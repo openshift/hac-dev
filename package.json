@@ -18,6 +18,7 @@
     "start": "webpack serve --config config/dev.webpack.config.js",
     "start:proxy": "PROXY=true BETA=true webpack serve --config config/dev.webpack.config.js",
     "start:proxy:beta": "PROXY=true BETA=true webpack serve --config config/dev.webpack.config.js",
+    "start:proxy:beta:ci": "ENVIRONMENT=ci npm run start:proxy:beta",
     "start:beta": "BETA=true npm start",
     "start:standalone": "STANDALONE=true npm start",
     "test": "jest",

@@ -7,10 +7,7 @@ const plugins = [fedModulePlugin({ root: resolve(__dirname, '../') })];
 // Save 20kb of bundle size in prod
 if (process.env.NODE_ENV === 'production') {
   plugins.push(
-    new webpack.NormalModuleReplacementPlugin(
-      /redux-logger/,
-      resolve(__dirname, './empty.js')
-    )
+    new webpack.NormalModuleReplacementPlugin(/redux-logger/, resolve(__dirname, './empty.js')),
   );
 }
 
