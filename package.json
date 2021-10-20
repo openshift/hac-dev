@@ -16,10 +16,8 @@
     "lint:sass": "stylelint 'src/**/*.scss' --config .stylelintrc.json",
     "nightly": "npm run deploy",
     "start": "webpack serve --config config/dev.webpack.config.js",
-    "start:proxy": "PROXY=true BETA=true webpack serve --config config/dev.webpack.config.js",
-    "start:proxy:beta": "PROXY=true BETA=true webpack serve --config config/dev.webpack.config.js",
-    "start:proxy:beta:ci": "ENVIRONMENT=ci npm run start:proxy:beta",
     "start:beta": "BETA=true npm start",
+    "start:beta:ci": "ENVIRONMENT=ci npm run start:beta",
     "start:standalone": "STANDALONE=true npm start",
     "test": "jest",
     "verify": "npm-run-all build lint test"
