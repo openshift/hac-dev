@@ -28,7 +28,7 @@ const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
   debug: true,
   useFileHash: false,
-  webpackProxy,
+  ...webpackProxy,
 });
 
 plugins.push(...commonPlugins);

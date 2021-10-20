@@ -10,9 +10,9 @@ HAC Developer Experience will deliver the UI for App Studio.
 
 1. ```npm install```
 
-2. ```npm run start:proxy:beta:ci```
+2. ```npm run start:beta:ci```
 
-3. Open browser using the URL listed in the terminal output.
+3. Open the URL listed in the terminal output.
 
 
 ### Update `/etc/hosts`
