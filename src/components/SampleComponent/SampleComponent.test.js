@@ -1,7 +1,7 @@
 import React from 'react';
-import SampleComponent from './sample-component';
+import SampleComponent from './SampleComponent';
 
-describe('sample-component', () => {
+describe('SampleComponent', () => {
   it('expect sample-component to render children', () => {
     const children = '<h1>Hello</h1>';
 

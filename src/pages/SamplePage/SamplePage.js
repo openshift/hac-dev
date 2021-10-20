@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useEffect } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import { Button, StackItem, Stack, Title, Spinner } from '@patternfly/react-core';
@@ -7,9 +7,9 @@ import { Main } from '@redhat-cloud-services/frontend-components/Main';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 
-const SampleComponent = lazy(() => import('../../Components/SampleComponent/sample-component'));
+const SampleComponent = lazy(() => import('../../components/SampleComponent/SampleComponent'));
 
-import './sample-page.scss';
+import './SamplePage.scss';
 
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
@@ -29,8 +29,8 @@ const SamplePage = () => {
     dispatch(
       addNotification({
         variant: 'success',
-        title: 'Notification title',
-        description: 'notification description',
+        title: 'Hello World!!',
+        description: 'This is a test notification.',
       }),
     );
   };
@@ -38,8 +38,8 @@ const SamplePage = () => {
   return (
     <React.Fragment>
       <PageHeader>
-        <PageHeaderTitle title="Sample Insights App" />
-        <p> This is page header text </p>
+        <PageHeaderTitle title="App Studio" />
+        <p> HAC Developer Experience. </p>
       </PageHeader>
       <Main>
         <Stack hasGutter>
@@ -55,24 +55,13 @@ const SamplePage = () => {
           </StackItem>
           <StackItem>
             <Suspense fallback={<Spinner />}>
-              <SampleComponent />
+              <SampleComponent>
+                <h1>
+                  This is a sample component which takes childrens and renders it. Just like this
+                  header text.
+                </h1>
+              </SampleComponent>
             </Suspense>
-          </StackItem>
-          <StackItem>
-            <Stack hasGutter>
-              <StackItem>
-                <Title headingLevel="h2" size="3xl">
-                  {' '}
-                  Links{' '}
-                </Title>
-              </StackItem>
-              <StackItem>
-                <Link to="/oops"> How to handle 500s in app </Link>
-              </StackItem>
-              <StackItem>
-                <Link to="/no-permissions"> How to handle 403s in app </Link>
-              </StackItem>
-            </Stack>
           </StackItem>
         </Stack>
       </Main>

@@ -1,6 +1,6 @@
-import './sample-component.scss';
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
+import './SampleComponent.scss';
 
 /**
  * This is a dumb component that only recieves properties from a smart component.
