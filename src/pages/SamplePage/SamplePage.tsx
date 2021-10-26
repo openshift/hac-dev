@@ -18,11 +18,11 @@ import './SamplePage.scss';
  * https://reactjs.org/docs/components-and-props.html
  * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
  */
-const SamplePage = () => {
+const SamplePage: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    insights?.chrome?.appAction?.('sample-page');
+    window.insights?.chrome?.appAction?.('sample-page');
   }, []);
 
   const handleAlert = () => {

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './SampleComponent.scss';
 
 /**
@@ -8,14 +7,8 @@ import './SampleComponent.scss';
  *
  * @param props the props given by the smart component.
  */
-const SampleComponent = (props) => {
+const SampleComponent: React.FC<{ children: React.ReactNode }> = (props) => {
   return <span className="sample-component"> {props.children} </span>;
-};
-
-SampleComponent.displayName = 'SampleComponent';
-
-SampleComponent.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
 };
 
 export default SampleComponent;

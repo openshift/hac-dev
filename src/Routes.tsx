@@ -3,8 +3,8 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { Bullseye, Spinner } from '@patternfly/react-core';
 
-const SamplePage = lazy(() =>
-  import(/* webpackChunkName: "SamplePage" */ './pages/SamplePage/SamplePage'),
+const SamplePage = lazy(
+  () => import(/* webpackChunkName: "SamplePage" */ './pages/SamplePage/SamplePage'),
 );
 
 /**
@@ -15,7 +15,7 @@ const SamplePage = lazy(() =>
  *      path - https://prod.foo.redhat.com:1337/insights/advisor/rules
  *      component - component to be rendered when a route has been chosen.
  */
-export const Routes = () => (
+export const Routes: React.FC = () => (
   <Suspense
     fallback={
       <Bullseye>
