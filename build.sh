@@ -1,4 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-echo Perform a build!
+if [ ! -d node_modules ]; then
+    npm install
+fi
+
+npm run build

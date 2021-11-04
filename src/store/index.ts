@@ -1,6 +1,6 @@
 import { getRegistry } from '@redhat-cloud-services/frontend-components-utilities/Registry';
 import promiseMiddleware from 'redux-promise-middleware';
-import notificationsMiddleware from '@redhat-cloud-services/frontend-components-notifications/notificationsMiddleware';
+import { notificationsMiddleware } from '@redhat-cloud-services/frontend-components-notifications/notificationsMiddleware';
 
 let registry;
 

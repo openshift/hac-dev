@@ -1,10 +1,10 @@
 declare interface Window {
-  insights?:{
+  insights?: {
     chrome?: {
-      init?: Function,
-      identifyApp?: Function,
-      on?: Function,
-      appAction?: Function
-    }
-  }
+      init?: Function;
+      identifyApp?: Function;
+      on?: Function;
+      appAction?: Function;
+    };
+  };
 }
