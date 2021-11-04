@@ -7,7 +7,7 @@ import { getRegistry } from '@redhat-cloud-services/frontend-components-utilitie
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
 import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
 
-const App: React.FC = (props) => {
+const App: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const App: React.FC = (props) => {
     return () => {
       unregister();
     };
-  }, []);
+  }, [history]);
 
   return (
     <Fragment>

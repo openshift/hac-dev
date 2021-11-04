@@ -1,4 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-echo Write some tests!
+if [ ! -d node_modules ]; then
+    npm install
+fi
+
+npm run verify
