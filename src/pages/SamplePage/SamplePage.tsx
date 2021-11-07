@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import { Button, StackItem, Stack, Title, Spinner } from '@patternfly/react-core';
@@ -62,6 +62,9 @@ const SamplePage: React.FC = () => {
                 </h1>
               </SampleComponent>
             </Suspense>
+          </StackItem>
+          <StackItem>
+            <Link to="/catalog?catalogType=Sample">Samples Catalog</Link>
           </StackItem>
         </Stack>
       </Main>
