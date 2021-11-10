@@ -21,7 +21,7 @@
     "start:beta:ci": "ENVIRONMENT=ci npm run start:beta",
     "start:standalone": "STANDALONE=true npm start",
     "test": "jest",
-    "verify": "npm-run-all build lint test"
+    "verify": "npm-run-all build lint coverage"
   },
   "dependencies": {
     "@patternfly/react-core": "4.135.0",
