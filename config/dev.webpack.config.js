@@ -26,6 +26,7 @@ const webpackProxy = {
 
 const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
+  sassPrefix: '.hacDev',
   debug: true,
   useFileHash: false,
   ...webpackProxy,
