@@ -1,3 +1,7 @@
+declare module '*.svg' {
+  const value: any;
+  export = value;
+}
 declare interface Window {
   insights?: {
     chrome?: {

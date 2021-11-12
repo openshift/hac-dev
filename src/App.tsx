@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import { Routes } from './Routes';
 import './App.scss';
 
+import './shared/style.scss';
+
 import { getRegistry } from '@redhat-cloud-services/frontend-components-utilities/Registry';
 import NotificationsPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
 import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';

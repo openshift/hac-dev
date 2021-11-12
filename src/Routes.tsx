@@ -7,6 +7,10 @@ const SamplePage = lazy(
   () => import(/* webpackChunkName: "SamplePage" */ './pages/SamplePage/SamplePage'),
 );
 
+const CatalogPage = lazy(
+  () => import(/* webpackChunkName: "CatalogPage" */ './shared/components/catalog/CatalogPage'),
+);
+
 /**
  * the Switch component changes routes depending on the path.
  *
@@ -24,7 +28,8 @@ export const Routes: React.FC = () => (
     }
   >
     <Switch>
-      <Route path="/" component={SamplePage} />
+      <Route path="/" component={SamplePage} exact />
+      <Route path="/catalog" component={CatalogPage} exact />
       {/* Finally, catch all unmatched routes */}
       <Route>
         <Redirect to="/" />

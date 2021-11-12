@@ -56,7 +56,8 @@ module.exports = {
         message: 'Don\'t use group imports. Use lodash/(funcName) instead.'
       }
     ],
-    'no-shadow': ['error'],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
     'no-underscore-dangle': 0,
     '@typescript-eslint/no-unused-vars': [
       'error',
