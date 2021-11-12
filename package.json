@@ -21,7 +21,7 @@
     "start:beta:ci": "ENVIRONMENT=ci npm run start:beta",
     "start:standalone": "STANDALONE=true npm start",
     "test": "jest",
-    "verify": "npm-run-all build lint coverage"
+    "verify": "npm-run-all build lint test"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",

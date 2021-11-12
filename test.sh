@@ -5,10 +5,11 @@ if [ ! -d node_modules ]; then
     npm install
 fi
 
-curl -Os https://uploader.codecov.io/latest/linux/codecov
+# Disabling code coverage for now because of CI issues.
+# curl -Os https://uploader.codecov.io/latest/linux/codecov
 
-chmod +x codecov
+# chmod +x codecov
 
 npm run verify
-./codecov --dir ./coverage
+# ./codecov --dir ./coverage
 
