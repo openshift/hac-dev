@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 const isHTMLElement = (n: Node): n is HTMLElement => {
   return n.nodeType === Node.ELEMENT_NODE;
