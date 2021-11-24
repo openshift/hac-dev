@@ -1,0 +1,13 @@
+.hacDev-close-button {
+  &--float-right {
+    float: right;
+  }
+
+  &--no-padding {
+    padding: 0 !important;
+  }
+}
+
+.hacDev-sidebar-dismiss__close-button {
+  font-size: 16px !important;
+}

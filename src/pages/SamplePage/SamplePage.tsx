@@ -66,6 +66,9 @@ const SamplePage: React.FC = () => {
           <StackItem>
             <Link to="/catalog?catalogType=Sample">Samples Catalog</Link>
           </StackItem>
+          <StackItem>
+            <Link to="/sample-form">Sample Form</Link>
+          </StackItem>
         </Stack>
       </Main>
     </React.Fragment>

@@ -6,6 +6,9 @@ import { Bullseye, Spinner } from '@patternfly/react-core';
 const SamplePage = lazy(
   () => import(/* webpackChunkName: "SamplePage" */ './pages/SamplePage/SamplePage'),
 );
+const SampleFormPage = lazy(
+  () => import(/* webpackChunkName: "SampleFormPage" */ './pages/SampleForm/SampleFormPage'),
+);
 
 const CatalogPage = lazy(
   () => import(/* webpackChunkName: "CatalogPage" */ './shared/components/catalog/CatalogPage'),
@@ -30,6 +33,7 @@ export const Routes: React.FC = () => (
     <Switch>
       <Route path="/" component={SamplePage} exact />
       <Route path="/catalog" component={CatalogPage} exact />
+      <Route path="/sample-form" component={SampleFormPage} exact />
       {/* Finally, catch all unmatched routes */}
       <Route>
         <Redirect to="/" />
