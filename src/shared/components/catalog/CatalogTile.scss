@@ -1,4 +1,8 @@
 .hac-catalog-tile {
+  height: 100%;
+  width: 260px;
+  color: black;
+  
   > .catalog-tile-pf-body {
     display: flex;
     flex-direction: column;
@@ -8,3 +12,5 @@
     }
   }
 }
+
+

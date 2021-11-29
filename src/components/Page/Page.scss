@@ -1,0 +1,17 @@
+.hacDev-page {
+  background-color: var(--pf-global--BackgroundColor--100);
+  padding: var(--pf-global--spacer--md) var(--pf-global--spacer--lg);
+  height: 100%;
+
+  &__breadcrumb {
+    margin-bottom: var(--pf-global--spacer--md);
+  }
+
+  &__heading {
+    margin-bottom: var(--pf-global--spacer--sm);
+  }
+
+  &__description {
+    margin-bottom: var(--pf-global--spacer--lg);
+  }
+}

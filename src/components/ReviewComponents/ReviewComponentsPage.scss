@@ -1,0 +1,18 @@
+.hacDev-review-component {
+  .pf-c-card__header-toggle {
+    align-self: center;
+  }
+
+  &__image {
+    width: 40px;
+  }
+
+  &__name {
+    margin-left: var(--pf-global--spacer--md);
+  }
+
+  &__content {
+    padding-left: 110px;
+    padding-bottom: 15px;
+  }
+}

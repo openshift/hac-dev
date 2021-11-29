@@ -3,6 +3,10 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { Bullseye, Spinner } from '@patternfly/react-core';
 
+import { AddComponentPage } from './components/AddComponent/AddComponentPage';
+import { ComponentSamplesPage } from './components/ComponentSamples/ComponentSamplesPage';
+import { SamplesFlow } from './components/SamplesFlow';
+
 const SamplePage = lazy(
   () => import(/* webpackChunkName: "SamplePage" */ './pages/SamplePage/SamplePage'),
 );
@@ -32,6 +36,9 @@ export const Routes: React.FC = () => (
   >
     <Switch>
       <Route path="/" component={SamplePage} exact />
+      <Route path="/application/create" component={SamplesFlow} exact />
+      <Route path="/component/add" component={AddComponentPage} exact />
+      <Route path="/component/samples" component={ComponentSamplesPage} exact />
       <Route path="/catalog" component={CatalogPage} exact />
       <Route path="/sample-form" component={SampleFormPage} exact />
       {/* Finally, catch all unmatched routes */}

@@ -65,6 +65,13 @@ export type CatalogItem<T extends any = any> = {
   // This description will also be shown in the side panel if there are no `details.descriptions`.
   description?: string | React.ReactNode;
   tags?: string[];
+  projectType?: string;
+  language?: string;
+  git?: {
+    remotes: {
+      origin: string;
+    };
+  };
   creationTimestamp?: string;
   supportUrl?: string;
   documentationUrl?: string;

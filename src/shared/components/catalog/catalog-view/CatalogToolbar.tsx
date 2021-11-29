@@ -66,11 +66,11 @@ const CatalogToolbar = React.forwardRef<HTMLInputElement, CatalogToolbarProps>(
               className="co-catalog-page__input"
               data-test="search-catalog"
               type="text"
-              placeholder={t('devconsole~Filter by keyword...')}
+              placeholder={t('Filter by keyword...')}
               value={searchKeyword}
               onChange={onSearchKeywordChange}
               onClear={() => onSearchKeywordChange('')}
-              aria-label={t('devconsole~Filter by keyword...')}
+              aria-label={t('Filter by keyword...')}
             />
             {/* <Dropdown
               className="co-catalog-page__sort"
@@ -89,9 +89,7 @@ const CatalogToolbar = React.forwardRef<HTMLInputElement, CatalogToolbarProps>(
               />
             )} */}
           </div>
-          <div className="co-catalog-page__num-items">
-            {t('devconsole~{{totalItems}} items', { totalItems })}
-          </div>
+          <div className="co-catalog-page__num-items">{totalItems} items</div>
         </div>
       </div>
     );

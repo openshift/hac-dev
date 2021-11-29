@@ -39,13 +39,13 @@ import { RenderCell } from '../../virtualized-grid/types';
 
 type CatalogViewProps = {
   items: CatalogItem[];
-  catalogType: string;
-  catalogTypes: CatalogType[];
+  catalogType?: string;
+  catalogTypes?: CatalogType[];
   categories?: CatalogCategory[];
-  filters: FiltersType;
-  filterGroups: string[];
-  filterGroupNameMap: CatalogStringMap;
-  groupings: CatalogStringMap;
+  filters?: FiltersType;
+  filterGroups?: string[];
+  filterGroupNameMap?: CatalogStringMap;
+  groupings?: CatalogStringMap;
   renderTile: RenderCell;
   hideSidebar?: boolean;
 };
@@ -145,8 +145,8 @@ const CatalogView: React.FC<CatalogViewProps> = ({
   }, []);
 
   const catalogCategories = React.useMemo<CatalogCategory[]>(() => {
-    const allCategory = { id: ALL_CATEGORY, label: t('devconsole~All items') };
-    const otherCategory = { id: OTHER_CATEGORY, label: t('devconsole~Other') };
+    const allCategory = { id: ALL_CATEGORY, label: t('All items') };
+    const otherCategory = { id: OTHER_CATEGORY, label: t('Other') };
     return [allCategory, ...(categories ?? []), otherCategory];
   }, [categories, t]);
 
@@ -185,10 +185,10 @@ const CatalogView: React.FC<CatalogViewProps> = ({
 
   const showFilters = React.useMemo(
     () =>
-      filterGroups.length > 0 &&
+      filterGroups?.length > 0 &&
       !_.isEmpty(activeFilters) &&
       Object.values(activeFilters).some((filterGroup) => Object.keys(filterGroup).length > 1),
-    [activeFilters, filterGroups.length],
+    [activeFilters, filterGroups?.length],
   );
 
   // const showTypeSelector = React.useMemo(
