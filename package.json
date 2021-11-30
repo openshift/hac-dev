@@ -54,6 +54,7 @@
   "devDependencies": {
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^1.2.1",
     "@redhat-cloud-services/frontend-components-config": "^4.3.5",
+    "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/enzyme": "^3.10.10",

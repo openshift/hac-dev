@@ -33,5 +33,3 @@ export const CreateApplicationPage = () => {
     </Page>
   );
 };
-
-export default CreateApplicationPage;
