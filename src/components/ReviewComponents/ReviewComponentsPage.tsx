@@ -8,6 +8,7 @@ import {
   FlexItem,
 } from '@patternfly/react-core';
 import * as React from 'react';
+import { createApplication, createComponent } from '../..//utils/create-utils';
 import { FormFooter } from '../../shared';
 import { useFormValues } from '../form-fields/form-context';
 import { Page } from '../Page';
@@ -18,6 +19,21 @@ export const ReviewComponentsPage: React.FC = () => {
   const wizardContext = useWizardContext();
   const [formState] = useFormValues();
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
+
+  const handleSubmit = React.useCallback(() => {
+    createApplication(formState.application).then((applicationData) => {
+      // eslint-disable-next-line no-console
+      console.log('###############- Application created', applicationData);
+      createComponent(
+        { name: formState.component.name, gitRepo: formState.component.git.remotes.origin },
+        applicationData?.metadata?.name,
+      ).then((componentData) => {
+        // eslint-disable-next-line no-console
+        console.log('###############- Component created', componentData);
+      });
+    });
+  }, [formState]);
+
   return (
     <Page
       breadcrumbs={[
@@ -61,7 +77,7 @@ export const ReviewComponentsPage: React.FC = () => {
         resetLabel="Back"
         handleReset={wizardContext.handleBack}
         handleCancel={wizardContext.handleReset}
-        handleSubmit={() => {}}
+        handleSubmit={handleSubmit}
         isSubmitting={false}
         disableSubmit={false}
         errorMessage={undefined}

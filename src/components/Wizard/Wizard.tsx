@@ -20,7 +20,7 @@ export const Wizard: React.FC = ({ children }) => {
 
   const [activeStepContent, childrenLength] = React.useMemo(() => {
     const step = React.Children.toArray(children).filter((_, i) => i === currentStep);
-    const length = React.Children.count(children);
+    const length = React.Children.count(children) - 1;
     return [step, length];
   }, [currentStep, children]);
 
@@ -29,8 +29,8 @@ export const Wizard: React.FC = ({ children }) => {
   }, []);
 
   const handleNext = React.useCallback(() => {
-    setCurrentStep((prevStep) => prevStep + 1);
-  }, []);
+    setCurrentStep((prevStep) => (prevStep === childrenLength ? prevStep : prevStep + 1));
+  }, [childrenLength]);
 
   const handleBack = React.useCallback(() => {
     setCurrentStep((prevStep) => (prevStep === 0 ? 0 : prevStep - 1));
