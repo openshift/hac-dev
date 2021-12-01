@@ -50,10 +50,10 @@ const FormFooter: React.FC<FormFooterProps> = ({
             isInline
             className="hacDev-alert"
             variant="info"
-            title={infoTitle || t('hac-shared~You made changes to this page.')}
+            title={infoTitle || t('You made changes to this page.')}
           >
             {infoMessage ||
-              t('hac-shared~Click {{submit}} to save changes or {{reset}} to cancel changes.', {
+              t('Click {{submit}} to save changes or {{reset}} to cancel changes.', {
                 submit: submitLabel,
                 reset: resetLabel,
               })}
@@ -68,7 +68,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
               isDisabled={disableSubmit}
               data-test-id="submit-button"
             >
-              {submitLabel || t('hac-shared~Save')}
+              {submitLabel || t('Save')}
             </Button>
           )}
           {handleReset && (
@@ -78,17 +78,17 @@ const FormFooter: React.FC<FormFooterProps> = ({
               variant={ButtonVariant.secondary}
               onClick={handleReset}
             >
-              {resetLabel || t('hac-shared~Reload')}
+              {resetLabel || t('Reload')}
             </Button>
           )}
           {handleCancel && (
             <Button
               type="button"
               data-test-id="cancel-button"
-              variant={ButtonVariant.secondary}
+              variant={ButtonVariant.link}
               onClick={handleCancel}
             >
-              {cancelLabel || t('hac-shared~Cancel')}
+              {cancelLabel || t('Cancel')}
             </Button>
           )}
           {handleDownload && (
@@ -100,7 +100,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
               onClick={handleDownload}
               icon={<DownloadIcon />}
             >
-              {t('hac-shared~Download')}
+              {t('Download')}
             </Button>
           )}
         </ActionGroup>
