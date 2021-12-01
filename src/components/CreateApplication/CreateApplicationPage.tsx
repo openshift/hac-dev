@@ -1,13 +1,12 @@
 import { Formik, FormikProps } from 'formik';
 import * as React from 'react';
-import { useFormValues } from '../form-fields/form-context';
-import { Page } from '../Page';
+import { useFormValues } from '../form-context';
+import { Page } from '../Page/Page';
 import { useWizardContext } from '../Wizard/Wizard';
-import { CreateApplicationForm } from './CreateApplicationForm';
-import { CreateApplicationValues } from './type';
+import { CreateApplicationForm, CreateApplicationValues } from './CreateApplicationForm';
 
 export const CreateApplicationPage = () => {
-  const { handleNext } = useWizardContext();
+  const { handleNext, handleReset: wizardHandleReset } = useWizardContext();
   const [formState, setValues] = useFormValues();
   const initialValues = {
     workspace: formState.workspace ?? 'Purple_workspace',
@@ -17,7 +16,10 @@ export const CreateApplicationPage = () => {
     setValues((prevVal) => ({ ...prevVal, ...values }));
     handleNext();
   };
-  const handleReset = () => {};
+  const handleReset = () => {
+    wizardHandleReset();
+    setValues({});
+  };
   return (
     <Page
       breadcrumbs={[

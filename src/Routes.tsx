@@ -1,10 +1,13 @@
 import React, { Suspense, lazy } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Bullseye, Spinner } from '@patternfly/react-core';
-import { SamplesFlow } from './components/SamplesFlow';
 
 const SampleFormPage = lazy(
   () => import(/* webpackChunkName: "SampleFormPage" */ './pages/SampleForm/SampleFormPage'),
+);
+
+const SamplesFlow = lazy(
+  () => import(/* webpackChunkName: "SamplesFlow" */ './components/SamplesFlow'),
 );
 
 /**

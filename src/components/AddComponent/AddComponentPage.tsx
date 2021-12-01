@@ -1,10 +1,9 @@
 import { Formik, FormikProps } from 'formik';
 import * as React from 'react';
-import { Page } from '../Page';
-import { AddComponentForm } from './AddComponentForm';
-import { AddComponentValues } from './type';
+import { Page } from '../Page/Page';
+import { AddComponentForm, AddComponentValues } from './AddComponentForm';
 import { useWizardContext } from '../Wizard/Wizard';
-import { useFormValues } from '../form-fields/form-context';
+import { useFormValues } from '../form-context';
 
 export const AddComponentPage = () => {
   const initialValues = {

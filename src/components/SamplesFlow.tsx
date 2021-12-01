@@ -2,11 +2,11 @@ import * as React from 'react';
 import { AddComponentPage } from './AddComponent/AddComponentPage';
 import { ComponentSamplesPage } from './ComponentSamples/ComponentSamplesPage';
 import { CreateApplicationPage } from './CreateApplication/CreateApplicationPage';
-import { FormContextProvider } from './form-fields/form-context';
+import { FormContextProvider } from './form-context';
 import { ReviewComponentsPage } from './ReviewComponents/ReviewComponentsPage';
 import { Wizard } from './Wizard/Wizard';
 
-export const SamplesFlow: React.FC = () => {
+const SamplesFlow: React.FC = () => {
   return (
     <FormContextProvider>
       <Wizard>
@@ -18,3 +18,5 @@ export const SamplesFlow: React.FC = () => {
     </FormContextProvider>
   );
 };
+
+export default SamplesFlow;

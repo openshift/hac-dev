@@ -10,22 +10,27 @@ import {
 import * as React from 'react';
 import { createApplication, createComponent } from '../..//utils/create-utils';
 import { FormFooter } from '../../shared';
-import { useFormValues } from '../form-fields/form-context';
-import { Page } from '../Page';
+import { useFormValues } from '../form-context';
+import { Page } from '../Page/Page';
 import { useWizardContext } from '../Wizard/Wizard';
 import './ReviewComponentsPage.scss';
 
 export const ReviewComponentsPage: React.FC = () => {
   const wizardContext = useWizardContext();
-  const [formState] = useFormValues();
+  const [formState, setFormState] = useFormValues();
+  const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
 
   const handleSubmit = React.useCallback(() => {
+    setIsSubmitting(true);
     createApplication(formState.application).then((applicationData) => {
       // eslint-disable-next-line no-console
       console.log('###############- Application created', applicationData);
       createComponent(
-        { name: formState.component.name, gitRepo: formState.component.git.remotes.origin },
+        {
+          name: formState.component.name,
+          gitRepo: formState.component.attributes.git.remotes.origin,
+        },
         applicationData?.metadata?.name,
       ).then((componentData) => {
         // eslint-disable-next-line no-console
@@ -65,8 +70,12 @@ export const ReviewComponentsPage: React.FC = () => {
             </FlexItem>
             <FlexItem>
               <b>Git Repo: </b>
-              <a href={formState.component.git.remotes.origin} target="_blank" rel="noreferrer">
-                {formState.component.git.remotes.origin}
+              <a
+                href={formState.component.attributes.git.remotes.origin}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {formState.component.attributes.git.remotes.origin}
               </a>
             </FlexItem>
           </Flex>
@@ -76,10 +85,13 @@ export const ReviewComponentsPage: React.FC = () => {
         submitLabel="Create"
         resetLabel="Back"
         handleReset={wizardContext.handleBack}
-        handleCancel={wizardContext.handleReset}
+        handleCancel={() => {
+          wizardContext.handleReset();
+          setFormState({});
+        }}
         handleSubmit={handleSubmit}
         isSubmitting={false}
-        disableSubmit={false}
+        disableSubmit={isSubmitting}
         errorMessage={undefined}
       />
     </Page>

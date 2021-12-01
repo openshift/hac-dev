@@ -3,11 +3,15 @@ import { FormikProps } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import * as React from 'react';
 import { FormFooter } from '../../shared';
-import { SourceField } from '../form-fields';
-import { AddComponentValues } from './type';
+import { SourceField } from './SourceField';
 import { useWizardContext } from '../Wizard/Wizard';
+import { useFormValues } from '../form-context';
 
-export type AddComponentFormProps = FormikProps<AddComponentValues>;
+export type AddComponentValues = {
+  source: string;
+};
+
+type AddComponentFormProps = FormikProps<AddComponentValues>;
 
 export const AddComponentForm: React.FC<AddComponentFormProps> = ({
   dirty,
@@ -17,7 +21,9 @@ export const AddComponentForm: React.FC<AddComponentFormProps> = ({
   handleSubmit,
   handleReset,
 }) => {
-  const { handleNext } = useWizardContext();
+  const { handleNext, handleReset: wizardHandleReset } = useWizardContext();
+  const [, setValues] = useFormValues();
+
   return (
     <Form onSubmit={handleSubmit}>
       <SourceField onSamplesClick={handleNext} />
@@ -26,7 +32,10 @@ export const AddComponentForm: React.FC<AddComponentFormProps> = ({
         resetLabel="Back"
         handleReset={handleReset}
         errorMessage={status && status.submitError}
-        handleCancel={handleReset}
+        handleCancel={() => {
+          wizardHandleReset();
+          setValues({});
+        }}
         isSubmitting={isSubmitting}
         disableSubmit={!dirty || !isEmpty(errors) || isSubmitting}
       />

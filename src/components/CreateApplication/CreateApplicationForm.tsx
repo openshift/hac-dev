@@ -2,9 +2,13 @@ import { Form } from '@patternfly/react-core';
 import { FormikProps } from 'formik';
 import * as React from 'react';
 import { FormFooter } from '../../shared';
-import { ApplicationField } from '../form-fields/ApplicationField';
-import { WorkspaceField } from '../form-fields/WorkspaceField';
-import { CreateApplicationValues } from './type';
+import { ApplicationField } from './ApplicationField';
+import { WorkspaceField } from './WorkspaceField';
+
+export type CreateApplicationValues = {
+  workspace: string;
+  application: string;
+};
 
 type CreateApplicationFormProps = FormikProps<CreateApplicationValues>;
 

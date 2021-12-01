@@ -19,8 +19,8 @@ import { FormFooter } from '../../shared';
 import CatalogView from '../../shared/components/catalog/catalog-view/CatalogView';
 import CatalogTile from '../../shared/components/catalog/CatalogTile';
 import { CatalogItem } from '../../shared/components/catalog/utils/types';
-import { useFormValues } from '../form-fields/form-context';
-import { Page } from '../Page';
+import { useFormValues } from '../form-context';
+import { Page } from '../Page/Page';
 import { useWizardContext } from '../Wizard/Wizard';
 
 /**
@@ -87,11 +87,16 @@ const catalogItems = [
       },
     },
   },
-].map((item) => ({
+].map(({ projectType, language, git, ...item }) => ({
   ...item,
   uid: item.name,
   name: item.displayName,
   icon: { url: `data:image/png;base64,${item.icon}` },
+  attributes: {
+    projectType,
+    language,
+    git,
+  },
 }));
 
 export const ComponentSamplesPage = () => {
@@ -142,13 +147,13 @@ export const ComponentSamplesPage = () => {
           </LabelGroup>
         </FlexItem>
         <FlexItem>
-          <b>Project type:</b> {selected.projectType}
+          <b>Project type:</b> {selected.attributes.projectType}
         </FlexItem>
         <FlexItem>
-          <b>Language:</b> {selected.language}
+          <b>Language:</b> {selected.attributes.language}
         </FlexItem>
         <FlexItem>
-          <a href={selected.git.remotes.origin} target="_blank" rel="noreferrer">
+          <a href={selected.attributes.git.remotes.origin} target="_blank" rel="noreferrer">
             View Git Repository
           </a>
         </FlexItem>
@@ -184,7 +189,10 @@ export const ComponentSamplesPage = () => {
               errorMessage={undefined}
               handleSubmit={handleSubmit}
               handleReset={handleBack}
-              handleCancel={handleReset}
+              handleCancel={() => {
+                handleReset();
+                setValues({});
+              }}
             />
           </Page>
         </DrawerContentBody>

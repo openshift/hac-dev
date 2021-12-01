@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CatalogItem } from '../../shared/components/catalog/utils/types';
+import { CatalogItem } from '../shared/components/catalog/utils/types';
 
 type S = {
   workspace?: string;
