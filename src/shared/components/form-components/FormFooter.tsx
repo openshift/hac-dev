@@ -1,10 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ActionGroup, Alert, Button, ButtonVariant } from '@patternfly/react-core';
 import { DownloadIcon } from '@patternfly/react-icons/dist/js/icons/download-icon';
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
-import ButtonBar from '../button-bar/ButtonBar';
 import { Shadows, useScrollShadows, useScrollContainer } from '../../hooks';
+import ButtonBar from '../button-bar/ButtonBar';
 import { FormFooterProps } from './form-component-types';
 
 import './FormFooter.scss';

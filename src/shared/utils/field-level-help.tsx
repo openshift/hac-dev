@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button, Popover, PopoverProps } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons/dist/js/icons';
-import { useTranslation } from 'react-i18next';
 
 import './field-level-help.scss';
 

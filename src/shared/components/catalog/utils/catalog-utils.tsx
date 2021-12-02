@@ -1,7 +1,7 @@
 import * as _ from 'lodash-es';
 import * as catalogImg from '../../../../imgs/catalog-icon.svg';
-import { CatalogType, CatalogTypeCounts, CatalogItem } from './types';
 import { history, keywordFilter } from '../../../utils';
+import { CatalogType, CatalogTypeCounts, CatalogItem } from './types';
 
 export const normalizeIconClass = (iconClass: string): string => {
   return _.startsWith(iconClass, 'icon-') ? `font-icon ${iconClass}` : iconClass;

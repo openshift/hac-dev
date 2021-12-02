@@ -1,5 +1,5 @@
-import { Text, TextVariants, Title } from '@patternfly/react-core';
 import * as React from 'react';
+import { Text, TextVariants, Title } from '@patternfly/react-core';
 import BreadCrumbs from '../../shared/components/breadcrumbs/BreadCrumbs';
 import './Page.scss';
 

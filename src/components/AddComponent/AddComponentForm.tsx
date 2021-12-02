@@ -1,11 +1,11 @@
+import * as React from 'react';
 import { Form } from '@patternfly/react-core';
 import { FormikProps } from 'formik';
 import isEmpty from 'lodash/isEmpty';
-import * as React from 'react';
 import { FormFooter } from '../../shared';
-import { SourceField } from './SourceField';
-import { useWizardContext } from '../Wizard/Wizard';
 import { useFormValues } from '../form-context';
+import { useWizardContext } from '../Wizard/Wizard';
+import { SourceField } from './SourceField';
 
 export type AddComponentValues = {
   source: string;

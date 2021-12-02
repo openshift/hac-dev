@@ -1,19 +1,9 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import cx from 'classnames';
 import * as _ from 'lodash-es';
-import { useTranslation } from 'react-i18next';
-import {
-  CatalogItem,
-  CatalogCategory,
-  // CatalogFilterCounts,
-  CatalogFilters as FiltersType,
-  CatalogQueryParams,
-  CatalogSortOrder,
-  CatalogStringMap,
-  CatalogType,
-  // CatalogTypeCounts,
-} from '../utils/types';
 import { useQueryParams } from '../../../hooks';
+import { RenderCell } from '../../virtualized-grid/types';
 import { setURLParams, updateURLParams } from '../utils/catalog-utils';
 import {
   categorize,
@@ -29,13 +19,23 @@ import {
   getActiveFilters,
   getFilterSearchParam,
 } from '../utils/filter-utils';
+import {
+  CatalogItem,
+  CatalogCategory,
+  // CatalogFilterCounts,
+  CatalogFilters as FiltersType,
+  CatalogQueryParams,
+  CatalogSortOrder,
+  CatalogStringMap,
+  CatalogType,
+  // CatalogTypeCounts,
+} from '../utils/types';
 import CatalogCategories from './CatalogCategories';
 import CatalogEmptyState from './CatalogEmptyState';
 import CatalogFilters from './CatalogFilters';
 import CatalogGrid from './CatalogGrid';
 import CatalogToolbar from './CatalogToolbar';
 // import CatalogTypeSelector from './CatalogTypeSelector';
-import { RenderCell } from '../../virtualized-grid/types';
 
 type CatalogViewProps = {
   items: CatalogItem[];

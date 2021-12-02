@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Flex,
   FlexItem,
@@ -9,7 +10,6 @@ import {
   Tooltip,
 } from '@patternfly/react-core';
 import { MinusCircleIcon, GripVerticalIcon } from '@patternfly/react-icons/dist/js/icons';
-import { useTranslation } from 'react-i18next';
 import InputField from '../InputField';
 import {
   TextColumnItemProps,

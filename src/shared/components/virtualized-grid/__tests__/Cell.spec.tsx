@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { shallow } from 'enzyme';
 import { GridCellProps, CellMeasurer } from 'react-virtualized';
+import { shallow } from 'enzyme';
 import Cell from '../Cell';
 import { RenderHeader, RenderCell } from '../types';
 

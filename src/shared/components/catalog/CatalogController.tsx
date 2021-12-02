@@ -1,16 +1,18 @@
 import * as React from 'react';
-import * as _ from 'lodash-es';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { setQueryArgument } from '../../utils';
-import { StatusBox } from '../status-box/StatusBox';
-import { skeletonCatalog } from './utils/skeleton-catalog';
+import * as _ from 'lodash-es';
 import { useQueryParams } from '../../hooks';
+import { setQueryArgument } from '../../utils';
+import PageHeading from '../headings/PageHeading';
+import { StatusBox } from '../status-box/StatusBox';
+import { RenderCell } from '../virtualized-grid/types';
 import CatalogView from './catalog-view/CatalogView';
 import CatalogTile from './CatalogTile';
 // import CatalogDetailsModal from './details/CatalogDetailsModal';
 import { getURLWithParams } from './utils/catalog-utils';
 import { determineAvailableFilters } from './utils/filter-utils';
+import { skeletonCatalog } from './utils/skeleton-catalog';
 import {
   CatalogCategory,
   CatalogFilters,
@@ -21,8 +23,6 @@ import {
   CatalogItemAttribute,
   CatalogService,
 } from './utils/types';
-import { RenderCell } from '../virtualized-grid/types';
-import PageHeading from '../headings/PageHeading';
 
 type CatalogControllerProps = CatalogService & {
   enableDetailsPanel?: boolean;
