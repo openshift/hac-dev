@@ -1,6 +1,6 @@
 import React from 'react';
-import { NumberInput } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
+import { NumberInput } from '@patternfly/react-core';
 
 type NumberSpinnerProps = {
   value: number;

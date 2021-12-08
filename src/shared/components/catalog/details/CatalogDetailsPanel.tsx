@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { PropertiesSidePanel, PropertyItem } from '@patternfly/react-catalog-view-extension';
 import { Stack, StackItem } from '@patternfly/react-core';
-import { useTranslation } from 'react-i18next';
-import { CatalogItem } from '../utils/types';
 import SectionHeading from '../../headings/SectionHeading';
 import ExternalLink from '../../links/ExternalLink';
+import { CatalogItem } from '../utils/types';
 // import { Timestamp } from '@console/internal/components/utils';
 
 type CatalogDetailsPanelProps = {

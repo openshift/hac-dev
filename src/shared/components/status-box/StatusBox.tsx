@@ -1,11 +1,10 @@
 import * as React from 'react';
-import * as _ from 'lodash-es';
-import classNames from 'classnames';
-import { Alert, Button } from '@patternfly/react-core';
 import { useTranslation, Trans } from 'react-i18next';
-import { TimeoutError } from '../../utils/error/http-error';
-
+import { Alert, Button } from '@patternfly/react-core';
+import classNames from 'classnames';
+import * as _ from 'lodash-es';
 import * as restrictedSignImg from '../../../imgs/restricted-sign.svg';
+import { TimeoutError } from '../../utils/error/http-error';
 
 import './StatusBox.scss';
 

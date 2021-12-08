@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   Button,
   ButtonVariant,
@@ -8,7 +9,6 @@ import {
   ValidatedOptions,
 } from '@patternfly/react-core';
 import { useField } from 'formik';
-import * as React from 'react';
 import { getFieldId } from '../../shared';
 
 export const SourceField = ({ onSamplesClick }) => {

@@ -1,5 +1,5 @@
-import * as _ from 'lodash-es';
 import { createBrowserHistory, createMemoryHistory, History } from 'history';
+import * as _ from 'lodash-es';
 
 type AppHistory = History & { pushPath: History['push'] };
 

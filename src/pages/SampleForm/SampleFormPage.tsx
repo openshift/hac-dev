@@ -1,9 +1,9 @@
-import { Spinner } from '@patternfly/react-core';
-import { withRouter } from 'react-router-dom';
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { Spinner } from '@patternfly/react-core';
+import { Formik, FormikProps } from 'formik';
 import { Main } from '@redhat-cloud-services/frontend-components/Main';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { Formik, FormikProps } from 'formik';
 
 const SampleForm = React.lazy(() => import('../../components/SampleForm/SampleForm'));
 

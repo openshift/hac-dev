@@ -1,7 +1,7 @@
+import React from 'react';
 import { FormSection, InputGroupText, TextInputTypes } from '@patternfly/react-core';
 import { AtIcon } from '@patternfly/react-icons/dist/esm/icons/at-icon';
 import { FormikProps, FormikValues } from 'formik';
-import React from 'react';
 import { DropdownItemObject } from '../../shared/components/dropdown/BasicDropdown';
 import {
   FlexForm,

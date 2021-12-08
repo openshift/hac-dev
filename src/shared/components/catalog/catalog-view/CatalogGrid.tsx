@@ -1,9 +1,9 @@
 import * as React from 'react';
-import * as _ from 'lodash-es';
 import { Title } from '@patternfly/react-core';
-import { CatalogItem } from '../utils/types';
+import * as _ from 'lodash-es';
 import { VirtualizedGrid } from '../../virtualized-grid';
 import { RenderCell } from '../../virtualized-grid/types';
+import { CatalogItem } from '../utils/types';
 
 type CatalogGridProps = {
   items: CatalogItem[] | { [key: string]: CatalogItem[] };

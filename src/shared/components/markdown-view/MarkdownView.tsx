@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import cx from 'classnames';
 import * as _ from 'lodash-es';
-import { Converter } from 'showdown';
 import * as sanitizeHtml from 'sanitize-html';
-import { useTranslation } from 'react-i18next';
+import { Converter } from 'showdown';
 import { useForceRender, useResizeObserver } from '../../hooks';
 
 import './MarkdownView.scss';

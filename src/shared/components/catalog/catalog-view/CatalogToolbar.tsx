@@ -1,8 +1,8 @@
 import * as React from 'react';
 // import * as _ from 'lodash-es';
-import { SearchInput } from '@patternfly/react-core';
 import * as ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { SearchInput } from '@patternfly/react-core';
 // import { Dropdown } from '@console/internal/components/utils';
 // import { NO_GROUPING } from '../utils/category-utils';
 import { CatalogSortOrder, CatalogStringMap } from '../utils/types';

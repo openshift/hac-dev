@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   Card,
   CardExpandableContent,
@@ -7,7 +8,6 @@ import {
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
-import * as React from 'react';
 import { createApplication, createComponent } from '../..//utils/create-utils';
 import { FormFooter } from '../../shared';
 import { useFormValues } from '../form-context';

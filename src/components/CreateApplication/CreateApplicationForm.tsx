@@ -1,6 +1,6 @@
+import * as React from 'react';
 import { Form } from '@patternfly/react-core';
 import { FormikProps } from 'formik';
-import * as React from 'react';
 import { FormFooter } from '../../shared';
 import { ApplicationField } from './ApplicationField';
 import { WorkspaceField } from './WorkspaceField';

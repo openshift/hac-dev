@@ -1,6 +1,6 @@
 import * as React from 'react';
-import classNames from 'classnames';
 import { Grid as GridComponent, GridCellProps } from 'react-virtualized';
+import classNames from 'classnames';
 import { Params, GroupedItems, GridChildrenProps } from './types';
 import { getItemsAndRowCount, CellMeasurementContext } from './utils';
 import './Grid.scss';

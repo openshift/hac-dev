@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useWizardContext, Wizard } from '../Wizard';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { useWizardContext, Wizard } from '../Wizard';
 
 const DummyComponent = () => {
   const { handleNext, handleBack, handleReset, currentStep } = useWizardContext();

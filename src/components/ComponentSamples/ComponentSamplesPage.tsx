@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   Drawer,
   DrawerActions,
@@ -14,7 +15,6 @@ import {
   TextVariants,
   Title,
 } from '@patternfly/react-core';
-import * as React from 'react';
 import { FormFooter } from '../../shared';
 import CatalogView from '../../shared/components/catalog/catalog-view/CatalogView';
 import CatalogTile from '../../shared/components/catalog/CatalogTile';
@@ -108,6 +108,8 @@ export const ComponentSamplesPage = () => {
     if (formState.component) {
       setSelected(formState.component);
     }
+    // We just need setSelected called once when the component is mounted
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = React.useCallback(() => {
