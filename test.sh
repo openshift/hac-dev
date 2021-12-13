@@ -10,5 +10,5 @@ curl -Os https://uploader.codecov.io/latest/linux/codecov
 chmod +x codecov
 
 npm run verify
-./codecov --dir ./coverage
+./codecov -t ${CODECOV_TOKEN} --dir ./coverage
 
