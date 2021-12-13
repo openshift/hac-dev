@@ -1,0 +1,19 @@
+.hacDev-radio-group-field {
+  padding-left: var(--pf-global--spacer--sm);
+
+  .pf-c-radio {
+    &__description {
+      width: 100%;
+    }
+  }
+
+  &--inline {
+    display: flex;
+    align-items: flex-start;
+
+    > .pf-c-form__group-label {
+      margin-right: var(--pf-global--spacer--md);
+    }
+  }
+
+}
