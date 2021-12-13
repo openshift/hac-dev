@@ -11,4 +11,3 @@ chmod +x codecov
 
 npm run verify
 ./codecov -t ${CODECOV_TOKEN} --dir ./coverage
-

@@ -1,5 +1,5 @@
-const webpack = require('webpack');
 const { resolve } = require('path');
+const webpack = require('webpack');
 const fedModulePlugin = require('@redhat-cloud-services/frontend-components-config/federated-modules');
 
 const plugins = [fedModulePlugin({ root: resolve(__dirname, '../') })];

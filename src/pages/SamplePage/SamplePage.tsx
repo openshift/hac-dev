@@ -1,11 +1,10 @@
 import React, { Suspense, lazy, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-
+import { Link, withRouter } from 'react-router-dom';
 import { Button, StackItem, Stack, Title, Spinner } from '@patternfly/react-core';
+import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { Main } from '@redhat-cloud-services/frontend-components/Main';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 
 const SampleComponent = lazy(() => import('../../components/SampleComponent/SampleComponent'));
 
@@ -62,6 +61,12 @@ const SamplePage: React.FC = () => {
                 </h1>
               </SampleComponent>
             </Suspense>
+          </StackItem>
+          <StackItem>
+            <Link to="/catalog?catalogType=Sample">Samples Catalog</Link>
+          </StackItem>
+          <StackItem>
+            <Link to="/sample-form">Sample Form</Link>
           </StackItem>
         </Stack>
       </Main>
