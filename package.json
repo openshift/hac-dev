@@ -9,7 +9,7 @@
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config config/prod.webpack.config.js --env analyze=true",
     "build": "NODE_ENV=production webpack --config config/prod.webpack.config.js",
-    "coverage": "jest --coverage",
+    "coverage": "jest --coverage --runInBand --detectOpenHandles --forceExit",
     "deploy": "npm-run-all build lint test",
     "lint": "npm-run-all lint:*",
     "lint:ts": "eslint . --ext .js,.jsx,.ts,.tsx --color",
@@ -21,7 +21,7 @@
     "start:beta:ci": "ENVIRONMENT=ci npm run start:beta",
     "start:standalone": "STANDALONE=true npm start",
     "test": "jest",
-    "verify": "npm-run-all build lint test",
+    "verify": "npm-run-all build lint coverage",
     "prepare": "husky install"
   },
   "dependencies": {
