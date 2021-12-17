@@ -13,8 +13,9 @@ if [[ "${JOB_TYPE}" == "presubmit" ]]; then
        REF_FLAGS="-P ${PULL_NUMBER} -C ${PULL_PULL_SHA}"
        JOB_LINK="${CI_SERVER_URL}/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}"
 elif [[ "${JOB_TYPE}" == "postsubmit" || "${JOB_TYPE}" == "periodic" ]]; then
-       echo "detected branch code coverage job for ${PULL_BASE_REF}"
-       REF_FLAGS="-B ${PULL_BASE_REF} -C ${PULL_BASE_SHA}"
+       #echo "detected branch code coverage job for ${PULL_BASE_REF}"
+       #REF_FLAGS="-B ${PULL_BASE_REF} -C ${PULL_BASE_SHA}"
+       REF_FLAGS=""
        JOB_LINK="${CI_SERVER_URL}/logs/${JOB_NAME}/${BUILD_ID}"
 else
        echo "Coverage not enabled on Job Type :${JOB_TYPE}"
