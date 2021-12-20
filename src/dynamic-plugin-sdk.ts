@@ -2,6 +2,8 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 
+const HOOK_POLL_DELAY = 2000; // change this if you want the useHook to go faster / slower on polls
+
 /* throw away fetch methods */
 const k8sBasePath = `/api/k8s`; // webpack proxy path
 
@@ -404,19 +406,59 @@ const k8sList = (
  * This makes an assumption that the model will have a plural of `${kind}s` -- which is obv not ideal.
  * Without apiDiscovery & the hook interface being sorta fixed, our options are limited.
  */
-const makeGetCall = (initResource: WatchK8sResource) => (
-  k8sGetResource({
-    model: {
-      apiVersion: initResource.groupVersionKind.version,
-      apiGroup: initResource.groupVersionKind.group,
-      kind: initResource.groupVersionKind.kind,
-      // TODO: no dictionary... solution?
-      plural: initResource.groupVersionKind.kind.toLowerCase() + 's',
-    },
-    name: initResource.name,
-    ns: initResource.namespace,
+const makeGetCall = (resourceData: WatchK8sResource) => (
+  resourceData.groupVersionKind &&
+    k8sGetResource({
+      model: {
+        apiVersion: resourceData.groupVersionKind.version,
+        apiGroup: resourceData.groupVersionKind.group,
+        kind: resourceData.groupVersionKind.kind,
+        // TODO: no dictionary... solution?
+        plural: resourceData.groupVersionKind.kind.toLowerCase() + 's',
+      },
+      name: resourceData.name,
+      ns: resourceData.namespace,
+    })
+);
+/**
+ * This makes an assumption that the model will have a plural of `${kind}s` -- which is obv not ideal.
+ * Without apiDiscovery & the hook interface being sorta fixed, our options are limited.
+ */
+const makeListCall = (resourceData: WatchK8sResource) => (
+  resourceData.groupVersionKind &&
+    k8sListResource({
+      model: {
+        apiVersion: resourceData.groupVersionKind.version,
+        apiGroup: resourceData.groupVersionKind.group,
+        kind: resourceData.groupVersionKind.kind,
+        // TODO: no dictionary... solution?
+        plural: resourceData.groupVersionKind.kind.toLowerCase() + 's',
+      },
+      ...resourceData.namespace
+        ? {
+            queryParams: {
+              ns: resourceData.namespace,
+            }
+          }
+        : {},
   })
 );
+
+const useDeepCompareMemoize = <T = any>(value: T, strinfigy?: boolean): T => {
+  const ref = React.useRef<T>();
+
+  if (
+    strinfigy
+      ? JSON.stringify(value) !== JSON.stringify(ref.current)
+      : !_.isEqual(value, ref.current)
+  ) {
+    ref.current = value;
+  }
+
+  return ref.current;
+};
+
+const useForceRender = () => React.useReducer((s: boolean) => !s, false)[1] as VoidFunction;
 
 /* ------------------ *
  *  External Methods  *
@@ -515,40 +557,47 @@ export const k8sDeleteResource = adapterFunc(k8sKill, [
  * * */
 export const k8sListResource = adapterFunc(k8sList, ['model', 'queryParams', 'raw', 'requestInit']);
 
-const POLL_DELAY = 2000; // change this if you want it faster / slower
+
 /**
  * Watch a resource -- works on a fixed delay poll today.
  */
 export const useK8sWatchResource = <R extends K8sResourceCommon | K8sResourceCommon[]>(initResource: WatchK8sResource): WatchK8sResult<R> => {
-  const [resource, setResource] = React.useState<R | null>(null);
-  const [fetched, setFetched] = React.useState(false);
+  const resource = useDeepCompareMemoize(initResource, true);
+  const resourceRef = React.useRef<R | null>(null);
+  const fetchedRef = React.useRef<boolean>(false);
   const [error, setError] = React.useState<Error | null>(null);
+  const reRender = useForceRender();
 
   React.useEffect(() => {
     const addPromiseFollowups = (promise) => {
       promise
-        .then((data) => {
+        ?.then((data) => {
           if (data.kind === 'Status') {
-            setResource(null);
-          } else if (!_.isEqual(resource, data)) {
-            setResource(data);
+            if (resourceRef.current !== null) {
+              resourceRef.current = null;
+              reRender();
+            }
+          } else if (!_.isEqual(resourceRef.current, data)) {
+            resourceRef.current = data;
+            reRender();
           }
-          setFetched(true);
+          fetchedRef.current = true;
         })
         .catch((err) => {
           setError(err);
-          setFetched(true);
+          fetchedRef.current = false;
         });
     };
+    const makeTheCall = (r) => r.isList ? makeListCall(r) : makeGetCall(r);
 
-    addPromiseFollowups(makeGetCall(initResource));
+    addPromiseFollowups(makeTheCall(resource));
     const intervalId = setInterval(() => {
-      addPromiseFollowups(makeGetCall(initResource));
-    }, POLL_DELAY);
+      addPromiseFollowups(makeTheCall(resource));
+    }, HOOK_POLL_DELAY);
     return () => {
       clearInterval(intervalId);
     }
-  }, [initResource]);
+  }, [resource]);
 
-  return [resource, fetched, error];
+  return [resourceRef.current, fetchedRef.current, error];
 };
