@@ -16,6 +16,8 @@ elif [[ "${JOB_TYPE}" == "postsubmit" || "${JOB_TYPE}" == "periodic" ]]; then
        #echo "detected branch code coverage job for ${PULL_BASE_REF}"
        #REF_FLAGS="-B ${PULL_BASE_REF} -C ${PULL_BASE_SHA}"
        REF_FLAGS=""
+       REPO_OWNER="openshift"
+       REPO_NAME="hac-dev"
        JOB_LINK="${CI_SERVER_URL}/logs/${JOB_NAME}/${BUILD_ID}"
 else
        echo "Coverage not enabled on Job Type :${JOB_TYPE}"
