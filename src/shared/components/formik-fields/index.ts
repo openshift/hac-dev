@@ -13,5 +13,8 @@ export * from './text-column-field/text-column-types';
 export { default as TextColumnField } from './text-column-field/TextColumnField';
 export { default as SelectInputField } from './SelectInputField';
 export { default as FileUploadField } from './FileUploadField';
+export { default as ResourceLimitField } from './ResourceLimitField';
+export { default as EditableLabelField } from './EditableLabelField';
+export { default as EnvironmentField } from './EnvironmentField';
 export * from './field-utils';
 export * from './field-types';

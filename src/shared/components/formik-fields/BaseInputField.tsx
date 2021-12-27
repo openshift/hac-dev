@@ -10,6 +10,7 @@ const BaseInputField: React.FC<
   }
 > = ({
   label,
+  labelIcon,
   helpText,
   required,
   children,
@@ -27,6 +28,7 @@ const BaseInputField: React.FC<
     <FormGroup
       fieldId={fieldId}
       label={label}
+      labelIcon={labelIcon}
       helperText={helpText}
       helperTextInvalid={errorMessage || helpTextInvalid}
       validated={!isValid ? ValidatedOptions.error : validated}

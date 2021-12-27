@@ -1,0 +1,7 @@
+.hacDev-review-form {
+
+  &__components-section {
+    width: 100vw;
+    transform: translateX(calc(0px - var(--pf-global--spacer--lg)));
+  }
+}

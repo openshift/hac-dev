@@ -10,3 +10,14 @@ export const ComponentModel: K8sModel = {
   labelPlural: 'Components',
   namespaced: true,
 };
+
+export const ComponentDetectionQueryModel = {
+  group: 'appstudio.redhat.com',
+  version: 'v1alpha1',
+  kind: 'ComponentDetectionQuery',
+  abbr: 'CDQ',
+  plural: 'componentdetectionqueries',
+  label: 'Component Detection Query',
+  labelPlural: 'Component Detection Queries',
+  namespaced: true,
+};

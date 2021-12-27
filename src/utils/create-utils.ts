@@ -1,4 +1,5 @@
-import { ApplicationModel, ComponentModel } from '../models';
+import uniqueId from 'lodash/uniqueId';
+import { ApplicationModel, ComponentModel, ComponentDetectionQueryModel } from '../models';
 import { k8sCreateResource } from './../dynamic-plugin-sdk';
 
 /**
@@ -61,4 +62,89 @@ export const createComponent = (component, application: string, namespace: strin
     model: ComponentModel,
     data: requestData,
   });
+};
+
+/**
+ * Create ComponentDetectionQuery CR
+ *
+ * @param appName application name
+ * @param url the URL of the repository that will be analyzed for components
+ * @param namespace namespace to deploy resource in. Defaults to current namespace
+ * @param isMulticomponent whether or not the git repository contains multiple components
+ * @returns Returns HAS ComponentDetectionQuery results
+ *
+ * TODO: Return type any should be changed to a proper type like K8sResourceCommon
+ */
+export const createComponentDetectionQuery = async (
+  appName: string,
+  repository: string,
+  namespace?: string,
+  isMulticomponent?: boolean,
+): Promise<any> => {
+  const name = `detect-${appName.split(' ').join('-').toLowerCase()}-git-repo`;
+  const uniqueName = uniqueId(name);
+  const mockReturnData = {
+    'backend-service': {
+      devfileFound: false,
+      language: 'go',
+      projectType: 'go',
+      componentResourceStub: {
+        apiVersion: 'has.appstudio/v1alpha1',
+        kind: 'Component',
+        spec: {
+          source: {
+            git: {
+              url: 'https://github.com/test/repository.git',
+              path: 'backend-service',
+            },
+          },
+          resources: {
+            memory: '1Gi',
+            cpu: '500m',
+          },
+        },
+      },
+    },
+    'frontend-service': {
+      devfileFound: true,
+      language: 'js',
+      projectType: 'nodejs',
+      componentResourceStub: {
+        apiVersion: 'has.appstudio/v1alpha1',
+        kind: 'Component',
+        spec: {
+          source: {
+            git: {
+              url: 'https://github.com/test/repository.git',
+              path: 'frontend-service',
+            },
+          },
+          targetPort: 3000,
+          resources: {
+            memory: '1Gi',
+            cpu: '500m',
+          },
+        },
+      },
+    },
+  };
+
+  const requestData = {
+    apiversion: `${ComponentDetectionQueryModel.group}/${ComponentDetectionQueryModel.version}`,
+    kind: ComponentDetectionQueryModel.kind,
+    metadata: {
+      name: uniqueName,
+      namespace,
+    },
+    spec: {
+      git: {
+        repository,
+      },
+      isMulticomponent,
+    },
+    data: mockReturnData,
+  };
+
+  // TODO: Make Api Calls here
+  return requestData;
 };
