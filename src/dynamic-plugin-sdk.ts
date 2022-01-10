@@ -50,7 +50,7 @@ const consoleFetchSendJSON = (
   return commonFetch(url, method, _.defaultsDeep(allOptions, options), timeout);
 };
 
-const coFetchJSON = (...args) => commonFetch.apply(undefined, args);
+export const coFetchJSON = (...args) => commonFetch.apply(undefined, args);
 coFetchJSON.post = (url, json) => consoleFetchSendJSON(url, 'POST', json, undefined, undefined);
 coFetchJSON.put = (url, json) => consoleFetchSendJSON(url, 'PUT', json, undefined, undefined);
 coFetchJSON.patch = (url, json) => consoleFetchSendJSON(url, 'PATCH', json, undefined, undefined);

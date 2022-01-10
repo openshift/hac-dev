@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Card,
   CardExpandableContent,
@@ -8,11 +9,13 @@ import {
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
+import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { createApplication, createComponent } from '../..//utils/create-utils';
 import { FormFooter } from '../../shared';
 import { useFormValues } from '../form-context';
 import { Page } from '../Page/Page';
 import { useWizardContext } from '../Wizard/Wizard';
+
 import './ReviewComponentsPage.scss';
 
 export const ReviewComponentsPage: React.FC = () => {
@@ -20,6 +23,7 @@ export const ReviewComponentsPage: React.FC = () => {
   const [formState, setFormState] = useFormValues();
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
+  const dispatch = useDispatch();
 
   const handleSubmit = React.useCallback(() => {
     setIsSubmitting(true);
@@ -35,9 +39,21 @@ export const ReviewComponentsPage: React.FC = () => {
       ).then((componentData) => {
         // eslint-disable-next-line no-console
         console.log('###############- Component created', componentData);
+        dispatch(
+          addNotification({
+            variant: 'success',
+            title: 'Created application with component!!',
+            description: `Created application ${formState.application} with component ${formState.component.name}`,
+          }),
+        );
       });
     });
-  }, [formState]);
+  }, [
+    dispatch,
+    formState.application,
+    formState.component.attributes.git.remotes.origin,
+    formState.component.name,
+  ]);
 
   return (
     <Page

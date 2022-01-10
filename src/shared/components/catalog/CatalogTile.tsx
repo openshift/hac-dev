@@ -32,7 +32,7 @@ const CatalogTile: React.FC<CatalogTileProps> = ({
   const { t } = useTranslation();
   const { name, title, provider, description, type, badges, tags } = item;
 
-  const vendor = provider ? t('devconsole~Provided by {{provider}}', { provider }) : null;
+  const vendor = provider ? t(`Provided by ${provider}`) : null;
   const catalogType = _.find(catalogTypes, ['value', type]);
   const tagsBadge = tags
     ? [
