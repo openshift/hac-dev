@@ -3,6 +3,7 @@ import { CatalogItem } from '../shared/components/catalog/utils/types';
 
 type S = {
   workspace?: string;
+  namespace?: string;
   application?: string;
   component?: CatalogItem;
 };

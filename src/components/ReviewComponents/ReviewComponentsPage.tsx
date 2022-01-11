@@ -27,32 +27,54 @@ export const ReviewComponentsPage: React.FC = () => {
 
   const handleSubmit = React.useCallback(() => {
     setIsSubmitting(true);
-    createApplication(formState.application).then((applicationData) => {
-      // eslint-disable-next-line no-console
-      console.log('###############- Application created', applicationData);
-      createComponent(
-        {
-          name: formState.component.name,
-          gitRepo: formState.component.attributes.git.remotes.origin,
-        },
-        applicationData?.metadata?.name,
-      ).then((componentData) => {
+    createApplication(formState.application, formState.namespace)
+      .then((applicationData) => {
         // eslint-disable-next-line no-console
-        console.log('###############- Component created', componentData);
+        console.log('###############- Application created', applicationData);
+        createComponent(
+          {
+            name: formState.component.name,
+            gitRepo: formState.component.attributes.git.remotes.origin,
+          },
+          applicationData?.metadata?.name,
+          formState.namespace,
+        )
+          .then((componentData) => {
+            // eslint-disable-next-line no-console
+            console.log('###############- Component created', componentData);
+            dispatch(
+              addNotification({
+                variant: 'success',
+                title: 'Application and component created successfully!!',
+                description: `Created application ${formState.application} with component ${formState.component.name}`,
+              }),
+            );
+          })
+          .catch((error) => {
+            dispatch(
+              addNotification({
+                variant: 'danger',
+                title: 'Component creation failed!!',
+                description: error.message,
+              }),
+            );
+          });
+      })
+      .catch((error) => {
         dispatch(
           addNotification({
-            variant: 'success',
-            title: 'Created application with component!!',
-            description: `Created application ${formState.application} with component ${formState.component.name}`,
+            variant: 'danger',
+            title: 'Application creation failed!!',
+            description: error.message,
           }),
         );
       });
-    });
   }, [
     dispatch,
     formState.application,
     formState.component.attributes.git.remotes.origin,
     formState.component.name,
+    formState.namespace,
   ]);
 
   return (

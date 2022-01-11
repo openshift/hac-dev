@@ -1,4 +1,3 @@
-import uniqueId from 'lodash/uniqueId';
 import { ApplicationModel, ComponentModel } from '../models';
 import { k8sCreateResource } from './../dynamic-plugin-sdk';
 
@@ -9,15 +8,15 @@ import { k8sCreateResource } from './../dynamic-plugin-sdk';
  *
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
-export const createApplication = (application: string): any => {
+export const createApplication = (application: string, namespace: string): any => {
   const name = application.split(' ').join('-').toLowerCase();
-  const uniqueName = uniqueId(`${name}-`);
+  // const uniqueName = uniqueId(`${name}-`);
   const requestData = {
     apiVersion: `${ApplicationModel.apiGroup}/${ApplicationModel.apiVersion}`,
     kind: ApplicationModel.kind,
     metadata: {
-      name: uniqueName,
-      namespace: 'rorai',
+      name,
+      namespace,
     },
     spec: {
       displayName: application,
@@ -39,15 +38,15 @@ export const createApplication = (application: string): any => {
  *
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
-export const createComponent = (component, application: string): any => {
-  const name = `${application}-${component.name.split(' ').join('-').toLowerCase()}-`;
-  const uniqueName = uniqueId(name);
+export const createComponent = (component, application: string, namespace: string): any => {
+  const name = `${application}-${component.name.split(' ').join('-').toLowerCase()}`;
+  // const uniqueName = uniqueId(name);
   const requestData = {
     apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
     kind: ComponentModel.kind,
     metadata: {
-      name: uniqueName,
-      namespace: 'rorai',
+      name,
+      namespace,
     },
     spec: {
       componentName: component.name,
