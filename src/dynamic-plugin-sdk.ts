@@ -1,11 +1,59 @@
 /* eslint-disable */
 import * as React from 'react';
 import * as _ from 'lodash';
+import { HttpError } from './shared/utils/error/http-error';
 
 const HOOK_POLL_DELAY = 2000; // change this if you want the useHook to go faster / slower on polls
 
 /* throw away fetch methods */
 const k8sBasePath = `/api/k8s`; // webpack proxy path
+
+export const validateStatus = async (
+  response: Response
+) => {
+  if (response.ok) {
+    return response;
+  }
+
+  if (response.status === 401) {
+    throw new HttpError('Invalid token. Are you working with Prod SSO token?', response.status, response);
+  }
+
+  const contentType = response.headers.get('content-type');
+  if (!contentType || contentType.indexOf('json') === -1) {
+    throw new HttpError(response.statusText, response.status, response);
+  }
+
+  if (response.status === 403) {
+    return response.json().then((json) => {
+      throw new HttpError(
+        json.message || 'Access denied due to cluster policy.',
+        response.status,
+        response,
+        json,
+      );
+    });
+  }
+
+  return response.json().then((json) => {
+    const cause = json.details?.causes?.[0];
+    let reason;
+    if (cause) {
+      reason = `Error "${cause.message}" for field "${cause.field}".`;
+    }
+    if (!reason) {
+      reason = json.message;
+    }
+    if (!reason) {
+      reason = json.error;
+    }
+    if (!reason) {
+      reason = response.statusText;
+    }
+
+    throw new HttpError(reason, response.status, response, json);
+  });
+};
 
 const commonFetch = async (url, method, options, timeout): Promise<any> => {
   // Grab the token out of the cookie for ConsoleDot | if not proxying to prod, token will be invalid even if it is there
@@ -18,10 +66,7 @@ const commonFetch = async (url, method, options, timeout): Promise<any> => {
   const allOptions = _.defaultsDeep({ method }, options, { headers: { Accept: 'application/json' } });
   allOptions.headers.Authorization = `Bearer ${token}`;
   try {
-    const response = await fetch(url, allOptions);
-    if (response.status === 401) {
-      return Promise.reject('Invalid token. Are you working with Prod SSO token?');
-    }
+    const response = await fetch(url, allOptions).then(validateStatus);
     const json = await response.json();
     return Promise.resolve(json);
   } catch(e) {
@@ -50,7 +95,7 @@ const consoleFetchSendJSON = (
   return commonFetch(url, method, _.defaultsDeep(allOptions, options), timeout);
 };
 
-const coFetchJSON = (...args) => commonFetch.apply(undefined, args);
+export const coFetchJSON = (...args) => commonFetch.apply(undefined, args);
 coFetchJSON.post = (url, json) => consoleFetchSendJSON(url, 'POST', json, undefined, undefined);
 coFetchJSON.put = (url, json) => consoleFetchSendJSON(url, 'PUT', json, undefined, undefined);
 coFetchJSON.patch = (url, json) => consoleFetchSendJSON(url, 'PATCH', json, undefined, undefined);

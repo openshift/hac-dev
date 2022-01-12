@@ -1,5 +1,5 @@
-import uniqueId from 'lodash/uniqueId';
-import { HASApplicationModel, HASComponentModel } from '../models';
+import { ApplicationModel, ComponentModel } from '../models';
+import { k8sCreateResource } from './../dynamic-plugin-sdk';
 
 /**
  * Create HAS Application CR
@@ -8,22 +8,24 @@ import { HASApplicationModel, HASComponentModel } from '../models';
  *
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
-export const createApplication = (application: string): any => {
+export const createApplication = (application: string, namespace: string): any => {
   const name = application.split(' ').join('-').toLowerCase();
-  const uniqueName = uniqueId(`${name}-`);
+  // const uniqueName = uniqueId(`${name}-`);
   const requestData = {
-    apiversion: `${HASApplicationModel.group}/${HASApplicationModel.version}`,
-    kind: HASApplicationModel.kind,
+    apiVersion: `${ApplicationModel.apiGroup}/${ApplicationModel.apiVersion}`,
+    kind: ApplicationModel.kind,
     metadata: {
-      name: uniqueName,
+      name,
+      namespace,
     },
     spec: {
       displayName: application,
     },
   };
   // TODO: Make Api Calls here
-  return new Promise((resolve) => {
-    resolve(requestData);
+  return k8sCreateResource({
+    model: ApplicationModel,
+    data: requestData,
   });
 };
 
@@ -36,25 +38,27 @@ export const createApplication = (application: string): any => {
  *
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
-export const createComponent = (component, application: string): any => {
-  const name = `${application}-${component.name.split(' ').join('-').toLowerCase()}-`;
-  const uniqueName = uniqueId(name);
+export const createComponent = (component, application: string, namespace: string): any => {
+  const name = `${application}-${component.name.split(' ').join('-').toLowerCase()}`;
+  // const uniqueName = uniqueId(name);
   const requestData = {
-    apiversion: `${HASComponentModel.group}/${HASComponentModel.version}`,
-    kind: HASComponentModel.kind,
+    apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
+    kind: ComponentModel.kind,
     metadata: {
-      name: uniqueName,
+      name,
+      namespace,
     },
     spec: {
       componentName: component.name,
       application,
       source: {
-        gitURL: component.gitRepo,
+        git: { url: component.gitRepo },
       },
     },
   };
   // TODO: Make Api Calls here
-  return new Promise((resolve) => {
-    resolve(requestData);
+  return k8sCreateResource({
+    model: ComponentModel,
+    data: requestData,
   });
 };

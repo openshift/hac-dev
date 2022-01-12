@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Formik, FormikProps } from 'formik';
+import { useActiveNamespace } from '../../hooks/useActiveNamespace';
 import { useFormValues } from '../form-context';
 import { Page } from '../Page/Page';
 import { useWizardContext } from '../Wizard/Wizard';
@@ -8,18 +9,24 @@ import { CreateApplicationForm, CreateApplicationValues } from './CreateApplicat
 export const CreateApplicationPage = () => {
   const { handleNext, handleReset: wizardHandleReset } = useWizardContext();
   const [formState, setValues] = useFormValues();
+
+  useActiveNamespace();
+
   const initialValues = {
     workspace: formState.workspace ?? 'Purple_workspace',
     application: formState.application ?? 'Purple Mermaid app',
   };
+
   const handleSubmit = (values: CreateApplicationValues) => {
     setValues((prevVal) => ({ ...prevVal, ...values }));
     handleNext();
   };
+
   const handleReset = () => {
     wizardHandleReset();
     setValues({});
   };
+
   return (
     <Page
       breadcrumbs={[

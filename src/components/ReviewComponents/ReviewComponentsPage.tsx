@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Card,
   CardExpandableContent,
@@ -8,11 +9,13 @@ import {
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
+import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { createApplication, createComponent } from '../..//utils/create-utils';
 import { FormFooter } from '../../shared';
 import { useFormValues } from '../form-context';
 import { Page } from '../Page/Page';
 import { useWizardContext } from '../Wizard/Wizard';
+
 import './ReviewComponentsPage.scss';
 
 export const ReviewComponentsPage: React.FC = () => {
@@ -20,24 +23,59 @@ export const ReviewComponentsPage: React.FC = () => {
   const [formState, setFormState] = useFormValues();
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
+  const dispatch = useDispatch();
 
   const handleSubmit = React.useCallback(() => {
     setIsSubmitting(true);
-    createApplication(formState.application).then((applicationData) => {
-      // eslint-disable-next-line no-console
-      console.log('###############- Application created', applicationData);
-      createComponent(
-        {
-          name: formState.component.name,
-          gitRepo: formState.component.attributes.git.remotes.origin,
-        },
-        applicationData?.metadata?.name,
-      ).then((componentData) => {
+    createApplication(formState.application, formState.namespace)
+      .then((applicationData) => {
         // eslint-disable-next-line no-console
-        console.log('###############- Component created', componentData);
+        console.log('###############- Application created', applicationData);
+        createComponent(
+          {
+            name: formState.component.name,
+            gitRepo: formState.component.attributes.git.remotes.origin,
+          },
+          applicationData?.metadata?.name,
+          formState.namespace,
+        )
+          .then((componentData) => {
+            // eslint-disable-next-line no-console
+            console.log('###############- Component created', componentData);
+            dispatch(
+              addNotification({
+                variant: 'success',
+                title: 'Application and component created successfully!!',
+                description: `Created application ${formState.application} with component ${formState.component.name}`,
+              }),
+            );
+          })
+          .catch((error) => {
+            dispatch(
+              addNotification({
+                variant: 'danger',
+                title: 'Component creation failed!!',
+                description: error.message,
+              }),
+            );
+          });
+      })
+      .catch((error) => {
+        dispatch(
+          addNotification({
+            variant: 'danger',
+            title: 'Application creation failed!!',
+            description: error.message,
+          }),
+        );
       });
-    });
-  }, [formState]);
+  }, [
+    dispatch,
+    formState.application,
+    formState.component.attributes.git.remotes.origin,
+    formState.component.name,
+    formState.namespace,
+  ]);
 
   return (
     <Page

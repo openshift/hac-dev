@@ -1,0 +1,8 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Application
+metadata:
+  name: application-sample
+  namespace: rorai
+spec:
+  description: Application definition for sample app
+  displayName: Sample Application

@@ -19,6 +19,7 @@
     "start": "webpack serve --config config/dev.webpack.config.js",
     "start:beta": "BETA=true npm start",
     "start:beta:ci": "ENVIRONMENT=ci npm run start:beta",
+    "start:prod": "REMOTE_CONFIG=ci ENVIRONMENT=prod BETA=true PROXY=true npm run start",
     "start:standalone": "STANDALONE=true npm start",
     "test": "jest",
     "verify": "npm-run-all build lint coverage",
