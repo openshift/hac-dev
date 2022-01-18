@@ -1,6 +1,11 @@
-import { Login } from '../../utils/Login';
+import { Common } from '../../utils/Common';
 
 before(() => {
-  //Login to Rad Hat SSO
-  Login.login(Cypress.env('USERNAME'), Cypress.env('PASSWORD'));
+  //Clear namespace before running the tests
+  Common.cleanNamespace();
+});
+
+after(() => {
+  //Clear namespace after running the tests
+  Common.cleanNamespace();
 });

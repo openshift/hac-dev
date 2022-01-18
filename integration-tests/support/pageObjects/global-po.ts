@@ -5,6 +5,8 @@ export const formPO = {
 export const alert = '.pf-c-alert';
 export const alertTitle = '.pf-c-alert__title';
 
+export const consentButton = '[id="truste-consent-button"]';
+
 export const loginPO = {
   usernameForm: '.pf-c-login__main',
   username: '#rh-username-verification-form',
