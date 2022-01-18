@@ -3,3 +3,4 @@ static/*
 dist/*
 @types/*
 .eslintrc.js
+integration-tests/*
