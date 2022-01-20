@@ -1,20 +1,22 @@
 reviewers:
   - abhinandan13jan
+  - christianvogt
   - debsmita1
   - divyanshiGupta
-  - christianvogt
+  - invincibleJai
   - jerolimov
+  - jrichter1
   - karthikjeeyar
   - nemesis09
+  - rhopp
   - rohitkrai03
   - rottencandy
   - sahil143
-  - vikram-raj
-  - rhopp
   - sawood14012
-  - jrichter1
+  - vikram-raj
 approvers:
   - christianvogt
+  - invincibleJai
   - jerolimov
   - rohitkrai03
 component: HAC Developer Experience
