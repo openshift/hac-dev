@@ -31,8 +31,8 @@ export const ComponentSamplesPage = () => {
   const [items, setItems] = React.useState<CatalogItem[]>([]);
 
   React.useEffect(() => {
-    if (formState.component) {
-      setSelected(formState.component);
+    if (formState.components?.[0]?.type === 'sample') {
+      setSelected(formState.components[0]);
     }
     // We just need setSelected called once when the component is mounted
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,7 +51,7 @@ export const ComponentSamplesPage = () => {
   }, []);
 
   const handleSubmit = React.useCallback(() => {
-    setValues((prevValues) => ({ ...prevValues, component: selected }));
+    setValues((prevValues) => ({ ...prevValues, components: [selected] }));
     handleNext();
   }, [selected, setValues, handleNext]);
 

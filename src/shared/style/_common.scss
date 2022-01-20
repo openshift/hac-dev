@@ -128,3 +128,26 @@ $co-external-link-padding-right: 15px;
 .co-m-loader-dot__two {
   animation-delay: -0.16s;
 }
+
+.co-toolbar__group {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-width: 0;
+
+  @media (max-width: $screen-xs-max) {
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+}
+
+.co-toolbar__group--left {
+  justify-content: flex-start;
+  .co-toolbar__item {
+    padding-right: 15px;
+  }
+  @media (max-width: $screen-xs-max) {
+    align-items: flex-start;
+  }
+}
