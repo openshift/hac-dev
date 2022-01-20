@@ -12,8 +12,8 @@ export const ComponentModel: K8sModel = {
 };
 
 export const ComponentDetectionQueryModel = {
-  group: 'appstudio.redhat.com',
-  version: 'v1alpha1',
+  apiGroup: 'appstudio.redhat.com',
+  apiVersion: 'v1alpha1',
   kind: 'ComponentDetectionQuery',
   abbr: 'CDQ',
   plural: 'componentdetectionqueries',

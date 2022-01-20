@@ -7,7 +7,6 @@ import { useWizardContext } from '../Wizard/Wizard';
 import { ReviewSampleComponentCard } from './ReviewSampleComponentCard';
 import { ReviewSourceComponentCard } from './ReviewSourceComponentCard';
 import { DeployMethod } from './types';
-import './ReviewComponentsForm.scss';
 
 type ReviewComponentsFormProps = FormikProps<{}>;
 
@@ -23,16 +22,18 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
   return (
     <Form onSubmit={handleSubmit}>
       {!isSample && (
-        <RadioGroupField
-          isInline
-          name="deployMethod"
-          options={[
-            { label: 'Automatically deploy', value: DeployMethod.AutomaticDeploy },
-            { label: 'Manually deploy', value: DeployMethod.ManualDeploy },
-          ]}
-        />
+        <div className="hacDev-page__section">
+          <RadioGroupField
+            isInline
+            name="deployMethod"
+            options={[
+              { label: 'Automatically deploy', value: DeployMethod.AutomaticDeploy },
+              { label: 'Manually deploy', value: DeployMethod.ManualDeploy },
+            ]}
+          />
+        </div>
       )}
-      <PageSection className="hacDev-review-form__components-section">
+      <PageSection>
         <FormSection>
           {isSample ? (
             <ReviewSampleComponentCard component={formState.components[0]} />
@@ -48,19 +49,21 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
           )}
         </FormSection>
       </PageSection>
-      <FormFooter
-        submitLabel="Create"
-        resetLabel="Back"
-        handleReset={handleReset}
-        handleCancel={() => {
-          wizardHandleReset();
-          setFormState({});
-        }}
-        handleSubmit={handleSubmit}
-        isSubmitting={false}
-        disableSubmit={isSubmitting}
-        errorMessage={undefined}
-      />
+      <div className="hacDev-page__section">
+        <FormFooter
+          submitLabel="Create"
+          resetLabel="Back"
+          handleReset={handleReset}
+          handleCancel={() => {
+            wizardHandleReset();
+            setFormState({});
+          }}
+          handleSubmit={handleSubmit}
+          isSubmitting={false}
+          disableSubmit={isSubmitting}
+          errorMessage={undefined}
+        />
+      </div>
     </Form>
   );
 };

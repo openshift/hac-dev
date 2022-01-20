@@ -1,6 +1,5 @@
 .hacDev-page {
   background-color: var(--pf-global--BackgroundColor--100);
-  padding: var(--pf-global--spacer--md) var(--pf-global--spacer--lg);
   height: 100%;
 
   &__breadcrumb {
@@ -13,5 +12,9 @@
 
   &__description {
     margin-bottom: var(--pf-global--spacer--lg);
+  }
+
+  &__section {
+    padding: var(--pf-global--spacer--xs) var(--pf-global--spacer--lg);
   }
 }

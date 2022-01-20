@@ -46,6 +46,7 @@ export const AddComponentPage = () => {
       ]}
       heading="Build your application"
       description="To get started, enter source code or a container image."
+      isSection
     >
       <Formik
         onSubmit={handleSubmit}
