@@ -35,6 +35,7 @@ export const CreateApplicationPage = () => {
       ]}
       heading="Create your application"
       description="To create an application, first enter an application name."
+      isSection
     >
       <Formik onSubmit={handleSubmit} onReset={handleReset} initialValues={initialValues}>
         {(props: FormikProps<CreateApplicationValues>) => <CreateApplicationForm {...props} />}

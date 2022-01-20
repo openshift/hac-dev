@@ -130,7 +130,7 @@ export const createComponentDetectionQuery = async (
   };
 
   const requestData = {
-    apiversion: `${ComponentDetectionQueryModel.group}/${ComponentDetectionQueryModel.version}`,
+    apiVersion: `${ComponentDetectionQueryModel.apiGroup}/${ComponentDetectionQueryModel.apiVersion}`,
     kind: ComponentDetectionQueryModel.kind,
     metadata: {
       name: uniqueName,

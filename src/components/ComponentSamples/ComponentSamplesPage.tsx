@@ -18,7 +18,9 @@ import {
 import { FormFooter } from '../../shared';
 import CatalogView from '../../shared/components/catalog/catalog-view/CatalogView';
 import CatalogTile from '../../shared/components/catalog/CatalogTile';
+import { skeletonCatalog } from '../../shared/components/catalog/utils/skeleton-catalog';
 import { CatalogItem } from '../../shared/components/catalog/utils/types';
+import { StatusBox } from '../../shared/components/status-box/StatusBox';
 import { getDevfileSamples } from '../../utils/devfile-utils';
 import { useFormValues } from '../form-context';
 import { Page } from '../Page/Page';
@@ -29,6 +31,8 @@ export const ComponentSamplesPage = () => {
   const [formState, setValues] = useFormValues();
   const [selected, setSelected] = React.useState<CatalogItem>();
   const [items, setItems] = React.useState<CatalogItem[]>([]);
+  const [loaded, setLoaded] = React.useState<boolean>(false);
+  const [loadError, setLoadError] = React.useState<string>();
 
   React.useEffect(() => {
     if (formState.components?.[0]?.type === 'sample') {
@@ -40,10 +44,15 @@ export const ComponentSamplesPage = () => {
 
   React.useEffect(() => {
     const fetchDevfileSamples = async () => {
-      const devfileSamples = await getDevfileSamples();
+      try {
+        const devfileSamples = await getDevfileSamples();
 
-      if (devfileSamples) {
-        setItems(devfileSamples);
+        if (devfileSamples) {
+          setItems(devfileSamples);
+          setLoaded(true);
+        }
+      } catch (e) {
+        setLoadError(`Failed to load devfile samples: ${e.message}`);
       }
     };
 
@@ -123,20 +132,30 @@ export const ComponentSamplesPage = () => {
             heading="Start with a sample"
             description="Get started using applications by choosing a code sample"
           >
-            <CatalogView items={items} renderTile={renderTile} hideSidebar={true} />
-            <FormFooter
-              submitLabel="Next"
-              resetLabel="Back"
-              isSubmitting={false}
-              disableSubmit={!selected}
-              errorMessage={undefined}
-              handleSubmit={handleSubmit}
-              handleReset={handleBack}
-              handleCancel={() => {
-                handleReset();
-                setValues({});
-              }}
-            />
+            <StatusBox
+              skeleton={skeletonCatalog}
+              data={items}
+              loaded={loaded}
+              loadError={loadError}
+              label="Catalog items"
+            >
+              <CatalogView items={items} renderTile={renderTile} hideSidebar={true} />
+            </StatusBox>
+            <div className="hacDev-page__section">
+              <FormFooter
+                submitLabel="Next"
+                resetLabel="Back"
+                isSubmitting={false}
+                disableSubmit={!selected}
+                errorMessage={undefined}
+                handleSubmit={handleSubmit}
+                handleReset={handleBack}
+                handleCancel={() => {
+                  handleReset();
+                  setValues({});
+                }}
+              />
+            </div>
           </Page>
         </DrawerContentBody>
       </DrawerContent>

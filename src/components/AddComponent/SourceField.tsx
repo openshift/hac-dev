@@ -37,7 +37,7 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
         return;
       }
       setValidated(ValidatedOptions.default);
-      createComponentDetectionQuery(formState.application, source)
+      createComponentDetectionQuery(formState.application, source, formState.namespace)
         .then((result) => {
           setValidated(ValidatedOptions.success);
           setHelpText('Validated');
@@ -62,7 +62,7 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
           setValidated(ValidatedOptions.error);
           setHelpText('');
         });
-    }, [source, error, formState.application, setDetectedComponents]),
+    }, [error, formState.application, formState.namespace, source, setDetectedComponents]),
   );
 
   React.useEffect(() => {
