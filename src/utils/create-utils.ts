@@ -40,7 +40,7 @@ export const createApplication = (application: string, namespace: string): any =
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
 export const createComponent = (component, application: string, namespace: string): any => {
-  const name = `${application}-${component.name.split(' ').join('-').toLowerCase()}`;
+  const name = component.name.split(' ').join('-').toLowerCase();
   // const uniqueName = uniqueId(name);
   const requestData = {
     apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
@@ -55,6 +55,9 @@ export const createComponent = (component, application: string, namespace: strin
       source: {
         git: { url: component.gitRepo },
       },
+      replicas: component.replicas,
+      targetPort: component.targetPort,
+      resources: component.resources,
     },
   };
   // TODO: Make Api Calls here

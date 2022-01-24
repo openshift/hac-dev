@@ -19,6 +19,7 @@ export type ComponentValues = {
   runtime: Resources;
   source: string;
   replicas?: number;
+  targetPort?: number;
   resources?: {
     cpu: number;
     cpuUnit: CPUUnits;

@@ -74,11 +74,10 @@ export const LoadingBox: React.FC<LoadingBoxProps> = ({ className, message }) =>
 LoadingBox.displayName = 'LoadingBox';
 
 export const EmptyBox: React.FC<EmptyBoxProps> = ({ label }) => {
-  const { t } = useTranslation();
   return (
     <Box>
       <div data-test="empty-message" className="pf-u-text-align-center">
-        {label ? t('public~No {{label}} found', { label }) : t('public~Not found')}
+        {label ? `No ${label} found` : 'Not found'}
       </div>
     </Box>
   );

@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import { Formik, FormikProps } from 'formik';
 import { useActiveNamespace } from '../../hooks/useActiveNamespace';
+import { useQueryParams } from '../../shared';
 import { useFormValues } from '../form-context';
 import { Page } from '../Page/Page';
 import { useWizardContext } from '../Wizard/Wizard';
@@ -9,13 +11,18 @@ import { CreateApplicationForm, CreateApplicationValues } from './CreateApplicat
 export const CreateApplicationPage = () => {
   const { handleNext, handleReset: wizardHandleReset } = useWizardContext();
   const [formState, setValues] = useFormValues();
+  const queryParams = useQueryParams();
+  const history = useHistory();
 
   useActiveNamespace();
 
-  const initialValues = {
-    workspace: formState.workspace ?? 'Purple_workspace',
-    application: formState.application ?? 'Purple Mermaid app',
-  };
+  const initialValues: CreateApplicationValues = React.useMemo(
+    () => ({
+      workspace: formState.workspace ?? 'Purple_workspace',
+      application: formState.application ?? 'Purple Mermaid app',
+    }),
+    [formState.application, formState.workspace],
+  );
 
   const handleSubmit = (values: CreateApplicationValues) => {
     setValues((prevVal) => ({ ...prevVal, ...values }));
@@ -26,6 +33,16 @@ export const CreateApplicationPage = () => {
     wizardHandleReset();
     setValues({});
   };
+
+  React.useEffect(() => {
+    const existingApplication = queryParams.get('application');
+    if (existingApplication) {
+      setValues((prevVal) => ({ ...prevVal, ...initialValues, existingApplication }));
+      handleNext();
+      queryParams.delete('application');
+      history.replace({ search: queryParams.toString() });
+    }
+  }, [handleNext, history, initialValues, queryParams, setValues]);
 
   return (
     <Page

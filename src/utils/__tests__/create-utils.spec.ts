@@ -23,7 +23,7 @@ const mockComponentData = {
   apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
   kind: ComponentModel.kind,
   metadata: {
-    name: 'test-application-test-component',
+    name: 'test-component',
     namespace: 'test-ns',
   },
   spec: {
