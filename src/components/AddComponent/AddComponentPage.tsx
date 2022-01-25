@@ -14,6 +14,7 @@ export const AddComponentPage = () => {
     git: {
       reference: '',
       contextDir: '/',
+      isMultiComponent: formState.isMultiComponent,
     },
   };
 
@@ -21,17 +22,18 @@ export const AddComponentPage = () => {
     setValues((prevVal) => ({
       ...prevVal,
       source: values.source,
+      isMultiComponent: values.git.isMultiComponent,
       components: values.detectedComponents.map((component) => ({
         name: component.name,
         uid: component.name,
         type: 'source',
         data: {
           source: component.git.url,
-          contextDir: component.git.path,
+          contextDir: component.context,
           targetPort: component.targetPort,
-          language: component.language,
-          projectType: component.projectType,
           resources: component.resources,
+          replicas: component.replicas,
+          route: component.route,
         },
       })),
     }));

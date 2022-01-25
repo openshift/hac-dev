@@ -3,14 +3,13 @@ import { CatalogItem } from '../shared/components/catalog/utils/types';
 
 type ComponentData = {
   source: string;
-  reference?: string;
   contextDir?: string;
   targetPort?: number;
-  language?: string;
-  projectType?: string;
+  replicas?: number;
+  route?: string;
   resources?: {
-    memory: string;
-    cpu: string;
+    memory?: string;
+    cpu?: string;
   };
 };
 
@@ -21,6 +20,7 @@ type S = {
   existingApplication?: string;
   source?: string;
   components?: CatalogItem<ComponentData>[];
+  isMultiComponent?: boolean;
 };
 
 const FormContext = React.createContext<[S, React.Dispatch<React.SetStateAction<S>>]>([

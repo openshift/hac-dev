@@ -1,6 +1,7 @@
 import uniqueId from 'lodash/uniqueId';
 import { ApplicationModel, ComponentModel, ComponentDetectionQueryModel } from '../models';
-import { k8sCreateResource } from './../dynamic-plugin-sdk';
+import { ComponentDetectionQueryKind } from '../types';
+import { k8sCreateResource, k8sGetResource } from './../dynamic-plugin-sdk';
 
 /**
  * Create HAS Application CR
@@ -67,70 +68,32 @@ export const createComponent = (component, application: string, namespace: strin
   });
 };
 
+// https://stackoverflow.com/q/105034/7683374
+const uid = () =>
+  Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1);
+
 /**
  * Create ComponentDetectionQuery CR
  *
  * @param appName application name
  * @param url the URL of the repository that will be analyzed for components
  * @param namespace namespace to deploy resource in. Defaults to current namespace
- * @param isMulticomponent whether or not the git repository contains multiple components
+ * @param isMultiComponent whether or not the git repository contains multiple components
  * @returns Returns HAS ComponentDetectionQuery results
  *
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
 export const createComponentDetectionQuery = async (
   appName: string,
-  repository: string,
-  namespace?: string,
-  isMulticomponent?: boolean,
-): Promise<any> => {
-  const name = `detect-${appName.split(' ').join('-').toLowerCase()}-git-repo`;
+  url: string,
+  namespace: string,
+  isMultiComponent?: boolean,
+): Promise<ComponentDetectionQueryKind['status']['componentDetected']> => {
+  // append name with uid for additional randomness
+  const name = `${appName.split(' ').join('-').toLowerCase()}-${uid()}`;
   const uniqueName = uniqueId(name);
-  const mockReturnData = {
-    'backend-service': {
-      devfileFound: false,
-      language: 'go',
-      projectType: 'go',
-      componentResourceStub: {
-        apiVersion: 'has.appstudio/v1alpha1',
-        kind: 'Component',
-        spec: {
-          source: {
-            git: {
-              url: 'https://github.com/test/repository.git',
-              path: 'backend-service',
-            },
-          },
-          resources: {
-            memory: '1Gi',
-            cpu: '500m',
-          },
-        },
-      },
-    },
-    'frontend-service': {
-      devfileFound: true,
-      language: 'js',
-      projectType: 'nodejs',
-      componentResourceStub: {
-        apiVersion: 'has.appstudio/v1alpha1',
-        kind: 'Component',
-        spec: {
-          source: {
-            git: {
-              url: 'https://github.com/test/repository.git',
-              path: 'frontend-service',
-            },
-          },
-          targetPort: 3000,
-          resources: {
-            memory: '1Gi',
-            cpu: '500m',
-          },
-        },
-      },
-    },
-  };
 
   const requestData = {
     apiVersion: `${ComponentDetectionQueryModel.apiGroup}/${ComponentDetectionQueryModel.apiVersion}`,
@@ -141,13 +104,31 @@ export const createComponentDetectionQuery = async (
     },
     spec: {
       git: {
-        repository,
+        url,
       },
-      isMulticomponent,
+      isMultiComponent,
     },
-    data: mockReturnData,
   };
 
-  // TODO: Make Api Calls here
-  return requestData;
+  let cdq: ComponentDetectionQueryKind = await k8sCreateResource({
+    model: ComponentDetectionQueryModel,
+    data: requestData,
+  });
+
+  while (cdq.status?.conditions?.[0]?.type !== 'Completed') {
+    // sleep for 200ms before refetching
+    await new Promise((r) => setTimeout(r, 200));
+    cdq = await k8sGetResource({
+      model: ComponentDetectionQueryModel,
+      name: cdq.metadata.name,
+      ns: namespace,
+      data: requestData,
+    });
+  }
+
+  if (!cdq.status.componentDetected || cdq.status.conditions[0].status !== 'True') {
+    throw new Error(cdq.status.conditions[0].message);
+  }
+
+  return cdq.status.componentDetected;
 };

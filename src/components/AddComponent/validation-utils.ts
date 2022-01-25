@@ -1,4 +1,4 @@
-import { string, object } from 'yup';
+import { string, object, array } from 'yup';
 
 export const gitUrlRegex =
   /^((((ssh|git|https?:?):\/\/:?)(([^\s@]+@|[^@]:?)[-\w.]+(:\d\d+:?)?(\/[-\w.~/?[\]!$&'()*+,;=:@%]*:?)?:?))|([^\s@]+@[-\w.]+:[-\w.~/?[\]!$&'()*+,;=:@%]*?:?))$/;
@@ -12,4 +12,5 @@ export const validationSchema = object({
     reference: string(),
     contextDir: string(),
   }),
+  detectedComponents: array().defined().required(),
 });

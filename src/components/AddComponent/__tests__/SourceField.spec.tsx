@@ -52,10 +52,10 @@ describe('SourceField', () => {
     const onClick = jest.fn();
     useFieldMock.mockReturnValue([
       { value: '', onChange: jest.fn() },
-      { value: '', touched: false, error: null },
+      { value: 'https://github.com/example/repo', touched: false, error: null },
       { setValue: jest.fn() },
     ]);
-    createComponentMock.mockReturnValue({ then: () => ({ catch: () => {} }) });
+    createComponentMock.mockReturnValue({ then: () => ({ catch: () => ({ finally: () => {} }) }) });
 
     render(<SourceField onSamplesClick={onClick} />);
     fireEvent.input(screen.getByPlaceholderText('Enter your source'), {

@@ -11,7 +11,7 @@ const CPUResourceMap = {
   '': 'cores',
 };
 
-export const createResourceData = ({ memory, cpu }: { memory: string; cpu: string }) => {
+export const createResourceData = ({ memory = '', cpu = '' }) => {
   const [memoryResource, memoryUnit] = getResourceData(memory);
   const [cpuResource, cpuUnit] = getResourceData(cpu);
 

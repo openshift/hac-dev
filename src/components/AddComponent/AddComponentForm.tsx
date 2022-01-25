@@ -13,21 +13,22 @@ export type AddComponentValues = {
   git: {
     reference: string;
     contextDir: string;
+    isMultiComponent: boolean;
   };
   detectedComponents?: {
     name: string;
-    language: string;
-    projectType: string;
     git: {
       url: string;
-      path: string;
     };
-    resources: {
-      memory: string;
-      cpu: string;
+    context: string;
+    resources?: {
+      memory?: string;
+      cpu?: string;
     };
     devfileFound?: boolean;
     targetPort?: number;
+    route?: string;
+    replicas?: number;
   }[];
 };
 
