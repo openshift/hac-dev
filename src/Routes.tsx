@@ -6,8 +6,6 @@ const SamplePage = lazy(
   () => import(/* webpackChunkName: "SamplePage" */ './pages/SamplePage/SamplePage'),
 );
 
-const K8sPage = lazy(() => import(/* webpackChunkName: "K8sPage" */ './pages/TestK8s'));
-
 const SamplesFlow = lazy(
   () => import(/* webpackChunkName: "SamplesFlow" */ './components/SamplesFlow'),
 );
@@ -31,7 +29,6 @@ export const Routes: React.FC = () => (
     <Switch>
       <Route path="/" component={SamplesFlow} exact />
       <Route path="/sample-page" component={SamplePage} exact />
-      <Route path="/k8s-util" component={K8sPage} exact />
       {/* Finally, catch all unmatched routes */}
       <Route>
         <Redirect to="/" />
