@@ -12,6 +12,8 @@ import { getFieldId, HelpTooltipIcon, InputField } from '../../shared';
 import { useDebounceCallback } from '../../shared/hooks/useDebounceCallback';
 import { createComponentDetectionQuery } from '../../utils/create-utils';
 import { useFormValues } from '../form-context';
+import { AddComponentValues } from './AddComponentForm';
+import { gitUrlRegex } from './validation-utils';
 
 type SourceFieldProps = {
   onSamplesClick: React.MouseEventHandler<HTMLButtonElement>;
@@ -22,9 +24,12 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
     name: 'source',
     type: 'input',
   });
-  const [, , { setValue: setDetectedComponents }] = useField('detectedComponents');
+  const [, { value: gitOptions }] = useField('git');
+  const [, , { setValue: setDetectedComponents }] =
+    useField<AddComponentValues['detectedComponents']>('detectedComponents');
   const [validated, setValidated] = React.useState(ValidatedOptions.default);
   const [helpText, setHelpText] = React.useState('');
+  const [helpTextInvalid, setHelpTextInvalid] = React.useState('');
   const [formState] = useFormValues();
   const fieldId = getFieldId('source', 'input');
   const isValid = !(touched && error);
@@ -32,44 +37,56 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
 
   const debouncedHandleSourceChange = useDebounceCallback(
     React.useCallback(() => {
-      if (error) {
+      if (!gitUrlRegex.test(source)) {
         setValidated(ValidatedOptions.error);
         return;
       }
       setValidated(ValidatedOptions.default);
-      createComponentDetectionQuery(formState.application, source, formState.namespace)
+      setDetectedComponents(undefined);
+      setHelpText('Validating...');
+      setHelpTextInvalid('');
+      createComponentDetectionQuery(
+        formState.application,
+        source,
+        formState.namespace,
+        gitOptions.isMultiComponent,
+      )
         .then((result) => {
           setValidated(ValidatedOptions.success);
           setHelpText('Validated');
 
           setDetectedComponents(
-            Object.keys(result.data).map((name) => {
-              const { componentResourceStub } = result.data[name];
-
-              return {
-                name,
-                resources: componentResourceStub.spec.resources,
-                git: {
-                  url: componentResourceStub.spec.source.git.url,
-                  path: componentResourceStub.spec.source.git.path,
-                },
-                ...result.data[name],
-              };
-            }),
+            Object.values(result).map(({ componentStub }) => ({
+              ...componentStub,
+              name: componentStub.componentName,
+              resources: componentStub.resources.resources,
+              git: {
+                url: componentStub.source.git.url,
+              },
+            })),
           );
         })
-        .catch(() => {
+        .catch((e) => {
           setValidated(ValidatedOptions.error);
-          setHelpText('');
+          setHelpTextInvalid('Unable to detect components');
+          // eslint-disable-next-line no-console
+          console.error('Unable to detect component: ', e);
         });
-    }, [error, formState.application, formState.namespace, source, setDetectedComponents]),
+    }, [
+      source,
+      setDetectedComponents,
+      formState.application,
+      formState.namespace,
+      gitOptions.isMultiComponent,
+    ]),
   );
 
   React.useEffect(() => {
-    source && debouncedHandleSourceChange();
+    source && gitOptions && debouncedHandleSourceChange();
     // Run detection on mount if initial value exists
+    // or if git options are changed
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [gitOptions]);
 
   return (
     <FormGroup
@@ -89,6 +106,7 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
             onChange={debouncedHandleSourceChange}
             validated={validated}
             helpText={helpText}
+            helpTextInvalid={helpTextInvalid}
             required
           />
         </GridItem>

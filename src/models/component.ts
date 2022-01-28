@@ -27,3 +27,9 @@ export const ComponentDetectionQueryModel = {
   labelPlural: 'Component Detection Queries',
   namespaced: true,
 };
+
+export const ComponentDetectionQueryGroupVersionKind: K8sGroupVersionKind = {
+  group: 'appstudio.redhat.com',
+  version: 'v1alpha1',
+  kind: 'ComponentDetectionQuery',
+};

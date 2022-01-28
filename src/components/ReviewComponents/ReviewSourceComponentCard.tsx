@@ -119,6 +119,11 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
                     label="Replicas"
                     helpText="Number of instances of your image"
                   />
+                  <InputField
+                    name={`${fieldPrefix}.route`}
+                    label="Route"
+                    placeholder="Route exposed by the deployment"
+                  />
                   <EnvironmentField
                     name={`${fieldPrefix}.env`}
                     label="Environment variables"

@@ -30,9 +30,10 @@ export const ReviewComponentsPage: React.FC = () => {
             ? {}
             : {
                 runtime: Resources.OpenShift,
-                resources: createResourceData(val.data.resources),
-                replicas: 3,
-                targetPort: 8080,
+                resources: val.data.resources && createResourceData(val.data.resources),
+                replicas: val.data.replicas,
+                targetPort: val.data.targetPort,
+                route: val.data.route,
               }),
         },
       }),
