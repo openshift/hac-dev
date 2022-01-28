@@ -59,7 +59,7 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
             setFormState({});
           }}
           handleSubmit={handleSubmit}
-          isSubmitting={false}
+          isSubmitting={isSubmitting}
           disableSubmit={isSubmitting}
           errorMessage={undefined}
         />

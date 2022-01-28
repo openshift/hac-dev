@@ -1,4 +1,4 @@
-import { K8sModel } from './../dynamic-plugin-sdk';
+import { K8sGroupVersionKind, K8sModel } from './../dynamic-plugin-sdk';
 
 export const ComponentModel: K8sModel = {
   apiGroup: 'appstudio.redhat.com',
@@ -9,6 +9,12 @@ export const ComponentModel: K8sModel = {
   label: 'Component',
   labelPlural: 'Components',
   namespaced: true,
+};
+
+export const ComponentGroupVersionKind: K8sGroupVersionKind = {
+  group: 'appstudio.redhat.com',
+  version: 'v1alpha1',
+  kind: 'Component',
 };
 
 export const ComponentDetectionQueryModel = {

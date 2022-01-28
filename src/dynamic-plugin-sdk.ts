@@ -2,6 +2,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { HttpError } from './shared/utils/error/http-error';
+import { useDeepCompareMemoize } from './shared';
 
 const HOOK_POLL_DELAY = 2000; // change this if you want the useHook to go faster / slower on polls
 
@@ -489,20 +490,6 @@ const makeListCall = (resourceData: WatchK8sResource) => (
   })
 );
 
-const useDeepCompareMemoize = <T = any>(value: T, strinfigy?: boolean): T => {
-  const ref = React.useRef<T>();
-
-  if (
-    strinfigy
-      ? JSON.stringify(value) !== JSON.stringify(ref.current)
-      : !_.isEqual(value, ref.current)
-  ) {
-    ref.current = value;
-  }
-
-  return ref.current;
-};
-
 const useForceRender = () => React.useReducer((s: boolean) => !s, false)[1] as VoidFunction;
 
 /* ------------------ *
@@ -609,7 +596,7 @@ export const k8sListResource = adapterFunc(k8sList, ['model', 'queryParams', 'ra
 export const useK8sWatchResource = <R extends K8sResourceCommon | K8sResourceCommon[]>(initResource: WatchK8sResource): WatchK8sResult<R> => {
   const resource = useDeepCompareMemoize(initResource, true);
   const resourceRef = React.useRef<R | null>(null);
-  const fetchedRef = React.useRef<boolean>(false);
+  const [fetched, setFetched] = React.useState<boolean>(false);
   const [error, setError] = React.useState<Error | null>(null);
   const reRender = useForceRender();
 
@@ -626,11 +613,11 @@ export const useK8sWatchResource = <R extends K8sResourceCommon | K8sResourceCom
             resourceRef.current = data;
             reRender();
           }
-          fetchedRef.current = true;
+          setFetched(true);
         })
         .catch((err) => {
           setError(err);
-          fetchedRef.current = false;
+          setFetched(false);
         });
     };
     const makeTheCall = (r) => r.isList ? makeListCall(r) : makeGetCall(r);
@@ -642,7 +629,7 @@ export const useK8sWatchResource = <R extends K8sResourceCommon | K8sResourceCom
     return () => {
       clearInterval(intervalId);
     }
-  }, [resource]);
+  }, [resource, setFetched]);
 
-  return [resourceRef.current, fetchedRef.current, error];
+  return [resourceRef.current, fetched, error];
 };

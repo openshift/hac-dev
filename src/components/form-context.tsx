@@ -18,6 +18,7 @@ type S = {
   workspace?: string;
   namespace?: string;
   application?: string;
+  existingApplication?: string;
   source?: string;
   components?: CatalogItem<ComponentData>[];
 };

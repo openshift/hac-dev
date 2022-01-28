@@ -4,7 +4,7 @@ import { k8sListResource } from './../dynamic-plugin-sdk';
 import { ProjectModel } from './../models';
 
 export const useActiveNamespace = () => {
-  const [activeNamespace, setActiveNamespace] = useState('default');
+  const [activeNamespace, setActiveNamespace] = useState('');
   const [, setFormValues] = useFormValues();
 
   useEffect(() => {
@@ -25,6 +25,7 @@ export const useActiveNamespace = () => {
         setActiveNamespace(ns);
         setFormValues((formValues) => ({ ...formValues, namespace: ns }));
       } else {
+        setActiveNamespace('default');
         // eslint-disable-next-line no-console
         console.warn(
           'Could not find namespace; you are likely not able to do much as we are targeting "default"',
