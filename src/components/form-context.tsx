@@ -1,10 +1,26 @@
 import * as React from 'react';
 import { CatalogItem } from '../shared/components/catalog/utils/types';
 
+type ComponentData = {
+  source: string;
+  reference?: string;
+  contextDir?: string;
+  targetPort?: number;
+  language?: string;
+  projectType?: string;
+  resources?: {
+    memory: string;
+    cpu: string;
+  };
+};
+
 type S = {
   workspace?: string;
+  namespace?: string;
   application?: string;
-  component?: CatalogItem;
+  existingApplication?: string;
+  source?: string;
+  components?: CatalogItem<ComponentData>[];
 };
 
 const FormContext = React.createContext<[S, React.Dispatch<React.SetStateAction<S>>]>([

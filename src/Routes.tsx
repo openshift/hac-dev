@@ -2,12 +2,21 @@ import React, { Suspense, lazy } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 
-const SampleFormPage = lazy(
-  () => import(/* webpackChunkName: "SampleFormPage" */ './pages/SampleForm/SampleFormPage'),
+const SamplePage = lazy(
+  () => import(/* webpackChunkName: "SamplePage" */ './pages/SamplePage/SamplePage'),
 );
+
+const K8sPage = lazy(() => import(/* webpackChunkName: "K8sPage" */ './pages/TestK8s'));
 
 const SamplesFlow = lazy(
   () => import(/* webpackChunkName: "SamplesFlow" */ './components/SamplesFlow'),
+);
+
+const ComponentListView = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "ComponentListView" */ './components/ComponentListView/ComponentListView'
+    ),
 );
 
 /**
@@ -28,7 +37,9 @@ export const Routes: React.FC = () => (
   >
     <Switch>
       <Route path="/" component={SamplesFlow} exact />
-      <Route path="/sample-form" component={SampleFormPage} exact />
+      <Route path="/components" component={ComponentListView} exact />
+      <Route path="/sample-page" component={SamplePage} exact />
+      <Route path="/k8s-util" component={K8sPage} exact />
       {/* Finally, catch all unmatched routes */}
       <Route>
         <Redirect to="/" />

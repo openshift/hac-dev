@@ -5,10 +5,30 @@ import isEmpty from 'lodash/isEmpty';
 import { FormFooter } from '../../shared';
 import { useFormValues } from '../form-context';
 import { useWizardContext } from '../Wizard/Wizard';
+import { GitOptions } from './GitOptions';
 import { SourceField } from './SourceField';
 
 export type AddComponentValues = {
   source: string;
+  git: {
+    reference: string;
+    contextDir: string;
+  };
+  detectedComponents?: {
+    name: string;
+    language: string;
+    projectType: string;
+    git: {
+      url: string;
+      path: string;
+    };
+    resources: {
+      memory: string;
+      cpu: string;
+    };
+    devfileFound?: boolean;
+    targetPort?: number;
+  }[];
 };
 
 type AddComponentFormProps = FormikProps<AddComponentValues>;
@@ -27,6 +47,7 @@ export const AddComponentForm: React.FC<AddComponentFormProps> = ({
   return (
     <Form onSubmit={handleSubmit}>
       <SourceField onSamplesClick={handleNext} />
+      <GitOptions />
       <FormFooter
         submitLabel="Next"
         resetLabel="Back"

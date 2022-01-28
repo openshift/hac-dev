@@ -63,10 +63,7 @@ const SamplePage: React.FC = () => {
             </Suspense>
           </StackItem>
           <StackItem>
-            <Link to="/catalog?catalogType=Sample">Samples Catalog</Link>
-          </StackItem>
-          <StackItem>
-            <Link to="/sample-form">Sample Form</Link>
+            <Link to="/k8s-util">K8s Util Test</Link>
           </StackItem>
         </Stack>
       </Main>

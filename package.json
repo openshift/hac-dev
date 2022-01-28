@@ -19,6 +19,7 @@
     "start": "webpack serve --config config/dev.webpack.config.js",
     "start:beta": "BETA=true npm start",
     "start:beta:ci": "ENVIRONMENT=ci npm run start:beta",
+    "start:prod": "REMOTE_CONFIG=ci ENVIRONMENT=prod BETA=true PROXY=true npm run start",
     "start:standalone": "STANDALONE=true npm start",
     "test": "jest",
     "verify": "npm-run-all build lint coverage",
@@ -50,7 +51,8 @@
     "redux": "4.1.0",
     "redux-logger": "3.0.6",
     "redux-promise-middleware": "6.1.2",
-    "showdown": "^1.9.0"
+    "showdown": "^1.9.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^1.2.1",
@@ -65,6 +67,7 @@
     "@types/react-helmet": "5.x",
     "@types/react-router-dom": "^5.3.2",
     "@types/react-virtualized": "9.x",
+    "@types/yup": "^0.29.13",
     "@typescript-eslint/eslint-plugin": "^5.3.0",
     "@typescript-eslint/parser": "^5.3.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.2",
