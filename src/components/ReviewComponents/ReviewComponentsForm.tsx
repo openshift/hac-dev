@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Form, FormSection, PageSection } from '@patternfly/react-core';
 import { FormikProps } from 'formik';
+import isEmpty from 'lodash/isEmpty';
 import { FormFooter, RadioGroupField } from '../../shared';
 import { useFormValues } from '../form-context';
 import { useWizardContext } from '../Wizard/Wizard';
@@ -14,6 +15,7 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
   handleSubmit,
   handleReset,
   isSubmitting,
+  errors,
 }) => {
   const [formState, setFormState] = useFormValues();
   const { handleReset: wizardHandleReset } = useWizardContext();
@@ -60,7 +62,7 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
           }}
           handleSubmit={handleSubmit}
           isSubmitting={isSubmitting}
-          disableSubmit={isSubmitting}
+          disableSubmit={!isEmpty(errors) || isSubmitting}
           errorMessage={undefined}
         />
       </div>
