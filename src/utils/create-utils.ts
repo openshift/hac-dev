@@ -11,7 +11,7 @@ import { k8sCreateResource, k8sGetResource } from './../dynamic-plugin-sdk';
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
 export const createApplication = (application: string, namespace: string): any => {
-  const name = application.split(' ').join('-').toLowerCase();
+  const name = application.split(/ |\./).join('-').toLowerCase();
   // const uniqueName = uniqueId(`${name}-`);
   const requestData = {
     apiVersion: `${ApplicationModel.apiGroup}/${ApplicationModel.apiVersion}`,
@@ -41,7 +41,7 @@ export const createApplication = (application: string, namespace: string): any =
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
 export const createComponent = (component, application: string, namespace: string): any => {
-  const name = component.name.split(' ').join('-').toLowerCase();
+  const name = component.name.split(/ |\./).join('-').toLowerCase();
   // const uniqueName = uniqueId(name);
   const requestData = {
     apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
@@ -92,7 +92,7 @@ export const createComponentDetectionQuery = async (
   isMultiComponent?: boolean,
 ): Promise<ComponentDetectionQueryKind['status']['componentDetected']> => {
   // append name with uid for additional randomness
-  const name = `${appName.split(' ').join('-').toLowerCase()}-${uid()}`;
+  const name = `${appName.split(/ |\./).join('-').toLowerCase()}-${uid()}`;
   const uniqueName = uniqueId(name);
 
   const requestData = {

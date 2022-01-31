@@ -10,6 +10,7 @@ import { useWizardContext } from '../Wizard/Wizard';
 import { ReviewComponentsForm } from './ReviewComponentsForm';
 import { DeployMethod, Resources, ReviewComponentsFormValues } from './types';
 import { createResourceData, transformResources } from './utils';
+import { reviewFormSchema } from './validation-utils';
 
 export const ReviewComponentsPage: React.FC = () => {
   const { decreaseStepBy } = useWizardContext();
@@ -24,7 +25,7 @@ export const ReviewComponentsPage: React.FC = () => {
       (acc, val) => ({
         ...acc,
         [val.name]: {
-          name: val.name,
+          name: val.name.split(/ |\./).join('-').toLowerCase(),
           source: val.data?.source || val.attributes.git.remotes.origin,
           ...(isSample
             ? {}
@@ -129,6 +130,7 @@ export const ReviewComponentsPage: React.FC = () => {
           decreaseStepBy(isSample ? 1 : 2);
         }}
         initialValues={initialValues}
+        validationSchema={reviewFormSchema}
       >
         {(props) => <ReviewComponentsForm {...props} />}
       </Formik>

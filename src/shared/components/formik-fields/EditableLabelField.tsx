@@ -18,7 +18,7 @@ const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
   type = TextInputTypes.text,
   ...props
 }) => {
-  const [, { value }, { setValue }] = useField({ name, type });
+  const [, { value, error }, { setValue }] = useField({ name, type });
   const [editing, setEditing] = React.useState(false);
   const [oldValue, setOldValue] = React.useState('');
   const fieldId = getFieldId(name, 'label-field');
@@ -43,6 +43,7 @@ const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
             <ActionGroupWithIcons
               className="hacDev-editable-label-field__action-group"
               onSubmit={() => setEditing(false)}
+              isDisabled={!!error}
               onClose={() => {
                 setEditing(false);
                 setValue(oldValue);
