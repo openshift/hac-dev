@@ -18,6 +18,7 @@ const BaseInputField: React.FC<
   onChange,
   helpTextInvalid,
   validated,
+  dataTest,
   ...props
 }) => {
   const [field, { touched, error }] = useField({ name, type: 'input' });
@@ -33,6 +34,7 @@ const BaseInputField: React.FC<
       helperTextInvalid={errorMessage || helpTextInvalid}
       validated={!isValid ? ValidatedOptions.error : validated}
       isRequired={required}
+      data-test={dataTest}
     >
       {children({
         ...field,

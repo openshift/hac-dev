@@ -37,7 +37,7 @@ const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
       {editing ? (
         <Flex>
           <FlexItem>
-            <InputField name={name} />
+            <InputField name={name} dataTest="editable-label-input" />
           </FlexItem>
           <FlexItem>
             <ActionGroupWithIcons

@@ -58,7 +58,7 @@ export interface SearchInputFieldProps extends BaseInputFieldProps {
 }
 
 export interface DropdownFieldProps extends FieldProps {
-  items?: DropdownItemObject[];
+  items: DropdownItemObject[];
   selectedKey?: string;
   title?: React.ReactNode;
   fullWidth?: boolean;

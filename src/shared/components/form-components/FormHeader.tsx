@@ -1,7 +1,7 @@
 import React from 'react';
 import { Title, FormHelperText } from '@patternfly/react-core';
 
-type SpacerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
+export type SpacerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
 
 type FormHeaderProps = {
   title: React.ReactNode;
@@ -17,7 +17,7 @@ const FormHeader: React.FC<FormHeaderProps> = ({ title, helpText, marginTop, mar
   };
 
   return (
-    <div style={marginStyles}>
+    <div data-test="form-header-container" style={marginStyles}>
       <Title headingLevel="h1" size="2xl">
         {title}
       </Title>

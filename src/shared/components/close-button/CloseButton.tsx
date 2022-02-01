@@ -23,7 +23,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({
     <Button
       aria-label={ariaLabel || t('hac-shared~Close')}
       className={classNames('hacDev-close-button', additionalClassName)}
-      data-test-id={dataTestID}
+      data-test={dataTestID}
       onClick={onClick}
       variant="plain"
     >

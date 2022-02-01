@@ -66,7 +66,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
               {...(handleSubmit && { onClick: handleSubmit })}
               variant={ButtonVariant.primary}
               isDisabled={disableSubmit}
-              data-test-id="submit-button"
+              data-test="submit-button"
             >
               {submitLabel || t('Save')}
             </Button>
@@ -74,7 +74,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
           {handleReset && (
             <Button
               type="button"
-              data-test-id="reset-button"
+              data-test="reset-button"
               variant={ButtonVariant.secondary}
               onClick={handleReset}
             >
@@ -84,7 +84,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
           {handleCancel && (
             <Button
               type="button"
-              data-test-id="cancel-button"
+              data-test="cancel-button"
               variant={ButtonVariant.link}
               onClick={handleCancel}
             >
@@ -94,7 +94,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
           {handleDownload && (
             <Button
               type="button"
-              data-test-id="download-button"
+              data-test="download-button"
               variant={ButtonVariant.secondary}
               className="pf-c-button--align-right hidden-sm hidden-xs"
               onClick={handleDownload}
