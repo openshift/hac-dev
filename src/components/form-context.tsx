@@ -13,7 +13,7 @@ type ComponentData = {
   };
 };
 
-type S = {
+export type FormState = {
   workspace?: string;
   namespace?: string;
   application?: string;
@@ -23,13 +23,12 @@ type S = {
   isMultiComponent?: boolean;
 };
 
-const FormContext = React.createContext<[S, React.Dispatch<React.SetStateAction<S>>]>([
-  {},
-  () => {},
-]);
+const FormContext = React.createContext<
+  [FormState, React.Dispatch<React.SetStateAction<FormState>>]
+>([{}, () => {}]);
 
 export const FormContextProvider = ({ children }) => {
-  const [formValues, setFormValues] = React.useState<S>({});
+  const [formValues, setFormValues] = React.useState<FormState>({});
 
   return (
     <FormContext.Provider value={[formValues, setFormValues]}>{children}</FormContext.Provider>

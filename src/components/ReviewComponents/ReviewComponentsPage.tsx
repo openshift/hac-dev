@@ -2,14 +2,13 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
-import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { Page } from '../../shared';
-import { createApplication, createComponent } from '../../utils/create-utils';
 import { useFormValues } from '../form-context';
 import { useWizardContext } from '../Wizard/Wizard';
 import { ReviewComponentsForm } from './ReviewComponentsForm';
+import { createResources } from './submit-utils';
 import { DeployMethod, Resources, ReviewComponentsFormValues } from './types';
-import { createResourceData, transformResources } from './utils';
+import { createResourceData } from './utils';
 import { reviewFormSchema } from './validation-utils';
 
 export const ReviewComponentsPage: React.FC = () => {
@@ -44,71 +43,11 @@ export const ReviewComponentsPage: React.FC = () => {
 
   const handleSubmit = React.useCallback(
     (data: ReviewComponentsFormValues, { setSubmitting }) => {
-      let appName: string, successful: boolean;
-      const createResources = async () => {
-        if (!formState.existingApplication) {
-          const applicationData = await createApplication(
-            formState.application,
-            formState.namespace,
-          );
-          appName = applicationData.metadata.name;
-          // eslint-disable-next-line no-console
-          console.log('###############- Application created', applicationData);
-        } else {
-          appName = formState.existingApplication;
-        }
-        await Promise.all(
-          Object.values(data.components).map((component) => {
-            return createComponent(
-              {
-                name: component.name,
-                gitRepo: component.source,
-                replicas: component.replicas && Number(component.replicas),
-                targetPort: component.targetPort && Number(component.targetPort),
-                resources: component.resources && transformResources(component.resources),
-              },
-              appName,
-              formState.namespace,
-            );
-          }),
-        )
-          .then((componentData) => {
-            // eslint-disable-next-line no-console
-            console.log('###############- Components created', componentData);
-            dispatch(
-              addNotification({
-                variant: 'success',
-                title: 'Application and components created successfully!!',
-                description: `Created application ${appName} with components ${formState.components
-                  .map((c) => c.name)
-                  .join(', ')}`,
-              }),
-            );
-            successful = true;
-          })
-          .catch((error) => {
-            dispatch(
-              addNotification({
-                variant: 'danger',
-                title: 'Component creation failed!!',
-                description: error.message,
-              }),
-            );
-            setSubmitting(false);
-          });
-      };
-      createResources()
-        .then(() => {
-          if (successful) history.push(`/components?application=${appName}`);
+      createResources(formState, data.components, dispatch)
+        .then((appName) => {
+          history.push(`/components?application=${appName}`);
         })
-        .catch((error) => {
-          dispatch(
-            addNotification({
-              variant: 'danger',
-              title: 'Application creation failed!!',
-              description: error.message,
-            }),
-          );
+        .catch(() => {
           setSubmitting(false);
         });
     },
