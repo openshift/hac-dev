@@ -15,7 +15,7 @@ import {
   TextVariants,
   Title,
 } from '@patternfly/react-core';
-import { FormFooter } from '../../shared';
+import { FormFooter, Page } from '../../shared';
 import CatalogView from '../../shared/components/catalog/catalog-view/CatalogView';
 import CatalogTile from '../../shared/components/catalog/CatalogTile';
 import { skeletonCatalog } from '../../shared/components/catalog/utils/skeleton-catalog';
@@ -23,7 +23,6 @@ import { CatalogItem } from '../../shared/components/catalog/utils/types';
 import { StatusBox } from '../../shared/components/status-box/StatusBox';
 import { getDevfileSamples } from '../../utils/devfile-utils';
 import { useFormValues } from '../form-context';
-import { Page } from '../Page/Page';
 import { useWizardContext } from '../Wizard/Wizard';
 
 export const ComponentSamplesPage = () => {
@@ -126,7 +125,7 @@ export const ComponentSamplesPage = () => {
         <DrawerContentBody>
           <Page
             breadcrumbs={[
-              { path: '#', name: 'Applications' },
+              { path: '/applications', name: 'Applications' },
               { path: '#', name: 'Create your application' },
             ]}
             heading="Start with a sample"
