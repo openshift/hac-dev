@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Formik } from 'formik';
+import { Page } from '../../shared';
 import { useFormValues } from '../form-context';
-import { Page } from '../Page/Page';
 import { useWizardContext } from '../Wizard/Wizard';
 import { AddComponentForm, AddComponentValues } from './AddComponentForm';
 import { validationSchema } from './validation-utils';

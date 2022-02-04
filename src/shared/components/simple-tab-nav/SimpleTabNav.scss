@@ -1,0 +1,8 @@
+.hacDev-simple-tab-nav {
+  &__tab-title-active {
+    color: var(--pf-global--link--Color);
+  }
+  &__tab-title {
+    color: var(--pf-global--BackgroundColor--dark-400);
+  }
+}

@@ -2,9 +2,8 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Formik, FormikProps } from 'formik';
 import { useActiveNamespace } from '../../hooks/useActiveNamespace';
-import { useQueryParams } from '../../shared';
+import { useQueryParams, Page } from '../../shared';
 import { useFormValues } from '../form-context';
-import { Page } from '../Page/Page';
 import { useWizardContext } from '../Wizard/Wizard';
 import { CreateApplicationForm, CreateApplicationValues } from './CreateApplicationForm';
 

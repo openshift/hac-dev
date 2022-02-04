@@ -15,6 +15,11 @@
   }
 
   &__section {
-    padding: var(--pf-global--spacer--xs) var(--pf-global--spacer--lg);
+    padding: var(--pf-global--spacer--xs) var(--pf-global--spacer--md);
+  }
+
+  &__custom-button {
+    margin-top: var(--pf-global--spacer--xs);
+    margin-bottom: var(--pf-global--spacer--sm);
   }
 }

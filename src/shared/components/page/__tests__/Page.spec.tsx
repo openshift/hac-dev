@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Router } from 'react-router';
 import { render, screen } from '@testing-library/react';
 import { createBrowserHistory } from 'history';
-import { Page } from '../Page';
 import '@testing-library/jest-dom';
+import Page from '../Page';
 
 describe('Page', () => {
   it('should render children and heading', () => {

@@ -19,6 +19,10 @@ const ComponentListView = lazy(
     ),
 );
 
+const WorkspaceView = lazy(
+  () => import(/* webpackChunkName: "WorkspaceView" */ './components/WorkspaceView/WorkspaceView'),
+);
+
 /**
  * the Switch component changes routes depending on the path.
  *
@@ -38,6 +42,7 @@ export const Routes: React.FC = () => (
     <Switch>
       <Route path="/" component={SamplesFlow} exact />
       <Route path="/components" component={ComponentListView} exact />
+      <Route path="/workspaces" component={WorkspaceView} exact />
       <Route path="/sample-page" component={SamplePage} exact />
       <Route path="/k8s-util" component={K8sPage} exact />
       {/* Finally, catch all unmatched routes */}
