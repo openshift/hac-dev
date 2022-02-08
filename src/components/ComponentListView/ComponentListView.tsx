@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import { useActiveNamespace } from '../../hooks/useActiveNamespace';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { ApplicationGroupVersionKind } from '../../models';
 import { useQueryParams } from '../../shared';
 import { StatusBox } from '../../shared/components/status-box/StatusBox';
@@ -17,8 +18,11 @@ const ComponentListView: React.FC = () => {
     name: applicationName,
     namespace,
   });
+  const [lsData, updateData] = useLocalStorage('userDetails', {});
   const loaded = namespace && appLoaded;
-
+  if (loaded) {
+    updateData({ ...lsData, firstLogin: false, lastViewedApp: applicationName });
+  }
   return (
     <StatusBox data={application} loaded={loaded}>
       <Page
