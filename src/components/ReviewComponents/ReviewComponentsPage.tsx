@@ -122,7 +122,7 @@ export const ReviewComponentsPage: React.FC = () => {
         { path: '#', name: 'Create your application' },
       ]}
       heading="Review your new components"
-      description="Review your choices for the application."
+      description="Review your selections for the application."
     >
       <Formik
         onSubmit={handleSubmit}

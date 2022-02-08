@@ -32,7 +32,7 @@ describe('SourceField', () => {
 
     render(<SourceField onSamplesClick={jest.fn()} />);
     expect(screen.getByPlaceholderText('Enter your source')).toBeInTheDocument();
-    expect(screen.getByText('Start with a sample')).toBeInTheDocument();
+    expect(screen.getByText('Start with a sample.')).toBeInTheDocument();
   });
 
   it('fires callback on sample button click', () => {
@@ -44,7 +44,7 @@ describe('SourceField', () => {
     ]);
 
     render(<SourceField onSamplesClick={onClick} />);
-    fireEvent.click(screen.getByText('Start with a sample'));
+    fireEvent.click(screen.getByText('Start with a sample.'));
     expect(onClick).toHaveBeenCalled();
   });
 

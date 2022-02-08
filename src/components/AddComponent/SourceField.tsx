@@ -33,7 +33,7 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
   const [formState] = useFormValues();
   const fieldId = getFieldId('source', 'input');
   const isValid = !(touched && error);
-  const label = 'Component Source';
+  const label = 'Git repo URL or container image';
 
   const debouncedHandleSourceChange = useDebounceCallback(
     React.useCallback(() => {
@@ -112,8 +112,8 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
         </GridItem>
         <GridItem span={4}>
           No code?{' '}
-          <Button variant={ButtonVariant.link} onClick={onSamplesClick}>
-            Start with a sample
+          <Button variant={ButtonVariant.link} onClick={onSamplesClick} style={{ paddingLeft: 0 }}>
+            Start with a sample.
           </Button>
         </GridItem>
       </Grid>

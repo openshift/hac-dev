@@ -3,7 +3,7 @@ import { ExpandableSection, Stack, StackItem } from '@patternfly/react-core';
 import { CheckboxField, InputField } from '../../shared';
 
 export const GitOptions: React.FC = () => (
-  <ExpandableSection toggleText="Show options">
+  <ExpandableSection toggleText="Authorization and Git options">
     <Stack style={{ maxWidth: '50%', marginLeft: '2em' }} hasGutter>
       <StackItem>
         <CheckboxField
@@ -23,7 +23,7 @@ export const GitOptions: React.FC = () => (
         <InputField
           name="git.contextDir"
           label="Context dir"
-          helpText="Optional subdirectory for the Application source code."
+          helpText="Optional subdirectory for the application source code."
         />
       </StackItem>
     </Stack>

@@ -24,7 +24,6 @@ import {
 } from '../../shared';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { CPUUnits, MemoryUnits, Resources } from './types';
-import './ReviewSampleComponentCard.scss';
 
 type ReviewSourceComponentCardProps = {
   component: {
@@ -90,7 +89,7 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
               />
             </FormSection>
           </ExpandableSection>
-          <ExpandableSection toggleText="Deploy configuration">
+          <ExpandableSection style={{ marginTop: '1em' }} toggleText="Deploy configuration">
             <FormSection style={{ marginLeft: '2em' }}>
               <Grid hasGutter>
                 <GridItem span={5}>
@@ -99,7 +98,7 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
                     unitName={`${fieldPrefix}.resources.cpuUnit`}
                     label="CPU"
                     unitOptions={CPUUnits}
-                    helpText="The amount of CPU the Container is guranteed"
+                    helpText="The amount of CPU the container is guaranteed"
                   />
                 </GridItem>
                 <GridItem span={5}>
@@ -108,7 +107,7 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
                     unitName={`${fieldPrefix}.resources.memoryUnit`}
                     label="Memory"
                     unitOptions={MemoryUnits}
-                    helpText="The amount of memory the Container is guranteed"
+                    helpText="The amount of memory the container is guaranteed"
                   />
                 </GridItem>
               </Grid>
