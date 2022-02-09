@@ -36,7 +36,7 @@ const CatalogTile: React.FC<CatalogTileProps> = ({
   const catalogType = _.find(catalogTypes, ['value', type]);
   const tagsBadge = tags
     ? [
-        <LabelGroup key="tag-badges">
+        <LabelGroup key="tag-badges" data-test="tag-badges">
           {tags.map((label) => (
             <Badge key={label} isRead>
               {label}
@@ -48,7 +48,7 @@ const CatalogTile: React.FC<CatalogTileProps> = ({
   const typeBadges = catalogType
     ? [
         // eslint-disable-next-line react/jsx-key
-        <CatalogTileBadge>
+        <CatalogTileBadge data-test="catalog-tile-badge">
           <Badge isRead>{catalogType?.label}</Badge>
         </CatalogTileBadge>,
       ]
