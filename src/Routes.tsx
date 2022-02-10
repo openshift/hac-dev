@@ -19,6 +19,13 @@ const ComponentListView = lazy(
     ),
 );
 
+const ApplicationList = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "ApplicationList" */ './components/ApplicationListView/ApplicationList'
+    ),
+);
+
 /**
  * the Switch component changes routes depending on the path.
  *
@@ -38,6 +45,7 @@ export const Routes: React.FC = () => (
     <Switch>
       <Route path="/" component={SamplesFlow} exact />
       <Route path="/components" component={ComponentListView} exact />
+      <Route path="/applications" component={ApplicationList} exact />
       <Route path="/sample-page" component={SamplePage} exact />
       <Route path="/k8s-util" component={K8sPage} exact />
       {/* Finally, catch all unmatched routes */}

@@ -3,9 +3,9 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
 import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
+import { Page } from '../../shared';
 import { createApplication, createComponent } from '../../utils/create-utils';
 import { useFormValues } from '../form-context';
-import { Page } from '../Page/Page';
 import { useWizardContext } from '../Wizard/Wizard';
 import { ReviewComponentsForm } from './ReviewComponentsForm';
 import { DeployMethod, Resources, ReviewComponentsFormValues } from './types';
@@ -118,7 +118,7 @@ export const ReviewComponentsPage: React.FC = () => {
   return (
     <Page
       breadcrumbs={[
-        { path: '#', name: 'Applications' },
+        { path: '/applications', name: 'Applications' },
         { path: '#', name: 'Create your application' },
       ]}
       heading="Review your new components"

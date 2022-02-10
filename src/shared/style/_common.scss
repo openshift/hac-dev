@@ -151,3 +151,17 @@ $co-external-link-padding-right: 15px;
     align-items: flex-start;
   }
 }
+
+.co-icon-and-text {
+  align-items: baseline;
+  display: inline-block;
+
+  &__icon {
+    flex-shrink: 0;
+    margin-right: 5px;
+  }
+}
+
+.co-nowrap {
+  white-space: nowrap;
+}
