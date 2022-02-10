@@ -6,7 +6,13 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+  TextInput,
+  Button,
 } from '@patternfly/react-core';
+import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import { useActiveNamespace } from '../../hooks/useActiveNamespace';
 import { ComponentGroupVersionKind } from '../../models';
@@ -33,9 +39,42 @@ export const ComponentListViewPage: React.FC<ComponentListViewPageProps> = ({ ap
     [allComponents, application, loaded],
   );
 
+  const [nameFilter, setNameFilter] = React.useState<string>('');
+
+  const filteredComponents = React.useMemo(
+    () =>
+      nameFilter
+        ? components.filter((component) => component.metadata.name.indexOf(nameFilter) !== -1)
+        : components,
+    [nameFilter, components],
+  );
+
+  const onClearFilters = () => setNameFilter('');
+  const onNameInput = (name: string) => setNameFilter(name);
+
   return (
     <StatusBox data={allComponents} loaded={loaded}>
-      <DataList aria-label="Components">
+      <Toolbar data-testid="component-list-filter-toolbar" clearAllFilters={onClearFilters}>
+        <ToolbarContent>
+          <ToolbarItem>
+            <Button variant="control">
+              <FilterIcon /> {'Name'}
+            </Button>
+          </ToolbarItem>
+          <ToolbarItem>
+            <TextInput
+              name="nameInput"
+              data-testid="nameInput1"
+              type="search"
+              aria-label="name filter"
+              placeholder="Filter by name..."
+              onChange={(name) => onNameInput(name)}
+            />
+          </ToolbarItem>
+        </ToolbarContent>
+      </Toolbar>
+
+      <DataList aria-label="Components" data-testid="component-list">
         <DataListItem>
           <DataListItemRow>
             <DataListItemCells
@@ -49,7 +88,7 @@ export const ComponentListViewPage: React.FC<ComponentListViewPageProps> = ({ ap
             />
           </DataListItemRow>
         </DataListItem>
-        {components?.map((component) => (
+        {filteredComponents?.map((component) => (
           <ComponentListItem key={component.metadata.uid} component={component} />
         ))}
       </DataList>
