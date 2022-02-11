@@ -41,7 +41,10 @@ export const ComponentListViewPage: React.FC<ComponentListViewPageProps> = ({ ap
             <DataListItemCells
               dataListCells={[
                 <DataListCell key="add component">
-                  <Link className="pf-c-button pf-m-primary" to={`/?application=${application}`}>
+                  <Link
+                    className="pf-c-button pf-m-primary"
+                    to={`/create?application=${application}`}
+                  >
                     Add Component
                   </Link>
                 </DataListCell>,

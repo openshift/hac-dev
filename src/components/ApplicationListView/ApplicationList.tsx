@@ -43,7 +43,7 @@ const ApplicationList: React.FC = () => {
     <Page
       heading="Applications"
       customButton={
-        <Link className="pf-c-button pf-m-primary" to={`/`}>
+        <Link className="pf-c-button pf-m-primary" to={'/create'}>
           Create Application
         </Link>
       }
