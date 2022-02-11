@@ -121,6 +121,7 @@ type Options = {
   ns?: string;
   name?: string;
   path?: string;
+  dryRun?: boolean;
   queryParams?: QueryParams;
 };
 enum Operator {
@@ -241,6 +242,11 @@ const getK8sResourcePath = (model: K8sModel, options: Options): string => {
   if (options.path) {
     u += `/${options.path}`;
   }
+  if (options.dryRun) {
+    options.queryParams ?
+      options.queryParams.dryRun = 'All' :
+      options.queryParams = { dryRun: 'All' };
+  }
   if (!_.isEmpty(options.queryParams)) {
     const q = _.map(options.queryParams, function(v, k) {
       return `${k}=${v}`;
@@ -268,12 +274,13 @@ const adapterFunc = (func: Function, knownArgs: string[]) => {
     const args = knownArgs.map((arg) => {
       // forming opts to match underlying API signature if it's there in knownArgs
       if (arg === 'opts') {
-        const { name, ns, path, queryParams } = options || {};
+        const { name, ns, path, queryParams, dryRun } = options || {};
         return {
           ...(name && { name }),
           ...(ns && { ns }),
           ...(path && { path }),
           ...(queryParams && { queryParams }),
+          ...(dryRun && { dryRun }),
         };
       }
       return options[arg];
@@ -519,6 +526,7 @@ export const k8sGetResource = adapterFunc(k8sGet, ['model', 'name', 'ns', 'opts'
  * @param options.data payload for the resource to be created
  * @param options.path Appends as subpath if provided
  * @param options.queryParams The query parameters to be included in the URL.
+ * @param options.dryRun Dry run without creating any resources
  * @return A promise that resolves to the response of the resource created.
  * In case of failure promise gets rejected with HTTP error response.
  * * */
@@ -533,6 +541,7 @@ export const k8sCreateResource = adapterFunc(k8sCreate, ['model', 'data', 'opts'
  * @param options.data payload for the resource to be updated
  * @param options.path Appends as subpath if provided
  * @param options.queryParams The query parameters to be included in the URL.
+ * @param options.dryRun Dry run without updating any resources
  * @return A promise that resolves to the response of the resource updated.
  * In case of failure promise gets rejected with HTTP error response.
  * * */
@@ -549,6 +558,7 @@ export const k8sUpdateResource = adapterFunc(k8sUpdate, ['model', 'data', 'ns', 
  * @param options.data Only the data to be patched on existing resource with the operation, path, and value.
  * @param options.path Appends as subpath if provided.
  * @param options.queryParams The query parameters to be included in the URL.
+ * @param options.dryRun Dry run without patching any resources
  * @return A promise that resolves to the response of the resource patched.
  * In case of failure promise gets rejected with HTTP error response.
  * * */
@@ -565,6 +575,7 @@ export const k8sPatchResource = adapterFunc(k8sPatch, ['model', 'resource', 'dat
  * @param options.requestInit The fetch init object to use. This can have request headers, method, redirect, etc.
  * See more {@link https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.requestinit.html}
  * @param options.json Can control garbage collection of resources explicitly if provided else will default to model's "propagationPolicy".
+ * @param options.dryRun Dry run without deleting any resources
  * @example
  * { kind: 'DeleteOptions', apiVersion: 'v1', propagationPolicy }
  * @return A promise that resolves to the response of kind Status.

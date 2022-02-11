@@ -1,16 +1,22 @@
 import uniqueId from 'lodash/uniqueId';
 import { ApplicationModel, ComponentModel, ComponentDetectionQueryModel } from '../models';
-import { ComponentDetectionQueryKind } from '../types';
+import { ApplicationKind, ComponentDetectionQueryKind } from '../types';
 import { k8sCreateResource, k8sGetResource } from './../dynamic-plugin-sdk';
 
 /**
  * Create HAS Application CR
  * @param application application name
+ * @param namespace namespace of the application
+ * @param dryRun dry run without creating any resources
  * @returns Returns HAS Application CR data
  *
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
-export const createApplication = (application: string, namespace: string): any => {
+export const createApplication = (
+  application: string,
+  namespace: string,
+  dryRun?: boolean,
+): Promise<ApplicationKind> => {
   const name = application.split(/ |\./).join('-').toLowerCase();
   // const uniqueName = uniqueId(`${name}-`);
   const requestData = {
@@ -24,10 +30,12 @@ export const createApplication = (application: string, namespace: string): any =
       displayName: application,
     },
   };
+
   // TODO: Make Api Calls here
   return k8sCreateResource({
     model: ApplicationModel,
     data: requestData,
+    dryRun,
   });
 };
 
@@ -36,11 +44,18 @@ export const createApplication = (application: string, namespace: string): any =
  *
  * @param component component data TODO: Data might change based on the API requirements
  * @param application application name
+ * @param namespace namespace of the application
+ * @param dryRun dry run without creating any resources
  * @returns Returns HAS Component CR data
  *
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
-export const createComponent = (component, application: string, namespace: string): any => {
+export const createComponent = (
+  component,
+  application: string,
+  namespace: string,
+  dryRun?: boolean,
+): any => {
   const name = component.name.split(/ |\./).join('-').toLowerCase();
   // const uniqueName = uniqueId(name);
   const requestData = {
@@ -65,6 +80,7 @@ export const createComponent = (component, application: string, namespace: strin
   return k8sCreateResource({
     model: ComponentModel,
     data: requestData,
+    dryRun,
   });
 };
 
@@ -81,6 +97,7 @@ const uid = () =>
  * @param url the URL of the repository that will be analyzed for components
  * @param namespace namespace to deploy resource in. Defaults to current namespace
  * @param isMultiComponent whether or not the git repository contains multiple components
+ * @param dryRun dry run without creating any resources
  * @returns Returns HAS ComponentDetectionQuery results
  *
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
@@ -90,6 +107,7 @@ export const createComponentDetectionQuery = async (
   url: string,
   namespace: string,
   isMultiComponent?: boolean,
+  dryRun?: boolean,
 ): Promise<ComponentDetectionQueryKind['status']['componentDetected']> => {
   // append name with uid for additional randomness
   const name = `${appName.split(/ |\./).join('-').toLowerCase()}-${uid()}`;
@@ -113,6 +131,7 @@ export const createComponentDetectionQuery = async (
   let cdq: ComponentDetectionQueryKind = await k8sCreateResource({
     model: ComponentDetectionQueryModel,
     data: requestData,
+    dryRun,
   });
 
   while (cdq.status?.conditions?.[0]?.type !== 'Completed') {
