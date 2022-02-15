@@ -2,6 +2,8 @@ import React, { Suspense, lazy } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 
+const AppFlow = lazy(() => import(/* webpackChunkName: "AppFlows" */ './components/AppFlow'));
+
 const SamplePage = lazy(
   () => import(/* webpackChunkName: "SamplePage" */ './pages/SamplePage/SamplePage'),
 );
@@ -43,7 +45,8 @@ export const Routes: React.FC = () => (
     }
   >
     <Switch>
-      <Route path="/" component={SamplesFlow} exact />
+      <Route path="/" component={AppFlow} exact />
+      <Route path="/create" component={SamplesFlow} exact />
       <Route path="/components" component={ComponentListView} exact />
       <Route path="/applications" component={ApplicationList} exact />
       <Route path="/sample-page" component={SamplePage} exact />
