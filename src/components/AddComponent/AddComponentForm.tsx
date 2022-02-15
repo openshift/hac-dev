@@ -14,6 +14,7 @@ export type AddComponentValues = {
     reference: string;
     contextDir: string;
     isMultiComponent: boolean;
+    authSecret?: string;
   };
   detectedComponents?: {
     name: string;

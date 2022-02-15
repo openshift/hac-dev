@@ -1,10 +1,14 @@
 import * as React from 'react';
 import { ExpandableSection, Stack, StackItem } from '@patternfly/react-core';
 import { CheckboxField, InputField } from '../../shared';
+import { GitAuthorization } from './GitAuthorization';
 
 export const GitOptions: React.FC = () => (
   <ExpandableSection toggleText="Authorization and Git options">
     <Stack style={{ maxWidth: '50%', marginLeft: '2em' }} hasGutter>
+      <StackItem>
+        <GitAuthorization />
+      </StackItem>
       <StackItem>
         <CheckboxField
           name="git.isMultiComponent"
