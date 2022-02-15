@@ -56,7 +56,7 @@ describe('ComponentListViewPage', () => {
       true,
     ]);
     render(<ComponentListViewPage application="test-app" />);
-    expect(screen.getByTestId('component-list-filter-toolbar')).toBeInTheDocument();
+    expect(screen.getByTestId('component-list-toolbar')).toBeInTheDocument();
   });
   it('renders 3 component entries', () => {
     watchResourceMock.mockReturnValue([
@@ -77,7 +77,7 @@ describe('ComponentListViewPage', () => {
       true,
     ]);
     render(<ComponentListViewPage application="test-app" />);
-    const searchInput = screen.getByTestId('nameInput1');
+    const searchInput = screen.getByTestId('name-input-filter');
     fireEvent.change(searchInput, { target: { value: 'test' } });
     const componentList = screen.getByTestId('component-list');
     const componentListItems = within(componentList).getAllByTestId('component-list-item');
@@ -103,7 +103,7 @@ describe('ComponentListViewPage', () => {
       true,
     ]);
     render(<ComponentListViewPage application="test-app" />);
-    const searchInput = screen.getByTestId('nameInput1');
+    const searchInput = screen.getByTestId('name-input-filter');
     fireEvent.change(searchInput, { target: { value: 'aa' } });
     const componentList = screen.getByTestId('component-list');
     const componentListItems = within(componentList).getAllByTestId('component-list-item');

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  DataListAction,
   DataListContent,
   DataListItem,
   DataListItemCells,
@@ -12,8 +13,11 @@ import {
   DescriptionListTermHelpText,
   DescriptionListTermHelpTextButton,
 } from '@patternfly/react-core';
+import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind } from '../../types';
+import { deleteComponent } from '../../utils/delete-utils';
+
 import './ComponentListItem.scss';
 
 type ComponentListViewPageProps = {
@@ -48,6 +52,25 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
             </DescriptionList>,
           ]}
         />
+        <DataListAction
+          aria-labelledby={`${name.toLowerCase()}-actions`}
+          data-testid={`${name.toLowerCase()}-actions`}
+          id={`${name.toLowerCase()}-actions`}
+          aria-label={`${name.toLowerCase()}-actions`}
+          isPlainButtonAction
+        >
+          <ActionMenu
+            actions={[
+              {
+                cta: () => {
+                  deleteComponent(name, component.metadata.namespace);
+                },
+                id: `delete-${name.toLowerCase()}`,
+                label: 'Delete',
+              },
+            ]}
+          />
+        </DataListAction>
       </DataListItemRow>
       <DataListContent
         className="hacDev-component-list-item__details"
