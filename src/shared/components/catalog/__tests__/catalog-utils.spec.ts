@@ -1,11 +1,11 @@
 import * as catalogImg from '../../../../imgs/catalog-icon.svg';
+import { catalogItems } from '../catalog-data';
 import {
   getCatalogTypeCounts,
   getIconProps,
   getURLWithParams,
   normalizeIconClass,
 } from '../utils/catalog-utils';
-import { catalogItems } from './catalog-data';
 
 describe('catalog-utils', () => {
   it('normalizeIconClass should return normalized class', () => {

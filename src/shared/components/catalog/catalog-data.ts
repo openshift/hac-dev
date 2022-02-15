@@ -1,4 +1,4 @@
-import { CatalogItem } from '../utils/types';
+import { CatalogItem } from './utils/types';
 
 export const catalogItems: CatalogItem[] = [
   {
@@ -46,11 +46,10 @@ export const catalogItems: CatalogItem[] = [
     },
   },
   {
-    uid: 'code-with-quarkus',
+    uid: 'quarkus',
     type: 'OperatorBacked',
-    name: 'Basic Quarkus',
+    name: 'Quarkus',
     description: 'A simple Hello World Java application using Quarkus',
-    tags: ['Java', 'Quarkus'],
     cta: {
       label: 'Create Devfile Sample',
       href: '/import?importType=devfile&formType=sample&devfileName=code-with-quarkus&gitRepo=https://github.com/elsony/devfile-sample-code-with-quarkus.git',

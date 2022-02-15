@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { configure, render, screen } from '@testing-library/react';
+import { catalogItems } from '../catalog-data';
 import CatalogTile from '../CatalogTile';
 import { CatalogType } from '../utils/types';
-import { catalogItems } from './catalog-data';
 
 configure({ testIdAttribute: 'data-test' });
 
