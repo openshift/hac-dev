@@ -27,7 +27,7 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
   const resourceRequests = resources?.requests;
 
   return (
-    <DataListItem aria-label={name} isExpanded={expanded}>
+    <DataListItem aria-label={name} isExpanded={expanded} data-testid="component-list-item">
       <DataListItemRow>
         <DataListToggle id={name} onClick={() => setExpanded((x) => !x)} isExpanded={expanded} />
         <DataListItemCells
