@@ -1,0 +1,13 @@
+{
+  "name": "@hac-dev/integration-tests",
+  "version": "0.0.1",
+  "description": "HAC-DEV Cypress tests",
+  "private": true,
+  "scripts": {
+    "cy:run": "../node_modules/.bin/cypress run",
+    "cy:open": "../node_modules/.bin/cypress open"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.13"
+  }
+}

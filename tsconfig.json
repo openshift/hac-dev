@@ -18,6 +18,7 @@
   "exclude": [
     "**/node_modules",
     "**/dist",
+    "integration-tests",
   ],
   "include": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx", "**/*.json"]
 }
