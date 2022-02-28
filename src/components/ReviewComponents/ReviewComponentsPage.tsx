@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
 import { Page } from '../../shared';
@@ -15,7 +14,6 @@ export const ReviewComponentsPage: React.FC = () => {
   const { decreaseStepBy } = useWizardContext();
   const [formState] = useFormValues();
   const isSample = formState.components[0].type === 'sample';
-  const dispatch = useDispatch();
   const history = useHistory();
 
   const initialValues: ReviewComponentsFormValues = {
@@ -49,7 +47,7 @@ export const ReviewComponentsPage: React.FC = () => {
 
   const handleSubmit = React.useCallback(
     (data: ReviewComponentsFormValues, { setSubmitting }) => {
-      createResources(formState, data.components, dispatch)
+      createResources(formState, data.components)
         .then((appName) => {
           history.push(`/components?application=${appName}`);
         })
@@ -57,7 +55,7 @@ export const ReviewComponentsPage: React.FC = () => {
           setSubmitting(false);
         });
     },
-    [formState, dispatch, history],
+    [formState, history],
   );
 
   return (

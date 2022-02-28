@@ -1,16 +1,76 @@
 const { resolve } = require('path');
 const webpack = require('webpack');
-const fedModulePlugin = require('@redhat-cloud-services/frontend-components-config/federated-modules');
+const ExtensionsPlugin = require('@redhat-cloud-services/frontend-components-config-utilities/extensions-plugin');
 
 const plugins = [
-  fedModulePlugin({
-    root: resolve(__dirname, '../'),
-    debug: true,
-    exposes: {
-      // Application root
-      './RootApp': resolve(__dirname, '../src/AppEntry'),
+  new ExtensionsPlugin(
+    {
+      /**
+       * These extensions are offered up as 'console-extensions.json' (a subset are currently supported in HAC-Core)
+       */
+      extensions: [
+        {
+          type: 'console.page/route',
+          properties: {
+            path: '/app-studio',
+            exact: true,
+            component: {
+              $codeRef: 'AppEntry',
+            },
+          },
+        },
+        {
+          type: 'console.page/route',
+          properties: {
+            path: '/app-studio/components',
+            exact: true,
+            component: {
+              $codeRef: 'ComponentListView',
+            },
+          },
+        },
+        {
+          type: 'console.page/route',
+          properties: {
+            path: '/app-studio/sample-page',
+            exact: true,
+            component: {
+              $codeRef: 'SamplePage',
+            },
+          },
+        },
+        {
+          type: 'console.page/route',
+          properties: {
+            path: '/app-studio/k8s-util',
+            exact: true,
+            component: {
+              $codeRef: 'K8sPage',
+            },
+          },
+        },
+        {
+          type: 'console.navigation/href',
+          properties: {
+            href: '/app-studio',
+            name: 'App studio',
+          },
+        },
+      ],
     },
-  }),
+    {
+      exposes: {
+        AppEntry: resolve(__dirname, '../src/components/SamplesFlow.tsx'),
+        ComponentListView: resolve(
+          __dirname,
+          '../src/components/ComponentListView/ComponentListView.tsx',
+        ),
+        SamplePage: resolve(__dirname, '../src/pages/SamplePage/SamplePage.tsx'),
+        K8sPage: resolve(__dirname, '../src/pages/TestK8s.tsx'),
+      },
+      shared: [{ 'react-router-dom': { singleton: true } }],
+    },
+  ),
 ];
 
 // Save 20kb of bundle size in prod

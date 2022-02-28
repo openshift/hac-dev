@@ -18,7 +18,7 @@ const calculateRemoteConfig = (remoteConfig) => {
 };
 
 const webpackProxy = {
-  deployment: process.env.BETA ? 'beta/apps' : 'apps',
+  deployment: process.env.BETA ? 'beta/api/plugins' : 'api/plugins',
   useProxy: true,
   env,
   appUrl: process.env.BETA ? '/beta/hac/app-studio' : '/hac/app-studio',
@@ -37,18 +37,19 @@ const webpackProxy = {
       ws: true,
       pathRewrite: { '^/api/k8s': '' },
     },
+    {
+      context: (path) => path.includes('/apps/hac-core'),
+      target: 'https://console.stage.redhat.com',
+      secure: true,
+      changeOrigin: true,
+      autoRewrite: true,
+      ws: true,
+    },
   ],
   client: {
     overlay: false,
   },
   routes: {
-    // In order to serve your plugin locally change this line
-    '/api/plugins/console-demo-plugin': { host: 'http://localhost:9000' },
-    // '/beta/api/plugins/console-demo-plugin': { host: 'http://localhost:8003' },
-    // first part is the plugin URL, host is your localhost URL with port
-    ...(process.env.API_PORT && {
-      '/api/hac/app-studio': { host: `http://localhost:${process.env.API_PORT}` },
-    }),
     ...(process.env.REMOTE_CONFIG && {
       [`${process.env.BETA ? '/beta' : ''}/config`]: {
         host: calculateRemoteConfig(process.env.REMOTE_CONFIG),
@@ -64,7 +65,7 @@ const webpackProxy = {
 
 const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
-  sassPrefix: '.hacDev',
+  sassPrefix: '.hacCore',
   debug: true,
   useFileHash: false,
   ...webpackProxy,

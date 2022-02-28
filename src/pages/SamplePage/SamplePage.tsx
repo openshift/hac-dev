@@ -1,9 +1,6 @@
 import React, { Suspense, lazy, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, StackItem, Stack, Title, Spinner } from '@patternfly/react-core';
-import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
-import { Main } from '@redhat-cloud-services/frontend-components/Main';
+import { Button, StackItem, Stack, Title, Spinner, PageSection } from '@patternfly/react-core';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 
 const SampleComponent = lazy(() => import('../../components/SampleComponent/SampleComponent'));
@@ -18,21 +15,9 @@ import './SamplePage.scss';
  * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
  */
 const SamplePage: React.FC = () => {
-  const dispatch = useDispatch();
-
   useEffect(() => {
     window.insights?.chrome?.appAction?.('sample-page');
   }, []);
-
-  const handleAlert = () => {
-    dispatch(
-      addNotification({
-        variant: 'success',
-        title: 'Hello World!!',
-        description: 'This is a test notification.',
-      }),
-    );
-  };
 
   return (
     <React.Fragment>
@@ -40,17 +25,14 @@ const SamplePage: React.FC = () => {
         <PageHeaderTitle title="App Studio" />
         <p> HAC Developer Experience. </p>
       </PageHeader>
-      <Main>
+      <PageSection>
         <Stack hasGutter>
           <StackItem>
             <Title headingLevel="h2" size="3xl">
               {' '}
               Alerts{' '}
             </Title>
-            <Button variant="primary" onClick={handleAlert}>
-              {' '}
-              Dispatch alert{' '}
-            </Button>
+            <Button variant="primary"> Dispatch alert </Button>
           </StackItem>
           <StackItem>
             <Suspense fallback={<Spinner />}>
@@ -63,10 +45,10 @@ const SamplePage: React.FC = () => {
             </Suspense>
           </StackItem>
           <StackItem>
-            <Link to="/k8s-util">K8s Util Test</Link>
+            <Link to="/app-studio/k8s-util">K8s Util Test</Link>
           </StackItem>
         </Stack>
-      </Main>
+      </PageSection>
     </React.Fragment>
   );
 };
