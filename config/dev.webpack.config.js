@@ -23,9 +23,9 @@ const webpackProxy = {
   env,
   appUrl: process.env.BETA ? '/beta/hac/app-studio' : '/hac/app-studio',
   standalone: Boolean(process.env.STANDALONE),
-  ...(process.env.INSIGHTS_CHROME && {
-    localChrome: process.env.INSIGHTS_CHROME,
-  }),
+  // ...(process.env.INSIGHTS_CHROME && {
+  //   localChrome: process.env.INSIGHTS_CHROME,
+  // }),
   customProxy: [
     {
       context: (path) => path.includes('/api/k8s'),
@@ -36,14 +36,6 @@ const webpackProxy = {
       autoRewrite: true,
       ws: true,
       pathRewrite: { '^/api/k8s': '' },
-    },
-    {
-      context: (path) => path.includes('/apps/hac-core'),
-      target: 'https://console.stage.redhat.com',
-      secure: true,
-      changeOrigin: true,
-      autoRewrite: true,
-      ws: true,
     },
   ],
   client: {
