@@ -15,6 +15,7 @@ export const AddComponentPage = () => {
       reference: '',
       contextDir: '/',
       isMultiComponent: formState.isMultiComponent,
+      authSecret: formState.sourceSecret,
     },
   };
 
@@ -22,6 +23,7 @@ export const AddComponentPage = () => {
     setValues((prevVal) => ({
       ...prevVal,
       source: values.source,
+      sourceSecret: values.git.authSecret,
       isMultiComponent: values.git.isMultiComponent,
       components: values.detectedComponents.map((component) => ({
         name: component.name,

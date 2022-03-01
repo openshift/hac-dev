@@ -1,7 +1,13 @@
+import isEqual from 'lodash/isEqual';
 import uniqueId from 'lodash/uniqueId';
-import { ApplicationModel, ComponentModel, ComponentDetectionQueryModel } from '../models';
-import { ApplicationKind, ComponentDetectionQueryKind } from '../types';
-import { k8sCreateResource, k8sGetResource } from './../dynamic-plugin-sdk';
+import { k8sCreateResource, k8sGetResource, k8sListResource } from '../dynamic-plugin-sdk';
+import {
+  ApplicationModel,
+  ComponentModel,
+  ComponentDetectionQueryModel,
+  SPIAccessTokenBindingModel,
+} from '../models';
+import { ApplicationKind, ComponentDetectionQueryKind, SPIAccessTokenBindingKind } from '../types';
 
 /**
  * Create HAS Application CR
@@ -97,6 +103,7 @@ const uid = () =>
  * @param url the URL of the repository that will be analyzed for components
  * @param namespace namespace to deploy resource in. Defaults to current namespace
  * @param isMultiComponent whether or not the git repository contains multiple components
+ * @param secret Name of the secret containing the personal access token
  * @param dryRun dry run without creating any resources
  * @returns Returns HAS ComponentDetectionQuery results
  *
@@ -107,6 +114,7 @@ export const createComponentDetectionQuery = async (
   url: string,
   namespace: string,
   isMultiComponent?: boolean,
+  secret?: string,
   dryRun?: boolean,
 ): Promise<ComponentDetectionQueryKind['status']['componentDetected']> => {
   // append name with uid for additional randomness
@@ -123,6 +131,7 @@ export const createComponentDetectionQuery = async (
     spec: {
       git: {
         url,
+        secret,
       },
       isMultiComponent,
     },
@@ -141,7 +150,6 @@ export const createComponentDetectionQuery = async (
       model: ComponentDetectionQueryModel,
       name: cdq.metadata.name,
       ns: namespace,
-      data: requestData,
     });
   }
 
@@ -150,4 +158,76 @@ export const createComponentDetectionQuery = async (
   }
 
   return cdq.status.componentDetected;
+};
+
+/**
+ * Create SPIAccessTokenBinding CR
+ *
+ * @param url the URL of the git repository
+ * @param namespace namespace to create the binding
+ * @returns Returns created SPIAccessTokenBinding resource
+ */
+export const createAccessTokenBinding = async (url: string, namespace: string) => {
+  const id = uid();
+  const requestData = {
+    apiVersion: `${SPIAccessTokenBindingModel.apiGroup}/${SPIAccessTokenBindingModel.apiVersion}`,
+    kind: SPIAccessTokenBindingModel.kind,
+    metadata: {
+      name: `appstudio-import-${id}`,
+      namespace,
+    },
+    spec: {
+      repoUrl: url,
+      permissions: {
+        required: [
+          { type: 'r', area: 'repository' },
+          { type: 'w', area: 'repository' },
+        ],
+      },
+      secret: {
+        name: `appstudio-token-${id}`,
+        type: 'kubernetes.io/basic-auth',
+      },
+    },
+  };
+
+  const binding: SPIAccessTokenBindingKind = await k8sCreateResource({
+    model: SPIAccessTokenBindingModel,
+    data: requestData,
+  });
+
+  return binding;
+};
+
+/**
+ * Create SPIAccessTokenBinding if a binding with the same Git URL & permissins
+ * does not already exist.
+ * Else return the existing SPIAccessTokenBinding.
+ *
+ * @param url the URL of the git repository
+ * @param namespace namespace to create the binding
+ * @returns Returns the SPIAccessTokenBinding resource
+ */
+export const initiateAccessTokenBinding = async (url: string, namespace: string) => {
+  const bindings: SPIAccessTokenBindingKind[] = await k8sListResource({
+    model: SPIAccessTokenBindingModel,
+    queryParams: {
+      ns: namespace,
+    },
+  });
+  const binding = bindings.find(
+    (b) =>
+      b.spec.repoUrl === url &&
+      isEqual(b.spec.permissions, {
+        required: [
+          { type: 'r', area: 'repository' },
+          { type: 'w', area: 'repository' },
+        ],
+      }),
+  );
+  if (binding) {
+    return binding;
+  }
+
+  return createAccessTokenBinding(url, namespace);
 };

@@ -1,10 +1,12 @@
 import * as k8sUtil from '../../dynamic-plugin-sdk';
+import { SPIAccessTokenBindingModel } from '../../models';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
 import {
   createApplication,
   createComponent,
   createComponentDetectionQuery,
+  createAccessTokenBinding,
 } from './../create-utils';
 
 jest.mock('../../dynamic-plugin-sdk');
@@ -51,6 +53,28 @@ const mockCDQData = {
   spec: {
     git: { url: 'https://github.com/test/repository' },
     isMultiComponent: true,
+  },
+};
+
+const mockAccessTokenBinding = {
+  apiVersion: `${SPIAccessTokenBindingModel.apiGroup}/${SPIAccessTokenBindingModel.apiVersion}`,
+  kind: SPIAccessTokenBindingModel.kind,
+  metadata: {
+    namespace: 'test-ns',
+    name: expect.any(String),
+  },
+  spec: {
+    repoUrl: 'https://github.com/test/repository',
+    permissions: {
+      required: [
+        { type: 'r', area: 'repository' },
+        { type: 'w', area: 'repository' },
+      ],
+    },
+    secret: {
+      name: expect.any(String),
+      type: 'kubernetes.io/basic-auth',
+    },
   },
 };
 
@@ -108,5 +132,18 @@ describe('Create Utils', () => {
         true,
       ),
     ).rejects.toThrow();
+  });
+
+  it('Should call k8s create util with correct model and data for access token binding', async () => {
+    createResourceMock.mockImplementationOnce(() =>
+      Promise.resolve({ status: { phase: 'Injected' } }),
+    );
+
+    await createAccessTokenBinding('https://github.com/test/repository', 'test-ns');
+
+    expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
+      model: SPIAccessTokenBindingModel,
+      data: expect.objectContaining(mockAccessTokenBinding),
+    });
   });
 });

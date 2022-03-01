@@ -19,6 +19,7 @@ export type FormState = {
   application?: string;
   existingApplication?: string;
   source?: string;
+  sourceSecret?: string;
   components?: CatalogItem<ComponentData>[];
   isMultiComponent?: boolean;
 };

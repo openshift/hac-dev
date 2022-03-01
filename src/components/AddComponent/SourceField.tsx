@@ -24,7 +24,7 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
     name: 'source',
     type: 'input',
   });
-  const [, { value: gitOptions }] = useField('git');
+  const [, { value: gitOptions }] = useField<AddComponentValues['git']>('git');
   const [, , { setValue: setDetectedComponents }] =
     useField<AddComponentValues['detectedComponents']>('detectedComponents');
   const [validated, setValidated] = React.useState(ValidatedOptions.default);
@@ -50,6 +50,7 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
         source,
         formState.namespace,
         gitOptions.isMultiComponent,
+        gitOptions.authSecret,
       )
         .then((result) => {
           setValidated(ValidatedOptions.success);
@@ -78,6 +79,7 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
       formState.application,
       formState.namespace,
       gitOptions.isMultiComponent,
+      gitOptions.authSecret,
     ]),
   );
 
