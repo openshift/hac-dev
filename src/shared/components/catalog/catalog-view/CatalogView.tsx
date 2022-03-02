@@ -223,6 +223,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({
               categorizedIds={categorizedIds}
               selectedCategory={activeCategoryId}
               onSelectCategory={handleCategoryChange}
+              data-test="catalog-categories"
             />
           )}
           {/* {showTypeSelector && (
@@ -239,6 +240,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({
               filterGroupsShowAll={filterGroupsShowAll}
               onShowAllToggle={handleShowAllToggle}
               onFilterChange={handleFilterChange}
+              data-test="catalog-filters"
             />
           )}
         </div>
@@ -257,7 +259,12 @@ const CatalogView: React.FC<CatalogViewProps> = ({
           onSearchKeywordChange={handleSearchKeywordChange}
         />
         {totalItems > 0 ? (
-          <CatalogGrid items={catalogItems} renderTile={renderTile} isGrouped={isGrouped} />
+          <CatalogGrid
+            items={catalogItems}
+            renderTile={renderTile}
+            isGrouped={isGrouped}
+            data-test="catalog-grid"
+          />
         ) : (
           <CatalogEmptyState onClear={clearFilters} />
         )}
