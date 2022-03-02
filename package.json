@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",
+    "@openshift/dynamic-plugin-sdk-utils": "^1.0.0-alpha1",
     "@patternfly/react-catalog-view-extension": "4.13.18",
     "@patternfly/react-core": "4.135.0",
     "@patternfly/react-table": "4.29.0",

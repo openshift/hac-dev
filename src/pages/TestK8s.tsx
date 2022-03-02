@@ -1,11 +1,18 @@
 /* eslint-disable no-console */
 import * as React from 'react';
+import {
+  k8sListResource,
+  k8sGetResource,
+  k8sCreateResource,
+  // k8sDeleteResource,
+  // K8sResourceCommon,
+} from '@openshift/dynamic-plugin-sdk-utils';
 import { Button, PageSection, TextInput } from '@patternfly/react-core';
 import {
-  k8sCreateResource,
+  // k8sCreateResource,
   k8sDeleteResource,
-  k8sGetResource,
-  k8sListResource,
+  // k8sGetResource,
+  // k8sListResource,
   K8sModel,
   k8sPatchResource,
   K8sResourceCommon,
@@ -57,6 +64,7 @@ const TestK8s: React.FC = () => {
   const [name, setName] = React.useState<string>('test');
   const [status, setStatus] = React.useState<string>('');
   const [action, setAction] = React.useState<ActionType | null>(null);
+  const [resourceVersion, setResourceVersion] = React.useState<string>(null);
 
   // TODO: make hook work sanely
   // const result = useK8sWatchResource(initResource);
@@ -68,6 +76,11 @@ const TestK8s: React.FC = () => {
         name,
         namespace,
       },
+    };
+
+    const testConfigMetadata = {
+      name,
+      ns: namespace,
     };
     const testConfigMapData: K8sResourceCommon & { [key: string]: any } = {
       apiVersion: ConfigMapModel.apiVersion,
@@ -92,7 +105,7 @@ const TestK8s: React.FC = () => {
       kind: 'Component',
       ...testConfigMapMetadata,
       spec: {
-        componentName: 'Backend',
+        componentName: 'backend',
         application: applicationData.metadata.name,
         source: {
           git: { url: 'https://github.com/devfile-samples/devfile-sample-java-springboot-basic' },
@@ -107,15 +120,15 @@ const TestK8s: React.FC = () => {
         // response[0].metadata.name === your namespace
         promise = k8sListResource({
           model: ProjectModel,
-        }).then((data) => {
+        }).then(({ items }: any) => {
           // Lock in the namespace
           let ns = null;
-          if (Array.isArray(data)) {
-            const namespaces = data.map((dataResource) => dataResource.metadata.name);
+          if (Array.isArray(items)) {
+            const namespaces = items.map((dataResource) => dataResource.metadata.name);
             console.debug('++++available namespaces:', namespaces);
             ns = namespaces[0];
-          } else if (data?.metadata?.namespace) {
-            ns = data.metadata.namespace;
+          } else if (items?.metadata?.namespace) {
+            ns = items.metadata.namespace;
           }
 
           if (ns) {
@@ -127,33 +140,36 @@ const TestK8s: React.FC = () => {
               'Could not find namespace; you are likely not able to do much as we are targeting "default"',
             );
           }
-          return data;
+          return items;
         });
         break;
       case ActionType.CREATEAPP:
         promise = k8sCreateResource({
           model: ApplicationModel,
-          data: applicationData,
+          queryOptions: testConfigMetadata,
+          resource: applicationData,
         });
         break;
       case ActionType.GETAPP:
         promise = k8sGetResource({
           model: ApplicationModel,
-          name: applicationData.metadata.name,
-          ns: applicationData.metadata.namespace,
+          queryOptions: testConfigMetadata,
+        }).then((data) => {
+          setResourceVersion(data?.metadata?.resourceVersion);
+          return data;
         });
         break;
       case ActionType.CREATECOMP:
         promise = k8sCreateResource({
           model: ComponentModel,
-          data: componentData,
+          queryOptions: testConfigMetadata,
+          resource: componentData,
         });
         break;
       case ActionType.GETCOMP:
         promise = k8sGetResource({
           model: ComponentModel,
-          name: componentData.metadata.name,
-          ns: applicationData.metadata.namespace,
+          queryOptions: testConfigMetadata,
         });
         break;
       case ActionType.PATCH:
@@ -213,7 +229,10 @@ const TestK8s: React.FC = () => {
         {Object.values(ActionType).map((v) => (
           <React.Fragment key={v}>
             <Button
-              isDisabled={v !== ActionType.LIST && namespace === 'default'}
+              isDisabled={
+                (v !== ActionType.LIST && namespace === 'default') ||
+                (v === ActionType.PUT && resourceVersion === null)
+              }
               onClick={() => setAction(v)}
             >
               {v}

@@ -56,6 +56,13 @@ const plugins = [
             name: 'App studio',
           },
         },
+        {
+          type: 'console.navigation/href',
+          properties: {
+            href: '/app-studio/k8s-util',
+            name: 'Test k8s',
+          },
+        },
       ],
     },
     {
@@ -68,7 +75,10 @@ const plugins = [
         SamplePage: resolve(__dirname, '../src/pages/SamplePage/SamplePage.tsx'),
         K8sPage: resolve(__dirname, '../src/pages/TestK8s.tsx'),
       },
-      shared: [{ 'react-router-dom': { singleton: true } }],
+      shared: [
+        { 'react-router-dom': { singleton: true } },
+        { '@openshift/dynamic-plugin-sdk-utils': { singleton: true, import: false } },
+      ],
     },
   ),
 ];
