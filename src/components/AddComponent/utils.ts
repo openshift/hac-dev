@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useFormikContext } from 'formik';
-import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import { useActiveNamespace } from '../../hooks/useActiveNamespace';
 import { SPIAccessTokenBindingGroupVersionKind } from '../../models';

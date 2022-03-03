@@ -9,7 +9,6 @@ jest.mock('../../../utils/create-utils', () => ({
   createComponent: jest.fn(),
 }));
 
-const dispatchMock = jest.fn();
 const createApplicationMock = createApplication as jest.Mock;
 const createComponentMock = createComponent as jest.Mock;
 
@@ -25,7 +24,6 @@ describe('createResources', () => {
           runtime: Resources.OpenShift,
         },
       },
-      dispatchMock,
     );
     expect(createApplicationMock).toHaveBeenCalled();
     expect(createComponentMock).toHaveBeenCalled();
@@ -42,7 +40,6 @@ describe('createResources', () => {
           runtime: Resources.OpenShift,
         },
       },
-      dispatchMock,
     );
     expect(createApplicationMock).toHaveBeenCalled();
     expect(createComponentMock).toHaveBeenCalledWith(
@@ -71,7 +68,6 @@ describe('createResources', () => {
           runtime: Resources.OpenShift,
         },
       },
-      dispatchMock,
     );
     expect(createApplicationMock).toHaveBeenCalledTimes(0);
     expect(createComponentMock).toHaveBeenCalled();
@@ -89,7 +85,6 @@ describe('createResources', () => {
             runtime: Resources.OpenShift,
           },
         },
-        dispatchMock,
       ),
     ).rejects.toThrow();
     expect(createApplicationMock).toHaveBeenLastCalledWith(undefined, undefined, true);
@@ -109,7 +104,6 @@ describe('createResources', () => {
             runtime: Resources.OpenShift,
           },
         },
-        dispatchMock,
       ),
     ).rejects.toThrow();
     expect(createApplicationMock).toHaveBeenLastCalledWith(undefined, undefined, true);

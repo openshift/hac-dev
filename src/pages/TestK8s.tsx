@@ -4,19 +4,21 @@ import {
   k8sListResource,
   k8sGetResource,
   k8sCreateResource,
-  // k8sDeleteResource,
+  k8sDeleteResource,
+  k8sPatchResource,
+  k8sUpdateResource,
   // K8sResourceCommon,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { Button, PageSection, TextInput } from '@patternfly/react-core';
 import {
   // k8sCreateResource,
-  k8sDeleteResource,
+  // k8sDeleteResource,
   // k8sGetResource,
   // k8sListResource,
   K8sModel,
-  k8sPatchResource,
+  // k8sPatchResource,
   K8sResourceCommon,
-  k8sUpdateResource,
+  // k8sUpdateResource,
   // useK8sWatchResource,
   // WatchK8sResource,
 } from '../dynamic-plugin-sdk';
@@ -170,13 +172,16 @@ const TestK8s: React.FC = () => {
         promise = k8sGetResource({
           model: ComponentModel,
           queryOptions: testConfigMetadata,
+        }).then((data) => {
+          setResourceVersion(data?.metadata?.resourceVersion);
+          return data;
         });
         break;
       case ActionType.PATCH:
         promise = k8sPatchResource({
           model: ApplicationModel,
-          resource: applicationData,
-          data: [
+          queryOptions: testConfigMetadata,
+          patches: [
             {
               op: 'replace',
               path: '/spec/displayName',
@@ -188,15 +193,24 @@ const TestK8s: React.FC = () => {
       case ActionType.PUT:
         promise = k8sUpdateResource({
           model: ConfigMapModel,
-          name: testConfigMapMetadata.metadata.name,
-          ns: testConfigMapMetadata.metadata.namespace,
-          data: { ...testConfigMapData, data: { ...testConfigMapData.data, new: 'prop' } },
+          queryOptions: testConfigMetadata,
+          resource: {
+            ...testConfigMapData,
+            data: {
+              ...testConfigMapData.data,
+              new: 'prop',
+            },
+            metadata: {
+              ...testConfigMapData.metadata,
+              resourceVersion,
+            },
+          },
         });
         break;
       case ActionType.DELETE:
         promise = k8sDeleteResource({
           model: ComponentModel,
-          resource: componentData,
+          queryOptions: testConfigMetadata,
         });
         break;
       case null:
@@ -217,7 +231,7 @@ const TestK8s: React.FC = () => {
         setStatus('failed call');
         setR(null);
       });
-  }, [action, name, namespace]);
+  }, [action, name, namespace, resourceVersion]);
 
   return (
     <PageSection>
