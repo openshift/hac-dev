@@ -1,4 +1,4 @@
-import * as k8sUtil from '../../dynamic-plugin-sdk';
+import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { SPIAccessTokenBindingModel } from '../../models';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
@@ -11,7 +11,7 @@ import {
 
 jest.mock('../../dynamic-plugin-sdk');
 
-const createResourceMock = k8sUtil.k8sCreateResource as jest.Mock;
+const createResourceMock = k8sCreateResource as jest.Mock;
 
 const mockApplicationRequestData = {
   apiVersion: `${ApplicationModel.apiGroup}/${ApplicationModel.apiVersion}`,
@@ -99,7 +99,7 @@ describe('Create Utils', () => {
   it('Should call k8s create util with correct model and data for application', async () => {
     await createApplication('Test Application', 'test-ns');
 
-    expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
+    expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ApplicationModel,
       data: mockApplicationRequestData,
     });
@@ -108,7 +108,7 @@ describe('Create Utils', () => {
   it('Should call k8s create util with correct model and data for component', async () => {
     await createComponent(mockComponent, 'test-application', 'test-ns');
 
-    expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
+    expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ComponentModel,
       data: mockComponentData,
     });
@@ -137,7 +137,7 @@ describe('Create Utils', () => {
       true,
     );
 
-    expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
+    expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ComponentDetectionQueryModel,
       data: expect.objectContaining(mockCDQData),
     });
@@ -167,7 +167,7 @@ describe('Create Utils', () => {
 
     await createAccessTokenBinding('https://github.com/test/repository', 'test-ns');
 
-    expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
+    expect(k8sCreateResource).toHaveBeenCalledWith({
       model: SPIAccessTokenBindingModel,
       data: expect.objectContaining(mockAccessTokenBinding),
     });

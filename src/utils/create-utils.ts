@@ -1,6 +1,10 @@
+import {
+  k8sListResource,
+  k8sGetResource,
+  k8sCreateResource,
+} from '@openshift/dynamic-plugin-sdk-utils';
 import isEqual from 'lodash/isEqual';
 import uniqueId from 'lodash/uniqueId';
-import { k8sCreateResource, k8sGetResource, k8sListResource } from '../dynamic-plugin-sdk';
 import {
   ApplicationModel,
   ComponentModel,
@@ -37,11 +41,14 @@ export const createApplication = (
     },
   };
 
-  // TODO: Make Api Calls here
   return k8sCreateResource({
     model: ApplicationModel,
-    data: requestData,
-    dryRun,
+    queryOptions: {
+      name,
+      ns: namespace,
+      ...(dryRun && { queryParams: { dryRun: 'All' } }),
+    },
+    resource: requestData,
   });
 };
 
@@ -87,11 +94,15 @@ export const createComponent = (
       resources: component.resources,
     },
   };
-  // TODO: Make Api Calls here
+
   return k8sCreateResource({
     model: ComponentModel,
-    data: requestData,
-    dryRun,
+    queryOptions: {
+      name,
+      ns: namespace,
+      ...(dryRun && { queryParams: { dryRun: 'All' } }),
+    },
+    resource: requestData,
   });
 };
 
@@ -144,8 +155,12 @@ export const createComponentDetectionQuery = async (
 
   let cdq: ComponentDetectionQueryKind = await k8sCreateResource({
     model: ComponentDetectionQueryModel,
-    data: requestData,
-    dryRun,
+    queryOptions: {
+      name,
+      ns: namespace,
+      ...(dryRun && { queryParams: { dryRun: 'All' } }),
+    },
+    resource: requestData,
   });
 
   while (cdq.status?.conditions?.[0]?.type !== 'Completed') {
@@ -153,8 +168,10 @@ export const createComponentDetectionQuery = async (
     await new Promise((r) => setTimeout(r, 200));
     cdq = await k8sGetResource({
       model: ComponentDetectionQueryModel,
-      name: cdq.metadata.name,
-      ns: namespace,
+      queryOptions: {
+        name: cdq.metadata.name,
+        ns: namespace,
+      },
     });
   }
 
@@ -170,9 +187,14 @@ export const createComponentDetectionQuery = async (
  *
  * @param url the URL of the git repository
  * @param namespace namespace to create the binding
+ * @param dryRun dry run without creating any resources
  * @returns Returns created SPIAccessTokenBinding resource
  */
-export const createAccessTokenBinding = async (url: string, namespace: string) => {
+export const createAccessTokenBinding = async (
+  url: string,
+  namespace: string,
+  dryRun?: boolean,
+) => {
   const id = uid();
   const requestData = {
     apiVersion: `${SPIAccessTokenBindingModel.apiGroup}/${SPIAccessTokenBindingModel.apiVersion}`,
@@ -198,7 +220,12 @@ export const createAccessTokenBinding = async (url: string, namespace: string) =
 
   const binding: SPIAccessTokenBindingKind = await k8sCreateResource({
     model: SPIAccessTokenBindingModel,
-    data: requestData,
+    queryOptions: {
+      name: `appstudio-import-${id}`,
+      ns: namespace,
+      ...(dryRun && { queryParams: { dryRun: 'All' } }),
+    },
+    resource: requestData,
   });
 
   return binding;
@@ -214,9 +241,9 @@ export const createAccessTokenBinding = async (url: string, namespace: string) =
  * @returns Returns the SPIAccessTokenBinding resource
  */
 export const initiateAccessTokenBinding = async (url: string, namespace: string) => {
-  const bindings: SPIAccessTokenBindingKind[] = await k8sListResource({
+  const { items: bindings }: { items: SPIAccessTokenBindingKind[] } = await k8sListResource({
     model: SPIAccessTokenBindingModel,
-    queryParams: {
+    queryOptions: {
       ns: namespace,
     },
   });

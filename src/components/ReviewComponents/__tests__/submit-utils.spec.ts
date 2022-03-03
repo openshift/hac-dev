@@ -69,7 +69,7 @@ describe('createResources', () => {
         },
       },
     );
-    expect(createApplicationMock).toHaveBeenCalledTimes(0);
+    expect(createApplicationMock).toHaveBeenCalledTimes(1);
     expect(createComponentMock).toHaveBeenCalled();
   });
 

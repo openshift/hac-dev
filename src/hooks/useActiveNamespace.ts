@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
+import { k8sListResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { useFormValues } from './../components/form-context';
-import { k8sListResource } from './../dynamic-plugin-sdk';
 import { ProjectModel } from './../models';
 
 export const useActiveNamespace = () => {
@@ -9,7 +9,7 @@ export const useActiveNamespace = () => {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const projects = await k8sListResource({
+      const { items: projects }: any = await k8sListResource({
         model: ProjectModel,
       });
       // Lock in the namespace

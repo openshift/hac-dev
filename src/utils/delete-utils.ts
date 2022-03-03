@@ -1,5 +1,5 @@
+import { k8sDeleteResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { ComponentModel } from '../models';
-import { k8sDeleteResource } from './../dynamic-plugin-sdk';
 
 /**
  * Delete Component CR
@@ -11,17 +11,23 @@ import { k8sDeleteResource } from './../dynamic-plugin-sdk';
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
 export const deleteComponent = (componentName: string, namespace: string): any => {
-  const componentData = {
-    apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
-    kind: 'Component',
-    metadata: {
-      name: componentName,
-      namespace,
-    },
-  };
-  // TODO: Make Api Calls here
+  // const componentData = {
+  //   apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
+  //   kind: 'Component',
+  //   metadata: {
+  //     name: componentName,
+  //     namespace,
+  //   },
+  // };
+
   return k8sDeleteResource({
-    model: ComponentModel,
-    resource: componentData,
+    model: {
+      ...ComponentModel,
+      apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
+    },
+    queryOptions: {
+      name: componentName,
+      ns: namespace,
+    },
   });
 };

@@ -10,18 +10,7 @@ import {
   // K8sResourceCommon,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { Button, PageSection, TextInput } from '@patternfly/react-core';
-import {
-  // k8sCreateResource,
-  // k8sDeleteResource,
-  // k8sGetResource,
-  // k8sListResource,
-  K8sModel,
-  // k8sPatchResource,
-  K8sResourceCommon,
-  // k8sUpdateResource,
-  // useK8sWatchResource,
-  // WatchK8sResource,
-} from '../dynamic-plugin-sdk';
+import { K8sModel, K8sResourceCommon } from '../dynamic-plugin-sdk';
 import { ApplicationModel, ComponentModel } from '../models';
 
 const ProjectModel: K8sModel = {

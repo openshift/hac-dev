@@ -1,5 +1,5 @@
+import { k8sGetResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { renderHook } from '@testing-library/react-hooks';
-import { k8sGetResource } from '../../dynamic-plugin-sdk';
 import { useApplicationsInfo } from '../useApplicationsInfo';
 
 jest.mock('../../dynamic-plugin-sdk', () => {

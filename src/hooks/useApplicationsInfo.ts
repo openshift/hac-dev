@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { k8sGetResource } from '../dynamic-plugin-sdk';
+import { k8sGetResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { ApplicationModel } from '../models';
 import { useActiveNamespace } from './useActiveNamespace';
 
@@ -18,7 +18,10 @@ export const useApplicationsInfo = (): ApplicationInfo => {
   React.useEffect(() => {
     let mounted = true;
     const fetchApplication = async () => {
-      const appData = await k8sGetResource({ model: ApplicationModel, ns: namespace });
+      const appData: any = await k8sGetResource({
+        model: ApplicationModel,
+        queryOptions: { ns: namespace },
+      });
       if (mounted && appData?.items?.length > 0) {
         setApplicationInfo({ loaded: true, appExists: true });
       } else if (mounted) {
