@@ -1,5 +1,5 @@
 import {
-  k8sListResource,
+  k8sListResourceItems,
   k8sGetResource,
   k8sCreateResource,
 } from '@openshift/dynamic-plugin-sdk-utils';
@@ -241,7 +241,7 @@ export const createAccessTokenBinding = async (
  * @returns Returns the SPIAccessTokenBinding resource
  */
 export const initiateAccessTokenBinding = async (url: string, namespace: string) => {
-  const { items: bindings }: { items: SPIAccessTokenBindingKind[] } = await k8sListResource({
+  const bindings: SPIAccessTokenBindingKind[] = await k8sListResourceItems({
     model: SPIAccessTokenBindingModel,
     queryOptions: {
       ns: namespace,

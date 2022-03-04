@@ -9,7 +9,7 @@ import {
   createAccessTokenBinding,
 } from './../create-utils';
 
-jest.mock('../../dynamic-plugin-sdk');
+jest.mock('@openshift/dynamic-plugin-sdk-utils');
 
 const createResourceMock = k8sCreateResource as jest.Mock;
 

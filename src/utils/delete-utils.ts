@@ -11,15 +11,6 @@ import { ComponentModel } from '../models';
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
 export const deleteComponent = (componentName: string, namespace: string): any => {
-  // const componentData = {
-  //   apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
-  //   kind: 'Component',
-  //   metadata: {
-  //     name: componentName,
-  //     namespace,
-  //   },
-  // };
-
   return k8sDeleteResource({
     model: {
       ...ComponentModel,

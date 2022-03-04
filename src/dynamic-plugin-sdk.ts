@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { HttpError } from './shared/utils/error/http-error';
 import { useDeepCompareMemoize } from './shared';
 import {
-  k8sListResource,
+  k8sListResourceItems,
   k8sGetResource,
 } from '@openshift/dynamic-plugin-sdk-utils';
 
@@ -254,7 +254,7 @@ const makeGetCall = (resourceData: WatchK8sResource) => (
  */
 const makeListCall = (resourceData: WatchK8sResource) => (
   resourceData.groupVersionKind &&
-    k8sListResource({
+  k8sListResourceItems({
       model: {
         apiVersion: resourceData.groupVersionKind.version,
         apiGroup: resourceData.groupVersionKind.group,

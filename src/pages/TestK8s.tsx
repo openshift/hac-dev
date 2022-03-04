@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import {
-  k8sListResource,
+  k8sListResourceItems,
   k8sGetResource,
   k8sCreateResource,
   k8sDeleteResource,
@@ -109,17 +109,17 @@ const TestK8s: React.FC = () => {
       case ActionType.LIST:
         // TODO: this can work sorta for getting your namespace value
         // response[0].metadata.name === your namespace
-        promise = k8sListResource({
+        promise = k8sListResourceItems({
           model: ProjectModel,
-        }).then(({ items }: any) => {
+        }).then((data: any) => {
           // Lock in the namespace
           let ns = null;
-          if (Array.isArray(items)) {
-            const namespaces = items.map((dataResource) => dataResource.metadata.name);
+          if (Array.isArray(data)) {
+            const namespaces = data.map((dataResource) => dataResource.metadata.name);
             console.debug('++++available namespaces:', namespaces);
             ns = namespaces[0];
-          } else if (items?.metadata?.namespace) {
-            ns = items.metadata.namespace;
+          } else if (data?.metadata?.namespace) {
+            ns = data.metadata.namespace;
           }
 
           if (ns) {
