@@ -46,12 +46,17 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
   return (
     <Dropdown
       onSelect={onSelect}
-      toggle={<DropdownToggle onToggle={onToggle}>{currentSelection}</DropdownToggle>}
+      toggle={
+        <DropdownToggle onToggle={onToggle} data-test="dropdown-toggle">
+          {currentSelection}
+        </DropdownToggle>
+      }
       isOpen={dropdownOpen}
       dropdownItems={dropdownItems}
       autoFocus={false}
       disabled={disabled}
       className="hacDev-basic-dropdown"
+      data-test="dropdown"
     />
   );
 };

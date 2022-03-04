@@ -18,7 +18,7 @@ const ActionGroupWithIcons: React.FC<ActionGroupWithIconsProps> = ({
           type="submit"
           onClick={onSubmit}
           variant={ButtonVariant.plain}
-          data-test-id="check-icon"
+          data-test="check-icon"
           style={{ padding: '0' }}
           isDisabled={isDisabled}
         >
