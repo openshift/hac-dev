@@ -64,6 +64,7 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
           isSubmitting={isSubmitting}
           disableSubmit={!isEmpty(errors) || isSubmitting}
           errorMessage={undefined}
+          sticky
         />
       </div>
     </Form>
