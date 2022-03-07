@@ -11,13 +11,20 @@ const CPUResourceMap = {
   '': 'cores',
 };
 
-export const createResourceData = ({ memory = '', cpu = '' }) => {
+type ResourceData = {
+  limits?: { cpu?: string; memory?: string };
+  requests?: { cpu?: string; memory?: string };
+};
+
+export const createResourceData = (resources: ResourceData) => {
+  const memory = resources?.limits?.memory ?? '';
+  const cpu = resources?.limits?.cpu ?? '';
   const [memoryResource, memoryUnit] = getResourceData(memory);
   const [cpuResource, cpuUnit] = getResourceData(cpu);
 
   return {
     cpu: cpuResource || '',
-    cpuUnit: CPUResourceMap[cpuUnit] || '',
+    cpuUnit: CPUResourceMap[cpuUnit] || CPUResourceMap.m,
     memory: memoryResource || '',
     memoryUnit: memoryUnit || 'Mi',
   };

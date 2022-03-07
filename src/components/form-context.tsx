@@ -7,10 +7,8 @@ type ComponentData = {
   targetPort?: number;
   replicas?: number;
   route?: string;
-  resources?: {
-    memory?: string;
-    cpu?: string;
-  };
+  resources?: { limits?: { cpu?: string; memory?: string } };
+  env?: { name: string; value: string }[];
 };
 
 export type FormState = {

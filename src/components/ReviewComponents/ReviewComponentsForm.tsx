@@ -44,7 +44,11 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
               {formState.components.map((component) => (
                 <ReviewSourceComponentCard
                   key={component.name}
-                  component={{ ...component, source: component.data.source }}
+                  component={{
+                    name: component.name,
+                    source: component.data.source,
+                    envs: component.data.env,
+                  }}
                 />
               ))}
             </>

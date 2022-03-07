@@ -36,6 +36,7 @@ export const AddComponentPage = () => {
           resources: component.resources,
           replicas: component.replicas,
           route: component.route,
+          env: component.env,
         },
       })),
     }));
