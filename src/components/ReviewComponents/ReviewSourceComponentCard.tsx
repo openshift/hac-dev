@@ -29,6 +29,7 @@ type ReviewSourceComponentCardProps = {
   component: {
     name: string;
     source: string;
+    envs?: { name: string; value: string }[];
   };
 };
 
@@ -125,6 +126,7 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
                   />
                   <EnvironmentField
                     name={`${fieldPrefix}.env`}
+                    envs={component.envs}
                     label="Environment variables"
                     description="Component will have access during build and runtimes."
                     labelIcon={

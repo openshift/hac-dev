@@ -26,6 +26,7 @@ export type ComponentValues = {
     memory: number;
     memoryUnit: MemoryUnits;
   };
+  env?: { name: string; value: string }[];
   buildCommand?: string;
   runCommand?: string;
 };

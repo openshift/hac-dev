@@ -25,7 +25,7 @@ export type ComponentDetectionQueryKind = K8sResourceCommon & {
               cpu?: string;
               memory?: string;
             };
-            resources?: {
+            requests?: {
               cpu?: string;
               memory?: string;
             };
@@ -35,6 +35,7 @@ export type ComponentDetectionQueryKind = K8sResourceCommon & {
               url: string;
             };
           };
+          env?: { name: string; value: string }[];
         };
       };
     };

@@ -23,13 +23,14 @@ export type AddComponentValues = {
     };
     context: string;
     resources?: {
-      memory?: string;
-      cpu?: string;
+      limits?: { cpu?: string; memory?: string };
+      requests?: { cpu?: string; memory?: string };
     };
     devfileFound?: boolean;
     targetPort?: number;
     route?: string;
     replicas?: number;
+    env?: { name: string; value: string }[];
   }[];
 };
 
