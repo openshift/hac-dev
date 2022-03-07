@@ -3,7 +3,6 @@ import { Form } from '@patternfly/react-core';
 import { FormikProps } from 'formik';
 import { FormFooter } from '../../shared';
 import { ApplicationField } from './ApplicationField';
-import { WorkspaceField } from './WorkspaceField';
 
 export type CreateApplicationValues = {
   workspace: string;
@@ -20,7 +19,6 @@ export const CreateApplicationForm: React.FC<CreateApplicationFormProps> = ({
 }) => {
   return (
     <Form style={{ maxWidth: '50%' }} onSubmit={handleSubmit}>
-      <WorkspaceField />
       <ApplicationField />
       <FormFooter
         submitLabel="Next"
@@ -28,6 +26,7 @@ export const CreateApplicationForm: React.FC<CreateApplicationFormProps> = ({
         handleCancel={handleReset}
         isSubmitting={isSubmitting}
         disableSubmit={isSubmitting}
+        sticky
       />
     </Form>
   );

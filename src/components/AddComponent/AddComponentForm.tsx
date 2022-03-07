@@ -61,6 +61,7 @@ export const AddComponentForm: React.FC<AddComponentFormProps> = ({
         }}
         isSubmitting={isSubmitting}
         disableSubmit={!dirty || !isEmpty(errors) || isSubmitting}
+        sticky
       />
     </Form>
   );
