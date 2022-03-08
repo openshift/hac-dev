@@ -4,6 +4,7 @@ import NotificationsPortal from '@redhat-cloud-services/frontend-components-noti
 import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { getRegistry } from '@redhat-cloud-services/frontend-components-utilities/Registry';
 import AppBanner from './AppBanner';
+import { ModalPortal } from './ModalPortal';
 import { Routes } from './Routes';
 
 import './App.scss';
@@ -32,6 +33,7 @@ const App: React.FC = () => {
       <NotificationsPortal />
       <AppBanner />
       <Routes />
+      <ModalPortal />
     </Fragment>
   );
 };

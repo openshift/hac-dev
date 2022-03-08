@@ -18,7 +18,8 @@ export const ComponentLogViewerModal: React.FC<ComponentLogViewerModalProps> = (
 }) => {
   return (
     <Modal
-      className="hacDev hacDev-log-viewer-modal"
+      className="hacDev-log-viewer-modal"
+      appendTo={() => document.querySelector('#hacDev-modal-container')}
       isOpen={!!isOpen}
       variant={ModalVariant.large}
       onClose={onClose}
