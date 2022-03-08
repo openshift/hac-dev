@@ -131,7 +131,7 @@ const TestK8s: React.FC = () => {
               'Could not find namespace; you are likely not able to do much as we are targeting "default"',
             );
           }
-          return items;
+          return data;
         });
         break;
       case ActionType.CREATEAPP:

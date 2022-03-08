@@ -5,7 +5,7 @@ const commonPlugins = require('./plugins');
 
 const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
-  sassPrefix: '.hacCore',
+  sassPrefix: '.hacDev',
   deployment: process.env.BETA ? 'beta/api/plugins' : 'api/plugins',
 });
 plugins.push(...commonPlugins);

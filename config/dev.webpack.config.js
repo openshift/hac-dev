@@ -57,15 +57,18 @@ const webpackProxy = {
 
 const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
-  sassPrefix: '.hacCore',
+  sassPrefix: '.hacDev',
   debug: true,
   useFileHash: false,
   ...webpackProxy,
 });
 
-plugins.push(...commonPlugins);
-
-module.exports = {
-  ...webpackConfig,
-  plugins,
+module.exports = () => {
+  return commonPlugins().then((resolvedPlugins) => {
+    plugins.push(...resolvedPlugins);
+    return {
+      ...webpackConfig,
+      plugins,
+    };
+  });
 };
