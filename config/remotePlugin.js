@@ -2,6 +2,10 @@ const { resolve } = require('path');
 const packageInfo = require('../package.json');
 
 module.exports = {
+  entryCallbackSettings: {
+    name: 'loadPluginEntry',
+    pluginID: `${packageInfo.insights.appname}@${packageInfo.version}`,
+  },
   pluginMetadata: {
     name: packageInfo.name,
     version: packageInfo.version,
@@ -103,6 +107,7 @@ module.exports = {
   ],
   sharedModules: {
     'react-router-dom': { singleton: true },
+    'react-redux': { singleton: true, import: false },
     '@openshift/dynamic-plugin-sdk-utils': { singleton: true, import: false },
   },
 };

@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",
-    "@openshift/dynamic-plugin-sdk": "^1.0.0-alpha1",
-    "@openshift/dynamic-plugin-sdk-utils": "^1.0.0-alpha1",
+    "@openshift/dynamic-plugin-sdk": "^1.0.0-alpha2",
+    "@openshift/dynamic-plugin-sdk-utils": "^1.0.0-alpha4",
     "@patternfly/react-catalog-view-extension": "4.13.18",
     "@patternfly/react-core": "4.135.0",
     "@patternfly/react-table": "4.29.0",
@@ -52,11 +52,12 @@
     "react-i18next": "^11.12.0",
     "react-router-dom": "5.2.0",
     "react-virtualized": "^9.22.3",
+    "redux-thunk": "^2.4.1",
     "showdown": "^1.9.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@openshift/dynamic-plugin-sdk-webpack": "^1.0.0-alpha1",
+    "@openshift/dynamic-plugin-sdk-webpack": "^1.0.0-alpha2",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^1.2.1",
     "@redhat-cloud-services/frontend-components-config": "^4.6.1",
     "@redhat-cloud-services/frontend-components-config-utilities": "^1.5.15",

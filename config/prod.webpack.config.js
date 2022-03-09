@@ -8,14 +8,17 @@ const { config: webpackConfig, plugins } = config({
   sassPrefix: '.hacDev',
   deployment: process.env.BETA ? 'beta/api/plugins' : 'api/plugins',
 });
-plugins.push(...commonPlugins);
 
 module.exports = (env) => {
-  if (env && env.analyze === 'true') {
-    plugins.push(new BundleAnalyzerPlugin());
-  }
-  return {
-    ...webpackConfig,
-    plugins,
-  };
+  return commonPlugins().then((resolvedPlugins) => {
+    plugins.push(...resolvedPlugins);
+
+    if (env && env.analyze === 'true') {
+      plugins.push(new BundleAnalyzerPlugin());
+    }
+    return {
+      ...webpackConfig,
+      plugins,
+    };
+  });
 };

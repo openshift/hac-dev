@@ -23,9 +23,9 @@ const webpackProxy = {
   env,
   appUrl: process.env.BETA ? '/beta/hac/app-studio' : '/hac/app-studio',
   standalone: Boolean(process.env.STANDALONE),
-  // ...(process.env.INSIGHTS_CHROME && {
-  //   localChrome: process.env.INSIGHTS_CHROME,
-  // }),
+  ...(process.env.INSIGHTS_CHROME && {
+    localChrome: process.env.INSIGHTS_CHROME,
+  }),
   customProxy: [
     {
       context: (path) => path.includes('/api/k8s'),

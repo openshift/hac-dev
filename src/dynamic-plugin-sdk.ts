@@ -6,6 +6,7 @@ import { useDeepCompareMemoize } from './shared';
 import {
   k8sListResourceItems,
   k8sGetResource,
+  K8sResourceCommon,
 } from '@openshift/dynamic-plugin-sdk-utils';
 
 const HOOK_POLL_DELAY = 10000; // change this if you want the useHook to go faster / slower on polls
@@ -147,69 +148,11 @@ type Selector = {
   matchLabels?: MatchLabels;
   matchExpressions?: MatchExpression[];
 };
-type OwnerReference = {
-  name: string;
-  kind: string;
-  uid: string;
-  apiVersion: string;
-  controller?: boolean;
-  blockOwnerDeletion?: boolean;
-};
-type ObjectMetadata = {
-  annotations?: { [key: string]: string };
-  clusterName?: string;
-  creationTimestamp?: string;
-  deletionGracePeriodSeconds?: number;
-  deletionTimestamp?: string;
-  finalizers?: string[];
-  generateName?: string;
-  generation?: number;
-  labels?: { [key: string]: string };
-  managedFields?: any[];
-  name?: string;
-  namespace?: string;
-  ownerReferences?: OwnerReference[];
-  resourceVersion?: string;
-  uid?: string;
-};
 
 
 /* ---------------- *
  *  External Types  *
  * ---------------- */
-export type K8sResourceCommon = {
-  apiVersion: string;
-  kind: string;
-  metadata: ObjectMetadata;
-};
-export type K8sModel = {
-  abbr: string;
-  kind: string;
-  label: string;
-  labelKey?: string;
-  labelPlural: string;
-  labelPluralKey?: string;
-  plural: string;
-  propagationPolicy?: 'Foreground' | 'Background';
-
-  id?: string;
-  crd?: boolean;
-  apiVersion: string;
-  apiGroup?: string;
-  namespaced?: boolean;
-  selector?: Selector;
-  labels?: { [key: string]: string };
-  annotations?: { [key: string]: string };
-  // verbs?: K8sVerb[];
-  shortNames?: string[];
-  // badge?: BadgeType;
-  color?: string;
-
-  // Legacy option for supporing plural names in URL paths when `crd: true`.
-  // This should not be set for new models, but is needed to avoid breaking
-  // existing links as we transition to using the API group in URL paths.
-  legacyPluralURL?: boolean;
-};
 export type K8sGroupVersionKind = { group?: string; version: string; kind: string };
 export type WatchK8sResource = {
   groupVersionKind?: K8sGroupVersionKind;

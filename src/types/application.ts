@@ -1,4 +1,4 @@
-import { K8sResourceCommon } from '../dynamic-plugin-sdk';
+import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 
 export type ApplicationKind = K8sResourceCommon & {
   spec: {

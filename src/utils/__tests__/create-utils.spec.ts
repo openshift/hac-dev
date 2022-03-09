@@ -101,7 +101,11 @@ describe('Create Utils', () => {
 
     expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ApplicationModel,
-      data: mockApplicationRequestData,
+      queryOptions: {
+        name: 'test-application',
+        ns: 'test-ns',
+      },
+      resource: mockApplicationRequestData,
     });
   });
 
@@ -110,7 +114,11 @@ describe('Create Utils', () => {
 
     expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ComponentModel,
-      data: mockComponentData,
+      queryOptions: {
+        name: 'test-component',
+        ns: 'test-ns',
+      },
+      resource: mockComponentData,
     });
   });
 
@@ -139,7 +147,11 @@ describe('Create Utils', () => {
 
     expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ComponentDetectionQueryModel,
-      data: expect.objectContaining(mockCDQData),
+      queryOptions: {
+        name: expect.stringContaining('test-application'),
+        ns: 'test-ns',
+      },
+      resource: expect.objectContaining(mockCDQData),
     });
   });
 
@@ -169,7 +181,11 @@ describe('Create Utils', () => {
 
     expect(k8sCreateResource).toHaveBeenCalledWith({
       model: SPIAccessTokenBindingModel,
-      data: expect.objectContaining(mockAccessTokenBinding),
+      queryOptions: {
+        name: expect.stringContaining('appstudio-import-'),
+        ns: 'test-ns',
+      },
+      resource: expect.objectContaining(mockAccessTokenBinding),
     });
   });
 });

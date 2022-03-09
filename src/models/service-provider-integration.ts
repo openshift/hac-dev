@@ -1,13 +1,11 @@
-import { K8sGroupVersionKind, K8sModel } from './../dynamic-plugin-sdk';
+import { K8sModelCommon } from '@openshift/dynamic-plugin-sdk-utils';
+import { K8sGroupVersionKind } from './../dynamic-plugin-sdk';
 
-export const SPIAccessTokenBindingModel: K8sModel = {
+export const SPIAccessTokenBindingModel: K8sModelCommon = {
   apiGroup: 'appstudio.redhat.com',
   apiVersion: 'v1beta1',
   kind: 'SPIAccessTokenBinding',
   plural: 'spiaccesstokenbindings',
-  abbr: 'ATB',
-  label: 'SPIAccessTokenBinding',
-  labelPlural: 'SPIAccessTokenBindings',
   namespaced: true,
 };
 

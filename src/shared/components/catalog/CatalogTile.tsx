@@ -6,7 +6,7 @@ import {
 } from '@patternfly/react-catalog-view-extension';
 import { Badge, LabelGroup } from '@patternfly/react-core';
 import * as _ from 'lodash-es';
-import { history } from '../../utils';
+import { history } from '../../utils/router';
 import { isModifiedEvent } from '../../utils/utils';
 import CatalogBadges from './CatalogBadges';
 import { getIconProps } from './utils/catalog-utils';

@@ -37,11 +37,11 @@ export const createResources = async (
   const shouldCreateApplication = !formState.existingApplication;
   let appName = formState.existingApplication;
   if (shouldCreateApplication) {
-    const appData = await createApplication(formState.application, formState.namespace);
+    const appData = await createApplication(formState.application, formState.namespace, true);
     appName = appData.metadata.name;
   }
 
-  await createComponents(components, appName, formState.namespace);
+  await createComponents(components, appName, formState.namespace, true);
 
   const applicationData = await createApplication(formState.application, formState.namespace);
   appName = applicationData.metadata.name;

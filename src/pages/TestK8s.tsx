@@ -7,28 +7,22 @@ import {
   k8sDeleteResource,
   k8sPatchResource,
   k8sUpdateResource,
-  // K8sResourceCommon,
+  K8sModelCommon,
+  K8sResourceCommon,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { Button, PageSection, TextInput } from '@patternfly/react-core';
-import { K8sModel, K8sResourceCommon } from '../dynamic-plugin-sdk';
 import { ApplicationModel, ComponentModel } from '../models';
 
-const ProjectModel: K8sModel = {
+const ProjectModel: K8sModelCommon = {
   apiVersion: 'v1',
   apiGroup: 'project.openshift.io',
   kind: 'Project',
-  abbr: 'PR',
-  label: 'Project',
-  labelPlural: 'Projects',
   plural: 'projects',
 };
-const ConfigMapModel: K8sModel = {
+const ConfigMapModel: K8sModelCommon = {
   apiVersion: 'v1',
   kind: 'ConfigMap',
-  abbr: 'CM',
   plural: 'configmaps',
-  labelPlural: 'ConfigMaps',
-  label: 'ConfigMap',
   namespaced: true,
 };
 
