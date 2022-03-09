@@ -15,20 +15,24 @@ import {
 } from '@patternfly/react-core';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
-import { ComponentKind } from '../../types';
+import { ComponentKind, RouteKind } from '../../types';
 import { deleteComponent } from '../../utils/delete-utils';
+import { getComponentRouteWebURL } from '../../utils/route-utils';
 
 import './ComponentListItem.scss';
 
 type ComponentListViewPageProps = {
   component: ComponentKind;
+  routes: RouteKind[];
 };
 
-export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ component }) => {
+export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ component, routes }) => {
   const [expanded, setExpanded] = React.useState(false);
   const { replicas, targetPort, resources } = component.spec;
   const name = component.metadata.name;
   const resourceRequests = resources?.requests;
+  const containerImage = component.status?.containerImage;
+  const componentRouteWebURL = routes?.length > 0 && getComponentRouteWebURL(routes, name);
 
   return (
     <DataListItem aria-label={name} isExpanded={expanded} data-testid="component-list-item">
@@ -77,7 +81,11 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
         aria-label={`${name} details`}
         isHidden={!expanded}
       >
-        <DescriptionList>
+        <DescriptionList
+          columnModifier={{
+            default: '2Col',
+          }}
+        >
           {resourceRequests && (
             <DescriptionListGroup>
               <DescriptionListTermHelpText>
@@ -104,6 +112,28 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
                 <DescriptionListTermHelpTextButton>Target Port</DescriptionListTermHelpTextButton>
               </DescriptionListTermHelpText>
               <DescriptionListDescription>{targetPort}</DescriptionListDescription>
+            </DescriptionListGroup>
+          )}
+          {componentRouteWebURL && (
+            <DescriptionListGroup>
+              <DescriptionListTermHelpText>
+                <DescriptionListTermHelpTextButton>Route</DescriptionListTermHelpTextButton>
+              </DescriptionListTermHelpText>
+              <DescriptionListDescription>
+                <ExternalLink href={componentRouteWebURL} text={componentRouteWebURL} />
+              </DescriptionListDescription>
+            </DescriptionListGroup>
+          )}
+          {containerImage && (
+            <DescriptionListGroup>
+              <DescriptionListTermHelpText>
+                <DescriptionListTermHelpTextButton>
+                  Built container image
+                </DescriptionListTermHelpTextButton>
+              </DescriptionListTermHelpText>
+              <DescriptionListDescription>
+                <ExternalLink href={`https://${containerImage}`} text={containerImage} />
+              </DescriptionListDescription>
             </DescriptionListGroup>
           )}
         </DescriptionList>

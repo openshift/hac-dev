@@ -13,6 +13,7 @@ import {
 import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import { useActiveNamespace } from '../../hooks/useActiveNamespace';
+import { useApplicationRoutes } from '../../hooks/useApplicationRoutes';
 import { ComponentGroupVersionKind } from '../../models';
 import { StatusBox } from '../../shared/components/status-box/StatusBox';
 import { ComponentKind } from '../../types';
@@ -29,8 +30,11 @@ export const ComponentListViewPage: React.FC<ComponentListViewPageProps> = ({ ap
     namespace,
     isList: true,
   });
+
+  const [routes, routesLoaded] = useApplicationRoutes(application, namespace);
+
   const [nameFilter, setNameFilter] = React.useState<string>('');
-  const loaded = namespace && componentsLoaded;
+  const loaded = namespace && componentsLoaded && routesLoaded;
 
   // TODO: handle empty state / components not found
   const components = React.useMemo(
@@ -85,7 +89,7 @@ export const ComponentListViewPage: React.FC<ComponentListViewPageProps> = ({ ap
           </DataListItemRow>
         </DataListItem>
         {filteredComponents?.map((component) => (
-          <ComponentListItem key={component.metadata.uid} component={component} />
+          <ComponentListItem key={component.metadata.uid} component={component} routes={routes} />
         ))}
       </DataList>
     </StatusBox>

@@ -33,4 +33,10 @@ export type ComponentKind = K8sResourceCommon & {
       containerImage: string;
     };
   };
+  status?: {
+    containerImage?: string;
+    conditions?: any;
+    devfile?: string;
+    gitops?: { repositoryURL?: string };
+  };
 };
