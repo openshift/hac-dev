@@ -96,14 +96,18 @@ module.exports = {
         name: 'App studio',
       },
     },
-    {
-      type: 'console.navigation/href',
-      properties: {
-        className: 'hacDev',
-        href: '/app-studio/k8s-util',
-        name: 'Test k8s',
-      },
-    },
+    ...(process.env.NODE_ENV !== 'production'
+      ? [
+          {
+            type: 'console.navigation/href',
+            properties: {
+              className: 'hacDev',
+              href: '/app-studio/k8s-util',
+              name: 'Test k8s',
+            },
+          },
+        ]
+      : []),
   ],
   sharedModules: {
     'react-router-dom': { singleton: true },
