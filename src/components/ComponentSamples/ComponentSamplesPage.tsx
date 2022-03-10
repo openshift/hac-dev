@@ -18,15 +18,22 @@ export const ComponentSamplesPage = () => {
   const [loadError, setLoadError] = React.useState<string>();
 
   React.useEffect(() => {
+    let unmounted = false;
     if (formState.components?.[0]?.type === 'sample') {
-      setSelected(formState.components[0]);
+      !unmounted && setSelected(formState.components[0]);
     }
+    return () => {
+      unmounted = true;
+    };
     // We just need setSelected called once when the component is mounted
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
+    let unmounted = false;
     const fetchDevfileSamples = async () => {
+      if (unmounted) return;
+
       try {
         const devfileSamples = await getDevfileSamples();
 
@@ -40,6 +47,9 @@ export const ComponentSamplesPage = () => {
     };
 
     fetchDevfileSamples();
+    return () => {
+      unmounted = true;
+    };
   }, []);
 
   const handleSubmit = React.useCallback(() => {
