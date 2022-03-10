@@ -30,6 +30,11 @@ export const useAccessTokenBindingAuth = (name: string) => {
     if (!name || !loaded) return;
     if (binding.status?.phase === SPIAccessTokenBindingPhase.Injected) {
       setFieldValue('git.authSecret', binding.status.syncedObjectRef.name);
+      // eslint-disable-next-line no-console
+      console.log('Git repository successfully authorized.');
+    } else if (binding.status?.phase === SPIAccessTokenBindingPhase.Error) {
+      // eslint-disable-next-line no-console
+      console.log('Error in binding status ', binding.status.errorMessage);
     }
   }, [
     name,

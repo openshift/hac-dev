@@ -37,19 +37,52 @@ export const createResources = async (
   const shouldCreateApplication = !formState.existingApplication;
   let appName = formState.existingApplication;
   if (shouldCreateApplication) {
-    const appData = await createApplication(formState.application, formState.namespace, true);
-    appName = appData.metadata.name;
+    try {
+      const appData = await createApplication(formState.application, formState.namespace, true);
+      appName = appData.metadata.name;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log('Application creation failed!!', error.message);
+      throw error;
+    }
   }
 
-  await createComponents(components, appName, formState.namespace, true);
+  try {
+    await createComponents(components, appName, formState.namespace, true);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log('Component creation failed!!', error.message);
+    throw error;
+  }
 
-  const applicationData = await createApplication(formState.application, formState.namespace);
-  appName = applicationData.metadata.name;
-  // eslint-disable-next-line no-console
-  console.log('###############- Application created', applicationData);
+  if (shouldCreateApplication) {
+    try {
+      const applicationData = await createApplication(formState.application, formState.namespace);
+      appName = applicationData.metadata.name;
+      // eslint-disable-next-line no-console
+      console.log('###############- Application created', applicationData);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log('Application creation failed!!', error.message);
+      throw error;
+    }
+  }
 
-  const componentData = await createComponents(components, appName, formState.namespace);
+  try {
+    const componentData = await createComponents(components, appName, formState.namespace);
+    // eslint-disable-next-line no-console
+    console.log('###############- Components created', componentData);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log('Component creation failed!!', error.message);
+  }
+
   // eslint-disable-next-line no-console
-  console.log('###############- Components created', componentData);
+  console.log(
+    'Application and components created successfully!!',
+    `Created application ${appName} with components ${formState.components
+      .map((c) => c.name)
+      .join(', ')}`,
+  );
   return appName;
 };
