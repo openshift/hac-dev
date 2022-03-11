@@ -10,7 +10,7 @@ module.exports = {
     name: packageInfo.name,
     version: packageInfo.version,
     exposedModules: {
-      AppEntry: resolve(__dirname, '../src/components/SamplesFlow.tsx'),
+      AppEntry: resolve(__dirname, '../src/components/AppFlow.tsx'),
       ComponentListView: resolve(
         __dirname,
         '../src/components/ComponentListView/ComponentListView.tsx',
