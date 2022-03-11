@@ -9,7 +9,7 @@
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config config/prod.webpack.config.js --env analyze=true",
     "build": "NODE_ENV=production webpack --config config/prod.webpack.config.js",
-    "coverage": "jest --coverage --runInBand --detectOpenHandles --forceExit",
+    "coverage": "jest --coverage",
     "deploy": "npm-run-all build lint test",
     "lint": "npm-run-all lint:*",
     "lint:ts": "eslint . --ext .js,.jsx,.ts,.tsx --color",
