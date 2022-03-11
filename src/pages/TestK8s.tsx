@@ -11,7 +11,11 @@ import {
   K8sResourceCommon,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { Button, PageSection, TextInput } from '@patternfly/react-core';
+import AppBanner from '../AppBanner';
 import { ApplicationModel, ComponentModel } from '../models';
+
+import '../App.scss';
+import '../shared/style.scss';
 
 const ProjectModel: K8sModelCommon = {
   apiVersion: 'v1',
@@ -217,30 +221,34 @@ const TestK8s: React.FC = () => {
   }, [action, name, namespace, resourceVersion]);
 
   return (
-    <PageSection>
-      <TextInput placeholder="ConfigMap name" onChange={(v) => setName(v)} value={name} />
-      <div>
-        <p>
-          Test calls -- predefined data; use the above input to make/update/get multiple ConfigMaps
-        </p>
-        {Object.values(ActionType).map((v) => (
-          <React.Fragment key={v}>
-            <Button
-              isDisabled={
-                (v !== ActionType.LIST && namespace === 'default') ||
-                (v === ActionType.PUT && resourceVersion === null)
-              }
-              onClick={() => setAction(v)}
-            >
-              {v}
-            </Button>{' '}
-          </React.Fragment>
-        ))}
-        In `{namespace}` namespace
-      </div>
-      <div>{status}</div>
-      {r && <pre>{JSON.stringify(r, null, 2)}</pre>}
-    </PageSection>
+    <React.Fragment>
+      <AppBanner />
+      <PageSection>
+        <TextInput placeholder="ConfigMap name" onChange={(v) => setName(v)} value={name} />
+        <div>
+          <p>
+            Test calls -- predefined data; use the above input to make/update/get multiple
+            ConfigMaps
+          </p>
+          {Object.values(ActionType).map((v) => (
+            <React.Fragment key={v}>
+              <Button
+                isDisabled={
+                  (v !== ActionType.LIST && namespace === 'default') ||
+                  (v === ActionType.PUT && resourceVersion === null)
+                }
+                onClick={() => setAction(v)}
+              >
+                {v}
+              </Button>{' '}
+            </React.Fragment>
+          ))}
+          In `{namespace}` namespace
+        </div>
+        <div>{status}</div>
+        {r && <pre>{JSON.stringify(r, null, 2)}</pre>}
+      </PageSection>
+    </React.Fragment>
   );
 };
 

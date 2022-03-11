@@ -26,7 +26,6 @@ module.exports = {
       type: 'console.page/route',
       properties: {
         path: '/app-studio',
-        className: 'hacDev',
         exact: true,
         component: {
           $codeRef: 'AppEntry',
@@ -36,8 +35,7 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/applications',
-        className: 'hacDev',
+        path: '/app-studio/applications',
         exact: true,
         component: {
           $codeRef: 'Applications',
@@ -47,8 +45,7 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/create',
-        className: 'hacDev',
+        path: '/app-studio/create',
         exact: true,
         component: {
           $codeRef: 'Create',
@@ -59,7 +56,6 @@ module.exports = {
       type: 'console.page/route',
       properties: {
         path: '/app-studio/components',
-        className: 'hacDev',
         exact: true,
         component: {
           $codeRef: 'ComponentListView',
@@ -69,7 +65,6 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        className: 'hacDev',
         path: '/app-studio/sample-page',
         exact: true,
         component: {
@@ -80,7 +75,6 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        className: 'hacDev',
         path: '/app-studio/k8s-util',
         exact: true,
         component: {
@@ -91,7 +85,6 @@ module.exports = {
     {
       type: 'console.navigation/href',
       properties: {
-        className: 'hacDev',
         href: '/app-studio',
         name: 'App studio',
       },
@@ -101,7 +94,6 @@ module.exports = {
           {
             type: 'console.navigation/href',
             properties: {
-              className: 'hacDev',
               href: '/app-studio/k8s-util',
               name: 'Test k8s',
             },

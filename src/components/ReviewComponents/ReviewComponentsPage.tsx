@@ -49,7 +49,7 @@ export const ReviewComponentsPage: React.FC = () => {
     (data: ReviewComponentsFormValues, { setSubmitting }) => {
       createResources(formState, data.components)
         .then((appName) => {
-          history.push(`/components?application=${appName}`);
+          history.push(`/app-studio/components?application=${appName}`);
         })
         .catch(() => {
           setSubmitting(false);
@@ -61,7 +61,7 @@ export const ReviewComponentsPage: React.FC = () => {
   return (
     <Page
       breadcrumbs={[
-        { path: '/applications', name: 'Applications' },
+        { path: '/app-studio/applications', name: 'Applications' },
         { path: '#', name: 'Create your application' },
       ]}
       heading="Review your new components"

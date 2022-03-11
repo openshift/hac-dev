@@ -75,7 +75,7 @@ export const ComponentSamplesPage = () => {
   return (
     <Page
       breadcrumbs={[
-        { path: '/applications', name: 'Applications' },
+        { path: '/app-studio/applications', name: 'Applications' },
         { path: '#', name: 'Create your application' },
       ]}
       heading="Start with a sample"

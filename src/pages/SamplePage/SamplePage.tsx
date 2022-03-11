@@ -2,10 +2,13 @@ import React, { Suspense, lazy, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, StackItem, Stack, Title, Spinner, PageSection } from '@patternfly/react-core';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
+import AppBanner from '../../AppBanner';
 
 const SampleComponent = lazy(() => import('../../components/SampleComponent/SampleComponent'));
 
 import './SamplePage.scss';
+import '../../App.scss';
+import '../../shared/style.scss';
 
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
@@ -21,6 +24,7 @@ const SamplePage: React.FC = () => {
 
   return (
     <React.Fragment>
+      <AppBanner />
       <PageHeader>
         <PageHeaderTitle title="App Studio" />
         <p> HAC Developer Experience. </p>

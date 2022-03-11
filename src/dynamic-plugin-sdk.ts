@@ -205,13 +205,9 @@ const makeListCall = (resourceData: WatchK8sResource) => (
         // TODO: no dictionary... solution?
         plural: resourceData.groupVersionKind.kind.toLowerCase() + 's',
       },
-      ...resourceData.namespace
-        ? {
-            queryParams: {
-              ns: resourceData.namespace,
-            }
-          }
-        : {},
+      queryOptions: {
+        ns: resourceData.namespace,
+      },
   })
 );
 
