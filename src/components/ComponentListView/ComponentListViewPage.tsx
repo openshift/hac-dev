@@ -92,7 +92,12 @@ export const ComponentListViewPage: React.FC<ComponentListViewPageProps> = ({ ap
             </DataListItemRow>
           </DataListItem>
           {filteredComponents?.map((component) => (
-            <ComponentListItem key={component.metadata.uid} component={component} routes={routes} />
+            <ComponentListItem
+              key={component.metadata.uid}
+              component={component}
+              routes={routes}
+              showLogsForComponent={setLogsComponent}
+            />
           ))}
         </DataList>
       </StatusBox>
