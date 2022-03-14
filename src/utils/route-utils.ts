@@ -38,5 +38,5 @@ export const getComponentRouteWebURL = (routes: RouteKind[], component: string):
     (r) => r.metadata?.annotations?.['build.appstudio.openshift.io/component'] === component,
   );
 
-  return getRouteWebURL(componentRoute);
+  return componentRoute && getRouteWebURL(componentRoute);
 };
