@@ -7,4 +7,10 @@ describe('Route Utils', () => {
 
     expect(result).toEqual('http://elnodejs-test.apps.appstudio-stage.x99m.p1.openshiftapps.com/');
   });
+
+  it('Should return undefined if route is not created for given component', async () => {
+    const result = getComponentRouteWebURL(mockRoutes, 'nodejs-1');
+
+    expect(result).toBeUndefined();
+  });
 });
