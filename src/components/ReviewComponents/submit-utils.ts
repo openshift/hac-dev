@@ -9,6 +9,7 @@ const createComponents = async (
   components: ReviewComponentsFormValues['components'],
   application: string,
   namespace: string,
+  secret?: string,
   dryRun?: boolean,
 ) => {
   return Promise.all(
@@ -23,6 +24,7 @@ const createComponents = async (
         },
         application,
         namespace,
+        secret,
         dryRun,
       );
     }),
@@ -53,7 +55,7 @@ export const createResources = async (
   }
 
   try {
-    await createComponents(components, appName, formState.namespace, true);
+    await createComponents(components, appName, formState.namespace, formState.sourceSecret, true);
   } catch (error) {
     dispatch(
       addNotification({
@@ -84,7 +86,12 @@ export const createResources = async (
   }
 
   try {
-    const componentData = await createComponents(components, appName, formState.namespace);
+    const componentData = await createComponents(
+      components,
+      appName,
+      formState.namespace,
+      formState.sourceSecret,
+    );
     // eslint-disable-next-line no-console
     console.log('###############- Components created', componentData);
   } catch (error) {
