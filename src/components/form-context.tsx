@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CatalogItem } from '../shared/components/catalog/utils/types';
 
 type ComponentData = {
-  source: string;
+  source: { git: { url: string; devfileUrl?: string } };
   contextDir?: string;
   targetPort?: number;
   replicas?: number;

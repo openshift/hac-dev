@@ -17,7 +17,7 @@ export enum Resources {
 export type ComponentValues = {
   name: string;
   runtime: Resources;
-  source: string;
+  source: { git: { url: string; devfileUrl?: string } };
   replicas?: number;
   targetPort?: number;
   resources?: {

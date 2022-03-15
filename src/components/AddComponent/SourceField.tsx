@@ -60,10 +60,6 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
             Object.values(result).map(({ componentStub }) => ({
               ...componentStub,
               name: componentStub.componentName,
-              resources: componentStub.resources,
-              git: {
-                url: componentStub.source.git.url,
-              },
             })),
           );
         })

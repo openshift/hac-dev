@@ -30,7 +30,7 @@ export const AddComponentPage = () => {
         uid: component.name,
         type: 'source',
         data: {
-          source: component.git.url,
+          source: component.source,
           contextDir: component.context,
           targetPort: component.targetPort,
           resources: component.resources,

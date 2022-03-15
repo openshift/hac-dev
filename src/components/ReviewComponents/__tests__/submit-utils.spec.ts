@@ -18,17 +18,59 @@ describe('createResources', () => {
     createApplicationMock.mockResolvedValue({ metadata: { name: 'test-app' } });
     await createResources(
       { components: [] },
-      { comp: { name: 'comp', source: 'example.com', runtime: Resources.OpenShift } },
+      {
+        comp: {
+          name: 'comp',
+          source: { git: { url: 'example.com' } },
+          runtime: Resources.OpenShift,
+        },
+      },
       dispatchMock,
     );
     expect(createApplicationMock).toHaveBeenCalled();
     expect(createComponentMock).toHaveBeenCalled();
   });
 
+  it('should create component with devfileUrl if CDQ has devfileUrl', async () => {
+    createApplicationMock.mockResolvedValue({ metadata: { name: 'test-app' } });
+    await createResources(
+      { components: [] },
+      {
+        comp: {
+          name: 'comp',
+          source: { git: { url: 'example.com', devfileUrl: 'devfile.io/sample' } },
+          runtime: Resources.OpenShift,
+        },
+      },
+      dispatchMock,
+    );
+    expect(createApplicationMock).toHaveBeenCalled();
+    expect(createComponentMock).toHaveBeenCalledWith(
+      {
+        name: 'comp',
+        gitRepo: 'example.com',
+        devfileUrl: 'devfile.io/sample',
+        replicas: undefined,
+        targetPort: undefined,
+        resources: undefined,
+      },
+      'test-app',
+      undefined,
+      undefined,
+      undefined,
+    );
+  });
+
   it('should only create components if application exists', async () => {
     await createResources(
       { components: [], existingApplication: 'test-app' },
-      { comp: { name: 'comp', source: 'example.com', runtime: Resources.OpenShift } },
+      {
+        comp: {
+          name: 'comp',
+          source: { git: { url: 'example.com' } },
+          runtime: Resources.OpenShift,
+        },
+      },
       dispatchMock,
     );
     expect(createApplicationMock).toHaveBeenCalledTimes(0);
@@ -40,7 +82,13 @@ describe('createResources', () => {
     expect(
       createResources(
         { components: [] },
-        { comp: { name: 'comp', source: 'example.com', runtime: Resources.OpenShift } },
+        {
+          comp: {
+            name: 'comp',
+            source: { git: { url: 'example.com' } },
+            runtime: Resources.OpenShift,
+          },
+        },
         dispatchMock,
       ),
     ).rejects.toThrow();
@@ -54,7 +102,13 @@ describe('createResources', () => {
     expect(
       createResources(
         { components: [] },
-        { comp: { name: 'comp', source: 'example.com', runtime: Resources.OpenShift } },
+        {
+          comp: {
+            name: 'comp',
+            source: { git: { url: 'example.com' } },
+            runtime: Resources.OpenShift,
+          },
+        },
         dispatchMock,
       ),
     ).rejects.toThrow();
