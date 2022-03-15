@@ -18,8 +18,11 @@ export type AddComponentValues = {
   };
   detectedComponents?: {
     name: string;
-    git: {
-      url: string;
+    source: {
+      git: {
+        url: string;
+        devfileUrl?: string;
+      };
     };
     context: string;
     resources?: {

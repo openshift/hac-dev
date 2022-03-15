@@ -28,7 +28,7 @@ import { CPUUnits, MemoryUnits, Resources } from './types';
 type ReviewSourceComponentCardProps = {
   component: {
     name: string;
-    source: string;
+    source: { git: { url: string; devfileUrl?: string } };
     envs?: { name: string; value: string }[];
   };
 };
@@ -52,7 +52,7 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
           <Flex>
             <FlexItem spacer={{ default: 'spacer4xl' }}>
               <EditableLabelField name={`${fieldPrefix}.name`} type={TextInputTypes.text} />
-              <ExternalLink href={component.source} text={component.source} />
+              <ExternalLink href={component.source.git.url} text={component.source.git.url} />
             </FlexItem>
             <FlexItem>
               <EditableLabelField

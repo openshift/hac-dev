@@ -26,6 +26,10 @@ const mockApplicationRequestData = {
 };
 
 const mockComponent = { name: 'Test Component', gitRepo: 'http://github.com/test-repo' };
+const mockComponentWithDevfile = {
+  ...mockComponent,
+  devfileUrl: 'https://registry.devfile.io/sample-devfile',
+};
 
 const mockComponentData = {
   apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
@@ -39,6 +43,19 @@ const mockComponentData = {
     application: 'test-application',
     source: {
       git: { url: mockComponent.gitRepo },
+    },
+  },
+};
+
+const mockComponentDataWithDevfile = {
+  ...mockComponentData,
+  spec: {
+    ...mockComponentData.spec,
+    source: {
+      git: {
+        url: mockComponentWithDevfile.gitRepo,
+        devfileUrl: mockComponentWithDevfile.devfileUrl,
+      },
     },
   },
 };
@@ -94,6 +111,15 @@ describe('Create Utils', () => {
     expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
       model: ComponentModel,
       data: mockComponentData,
+    });
+  });
+
+  it('Should call k8s create util with correct model and data for component with devfile', async () => {
+    await createComponent(mockComponentWithDevfile, 'test-application', 'test-ns');
+
+    expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
+      model: ComponentModel,
+      data: mockComponentDataWithDevfile,
     });
   });
 

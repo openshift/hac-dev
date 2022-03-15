@@ -25,7 +25,12 @@ export const ReviewComponentsPage: React.FC = () => {
         ...acc,
         [val.name]: {
           name: val.name.split(/ |\./).join('-').toLowerCase(),
-          source: val.data?.source || val.attributes.git.remotes.origin,
+          source: {
+            git: {
+              url: val.data?.source?.git.url || val.attributes.git.remotes.origin,
+              devfileUrl: val.data?.source?.git.devfileUrl,
+            },
+          },
           ...(isSample
             ? {}
             : {
