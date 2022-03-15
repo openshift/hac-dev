@@ -60,6 +60,7 @@ export const createComponent = (
   component,
   application: string,
   namespace: string,
+  secret?: string,
   dryRun?: boolean,
 ): any => {
   const name = component.name.split(/ |\./).join('-').toLowerCase();
@@ -75,7 +76,7 @@ export const createComponent = (
       componentName: component.name,
       application,
       source: {
-        git: { url: component.gitRepo },
+        git: { url: component.gitRepo, secret },
       },
       replicas: component.replicas,
       targetPort: component.targetPort,
