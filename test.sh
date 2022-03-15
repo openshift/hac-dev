@@ -22,7 +22,6 @@ elif [[ "${JOB_TYPE}" == "postsubmit" || "${JOB_TYPE}" == "periodic" ]]; then
 else
        echo "Coverage not enabled on Job Type :${JOB_TYPE}"
        npm run verify
-       exit 0
 fi
 
 if [[ "${JOB_TYPE}" != "local" ]]; then
