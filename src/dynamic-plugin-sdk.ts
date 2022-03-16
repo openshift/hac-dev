@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { HttpError } from './shared/utils/error/http-error';
 import { useDeepCompareMemoize } from './shared';
 
-const HOOK_POLL_DELAY = 2000; // change this if you want the useHook to go faster / slower on polls
+const HOOK_POLL_DELAY = 10000; // change this if you want the useHook to go faster / slower on polls
 
 /* throw away fetch methods */
 const k8sBasePath = `/api/k8s`; // webpack proxy path

@@ -5,7 +5,7 @@ import { useK8sWatchResource, WatchK8sResource } from '../../dynamic-plugin-sdk'
 import PipelineRunLogs from '../../shared/components/pipeline-run-logs/PipelineRunLogs';
 import { PipelineRunKind } from '../../shared/components/pipeline-run-logs/types';
 import { PipelineRunGroupVersionKind } from '../../shared/components/pipeline-run-logs/utils';
-import { LoadingBox } from '../../shared/components/status-box/StatusBox';
+import { EmptyBox, LoadingBox } from '../../shared/components/status-box/StatusBox';
 import { ComponentKind } from '../../types';
 
 type BuildLogViewerProps = {
@@ -32,14 +32,24 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
 
   const pipelineRun = React.useMemo(() => {
     if (loaded && !error) {
-      return (pipelineRuns as { items: PipelineRunKind[] }).items.filter(
-        (plr) =>
-          plr.metadata.labels[BUILD_COMPONENT_LABEL] === component.metadata.name &&
-          plr.metadata.labels[BUILD_APPLICATION_LABEL] === component.spec.application,
-      )[0];
+      return (pipelineRuns as { items: PipelineRunKind[] }).items
+        .filter(
+          (plr) =>
+            plr.metadata.labels[BUILD_COMPONENT_LABEL] === component.metadata.name &&
+            plr.metadata.labels[BUILD_APPLICATION_LABEL] === component.spec.application,
+        )
+        .sort(
+          (a, b) =>
+            new Date(b.metadata.creationTimestamp).getTime() -
+            new Date(a.metadata.creationTimestamp).getTime(),
+        )[0];
     }
     return undefined;
   }, [pipelineRuns, component.metadata.name, component.spec.application, loaded, error]);
+
+  if (loaded && !pipelineRun) {
+    return <EmptyBox label="pipeline runs" />;
+  }
 
   return (
     <Stack>
@@ -48,11 +58,15 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
           {' '}
           Component: {component.metadata.name}
         </span>
-        <span>
-          {' '}
-          Build start date:{' '}
-          {dayjs(new Date(component.metadata.creationTimestamp)).format('MMMM DD, YYYY, h:mm A')}
-        </span>
+        {pipelineRun && loaded && (
+          <span>
+            {' '}
+            Build start date:{' '}
+            {dayjs(new Date(pipelineRun.metadata.creationTimestamp)).format(
+              'MMMM DD, YYYY, h:mm A',
+            )}
+          </span>
+        )}
       </StackItem>
       <StackItem isFilled>
         {pipelineRun ? <PipelineRunLogs obj={pipelineRun} /> : <LoadingBox />}
