@@ -17,6 +17,7 @@ import { useApplicationRoutes } from '../../hooks/useApplicationRoutes';
 import { ComponentGroupVersionKind } from '../../models';
 import { StatusBox } from '../../shared/components/status-box/StatusBox';
 import { ComponentKind } from '../../types';
+import { ComponentLogViewerModal } from '../LogViewer/ComponentLogViewerModal';
 import { ComponentListItem } from './ComponentListItem';
 
 type ComponentListViewPageProps = {
@@ -25,6 +26,7 @@ type ComponentListViewPageProps = {
 
 export const ComponentListViewPage: React.FC<ComponentListViewPageProps> = ({ application }) => {
   const namespace = useActiveNamespace();
+  const [logsComponent, setLogsComponent] = React.useState<ComponentKind | undefined>(undefined);
   const [allComponents, componentsLoaded] = useK8sWatchResource<ComponentKind[]>({
     groupVersionKind: ComponentGroupVersionKind,
     namespace,
@@ -54,44 +56,56 @@ export const ComponentListViewPage: React.FC<ComponentListViewPageProps> = ({ ap
   const onNameInput = (name: string) => setNameFilter(name);
 
   return (
-    <StatusBox data={allComponents} loaded={loaded}>
-      <DataList aria-label="Components" data-testid="component-list">
-        <DataListItem>
-          <DataListItemRow>
-            <Toolbar data-testid="component-list-toolbar" clearAllFilters={onClearFilters}>
-              <ToolbarContent>
-                <ToolbarItem>
-                  <Button variant="control">
-                    <FilterIcon /> {'Name'}
-                  </Button>
-                </ToolbarItem>
-                <ToolbarItem>
-                  <TextInput
-                    name="nameInput"
-                    data-testid="name-input-filter"
-                    type="search"
-                    aria-label="name filter"
-                    placeholder="Filter by name..."
-                    onChange={(name) => onNameInput(name)}
-                  />
-                </ToolbarItem>
-                <ToolbarItem>
-                  <Link
-                    data-testid="add-component"
-                    className="pf-c-button pf-m-primary"
-                    to={`/create?application=${application}`}
-                  >
-                    Add Component
-                  </Link>
-                </ToolbarItem>
-              </ToolbarContent>
-            </Toolbar>
-          </DataListItemRow>
-        </DataListItem>
-        {filteredComponents?.map((component) => (
-          <ComponentListItem key={component.metadata.uid} component={component} routes={routes} />
-        ))}
-      </DataList>
-    </StatusBox>
+    <>
+      <StatusBox data={allComponents} loaded={loaded}>
+        <DataList aria-label="Components" data-testid="component-list">
+          <DataListItem>
+            <DataListItemRow>
+              <Toolbar data-testid="component-list-toolbar" clearAllFilters={onClearFilters}>
+                <ToolbarContent>
+                  <ToolbarItem>
+                    <Button variant="control">
+                      <FilterIcon /> {'Name'}
+                    </Button>
+                  </ToolbarItem>
+                  <ToolbarItem>
+                    <TextInput
+                      name="nameInput"
+                      data-testid="name-input-filter"
+                      type="search"
+                      aria-label="name filter"
+                      placeholder="Filter by name..."
+                      onChange={(name) => onNameInput(name)}
+                    />
+                  </ToolbarItem>
+                  <ToolbarItem>
+                    <Link
+                      data-testid="add-component"
+                      className="pf-c-button pf-m-primary"
+                      to={`/create?application=${application}`}
+                    >
+                      Add Component
+                    </Link>
+                  </ToolbarItem>
+                </ToolbarContent>
+              </Toolbar>
+            </DataListItemRow>
+          </DataListItem>
+          {filteredComponents?.map((component) => (
+            <ComponentListItem
+              key={component.metadata.uid}
+              component={component}
+              routes={routes}
+              showLogsForComponent={setLogsComponent}
+            />
+          ))}
+        </DataList>
+      </StatusBox>
+      <ComponentLogViewerModal
+        component={logsComponent}
+        isOpen={!!logsComponent}
+        onClose={() => setLogsComponent(undefined)}
+      />
+    </>
   );
 };

@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { HttpError } from './shared/utils/error/http-error';
 import { useDeepCompareMemoize } from './shared';
 
-const HOOK_POLL_DELAY = 2000; // change this if you want the useHook to go faster / slower on polls
+const HOOK_POLL_DELAY = 10000; // change this if you want the useHook to go faster / slower on polls
 
 /* throw away fetch methods */
 const k8sBasePath = `/api/k8s`; // webpack proxy path
@@ -56,18 +56,33 @@ export const validateStatus = async (
   });
 };
 
-const commonFetch = async (url, method, options, timeout): Promise<any> => {
-  // Grab the token out of the cookie for ConsoleDot | if not proxying to prod, token will be invalid even if it is there
-  const cookieToken = document.cookie.split('; ').find((val) => val.startsWith('cs_jwt='));
-  if (!cookieToken) {
-    return Promise.reject('Could not make k8s call. Unable to find token.');
+export const consoleFetchText = async (url: string, options: RequestInit = {}, timeout?: number) => {
+  const response = await innerFetch(url, 'GET', options);
+  const text = await response.text();
+  const isPlainText = response.headers.get('Content-Type') === 'text/plain';
+  if (!text) {
+    return isPlainText ? '' : {};
   }
-  const [,token] = cookieToken.split('=');
+  return isPlainText || !response.ok ? text : JSON.parse(text);
+};
 
-  const allOptions = _.defaultsDeep({ method }, options, { headers: { Accept: 'application/json' } });
-  allOptions.headers.Authorization = `Bearer ${token}`;
+const innerFetch = async (url, method, options) => {
+    // Grab the token out of the cookie for ConsoleDot | if not proxying to prod, token will be invalid even if it is there
+    const cookieToken = document.cookie.split('; ').find((val) => val.startsWith('cs_jwt='));
+    if (!cookieToken) {
+      return Promise.reject('Could not make k8s call. Unable to find token.');
+    }
+    const [,token] = cookieToken.split('=');
+  
+    const allOptions = _.defaultsDeep({}, { method, headers: {} }, options);
+    allOptions.headers.Authorization = `Bearer ${token}`;
+    return fetch(url, allOptions);
+};
+
+const commonFetch = async (url, method, options, timeout): Promise<any> => {
+  const allOptions = _.defaultsDeep({}, options, { headers: { Accept: 'application/json' } });
   try {
-    const response = await fetch(url, allOptions).then(validateStatus);
+    const response = await innerFetch(url, method, allOptions).then(validateStatus);
     const json = await response.json();
     return Promise.resolve(json);
   } catch(e) {
@@ -267,7 +282,7 @@ const getK8sAPIPath = ({ apiGroup = 'core', apiVersion }: K8sModel): string => {
   p += apiVersion;
   return p;
 };
-const resourceURL = (model: K8sModel, options: Options): string =>
+export const resourceURL = (model: K8sModel, options: Options): string =>
   `${k8sBasePath}${getK8sResourcePath(model, options)}`;
 const adapterFunc = (func: Function, knownArgs: string[]) => {
   return (options: Record<string, any>) => {

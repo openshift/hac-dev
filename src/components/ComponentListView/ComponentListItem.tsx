@@ -24,9 +24,14 @@ import './ComponentListItem.scss';
 type ComponentListViewPageProps = {
   component: ComponentKind;
   routes: RouteKind[];
+  showLogsForComponent: (component: ComponentKind) => void;
 };
 
-export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ component, routes }) => {
+export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({
+  component,
+  showLogsForComponent,
+  routes,
+}) => {
   const [expanded, setExpanded] = React.useState(false);
   const { replicas, targetPort, resources } = component.spec;
   const name = component.metadata.name;
@@ -65,6 +70,11 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
         >
           <ActionMenu
             actions={[
+              {
+                cta: () => showLogsForComponent(component),
+                id: `view-logs-${name.toLowerCase()}`,
+                label: 'View Build Logs',
+              },
               {
                 cta: () => {
                   deleteComponent(name, component.metadata.namespace);
