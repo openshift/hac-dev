@@ -17,8 +17,22 @@ objects:
     frontend:
       paths:
         - /api/plugins/hac-dev
+        - /apps/hac-dev
     image: ${IMAGE}:${IMAGE_TAG}
     title: hac-dev
+    module:
+      manifestLocation: /apps/hac-dev/fed-mods.json
+      moduleID: hacDev
+      modules:
+        - id: hacDev
+          module: ./RootApp
+          routes:
+            - pathname: /hac/app-studio
+    navItems:
+      - appId: hacDev
+        href: /hac/app-studio
+        product: Red Hat Insights
+        title: App Studio
 parameters:
   - name: IMAGE_TAG
     value: latest
