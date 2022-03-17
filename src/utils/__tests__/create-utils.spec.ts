@@ -125,9 +125,13 @@ describe('Create Utils', () => {
   it('Should call k8s create util with correct model and data for component with devfile', async () => {
     await createComponent(mockComponentWithDevfile, 'test-application', 'test-ns');
 
-    expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
+    expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ComponentModel,
-      data: mockComponentDataWithDevfile,
+      queryOptions: {
+        name: 'test-component',
+        ns: 'test-ns',
+      },
+      resource: mockComponentDataWithDevfile,
     });
   });
 

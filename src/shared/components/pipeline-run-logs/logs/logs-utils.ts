@@ -1,5 +1,9 @@
+import {
+  commonFetchText,
+  getK8sResourceURL,
+  k8sGetResource,
+} from '@openshift/dynamic-plugin-sdk-utils';
 import { saveAs } from 'file-saver';
-import { consoleFetchText, k8sGetResource, resourceURL } from '../../../../dynamic-plugin-sdk';
 import { LineBuffer } from '../../../utils/line-buffer';
 import { ContainerSpec, ContainerStatus, PodKind } from '../../types';
 import { PLRTaskRunData, PLRTaskRuns } from '../types';
@@ -44,7 +48,7 @@ export const getRenderContainers = (
 };
 
 const getOrderedStepsFromPod = (name: string, ns: string): Promise<ContainerStatus[]> => {
-  return k8sGetResource({ model: PodModel, name, ns })
+  return k8sGetResource({ model: PodModel, queryOptions: { name, ns } })
     .then((pod: PodKind) => {
       return getSortedContainerStatus(
         pod.spec.containers ?? [],
@@ -104,7 +108,7 @@ export const getDownloadAllLogsCallback = (
           ...stepUrls,
           [name]: {
             status: currentStatus,
-            url: resourceURL(PodModel, urlOpts),
+            url: getK8sResourceURL(PodModel, undefined, urlOpts),
           } as WatchURLStatus,
         };
       }, {});
@@ -127,7 +131,7 @@ export const getDownloadAllLogsCallback = (
         }
         heading += `${step}\n\n`;
         const { url, status } = task.steps[step];
-        const getContentPromise = consoleFetchText(url).then((logs) => {
+        const getContentPromise = commonFetchText(url).then((logs) => {
           return `${heading}${logs}\n\n`;
         });
         if (status === LOG_SOURCE_TERMINATED) {

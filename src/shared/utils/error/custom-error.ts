@@ -15,7 +15,7 @@
  * new HttpError(404, 'Not found')
  * ```
  */
-export class CustomError extends Error {
+ export class CustomError extends Error {
   name: string;
 
   constructor(message?: string) {

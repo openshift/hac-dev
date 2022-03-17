@@ -32,7 +32,7 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
 
   const pipelineRun = React.useMemo(() => {
     if (loaded && !error) {
-      return (pipelineRuns as { items: PipelineRunKind[] }).items
+      return (pipelineRuns as PipelineRunKind[])
         .filter(
           (plr) =>
             plr.metadata.labels[BUILD_COMPONENT_LABEL] === component.metadata.name &&

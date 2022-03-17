@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { commonFetchText, getK8sResourceURL } from '@openshift/dynamic-plugin-sdk-utils';
 import { Alert } from '@patternfly/react-core';
 import './Logs.scss';
-import { consoleFetchText, resourceURL } from '../../../../dynamic-plugin-sdk';
 import { ContainerSpec, PodKind } from '../../types';
 import { LOG_SOURCE_TERMINATED, PodModel } from '../utils';
 
@@ -64,9 +64,8 @@ const Logs: React.FC<LogsProps> = ({
         follow: 'true',
       },
     };
-    const watchURL = resourceURL(PodModel, urlOpts);
     if (resourceStatusRef.current === LOG_SOURCE_TERMINATED) {
-      consoleFetchText(watchURL)
+      commonFetchText(getK8sResourceURL(PodModel, undefined, urlOpts))
         .then((res) => {
           if (loaded) return;
           appendMessage.current(res);

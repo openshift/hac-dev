@@ -1,3 +1,4 @@
+import { K8sModelCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { chart_color_black_400 as skippedColor } from '@patternfly/react-tokens/dist/js/chart_color_black_400';
 import { chart_color_black_500 as cancelledColor } from '@patternfly/react-tokens/dist/js/chart_color_black_500';
 import { chart_color_blue_100 as pendingColor } from '@patternfly/react-tokens/dist/js/chart_color_blue_100';
@@ -7,7 +8,7 @@ import { global_danger_color_100 as failureColor } from '@patternfly/react-token
 import i18next from 'i18next';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { K8sGroupVersionKind, K8sModel } from '../../../dynamic-plugin-sdk';
+import { K8sGroupVersionKind } from '../../../dynamic-plugin-sdk';
 
 export const LOG_SOURCE_RESTARTING = 'restarting';
 export const LOG_SOURCE_RUNNING = 'running';
@@ -31,7 +32,7 @@ export const containerToLogSourceStatus = (container): string => {
   return LOG_SOURCE_RUNNING;
 };
 
-export const resourcePathFromModel = (model: K8sModel, name?: string, namespace?: string) => {
+export const resourcePathFromModel = (model: K8sModelCommon, name?: string, namespace?: string) => {
   const { plural, namespaced, crd } = model;
 
   let url = '/k8s/';
@@ -72,21 +73,13 @@ export enum SucceedConditionReason {
   ConditionCheckFailed = 'ConditionCheckFailed',
 }
 
-const color = successColor.value;
-
-export const PodModel: K8sModel = {
+export const PodModel: K8sModelCommon = {
   apiVersion: 'v1',
-  label: 'Pod',
   // t('public~Pod')
-  labelKey: 'public~Pod',
   plural: 'pods',
-  abbr: 'P',
   namespaced: true,
   kind: 'Pod',
-  id: 'pod',
-  labelPlural: 'Pods',
   // t('public~Pods')
-  labelPluralKey: 'public~Pods',
 };
 
 export const PodGroupVersionKind: K8sGroupVersionKind = {
@@ -100,22 +93,15 @@ export const PipelineRunGroupVersionKind: K8sGroupVersionKind = {
   kind: 'PipelineRun',
 };
 
-export const PipelineRunModel: K8sModel = {
+export const PipelineRunModel: K8sModelCommon = {
   apiGroup: 'tekton.dev',
   apiVersion: 'v1beta1',
-  label: 'PipelineRun',
   // t('PipelineRun')
-  labelKey: 'PipelineRun',
   // t('PipelineRuns')
-  labelPluralKey: 'PipelineRuns',
   plural: 'pipelineruns',
-  abbr: 'PLR',
   namespaced: true,
   kind: 'PipelineRun',
-  id: 'pipelinerun',
-  labelPlural: 'PipelineRuns',
   crd: true,
-  color,
 };
 
 // Converts the PipelineRun (and TaskRun) condition status into a human readable string.

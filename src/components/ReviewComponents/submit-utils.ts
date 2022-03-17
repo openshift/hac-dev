@@ -48,7 +48,7 @@ export const createResources = async (
   }
 
   try {
-    await createComponents(components, appName, formState.namespace, true);
+    await createComponents(components, appName, formState.namespace, formState.sourceSecret, true);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.log('Component creation failed!!', error.message);
