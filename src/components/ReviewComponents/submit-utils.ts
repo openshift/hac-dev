@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux';
 import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
+import { pluralize } from '../../shared/utils/utils';
 import { createApplication, createComponent } from '../../utils/create-utils';
 import { FormState } from '../form-context';
 import { ReviewComponentsFormValues } from './types';
@@ -39,6 +40,12 @@ export const createResources = async (
 ) => {
   const shouldCreateApplication = !formState.existingApplication;
   let appName = formState.existingApplication;
+  const componentStr = pluralize(
+    formState.components.length,
+    'Component',
+    'Components',
+    !shouldCreateApplication,
+  );
   if (shouldCreateApplication) {
     try {
       const appData = await createApplication(formState.application, formState.namespace, true);
@@ -108,10 +115,18 @@ export const createResources = async (
   dispatch(
     addNotification({
       variant: 'success',
-      title: 'Application and components created successfully!!',
-      description: `Created application ${appName} with components ${formState.components
-        .map((c) => c.name)
-        .join(', ')}`,
+      title: shouldCreateApplication
+        ? `Application and ${componentStr} created successfully!`
+        : `${componentStr} created successfully!`,
+      description: shouldCreateApplication
+        ? `Created application ${appName} with ${componentStr} ${formState.components
+            .map((c) => c.name)
+            .join(', ')}.`
+        : `${componentStr} ${formState.components.map((c) => c.name).join(', ')} ${pluralize(
+            formState.components.length,
+            'has',
+            'have',
+          )} been added to ${appName} application.`,
     }),
   );
   return appName;
