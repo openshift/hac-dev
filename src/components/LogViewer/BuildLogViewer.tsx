@@ -33,16 +33,16 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
   const pipelineRun = React.useMemo(() => {
     if (loaded && !error) {
       return (pipelineRuns as PipelineRunKind[])
-        .filter(
+        ?.filter?.(
           (plr) =>
             plr.metadata.labels[BUILD_COMPONENT_LABEL] === component.metadata.name &&
             plr.metadata.labels[BUILD_APPLICATION_LABEL] === component.spec.application,
         )
-        .sort(
+        ?.sort?.(
           (a, b) =>
             new Date(b.metadata.creationTimestamp).getTime() -
             new Date(a.metadata.creationTimestamp).getTime(),
-        )[0];
+        )?.[0];
     }
     return undefined;
   }, [pipelineRuns, component.metadata.name, component.spec.application, loaded, error]);

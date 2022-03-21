@@ -20,7 +20,7 @@ export const ComponentLogViewerModal: React.FC<ComponentLogViewerModalProps> = (
     <Modal
       data-testId="component-log-viewer-modal"
       className="hacDev-log-viewer-modal"
-      appendTo={() => document.querySelector('#hacDev-modal-container')}
+      appendTo={() => document.querySelector('.hacDev')}
       isOpen={!!isOpen}
       variant={ModalVariant.large}
       onClose={onClose}

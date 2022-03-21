@@ -47,6 +47,6 @@ describe('AppFlow', () => {
     act(() => {
       render(<AppFlow />);
     });
-    expect(mockHistoryPush).toHaveBeenCalledWith('/create');
+    expect(mockHistoryPush).toHaveBeenCalledWith('/app-studio/create');
   });
 });

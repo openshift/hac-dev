@@ -14,7 +14,7 @@ const AppFlow: React.FC = () => {
 
   React.useEffect(() => {
     if (loaded && !appExists) {
-      history.push('/create');
+      history.push('/app-studio/create');
     }
   }, [appExists, history, loaded]);
 
