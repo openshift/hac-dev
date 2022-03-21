@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import { Formik, FormikProps } from 'formik';
 import { useActiveNamespace } from '../../hooks/useActiveNamespace';
 import { useQueryParams, Page } from '../../shared';
@@ -11,7 +10,6 @@ export const CreateApplicationPage = () => {
   const { handleNext, handleReset: wizardHandleReset } = useWizardContext();
   const [formState, setValues] = useFormValues();
   const queryParams = useQueryParams();
-  const history = useHistory();
 
   useActiveNamespace();
 
@@ -38,10 +36,8 @@ export const CreateApplicationPage = () => {
     if (existingApplication) {
       setValues((prevVal) => ({ ...prevVal, ...initialValues, existingApplication }));
       handleNext();
-      queryParams.delete('application');
-      history.replace({ search: queryParams.toString() });
     }
-  }, [handleNext, history, initialValues, queryParams, setValues]);
+  }, [handleNext, initialValues, queryParams, setValues]);
 
   return (
     <Page

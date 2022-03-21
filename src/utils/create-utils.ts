@@ -156,7 +156,7 @@ export const createComponentDetectionQuery = async (
   let cdq: ComponentDetectionQueryKind = await k8sCreateResource({
     model: ComponentDetectionQueryModel,
     queryOptions: {
-      name,
+      name: uniqueName,
       ns: namespace,
       ...(dryRun && { queryParams: { dryRun: 'All' } }),
     },

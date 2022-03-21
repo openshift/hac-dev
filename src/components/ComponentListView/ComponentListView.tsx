@@ -30,9 +30,9 @@ const ComponentListView: React.FC = () => {
           breadcrumbs={[
             { path: `?${queryParams.toString()}`, name: 'Workspaces' },
             { path: `?${queryParams.toString()}`, name: 'Purple_workspace' },
-            { path: `?${queryParams.toString()}`, name: application?.spec.displayName },
+            { path: `?${queryParams.toString()}`, name: application?.spec?.displayName },
           ]}
-          heading={application?.spec.displayName}
+          heading={application?.spec?.displayName}
         >
           <ComponentListViewPage application={applicationName} />
         </Page>

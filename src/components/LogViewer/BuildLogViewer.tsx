@@ -25,6 +25,7 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
       groupVersionKind: PipelineRunGroupVersionKind,
       namespace: component.metadata.namespace,
       selector: { matchLabels },
+      isList: true,
     };
   }, [component.metadata.name, component.spec.application, component.metadata.namespace]);
 
