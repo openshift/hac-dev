@@ -1,4 +1,4 @@
-import { K8sResourceCommon } from '../../../../dynamic-plugin-sdk';
+import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { TektonResultsRun, TektonTaskSpec } from './coreTekton';
 import { PipelineKind, PipelineSpec } from './pipeline';
 

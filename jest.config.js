@@ -18,4 +18,9 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!@openshift|@patternfly|@redhat-cloud-services|lodash-es|@popperjs|i18next)',
   ],
+  globals: {
+    'ts-jest': {
+      isolatedModules: true,
+    },
+  },
 };
