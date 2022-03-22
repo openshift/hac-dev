@@ -4,10 +4,6 @@ import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '../../../dynamic-plugin-sdk';
 import { ComponentListViewPage } from '../ComponentListViewPage';
 
-const modalRoot = document.createElement('div');
-modalRoot.setAttribute('class', 'hacDev');
-document.body.appendChild(modalRoot);
-
 jest.mock('../../../dynamic-plugin-sdk', () => ({
   useK8sWatchResource: jest.fn(),
 }));

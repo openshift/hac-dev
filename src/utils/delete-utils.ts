@@ -12,10 +12,7 @@ import { ComponentModel } from '../models';
  */
 export const deleteComponent = (componentName: string, namespace: string): any => {
   return k8sDeleteResource({
-    model: {
-      ...ComponentModel,
-      apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
-    },
+    model: ComponentModel,
     queryOptions: {
       name: componentName,
       ns: namespace,
