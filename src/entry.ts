@@ -1,1 +1,1 @@
-import('./bootstrap');
+import('./components/SamplesFlow');

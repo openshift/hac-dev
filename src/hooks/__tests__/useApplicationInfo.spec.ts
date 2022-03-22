@@ -1,9 +1,9 @@
+import { k8sGetResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { renderHook } from '@testing-library/react-hooks';
-import { k8sGetResource } from '../../dynamic-plugin-sdk';
 import { useApplicationsInfo } from '../useApplicationsInfo';
 
-jest.mock('../../dynamic-plugin-sdk', () => {
-  const originalModule = (jest as any).requireActual('../../dynamic-plugin-sdk');
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
+  const originalModule = (jest as any).requireActual('@openshift/dynamic-plugin-sdk-utils');
   return {
     ...originalModule,
     k8sGetResource: jest.fn(),

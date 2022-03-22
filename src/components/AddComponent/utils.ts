@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import { useFormikContext } from 'formik';
-import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import { useActiveNamespace } from '../../hooks/useActiveNamespace';
 import { SPIAccessTokenBindingGroupVersionKind } from '../../models';
@@ -13,7 +11,6 @@ import { SPIAccessTokenBindingKind, SPIAccessTokenBindingPhase } from '../../typ
  */
 export const useAccessTokenBindingAuth = (name: string) => {
   const namespace = useActiveNamespace();
-  const dispatch = useDispatch();
   const { setFieldValue } = useFormikContext();
   const [binding, loaded] = useK8sWatchResource<SPIAccessTokenBindingKind>({
     groupVersionKind: SPIAccessTokenBindingGroupVersionKind,
@@ -33,26 +30,15 @@ export const useAccessTokenBindingAuth = (name: string) => {
     if (!name || !loaded) return;
     if (binding.status?.phase === SPIAccessTokenBindingPhase.Injected) {
       setFieldValue('git.authSecret', binding.status.syncedObjectRef.name);
-      dispatch(
-        addNotification({
-          variant: 'success',
-          title: 'Authorization successful!!',
-          description: 'Git repository successfully authorized.',
-        }),
-      );
+      // eslint-disable-next-line no-console
+      console.log('Git repository successfully authorized.');
     } else if (binding.status?.phase === SPIAccessTokenBindingPhase.Error) {
-      dispatch(
-        addNotification({
-          variant: 'danger',
-          title: 'Authorization failed!!',
-          description: binding.status.errorMessage,
-        }),
-      );
+      // eslint-disable-next-line no-console
+      console.log('Error in binding status ', binding.status.errorMessage);
     }
   }, [
     name,
     loaded,
-    dispatch,
     setFieldValue,
     binding?.status?.phase,
     binding?.status?.errorMessage,

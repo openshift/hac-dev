@@ -4,10 +4,6 @@ import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '../../../dynamic-plugin-sdk';
 import { ComponentListViewPage } from '../ComponentListViewPage';
 
-const modalRoot = document.createElement('div');
-modalRoot.setAttribute('id', 'hacDev-modal-container');
-document.body.appendChild(modalRoot);
-
 jest.mock('../../../dynamic-plugin-sdk', () => ({
   useK8sWatchResource: jest.fn(),
 }));
@@ -46,7 +42,9 @@ describe('ComponentListViewPage', () => {
     render(<ComponentListViewPage application="test-app" />);
     const button = screen.getByText('Add Component');
     expect(button).toBeInTheDocument();
-    expect(button.closest('a').href).toBe('http://localhost/create?application=test-app');
+    expect(button.closest('a').href).toBe(
+      'http://localhost/app-studio/create?application=test-app',
+    );
   });
 
   it('renders filter toolbar', () => {

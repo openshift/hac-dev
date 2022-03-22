@@ -1,36 +1,32 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { Button, PageSection, TextInput } from '@patternfly/react-core';
 import {
+  k8sListResourceItems,
+  k8sGetResource,
   k8sCreateResource,
   k8sDeleteResource,
-  k8sGetResource,
-  k8sListResource,
-  K8sModel,
   k8sPatchResource,
-  K8sResourceCommon,
   k8sUpdateResource,
-  // useK8sWatchResource,
-  // WatchK8sResource,
-} from '../dynamic-plugin-sdk';
+  K8sModelCommon,
+  K8sResourceCommon,
+} from '@openshift/dynamic-plugin-sdk-utils';
+import { Button, PageSection, TextInput } from '@patternfly/react-core';
+import AppBanner from '../AppBanner';
 import { ApplicationModel, ComponentModel } from '../models';
 
-const ProjectModel: K8sModel = {
+import '../App.scss';
+import '../shared/style.scss';
+
+const ProjectModel: K8sModelCommon = {
   apiVersion: 'v1',
   apiGroup: 'project.openshift.io',
   kind: 'Project',
-  abbr: 'PR',
-  label: 'Project',
-  labelPlural: 'Projects',
   plural: 'projects',
 };
-const ConfigMapModel: K8sModel = {
+const ConfigMapModel: K8sModelCommon = {
   apiVersion: 'v1',
   kind: 'ConfigMap',
-  abbr: 'CM',
   plural: 'configmaps',
-  labelPlural: 'ConfigMaps',
-  label: 'ConfigMap',
   namespaced: true,
 };
 
@@ -57,6 +53,7 @@ const TestK8s: React.FC = () => {
   const [name, setName] = React.useState<string>('test');
   const [status, setStatus] = React.useState<string>('');
   const [action, setAction] = React.useState<ActionType | null>(null);
+  const [resourceVersion, setResourceVersion] = React.useState<string>(null);
 
   // TODO: make hook work sanely
   // const result = useK8sWatchResource(initResource);
@@ -68,6 +65,11 @@ const TestK8s: React.FC = () => {
         name,
         namespace,
       },
+    };
+
+    const testConfigMetadata = {
+      name,
+      ns: namespace,
     };
     const testConfigMapData: K8sResourceCommon & { [key: string]: any } = {
       apiVersion: ConfigMapModel.apiVersion,
@@ -92,7 +94,7 @@ const TestK8s: React.FC = () => {
       kind: 'Component',
       ...testConfigMapMetadata,
       spec: {
-        componentName: 'Backend',
+        componentName: 'backend',
         application: applicationData.metadata.name,
         source: {
           git: { url: 'https://github.com/devfile-samples/devfile-sample-java-springboot-basic' },
@@ -105,9 +107,9 @@ const TestK8s: React.FC = () => {
       case ActionType.LIST:
         // TODO: this can work sorta for getting your namespace value
         // response[0].metadata.name === your namespace
-        promise = k8sListResource({
+        promise = k8sListResourceItems({
           model: ProjectModel,
-        }).then((data) => {
+        }).then((data: any) => {
           // Lock in the namespace
           let ns = null;
           if (Array.isArray(data)) {
@@ -133,34 +135,40 @@ const TestK8s: React.FC = () => {
       case ActionType.CREATEAPP:
         promise = k8sCreateResource({
           model: ApplicationModel,
-          data: applicationData,
+          queryOptions: testConfigMetadata,
+          resource: applicationData,
         });
         break;
       case ActionType.GETAPP:
         promise = k8sGetResource({
           model: ApplicationModel,
-          name: applicationData.metadata.name,
-          ns: applicationData.metadata.namespace,
+          queryOptions: testConfigMetadata,
+        }).then((data) => {
+          setResourceVersion(data?.metadata?.resourceVersion);
+          return data;
         });
         break;
       case ActionType.CREATECOMP:
         promise = k8sCreateResource({
           model: ComponentModel,
-          data: componentData,
+          queryOptions: testConfigMetadata,
+          resource: componentData,
         });
         break;
       case ActionType.GETCOMP:
         promise = k8sGetResource({
           model: ComponentModel,
-          name: componentData.metadata.name,
-          ns: applicationData.metadata.namespace,
+          queryOptions: testConfigMetadata,
+        }).then((data) => {
+          setResourceVersion(data?.metadata?.resourceVersion);
+          return data;
         });
         break;
       case ActionType.PATCH:
         promise = k8sPatchResource({
           model: ApplicationModel,
-          resource: applicationData,
-          data: [
+          queryOptions: testConfigMetadata,
+          patches: [
             {
               op: 'replace',
               path: '/spec/displayName',
@@ -172,15 +180,24 @@ const TestK8s: React.FC = () => {
       case ActionType.PUT:
         promise = k8sUpdateResource({
           model: ConfigMapModel,
-          name: testConfigMapMetadata.metadata.name,
-          ns: testConfigMapMetadata.metadata.namespace,
-          data: { ...testConfigMapData, data: { ...testConfigMapData.data, new: 'prop' } },
+          queryOptions: testConfigMetadata,
+          resource: {
+            ...testConfigMapData,
+            data: {
+              ...testConfigMapData.data,
+              new: 'prop',
+            },
+            metadata: {
+              ...testConfigMapData.metadata,
+              resourceVersion,
+            },
+          },
         });
         break;
       case ActionType.DELETE:
         promise = k8sDeleteResource({
           model: ComponentModel,
-          resource: componentData,
+          queryOptions: testConfigMetadata,
         });
         break;
       case null:
@@ -201,30 +218,37 @@ const TestK8s: React.FC = () => {
         setStatus('failed call');
         setR(null);
       });
-  }, [action, name, namespace]);
+  }, [action, name, namespace, resourceVersion]);
 
   return (
-    <PageSection>
-      <TextInput placeholder="ConfigMap name" onChange={(v) => setName(v)} value={name} />
-      <div>
-        <p>
-          Test calls -- predefined data; use the above input to make/update/get multiple ConfigMaps
-        </p>
-        {Object.values(ActionType).map((v) => (
-          <React.Fragment key={v}>
-            <Button
-              isDisabled={v !== ActionType.LIST && namespace === 'default'}
-              onClick={() => setAction(v)}
-            >
-              {v}
-            </Button>{' '}
-          </React.Fragment>
-        ))}
-        In `{namespace}` namespace
-      </div>
-      <div>{status}</div>
-      {r && <pre>{JSON.stringify(r, null, 2)}</pre>}
-    </PageSection>
+    <React.Fragment>
+      <AppBanner />
+      <PageSection>
+        <TextInput placeholder="ConfigMap name" onChange={(v) => setName(v)} value={name} />
+        <div>
+          <p>
+            Test calls -- predefined data; use the above input to make/update/get multiple
+            ConfigMaps
+          </p>
+          {Object.values(ActionType).map((v) => (
+            <React.Fragment key={v}>
+              <Button
+                isDisabled={
+                  (v !== ActionType.LIST && namespace === 'default') ||
+                  (v === ActionType.PUT && resourceVersion === null)
+                }
+                onClick={() => setAction(v)}
+              >
+                {v}
+              </Button>{' '}
+            </React.Fragment>
+          ))}
+          In `{namespace}` namespace
+        </div>
+        <div>{status}</div>
+        {r && <pre>{JSON.stringify(r, null, 2)}</pre>}
+      </PageSection>
+    </React.Fragment>
   );
 };
 

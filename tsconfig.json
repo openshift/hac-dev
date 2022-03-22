@@ -19,6 +19,7 @@
     "**/node_modules",
     "**/dist",
     "integration-tests",
+    "*.spec.ts"
   ],
   "include": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx", "**/*.json"]
 }

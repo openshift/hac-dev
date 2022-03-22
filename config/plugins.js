@@ -1,17 +1,9 @@
 const { resolve } = require('path');
+const pckg = import('@openshift/dynamic-plugin-sdk-webpack');
 const webpack = require('webpack');
-const fedModulePlugin = require('@redhat-cloud-services/frontend-components-config/federated-modules');
+const remotePluginOptions = require('./remotePlugin');
 
-const plugins = [
-  fedModulePlugin({
-    root: resolve(__dirname, '../'),
-    debug: true,
-    exposes: {
-      // Application root
-      './RootApp': resolve(__dirname, '../src/AppEntry'),
-    },
-  }),
-];
+const plugins = [];
 
 // Save 20kb of bundle size in prod
 if (process.env.NODE_ENV === 'production') {
@@ -20,4 +12,8 @@ if (process.env.NODE_ENV === 'production') {
   );
 }
 
-module.exports = plugins;
+module.exports = async () => {
+  const { DynamicRemotePlugin } = await pckg;
+  plugins.push(new DynamicRemotePlugin(remotePluginOptions));
+  return plugins;
+};

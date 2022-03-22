@@ -16,6 +16,9 @@ import { ApplicationKind } from '../../types';
 import { ApplicationListHeader } from './ApplicationListHeader';
 import ApplicationListRow from './ApplicationListRow';
 
+import '../../App.scss';
+import '../../shared/style.scss';
+
 const getRowProps = (obj: ApplicationKind) => ({
   id: obj.metadata.name,
 });
@@ -43,7 +46,7 @@ const ApplicationList: React.FC = () => {
     <Page
       heading="Applications"
       customButton={
-        <Link className="pf-c-button pf-m-primary" to={'/create'}>
+        <Link className="pf-c-button pf-m-primary" to={'/app-studio/create'}>
           Create Application
         </Link>
       }
@@ -54,7 +57,7 @@ const ApplicationList: React.FC = () => {
           <EmptyStateBody data-test="empty-state-body">
             <p>No applications found</p>
             <br />
-            <Link to={`/`}>Create an application</Link> to get started.
+            <Link to={`/app-studio`}>Create an application</Link> to get started.
           </EmptyStateBody>
         </EmptyState>
       ) : (

@@ -1,13 +1,11 @@
-import { K8sGroupVersionKind, K8sModel } from './../dynamic-plugin-sdk';
+import { K8sModelCommon } from '@openshift/dynamic-plugin-sdk-utils';
+import { K8sGroupVersionKind } from './../dynamic-plugin-sdk';
 
-export const ComponentModel: K8sModel = {
+export const ComponentModel: K8sModelCommon = {
   apiGroup: 'appstudio.redhat.com',
   apiVersion: 'v1alpha1',
   kind: 'Component',
   plural: 'components',
-  abbr: 'COMP',
-  label: 'Component',
-  labelPlural: 'Components',
   namespaced: true,
 };
 
@@ -21,10 +19,7 @@ export const ComponentDetectionQueryModel = {
   apiGroup: 'appstudio.redhat.com',
   apiVersion: 'v1alpha1',
   kind: 'ComponentDetectionQuery',
-  abbr: 'CDQ',
   plural: 'componentdetectionqueries',
-  label: 'Component Detection Query',
-  labelPlural: 'Component Detection Queries',
   namespaced: true,
 };
 

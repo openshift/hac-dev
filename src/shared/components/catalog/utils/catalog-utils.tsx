@@ -1,6 +1,7 @@
 import * as _ from 'lodash-es';
 import * as catalogImg from '../../../../imgs/catalog-icon.svg';
-import { history, keywordFilter } from '../../../utils';
+import { keywordFilter } from '../../../utils/keyword-filter';
+import { history } from '../../../utils/router';
 import { CatalogType, CatalogTypeCounts, CatalogItem } from './types';
 
 export const normalizeIconClass = (iconClass: string): string => {

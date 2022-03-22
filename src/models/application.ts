@@ -1,13 +1,11 @@
-import { K8sGroupVersionKind, K8sModel } from './../dynamic-plugin-sdk';
+import { K8sModelCommon } from '@openshift/dynamic-plugin-sdk-utils';
+import { K8sGroupVersionKind } from './../dynamic-plugin-sdk';
 
-export const ApplicationModel: K8sModel = {
+export const ApplicationModel: K8sModelCommon = {
   apiGroup: 'appstudio.redhat.com',
   apiVersion: 'v1alpha1',
   kind: 'Application',
   plural: 'applications',
-  abbr: 'APP',
-  label: 'Application',
-  labelPlural: 'Applications',
   namespaced: true,
 };
 

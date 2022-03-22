@@ -1,5 +1,3 @@
-import { Dispatch } from 'redux';
-import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { createApplication, createComponent } from '../../utils/create-utils';
 import { FormState } from '../form-context';
 import { ReviewComponentsFormValues } from './types';
@@ -35,7 +33,6 @@ const createComponents = async (
 export const createResources = async (
   formState: FormState,
   components: ReviewComponentsFormValues['components'],
-  dispatch: Dispatch,
 ) => {
   const shouldCreateApplication = !formState.existingApplication;
   let appName = formState.existingApplication;
@@ -44,13 +41,8 @@ export const createResources = async (
       const appData = await createApplication(formState.application, formState.namespace, true);
       appName = appData.metadata.name;
     } catch (error) {
-      dispatch(
-        addNotification({
-          variant: 'danger',
-          title: 'Application creation failed!!',
-          description: error.message,
-        }),
-      );
+      // eslint-disable-next-line no-console
+      console.log('Application creation failed!!', error.message);
       throw error;
     }
   }
@@ -58,13 +50,8 @@ export const createResources = async (
   try {
     await createComponents(components, appName, formState.namespace, formState.sourceSecret, true);
   } catch (error) {
-    dispatch(
-      addNotification({
-        variant: 'danger',
-        title: 'Component creation failed!!',
-        description: error.message,
-      }),
-    );
+    // eslint-disable-next-line no-console
+    console.log('Component creation failed!!', error.message);
     throw error;
   }
 
@@ -75,44 +62,27 @@ export const createResources = async (
       // eslint-disable-next-line no-console
       console.log('###############- Application created', applicationData);
     } catch (error) {
-      dispatch(
-        addNotification({
-          variant: 'danger',
-          title: 'Application creation failed!!',
-          description: error.message,
-        }),
-      );
+      // eslint-disable-next-line no-console
+      console.log('Application creation failed!!', error.message);
       throw error;
     }
   }
 
   try {
-    const componentData = await createComponents(
-      components,
-      appName,
-      formState.namespace,
-      formState.sourceSecret,
-    );
+    const componentData = await createComponents(components, appName, formState.namespace);
     // eslint-disable-next-line no-console
     console.log('###############- Components created', componentData);
   } catch (error) {
-    dispatch(
-      addNotification({
-        variant: 'danger',
-        title: 'Component creation failed!!',
-        description: error.message,
-      }),
-    );
-    throw error;
+    // eslint-disable-next-line no-console
+    console.log('Component creation failed!!', error.message);
   }
-  dispatch(
-    addNotification({
-      variant: 'success',
-      title: 'Application and components created successfully!!',
-      description: `Created application ${appName} with components ${formState.components
-        .map((c) => c.name)
-        .join(', ')}`,
-    }),
+
+  // eslint-disable-next-line no-console
+  console.log(
+    'Application and components created successfully!!',
+    `Created application ${appName} with components ${formState.components
+      .map((c) => c.name)
+      .join(', ')}`,
   );
   return appName;
 };

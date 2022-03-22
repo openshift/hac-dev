@@ -23,7 +23,7 @@ describe('BuildLogViewer', () => {
 
   it('should show empty box if pipelineRuns not found', () => {
     const watchResourceMock = useK8sWatchResource as jest.Mock;
-    watchResourceMock.mockReturnValue([{ items: [] }, true]);
+    watchResourceMock.mockReturnValue([[], true]);
     render(<BuildLogViewer component={componentCRMock} />);
     expect(screen.getByTestId('empty-message')).not.toBeNull();
     expect(screen.getByTestId('empty-message').innerHTML).toBe('No pipeline runs found');
@@ -31,16 +31,16 @@ describe('BuildLogViewer', () => {
 
   it('should show component name', () => {
     const watchResourceMock = useK8sWatchResource as jest.Mock;
-    watchResourceMock.mockReturnValue([{ items: [pipelineRunMock] }, true]);
-    watchResourceMock.mockReturnValue([{ items: [pipelineRunMock] }, true]);
+    watchResourceMock.mockReturnValue([[pipelineRunMock], true]);
+    watchResourceMock.mockReturnValue([[pipelineRunMock], true]);
     const wrapper = shallow(<BuildLogViewer component={componentCRMock} />);
     expect(wrapper.find('span').contains('basic-node-js')).toBe(true);
   });
 
   it('should render PipelineRunLogs', () => {
     const watchResourceMock = useK8sWatchResource as jest.Mock;
-    watchResourceMock.mockReturnValue([{ items: [pipelineRunMock] }, true]);
-    watchResourceMock.mockReturnValue([{ items: [pipelineRunMock] }, true]);
+    watchResourceMock.mockReturnValue([[pipelineRunMock], true]);
+    watchResourceMock.mockReturnValue([[pipelineRunMock], true]);
     const wrapper = shallow(<BuildLogViewer component={componentCRMock} />);
     expect(wrapper.find(PipelineRunLogs).exists()).toBe(true);
   });

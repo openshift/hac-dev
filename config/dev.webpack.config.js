@@ -18,7 +18,7 @@ const calculateRemoteConfig = (remoteConfig) => {
 };
 
 const webpackProxy = {
-  deployment: process.env.BETA ? 'beta/apps' : 'apps',
+  deployment: process.env.BETA ? 'beta/api/plugins' : 'api/plugins',
   useProxy: true,
   env,
   appUrl: process.env.BETA ? '/beta/hac/app-studio' : '/hac/app-studio',
@@ -42,13 +42,6 @@ const webpackProxy = {
     overlay: false,
   },
   routes: {
-    // In order to serve your plugin locally change this line
-    '/api/plugins/console-demo-plugin': { host: 'http://localhost:9000' },
-    // '/beta/api/plugins/console-demo-plugin': { host: 'http://localhost:8003' },
-    // first part is the plugin URL, host is your localhost URL with port
-    ...(process.env.API_PORT && {
-      '/api/hac/app-studio': { host: `http://localhost:${process.env.API_PORT}` },
-    }),
     ...(process.env.REMOTE_CONFIG && {
       [`${process.env.BETA ? '/beta' : ''}/config`]: {
         host: calculateRemoteConfig(process.env.REMOTE_CONFIG),
@@ -70,9 +63,12 @@ const { config: webpackConfig, plugins } = config({
   ...webpackProxy,
 });
 
-plugins.push(...commonPlugins);
-
-module.exports = {
-  ...webpackConfig,
-  plugins,
+module.exports = () => {
+  return commonPlugins().then((resolvedPlugins) => {
+    plugins.push(...resolvedPlugins);
+    return {
+      ...webpackConfig,
+      plugins,
+    };
+  });
 };

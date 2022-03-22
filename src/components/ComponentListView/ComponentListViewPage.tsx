@@ -82,7 +82,7 @@ export const ComponentListViewPage: React.FC<ComponentListViewPageProps> = ({ ap
                     <Link
                       data-testid="add-component"
                       className="pf-c-button pf-m-primary"
-                      to={`/create?application=${application}`}
+                      to={`/app-studio/create?application=${application}`}
                     >
                       Add Component
                     </Link>

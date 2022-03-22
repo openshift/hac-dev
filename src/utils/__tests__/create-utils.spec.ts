@@ -1,4 +1,4 @@
-import * as k8sUtil from '../../dynamic-plugin-sdk';
+import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { SPIAccessTokenBindingModel } from '../../models';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
@@ -9,9 +9,9 @@ import {
   createAccessTokenBinding,
 } from './../create-utils';
 
-jest.mock('../../dynamic-plugin-sdk');
+jest.mock('@openshift/dynamic-plugin-sdk-utils');
 
-const createResourceMock = k8sUtil.k8sCreateResource as jest.Mock;
+const createResourceMock = k8sCreateResource as jest.Mock;
 
 const mockApplicationRequestData = {
   apiVersion: `${ApplicationModel.apiGroup}/${ApplicationModel.apiVersion}`,
@@ -99,27 +99,39 @@ describe('Create Utils', () => {
   it('Should call k8s create util with correct model and data for application', async () => {
     await createApplication('Test Application', 'test-ns');
 
-    expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
+    expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ApplicationModel,
-      data: mockApplicationRequestData,
+      queryOptions: {
+        name: 'test-application',
+        ns: 'test-ns',
+      },
+      resource: mockApplicationRequestData,
     });
   });
 
   it('Should call k8s create util with correct model and data for component', async () => {
     await createComponent(mockComponent, 'test-application', 'test-ns');
 
-    expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
+    expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ComponentModel,
-      data: mockComponentData,
+      queryOptions: {
+        name: 'test-component',
+        ns: 'test-ns',
+      },
+      resource: mockComponentData,
     });
   });
 
   it('Should call k8s create util with correct model and data for component with devfile', async () => {
     await createComponent(mockComponentWithDevfile, 'test-application', 'test-ns');
 
-    expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
+    expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ComponentModel,
-      data: mockComponentDataWithDevfile,
+      queryOptions: {
+        name: 'test-component',
+        ns: 'test-ns',
+      },
+      resource: mockComponentDataWithDevfile,
     });
   });
 
@@ -137,9 +149,13 @@ describe('Create Utils', () => {
       true,
     );
 
-    expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
+    expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ComponentDetectionQueryModel,
-      data: expect.objectContaining(mockCDQData),
+      queryOptions: {
+        name: expect.stringContaining('test-application'),
+        ns: 'test-ns',
+      },
+      resource: expect.objectContaining(mockCDQData),
     });
   });
 
@@ -167,9 +183,13 @@ describe('Create Utils', () => {
 
     await createAccessTokenBinding('https://github.com/test/repository', 'test-ns');
 
-    expect(k8sUtil.k8sCreateResource).toHaveBeenCalledWith({
+    expect(k8sCreateResource).toHaveBeenCalledWith({
       model: SPIAccessTokenBindingModel,
-      data: expect.objectContaining(mockAccessTokenBinding),
+      queryOptions: {
+        name: expect.stringContaining('appstudio-import-'),
+        ns: 'test-ns',
+      },
+      resource: expect.objectContaining(mockAccessTokenBinding),
     });
   });
 });

@@ -46,7 +46,7 @@ export const AddComponentPage = () => {
   return (
     <Page
       breadcrumbs={[
-        { path: '/applications', name: 'Applications' },
+        { path: '/app-studio/applications', name: 'Applications' },
         { path: '#', name: 'Create your application' },
       ]}
       heading="Build your application"
