@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import * as _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { useDeepCompareMemoize } from './shared';
 import {
   k8sListResourceItems,
@@ -126,7 +126,7 @@ export const useK8sWatchResource = <R extends K8sResourceCommon | K8sResourceCom
               resourceRef.current = null;
               reRender();
             }
-          } else if (!_.isEqual(resourceRef.current, data)) {
+          } else if (!isEqual(resourceRef.current, data)) {
             resourceRef.current = data;
             reRender();
           }

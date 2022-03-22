@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Nav, NavItem, NavList } from '@patternfly/react-core';
-import * as _ from 'lodash-es';
+import get from 'lodash/get';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
 import { ErrorDetailsWithStaticLog } from './logs/log-snippet-types';
 import { getDownloadAllLogsCallback } from './logs/logs-utils';
@@ -27,7 +27,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
 
   componentDidMount() {
     const { obj, activeTask } = this.props;
-    const taskRunFromYaml = _.get(obj, ['status', 'taskRuns'], {});
+    const taskRunFromYaml = get(obj, ['status', 'taskRuns'], {});
     const taskRuns = this.getSortedTaskRun(taskRunFromYaml);
     const activeItem = this.getActiveTaskRun(taskRuns, activeTask);
     this.setState({ activeItem });
@@ -36,7 +36,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.obj !== nextProps.obj) {
       const { obj, activeTask } = this.props;
-      const taskRunFromYaml = _.get(obj, ['status', 'taskRuns'], {});
+      const taskRunFromYaml = get(obj, ['status', 'taskRuns'], {});
       const taskRuns = this.getSortedTaskRun(taskRunFromYaml);
       const activeItem = this.getActiveTaskRun(taskRuns, activeTask);
       this.state.navUntouched && this.setState({ activeItem });
@@ -50,7 +50,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
 
   getSortedTaskRun = (taskRunFromYaml) => {
     const taskRuns = Object.keys(taskRunFromYaml).sort((a, b) => {
-      if (_.get(taskRunFromYaml, [a, 'status', 'completionTime'], false)) {
+      if (get(taskRunFromYaml, [a, 'status', 'completionTime'], false)) {
         return taskRunFromYaml[b].status?.completionTime &&
           new Date(taskRunFromYaml[a].status.completionTime) >
             new Date(taskRunFromYaml[b].status.completionTime)
@@ -76,7 +76,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
   render() {
     const { obj } = this.props;
     const { activeItem } = this.state;
-    const taskRunFromYaml = _.get(obj, ['status', 'taskRuns'], {});
+    const taskRunFromYaml = get(obj, ['status', 'taskRuns'], {});
     const taskRuns = this.getSortedTaskRun(taskRunFromYaml);
     const logDetails = getPLRLogSnippet(obj) as ErrorDetailsWithStaticLog;
 
@@ -114,12 +114,10 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
                     >
                       <span>
                         <ColoredStatusIcon
-                          status={pipelineRunFilterReducer(
-                            _.get(obj, ['status', 'taskRuns', task]),
-                          )}
+                          status={pipelineRunFilterReducer(get(obj, ['status', 'taskRuns', task]))}
                         />
                         <span className="hacDev-pipeline-run-logs__namespan">
-                          {_.get(taskRunFromYaml, [task, `pipelineTaskName`], '-')}
+                          {get(taskRunFromYaml, [task, `pipelineTaskName`], '-')}
                         </span>
                       </span>
                     </NavItem>
@@ -135,14 +133,14 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
           {activeItem && resource ? (
             <LogsWrapperComponent
               resource={resource}
-              taskName={_.get(taskRunFromYaml, [activeItem, 'pipelineTaskName'], '-')}
+              taskName={get(taskRunFromYaml, [activeItem, 'pipelineTaskName'], '-')}
               downloadAllLabel={'Download all task logs'}
               onDownloadAll={downloadAllCallback}
             />
           ) : (
             <div className="hacDev-pipeline-run-logs__log">
               <div className="hacDev-pipeline-run-logs__logtext">
-                {_.get(obj, ['status', 'conditions', 0, 'message'], 'No logs found')}
+                {get(obj, ['status', 'conditions', 0, 'message'], 'No logs found')}
                 {logDetails && (
                   <div className="hacDev-pipeline-run-logs__logsnippet">
                     {logDetails.staticMessage}

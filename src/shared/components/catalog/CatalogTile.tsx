@@ -5,7 +5,7 @@ import {
   CatalogTile as PfCatalogTile,
 } from '@patternfly/react-catalog-view-extension';
 import { Badge, LabelGroup } from '@patternfly/react-core';
-import * as _ from 'lodash-es';
+import find from 'lodash/find';
 import { history } from '../../utils/router';
 import { isModifiedEvent } from '../../utils/utils';
 import CatalogBadges from './CatalogBadges';
@@ -33,7 +33,7 @@ const CatalogTile: React.FC<CatalogTileProps> = ({
   const { name, title, provider, description, type, badges, tags } = item;
 
   const vendor = provider ? t(`Provided by ${provider}`) : null;
-  const catalogType = _.find(catalogTypes, ['value', type]);
+  const catalogType = find(catalogTypes, ['value', type]);
   const tagsBadge = tags
     ? [
         <LabelGroup key="tag-badges" data-test="tag-badges">

@@ -7,7 +7,8 @@ import {
   MenuItemProps,
 } from '@patternfly/react-core';
 import classNames from 'classnames';
-import * as _ from 'lodash-es';
+import isFunction from 'lodash/isFunction';
+import isObject from 'lodash/isObject';
 import { history } from '../../utils';
 import { Action } from './types';
 
@@ -35,9 +36,9 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
   const handleClick = React.useCallback(
     (event) => {
       event.preventDefault();
-      if (_.isFunction(cta)) {
+      if (isFunction(cta)) {
         cta();
-      } else if (_.isObject(cta)) {
+      } else if (isObject(cta)) {
         if (!cta.external) {
           history.push(cta.href);
         }

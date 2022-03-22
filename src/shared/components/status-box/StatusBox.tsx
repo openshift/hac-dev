@@ -2,7 +2,9 @@ import * as React from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { Alert, Button } from '@patternfly/react-core';
 import classNames from 'classnames';
-import * as _ from 'lodash-es';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import isString from 'lodash/isString';
 import * as restrictedSignImg from '../../../imgs/restricted-sign.svg';
 import { TimeoutError } from '../../utils/error/http-error';
 
@@ -22,7 +24,7 @@ export const LoadError: React.FC<LoadErrorProps> = ({
   return (
     <Box className={className}>
       <div className="pf-u-text-align-center cos-error-title">
-        {_.isString(message)
+        {isString(message)
           ? t('public~Error Loading {{label}}: {{message}}', {
               label,
               message,
@@ -111,7 +113,7 @@ export const AccessDenied: React.FC<AccessDeniedProps> = ({ message }) => {
           detail={t("public~You don't have access to this section due to cluster policy.")}
         />
       </Box>
-      {_.isString(message) && (
+      {isString(message) && (
         <Alert isInline className="co-alert" variant="danger" title={t('public~Error details')}>
           {message}
         </Alert>
@@ -129,7 +131,7 @@ const Data: React.FC<DataProps> = ({
   unfilteredData,
   children,
 }) => {
-  if (NoDataEmptyMsg && _.isEmpty(unfilteredData)) {
+  if (NoDataEmptyMsg && isEmpty(unfilteredData)) {
     return (
       <div className="loading-box loading-box__loaded">
         {NoDataEmptyMsg ? <NoDataEmptyMsg /> : <EmptyBox label={label} />}
@@ -137,7 +139,7 @@ const Data: React.FC<DataProps> = ({
     );
   }
 
-  if (!data || _.isEmpty(data)) {
+  if (!data || isEmpty(data)) {
     return (
       <div className="loading-box loading-box__loaded">
         {EmptyMsg ? <EmptyMsg /> : <EmptyBox label={label} />}
@@ -153,7 +155,7 @@ export const StatusBox: React.FC<StatusBoxProps> = (props) => {
   const { t } = useTranslation();
 
   if (loadError) {
-    const status = _.get(loadError, 'response.status');
+    const status = get(loadError, 'response.status');
     if (status === 404) {
       return (
         <div className="co-m-pane__body">

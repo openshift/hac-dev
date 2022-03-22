@@ -1,5 +1,10 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash-es';
+import cloneDeep from 'lodash/cloneDeep';
+import filter from 'lodash/filter';
+import forOwn from 'lodash/forOwn';
+import isEmpty from 'lodash/isEmpty';
+import reduce from 'lodash/reduce';
+import set from 'lodash/set';
+import size from 'lodash/size';
 import { keywordCompare } from './catalog-utils';
 import { CatalogFilter, CatalogFilterCounts, CatalogFilters, CatalogItem } from './types';
 
@@ -8,22 +13,22 @@ export const filterByGroup = (
   filters: CatalogFilters,
 ): Record<string, CatalogItem[]> => {
   // Filter items by each filter group
-  return _.reduce(
+  return reduce(
     filters,
     (filtered, group, key) => {
       // Only apply active filters
-      const activeFilters = _.filter(group, 'active');
+      const activeFilters = filter(group, 'active');
       if (activeFilters.length) {
-        const values = _.reduce(
+        const values = reduce(
           activeFilters,
-          (filterValues, filter) => {
-            filterValues.push(filter.value);
+          (filterValues, { value }) => {
+            filterValues.push(value);
             return filterValues;
           },
           [],
         );
 
-        filtered[key] = _.filter(items, (item) => {
+        filtered[key] = filter(items, (item) => {
           const filterValue = item[key] || item.attributes?.[key];
           if (Array.isArray(filterValue)) {
             return filterValue.some((f) => values.includes(f));
@@ -42,7 +47,7 @@ export const filterByAttributes = (
   items: CatalogItem[],
   filters: CatalogFilters,
 ): CatalogItem[] => {
-  if (_.isEmpty(filters)) {
+  if (isEmpty(filters)) {
     return items;
   }
 
@@ -55,7 +60,9 @@ export const filterByAttributes = (
 
   // Intersection of individually applied filters is all filters
   // In the case no filters are active, returns items filteredByKeyword
-  return [..._.values(filteredByGroup), items].reduce((a, b) => a.filter((c) => b.includes(c)));
+  return [...Object.values(filteredByGroup), items].reduce((a, b) =>
+    a.filter((c) => b.includes(c)),
+  );
 };
 
 export const filterBySearchKeyword = (
@@ -80,13 +87,13 @@ export const determineAvailableFilters = (
   items: CatalogItem[],
   filterGroups: string[],
 ): CatalogFilters => {
-  const filters = _.cloneDeep(initialFilters);
+  const filters = cloneDeep(initialFilters);
 
-  _.each(filterGroups, (field) => {
-    _.each(items, (item) => {
+  filterGroups.forEach((field) => {
+    items.forEach((item) => {
       const value = item[field] || item.attributes?.[field];
       if (value) {
-        _.set(filters, [field, value], {
+        set(filters, [field, value], {
           label: value,
           value,
           active: false,
@@ -99,13 +106,13 @@ export const determineAvailableFilters = (
 };
 
 export const getActiveFilters = (attributeFilters, activeFilters): CatalogFilters => {
-  _.forOwn(attributeFilters, (filterValues, filterType) => {
+  forOwn(attributeFilters, (filterValues, filterType) => {
     // removing default and localstore filters if Filters are present over URL
-    _.each(_.keys(activeFilters[filterType]), (key) =>
-      _.set(activeFilters, [filterType, key, 'active'], false),
+    Object.keys(activeFilters[filterType]).forEach((key) =>
+      set(activeFilters, [filterType, key, 'active'], false),
     );
-    _.each(filterValues, (filterValue) => {
-      _.set(activeFilters, [filterType, filterValue, 'active'], true);
+    filterValues.forEach(filterValues, (filterValue) => {
+      set(activeFilters, [filterType, filterValue, 'active'], true);
     });
   });
 
@@ -119,15 +126,15 @@ export const getFilterGroupCounts = (
 ): CatalogFilterCounts => {
   const newFilterCounts = {};
 
-  if (_.isEmpty(activeFilters)) {
+  if (isEmpty(activeFilters)) {
     return newFilterCounts;
   }
 
-  _.each(filterGroups, (filterGroup) => {
-    _.each(_.keys(activeFilters[filterGroup]), (key) => {
+  filterGroups.forEach((filterGroup) => {
+    Object.keys(activeFilters[filterGroup]).forEach((key) => {
       const filterValues = [activeFilters[filterGroup]?.[key]?.value];
 
-      const matchedItems = _.filter(items, (item) => {
+      const matchedItems = filter(items, (item) => {
         const filterValue = item[filterGroup] || item.attributes?.[filterGroup];
         if (Array.isArray(filterValue)) {
           return filterValue.some((f) => filterValues.includes(f));
@@ -136,7 +143,7 @@ export const getFilterGroupCounts = (
         return filterValues.includes(filterValue);
       });
 
-      _.set(newFilterCounts, [filterGroup, key], _.size(matchedItems));
+      set(newFilterCounts, [filterGroup, key], size(matchedItems));
     });
   });
 
@@ -144,13 +151,13 @@ export const getFilterGroupCounts = (
 };
 
 export const getFilterSearchParam = (groupFilter: CatalogFilter): string => {
-  const activeValues = _.reduce(
-    _.keys(groupFilter),
+  const activeValues = reduce(
+    Object.keys(groupFilter),
     (result, typeKey) => {
       return groupFilter[typeKey].active ? result.concat(typeKey) : result;
     },
     [],
   );
 
-  return _.isEmpty(activeValues) ? '' : JSON.stringify(activeValues);
+  return isEmpty(activeValues) ? '' : JSON.stringify(activeValues);
 };

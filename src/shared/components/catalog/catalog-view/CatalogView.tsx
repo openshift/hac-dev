@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import cx from 'classnames';
-import * as _ from 'lodash-es';
+import clone from 'lodash/clone';
+import each from 'lodash/each';
+import groupBy from 'lodash/groupBy';
+import has from 'lodash/has';
+import isEmpty from 'lodash/isEmpty';
+import orderBy from 'lodash/orderBy';
+import set from 'lodash/set';
 import { useQueryParams } from '../../../hooks';
 import { RenderCell } from '../../virtualized-grid/types';
 import { setURLParams, updateURLParams } from '../utils/catalog-utils';
@@ -74,10 +80,10 @@ const CatalogView: React.FC<CatalogViewProps> = ({
   const activeFilters = React.useMemo(() => {
     const attributeFilters = {};
 
-    _.each(filterGroups, (filterGroup) => {
+    each(filterGroups, (filterGroup) => {
       const attributeFilterParam = queryParams.get(filterGroup);
       try {
-        _.set(attributeFilters, filterGroup, JSON.parse(attributeFilterParam));
+        set(attributeFilters, filterGroup, JSON.parse(attributeFilterParam));
       } catch (e) {
         // eslint-disable-next-line no-console
         console.warn('could not update filters from url params: could not parse search params', e);
@@ -91,12 +97,12 @@ const CatalogView: React.FC<CatalogViewProps> = ({
   // const [filterGroupCounts, setFilterGroupCounts] = React.useState<CatalogFilterCounts>({});
   // const [catalogTypeCounts, setCatalogTypeCounts] = React.useState<CatalogTypeCounts>({});
 
-  const isGrouped = _.has(groupings, activeGrouping);
+  const isGrouped = has(groupings, activeGrouping);
 
   const catalogToolbarRef = React.useRef<HTMLInputElement>();
 
   const itemsSorter = React.useCallback(
-    (itemsToSort) => _.orderBy(itemsToSort, ({ name }) => name.toLowerCase(), [sortOrder]),
+    (itemsToSort) => orderBy(itemsToSort, ({ name }) => name.toLowerCase(), [sortOrder]),
     [sortOrder],
   );
 
@@ -118,7 +124,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({
 
   const handleFilterChange = React.useCallback(
     (filterType, id, value) => {
-      const updatedFilters = _.set(activeFilters, [filterType, id, 'active'], value);
+      const updatedFilters = set(activeFilters, [filterType, id, 'active'], value);
       updateURLParams(filterType, getFilterSearchParam(updatedFilters[filterType]));
     },
     [activeFilters],
@@ -138,8 +144,8 @@ const CatalogView: React.FC<CatalogViewProps> = ({
 
   const handleShowAllToggle = React.useCallback((groupName) => {
     setFilterGroupsShowAll((showAll) => {
-      const updatedShowAll = _.clone(showAll);
-      _.set(updatedShowAll, groupName, !(showAll[groupName] ?? false));
+      const updatedShowAll = clone(showAll);
+      set(updatedShowAll, groupName, !(showAll[groupName] ?? false));
       return updatedShowAll;
     });
   }, []);
@@ -186,7 +192,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({
   const showFilters = React.useMemo(
     () =>
       filterGroups?.length > 0 &&
-      !_.isEmpty(activeFilters) &&
+      !isEmpty(activeFilters) &&
       Object.values(activeFilters).some((filterGroup) => Object.keys(filterGroup).length > 1),
     [activeFilters, filterGroups?.length],
   );
@@ -204,7 +210,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({
   const catalogItems = React.useMemo(() => {
     if (!isGrouped) return filteredItems;
 
-    return _.groupBy(filteredItems, (item) => item.attributes?.[activeGrouping]) as {
+    return groupBy(filteredItems, (item) => item.attributes?.[activeGrouping]) as {
       [key: string]: CatalogItem[];
     };
   }, [activeGrouping, filteredItems, isGrouped]);
