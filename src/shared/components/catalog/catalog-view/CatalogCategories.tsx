@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { VerticalTabs, VerticalTabsTab } from '@patternfly/react-catalog-view-extension';
 import cx from 'classnames';
-import * as _ from 'lodash-es';
+import has from 'lodash/has';
+import map from 'lodash/map';
 import { hasActiveDescendant, isActiveTab } from '../utils/category-utils';
 import { CatalogCategory } from '../utils/types';
 
@@ -18,7 +19,7 @@ const CatalogCategories: React.FC<CatalogCategoriesProp> = ({
   selectedCategory,
   onSelectCategory,
 }) => {
-  const activeTab = _.has(categories, selectedCategory);
+  const activeTab = has(categories, selectedCategory);
 
   const renderTabs = (
     category: CatalogCategory & { numItems?: number },
@@ -45,7 +46,7 @@ const CatalogCategories: React.FC<CatalogCategoriesProp> = ({
       >
         {subcategories && (
           <VerticalTabs restrictTabs activeTab={isActiveTab(selectedCategoryID, category)}>
-            {_.map(subcategories, (subcategory) =>
+            {map(subcategories, (subcategory) =>
               renderTabs(subcategory, selectedCategoryID, false),
             )}
           </VerticalTabs>
@@ -56,7 +57,7 @@ const CatalogCategories: React.FC<CatalogCategoriesProp> = ({
 
   return (
     <VerticalTabs restrictTabs activeTab={activeTab} data-test="catalog-categories">
-      {_.map(categories, (category) => renderTabs(category, selectedCategory, true))}
+      {map(categories, (category) => renderTabs(category, selectedCategory, true))}
     </VerticalTabs>
   );
 };

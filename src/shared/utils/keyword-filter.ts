@@ -1,4 +1,4 @@
-import * as _ from 'lodash-es';
+import uniq from 'lodash/uniq';
 
 export const keywordFilter = <T>(
   filterText: string,
@@ -8,7 +8,7 @@ export const keywordFilter = <T>(
   if (!filterText) {
     return items;
   }
-  const keywords = _.uniq(filterText.match(/\S+/g)).map((w) => w.toLowerCase());
+  const keywords = uniq(filterText.match(/\S+/g)).map((w) => w.toLowerCase());
 
   // Sort the longest keyword fist
   keywords.sort(function (a: string, b: string) {

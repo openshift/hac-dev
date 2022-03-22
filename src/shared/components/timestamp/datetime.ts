@@ -1,5 +1,7 @@
 import { pluralize } from '@patternfly/react-core';
-import * as _ from 'lodash-es';
+import each from 'lodash/each';
+import isFinite from 'lodash/isFinite';
+import sumBy from 'lodash/sumBy';
 
 // The maximum allowed clock skew in milliseconds where we show a date as "Just now" even if it is from the future.
 export const maxClockSkewMS = -60000;
@@ -130,7 +132,7 @@ export const fromNow = (dateTime: string | Date, now?: Date, options?) => {
   return relativeTimeFormatter.format(-minutes, 'minute');
 };
 
-export const isValid = (dateTime: Date) => dateTime instanceof Date && !_.isNaN(dateTime.valueOf());
+export const isValid = (dateTime: Date) => dateTime instanceof Date && !isNaN(dateTime.valueOf());
 
 // Conversions between units and milliseconds
 const s = 1000;
@@ -142,19 +144,19 @@ const units = { w, d, h, m, s };
 
 // Formats a duration in milliseconds like "1h 10m"
 export const formatPrometheusDuration = (ms: number) => {
-  if (!_.isFinite(ms) || ms < 0) {
+  if (!isFinite(ms) || ms < 0) {
     return '';
   }
   let remaining = ms;
   let str = '';
-  _.each(units, (factor, unit) => {
+  each(units, (factor, unit) => {
     const n = Math.floor(remaining / factor);
     if (n > 0) {
       str += `${n}${unit} `;
       remaining -= n * factor;
     }
   });
-  return _.trim(str);
+  return str.trim();
 };
 
 // Converts a duration like "1h 10m 23s" to milliseconds or returns 0 if the duration could not be
@@ -165,7 +167,7 @@ export const parsePrometheusDuration = (duration: string): number => {
       .trim()
       .split(/\s+/)
       .map((p) => p.match(/^(\d+)([wdhms])$/));
-    return _.sumBy(parts, (p) => parseInt(p[1], 10) * units[p[2]]);
+    return sumBy(parts, (p) => parseInt(p[1], 10) * units[p[2]]);
   } catch (ignored) {
     // Invalid duration format
     return 0;

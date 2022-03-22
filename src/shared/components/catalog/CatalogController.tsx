@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import * as _ from 'lodash-es';
+import sortBy from 'lodash/sortBy';
 import { useQueryParams } from '../../hooks';
 import { setQueryArgument } from '../../utils';
 import PageHeading from '../headings/PageHeading';
@@ -120,7 +120,7 @@ const CatalogController: React.FC<CatalogControllerProps> = ({
       description: extension.properties.typeDescription,
     }));
 
-    return _.sortBy(types, ({ label }) => label.toLowerCase());
+    return sortBy(types, ({ label }) => label.toLowerCase());
   }, [catalogExtensions]);
 
   const catalogItems = React.useMemo(

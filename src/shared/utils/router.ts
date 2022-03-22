@@ -1,5 +1,6 @@
 import { createBrowserHistory, createMemoryHistory, History } from 'history';
-import * as _ from 'lodash-es';
+import each from 'lodash/each';
+import startsWith from 'lodash/startsWith';
 
 type AppHistory = History & { pushPath: History['push'] };
 
@@ -20,7 +21,7 @@ try {
 export const history: AppHistory = createHistory({ basename: basePath });
 
 const removeBasePath = (url = '/') =>
-  _.startsWith(url, basePath) ? url.slice(basePath.length - 1) : url;
+  startsWith(url, basePath) ? url.slice(basePath.length - 1) : url;
 
 // Monkey patch history to slice off the base path
 (history as any).__replace__ = history.replace;
@@ -45,7 +46,7 @@ export const setQueryArgument = (k: string, v: string) => {
 export const setQueryArguments = (newParams: { [k: string]: string }) => {
   const params = new URLSearchParams(window.location.search);
   let update = false;
-  _.each(newParams, (v, k) => {
+  each(newParams, (v, k) => {
     if (params.get(k) !== v) {
       update = true;
       params.set(k, v);
@@ -60,7 +61,7 @@ export const setQueryArguments = (newParams: { [k: string]: string }) => {
 export const setAllQueryArguments = (newParams: { [k: string]: string }) => {
   const params = new URLSearchParams();
   let update = false;
-  _.each(newParams, (v, k) => {
+  each(newParams, (v, k) => {
     if (params.get(k) !== v) {
       update = true;
       params.set(k, v);

@@ -4,7 +4,8 @@ import {
   FilterSidePanelCategory,
   FilterSidePanelCategoryItem,
 } from '@patternfly/react-catalog-view-extension';
-import * as _ from 'lodash-es';
+import kebabCase from 'lodash/kebabCase';
+import map from 'lodash/map';
 import { CatalogFilterCounts, CatalogFilters as FiltersType } from '../utils/types';
 
 type CatalogFiltersProps = {
@@ -37,7 +38,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         onClick={(e: React.ChangeEvent<HTMLInputElement>) =>
           onFilterChange(groupName, filterName, e.target.checked)
         }
-        data-test={`${groupName}-${_.kebabCase(filterName)}`}
+        data-test={`${groupName}-${kebabCase(filterName)}`}
         {...dummyProps}
       >
         {label}
@@ -54,15 +55,13 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         showAll={filterGroupsShowAll[groupName] ?? false}
         data-test-group-name={groupName}
       >
-        {_.map(filterGroup, (filter, filterName) =>
-          renderFilterItem(filter, filterName, groupName),
-        )}
+        {map(filterGroup, (filter, filterName) => renderFilterItem(filter, filterName, groupName))}
       </FilterSidePanelCategory>
     ) : null;
 
   return (
     <FilterSidePanel>
-      {_.map(activeFilters, (filterGroup, groupName) => renderFilterGroup(filterGroup, groupName))}
+      {map(activeFilters, (filterGroup, groupName) => renderFilterGroup(filterGroup, groupName))}
     </FilterSidePanel>
   );
 };

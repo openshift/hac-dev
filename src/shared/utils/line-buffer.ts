@@ -1,4 +1,5 @@
-import * as _ from 'lodash-es';
+import truncate from 'lodash/truncate';
+
 export const LINE_PATTERN = /^.*(\n|$)/gm;
 const TRUNCATE_LENGTH = 1024;
 
@@ -22,7 +23,7 @@ export class LineBuffer {
         this._hasTruncated = true;
       }
       if (/\n$/.test(line)) {
-        this._buffer.push(_.truncate(next, { length: TRUNCATE_LENGTH }).trimEnd());
+        this._buffer.push(truncate(next, { length: TRUNCATE_LENGTH }).trimEnd());
         lineCount++;
         this._tail = '';
       } else {
@@ -51,7 +52,7 @@ export class LineBuffer {
   }
 
   getTail() {
-    return _.truncate(this._tail, { length: TRUNCATE_LENGTH });
+    return truncate(this._tail, { length: TRUNCATE_LENGTH });
   }
 
   length(): number {
