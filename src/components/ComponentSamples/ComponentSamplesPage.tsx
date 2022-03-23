@@ -9,6 +9,9 @@ import { getDevfileSamples } from '../../utils/devfile-utils';
 import { useFormValues } from '../form-context';
 import { useWizardContext } from '../Wizard/Wizard';
 
+import '../../App.scss';
+import '../../shared/style.scss';
+
 export const ComponentSamplesPage = () => {
   const { handleNext, handleBack, handleReset } = useWizardContext();
   const [formState, setValues] = useFormValues();

@@ -6,7 +6,6 @@ import { LoadingBox } from '../shared/components/status-box/StatusBox';
 import ApplicationList from './ApplicationListView/ApplicationList';
 
 import '../App.scss';
-import '../shared/style.scss';
 
 const AppFlow: React.FC = () => {
   const history = useHistory();
