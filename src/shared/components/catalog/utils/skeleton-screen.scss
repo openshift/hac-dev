@@ -94,8 +94,6 @@ $skeleton-tile-desc-line-bone: linear-gradient(#fff $skeleton-tile-desc-line-hei
   display: flex;
   flex: 1;
   height: 100%;
-  margin: 0 math.div($grid-gutter-width, 2);
-
   position: relative;
 }
 

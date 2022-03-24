@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Formik } from 'formik';
-import { Page } from '../../shared';
 import { useFormValues } from '../form-context';
 import { useWizardContext } from '../Wizard/Wizard';
 import { AddComponentForm, AddComponentValues } from './AddComponentForm';
@@ -44,23 +43,13 @@ export const AddComponentPage = () => {
   };
 
   return (
-    <Page
-      breadcrumbs={[
-        { path: '/app-studio/applications', name: 'Applications' },
-        { path: '#', name: 'Create your application' },
-      ]}
-      heading="Build your application"
-      description="To get started, enter source code or a container image."
-      isSection
+    <Formik
+      onSubmit={handleSubmit}
+      onReset={handleBack}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
     >
-      <Formik
-        onSubmit={handleSubmit}
-        onReset={handleBack}
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-      >
-        {(props) => <AddComponentForm {...props} />}
-      </Formik>
-    </Page>
+      {(props) => <AddComponentForm {...props} />}
+    </Formik>
   );
 };

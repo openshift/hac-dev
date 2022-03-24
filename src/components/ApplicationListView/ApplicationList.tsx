@@ -1,22 +1,27 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
+  Button,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateVariant,
+  PageSection,
+  PageSectionVariants,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
 } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import { useActiveNamespace } from '../../hooks/useActiveNamespace';
 import { ApplicationGroupVersionKind } from '../../models';
-import { Page, Table } from '../../shared';
+import { Table } from '../../shared';
 import { LoadingBox } from '../../shared/components/status-box/StatusBox';
 import { ApplicationKind } from '../../types';
+import PageLayout from '../layout/PageLayout';
 import { ApplicationListHeader } from './ApplicationListHeader';
 import ApplicationListRow from './ApplicationListRow';
-
-import '../../App.scss';
 
 const getRowProps = (obj: ApplicationKind) => ({
   id: obj.metadata.name,
@@ -41,25 +46,30 @@ const ApplicationList: React.FC = () => {
       +new Date(app2.metadata.creationTimestamp) - +new Date(app1.metadata.creationTimestamp),
   );
 
-  return (
-    <Page
-      heading="Applications"
-      customButton={
-        <Link className="pf-c-button pf-m-primary" to={'/app-studio/create'}>
-          Create Application
-        </Link>
-      }
-    >
-      {!allApplications || allApplications.length === 0 ? (
-        <EmptyState variant={EmptyStateVariant.full}>
-          <EmptyStateIcon icon={SearchIcon} />
-          <EmptyStateBody data-test="empty-state-body">
-            <p>No applications found</p>
-            <br />
-            <Link to={`/app-studio`}>Create an application</Link> to get started.
-          </EmptyStateBody>
-        </EmptyState>
-      ) : (
+  const content =
+    !allApplications || allApplications.length === 0 ? (
+      <EmptyState variant={EmptyStateVariant.full}>
+        <EmptyStateIcon icon={SearchIcon} />
+        <EmptyStateBody data-test="empty-state-body">
+          <p>No applications found</p>
+          <br />
+          <Link to="/app-studio/create">Create an application</Link> to get started.
+        </EmptyStateBody>
+      </EmptyState>
+    ) : (
+      <>
+        <Toolbar usePageInsets>
+          <ToolbarContent>
+            <ToolbarItem>
+              <Button
+                variant="primary"
+                component={(props) => <Link {...props} to="/app-studio/create" />}
+              >
+                Create application
+              </Button>
+            </ToolbarItem>
+          </ToolbarContent>
+        </Toolbar>
         <Table
           data={allApplications}
           aria-label="Application List"
@@ -68,8 +78,18 @@ const ApplicationList: React.FC = () => {
           loaded={loaded}
           getRowProps={getRowProps}
         />
-      )}
-    </Page>
+      </>
+    );
+
+  return (
+    <PageLayout
+      title="Applications"
+      description="Applications are a set of components that run together on environments."
+    >
+      <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light} isFilled>
+        {content}
+      </PageSection>
+    </PageLayout>
   );
 };
 

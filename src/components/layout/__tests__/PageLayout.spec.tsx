@@ -1,34 +1,34 @@
 import * as React from 'react';
+import '@testing-library/jest-dom';
 import { Router } from 'react-router';
 import { render, screen } from '@testing-library/react';
 import { createBrowserHistory } from 'history';
-import '@testing-library/jest-dom';
-import Page from '../Page';
+import PageLayout from '../PageLayout';
 
 describe('Page', () => {
   it('should render children and heading', () => {
     render(
-      <Page heading="Heading 1">
+      <PageLayout title="Title 1">
         <span data-testid="children-text">children</span>
-      </Page>,
+      </PageLayout>,
     );
     expect(screen.getByTestId('children-text')).toBeInTheDocument();
-    expect(screen.getByText('Heading 1')).toBeInTheDocument();
+    expect(screen.getByText('Title 1')).toBeInTheDocument();
   });
 
   it('should render breadcrumbs', () => {
     render(
       <Router history={createBrowserHistory()}>
-        <Page
+        <PageLayout
           breadcrumbs={[
             { path: '/', name: 'Home' },
             { path: '/2', name: 'Home2' },
             { path: '/3', name: 'Home3' },
           ]}
-          heading="Heading 1"
+          title="Title 1"
         >
           <span data-testid="children-text">children</span>
-        </Page>
+        </PageLayout>
       </Router>,
     );
     expect(screen.getByTestId('children-text')).toBeInTheDocument();
@@ -39,11 +39,22 @@ describe('Page', () => {
 
   it('should render description', () => {
     render(
-      <Page description="Description 1" heading="Heading 1">
+      <PageLayout description="Description 1" title="Title 1">
         <span data-testid="children-text">children</span>
-      </Page>,
+      </PageLayout>,
     );
     expect(screen.getByTestId('children-text')).toBeInTheDocument();
     expect(screen.getByText('Description 1')).toBeInTheDocument();
+  });
+
+  it('should render footer', () => {
+    render(
+      <PageLayout description="Description 1" title="Title 1" footer={<span>Footer Text</span>}>
+        <span data-testid="children-text">children</span>
+      </PageLayout>,
+    );
+    expect(screen.getByTestId('children-text')).toBeInTheDocument();
+    expect(screen.getByText('Description 1')).toBeInTheDocument();
+    expect(screen.getByText('Footer Text')).toBeInTheDocument();
   });
 });

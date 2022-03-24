@@ -1,14 +1,13 @@
 import * as React from 'react';
-import AppBanner from '../../AppBanner';
+import { PageSection } from '@patternfly/react-core';
 import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import { useActiveNamespace } from '../../hooks/useActiveNamespace';
 import { ApplicationGroupVersionKind } from '../../models';
-import { useQueryParams, Page } from '../../shared';
+import { useQueryParams } from '../../shared';
 import { StatusBox } from '../../shared/components/status-box/StatusBox';
 import { ApplicationKind } from '../../types';
+import PageLayout from '../layout/PageLayout';
 import { ComponentListViewPage } from './ComponentListViewPage';
-
-import '../../App.scss';
 
 const ComponentListView: React.FC = () => {
   const queryParams = useQueryParams();
@@ -23,18 +22,18 @@ const ComponentListView: React.FC = () => {
 
   return (
     <React.Fragment>
-      <AppBanner />
       <StatusBox data={application} loaded={loaded}>
-        <Page
+        <PageLayout
           breadcrumbs={[
-            { path: `?${queryParams.toString()}`, name: 'Workspaces' },
-            { path: `?${queryParams.toString()}`, name: 'Purple_workspace' },
+            { path: '/app-studio/applications', name: 'Applications' },
             { path: `?${queryParams.toString()}`, name: application?.spec?.displayName },
           ]}
-          heading={application?.spec?.displayName}
+          title={application?.spec?.displayName}
         >
-          <ComponentListViewPage application={applicationName} />
-        </Page>
+          <PageSection isFilled>
+            <ComponentListViewPage application={applicationName} />
+          </PageSection>
+        </PageLayout>
       </StatusBox>
     </React.Fragment>
   );

@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import {
   Button,
   DataList,
-  DataListItem,
-  DataListItemRow,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
@@ -58,39 +56,35 @@ export const ComponentListViewPage: React.FC<ComponentListViewPageProps> = ({ ap
   return (
     <>
       <StatusBox data={allComponents} loaded={loaded}>
+        <Toolbar data-testid="component-list-toolbar" clearAllFilters={onClearFilters}>
+          <ToolbarContent>
+            <ToolbarItem>
+              <Button variant="control">
+                <FilterIcon /> {'Name'}
+              </Button>
+            </ToolbarItem>
+            <ToolbarItem>
+              <TextInput
+                name="nameInput"
+                data-testid="name-input-filter"
+                type="search"
+                aria-label="name filter"
+                placeholder="Filter by name..."
+                onChange={(name) => onNameInput(name)}
+              />
+            </ToolbarItem>
+            <ToolbarItem>
+              <Link
+                data-testid="add-component"
+                className="pf-c-button pf-m-primary"
+                to={`/app-studio/create?application=${application}`}
+              >
+                Add Component
+              </Link>
+            </ToolbarItem>
+          </ToolbarContent>
+        </Toolbar>
         <DataList aria-label="Components" data-testid="component-list">
-          <DataListItem>
-            <DataListItemRow>
-              <Toolbar data-testid="component-list-toolbar" clearAllFilters={onClearFilters}>
-                <ToolbarContent>
-                  <ToolbarItem>
-                    <Button variant="control">
-                      <FilterIcon /> {'Name'}
-                    </Button>
-                  </ToolbarItem>
-                  <ToolbarItem>
-                    <TextInput
-                      name="nameInput"
-                      data-testid="name-input-filter"
-                      type="search"
-                      aria-label="name filter"
-                      placeholder="Filter by name..."
-                      onChange={(name) => onNameInput(name)}
-                    />
-                  </ToolbarItem>
-                  <ToolbarItem>
-                    <Link
-                      data-testid="add-component"
-                      className="pf-c-button pf-m-primary"
-                      to={`/app-studio/create?application=${application}`}
-                    >
-                      Add Component
-                    </Link>
-                  </ToolbarItem>
-                </ToolbarContent>
-              </Toolbar>
-            </DataListItemRow>
-          </DataListItem>
           {filteredComponents?.map((component) => (
             <ComponentListItem
               key={component.metadata.uid}

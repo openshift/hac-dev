@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
-import { Page } from '../../shared';
 import { useFormValues } from '../form-context';
 import { useWizardContext } from '../Wizard/Wizard';
 import { ReviewComponentsForm } from './ReviewComponentsForm';
@@ -59,24 +58,15 @@ export const ReviewComponentsPage: React.FC = () => {
   );
 
   return (
-    <Page
-      breadcrumbs={[
-        { path: '/app-studio/applications', name: 'Applications' },
-        { path: '#', name: 'Create your application' },
-      ]}
-      heading="Review your new components"
-      description="Review your selections for the application."
+    <Formik
+      onSubmit={handleSubmit}
+      onReset={() => {
+        decreaseStepBy(isSample ? 1 : 2);
+      }}
+      initialValues={initialValues}
+      validationSchema={reviewFormSchema}
     >
-      <Formik
-        onSubmit={handleSubmit}
-        onReset={() => {
-          decreaseStepBy(isSample ? 1 : 2);
-        }}
-        initialValues={initialValues}
-        validationSchema={reviewFormSchema}
-      >
-        {(props) => <ReviewComponentsForm {...props} />}
-      </Formik>
-    </Page>
+      {(props) => <ReviewComponentsForm {...props} />}
+    </Formik>
   );
 };
