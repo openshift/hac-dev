@@ -15,7 +15,6 @@ import AppBanner from '../AppBanner';
 import { ApplicationModel, ComponentModel } from '../models';
 
 import '../App.scss';
-import '../shared/style.scss';
 
 const ProjectModel: K8sModelCommon = {
   apiVersion: 'v1',

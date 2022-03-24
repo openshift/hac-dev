@@ -7,8 +7,6 @@ import AppBanner from '../../AppBanner';
 const SampleComponent = lazy(() => import('../../components/SampleComponent/SampleComponent'));
 
 import './SamplePage.scss';
-import '../../App.scss';
-import '../../shared/style.scss';
 
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.

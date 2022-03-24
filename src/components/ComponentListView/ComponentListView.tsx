@@ -9,7 +9,6 @@ import { ApplicationKind } from '../../types';
 import { ComponentListViewPage } from './ComponentListViewPage';
 
 import '../../App.scss';
-import '../../shared/style.scss';
 
 const ComponentListView: React.FC = () => {
   const queryParams = useQueryParams();

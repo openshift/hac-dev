@@ -7,7 +7,6 @@ import { FormContextProvider } from './form-context';
 import { ReviewComponentsPage } from './ReviewComponents/ReviewComponentsPage';
 import { Wizard } from './Wizard/Wizard';
 import '../App.scss';
-import '../shared/style.scss';
 
 const SamplesFlow: React.FC = () => {
   return (

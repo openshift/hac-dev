@@ -17,7 +17,6 @@ import { ApplicationListHeader } from './ApplicationListHeader';
 import ApplicationListRow from './ApplicationListRow';
 
 import '../../App.scss';
-import '../../shared/style.scss';
 
 const getRowProps = (obj: ApplicationKind) => ({
   id: obj.metadata.name,
