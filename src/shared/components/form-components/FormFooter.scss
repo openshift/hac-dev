@@ -11,4 +11,8 @@
   &__shadow {
     box-shadow: var(--pf-global--BoxShadow--sm-top);
   }
+
+  &__no-top-margin {
+    margin-top: 0;
+  }
 }

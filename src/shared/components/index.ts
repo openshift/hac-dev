@@ -8,6 +8,5 @@ export * from './spinner';
 export * from './status';
 export * from './name-value-editor';
 export * from './help-tooltip';
-export * from './page';
 export * from './table';
 export * from './pipeline-run-logs';

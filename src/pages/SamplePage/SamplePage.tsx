@@ -2,7 +2,6 @@ import React, { Suspense, lazy, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, StackItem, Stack, Title, Spinner, PageSection } from '@patternfly/react-core';
 import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
-import AppBanner from '../../AppBanner';
 
 const SampleComponent = lazy(() => import('../../components/SampleComponent/SampleComponent'));
 
@@ -22,7 +21,6 @@ const SamplePage: React.FC = () => {
 
   return (
     <React.Fragment>
-      <AppBanner />
       <PageHeader>
         <PageHeaderTitle title="App Studio" />
         <p> HAC Developer Experience. </p>

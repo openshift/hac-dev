@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { FormFooter, Page } from '../../shared';
+import { PageSection } from '@patternfly/react-core';
+import { FormFooter } from '../../shared';
 import CatalogView from '../../shared/components/catalog/catalog-view/CatalogView';
 import CatalogTile from '../../shared/components/catalog/CatalogTile';
 import { skeletonCatalog } from '../../shared/components/catalog/utils/skeleton-catalog';
@@ -7,9 +8,9 @@ import { CatalogItem } from '../../shared/components/catalog/utils/types';
 import { StatusBox } from '../../shared/components/status-box/StatusBox';
 import { getDevfileSamples } from '../../utils/devfile-utils';
 import { useFormValues } from '../form-context';
+import PageLayout from '../layout/PageLayout';
 import { useWizardContext } from '../Wizard/Wizard';
 
-import '../../App.scss';
 import '../../shared/style.scss';
 
 export const ComponentSamplesPage = () => {
@@ -75,40 +76,43 @@ export const ComponentSamplesPage = () => {
     [selected],
   );
 
+  const footer = (
+    <FormFooter
+      submitLabel="Next"
+      resetLabel="Back"
+      isSubmitting={false}
+      disableSubmit={!selected}
+      errorMessage={undefined}
+      handleSubmit={handleSubmit}
+      handleReset={handleBack}
+      handleCancel={() => {
+        handleReset();
+        setValues({});
+      }}
+    />
+  );
+
   return (
-    <Page
+    <PageLayout
       breadcrumbs={[
         { path: '/app-studio/applications', name: 'Applications' },
         { path: '#', name: 'Create your application' },
       ]}
-      heading="Start with a sample"
-      description="Get started using applications by choosing a code sample"
+      title="Start with a sample"
+      description="Get started using applications by choosing a code sample."
+      footer={footer}
     >
-      <StatusBox
-        skeleton={skeletonCatalog}
-        data={items}
-        loaded={loaded}
-        loadError={loadError}
-        label="Catalog items"
-      >
-        <CatalogView items={items} renderTile={renderTile} hideSidebar={true} />
-      </StatusBox>
-      <div className="hacDev-page__section">
-        <FormFooter
-          submitLabel="Next"
-          resetLabel="Back"
-          isSubmitting={false}
-          disableSubmit={!selected}
-          errorMessage={undefined}
-          handleSubmit={handleSubmit}
-          handleReset={handleBack}
-          handleCancel={() => {
-            handleReset();
-            setValues({});
-          }}
-          sticky
-        />
-      </div>
-    </Page>
+      <PageSection padding={{ default: 'noPadding' }} isFilled>
+        <StatusBox
+          skeleton={skeletonCatalog}
+          data={items}
+          loaded={loaded}
+          loadError={loadError}
+          label="Catalog items"
+        >
+          <CatalogView items={items} renderTile={renderTile} hideSidebar={true} />
+        </StatusBox>
+      </PageSection>
+    </PageLayout>
   );
 };

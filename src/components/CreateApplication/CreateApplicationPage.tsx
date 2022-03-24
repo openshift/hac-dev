@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Formik, FormikProps } from 'formik';
 import { useActiveNamespace } from '../../hooks/useActiveNamespace';
-import { useQueryParams, Page } from '../../shared';
+import { useQueryParams } from '../../shared';
 import { useFormValues } from '../form-context';
 import { useWizardContext } from '../Wizard/Wizard';
 import { CreateApplicationForm, CreateApplicationValues } from './CreateApplicationForm';
@@ -40,18 +40,8 @@ export const CreateApplicationPage = () => {
   }, [handleNext, initialValues, queryParams, setValues]);
 
   return (
-    <Page
-      breadcrumbs={[
-        { path: '/app-studio/applications', name: 'Applications' },
-        { path: '#', name: 'Create your application' },
-      ]}
-      heading="Create your application"
-      description="To create an application, first enter an application name."
-      isSection
-    >
-      <Formik onSubmit={handleSubmit} onReset={handleReset} initialValues={initialValues}>
-        {(props: FormikProps<CreateApplicationValues>) => <CreateApplicationForm {...props} />}
-      </Formik>
-    </Page>
+    <Formik onSubmit={handleSubmit} onReset={handleReset} initialValues={initialValues}>
+      {(props: FormikProps<CreateApplicationValues>) => <CreateApplicationForm {...props} />}
+    </Formik>
   );
 };

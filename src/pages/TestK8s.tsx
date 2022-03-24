@@ -11,10 +11,7 @@ import {
   K8sResourceCommon,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { Button, PageSection, TextInput } from '@patternfly/react-core';
-import AppBanner from '../AppBanner';
 import { ApplicationModel, ComponentModel } from '../models';
-
-import '../App.scss';
 
 const ProjectModel: K8sModelCommon = {
   apiVersion: 'v1',
@@ -221,7 +218,6 @@ const TestK8s: React.FC = () => {
 
   return (
     <React.Fragment>
-      <AppBanner />
       <PageSection>
         <TextInput placeholder="ConfigMap name" onChange={(v) => setName(v)} value={name} />
         <div>

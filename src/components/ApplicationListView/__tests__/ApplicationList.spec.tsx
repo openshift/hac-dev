@@ -86,14 +86,14 @@ describe('Application List', () => {
   it('renders empty state if no application is present', () => {
     watchResourceMock.mockReturnValue([[], true]);
     const { getByText } = render(<ApplicationList />);
-    expect(getByText('Create Application')).toBeInTheDocument();
+    expect(getByText('Create an application')).toBeInTheDocument();
     expect(getByText('No applications found')).toBeInTheDocument();
   });
 
   it('renders application list when application(s) is(are) present', () => {
     watchResourceMock.mockReturnValue([applications, true]);
     const { getByText } = render(<ApplicationList />);
-    expect(getByText('Create Application')).toBeInTheDocument();
+    expect(getByText('Create application')).toBeInTheDocument();
     expect(getByText('Name')).toBeInTheDocument();
     expect(getByText('Components')).toBeInTheDocument();
     expect(getByText('Environments')).toBeInTheDocument();

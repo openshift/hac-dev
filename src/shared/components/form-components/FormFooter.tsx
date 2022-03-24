@@ -59,7 +59,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
               })}
           </Alert>
         )}
-        <ActionGroup className="pf-c-form pf-c-form__group--no-top-margin">
+        <ActionGroup className="pf-c-form hacDev-form-footer__no-top-margin">
           {!hideSubmit && (
             <Button
               type={handleSubmit ? 'button' : 'submit'}
