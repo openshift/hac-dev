@@ -6,6 +6,7 @@ import {
   k8sListResourceItems,
   k8sGetResource,
   K8sResourceCommon,
+  WebSocketFactory
 } from '@openshift/dynamic-plugin-sdk-utils';
 
 const HOOK_POLL_DELAY = 10000; // change this if you want the useHook to go faster / slower on polls
@@ -37,6 +38,14 @@ type Selector = {
   matchLabels?: MatchLabels;
   matchExpressions?: MatchExpression[];
 };
+
+type WSCallbacks = {
+  onError?: (data: unknown) => void;
+  onOpen?: (topic?: string) => void;
+  onMessage?: (response: { type: string, object: unknown }, rawResponse?: string) => void;
+  onClose?: (topic?: string) => void;
+}
+export type GetWsTopic = (path: string, callbacks: WSCallbacks, topic?: string) => void;
 
 
 /* ---------------- *
@@ -101,6 +110,49 @@ const makeListCall = (resourceData: WatchK8sResource) => (
 );
 
 const useForceRender = () => React.useReducer((s: boolean) => !s, false)[1] as VoidFunction;
+
+const wsTopics = {};
+
+export const getWsTopic: GetWsTopic = (path, { onError, onOpen, onMessage, onClose }, topic = 'default') => {
+  let currWs = wsTopics[topic];
+  if (!currWs) {
+    let safePath = path;
+    if (/^\/\//.test(path)) {
+      // https://github.com/openshift/dynamic-plugin-sdk/pull/55
+      safePath = path.slice(1);
+    }
+    currWs = new WebSocketFactory(topic, {
+      path: safePath,
+    });
+
+    wsTopics[topic] = currWs;
+  }
+
+  currWs.onOpen(() => {
+    if (!wsTopics[topic]) {
+      wsTopics[topic] = currWs;
+    }
+    onOpen(topic)
+  });
+  currWs.onError(onError);
+  currWs.onMessage((rawResponse) => {
+    let data;
+    try {
+      if (typeof rawResponse === 'string') {
+        data = JSON.parse(rawResponse);
+      } else {
+        data = rawResponse;
+      }
+    } catch (e) {
+      throw new Error(`Websocket bad data. Name: ${e.name}, message: ${e.message}`);
+    }
+    onMessage(data, rawResponse);
+  });
+  currWs.onClose(() => {
+    delete wsTopics[topic];
+    onClose(topic)
+  });
+}
 
 /* ------------------ *
  *  External Methods  *
