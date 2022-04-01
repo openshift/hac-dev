@@ -26,18 +26,6 @@ const webpackProxy = {
   ...(process.env.INSIGHTS_CHROME && {
     localChrome: process.env.INSIGHTS_CHROME,
   }),
-  customProxy: [
-    {
-      context: (path) => path.includes('/api/k8s'),
-      target:
-        'https://api-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com:443',
-      secure: false,
-      changeOrigin: true,
-      autoRewrite: true,
-      ws: true,
-      pathRewrite: { '^/api/k8s': '' },
-    },
-  ],
   client: {
     overlay: false,
   },

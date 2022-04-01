@@ -2,5 +2,9 @@ import { Login } from '../../utils/Login';
 
 before(() => {
   //Login to Rad Hat SSO
-  Login.login(Cypress.env('USERNAME'), Cypress.env('PASSWORD'));
+  if (Cypress.env('PR_CHECK') == true) {
+    Login.pr_check_login(Cypress.env('USERNAME'), Cypress.env('PASSWORD'));
+  } else {
+    Login.login(Cypress.env('USERNAME'), Cypress.env('PASSWORD'));
+  }
 });
