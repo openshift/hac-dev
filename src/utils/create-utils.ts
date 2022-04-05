@@ -92,6 +92,7 @@ export const createComponent = (
       replicas: component.replicas,
       targetPort: component.targetPort,
       resources: component.resources,
+      env: component.env,
     },
   };
 
