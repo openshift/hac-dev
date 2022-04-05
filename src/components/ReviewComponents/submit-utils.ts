@@ -20,6 +20,7 @@ const createComponents = async (
           replicas: component.replicas && Number(component.replicas),
           targetPort: component.targetPort && Number(component.targetPort),
           resources: component.resources && transformResources(component.resources),
+          env: component.env,
         },
         application,
         namespace,
