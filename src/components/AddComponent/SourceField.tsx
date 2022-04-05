@@ -110,7 +110,7 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
         </GridItem>
         <GridItem span={4}>
           No code?{' '}
-          <Button variant={ButtonVariant.link} onClick={onSamplesClick} style={{ paddingLeft: 0 }}>
+          <Button variant={ButtonVariant.link} onClick={onSamplesClick} style={{ paddingLeft: 0 }} data-ouia-component-id="sample-button">
             Start with a sample.
           </Button>
         </GridItem>

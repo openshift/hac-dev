@@ -67,6 +67,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
               variant={ButtonVariant.primary}
               isDisabled={disableSubmit}
               data-test="submit-button"
+              data-ouia-component-id={submitLabel || t('Save')}
             >
               {submitLabel || t('Save')}
             </Button>

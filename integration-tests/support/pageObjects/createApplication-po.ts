@@ -4,15 +4,15 @@ export const addComponentPagePO = {
 
 export const componentSamplesPagePO = {
   grid: '.co-catalog-page__grid',
-  nodejs: 'Basic Node.js',
-  create: '[data-ouia-component-id="OUIA-Generated-Button-primary-2"]',
+  nodejs: '[data-test="sample-Basic Node.js"]',
+  create: '[data-test="submit-button"]',
 };
 
 export const createApplicationPagePO = {
   applicationName: '[id="form-input-application-field"]',
-  next: '[data-ouia-component-id="OUIA-Generated-Button-primary-1"]',
+  next: '[data-test="submit-button"]',
 };
 
 export const reviewComponentsPagePO = {
-  create: '[data-ouia-component-id="OUIA-Generated-Button-primary-4"]',
+  create: '[data-test="submit-button"]',
 };
