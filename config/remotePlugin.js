@@ -2,10 +2,6 @@ const { resolve } = require('path');
 const packageInfo = require('../package.json');
 
 module.exports = {
-  entryCallbackSettings: {
-    name: 'loadPluginEntry',
-    pluginID: `${packageInfo.insights.appname}@${packageInfo.version}`,
-  },
   pluginMetadata: {
     name: packageInfo.name,
     version: packageInfo.version,
