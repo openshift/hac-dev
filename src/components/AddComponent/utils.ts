@@ -1,8 +1,17 @@
 import * as React from 'react';
 import { useFormikContext } from 'formik';
 import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
-import { SPIAccessTokenBindingGroupVersionKind } from '../../models';
-import { SPIAccessTokenBindingKind, SPIAccessTokenBindingPhase } from '../../types';
+import {
+  ComponentDetectionQueryGroupVersionKind,
+  SPIAccessTokenBindingGroupVersionKind,
+} from '../../models';
+import {
+  ComponentDetectionQueryKind,
+  DetectedComponents,
+  SPIAccessTokenBindingKind,
+  SPIAccessTokenBindingPhase,
+} from '../../types';
+import { createComponentDetectionQuery } from '../../utils/create-utils';
 import { NamespaceContext } from './../NamespacedPage/NamespacedPage';
 
 /**
@@ -44,4 +53,62 @@ export const useAccessTokenBindingAuth = (name: string) => {
     binding?.status?.errorMessage,
     binding?.status?.syncedObjectRef?.name,
   ]);
+};
+
+/**
+ * Create a ComponentDetectionQuery when any of the params change,
+ * and return the detected components when detection is completed.
+ */
+export const useComponentDetection = (
+  source: string,
+  application: string,
+  namespace: string,
+  isMultiComponent?: boolean,
+  authSecret?: string,
+): [DetectedComponents, any] => {
+  const [cdqName, setCdqName] = React.useState<string>();
+  const [createError, setCreateError] = React.useState();
+
+  const [cdq, loaded, loadError] = useK8sWatchResource<ComponentDetectionQueryKind>({
+    groupVersionKind: ComponentDetectionQueryGroupVersionKind,
+    name: cdqName,
+    namespace,
+    isList: false,
+  });
+
+  React.useEffect(() => {
+    setCdqName(null);
+    setCreateError(null);
+    if (source) {
+      createComponentDetectionQuery(application, source, namespace, isMultiComponent, authSecret)
+        .then((resource) => setCdqName(resource.metadata.name))
+        .catch(setCreateError);
+    }
+  }, [application, authSecret, isMultiComponent, namespace, source]);
+
+  const detectedComponents = React.useMemo(() => {
+    if (cdqName && loaded && cdq) {
+      if (cdqName === cdq.metadata.name) {
+        return cdq?.status?.componentDetected;
+      }
+    }
+  }, [cdqName, cdq, loaded]);
+
+  const error = React.useMemo(() => {
+    if (createError) {
+      return createError;
+    }
+    if (cdqName) {
+      if (loadError) {
+        return loadError;
+      }
+      if (loaded && !detectedComponents && cdq?.status?.conditions?.[0]?.status === 'True') {
+        if (cdqName === cdq.metadata.name) {
+          return cdq.status.conditions[0].message;
+        }
+      }
+    }
+  }, [cdq, cdqName, createError, detectedComponents, loadError, loaded]);
+
+  return [detectedComponents, error];
 };

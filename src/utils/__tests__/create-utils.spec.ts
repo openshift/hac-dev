@@ -136,12 +136,6 @@ describe('Create Utils', () => {
   });
 
   it('Should call k8s create util with correct model and data for component detection query', async () => {
-    createResourceMock.mockImplementationOnce(() =>
-      Promise.resolve({
-        status: { conditions: [{ type: 'Completed', status: 'True' }], componentDetected: true },
-      }),
-    );
-
     await createComponentDetectionQuery(
       'test-application',
       'https://github.com/test/repository',
@@ -157,23 +151,6 @@ describe('Create Utils', () => {
       },
       resource: expect.objectContaining(mockCDQData),
     });
-  });
-
-  it('Should throw error when no components are detected', async () => {
-    createResourceMock.mockImplementationOnce(() =>
-      Promise.resolve({
-        status: { conditions: [{ type: 'Completed', status: 'False' }], componentDetected: false },
-      }),
-    );
-
-    await expect(
-      createComponentDetectionQuery(
-        'test-application',
-        'https://github.com/test/repository',
-        'test-ns',
-        true,
-      ),
-    ).rejects.toThrow();
   });
 
   it('Should call k8s create util with correct model and data for access token binding', async () => {

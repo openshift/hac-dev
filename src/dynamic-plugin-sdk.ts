@@ -61,6 +61,15 @@ export type WatchK8sResult<R extends K8sResourceCommon | K8sResourceCommon[]> = 
  * ------------------ */
 
 /**
+* Temporary workaround to use the correct plural form for kinds
+*/
+const getPlural = (kind: string) => {
+  const kindsLookupTable = { ComponentDetectionQuery: 'ComponentDetectionQueries' };
+  const pluralKind = kindsLookupTable[kind] || kind + 's';
+  return pluralKind.toLowerCase();
+}
+
+/**
  * This makes an assumption that the model will have a plural of `${kind}s` -- which is obv not ideal.
  * Without apiDiscovery & the hook interface being sorta fixed, our options are limited.
  */
@@ -72,7 +81,7 @@ const makeGetCall = (resourceData: WatchK8sResource) => (
         apiGroup: resourceData.groupVersionKind.group,
         kind: resourceData.groupVersionKind.kind,
         // TODO: no dictionary... solution?
-        plural: resourceData.groupVersionKind.kind.toLowerCase() + 's',
+        plural: getPlural(resourceData.groupVersionKind.kind),
       },
       queryOptions: {
         name: resourceData.name,
@@ -92,7 +101,7 @@ const makeListCall = (resourceData: WatchK8sResource) => (
         apiGroup: resourceData.groupVersionKind.group,
         kind: resourceData.groupVersionKind.kind,
         // TODO: no dictionary... solution?
-        plural: resourceData.groupVersionKind.kind.toLowerCase() + 's',
+        plural: getPlural(resourceData.groupVersionKind.kind),
       },
       queryOptions: {
         ns: resourceData.namespace,

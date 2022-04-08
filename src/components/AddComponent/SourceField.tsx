@@ -7,12 +7,12 @@ import {
   GridItem,
   ValidatedOptions,
 } from '@patternfly/react-core';
-import { useField } from 'formik';
+import { useField, useFormikContext } from 'formik';
 import { getFieldId, HelpTooltipIcon, InputField } from '../../shared';
 import { useDebounceCallback } from '../../shared/hooks/useDebounceCallback';
-import { createComponentDetectionQuery } from '../../utils/create-utils';
 import { useFormValues } from '../form-context';
 import { AddComponentValues } from './AddComponentForm';
+import { useComponentDetection } from './utils';
 import { gitUrlRegex } from './validation-utils';
 
 type SourceFieldProps = {
@@ -25,15 +25,23 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
     type: 'input',
   });
   const [, { value: gitOptions }] = useField<AddComponentValues['git']>('git');
-  const [, , { setValue: setDetectedComponents }] =
-    useField<AddComponentValues['detectedComponents']>('detectedComponents');
+  const { setFieldValue } = useFormikContext();
   const [validated, setValidated] = React.useState(ValidatedOptions.default);
   const [helpText, setHelpText] = React.useState('');
   const [helpTextInvalid, setHelpTextInvalid] = React.useState('');
+  const [sourceUrl, setSourceUrl] = React.useState('');
   const [formState] = useFormValues();
   const fieldId = getFieldId('source', 'input');
   const isValid = !(touched && error);
   const label = 'Git repo URL or container image';
+
+  const [detectedComponents, loadError] = useComponentDetection(
+    sourceUrl,
+    formState.application,
+    formState.namespace,
+    gitOptions.isMultiComponent,
+    gitOptions.authSecret,
+  );
 
   const debouncedHandleSourceChange = useDebounceCallback(
     React.useCallback(() => {
@@ -42,42 +50,33 @@ export const SourceField: React.FC<SourceFieldProps> = ({ onSamplesClick }) => {
         return;
       }
       setValidated(ValidatedOptions.default);
-      setDetectedComponents(undefined);
+      setFieldValue('detectedComponents', undefined);
       setHelpText('Validating...');
       setHelpTextInvalid('');
-      createComponentDetectionQuery(
-        formState.application,
-        source,
-        formState.namespace,
-        gitOptions.isMultiComponent,
-        gitOptions.authSecret,
-      )
-        .then((result) => {
-          setValidated(ValidatedOptions.success);
-          setHelpText('Validated');
-
-          setDetectedComponents(
-            Object.values(result).map(({ componentStub }) => ({
-              ...componentStub,
-              name: componentStub.componentName,
-            })),
-          );
-        })
-        .catch((e) => {
-          setValidated(ValidatedOptions.error);
-          setHelpTextInvalid('Unable to detect components');
-          // eslint-disable-next-line no-console
-          console.error('Unable to detect component: ', e);
-        });
-    }, [
-      source,
-      setDetectedComponents,
-      formState.application,
-      formState.namespace,
-      gitOptions.isMultiComponent,
-      gitOptions.authSecret,
-    ]),
+      setSourceUrl(source);
+    }, [source, setFieldValue]),
   );
+
+  React.useEffect(() => {
+    if (detectedComponents) {
+      setValidated(ValidatedOptions.success);
+      setHelpText('Validated');
+
+      setFieldValue(
+        'detectedComponents',
+        Object.values(detectedComponents).map(({ componentStub }) => ({
+          ...componentStub,
+          name: componentStub.componentName,
+        })),
+      );
+    } else if (loadError) {
+      setValidated(ValidatedOptions.error);
+      setHelpTextInvalid('Unable to detect components');
+      setFieldValue('detectedComponents', undefined);
+      // eslint-disable-next-line no-console
+      console.error('Unable to detect component: ', loadError);
+    }
+  }, [detectedComponents, loadError, setFieldValue]);
 
   React.useEffect(() => {
     source && gitOptions && debouncedHandleSourceChange();
