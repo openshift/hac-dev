@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Stack, StackItem } from '@patternfly/react-core';
 import dayjs from 'dayjs';
-import { useK8sWatchResource, WatchK8sResource } from '../../dynamic-plugin-sdk';
+import { WatchK8sResource } from '../../dynamic-plugin-sdk';
 import PipelineRunLogs from '../../shared/components/pipeline-run-logs/PipelineRunLogs';
 import { PipelineRunKind } from '../../shared/components/pipeline-run-logs/types';
 import { PipelineRunGroupVersionKind } from '../../shared/components/pipeline-run-logs/utils';

@@ -44,7 +44,7 @@ type Selector = {
  * ---------------- */
 export type K8sGroupVersionKind = { group?: string; version: string; kind: string };
 export type WatchK8sResource = {
-  groupVersionKind?: K8sGroupVersionKind;
+  groupVersionKind: K8sGroupVersionKind;
   name?: string;
   namespace?: string;
   isList?: boolean;

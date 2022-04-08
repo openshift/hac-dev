@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
   Button,
@@ -12,7 +13,6 @@ import {
   Title,
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
-import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import { ApplicationGroupVersionKind, ComponentGroupVersionKind } from '../../models';
 import { ApplicationKind, ComponentKind } from '../../types';
 import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
