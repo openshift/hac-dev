@@ -22,8 +22,8 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
     <>
       <TableData className={applicationTableColumnClasses.name}>
         <Link
-          to={`/app-studio/components?application=${obj.metadata.name}`}
-          title={obj.metadata.name}
+          to={`/app-studio/applications?name=${obj.metadata.name}`}
+          title={obj.spec.displayName}
         >
           {obj.spec.displayName}
         </Link>

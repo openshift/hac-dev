@@ -2,15 +2,12 @@ import * as React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useField } from 'formik';
+import { NamespaceContext } from '../../../components/NamespacedPage/NamespacedPage';
 import { initiateAccessTokenBinding } from '../../../utils/create-utils';
 import { GitAuthorization } from '../GitAuthorization';
 
 jest.mock('formik', () => ({
   useField: jest.fn(),
-}));
-
-jest.mock('../../../hooks/useActiveNamespace', () => ({
-  useActiveNamespace: jest.fn(() => 'test-ns'),
 }));
 
 jest.mock('../../../utils/create-utils', () => ({
@@ -30,13 +27,21 @@ describe('GitAuthorization', () => {
       {},
       { value: field === 'source' ? 'test' : null, error: true },
     ]);
-    render(<GitAuthorization />);
+    render(
+      <NamespaceContext.Provider value={{ namespace: 'test-ns' }}>
+        <GitAuthorization />
+      </NamespaceContext.Provider>,
+    );
     expect(screen.getByText('Sign In')).toBeDisabled();
   });
 
   it('should show success message if secret is available', () => {
     useFieldMock.mockReturnValue([{}, { value: 'test', touched: true }]);
-    render(<GitAuthorization />);
+    render(
+      <NamespaceContext.Provider value={{ namespace: 'test-ns' }}>
+        <GitAuthorization />
+      </NamespaceContext.Provider>,
+    );
     expect(screen.getByText('Authorized access')).toBeInTheDocument();
     expect(screen.queryByText('Sign In')).not.toBeInTheDocument();
   });
@@ -51,7 +56,11 @@ describe('GitAuthorization', () => {
       status: {},
     });
 
-    render(<GitAuthorization />);
+    render(
+      <NamespaceContext.Provider value={{ namespace: 'test-ns' }}>
+        <GitAuthorization />
+      </NamespaceContext.Provider>,
+    );
     const button = screen.getByText('Sign In');
     expect(button).toBeEnabled();
 

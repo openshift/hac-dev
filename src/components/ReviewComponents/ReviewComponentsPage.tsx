@@ -48,7 +48,7 @@ export const ReviewComponentsPage: React.FC = () => {
     (data: ReviewComponentsFormValues, { setSubmitting }) => {
       createResources(formState, data.components)
         .then((appName) => {
-          history.push(`/app-studio/components?application=${appName}`);
+          history.push(`/app-studio/applications?name=${appName}`);
         })
         .catch(() => {
           setSubmitting(false);

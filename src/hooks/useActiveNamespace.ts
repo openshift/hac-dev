@@ -3,8 +3,9 @@ import { k8sListResourceItems } from '@openshift/dynamic-plugin-sdk-utils';
 import { useFormValues } from './../components/form-context';
 import { ProjectModel } from './../models';
 
-export const useActiveNamespace = () => {
-  const [activeNamespace, setActiveNamespace] = useState('');
+export const useActiveNamespace = (): [string, boolean] => {
+  const [activeNamespace, setActiveNamespace] = useState<string>('');
+  const [loaded, setLoaded] = useState<boolean>(false);
   const [, setFormValues] = useFormValues();
 
   useEffect(() => {
@@ -31,10 +32,16 @@ export const useActiveNamespace = () => {
           'Could not find namespace; you are likely not able to do much as we are targeting "default"',
         );
       }
+      setLoaded(true);
     };
 
-    fetchProjects();
+    try {
+      fetchProjects();
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
   }, [setFormValues]);
 
-  return activeNamespace;
+  return [activeNamespace, loaded];
 };

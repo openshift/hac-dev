@@ -1,1 +1,1 @@
-import('./components/SamplesFlow');
+import('./pages/ApplicationsPage');

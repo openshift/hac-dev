@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 export type WizardContextType = {
   handleNext: () => void;
@@ -17,6 +18,7 @@ export const useWizardContext = () => React.useContext(WizardContext);
 
 export const Wizard: React.FC = ({ children }) => {
   const [currentStep, setCurrentStep] = React.useState<number>(0);
+  const history = useHistory();
 
   const [activeStepContent, childrenLength] = React.useMemo(() => {
     const step = React.Children.toArray(children).filter((_, i) => i === currentStep);
@@ -25,8 +27,8 @@ export const Wizard: React.FC = ({ children }) => {
   }, [currentStep, children]);
 
   const handleReset = React.useCallback(() => {
-    setCurrentStep(0);
-  }, []);
+    history.goBack();
+  }, [history]);
 
   const handleNext = React.useCallback(() => {
     setCurrentStep((prevStep) => (prevStep === childrenLength ? prevStep : prevStep + 1));
