@@ -59,6 +59,8 @@ export const createResources = async (
   if (shouldCreateApplication) {
     try {
       const applicationData = await createApplication(formState.application, formState.namespace);
+      // wait for the application to be ready
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       appName = applicationData.metadata.name;
       // eslint-disable-next-line no-console
       console.log('###############- Application created', applicationData);
