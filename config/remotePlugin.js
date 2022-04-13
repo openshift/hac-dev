@@ -6,13 +6,8 @@ module.exports = {
     name: packageInfo.name,
     version: packageInfo.version,
     exposedModules: {
-      AppEntry: resolve(__dirname, '../src/components/AppFlow.tsx'),
-      ComponentListView: resolve(
-        __dirname,
-        '../src/components/ComponentListView/ComponentListView.tsx',
-      ),
-      Applications: resolve(__dirname, '../src/components/ApplicationListView/ApplicationList'),
-      Create: resolve(__dirname, '../src/components/SamplesFlow'),
+      Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
+      Import: resolve(__dirname, '../src/pages/ImportPage'),
     },
   },
   extensions: [
@@ -22,7 +17,7 @@ module.exports = {
         path: '/app-studio',
         exact: true,
         component: {
-          $codeRef: 'AppEntry',
+          $codeRef: 'Applications',
         },
       },
     },
@@ -39,20 +34,10 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/create',
+        path: '/app-studio/import',
         exact: true,
         component: {
-          $codeRef: 'Create',
-        },
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/app-studio/components',
-        exact: true,
-        component: {
-          $codeRef: 'ComponentListView',
+          $codeRef: 'Import',
         },
       },
     },

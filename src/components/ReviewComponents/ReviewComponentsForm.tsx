@@ -4,7 +4,7 @@ import { FormikProps } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import { FormFooter } from '../../shared';
 import { useFormValues } from '../form-context';
-import PageLayout from '../layout/PageLayout';
+import PageLayout from '../PageLayout/PageLayout';
 import { useWizardContext } from '../Wizard/Wizard';
 import { ReviewSampleComponentCard } from './ReviewSampleComponentCard';
 import { ReviewSourceComponentCard } from './ReviewSourceComponentCard';

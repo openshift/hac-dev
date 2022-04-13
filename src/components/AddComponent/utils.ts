@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { useFormikContext } from 'formik';
 import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
-import { useActiveNamespace } from '../../hooks/useActiveNamespace';
 import { SPIAccessTokenBindingGroupVersionKind } from '../../models';
 import { SPIAccessTokenBindingKind, SPIAccessTokenBindingPhase } from '../../types';
+import { NamespaceContext } from './../NamespacedPage/NamespacedPage';
 
 /**
  * Watch the SPIAccessTokenBinding resource and open auth window when provided.
  * Upon successful injection, set the specified secret.
  */
 export const useAccessTokenBindingAuth = (name: string) => {
-  const namespace = useActiveNamespace();
+  const { namespace } = React.useContext(NamespaceContext);
   const { setFieldValue } = useFormikContext();
   const [binding, loaded] = useK8sWatchResource<SPIAccessTokenBindingKind>({
     groupVersionKind: SPIAccessTokenBindingGroupVersionKind,

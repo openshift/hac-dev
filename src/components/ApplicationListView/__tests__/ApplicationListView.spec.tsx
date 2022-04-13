@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
 import { useK8sWatchResource } from '../../../dynamic-plugin-sdk';
 import { ApplicationKind } from '../../../types';
-import ApplicationList from '../ApplicationList';
+import ApplicationListView from '../ApplicationListView';
 
 jest.mock('../../../dynamic-plugin-sdk', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 
-jest.mock('../../../hooks/useActiveNamespace', () => ({
-  useActiveNamespace: jest.fn(() => 'test-ns'),
+jest.mock('react-i18next', () => ({
+  useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -83,19 +83,28 @@ const applications: ApplicationKind[] = [
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('Application List', () => {
-  it('renders empty state if no application is present', () => {
-    watchResourceMock.mockReturnValue([[], true]);
-    const { getByText } = render(<ApplicationList />);
-    expect(getByText('Create an application')).toBeInTheDocument();
-    expect(getByText('No applications found')).toBeInTheDocument();
+  it('should render spinner if application data is not loaded', () => {
+    watchResourceMock.mockReturnValue([[], false]);
+    render(<ApplicationListView />);
+    screen.getByRole('progressbar');
   });
 
-  it('renders application list when application(s) is(are) present', () => {
+  it('should render empty state if no application is present', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    render(<ApplicationListView />);
+    screen.getByText('No applications');
+    screen.getByText('To get started, create an application.');
+    const button = screen.getByText('Create application');
+    expect(button).toBeInTheDocument();
+    expect(button.closest('a').href).toBe('http://localhost/app-studio/import');
+  });
+
+  it('should render application list when application(s) is(are) present', () => {
     watchResourceMock.mockReturnValue([applications, true]);
-    const { getByText } = render(<ApplicationList />);
-    expect(getByText('Create application')).toBeInTheDocument();
-    expect(getByText('Name')).toBeInTheDocument();
-    expect(getByText('Components')).toBeInTheDocument();
-    expect(getByText('Environments')).toBeInTheDocument();
+    render(<ApplicationListView />);
+    screen.getByText('Create application');
+    screen.getByText('Name');
+    screen.getByText('Components');
+    screen.getByText('Environments');
   });
 });

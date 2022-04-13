@@ -2,6 +2,12 @@ import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { useWizardContext, Wizard } from '../Wizard';
 
+const mockGoBack = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  useHistory: jest.fn(() => ({ goBack: mockGoBack })),
+}));
+
 const DummyComponent = () => {
   const { handleNext, handleBack, handleReset, currentStep } = useWizardContext();
 
@@ -54,6 +60,6 @@ describe('Wizard', () => {
     fireEvent.click(screen.getByTestId('next')); // 1
     fireEvent.click(screen.getByTestId('next')); // 2
     fireEvent.click(screen.getByTestId('reset')); // 0
-    expect(screen.getByTestId('current-step').textContent).toBe('0');
+    expect(mockGoBack).toHaveBeenCalled();
   });
 });

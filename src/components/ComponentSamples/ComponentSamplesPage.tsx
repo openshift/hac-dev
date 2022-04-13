@@ -8,7 +8,7 @@ import { CatalogItem } from '../../shared/components/catalog/utils/types';
 import { StatusBox } from '../../shared/components/status-box/StatusBox';
 import { getDevfileSamples } from '../../utils/devfile-utils';
 import { useFormValues } from '../form-context';
-import PageLayout from '../layout/PageLayout';
+import PageLayout from '../PageLayout/PageLayout';
 import { useWizardContext } from '../Wizard/Wizard';
 
 import '../../shared/style.scss';
