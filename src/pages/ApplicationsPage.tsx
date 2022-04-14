@@ -5,9 +5,11 @@ import ApplicationDetailsView from '../components/ApplicationDetailsView/Applica
 import ApplicationListView from '../components/ApplicationListView/ApplicationListView';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
+import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 import { getQueryArgument } from '../shared/utils';
 
 const ApplicationsPage = () => {
+  useQuickstartCloseOnUnmount();
   const applicationName = getQueryArgument('name');
 
   return (

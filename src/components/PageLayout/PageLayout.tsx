@@ -13,7 +13,7 @@ type PageLayoutProps = {
   title: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
-  description?: string;
+  description?: React.ReactNode;
   breadcrumbs?: { name: string; path: string }[];
 };
 

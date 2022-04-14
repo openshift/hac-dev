@@ -15,6 +15,7 @@ import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import { ApplicationGroupVersionKind, ComponentGroupVersionKind } from '../../models';
 import { ApplicationKind, ComponentKind } from '../../types';
+import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 import { NamespaceContext } from '../NamespacedPage/NamespacedPage';
 import PageLayout from '../PageLayout/PageLayout';
 import ComponentListView from './ComponentListView';
@@ -89,6 +90,12 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
           },
         ]}
         title={application?.spec?.displayName}
+        description={
+          <>
+            Use this application view to access logs and promote your components.{' '}
+            <HelpTopicLink topicId="app-view">Learn more</HelpTopicLink>
+          </>
+        }
       >
         <PageSection isFilled>
           {!componentsLoaded ? loading : filteredComponents.length > 0 ? componentList : emptyState}

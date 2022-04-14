@@ -17,6 +17,14 @@ jest.mock('../../../dynamic-plugin-sdk', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 
+jest.mock('../../../hooks/useQuickstartCloseOnUnmount', () => ({
+  useQuickstartCloseOnUnmount: jest.fn(),
+}));
+
+jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
+  useChrome: () => ({ helpTopics: { setActiveTopic: jest.fn(), enableTopics: jest.fn() } }),
+}));
+
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('ApplicationDetailsView', () => {
