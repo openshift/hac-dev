@@ -1,0 +1,132 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: hac-proxy
+parameters:
+  - name: NAMESPACE
+    required: true
+  - name: ENV_NAME
+    required: true
+objects:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        service.beta.openshift.io/serving-cert-secret-name: hac-proxy-cert
+      name: hac-proxy
+      namespace: ${NAMESPACE}
+    spec:
+      internalTrafficPolicy: Cluster
+      ipFamilies:
+        - IPv4
+      ipFamilyPolicy: SingleStack
+      ports:
+        - port: 8080
+          protocol: TCP
+          targetPort: 8080
+      selector:
+        app: hac-proxy
+      sessionAffinity: None
+      type: ClusterIP
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      annotations:
+        haproxy.router.openshift.io/rewrite-target: /
+        route.openshift.io/termination: reencrypt
+      labels:
+        frontend: hac-proxy
+      name: hac-proxy
+      namespace: ${NAMESPACE}
+      ownerReferences:
+        - apiVersion: networking.k8s.io/v1
+          controller: true
+          kind: Ingress
+          name: hac-proxy
+    spec:
+      host: ${ENV_NAME}.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com
+      path: /api/k8s
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: reencrypt
+      to:
+        kind: Service
+        name: hac-proxy
+        weight: 100
+      wildcardPolicy: None
+  - apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      annotations:
+        haproxy.router.openshift.io/rewrite-target: /
+        route.openshift.io/termination: reencrypt
+      labels:
+        frontend: hac-proxy
+      name: hac-proxy
+      namespace: ${NAMESPACE}
+    spec:
+      ingressClassName: openshift-default
+      rules:
+        - host: ${ENV_NAME}.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com
+          http:
+            paths:
+              - backend:
+                  service:
+                    name: hac-proxy
+                    port:
+                      number: 8080
+                path: /api/k8s
+                pathType: Prefix
+      tls:
+        - {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: hac-proxy
+      namespace: ${NAMESPACE}
+    spec:
+      progressDeadlineSeconds: 600
+      replicas: 1
+      revisionHistoryLimit: 10
+      selector:
+        matchLabels:
+          app: hac-proxy
+      strategy:
+        rollingUpdate:
+          maxSurge: 25%
+          maxUnavailable: 25%
+        type: RollingUpdate
+      template:
+        metadata:
+          labels:
+            app: hac-proxy
+        spec:
+          containers:
+            - env:
+                - name: HJ_K8S
+                  value: https://api-toolchain-host-operator.apps.hac-devsandbox.5unc.p1.openshiftapps.com
+                - name: HJ_SERVE
+                  value: :8080
+              image: quay.io/psav/hac-proxy:banana
+              imagePullPolicy: Always
+              name: hac-proxy
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+                - mountPath: /tmp/certs
+                  name: cert
+                  readOnly: true
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - name: cert
+              secret:
+                defaultMode: 420
+                secretName: hac-proxy-cert
