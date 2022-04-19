@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Form, PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { FormikProps } from 'formik';
 import { FormFooter } from '../../shared';
-import PageLayout from '../layout/PageLayout';
+import PageLayout from '../PageLayout/PageLayout';
 import { ApplicationField } from './ApplicationField';
 
 export type CreateApplicationValues = {

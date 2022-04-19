@@ -3,7 +3,7 @@ import { configure, render, screen } from '@testing-library/react';
 import { shallow } from 'enzyme';
 import { useK8sWatchResource } from '../../../dynamic-plugin-sdk';
 import { PipelineRunLogs } from '../../../shared';
-import { componentCRMock } from '../../ComponentListView/__data__/componentMock';
+import { componentCRMocks } from '../../ApplicationDetailsView/__data__/mock-data';
 import { pipelineRunMock } from '../__data__/pipelineRunMocks';
 import { BuildLogViewer } from '../BuildLogViewer';
 
@@ -17,14 +17,14 @@ describe('BuildLogViewer', () => {
   it('should show loading box if pipelineRuns are being fetched', () => {
     const watchResourceMock = useK8sWatchResource as jest.Mock;
     watchResourceMock.mockReturnValue([[], false]);
-    render(<BuildLogViewer component={componentCRMock} />);
+    render(<BuildLogViewer component={componentCRMocks[0]} />);
     expect(screen.getByTestId('loading-indicator')).not.toBeNull();
   });
 
   it('should show empty box if pipelineRuns not found', () => {
     const watchResourceMock = useK8sWatchResource as jest.Mock;
     watchResourceMock.mockReturnValue([[], true]);
-    render(<BuildLogViewer component={componentCRMock} />);
+    render(<BuildLogViewer component={componentCRMocks[0]} />);
     expect(screen.getByTestId('empty-message')).not.toBeNull();
     expect(screen.getByTestId('empty-message').innerHTML).toBe('No pipeline runs found');
   });
@@ -33,7 +33,7 @@ describe('BuildLogViewer', () => {
     const watchResourceMock = useK8sWatchResource as jest.Mock;
     watchResourceMock.mockReturnValue([[pipelineRunMock], true]);
     watchResourceMock.mockReturnValue([[pipelineRunMock], true]);
-    const wrapper = shallow(<BuildLogViewer component={componentCRMock} />);
+    const wrapper = shallow(<BuildLogViewer component={componentCRMocks[0]} />);
     expect(wrapper.find('span').contains('basic-node-js')).toBe(true);
   });
 
@@ -41,7 +41,7 @@ describe('BuildLogViewer', () => {
     const watchResourceMock = useK8sWatchResource as jest.Mock;
     watchResourceMock.mockReturnValue([[pipelineRunMock], true]);
     watchResourceMock.mockReturnValue([[pipelineRunMock], true]);
-    const wrapper = shallow(<BuildLogViewer component={componentCRMock} />);
+    const wrapper = shallow(<BuildLogViewer component={componentCRMocks[0]} />);
     expect(wrapper.find(PipelineRunLogs).exists()).toBe(true);
   });
 });

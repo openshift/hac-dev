@@ -12,13 +12,13 @@ import {
 import { CheckIcon } from '@patternfly/react-icons/dist/js/icons/check-icon';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons/dist/js/icons/outlined-question-circle-icon';
 import { useField } from 'formik';
-import { useActiveNamespace } from '../../hooks/useActiveNamespace';
 import { LoadingInline } from '../../shared/components/status-box/StatusBox';
 import { initiateAccessTokenBinding } from '../../utils/create-utils';
+import { NamespaceContext } from '../NamespacedPage/NamespacedPage';
 import { useAccessTokenBindingAuth } from './utils';
 
 export const GitAuthorization: React.FC = () => {
-  const namespace = useActiveNamespace();
+  const { namespace } = React.useContext(NamespaceContext);
   const [isCreating, setIsCreating] = React.useState(false);
   const [bindingName, setBindingName] = React.useState('');
   const [, { value: url, error, touched }] = useField<string>('source');

@@ -8,9 +8,6 @@ import {
   TextContent,
 } from '@patternfly/react-core';
 import BreadCrumbs from '../../shared/components/breadcrumbs/BreadCrumbs';
-import AppBanner from '../banner/AppBanner';
-
-import './PageLayout.scss';
 
 type PageLayoutProps = {
   title: string;
@@ -29,7 +26,6 @@ const PageLayout: React.FC<PageLayoutProps> = ({
 }) => {
   return (
     <>
-      <AppBanner />
       <PageGroup>
         {breadcrumbs && (
           <PageBreadcrumb>

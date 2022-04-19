@@ -1,2 +1,2 @@
-export { useApplicationsInfo } from './useApplicationsInfo';
 export { useActiveNamespace } from './useActiveNamespace';
+export { useApplicationRoutes } from './useApplicationRoutes';
