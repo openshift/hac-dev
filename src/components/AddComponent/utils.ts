@@ -102,9 +102,14 @@ export const useComponentDetection = (
       if (loadError) {
         return loadError;
       }
-      if (loaded && !detectedComponents && cdq?.status?.conditions?.[0]?.status === 'True') {
+
+      const completeCondition = cdq?.status?.conditions?.find(
+        (condition) => condition.type === 'Completed',
+      );
+
+      if (loaded && !detectedComponents && completeCondition) {
         if (cdqName === cdq.metadata.name) {
-          return cdq.status.conditions[0].message;
+          return completeCondition.message;
         }
       }
     }
