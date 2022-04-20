@@ -1,4 +1,4 @@
-import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { k8sCreateResource, k8sGetResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { SPIAccessTokenBindingModel } from '../../models';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
@@ -12,6 +12,7 @@ import {
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
 
 const createResourceMock = k8sCreateResource as jest.Mock;
+const getResourceMock = k8sGetResource as jest.Mock;
 
 const mockApplicationRequestData = {
   apiVersion: `${ApplicationModel.apiGroup}/${ApplicationModel.apiVersion}`,
@@ -136,6 +137,20 @@ describe('Create Utils', () => {
   });
 
   it('Should call k8s create util with correct model and data for component detection query', async () => {
+    createResourceMock.mockImplementationOnce(() =>
+      Promise.resolve({
+        metadata: { name: 'dummy-name' },
+        status: { conditions: [{ type: 'Completed', status: 'True' }], componentDetected: true },
+      }),
+    );
+
+    getResourceMock.mockResolvedValue(() =>
+      Promise.resolve({
+        metadata: { name: 'dummy-name' },
+        status: { conditions: [{ type: 'Completed', status: 'True' }], componentDetected: true },
+      }),
+    );
+
     await createComponentDetectionQuery(
       'test-application',
       'https://github.com/test/repository',

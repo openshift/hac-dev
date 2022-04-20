@@ -11,15 +11,21 @@ export type ResourceRequirements = {
   };
 };
 
+export type ComponentSource = {
+  git?: {
+    url: string;
+    devfileUrl?: string;
+  };
+  image?: {
+    containerImage: string;
+  };
+};
+
 export type ComponentKind = K8sResourceCommon & {
   spec: {
     componentName: string;
     application: string;
-    source: {
-      git?: {
-        url: string;
-      };
-    };
+    source: ComponentSource;
     context?: string;
     resources?: ResourceRequirements;
     replicas?: number;

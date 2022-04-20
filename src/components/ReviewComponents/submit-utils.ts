@@ -15,8 +15,9 @@ const createComponents = async (
       return createComponent(
         {
           name: component.name,
-          gitRepo: component.source.git.url,
-          devfileUrl: component.source.git.devfileUrl,
+          gitRepo: component.source.git?.url,
+          image: component.source.image?.containerImage,
+          devfileUrl: component.source.git?.devfileUrl,
           replicas: component.replicas && Number(component.replicas),
           targetPort: component.targetPort && Number(component.targetPort),
           resources: component.resources && transformResources(component.resources),

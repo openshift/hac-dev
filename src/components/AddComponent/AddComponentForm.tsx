@@ -3,11 +3,11 @@ import { Form, PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { FormikProps } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import { FormFooter } from '../../shared';
+import { ComponentSource } from '../../types';
 import { useFormValues } from '../form-context';
 import PageLayout from '../PageLayout/PageLayout';
 import { useWizardContext } from '../Wizard/Wizard';
-import { GitOptions } from './GitOptions';
-import { SourceField } from './SourceField';
+import { SourceSection } from './SourceSection';
 
 export type AddComponentValues = {
   source: string;
@@ -19,13 +19,8 @@ export type AddComponentValues = {
   };
   detectedComponents?: {
     name: string;
-    source: {
-      git: {
-        url: string;
-        devfileUrl?: string;
-      };
-    };
-    context: string;
+    source: ComponentSource;
+    context?: string;
     resources?: {
       limits?: { cpu?: string; memory?: string };
       requests?: { cpu?: string; memory?: string };
@@ -77,8 +72,7 @@ export const AddComponentForm: React.FC<AddComponentFormProps> = ({
     >
       <PageSection variant={PageSectionVariants.light} isFilled>
         <Form onSubmit={handleSubmit}>
-          <SourceField onSamplesClick={handleNext} />
-          <GitOptions />
+          <SourceSection onSamplesClick={handleNext} />
         </Form>
       </PageSection>
     </PageLayout>

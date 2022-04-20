@@ -80,10 +80,11 @@ export const createComponent = (
       application,
       source: {
         git: {
-          url: component.gitRepo,
+          ...(component.gitRepo ? { url: component.gitRepo } : {}),
           secret,
           ...(component.devfileUrl ? { devfileUrl: component.devfileUrl } : {}),
         },
+        ...(component.image ? { image: { containerImage: component.image } } : {}),
       },
       replicas: component.replicas,
       targetPort: component.targetPort,
