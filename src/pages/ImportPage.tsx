@@ -1,38 +1,35 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { AddComponentPage } from '../components/AddComponent/AddComponentPage';
-import { ComponentSamplesPage } from '../components/ComponentSamples/ComponentSamplesPage';
-import { CreateApplicationPage } from '../components/CreateApplication/CreateApplicationPage';
-import { FormContextProvider } from '../components/form-context';
+import { HelpTopicLink } from '../components/HelpTopicLink/HelpTopicLink';
+import ImportForm from '../components/ImportForm/ImportForm';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
-import { ReviewComponentsPage } from '../components/ReviewComponents/ReviewComponentsPage';
-import { Wizard } from '../components/Wizard/Wizard';
+import PageLayout from '../components/PageLayout/PageLayout';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
-// import PageLayout from '../components/PageLayout/PageLayout';
-// import ImportForm from '../components/ImportForm/ImportForm';
 
 const ImportPage: React.FunctionComponent = () => {
   const title = 'Import your application';
-
+  const description = (
+    <>
+      Import your code repo or start with a sample.{' '}
+      <HelpTopicLink topicId="create-app">Learn more</HelpTopicLink>
+    </>
+  );
   useQuickstartCloseOnUnmount();
-
-  // const description = 'Enter an application name.';
   return (
     <NamespacedPage>
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      {/* <PageLayout title={title} description={description}>
+      <PageLayout
+        breadcrumbs={[
+          { path: '/app-studio/applications', name: 'Applications' },
+          { path: '#', name: 'Import' },
+        ]}
+        title={title}
+        description={description}
+      >
         <ImportForm />
-      </PageLayout> */}
-      <FormContextProvider>
-        <Wizard>
-          <CreateApplicationPage />
-          <AddComponentPage />
-          <ComponentSamplesPage />
-          <ReviewComponentsPage />
-        </Wizard>
-      </FormContextProvider>
+      </PageLayout>
     </NamespacedPage>
   );
 };

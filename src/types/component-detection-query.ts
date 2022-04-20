@@ -1,34 +1,12 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
+import { ComponentSpecs } from './component';
 
 export type DetectedComponents = {
   [key: string]: {
-    componentStub: {
-      componentName: string;
-      context: string;
-      targetPort: number;
-      replicas?: number;
-      devfileFound?: boolean;
-      route?: string;
-      build?: {
-        containerImage: string;
-      };
-      resources: {
-        limits?: {
-          cpu?: string;
-          memory?: string;
-        };
-        requests?: {
-          cpu?: string;
-          memory?: string;
-        };
-      };
-      source: {
-        git: {
-          url: string;
-        };
-      };
-      env?: { name: string; value: string }[];
-    };
+    componentStub: ComponentSpecs;
+    language?: string;
+    projectType?: string;
+    devfileFound?: boolean;
   };
 };
 
