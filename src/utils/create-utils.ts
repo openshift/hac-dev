@@ -1,8 +1,4 @@
-import {
-  k8sListResourceItems,
-  k8sGetResource,
-  k8sCreateResource,
-} from '@openshift/dynamic-plugin-sdk-utils';
+import { k8sListResourceItems, k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import isEqual from 'lodash/isEqual';
 import uniqueId from 'lodash/uniqueId';
 import {
@@ -122,9 +118,8 @@ const uid = () =>
  * @param isMultiComponent whether or not the git repository contains multiple components
  * @param secret Name of the secret containing the personal access token
  * @param dryRun dry run without creating any resources
- * @returns Returns HAS ComponentDetectionQuery results
+ * @returns Returns CDQ
  *
- * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
 export const createComponentDetectionQuery = async (
   appName: string,
@@ -133,7 +128,7 @@ export const createComponentDetectionQuery = async (
   isMultiComponent?: boolean,
   secret?: string,
   dryRun?: boolean,
-): Promise<ComponentDetectionQueryKind['status']['componentDetected']> => {
+): Promise<ComponentDetectionQueryKind> => {
   // append name with uid for additional randomness
   const name = `${appName.split(/ |\./).join('-').toLowerCase()}-${uid()}`;
   const uniqueName = uniqueId(name);
@@ -154,7 +149,7 @@ export const createComponentDetectionQuery = async (
     },
   };
 
-  let cdq: ComponentDetectionQueryKind = await k8sCreateResource({
+  return k8sCreateResource({
     model: ComponentDetectionQueryModel,
     queryOptions: {
       name: uniqueName,
@@ -163,24 +158,6 @@ export const createComponentDetectionQuery = async (
     },
     resource: requestData,
   });
-
-  while (cdq.status?.conditions?.[0]?.type !== 'Completed') {
-    // sleep for 200ms before refetching
-    await new Promise((r) => setTimeout(r, 200));
-    cdq = await k8sGetResource({
-      model: ComponentDetectionQueryModel,
-      queryOptions: {
-        name: cdq.metadata.name,
-        ns: namespace,
-      },
-    });
-  }
-
-  if (!cdq.status.componentDetected || cdq.status.conditions[0].status !== 'True') {
-    throw new Error(cdq.status.conditions[0].message);
-  }
-
-  return cdq.status.componentDetected;
 };
 
 /**
