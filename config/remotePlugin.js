@@ -22,7 +22,27 @@ module.exports = {
       },
     },
     {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio',
+        exact: true,
+        component: {
+          $codeRef: 'Applications',
+        },
+      },
+    },
+    {
       type: 'console.page/route',
+      properties: {
+        path: '/app-studio/applications',
+        exact: true,
+        component: {
+          $codeRef: 'Applications',
+        },
+      },
+    },
+    {
+      type: 'core.page/route',
       properties: {
         path: '/app-studio/applications',
         exact: true,
@@ -42,7 +62,24 @@ module.exports = {
       },
     },
     {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/import',
+        exact: true,
+        component: {
+          $codeRef: 'Import',
+        },
+      },
+    },
+    {
       type: 'console.navigation/href',
+      properties: {
+        href: '/app-studio',
+        name: 'Applications',
+      },
+    },
+    {
+      type: 'core.navigation/href',
       properties: {
         href: '/app-studio',
         name: 'Applications',
