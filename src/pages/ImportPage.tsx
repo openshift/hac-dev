@@ -7,11 +7,15 @@ import { FormContextProvider } from '../components/form-context';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import { ReviewComponentsPage } from '../components/ReviewComponents/ReviewComponentsPage';
 import { Wizard } from '../components/Wizard/Wizard';
+import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 // import PageLayout from '../components/PageLayout/PageLayout';
 // import ImportForm from '../components/ImportForm/ImportForm';
 
 const ImportPage: React.FunctionComponent = () => {
   const title = 'Import your application';
+
+  useQuickstartCloseOnUnmount();
+
   // const description = 'Enter an application name.';
   return (
     <NamespacedPage>

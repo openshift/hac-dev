@@ -4,6 +4,7 @@ import { FormikProps } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import { FormFooter } from '../../shared';
 import { useFormValues } from '../form-context';
+import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 import PageLayout from '../PageLayout/PageLayout';
 import { useWizardContext } from '../Wizard/Wizard';
 import { ReviewSampleComponentCard } from './ReviewSampleComponentCard';
@@ -44,7 +45,12 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
         { path: '#', name: 'Create your application' },
       ]}
       title="Review your new components"
-      description="Review your selections for the application."
+      description={
+        <>
+          Review your selections for the application.{' '}
+          <HelpTopicLink topicId="create-app">Learn more</HelpTopicLink>
+        </>
+      }
       footer={footer}
     >
       <PageSection isFilled>
