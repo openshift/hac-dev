@@ -77,7 +77,7 @@ export const useComponentDetection = (
           namespace,
           isList: false,
         }
-      : {},
+      : null,
   );
 
   React.useEffect(() => {
