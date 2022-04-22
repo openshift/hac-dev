@@ -13,3 +13,9 @@ export const loginPO = {
   password: '#rh-password-verification-form',
   loginButton: '#rh-password-verification-submit-button',
 };
+
+export const kcLoginPO = {
+  username: '#username',
+  password: '#password',
+  loginButton: '#kc-login',
+};
