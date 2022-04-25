@@ -17,16 +17,16 @@ type ResourceData = {
 };
 
 export const createResourceData = (resources: ResourceData) => {
-  const memory = resources?.limits?.memory ?? '';
-  const cpu = resources?.limits?.cpu ?? '';
+  const memory = (resources?.limits?.memory || resources?.requests?.memory) ?? '0.5Gi';
+  const cpu = (resources?.limits?.cpu || resources?.requests?.cpu) ?? '1';
   const [memoryResource, memoryUnit] = getResourceData(memory);
   const [cpuResource, cpuUnit] = getResourceData(cpu);
 
   return {
     cpu: cpuResource || '',
-    cpuUnit: CPUResourceMap[cpuUnit] || CPUResourceMap.m,
+    cpuUnit: CPUResourceMap[cpuUnit] || CPUResourceMap[''],
     memory: memoryResource || '',
-    memoryUnit: memoryUnit || 'Mi',
+    memoryUnit: memoryUnit || 'Gi',
   };
 };
 

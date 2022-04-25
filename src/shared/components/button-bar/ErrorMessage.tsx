@@ -10,7 +10,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
       isInline
       className="hacDev-alert hacDev-alert--scrollable"
       variant="danger"
-      title={t('hac-shared~An error occurred')}
+      title={t('An error occurred')}
     >
       <div className="hacDev-pre-line">{message}</div>
     </Alert>

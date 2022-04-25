@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   KEY_CODES,
   MenuItem,
@@ -9,7 +10,6 @@ import {
 import classNames from 'classnames';
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
-import { history } from '../../utils';
 import { Action } from './types';
 
 export type ActionMenuItemProps = {
@@ -32,6 +32,7 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
   const { href, external } = cta as { href: string; external?: boolean };
   const isDisabled = !isAllowed || disabled;
   const classes = classNames({ 'pf-m-disabled': isDisabled });
+  const history = useHistory();
 
   const handleClick = React.useCallback(
     (event) => {
@@ -45,7 +46,7 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
       }
       onClick && onClick();
     },
-    [cta, onClick],
+    [cta, history, onClick],
   );
 
   const handleKeyDown = (event) => {

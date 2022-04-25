@@ -16,6 +16,7 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
   handleSubmit,
   handleReset,
   isSubmitting,
+  status,
   errors,
 }) => {
   const [formState, setFormState] = useFormValues();
@@ -34,7 +35,7 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
       handleSubmit={handleSubmit}
       isSubmitting={isSubmitting}
       disableSubmit={!isEmpty(errors) || isSubmitting}
-      errorMessage={undefined}
+      errorMessage={status?.submitError}
     />
   );
 
@@ -68,6 +69,7 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
                       source: component.data.source,
                       envs: component.data.env,
                     }}
+                    isExpanded={formState.components.length === 1}
                   />
                 ))}
               </>

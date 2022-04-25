@@ -1,6 +1,5 @@
 import { createApplication, createComponent } from '../../../utils/create-utils';
 import { createResources } from '../submit-utils';
-import { Resources } from '../types';
 
 jest.mock('@redhat-cloud-services/frontend-components-notifications/redux');
 
@@ -21,7 +20,6 @@ describe('createResources', () => {
         comp: {
           name: 'comp',
           source: { git: { url: 'example.com' } },
-          runtime: Resources.OpenShift,
         },
       },
     );
@@ -37,7 +35,6 @@ describe('createResources', () => {
         comp: {
           name: 'comp',
           source: { git: { url: 'example.com', devfileUrl: 'devfile.io/sample' } },
-          runtime: Resources.OpenShift,
         },
       },
     );
@@ -65,7 +62,6 @@ describe('createResources', () => {
         comp: {
           name: 'comp',
           source: { git: { url: 'example.com' } },
-          runtime: Resources.OpenShift,
         },
       },
     );
@@ -82,7 +78,6 @@ describe('createResources', () => {
           comp: {
             name: 'comp',
             source: { git: { url: 'example.com' } },
-            runtime: Resources.OpenShift,
           },
         },
       ),
@@ -101,7 +96,6 @@ describe('createResources', () => {
           comp: {
             name: 'comp',
             source: { git: { url: 'example.com' } },
-            runtime: Resources.OpenShift,
           },
         },
       ),

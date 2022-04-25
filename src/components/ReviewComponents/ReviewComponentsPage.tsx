@@ -5,7 +5,7 @@ import { useFormValues } from '../form-context';
 import { useWizardContext } from '../Wizard/Wizard';
 import { ReviewComponentsForm } from './ReviewComponentsForm';
 import { createResources } from './submit-utils';
-import { DeployMethod, Resources, ReviewComponentsFormValues } from './types';
+import { ReviewComponentsFormValues } from './types';
 import { createResourceData } from './utils';
 import { reviewFormSchema } from './validation-utils';
 
@@ -16,7 +16,6 @@ export const ReviewComponentsPage: React.FC = () => {
   const history = useHistory();
 
   const initialValues: ReviewComponentsFormValues = {
-    deployMethod: DeployMethod.AutomaticDeploy,
     components: formState.components.reduce(
       (acc, val) => ({
         ...acc,
@@ -38,7 +37,6 @@ export const ReviewComponentsPage: React.FC = () => {
           ...(isSample
             ? {}
             : {
-                runtime: Resources.OpenShift,
                 resources: createResourceData(val.data.resources || {}),
                 replicas: val.data.replicas || 1,
                 targetPort: val.data.targetPort || 8080,
@@ -52,13 +50,16 @@ export const ReviewComponentsPage: React.FC = () => {
   };
 
   const handleSubmit = React.useCallback(
-    (data: ReviewComponentsFormValues, { setSubmitting }) => {
+    (data: ReviewComponentsFormValues, actions) => {
       createResources(formState, data.components)
         .then((appName) => {
           history.push(`/app-studio/applications?name=${appName}`);
         })
-        .catch(() => {
-          setSubmitting(false);
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.warn('Error while submitting import form:', error);
+          actions.setSubmitting(false);
+          actions.setStatus({ submitError: error.message });
         });
     },
     [formState, history],

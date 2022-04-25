@@ -1,5 +1,10 @@
-import { k8sListResourceItems, k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
+import {
+  k8sListResourceItems,
+  k8sCreateResource,
+  k8sUpdateResource,
+} from '@openshift/dynamic-plugin-sdk-utils';
 import isEqual from 'lodash/isEqual';
+import merge from 'lodash/merge';
 import uniqueId from 'lodash/uniqueId';
 import {
   ApplicationModel,
@@ -7,7 +12,12 @@ import {
   ComponentDetectionQueryModel,
   SPIAccessTokenBindingModel,
 } from '../models';
-import { ApplicationKind, ComponentDetectionQueryKind, SPIAccessTokenBindingKind } from '../types';
+import {
+  ComponentKind,
+  ApplicationKind,
+  ComponentDetectionQueryKind,
+  SPIAccessTokenBindingKind,
+} from '../types';
 
 /**
  * Create HAS Application CR
@@ -65,10 +75,12 @@ export const createComponent = (
   namespace: string,
   secret?: string,
   dryRun?: boolean,
+  originalComponent?: ComponentKind,
+  verb: 'create' | 'update' = 'create',
 ): any => {
   const name = component.name.split(/ |\./).join('-').toLowerCase();
   // const uniqueName = uniqueId(name);
-  const requestData = {
+  const newComponent = {
     apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
     kind: ComponentModel.kind,
     metadata: {
@@ -93,15 +105,20 @@ export const createComponent = (
     },
   };
 
-  return k8sCreateResource({
-    model: ComponentModel,
-    queryOptions: {
-      name,
-      ns: namespace,
-      ...(dryRun && { queryParams: { dryRun: 'All' } }),
-    },
-    resource: requestData,
-  });
+  const resource =
+    verb === 'update' ? merge({}, originalComponent || {}, newComponent) : newComponent;
+
+  return verb === 'create'
+    ? k8sCreateResource({
+        model: ComponentModel,
+        queryOptions: {
+          name,
+          ns: namespace,
+          ...(dryRun && { queryParams: { dryRun: 'All' } }),
+        },
+        resource,
+      })
+    : k8sUpdateResource({ model: ComponentModel, resource });
 };
 
 // https://stackoverflow.com/q/105034/7683374

@@ -76,6 +76,11 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({
           <ActionMenu
             actions={[
               {
+                cta: { href: `/app-studio/component-settings?componentName=${name}` },
+                id: 'component-settings',
+                label: 'Component settings',
+              },
+              {
                 cta: () => showLogsForComponent(component),
                 id: `view-logs-${name.toLowerCase()}`,
                 label: 'View Build Logs',
