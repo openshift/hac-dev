@@ -4,26 +4,14 @@ import { ComponentSamplesPage } from '../support/pages/ComponentSamplesPage';
 import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
 import { ApplicationComponentPage } from '../support/pages/ApplicationComponentsPage';
 import { Common } from '../utils/Common';
-import { Login } from '../utils/Login';
 
 describe('Create Application from Sample', () => {
   const applicationName = 'test-app' + new Date().getTime() / 1000;
-  
-  Cypress.on('uncaught:exception', (err) => {
-    return false;
-  })
-
-  beforeEach(() => {
-    //Login to Rad Hat SSO
-    Login.login();
-    Common.clickOnConsentButton();
-  });
 
   it('NodeJS app can be created', () => {
     //set application name
     const createApplicationPage = new CreateApplicationPage();
     createApplicationPage.clickCreateApplication();
-    createApplicationPage.clearApplicationName();
     createApplicationPage.setApplicationName(applicationName);
     createApplicationPage.clickNext();
 
@@ -36,7 +24,6 @@ describe('Create Application from Sample', () => {
     applicationPage.createApplication();
 
     //Check application
-    cy.contains(applicationName).should('exist');
     applicationPage.createdApplicationExists('basic-node-js');
   });
 

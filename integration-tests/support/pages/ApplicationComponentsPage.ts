@@ -2,6 +2,7 @@ import { applicationComponentsPagePO } from '../pageObjects/createApplication-po
 import { alertTitle } from '../pageObjects/global-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 export class ApplicationComponentPage extends AbstractWizardPage {
+  //TODO
   createApplication() {
     cy.get(applicationComponentsPagePO.create).click();
     cy.contains(applicationComponentsPagePO.createText).click();
@@ -17,11 +18,15 @@ export class ApplicationComponentPage extends AbstractWizardPage {
   }
 
   createdApplicationExists(application: string) {
-    cy.contains(application).should('exist');
-  }
+    this.getComponentListItem(application).should('exist');
+    }
 
   createdApplicationNotExists(application: string) {
-    cy.contains(application).should('not.exist');
+    this.getComponentListItem(application).should('not.exist');
+  }
+
+  getComponentListItem(application: string) {
+    return cy.get(applicationComponentsPagePO.item).contains(application);
   }
 
   deleteComponent(componentName: string) {

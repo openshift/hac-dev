@@ -23,11 +23,11 @@ export const applicationComponentsPagePO = {
   createText: 'Create',
   componentPreferences: '[data-testid="kebab-button"]',
   componentDelete: '[data-testid="Delete"]',
+  item: '.pf-c-data-list__item',
 };
 
 export const componentsListPagePO = {
   addComponent: '[pf-c-button pf-m-primary]',
   applicationName: 'pf-c-title pf-m-4xl hacDev-page__heading',
   items: '[pf-c-data-list__item]',
-
 };
