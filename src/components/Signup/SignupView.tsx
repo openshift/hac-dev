@@ -1,15 +1,13 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
-import { commonFetchJSON } from '@openshift/dynamic-plugin-sdk-utils';
+import { commonFetch } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Alert,
-  Bullseye,
   Card,
   CardBody,
   CardFooter,
   CardTitle,
   PageSection,
-  Spinner,
   Split,
   SplitItem,
   Stack,
@@ -25,35 +23,30 @@ import SignupForm from './SignupForm';
 
 export type SignupViewProps = {
   status: string;
-  loaded: boolean;
   onStatusChange: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const SignupView: React.FC<SignupViewProps> = ({
   status = UserSignupStatus.NOT_SIGNEDUP,
-  loaded = true,
   onStatusChange,
 }) => {
   const initialValues: SignupValues = {
     signUpText: '',
   };
 
-  const handleSubmit = () => {
-    commonFetchJSON
-      .post('/api/v1/signup', {})
-      .then((res: any) => {
-        if (res.status === 202) onStatusChange(UserSignupStatus.PENDING_APPROVAL);
+  const handleSubmit = (values, actions) => {
+    return commonFetch('/api/v1/signup', { method: 'POST' })
+      .then((res: Response) => {
+        if (res.status === 202) {
+          onStatusChange(UserSignupStatus.PENDING_APPROVAL);
+        }
       })
-      .catch();
+      .catch((e) => {
+        actions.setSubmitting(false);
+        // eslint-disable-next-line no-console
+        console.error('error -----', e);
+      });
   };
-
-  if (!loaded) {
-    return (
-      <Bullseye>
-        <Spinner />
-      </Bullseye>
-    );
-  }
 
   return (
     <>
@@ -96,7 +89,7 @@ const SignupView: React.FC<SignupViewProps> = ({
                   <CardBody>
                     Create applications with your source code or our bundled samples. Your
                     applications will be automatically containerized with Red Hat&apos;s secure
-                    runtime images You can skip source code and just define applications with your
+                    runtime images. You can skip source code and just define applications with your
                     own container images.
                   </CardBody>
                 </Card>
@@ -170,7 +163,7 @@ const SignupView: React.FC<SignupViewProps> = ({
                 </Split>
               </CardBody>
               <CardFooter>
-                <ExternalLink href={'https://developers.redhat.com/'}>
+                <ExternalLink href="https://developers.redhat.com/">
                   Learn more about App Studio on Red Hat Developer&nbsp;
                   <ExternalLinkAltIcon />
                 </ExternalLink>

@@ -7,8 +7,12 @@ export enum UserSignupStatus {
   PROVISIONED = 'Provisioned',
 }
 
-export const useSignupStatus = (): [boolean, string, Dispatch<SetStateAction<string>>] => {
-  const [status, setStatus] = useState<string>(null);
+export const useSignupStatus = (): [
+  UserSignupStatus,
+  Dispatch<SetStateAction<string>>,
+  boolean,
+] => {
+  const [status, setStatus] = useState<UserSignupStatus>(null);
   const [loaded, setLoaded] = useState<boolean>(false);
 
   useEffect(() => {
@@ -26,11 +30,13 @@ export const useSignupStatus = (): [boolean, string, Dispatch<SetStateAction<str
             } else if (data.status.reason === 'PendingApproval') {
               setStatus(UserSignupStatus.PENDING_APPROVAL);
             }
-            // eslint-disable-next-line no-empty
-          } catch {}
+          } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error(e);
+          }
         }
       } catch (error) {
-        if (error.status === 404) setStatus(UserSignupStatus.NOT_SIGNEDUP);
+        if (error.code === 404) setStatus(UserSignupStatus.NOT_SIGNEDUP);
       }
     };
 
@@ -42,5 +48,5 @@ export const useSignupStatus = (): [boolean, string, Dispatch<SetStateAction<str
     };
   }, []);
 
-  return [loaded, status, setStatus];
+  return [status, setStatus, loaded];
 };

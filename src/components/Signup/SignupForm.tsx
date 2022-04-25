@@ -14,7 +14,7 @@ import { SignupValues } from '../../types/signup';
 
 type SignupFormProps = FormikProps<SignupValues>;
 
-const SignupForm: React.FC<SignupFormProps> = ({ handleSubmit }) => {
+const SignupForm: React.FC<SignupFormProps> = ({ handleSubmit, isSubmitting }) => {
   return (
     <Card isLarge>
       <CardTitle>Sign up for free for App Studio access</CardTitle>
@@ -32,10 +32,12 @@ const SignupForm: React.FC<SignupFormProps> = ({ handleSubmit }) => {
             aria-label="Sign up for App Studio access"
             variant={ButtonVariant.primary}
             type={ButtonType.submit}
-            style={{ width: '250px' }}
+            isLoading={isSubmitting}
+            isDisabled={isSubmitting}
+            style={{ width: 'fit-content' }}
             isLarge
           >
-            <span> Request Access for free</span>
+            {!isSubmitting ? 'Request Access for free' : 'Requesting Access to App Studio'}
           </Button>
         </Form>
       </CardBody>

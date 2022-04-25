@@ -20,14 +20,17 @@ type NamespacedPageProps = {
 };
 
 const NamespacedPage: React.FunctionComponent<NamespacedPageProps> = ({ children }) => {
-  const [activeNamepace, loaded] = useActiveNamespace();
-  const [statusLoaded, status, setStatus] = useSignupStatus();
+  const [status, setStatus, statusLoaded] = useSignupStatus();
+  const [activeNamepace, namespaceLoaded] = useActiveNamespace();
 
-  if (status === UserSignupStatus.NOT_SIGNEDUP || status === UserSignupStatus.PENDING_APPROVAL) {
-    return <SignupView loaded={statusLoaded} status={status} onStatusChange={setStatus} />;
+  if (
+    statusLoaded &&
+    (status === UserSignupStatus.NOT_SIGNEDUP || status === UserSignupStatus.PENDING_APPROVAL)
+  ) {
+    return <SignupView status={status} onStatusChange={setStatus} />;
   }
 
-  if (!loaded) {
+  if (!namespaceLoaded) {
     return (
       <Bullseye>
         <Spinner />

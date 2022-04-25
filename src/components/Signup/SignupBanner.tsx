@@ -9,8 +9,9 @@ const SignupBanner: React.FC = () => {
     <Card className="signup-banner" isLarge>
       <CardTitle>Get Started with Red Hat App Studio</CardTitle>
       <CardBody>
-        Red Hat App Studio is a fully managed experience that makes easier and faster for developers
-        to iterate and deploy their applications as containers across multiple cloud environments.
+        Red Hat App Studio is a fully managed experience that makes it easier and faster for
+        developers to iterate and deploy their applications as containers across multiple cloud
+        environments.
       </CardBody>
       <CardBody>
         <List isPlain>
