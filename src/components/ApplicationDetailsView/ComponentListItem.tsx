@@ -53,8 +53,13 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({
                 <DescriptionListDescription>
                   Code Repo:{' '}
                   <ExternalLink
-                    href={component.spec.source.git.url}
-                    text={component.spec.source.git.url}
+                    href={
+                      component.spec.source.git.url ||
+                      `https://${component.spec.source.image?.containerImage}`
+                    }
+                    text={
+                      component.spec.source.git.url || component.spec.source.image?.containerImage
+                    }
                   />
                 </DescriptionListDescription>
               </DescriptionListGroup>

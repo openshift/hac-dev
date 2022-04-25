@@ -69,12 +69,16 @@ export const useComponentDetection = (
   const [cdqName, setCdqName] = React.useState<string>();
   const [createError, setCreateError] = React.useState();
 
-  const [cdq, loaded, loadError] = useK8sWatchResource<ComponentDetectionQueryKind>({
-    groupVersionKind: ComponentDetectionQueryGroupVersionKind,
-    name: cdqName,
-    namespace,
-    isList: false,
-  });
+  const [cdq, loaded, loadError] = useK8sWatchResource<ComponentDetectionQueryKind>(
+    cdqName
+      ? {
+          groupVersionKind: ComponentDetectionQueryGroupVersionKind,
+          name: cdqName,
+          namespace,
+          isList: false,
+        }
+      : {},
+  );
 
   React.useEffect(() => {
     setCdqName(null);

@@ -1,3 +1,5 @@
+import { ComponentSource } from '../../types';
+
 export enum CPUUnits {
   millicores = 'millicores',
   cores = 'cores',
@@ -17,7 +19,7 @@ export enum Resources {
 export type ComponentValues = {
   name: string;
   runtime: Resources;
-  source: { git: { url: string; devfileUrl?: string } };
+  source: ComponentSource;
   replicas?: number;
   targetPort?: number;
   resources?: {

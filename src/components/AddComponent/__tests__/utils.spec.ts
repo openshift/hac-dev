@@ -43,4 +43,13 @@ describe('useComponentDetection', () => {
 
     expect(createCDQMock).toHaveBeenCalledTimes(0);
   });
+
+  it('should call useK8sWatchHook with empty object if cdqName is null', () => {
+    useK8sWatchMock.mockReturnValue([{}, true, null]);
+    createCDQMock.mockResolvedValue({ metadata: { name: 'test-cdq' } });
+
+    renderHook(() => useComponentDetection('', 'test-app', 'test-ns'));
+    expect(useK8sWatchMock).toHaveBeenCalledWith({});
+    expect(createCDQMock).toHaveBeenCalledTimes(0);
+  });
 });

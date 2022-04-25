@@ -23,12 +23,13 @@ import {
   ResourceLimitField,
 } from '../../shared';
 import ExternalLink from '../../shared/components/links/ExternalLink';
+import { ComponentSource } from '../../types';
 import { CPUUnits, MemoryUnits, Resources } from './types';
 
 type ReviewSourceComponentCardProps = {
   component: {
     name: string;
-    source: { git: { url: string; devfileUrl?: string } };
+    source: ComponentSource;
     envs?: { name: string; value: string }[];
   };
 };
@@ -52,7 +53,12 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
           <Flex>
             <FlexItem spacer={{ default: 'spacer4xl' }}>
               <EditableLabelField name={`${fieldPrefix}.name`} type={TextInputTypes.text} />
-              <ExternalLink href={component.source.git.url} text={component.source.git.url} />
+              <ExternalLink
+                href={
+                  component.source.git?.url ?? `https://${component.source.image?.containerImage}`
+                }
+                text={component.source.git?.url ?? component.source.image?.containerImage}
+              />
             </FlexItem>
             <FlexItem>
               <EditableLabelField

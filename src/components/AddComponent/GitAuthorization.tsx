@@ -4,13 +4,11 @@ import {
   ButtonVariant,
   HelperText,
   HelperTextItem,
-  Popover,
   Text,
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
 import { CheckIcon } from '@patternfly/react-icons/dist/js/icons/check-icon';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons/dist/js/icons/outlined-question-circle-icon';
 import { useField } from 'formik';
 import { LoadingInline } from '../../shared/components/status-box/StatusBox';
 import { initiateAccessTokenBinding } from '../../utils/create-utils';
@@ -39,15 +37,7 @@ export const GitAuthorization: React.FC = () => {
 
   return (
     <TextContent>
-      <Text component={TextVariants.h3}>
-        Authorize Git repository{' '}
-        <Popover bodyContent="Authorizing private Git repositories allows App Studio to access your source code.">
-          <OutlinedQuestionCircleIcon />
-        </Popover>
-      </Text>
-      <Text component={TextVariants.small}>
-        To connect to a private repository, authorize access to pull in source code.
-      </Text>
+      <Text component={TextVariants.small}>To connect to a private repository, sign in.</Text>
       {authSecret ? (
         <HelperText>
           <HelperTextItem variant="success" icon={<CheckIcon />}>
