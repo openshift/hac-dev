@@ -17,7 +17,7 @@ type ResourceData = {
 };
 
 export const createResourceData = (resources: ResourceData) => {
-  const memory = (resources?.limits?.memory || resources?.requests?.memory) ?? '0.5Gi';
+  const memory = (resources?.limits?.memory || resources?.requests?.memory) ?? '512Mi';
   const cpu = (resources?.limits?.cpu || resources?.requests?.cpu) ?? '1';
   const [memoryResource, memoryUnit] = getResourceData(memory);
   const [cpuResource, cpuUnit] = getResourceData(cpu);
