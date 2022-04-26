@@ -14,6 +14,10 @@ export class CreateApplicationPage extends AbstractWizardPage {
     cy.get(createApplicationPagePO.applicationName).clear();
   }
 
+  clickCreateApplication() {
+    cy.contains(createApplicationPagePO.createApplication).click();
+  }
+
   clickNext() {
     cy.get(createApplicationPagePO.next).click();
   }
