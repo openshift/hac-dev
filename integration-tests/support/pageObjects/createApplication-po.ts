@@ -23,7 +23,7 @@ export const applicationComponentsPagePO = {
   createText: 'Create',
   componentPreferences: '[data-testid="kebab-button"]',
   componentDelete: '[data-testid="Delete"]',
-  item: '.pf-c-data-list__item',
+  item: '.pf-c-description-list__text',
 };
 
 export const componentsListPagePO = {

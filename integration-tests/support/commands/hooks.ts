@@ -15,8 +15,8 @@ after(() => {
 
 beforeEach(() => {
   //Preserve cookies between tests
-  cy.getCookies().then(cookies => {
-    const namesOfCookies = cookies.map(c => c.name)
-    Cypress.Cookies.preserveOnce(...namesOfCookies)
-  })
+  cy.getCookies().then((cookies) => {
+    const namesOfCookies = cookies.map((c) => c.name);
+    Cypress.Cookies.preserveOnce(...namesOfCookies);
+  });
 });

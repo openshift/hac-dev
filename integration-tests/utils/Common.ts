@@ -1,4 +1,4 @@
-import { consentButton } from "../support/pageObjects/global-po";
+import { consentButton } from '../support/pageObjects/global-po';
 
 export class Common {
   static openAppStudioBaseURL() {
@@ -11,22 +11,29 @@ export class Common {
   }
 
   static openApplicationURL(applicationName: string) {
-    Common.openURL(Cypress.env('HAC_BASE_URL') + '/applications?name=' + applicationName.replace('.','-'));
+    Common.openURL(
+      `${Cypress.env('HAC_BASE_URL')}/applications?name=${applicationName.replace('.', '-')}`,
+    );
   }
 
-  static clickOnConsentButton(){
-    cy.get('body').find(consentButton).its('length').then(res=>{
-      if(res > 0){
+  static clickOnConsentButton() {
+    cy.get('body')
+      .find(consentButton)
+      .its('length')
+      .then((res) => {
+        if (res > 0) {
           cy.get(consentButton).click();
-      }
-    });
+        }
+      });
   }
 
-  static cleanNamespace(){
-    if (Cypress.env('CLEAN_NAMESPACE') == 'true'){
-      cy.exec('export KUBECONFIG=~/.kube/appstudio-config && ./delete-script.sh',  { timeout: 600000 } ) .its('stdout')
-      .should('contain', 'Done running the script');
+  static cleanNamespace() {
+    if (Cypress.env('CLEAN_NAMESPACE') === 'true') {
+      cy.exec('export KUBECONFIG=~/.kube/appstudio-config && ./delete-script.sh', {
+        timeout: 600000,
+      })
+        .its('stdout')
+        .should('contain', 'Done running the script');
     }
   }
-
 }

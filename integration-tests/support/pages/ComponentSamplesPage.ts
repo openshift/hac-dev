@@ -13,5 +13,4 @@ export class ComponentSamplesPage extends AbstractWizardPage {
     cy.get(sampleName).click();
     cy.get(componentSamplesPagePO.create).click();
   }
-
 }

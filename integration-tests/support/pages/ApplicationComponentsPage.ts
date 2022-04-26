@@ -12,7 +12,7 @@ export class ApplicationComponentPage extends AbstractWizardPage {
 
   createdApplicationExists(application: string) {
     this.getComponentListItem(application).should('exist');
-    }
+  }
 
   createdApplicationNotExists(application: string) {
     this.getComponentListItem(application).should('not.exist');
@@ -23,7 +23,9 @@ export class ApplicationComponentPage extends AbstractWizardPage {
   }
 
   deleteComponent(componentName: string) {
-    cy.get('[aria-label="' + componentName + '"]').find(applicationComponentsPagePO.componentPreferences).click();
+    cy.get(`[aria-label="${componentName}"]`)
+      .find(applicationComponentsPagePO.componentPreferences)
+      .click();
     cy.get(applicationComponentsPagePO.componentDelete).click();
   }
 }

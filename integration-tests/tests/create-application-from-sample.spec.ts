@@ -1,12 +1,12 @@
 // <reference types="cypress" />
 import { AddComponentPage } from '../support/pages/AddComponentPage';
+import { ApplicationComponentPage } from '../support/pages/ApplicationComponentsPage';
 import { ComponentSamplesPage } from '../support/pages/ComponentSamplesPage';
 import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
-import { ApplicationComponentPage } from '../support/pages/ApplicationComponentsPage';
 import { Common } from '../utils/Common';
 
 describe('Create Application from Sample', () => {
-  const applicationName = 'test-app' + new Date().getTime() / 1000;
+  const applicationName = `test-app${new Date().getTime() / 1000}`;
 
   it('NodeJS app can be created', () => {
     //set application name
@@ -54,5 +54,4 @@ describe('Create Application from Sample', () => {
     //Check if application does not exists
     applicationPage.createdApplicationNotExists('basic-quarkus');
   });
-
 });
