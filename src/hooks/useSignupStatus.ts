@@ -20,7 +20,7 @@ export const useSignupStatus = (): [
     const getSignupData = async () => {
       setLoaded(false);
       try {
-        const response = await commonFetch('/api/v1/signup');
+        const response = await commonFetch('/registration/api/v1/signup');
         if (unmounted) return;
         if (response.status === 200) {
           try {

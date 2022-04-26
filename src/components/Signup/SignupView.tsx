@@ -35,7 +35,7 @@ const SignupView: React.FC<SignupViewProps> = ({
   };
 
   const handleSubmit = (values, actions) => {
-    return commonFetch('/api/v1/signup', { method: 'POST' })
+    return commonFetch('/registration/api/v1/signup', { method: 'POST' })
       .then((res: Response) => {
         if (res.status === 202) {
           onStatusChange(UserSignupStatus.PENDING_APPROVAL);
