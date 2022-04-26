@@ -10,30 +10,25 @@ import {
 } from '@patternfly/react-core';
 import { CheckIcon } from '@patternfly/react-icons/dist/js/icons/check-icon';
 import { useField } from 'formik';
-import { LoadingInline } from '../../shared/components/status-box/StatusBox';
-import { initiateAccessTokenBinding } from '../../utils/create-utils';
-import { NamespaceContext } from '../NamespacedPage/NamespacedPage';
+import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { useAccessTokenBindingAuth } from './utils';
 
 export const GitAuthorization: React.FC = () => {
-  const { namespace } = React.useContext(NamespaceContext);
-  const [isCreating, setIsCreating] = React.useState(false);
-  const [bindingName, setBindingName] = React.useState('');
-  const [, { value: url, error, touched }] = useField<string>('source');
+  const [, { value: url }] = useField<string>('source');
   const [, { value: authSecret }] = useField<string>('git.authSecret');
+  const {
+    auth: { getToken },
+  } = useChrome();
 
-  useAccessTokenBindingAuth(bindingName);
+  const [authUrl, loaded] = useAccessTokenBindingAuth(url);
 
-  const startAuthorization = React.useCallback(() => {
-    setIsCreating(true);
-    initiateAccessTokenBinding(url, namespace)
-      .then((resource) => {
-        setBindingName(resource.metadata.name);
-      })
-      .finally(() => {
-        setIsCreating(false);
-      });
-  }, [namespace, url]);
+  const startAuthorization = React.useCallback(async () => {
+    if (authUrl) {
+      const token = await getToken();
+      window.open(`${authUrl}&k8s_token=${token}`, '_blank');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUrl]);
 
   return (
     <TextContent>
@@ -44,14 +39,12 @@ export const GitAuthorization: React.FC = () => {
             Authorized access
           </HelperTextItem>
         </HelperText>
-      ) : isCreating ? (
-        <LoadingInline />
       ) : (
         <Button
           variant={ButtonVariant.link}
           onClick={startAuthorization}
-          isDisabled={!touched || !!error}
-          style={{ paddingLeft: 0 }}
+          isDisabled={!loaded}
+          isLoading={!loaded}
         >
           Sign In
         </Button>

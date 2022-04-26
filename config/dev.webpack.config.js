@@ -38,6 +38,15 @@ const webpackProxy = {
       pathRewrite: { '^/api/k8s/registration': '' },
     },
     {
+      context: (path) => path.includes('/api/k8s/auth'),
+      target: 'https://spi-oauth-route-spi-system.apps.appstudio-stage.x99m.p1.openshiftapps.com',
+      secure: false,
+      changeOrigin: true,
+      autoRewrite: true,
+      ws: true,
+      pathRewrite: { '^/api/k8s/auth': '' },
+    },
+    {
       context: (path) => path.includes('/api/k8s'),
       target:
         'https://api-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com:443',

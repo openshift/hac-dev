@@ -106,4 +106,24 @@ describe('SourceField', () => {
 
     await waitFor(() => expect(screen.queryByText('Git options')).toBeNull());
   });
+
+  it('should validate a container image url starting with https:// or quay.io/', async () => {
+    useComponentDetectionMock.mockReturnValue([null, null]);
+
+    const { input, user } = renderSourceSection();
+
+    await user.type(input, 'https://quay.io/example/repo');
+
+    await (() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
+    await waitFor(() => screen.getByText('Validated'));
+
+    await user.type(input, 'http://quay.io/example/repo');
+
+    await (() => expect(screen.getByPlaceholderText('Enter your source')).toBeInvalid());
+
+    await user.type(input, 'quay.io/example/repo');
+
+    await (() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
+    await waitFor(() => screen.getByText('Validated'));
+  });
 });

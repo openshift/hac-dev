@@ -15,6 +15,11 @@ export const ReviewComponentsPage: React.FC = () => {
   const isSample = formState.components[0].type === 'sample';
   const history = useHistory();
 
+  // const name = searchTerm.split('/')?.[2];
+  // setFieldValue('detectedComponents', [
+  //   { source: { image: { containerImage: searchTerm } }, name },
+  // ]);
+
   const initialValues: ReviewComponentsFormValues = {
     components: transformComponentValues(formState.components),
   };

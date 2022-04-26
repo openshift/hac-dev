@@ -3,8 +3,8 @@ import { string, object, array } from 'yup';
 export const gitUrlRegex =
   /^((((ssh|git|https?:?):\/\/:?)(([^\s@]+@|[^@]:?)[-\w.]+(:\d\d+:?)?(\/[-\w.~/?[\]!$&'()*+,;=:@%]*:?)?:?))|([^\s@]+@[-\w.]+:[-\w.~/?[\]!$&'()*+,;=:@%]*?:?))$/;
 
-// generic regext to validate container image /^[^/]+\.[^/.]+\/([a-z0-9-_]+\/)?[^/.]+(:.+)?$/
-export const containerImageRegex = /^quay.io\/([a-z0-9-_]+\/)?[^/.]+(:.+)?$/;
+// generic regex to validate container image /^[^/]+\.[^/.]+\/([a-z0-9-_]+\/)?[^/.]+(:.+)?$/
+export const containerImageRegex = /^(https:\/\/)?quay.io\/([a-z0-9-_]+\/)?[^/.]+(:.+)?$/;
 
 const combineRegExps = (...regexps: RegExp[]) => {
   const regexStringsWithoutFlags = regexps.map((regex) => regex.source);
