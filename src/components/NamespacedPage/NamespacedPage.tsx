@@ -1,7 +1,9 @@
 import React from 'react';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { useActiveNamespace } from '../../hooks';
+import { UserSignupStatus, useSignupStatus } from '../../hooks/useSignupStatus';
 import AppBanner from '../AppBanner/AppBanner';
+import SignupView from '../Signup/SignupView';
 
 import './NamespacedPage.scss';
 
@@ -18,9 +20,17 @@ type NamespacedPageProps = {
 };
 
 const NamespacedPage: React.FunctionComponent<NamespacedPageProps> = ({ children }) => {
-  const [activeNamepace, loaded] = useActiveNamespace();
+  const [status, setStatus, statusLoaded] = useSignupStatus();
+  const [activeNamepace, namespaceLoaded] = useActiveNamespace();
 
-  if (!loaded) {
+  if (
+    statusLoaded &&
+    (status === UserSignupStatus.NOT_SIGNEDUP || status === UserSignupStatus.PENDING_APPROVAL)
+  ) {
+    return <SignupView status={status} onStatusChange={setStatus} />;
+  }
+
+  if (!namespaceLoaded) {
     return (
       <Bullseye>
         <Spinner />
