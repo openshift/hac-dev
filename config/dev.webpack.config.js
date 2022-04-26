@@ -28,14 +28,14 @@ const webpackProxy = {
   }),
   customProxy: [
     {
-      context: (path) => path.includes('/api/k8s/api/v1/'),
+      context: (path) => path.includes('/api/k8s/registration'),
       target:
         'https://registration-service-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com',
       secure: false,
       changeOrigin: true,
       autoRewrite: true,
       ws: true,
-      pathRewrite: { '^/api/k8s': '' },
+      pathRewrite: { '^/api/k8s/registration': '' },
     },
     {
       context: (path) => path.includes('/api/k8s'),
