@@ -1,4 +1,8 @@
-import { k8sCreateResource, k8sGetResource } from '@openshift/dynamic-plugin-sdk-utils';
+import {
+  k8sCreateResource,
+  k8sGetResource,
+  k8sUpdateResource,
+} from '@openshift/dynamic-plugin-sdk-utils';
 import { SPIAccessTokenBindingModel } from '../../models';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
@@ -134,6 +138,20 @@ describe('Create Utils', () => {
       },
       resource: mockComponentDataWithDevfile,
     });
+  });
+
+  it('Should call k8s update util with when verb is update', async () => {
+    await createComponent(
+      mockComponent,
+      'test-application',
+      'test-ns',
+      '',
+      false,
+      mockComponentData,
+      'update',
+    );
+
+    expect(k8sUpdateResource).toHaveBeenCalled();
   });
 
   it('Should call k8s create util with correct model and data for component detection query', async () => {

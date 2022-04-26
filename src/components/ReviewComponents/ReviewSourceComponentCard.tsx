@@ -14,7 +14,6 @@ import {
   TextInputTypes,
 } from '@patternfly/react-core';
 import {
-  DropdownField,
   EditableLabelField,
   EnvironmentField,
   HelpTooltipIcon,
@@ -24,7 +23,7 @@ import {
 } from '../../shared';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentSource } from '../../types';
-import { CPUUnits, MemoryUnits, Resources } from './types';
+import { CPUUnits, MemoryUnits } from './types';
 
 type ReviewSourceComponentCardProps = {
   component: {
@@ -32,27 +31,36 @@ type ReviewSourceComponentCardProps = {
     source: ComponentSource;
     envs?: { name: string; value: string }[];
   };
+  editMode?: boolean;
+  isExpanded?: boolean;
 };
 
 export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps> = ({
   component,
+  editMode = false,
+  isExpanded = false,
 }) => {
   const fieldPrefix = `components[${component.name}]`;
-  const [expanded, setExpanded] = React.useState(false);
+  const [expandedComponent, setExpandedComponent] = React.useState(isExpanded);
+  const [expandedConfig, setExpandedConfig] = React.useState(true);
 
   return (
-    <Card isSelectable isSelected={expanded} isExpanded={expanded}>
+    <Card isSelectable isSelected={expandedComponent} isExpanded={expandedComponent}>
       <CardHeader
-        onExpand={() => setExpanded((v) => !v)}
+        onExpand={() => setExpandedComponent((v) => !v)}
         toggleButtonProps={{
           'aria-label': component.name,
-          'aria-expanded': expanded,
+          'aria-expanded': expandedComponent,
         }}
       >
         <CardTitle>
           <Flex>
             <FlexItem spacer={{ default: 'spacer4xl' }}>
-              <EditableLabelField name={`${fieldPrefix}.name`} type={TextInputTypes.text} />
+              {editMode ? (
+                <p>{component.name}</p>
+              ) : (
+                <EditableLabelField name={`${fieldPrefix}.name`} type={TextInputTypes.text} />
+              )}
               <ExternalLink
                 href={
                   component.source.git?.url ?? `https://${component.source.image?.containerImage}`
@@ -72,32 +80,13 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
       </CardHeader>
       <CardExpandableContent>
         <CardBody style={{ marginLeft: '2em', maxWidth: '70%' }}>
-          <ExpandableSection toggleText="Build configuration">
-            <FormSection style={{ marginLeft: '2em' }}>
-              <DropdownField
-                name={`${fieldPrefix}.runtime`}
-                label="Runtime"
-                helpText="The software your component uses to run."
-                items={[
-                  { key: Resources.OpenShift, value: Resources.OpenShift },
-                  { key: Resources.Kubernetes, value: Resources.Kubernetes },
-                  { key: Resources.KnativeService, value: Resources.KnativeService },
-                ]}
-              />
-              <InputField
-                name={`${fieldPrefix}.buildCommand`}
-                label="Build command"
-                placeholder="Enter a build command"
-              />
-              <InputField
-                name={`${fieldPrefix}.runCommand`}
-                label="Run command"
-                placeholder="Enter a run command"
-              />
-            </FormSection>
-          </ExpandableSection>
-          <ExpandableSection style={{ marginTop: '1em' }} toggleText="Deploy configuration">
-            <FormSection style={{ marginLeft: '2em' }}>
+          <ExpandableSection
+            isExpanded={expandedConfig}
+            onToggle={() => setExpandedConfig((v) => !v)}
+            toggleText="Deploy configuration"
+            isIndented
+          >
+            <FormSection>
               <Grid hasGutter>
                 <GridItem span={5}>
                   <ResourceLimitField
@@ -119,7 +108,7 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
                 </GridItem>
               </Grid>
               <ExpandableSection toggleText="Show advanced deployment options">
-                <FormSection style={{ marginLeft: '2em' }}>
+                <FormSection>
                   <NumberSpinnerField
                     name={`${fieldPrefix}.replicas`}
                     label="Replicas"

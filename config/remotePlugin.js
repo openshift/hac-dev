@@ -8,6 +8,7 @@ module.exports = {
     exposedModules: {
       Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
       Import: resolve(__dirname, '../src/pages/ImportPage'),
+      ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
     },
   },
   extensions: [
@@ -68,6 +69,26 @@ module.exports = {
         exact: true,
         component: {
           $codeRef: 'Import',
+        },
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/component-settings',
+        exact: true,
+        component: {
+          $codeRef: 'ComponentSettings',
+        },
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/component-settings',
+        exact: true,
+        component: {
+          $codeRef: 'ComponentSettings',
         },
       },
     },

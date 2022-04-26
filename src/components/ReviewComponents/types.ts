@@ -10,15 +10,8 @@ export enum MemoryUnits {
   Gi = 'Gi',
 }
 
-export enum Resources {
-  OpenShift = 'openshift',
-  Kubernetes = 'kubernetes',
-  KnativeService = 'knative',
-}
-
 export type ComponentValues = {
   name: string;
-  runtime: Resources;
   source: ComponentSource;
   replicas?: number;
   targetPort?: number;
@@ -29,16 +22,8 @@ export type ComponentValues = {
     memoryUnit: MemoryUnits;
   };
   env?: { name: string; value: string }[];
-  buildCommand?: string;
-  runCommand?: string;
 };
-
-export enum DeployMethod {
-  AutomaticDeploy,
-  ManualDeploy,
-}
 
 export type ReviewComponentsFormValues = {
   components: { [name: string]: ComponentValues };
-  deployMethod: DeployMethod;
 };
