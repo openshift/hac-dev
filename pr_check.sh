@@ -6,6 +6,7 @@
 # name of app-sre "application" folder this component lives in; needs to match for quay
 export COMPONENT="hac-dev"
 export APP_ROOT=$(pwd)
+export TAG=$(git rev-parse --short=7 HEAD)
 export WORKSPACE=${WORKSPACE:-$APP_ROOT} # if running in jenkins, use the build's workspace
 export NODE_BUILD_VERSION=14
 IMAGE="quay.io/cloudservices/hac-dev-frontend"
@@ -24,28 +25,42 @@ set -exv
 source <(curl -sSL $COMMON_BUILDER/src/frontend-build.sh)
 BUILD_RESULTS=$?
 
-# Get bonfire helper scripts and python venv
+# Get bonfire helper scripts and python venv. Set GIT_COMMIT and IMAGE_TAG
 CICD_URL=https://raw.githubusercontent.com/RedHatInsights/bonfire/master/cicd
 curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
 
-# Get a namespace in the eph cluster
+# Note: PoC will be cleaned up with Bonfire changes
+# Get a namespace in the eph cluster and set vars accordingly
 NAMESPACE=$(bonfire namespace reserve)
-ENV_NAME=fenv-${NAMESPACE}
-# setup temp env, bundle, and proxy
-oc process -f tmp/hac-env.yaml -p ENV_NAME=${ENV_NAME} -p HOSTNAME=${ENV_NAME}.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com | oc apply -f -
-oc process -f tmp/hac-nav.yaml -p ENV_NAME=${ENV_NAME} | oc apply -f -
-oc process -f tmp/hac-proxy.yaml -p NAMESPACE=${NAMESPACE} -p ENV_NAME=${ENV_NAME} | oc apply -f -
+ENV_NAME=env-${NAMESPACE}
+oc project ${NAMESPACE}
+HOSTNAME=$(oc get feenv ${ENV_NAME} -o json | jq ".spec.hostname" | tr -d '"')
 
-# Deploys hac-dev with PR git ref and mainline hac-core ref
-bonfire deploy \ 
-        hac \ 
-        --frontends true \ 
-        --source=appsre \ 
-        --set-tempalte-ref ${COMPONENT}=${GIT_COMMIT}  \ 
-        --set-image-tag ${IMAGE} \ 
+# Temp: setup bundle, proxy, and patch SSO for devsandbox
+# TODO: Get bonfire to handle these resources instead of patch and tmp deploy
+oc patch feenv ${ENV_NAME} --type merge  -p '{"spec":{"sso": "'$HAC_KC_SSO_URL'" }}'
+oc process -f tmp/hac-nav.yaml -n ${NAMESPACE} -p ENV_NAME=${ENV_NAME} | oc create -f -
+oc process -f tmp/hac-proxy.yaml -n ${NAMESPACE} -p NAMESPACE=${NAMESPACE} -p ENV_NAME=${ENV_NAME} -p HOSTNAME=${HOSTNAME} | oc create -f -
+
+# Deploy hac-dev with PR git ref and mainline hac-core ref
+bonfire deploy \
+        hac \
+        --frontends true \
+        --source=appsre \
+        --set-template-ref ${COMPONENT}=${GIT_COMMIT} \
+        --set-image-tag ${IMAGE}=${TAG} \
+        -p hac-dev/ENV_NAME=${ENV_NAME} \
+        -p hac/ENV_NAME=${ENV_NAME} \
         --namespace ${NAMESPACE}
 
-# Call the keycloak API and add a user?
+# Call the keycloak API and add a user
+# TODO: Get bonfire to handle this?
+B64_USER=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.username'| tr -d '"')
+B64_PASS=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.password' | tr -d '"')
+# These ENVs are populated in the Jenkins job by Vault secrets
+python tmp/keycloak.py $HAC_KC_SSO_URL $HAC_KC_USERNAME $HAC_KC_PASSWORD $B64_USER $B64_PASS $HAC_KC_REGISTRATION
+
+# DO THE CYPRESS 
 
 # Stubbed out for now
 mkdir -p $WORKSPACE/artifacts

@@ -1,11 +1,13 @@
 kind: Template
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 metadata:
   name: hac-proxy
 parameters:
   - name: NAMESPACE
     required: true
   - name: ENV_NAME
+    required: true
+  - name: HOSTNAME
     required: true
 objects:
   - apiVersion: v1
@@ -28,32 +30,6 @@ objects:
         app: hac-proxy
       sessionAffinity: None
       type: ClusterIP
-  - apiVersion: route.openshift.io/v1
-    kind: Route
-    metadata:
-      annotations:
-        haproxy.router.openshift.io/rewrite-target: /
-        route.openshift.io/termination: reencrypt
-      labels:
-        frontend: hac-proxy
-      name: hac-proxy
-      namespace: ${NAMESPACE}
-      ownerReferences:
-        - apiVersion: networking.k8s.io/v1
-          controller: true
-          kind: Ingress
-          name: hac-proxy
-    spec:
-      host: ${ENV_NAME}.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com
-      path: /api/k8s
-      tls:
-        insecureEdgeTerminationPolicy: Redirect
-        termination: reencrypt
-      to:
-        kind: Service
-        name: hac-proxy
-        weight: 100
-      wildcardPolicy: None
   - apiVersion: networking.k8s.io/v1
     kind: Ingress
     metadata:
@@ -67,7 +43,7 @@ objects:
     spec:
       ingressClassName: openshift-default
       rules:
-        - host: ${ENV_NAME}.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com
+        - host: ${HOSTNAME}
           http:
             paths:
               - backend:
