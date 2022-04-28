@@ -37,7 +37,6 @@ oc project ${NAMESPACE}
 HOSTNAME=$(oc get feenv ${ENV_NAME} -o json | jq ".spec.hostname" | tr -d '"')
 
 # Temp: setup bundle, proxy, and patch SSO for devsandbox
-# TODO: Get bonfire to handle these resources instead of patch and tmp deploy
 oc patch feenv ${ENV_NAME} --type merge  -p '{"spec":{"sso": "'$HAC_KC_SSO_URL'" }}'
 oc process -f tmp/hac-nav.yaml -n ${NAMESPACE} -p ENV_NAME=${ENV_NAME} | oc create -f -
 oc process -f tmp/hac-proxy.yaml -n ${NAMESPACE} -p NAMESPACE=${NAMESPACE} -p ENV_NAME=${ENV_NAME} -p HOSTNAME=${HOSTNAME} | oc create -f -
@@ -54,13 +53,11 @@ bonfire deploy \
         --namespace ${NAMESPACE}
 
 # Call the keycloak API and add a user
-# TODO: Get bonfire to handle this?
 B64_USER=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.username'| tr -d '"')
 B64_PASS=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.password' | tr -d '"')
 # These ENVs are populated in the Jenkins job by Vault secrets
 python tmp/keycloak.py $HAC_KC_SSO_URL $HAC_KC_USERNAME $HAC_KC_PASSWORD $B64_USER $B64_PASS $HAC_KC_REGISTRATION
 
-# DO THE CYPRESS 
 
 # Stubbed out for now
 mkdir -p $WORKSPACE/artifacts
