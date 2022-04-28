@@ -46,10 +46,9 @@ bonfire deploy \
         hac \
         --frontends true \
         --source=appsre \
+        --clowd-env ${ENV_NAME} \
         --set-template-ref ${COMPONENT}=${GIT_COMMIT} \
         --set-image-tag ${IMAGE}=${TAG} \
-        -p hac-dev/ENV_NAME=${ENV_NAME} \
-        -p hac/ENV_NAME=${ENV_NAME} \
         --namespace ${NAMESPACE}
 
 # Call the keycloak API and add a user
