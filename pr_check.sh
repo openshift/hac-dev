@@ -37,9 +37,8 @@ ENV_NAME=env-${NAMESPACE}
 oc project ${NAMESPACE}
 HOSTNAME=$(oc get feenv ${ENV_NAME} -o json | jq ".spec.hostname" | tr -d '"')
 
-# Temp: setup bundle, proxy, and patch SSO for devsandbox
+# Temp: setup proxy and patch SSO for devsandbox
 oc patch feenv ${ENV_NAME} --type merge  -p '{"spec":{"sso": "'$HAC_KC_SSO_URL'" }}'
-oc process -f tmp/hac-nav.yaml -n ${NAMESPACE} -p ENV_NAME=${ENV_NAME} | oc create -f -
 oc process -f tmp/hac-proxy.yaml -n ${NAMESPACE} -p NAMESPACE=${NAMESPACE} -p ENV_NAME=${ENV_NAME} -p HOSTNAME=${HOSTNAME} | oc create -f -
 
 # Deploy hac-dev with PR git ref and mainline hac-core ref
