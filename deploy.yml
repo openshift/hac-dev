@@ -25,4 +25,4 @@ parameters:
   - name: IMAGE
     value: quay.io/cloudservices/hac-dev-frontend
   - name: ENV_NAME
-    required: true
+    value: ephem-hac
