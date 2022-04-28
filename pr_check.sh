@@ -6,6 +6,7 @@
 # name of app-sre "application" folder this component lives in; needs to match for quay
 export COMPONENT="hac-dev"
 export APP_ROOT=$(pwd)
+# Because IMAGE_TAG from bonfire is going to prepend "pr-" we override it.
 export TAG=$(git rev-parse --short=7 HEAD)
 export WORKSPACE=${WORKSPACE:-$APP_ROOT} # if running in jenkins, use the build's workspace
 export NODE_BUILD_VERSION=14

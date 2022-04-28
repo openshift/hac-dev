@@ -54,7 +54,7 @@ def main(kc, admin, password, user, secret, register):
             "IsInternal": "false",
             "IsOrgAdmin": "true",
             "IsActive": "true",
-            "Entitlements": '"insights": {"is_entitled": "true", "is_trial": "false"}'
+            "Entitlements": "{}"
         },
         "credentials": [
             {
@@ -80,7 +80,7 @@ def main(kc, admin, password, user, secret, register):
     user_header = {
         "Content-Type": "application/x-www-form-urlencoded",
     }
-    
+
     new_user = requests.post(tokenUrl, data=new_user_params, headers=user_header)
     user_bearer = new_user.json()["access_token"]
 

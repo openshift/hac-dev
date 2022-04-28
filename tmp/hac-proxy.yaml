@@ -46,13 +46,13 @@ objects:
         - host: ${HOSTNAME}
           http:
             paths:
-              - backend:
+              - path: /api/k8s
+                pathType: Prefix
+                backend:
                   service:
                     name: hac-proxy
                     port:
                       number: 8080
-                path: /api/k8s
-                pathType: Prefix
       tls:
         - {}
   - apiVersion: apps/v1
