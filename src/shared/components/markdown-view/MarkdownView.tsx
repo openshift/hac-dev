@@ -1,9 +1,13 @@
 import * as React from 'react';
-import cx from 'classnames';
-import * as _ from 'lodash-es';
-import { Converter } from 'showdown';
-import * as sanitizeHtml from 'sanitize-html';
 import { useTranslation } from 'react-i18next';
+import cx from 'classnames';
+import debounce from 'lodash/debounce';
+import includes from 'lodash/includes';
+import reduce from 'lodash/reduce';
+import truncate from 'lodash/truncate';
+import uniqueId from 'lodash/uniqueId';
+import * as sanitizeHtml from 'sanitize-html';
+import { Converter } from 'showdown';
 import { useForceRender, useResizeObserver } from '../../hooks';
 
 import './MarkdownView.scss';
@@ -132,7 +136,7 @@ const IFrameMarkdownView: React.FC<InnerSyncMarkdownProps> = ({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateDimensions = React.useCallback(
-    _.debounce(() => {
+    debounce(() => {
       if (!frame?.contentWindow?.document?.body?.firstElementChild) {
         return;
       }
@@ -152,10 +156,10 @@ const IFrameMarkdownView: React.FC<InnerSyncMarkdownProps> = ({
 
   // Find the app's stylesheets and inject them into the frame to ensure consistent styling.
   const filteredLinks = Array.from(document.getElementsByTagName('link')).filter((l) =>
-    _.includes(l.href, 'app-bundle'),
+    includes(l.href, 'app-bundle'),
   );
 
-  const linkRefs = _.reduce(
+  const linkRefs = reduce(
     filteredLinks,
     (refs, link) => `${refs}
     <link rel="stylesheet" href="${link.href}">`,
@@ -213,7 +217,7 @@ const InlineMarkdownView: React.FC<InnerSyncMarkdownProps> = ({
   isEmpty,
   renderExtension,
 }) => {
-  const id = React.useMemo(() => _.uniqueId('markdown'), []);
+  const id = React.useMemo(() => uniqueId('markdown'), []);
   return (
     <div className={cx('co-markdown-view', { ['is-empty']: isEmpty })} id={id}>
       <div dangerouslySetInnerHTML={{ __html: markup }} />
@@ -234,7 +238,7 @@ export const SyncMarkdownView: React.FC<SyncMarkdownProps> = ({
   const { t } = useTranslation();
   const markup = React.useMemo(() => {
     const truncatedContent = truncateContent
-      ? _.truncate(content, {
+      ? truncate(content, {
           length: 256,
           separator: ' ',
           omission: '\u2026',

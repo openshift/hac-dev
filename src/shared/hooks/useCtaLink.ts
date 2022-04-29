@@ -1,5 +1,5 @@
-import { useQueryParams } from '../hooks';
 import { CatalogQueryParams } from '../components/catalog/utils/types';
+import { useQueryParams } from '../hooks';
 
 const useCtaLink = (cta: { label: string; href?: string }): [string, string] => {
   const queryParams = useQueryParams();

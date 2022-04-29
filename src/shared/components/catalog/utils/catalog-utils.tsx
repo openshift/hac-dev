@@ -1,10 +1,11 @@
-import * as _ from 'lodash-es';
+import startsWith from 'lodash/startsWith';
 import * as catalogImg from '../../../../imgs/catalog-icon.svg';
+import { keywordFilter } from '../../../utils/keyword-filter';
+import { history } from '../../../utils/router';
 import { CatalogType, CatalogTypeCounts, CatalogItem } from './types';
-import { history, keywordFilter } from '../../../utils';
 
 export const normalizeIconClass = (iconClass: string): string => {
-  return _.startsWith(iconClass, 'icon-') ? `font-icon ${iconClass}` : iconClass;
+  return startsWith(iconClass, 'icon-') ? `font-icon ${iconClass}` : iconClass;
 };
 
 const catalogItemCompare = (keyword: string, item: CatalogItem): boolean => {
@@ -26,10 +27,10 @@ export const keywordCompare = (filterString: string, items: CatalogItem[]): Cata
 
 export const getIconProps = (item: CatalogItem) => {
   const { icon } = item;
-  if (icon.url) {
+  if (icon?.url) {
     return { iconImg: icon.url, iconClass: null };
   }
-  if (icon.class) {
+  if (icon?.class) {
     return { iconImg: null, iconClass: normalizeIconClass(icon.class) };
   }
   return { iconImg: catalogImg, iconClass: null };

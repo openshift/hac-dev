@@ -1,0 +1,9 @@
+.hacDev-component-list-item {
+  &__name {
+    margin-top: var(--pf-global--spacer--sm);
+    font-size: var(--pf-global--FontSize--md);
+  }
+  &__details {
+    margin-left: 72px;
+  }
+}

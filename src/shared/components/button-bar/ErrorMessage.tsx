@@ -1,6 +1,6 @@
 import React from 'react';
-import { Alert } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
+import { Alert } from '@patternfly/react-core';
 
 type ErrorMessageProps = { message: React.ReactNode };
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
@@ -10,7 +10,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
       isInline
       className="hacDev-alert hacDev-alert--scrollable"
       variant="danger"
-      title={t('hac-shared~An error occurred')}
+      title={t('An error occurred')}
     >
       <div className="hacDev-pre-line">{message}</div>
     </Alert>

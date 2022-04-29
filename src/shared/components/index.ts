@@ -6,3 +6,7 @@ export * from './form-components';
 export * from './formik-fields';
 export * from './spinner';
 export * from './status';
+export * from './name-value-editor';
+export * from './help-tooltip';
+export * from './table';
+export * from './pipeline-run-logs';

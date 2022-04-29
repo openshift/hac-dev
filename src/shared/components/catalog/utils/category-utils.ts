@@ -1,4 +1,7 @@
-import * as _ from 'lodash-es';
+import each from 'lodash/each';
+import has from 'lodash/has';
+import isEmpty from 'lodash/isEmpty';
+import some from 'lodash/some';
 import { CatalogCategory, CatalogSubcategory, CatalogItem } from './types';
 
 export const NO_GROUPING = 'none';
@@ -17,7 +20,7 @@ export const matchSubcategories = (
     const intersection = [category.tags, item.tags || []].reduce((a, b) =>
       a.filter((c) => b.includes(c)),
     );
-    if (!_.isEmpty(intersection)) {
+    if (!isEmpty(intersection)) {
       return [category];
     }
 
@@ -25,11 +28,11 @@ export const matchSubcategories = (
   }
 
   const matchedSubcategories: (CatalogCategory | CatalogSubcategory)[] = [];
-  _.each(category.subcategories, (subCategory) => {
+  each(category.subcategories, (subCategory) => {
     const valuesIntersection = [subCategory.tags, item.tags || []].reduce((a, b) =>
       a.filter((c) => b.includes(c)),
     );
-    if (!_.isEmpty(valuesIntersection)) {
+    if (!isEmpty(valuesIntersection)) {
       matchedSubcategories.push(subCategory, ...matchSubcategories(subCategory, item));
     }
   });
@@ -62,14 +65,14 @@ export const categorize = (
   const categorizedIds = {};
 
   // Categorize each item
-  _.each(items, (item) => {
+  each(items, (item) => {
     let itemCategorized = false;
 
     addItem(categorizedIds, item.uid, ALL_CATEGORY); // add each item to all category
 
-    _.each(categories, (category: CatalogCategory) => {
+    each(categories, (category: CatalogCategory) => {
       const matchedSubcategories = matchSubcategories(category, item);
-      _.each(matchedSubcategories, (subcategory) => {
+      each(matchedSubcategories, (subcategory) => {
         addItem(categorizedIds, item.uid, category.id);
         addItem(categorizedIds, item.uid, subcategory.id);
         itemCategorized = true;
@@ -89,7 +92,7 @@ export const findActiveCategory = (
   categories: CatalogCategory[],
 ): CatalogCategory => {
   let activeCategory = null;
-  _.each(categories, (category) => {
+  each(categories, (category) => {
     if (activeCategory) {
       return;
     }
@@ -104,15 +107,13 @@ export const findActiveCategory = (
 };
 
 export const hasActiveDescendant = (activeId: string, category: CatalogCategory): boolean => {
-  if (_.has(category.subcategories, activeId)) {
+  if (has(category.subcategories, activeId)) {
     return true;
   }
 
-  return _.some(category.subcategories, (subcategory) =>
-    hasActiveDescendant(activeId, subcategory),
-  );
+  return some(category.subcategories, (subcategory) => hasActiveDescendant(activeId, subcategory));
 };
 
 export const isActiveTab = (activeId: string, category: CatalogCategory): boolean => {
-  return _.has(category.subcategories, activeId);
+  return has(category.subcategories, activeId);
 };

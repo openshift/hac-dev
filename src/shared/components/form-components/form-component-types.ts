@@ -22,4 +22,5 @@ export interface ActionGroupWithIconsProps {
   onSubmit: () => void;
   onClose: () => void;
   isDisabled?: boolean;
+  className?: string;
 }

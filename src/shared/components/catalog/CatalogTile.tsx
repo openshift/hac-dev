@@ -1,44 +1,64 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   CatalogTileBadge,
   CatalogTile as PfCatalogTile,
 } from '@patternfly/react-catalog-view-extension';
-import { Badge } from '@patternfly/react-core';
-import * as _ from 'lodash-es';
-import { useTranslation } from 'react-i18next';
-import { CatalogItem, CatalogType } from './utils/types';
-import { history } from '../../utils';
+import { Badge, LabelGroup } from '@patternfly/react-core';
+import find from 'lodash/find';
+import { history } from '../../utils/router';
 import { isModifiedEvent } from '../../utils/utils';
 import CatalogBadges from './CatalogBadges';
 import { getIconProps } from './utils/catalog-utils';
+import { CatalogItem, CatalogType } from './utils/types';
 
 import './CatalogTile.scss';
 
 type CatalogTileProps = {
   item: CatalogItem;
-  catalogTypes: CatalogType[];
+  featured?: boolean;
+  catalogTypes?: CatalogType[];
   onClick?: (item: CatalogItem) => void;
   href?: string;
 };
 
-const CatalogTile: React.FC<CatalogTileProps> = ({ item, catalogTypes, onClick, href }) => {
+const CatalogTile: React.FC<CatalogTileProps> = ({
+  item,
+  catalogTypes,
+  featured,
+  onClick,
+  href,
+}) => {
   const { t } = useTranslation();
-  const { name, title, provider, description, type, badges } = item;
+  const { name, title, provider, description, type, badges, tags } = item;
 
-  const vendor = provider ? t('devconsole~Provided by {{provider}}', { provider }) : null;
-  const catalogType = _.find(catalogTypes, ['value', type]);
-
-  const typeBadges = [
-    // eslint-disable-next-line react/jsx-key
-    <CatalogTileBadge>
-      <Badge isRead>{catalogType?.label}</Badge>
-    </CatalogTileBadge>,
-  ];
+  const vendor = provider ? t(`Provided by ${provider}`) : null;
+  const catalogType = find(catalogTypes, ['value', type]);
+  const tagsBadge = tags
+    ? [
+        <LabelGroup key="tag-badges" data-test="tag-badges">
+          {tags.map((label) => (
+            <Badge key={label} isRead>
+              {label}
+            </Badge>
+          ))}
+        </LabelGroup>,
+      ]
+    : undefined;
+  const typeBadges = catalogType
+    ? [
+        // eslint-disable-next-line react/jsx-key
+        <CatalogTileBadge data-test="catalog-tile-badge">
+          <Badge isRead>{catalogType?.label}</Badge>
+        </CatalogTileBadge>,
+      ]
+    : [];
 
   const isDescriptionReactElement = React.isValidElement(description);
   return (
     <PfCatalogTile
-      className="hac-catalog-tile co-catalog-tile"
+      featured={featured}
+      className="hac-catalog-tile"
       onClick={(e: React.SyntheticEvent<HTMLElement>) => {
         if (isModifiedEvent(e as React.MouseEvent<HTMLElement>)) return;
         e.preventDefault();
@@ -50,7 +70,7 @@ const CatalogTile: React.FC<CatalogTileProps> = ({ item, catalogTypes, onClick, 
       }}
       href={href}
       title={title || name}
-      badges={typeBadges}
+      badges={tagsBadge ?? typeBadges}
       vendor={vendor}
       description={isDescriptionReactElement ? undefined : description}
       data-test={`${type}-${name}`}

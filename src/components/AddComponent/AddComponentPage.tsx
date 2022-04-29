@@ -1,0 +1,55 @@
+import * as React from 'react';
+import { Formik } from 'formik';
+import { useFormValues } from '../form-context';
+import { useWizardContext } from '../Wizard/Wizard';
+import { AddComponentForm, AddComponentValues } from './AddComponentForm';
+import { validationSchema } from './validation-utils';
+
+export const AddComponentPage = () => {
+  const [formState, setValues] = useFormValues();
+  const { handleBack, increaseStepBy } = useWizardContext();
+  const initialValues: AddComponentValues = {
+    source: formState.source ?? '',
+    git: {
+      reference: '',
+      contextDir: '/',
+      isMultiComponent: formState.isMultiComponent,
+      authSecret: formState.sourceSecret,
+    },
+  };
+
+  const handleSubmit = (values: AddComponentValues) => {
+    setValues((prevVal) => ({
+      ...prevVal,
+      source: values.source,
+      sourceSecret: values.git.authSecret,
+      isMultiComponent: values.git.isMultiComponent,
+      components: values.detectedComponents.map((component) => ({
+        name: component.name,
+        uid: component.name,
+        type: 'source',
+        data: {
+          source: component.source,
+          contextDir: component.context,
+          targetPort: component.targetPort,
+          resources: component.resources,
+          replicas: component.replicas,
+          route: component.route,
+          env: component.env,
+        },
+      })),
+    }));
+    increaseStepBy(2);
+  };
+
+  return (
+    <Formik
+      onSubmit={handleSubmit}
+      onReset={handleBack}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+    >
+      {(props) => <AddComponentForm {...props} />}
+    </Formik>
+  );
+};

@@ -1,0 +1,46 @@
+.hacDev-pipeline-run-logs {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  padding: var(--pf-global--spacer--xl) 0;
+  &__nav {
+    list-style-type: none;
+  }
+  &__nav .co-icon-and-text {
+    position: relative;
+    top: 0.35em;
+  }
+  &__namespan {
+    margin-left: var(--pf-global--spacer--sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  &__log {
+    height: 100%;
+    padding-top: var(--pf-global--spacer--md);
+  }
+  &__logtext {
+    position: relative;
+    background: var(--pf-global--palette--black-1000); // pod log background color
+    color: var(--pf-global--BackgroundColor--100);
+    height: 100%;
+    padding: var(--pf-global--spacer--sm) var(--pf-global--spacer--md);
+  }
+  &__logsnippet {
+    margin-top: var(--pf-global--spacer--sm);
+  }
+  &__tasklist {
+    max-width: 30%;
+    min-width: 208px;
+    margin-top: var(--pf-global--spacer--lg);
+  }
+  &__container {
+    flex: 1;
+    padding-right: var(--pf-global--spacer--xl);
+  }
+  &__container .co-m-pane__body {
+    padding: 0px;
+  }
+}

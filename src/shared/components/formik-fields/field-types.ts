@@ -6,6 +6,7 @@ import { RowRendererProps } from './multi-column-field/MultiColumnFieldRow';
 export interface FieldProps {
   name: string;
   label?: React.ReactNode;
+  labelIcon?: React.ReactElement;
   helpText?: React.ReactNode;
   helpTextInvalid?: React.ReactNode;
   required?: boolean;
@@ -57,7 +58,7 @@ export interface SearchInputFieldProps extends BaseInputFieldProps {
 }
 
 export interface DropdownFieldProps extends FieldProps {
-  items?: DropdownItemObject[];
+  items: DropdownItemObject[];
   selectedKey?: string;
   title?: React.ReactNode;
   fullWidth?: boolean;
@@ -151,4 +152,9 @@ export interface SelectInputFieldProps extends FieldProps {
   placeholderText?: React.ReactNode;
   isCreatable?: boolean;
   hasOnCreateOption?: boolean;
+}
+
+export interface EnvironmentFieldProps extends FieldProps {
+  envs?: (NameValuePair | NameValueFromPair)[];
+  description?: string;
 }

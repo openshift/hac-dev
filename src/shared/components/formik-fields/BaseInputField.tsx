@@ -10,6 +10,7 @@ const BaseInputField: React.FC<
   }
 > = ({
   label,
+  labelIcon,
   helpText,
   required,
   children,
@@ -17,6 +18,7 @@ const BaseInputField: React.FC<
   onChange,
   helpTextInvalid,
   validated,
+  dataTest,
   ...props
 }) => {
   const [field, { touched, error }] = useField({ name, type: 'input' });
@@ -27,10 +29,12 @@ const BaseInputField: React.FC<
     <FormGroup
       fieldId={fieldId}
       label={label}
+      labelIcon={labelIcon}
       helperText={helpText}
       helperTextInvalid={errorMessage || helpTextInvalid}
       validated={!isValid ? ValidatedOptions.error : validated}
       isRequired={required}
+      data-test={dataTest}
     >
       {children({
         ...field,

@@ -136,7 +136,7 @@ $catalog-tile-width: $co-m-catalog-tile-width;
   }
 
   &__grid {
-    background-color: var(--pf-global--palette--black-150);
+    background-color: var(--pf-c-page__main-section--BackgroundColor);
   }
 
   &__grouped-items {
@@ -148,12 +148,12 @@ $catalog-tile-width: $co-m-catalog-tile-width;
   }
 
   &__header {
-    margin: 0 $grid-gutter-width 0 0;
+    margin: 0 var(--pf-global--spacer--lg) 0 0;
   }
 
   &__heading {
     font-size: 16px;
-    margin: 0 0 20px 30px;
+    margin: 0 0 20px var(--pf-global--spacer--lg);
   }
 
   &__hint {
@@ -162,7 +162,7 @@ $catalog-tile-width: $co-m-catalog-tile-width;
 
   &__input {
     display: inline-flex !important;
-    margin: 0 0 20px 30px;
+    margin: 0 0 20px var(--pf-global--spacer--lg);
     width: auto !important;
   }
 

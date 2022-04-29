@@ -1,11 +1,11 @@
 import React from 'react';
+import { AlertGroup } from '@patternfly/react-core';
 import classNames from 'classnames';
 import { isObject } from 'lodash-es';
-import { AlertGroup } from '@patternfly/react-core';
 import { LoadingInline } from '../status-box/StatusBox';
-import SuccessMessage from './SuccessMessage';
 import ErrorMessage from './ErrorMessage';
 import InfoMessage from './InfoMessage';
+import SuccessMessage from './SuccessMessage';
 
 const injectDisabled = (children: React.ReactElement | React.ReactElement[], disabled: boolean) => {
   const childrenArray: React.ReactElement[] = Array.isArray(children) ? children : [children];

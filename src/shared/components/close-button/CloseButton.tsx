@@ -1,8 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@patternfly/react-core';
 import { CloseIcon } from '@patternfly/react-icons/dist/js/icons/close-icon';
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 import './CloseButton.scss';
 
 type CloseButtonProps = {
@@ -23,7 +23,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({
     <Button
       aria-label={ariaLabel || t('hac-shared~Close')}
       className={classNames('hacDev-close-button', additionalClassName)}
-      data-test-id={dataTestID}
+      data-test={dataTestID}
       onClick={onClick}
       variant="plain"
     >
