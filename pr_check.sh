@@ -4,7 +4,8 @@
 # Export vars for helper scripts to use
 # --------------------------------------------
 # name of app-sre "application" folder this component lives in; needs to match for quay
-export COMPONENT="hac-dev"
+export COMPONENT="hac"
+export IMAGE="quay.io/cloudservices/hac-dev-frontend"
 export APP_ROOT=$(pwd)
 # Because IMAGE_TAG from bonfire is going to prepend "pr-" we override it.
 export TAG=$(git rev-parse --short=7 HEAD)
