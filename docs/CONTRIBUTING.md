@@ -108,7 +108,7 @@ This is a rough outline of what a contributor's workflow looks like:
 
 1. ```npm install```
 
-2. ```npm run start:beta:ci```
+2. ```npm run start:prod:beta```
 
 3. Open the URL listed in the terminal output.
 
