@@ -1,0 +1,20 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: frontend-environment
+parameters:
+  - name: ENV_NAME
+    value: feenv-stage
+  - name: SSO_SOURCE
+    value: 'https://sso-keycloak.apps.hac-devsandbox.5unc.p1.openshiftapps.com/auth/'
+  - name: HOSTNAME
+    required: true
+objects:
+  - apiVersion: cloud.redhat.com/v1alpha1
+    kind: FrontendEnvironment
+    metadata:
+      name: ${ENV_NAME}
+    spec:
+      hostname: ${HOSTNAME}
+      ingressClass: openshift-default
+      sso: ${SSO_SOURCE}

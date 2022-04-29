@@ -3,24 +3,26 @@ kind: Template
 metadata:
   name: hac-dev
 objects:
-- apiVersion: cloud.redhat.com/v1alpha1
-  kind: Frontend
-  metadata:
-    name: hac-dev
-  spec:
-    API:
-      versions:
-        - v1
-    assetsPrefix: api/plugins
-    deploymentRepo: 'http://test'
-    envName: ephem-hac
-    frontend:
-      paths:
-        - /api/plugins/hac-dev
-    image: ${IMAGE}:${IMAGE_TAG}
-    title: hac-dev
+  - apiVersion: cloud.redhat.com/v1alpha1
+    kind: Frontend
+    metadata:
+      name: hac-dev
+    spec:
+      API:
+        versions:
+          - v1
+      assetsPrefix: api/plugins
+      deploymentRepo: 'http://github.com/openshift/hac-dev'
+      envName: ${ENV_NAME}
+      frontend:
+        paths:
+          - /api/plugins/hac-dev
+      image: ${IMAGE}:${IMAGE_TAG}
+      title: hac-dev
 parameters:
   - name: IMAGE_TAG
     value: latest
   - name: IMAGE
     value: quay.io/cloudservices/hac-dev-frontend
+  - name: ENV_NAME
+    value: ephem-hac
