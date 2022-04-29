@@ -1,10 +1,10 @@
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { renderHook } from '@testing-library/react-hooks';
-import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import { mockRoutes } from '../__data__/mock-data';
 import { useApplicationRoutes } from '../useApplicationRoutes';
 
-jest.mock('../../dynamic-plugin-sdk', () => {
-  const originalModule = (jest as any).requireActual('../../dynamic-plugin-sdk');
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
+  const originalModule = (jest as any).requireActual('@openshift/dynamic-plugin-sdk-utils');
   return {
     ...originalModule,
     useK8sWatchResource: jest.fn(),

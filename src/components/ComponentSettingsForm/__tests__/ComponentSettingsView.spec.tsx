@@ -1,8 +1,8 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen } from '@testing-library/react';
 import { componentCRMocks } from '../../../components/ApplicationDetailsView/__data__/mock-data';
-import { useK8sWatchResource } from '../../../dynamic-plugin-sdk';
 import ComponentSettingsView from '../ComponentSettingsView';
 
 jest.mock('react-i18next', () => ({
@@ -16,7 +16,7 @@ jest.mock('react-router-dom', () => ({
   })),
 }));
 
-jest.mock('../../../dynamic-plugin-sdk', () => ({
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 
