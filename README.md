@@ -10,7 +10,7 @@ HAC Developer Experience will deliver the UI for App Studio.
 
 1. ```npm install```
 
-2. ```npm run start:beta:ci```
+2. ```npm run start:prod:beta```
 
 3. Open the URL listed in the terminal output.
 
