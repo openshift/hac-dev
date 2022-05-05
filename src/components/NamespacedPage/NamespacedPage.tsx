@@ -3,6 +3,7 @@ import { Bullseye, Spinner } from '@patternfly/react-core';
 import { useActiveNamespace } from '../../hooks';
 import { UserSignupStatus, useSignupStatus } from '../../hooks/useSignupStatus';
 import AppBanner from '../AppBanner/AppBanner';
+import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 import SignupView from '../Signup/SignupView';
 
 import './NamespacedPage.scss';
@@ -41,7 +42,7 @@ const NamespacedPage: React.FunctionComponent<NamespacedPageProps> = ({ children
   return (
     <NamespaceContext.Provider value={{ namespace: activeNamepace }}>
       <AppBanner />
-      {children}
+      <ErrorBoundary>{children}</ErrorBoundary>
     </NamespaceContext.Provider>
   );
 };
