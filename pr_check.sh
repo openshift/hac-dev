@@ -58,9 +58,21 @@ B64_PASS=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.password' | tr
 # These ENVs are populated in the Jenkins job by Vault secrets
 python tmp/keycloak.py $HAC_KC_SSO_URL $HAC_KC_USERNAME $HAC_KC_PASSWORD $B64_USER $B64_PASS $HAC_KC_REGISTRATION
 
+cd integration-tests
+npm install
+npm install typescript
+cd ..
+
+mkdir -p $WORKSPACE/artifacts
+
+set +e
+
+docker run -u 0 -v $WORKSPACE/artifacts:/e2e/cypress:Z -v $PWD/integration-tests:/e2e:Z -w /e2e -e CYPRESS_PR_CHECK=true -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/app-studio -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` quay.io/redhatqe/cypress:9.6.0 bash -c "startcypress run"
+TEST_RUN=$?
+docker run -u 0 -v $WORKSPACE/artifacts:/e2e/cypress:Z -v $PWD/integration-tests:/e2e:Z -w /e2e quay.io/redhatqe/cypress:9.6.0 bash -c "chmod -v -R a+rwx,-t /e2e/cypress"
+# bonfire namespace release ${NAMESPACE}
 
 # Stubbed out for now
-mkdir -p $WORKSPACE/artifacts
 cat << EOF > $WORKSPACE/artifacts/junit-dummy.xml
 <testsuite tests="1">
     <testcase classname="dummy" name="dummytest"/>
@@ -68,4 +80,4 @@ cat << EOF > $WORKSPACE/artifacts/junit-dummy.xml
 EOF
 
 # teardown_docker
-exit $BUILD_RESULTS
+exit $TEST_RUN
