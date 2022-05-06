@@ -14,5 +14,8 @@ module.exports = (on, config) => {
   if (!Object.prototype.hasOwnProperty.call(config.env, 'CLEAN_NAMESPACE')) {
     config.env.CLEAN_NAMESPACE = 'false';
   }
+  if (!Object.prototype.hasOwnProperty.call(config.env, 'PR_CHECK')) {
+    config.env.PR_CHECK = 'false';
+  }
   return config;
 };
