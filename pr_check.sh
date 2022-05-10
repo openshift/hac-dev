@@ -72,12 +72,5 @@ TEST_RUN=$?
 docker run -u 0 -v $WORKSPACE/artifacts:/e2e/cypress:Z -v $PWD/integration-tests:/e2e:Z -w /e2e quay.io/redhatqe/cypress:9.6.0 bash -c "chmod -v -R a+rwx,-t /e2e/cypress"
 # bonfire namespace release ${NAMESPACE}
 
-# Stubbed out for now
-cat << EOF > $WORKSPACE/artifacts/junit-dummy.xml
-<testsuite tests="1">
-    <testcase classname="dummy" name="dummytest"/>
-</testsuite>
-EOF
-
 # teardown_docker
 exit $TEST_RUN

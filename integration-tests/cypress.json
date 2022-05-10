@@ -10,5 +10,9 @@
   "responseTimeout": 15000,
   "supportFile": "support/commands/index.ts",
   "pluginsFile": "plugins/index.ts",
-  "chromeWebSecurity": false
+  "chromeWebSecurity": false,
+  "reporter": "cypress-multi-reporters",
+  "reporterOptions": {
+    "configFile": "reporter-config.json"
+  }
 }
