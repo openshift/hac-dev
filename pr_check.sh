@@ -70,14 +70,7 @@ set +e
 docker run -u 0 -v $WORKSPACE/artifacts:/e2e/cypress:Z -v $PWD/integration-tests:/e2e:Z -w /e2e -e CYPRESS_PR_CHECK=true -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/app-studio -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` quay.io/redhatqe/cypress:9.6.0 bash -c "startcypress run"
 TEST_RUN=$?
 docker run -u 0 -v $WORKSPACE/artifacts:/e2e/cypress:Z -v $PWD/integration-tests:/e2e:Z -w /e2e quay.io/redhatqe/cypress:9.6.0 bash -c "chmod -v -R a+rwx,-t /e2e/cypress"
-# bonfire namespace release ${NAMESPACE}
-
-# Stubbed out for now
-cat << EOF > $WORKSPACE/artifacts/junit-dummy.xml
-<testsuite tests="1">
-    <testcase classname="dummy" name="dummytest"/>
-</testsuite>
-EOF
+bonfire namespace release ${NAMESPACE}
 
 # teardown_docker
 exit $TEST_RUN
