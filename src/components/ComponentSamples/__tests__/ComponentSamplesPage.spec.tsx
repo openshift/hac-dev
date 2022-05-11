@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { configure, render, screen } from '@testing-library/react';
+import { configure, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { mockCatalogItem } from '../../../utils/__data__/mock-devfile-data';
 import { getDevfileSamples } from '../../../utils/devfile-utils';
@@ -60,5 +60,16 @@ describe('ComponentSamplesPage', () => {
     render(<ComponentSamplesPage />);
     await screen.findByText('4 items');
     await screen.findByTestId('search-catalog');
+  });
+
+  it('filters samples with provided keyword', async () => {
+    getDevfileMock.mockReturnValue(Promise.resolve(mockCatalogItem));
+    render(<ComponentSamplesPage />);
+    await screen.findByTestId('search-catalog');
+    await screen.findByText('4 items');
+    fireEvent.change(await screen.findByPlaceholderText('Filter by keyword...'), {
+      target: { value: 'node' },
+    });
+    await screen.findByText('1 item');
   });
 });

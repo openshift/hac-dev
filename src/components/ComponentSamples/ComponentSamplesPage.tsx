@@ -1,8 +1,22 @@
 import * as React from 'react';
-import { PageSection } from '@patternfly/react-core';
+import { CatalogTile } from '@patternfly/react-catalog-view-extension';
+import {
+  Badge,
+  Gallery,
+  GalleryItem,
+  PageSection,
+  SearchInput,
+  Text,
+  TextContent,
+  TextVariants,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+  ToolbarItemVariant,
+  pluralize,
+} from '@patternfly/react-core';
 import { FormFooter } from '../../shared';
-import CatalogView from '../../shared/components/catalog/catalog-view/CatalogView';
-import CatalogTile from '../../shared/components/catalog/CatalogTile';
+import { getIconProps } from '../../shared/components/catalog/utils/catalog-utils';
 import { skeletonCatalog } from '../../shared/components/catalog/utils/skeleton-catalog';
 import { CatalogItem } from '../../shared/components/catalog/utils/types';
 import { StatusBox } from '../../shared/components/status-box/StatusBox';
@@ -10,8 +24,10 @@ import { getDevfileSamples } from '../../utils/devfile-utils';
 import { useFormValues } from '../form-context';
 import PageLayout from '../PageLayout/PageLayout';
 import { useWizardContext } from '../Wizard/Wizard';
+import SamplesEmptyState from './SamplesEmptyState';
 
 import '../../shared/style.scss';
+import './ComponentSamplesPage.scss';
 
 export const ComponentSamplesPage = () => {
   const { handleNext, handleBack, handleReset } = useWizardContext();
@@ -20,6 +36,13 @@ export const ComponentSamplesPage = () => {
   const [items, setItems] = React.useState<CatalogItem[]>([]);
   const [loaded, setLoaded] = React.useState<boolean>(false);
   const [loadError, setLoadError] = React.useState<string>();
+  const [filter, setFilter] = React.useState('');
+
+  const filteredItems = React.useMemo(
+    () =>
+      loaded ? items.filter((item) => item.name.toLowerCase().includes(filter.toLowerCase())) : [],
+    [filter, items, loaded],
+  );
 
   React.useEffect(() => {
     let unmounted = false;
@@ -61,21 +84,6 @@ export const ComponentSamplesPage = () => {
     handleNext();
   }, [selected, setValues, handleNext]);
 
-  const renderTile = React.useCallback(
-    (item: CatalogItem) => (
-      <CatalogTile
-        item={item}
-        featured={item.name === selected?.name}
-        onClick={() =>
-          setSelected((prevState) =>
-            prevState ? (prevState.name !== item.name ? item : undefined) : item,
-          )
-        }
-      />
-    ),
-    [selected],
-  );
-
   const footer = (
     <FormFooter
       submitLabel="Next"
@@ -110,7 +118,55 @@ export const ComponentSamplesPage = () => {
           loadError={loadError}
           label="Catalog items"
         >
-          <CatalogView items={items} renderTile={renderTile} hideSidebar={true} />
+          <Toolbar usePageInsets>
+            <ToolbarContent>
+              <ToolbarItem variant={ToolbarItemVariant['search-filter']}>
+                <SearchInput
+                  data-test="search-catalog"
+                  value={filter}
+                  onChange={setFilter}
+                  placeholder="Filter by keyword..."
+                />
+              </ToolbarItem>
+              <ToolbarItem alignment={{ default: 'alignRight' }}>
+                <TextContent>
+                  <Text component={TextVariants.h5}>
+                    {pluralize(filteredItems.length, 'item', 'items')}
+                  </Text>
+                </TextContent>
+              </ToolbarItem>
+            </ToolbarContent>
+          </Toolbar>
+          {filteredItems.length > 0 ? (
+            <Gallery className="hac-catalog" hasGutter>
+              {filteredItems.map((item) => (
+                <GalleryItem key={item.uid}>
+                  <CatalogTile
+                    className="hac-catalog__tile"
+                    id={item.uid}
+                    title={item.name}
+                    vendor={`Provided by ${item.provider}`}
+                    description={item.description}
+                    featured={item.name === selected?.name}
+                    data-test={`${item.type}-${item.name}`}
+                    badges={item.tags?.map((tag) => (
+                      <Badge key={tag} isRead>
+                        {tag}
+                      </Badge>
+                    ))}
+                    {...getIconProps(item)}
+                    onClick={() =>
+                      setSelected((prevState) =>
+                        prevState ? (prevState.name !== item.name ? item : undefined) : item,
+                      )
+                    }
+                  />
+                </GalleryItem>
+              ))}
+            </Gallery>
+          ) : (
+            <SamplesEmptyState onClear={() => setFilter('')} />
+          )}
         </StatusBox>
       </PageSection>
     </PageLayout>
