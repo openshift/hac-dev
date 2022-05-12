@@ -5,8 +5,8 @@ $catalog-capability-level-icon-top: 4px;
 $catalog-capability-level-inactive-color: var(--pf-global--Color--400);
 $catalog-item-icon-size-lg: 40px;
 $catalog-item-icon-size-sm: 24px;
-$co-modal-ignore-warning-icon-width: 30px;
-$catalog-tile-width: $co-m-catalog-tile-width;
+$hacDev-modal-ignore-warning-icon-width: 30px;
+$catalog-tile-width: $hacDev-m-catalog-tile-width;
 
 // reset font size back to 13px since console h5 font size is 14px
 .catalog-item-header-pf-subtitle {
@@ -17,27 +17,27 @@ $catalog-tile-width: $co-m-catalog-tile-width;
   font-size: ($font-size-base - 1);
 }
 
-.co-catalog {
+.hacDev-catalog {
   display: flex;
   flex-direction: column;
   min-height: 100%;
   min-width: 515px; // in order to accommodate filters and tiles at mobile
 }
 
-.co-catalog-tile-view {
+.hacDev-catalog-tile-view {
   display: flex;
   flex-wrap: wrap;
   --pf-l-gallery--GridTemplateColumns: repeat(auto-fill, 260px) !important;
 }
 
-.co-catalog__body {
-  min-width: 575px; // Minimum shrinkable width of .co-catalog child elements => 15 + ((220 + 15) + (30 + 250 + 30)) + 15
+.hacDev-catalog__body {
+  min-width: 575px; // Minimum shrinkable width of .hacDev-catalog child elements => 15 + ((220 + 15) + (30 + 250 + 30)) + 15
   @media (min-width: $screen-sm-min) {
     min-width: 590px; // Left margin 30 instead of 15
   }
 }
 
-.co-catalog-item-details {
+.hacDev-catalog-item-details {
   display: flex;
   margin: 0 0 10px;
 
@@ -66,7 +66,7 @@ $catalog-tile-width: $co-m-catalog-tile-width;
   }
 }
 
-.co-catalog-item-icon {
+.hacDev-catalog-item-icon {
   padding-right: 10px;
 
   &__icon {
@@ -96,7 +96,7 @@ $catalog-tile-width: $co-m-catalog-tile-width;
   }
 }
 
-.co-catalog-page {
+.hacDev-catalog-page {
   background: var(--pf-global--palette--white);
   border: 1px solid var(--pf-global--BorderColor--300);
   display: flex;
@@ -298,7 +298,7 @@ $catalog-tile-width: $co-m-catalog-tile-width;
   }
 }
 
-.co-catalog-page__overlay.pf-c-modal-box {
+.hacDev-catalog-page__overlay.pf-c-modal-box {
   @media screen and (min-width: $screen-sm) {
     --pf-c-modal-box--Width: 600px;
   }
@@ -308,11 +308,11 @@ $catalog-tile-width: $co-m-catalog-tile-width;
   }
 }
 
-.co-catalog-tab__empty {
+.hacDev-catalog-tab__empty {
   color: var(--pf-global--palette--black-600);
 }
 
-.co-modal-ignore-warning {
+.hacDev-modal-ignore-warning {
   height: initial;
 
   &__checkbox.checkbox {
@@ -323,10 +323,10 @@ $catalog-tile-width: $co-m-catalog-tile-width;
     display: flex;
   }
   &__icon {
-    font-size: $co-modal-ignore-warning-icon-width;
+    font-size: $hacDev-modal-ignore-warning-icon-width;
     margin-right: 15px;
     // Avoid the dialog shifting when the icon loads.
-    min-width: $co-modal-ignore-warning-icon-width;
+    min-width: $hacDev-modal-ignore-warning-icon-width;
   }
   &__link {
     display: block;

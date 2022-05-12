@@ -264,7 +264,7 @@ const CatalogPage: React.FC<CatalogPageProps> = () => {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <div className="co-m-page__body">
+      <div className="hacDev-m-page__body">
         <CatalogController
           {...service}
           hideSidebar={true}

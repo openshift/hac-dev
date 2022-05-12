@@ -11,7 +11,7 @@ $screen-md: 992px !default;
 $screen-md-min: $screen-md !default;
 $screen-sm-max: ($screen-md-min - 1) !default;
 $screen-xs-max: ($screen-sm-min - 1) !default;
-$co-m-catalog-tile-width: 260px;
+$hacDev-m-catalog-tile-width: 260px;
 $color-text-muted: $pf-color-black-600;
 
 // Can not use --pf-global--gutter --pf-global--gutter--md because you can't get a negative value of a scss variable that is assigned a css custom property.

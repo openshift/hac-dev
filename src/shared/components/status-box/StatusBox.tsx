@@ -11,7 +11,7 @@ import { TimeoutError } from '../../utils/error/http-error';
 import './StatusBox.scss';
 
 export const Box: React.FC<BoxProps> = ({ children, className }) => (
-  <div className={classNames('cos-status-box', className)}>{children}</div>
+  <div className={classNames('hacDev-status-box', className)}>{children}</div>
 );
 
 export const LoadError: React.FC<LoadErrorProps> = ({
@@ -54,23 +54,23 @@ LoadError.displayName = 'LoadError';
 
 export const Loading: React.FC<LoadingProps> = ({ className }) => (
   <div
-    className={classNames('co-m-loader co-an-fade-in-out', className)}
+    className={classNames('hacDev-m-loader co-an-fade-in-out', className)}
     data-test="loading-indicator"
   >
-    <div className="co-m-loader-dot__one" />
-    <div className="co-m-loader-dot__two" />
-    <div className="co-m-loader-dot__three" />
+    <div className="hacDev-m-loader-dot__one" />
+    <div className="hacDev-m-loader-dot__two" />
+    <div className="hacDev-m-loader-dot__three" />
   </div>
 );
 Loading.displayName = 'Loading';
 
-export const LoadingInline: React.FC<{}> = () => <Loading className="co-m-loader--inline" />;
+export const LoadingInline: React.FC<{}> = () => <Loading className="hacDev-m-loader--inline" />;
 LoadingInline.displayName = 'LoadingInline';
 
 export const LoadingBox: React.FC<LoadingBoxProps> = ({ className, message }) => (
-  <Box className={classNames('cos-status-box--loading', className)}>
+  <Box className={classNames('hacDev-status-box--loading', className)}>
     <Loading />
-    {message && <div className="cos-status-box__loading-message">{message}</div>}
+    {message && <div className="hacDev-status-box__loading-message">{message}</div>}
   </Box>
 );
 LoadingBox.displayName = 'LoadingBox';
@@ -89,12 +89,12 @@ EmptyBox.displayName = 'EmptyBox';
 export const MsgBox: React.FC<MsgBoxProps> = ({ title, detail, className = '' }) => (
   <Box className={className}>
     {title && (
-      <div className="cos-status-box__title" data-test="msg-box-title">
+      <div className="hacDev-status-box__title" data-test="msg-box-title">
         {title}
       </div>
     )}
     {detail && (
-      <div className="pf-u-text-align-center cos-status-box__detail" data-test="msg-box-detail">
+      <div className="pf-u-text-align-center hacDev-status-box__detail" data-test="msg-box-detail">
         {detail}
       </div>
     )}
@@ -107,7 +107,7 @@ export const AccessDenied: React.FC<AccessDeniedProps> = ({ message }) => {
   return (
     <div>
       <Box className="pf-u-text-align-center">
-        <img className="cos-status-box__access-denied-icon" src={restrictedSignImg} />
+        <img className="hacDev-status-box__access-denied-icon" src={restrictedSignImg} />
         <MsgBox
           title={t('public~Restricted Access')}
           detail={t("public~You don't have access to this section due to cluster policy.")}
@@ -158,8 +158,8 @@ export const StatusBox: React.FC<StatusBoxProps> = (props) => {
     const status = get(loadError, 'response.status');
     if (status === 404) {
       return (
-        <div className="co-m-pane__body">
-          <h1 className="co-m-pane__heading co-m-pane__heading--center">
+        <div className="hacDev-m-pane__body">
+          <h1 className="hacDev-m-pane__heading hacDev-m-pane__heading--center">
             {t('public~404: Not Found')}
           </h1>
         </div>
@@ -172,7 +172,7 @@ export const StatusBox: React.FC<StatusBoxProps> = (props) => {
     if (loaded && loadError instanceof TimeoutError) {
       return (
         <Data {...dataProps}>
-          <div className="co-m-timeout-error text-muted">
+          <div className="hacDev-m-timeout-error text-muted">
             {t('public~Timed out fetching new data. The data below is stale.')}
           </div>
           {props.children}

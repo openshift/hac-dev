@@ -38,15 +38,15 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose
   const modalHeader = (
     <>
       <CatalogItemHeader
-        className="co-catalog-page__overlay-header"
+        className="hacDev-catalog-page__overlay-header"
         title={title || name}
         vendor={vendor}
         {...getIconProps(item)}
       />
       {to && (
-        <div className="co-catalog-page__overlay-actions">
+        <div className="hacDev-catalog-page__overlay-actions">
           <Link
-            className="pf-c-button pf-m-primary co-catalog-page__overlay-action"
+            className="pf-c-button pf-m-primary hacDev-catalog-page__overlay-action"
             to={to}
             role="button"
             onClick={onClose}
@@ -60,7 +60,7 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose
 
   return (
     <Modal
-      className="co-catalog-page__overlay co-catalog-page__overlay--right"
+      className="hacDev-catalog-page__overlay hacDev-catalog-page__overlay--right"
       header={modalHeader}
       isOpen={!!item}
       onClose={onClose}

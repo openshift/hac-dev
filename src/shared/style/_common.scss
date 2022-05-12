@@ -2,7 +2,7 @@
 
 $co-external-link-padding-right: 15px;
 
-.co-m-pane__body {
+.hacDev-m-pane__body {
   margin: $grid-gutter-width 0 0;
   padding: 0 math.div($grid-gutter-width, 2) $grid-gutter-width;
   @media (min-width: $screen-sm-min) {
@@ -18,14 +18,14 @@ $co-external-link-padding-right: 15px;
   &--section-heading {
     padding-bottom: 0;
   }
-  + .co-m-pane__body {
+  + .hacDev-m-pane__body {
     border-top: 1px solid $color-grey-background-border;
     margin-top: 0;
     padding-top: $grid-gutter-width;
   }
 }
 
-.co-m-pane__heading {
+.hacDev-m-pane__heading {
   display: flex;
   justify-content: space-between;
   margin: 0 0 $grid-gutter-width;
@@ -41,19 +41,19 @@ $co-external-link-padding-right: 15px;
   }
 }
 
-.co-section-heading {
+.hacDev-section-heading {
   display: flex;
   justify-content: space-between;
   margin: 0 0 20px 0;
 }
 
-.co-m-loader {
+.hacDev-m-loader {
   min-width: 18px;
 }
 
-.co-m-loader-dot__one,
-.co-m-loader-dot__two,
-.co-m-loader-dot__three {
+.hacDev-m-loader-dot__one,
+.hacDev-m-loader-dot__two,
+.hacDev-m-loader-dot__three {
   animation-delay: 0;
   animation-direction: normal;
   animation-duration: 1s;
@@ -69,15 +69,15 @@ $co-external-link-padding-right: 15px;
   width: 6px;
 }
 
-.co-m-loader-dot__one {
+.hacDev-m-loader-dot__one {
   animation-delay: -0.32s;
 }
 
-.co-m-loader-dot__two {
+.hacDev-m-loader-dot__two {
   animation-delay: -0.16s;
 }
 
-.co-toolbar__group {
+.hacDev-toolbar__group {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
@@ -90,9 +90,9 @@ $co-external-link-padding-right: 15px;
   }
 }
 
-.co-toolbar__group--left {
+.hacDev-toolbar__group--left {
   justify-content: flex-start;
-  .co-toolbar__item {
+  .hacDev-toolbar__item {
     padding-right: 15px;
   }
   @media (max-width: $screen-xs-max) {
@@ -100,7 +100,7 @@ $co-external-link-padding-right: 15px;
   }
 }
 
-.co-icon-and-text {
+.hacDev-icon-and-text {
   align-items: baseline;
   display: inline-block;
 
@@ -110,6 +110,6 @@ $co-external-link-padding-right: 15px;
   }
 }
 
-.co-nowrap {
+.hacDev-nowrap {
   white-space: nowrap;
 }

@@ -56,11 +56,11 @@ export const Timestamp: React.FC<TimestampProps> = ({
   }
 
   return (
-    <div className={classNames('co-icon-and-text', className)}>
-      <GlobeAmericasIcon className="co-icon-and-text__icon" />
+    <div className={classNames('hacDev-icon-and-text', className)}>
+      <GlobeAmericasIcon className="hacDev-icon-and-text__icon" />
       <Tooltip
         content={[
-          <span className="co-nowrap" key={timestamp}>
+          <span className="hacDev-nowrap" key={timestamp}>
             {dateTime.utcDateTimeFormatter.format(mdate)}
           </span>,
         ]}

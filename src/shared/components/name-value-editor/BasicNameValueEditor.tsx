@@ -161,13 +161,13 @@ const BasicNameValueEditor: React.FC<NameValueEditorProps> = ({
       <div className="row pairs-list__heading">
         <div className="col-xs-5">{nameString}</div>
         <div className="col-xs-5">{valueString}</div>
-        <div className="col-xs-1 co-empty__header" />
+        <div className="col-xs-1 hacDev-empty__header" />
       </div>
       {pairElems}
       <div className="row">
         <div className="col-xs-12">
           {readOnly ? null : (
-            <div className="co-toolbar__group co-toolbar__group--left">
+            <div className="hacDev-toolbar__group hacDev-toolbar__group--left">
               <Button
                 className="pf-m-link--align-left"
                 data-test="add-button"
@@ -175,7 +175,10 @@ const BasicNameValueEditor: React.FC<NameValueEditorProps> = ({
                 type="button"
                 variant="link"
               >
-                <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-r" />
+                <PlusCircleIcon
+                  data-test-id="pairs-list__add-icon"
+                  className="hacDev-icon-space-r"
+                />
                 {addString}
               </Button>
             </div>

@@ -220,9 +220,11 @@ const CatalogView: React.FC<CatalogViewProps> = ({
   }, []);
 
   return (
-    <div className={cx('co-catalog-page', { 'co-catalog-page--with-sidebar': showSidebar })}>
+    <div
+      className={cx('hacDev-catalog-page', { 'hacDev-catalog-page--with-sidebar': showSidebar })}
+    >
       {showSidebar && (
-        <div className="co-catalog-page__tabs">
+        <div className="hacDev-catalog-page__tabs">
           {showCategories && (
             <CatalogCategories
               categories={catalogCategories}
@@ -251,7 +253,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({
           )}
         </div>
       )}
-      <div className="co-catalog-page__content">
+      <div className="hacDev-catalog-page__content">
         <CatalogToolbar
           ref={catalogToolbarRef}
           title={activeCategory.label}
