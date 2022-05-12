@@ -22,14 +22,14 @@ describe('useComponentDetection', () => {
     createCDQMock.mockResolvedValue({ metadata: { name: 'test-cdq' } });
 
     renderHook(() =>
-      useComponentDetection('https://github.com/test/repo', 'test-app', 'test-ns', true, 'token'),
+      useComponentDetection('https://github.com/test/repo', 'test-app', true, 'token'),
     );
 
     expect(createCDQMock).toHaveBeenCalledTimes(1);
     expect(createCDQMock).toHaveBeenCalledWith(
       'test-app',
       'https://github.com/test/repo',
-      'test-ns',
+      '',
       true,
       'token',
     );
@@ -39,7 +39,7 @@ describe('useComponentDetection', () => {
     useK8sWatchMock.mockReturnValue([{}, true, null]);
     createCDQMock.mockResolvedValue({ metadata: { name: 'test-cdq' } });
 
-    renderHook(() => useComponentDetection('', 'test-app', 'test-ns'));
+    renderHook(() => useComponentDetection('', 'test-app'));
 
     expect(createCDQMock).toHaveBeenCalledTimes(0);
   });
@@ -48,7 +48,7 @@ describe('useComponentDetection', () => {
     useK8sWatchMock.mockReturnValue([{}, true, null]);
     createCDQMock.mockResolvedValue({ metadata: { name: 'test-cdq' } });
 
-    renderHook(() => useComponentDetection('', 'test-app', 'test-ns'));
+    renderHook(() => useComponentDetection('', 'test-app'));
     expect(useK8sWatchMock).toHaveBeenCalledWith({});
     expect(createCDQMock).toHaveBeenCalledTimes(0);
   });

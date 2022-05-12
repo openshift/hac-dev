@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Formik, FormikProps } from 'formik';
-import { useActiveNamespace } from '../../hooks/useActiveNamespace';
 import { useQueryParams } from '../../shared';
 import { useFormValues } from '../form-context';
 import { useWizardContext } from '../Wizard/Wizard';
@@ -10,8 +9,6 @@ export const CreateApplicationPage = () => {
   const { handleNext, handleReset: wizardHandleReset } = useWizardContext();
   const [formState, setValues] = useFormValues();
   const queryParams = useQueryParams();
-
-  useActiveNamespace();
 
   const initialValues: CreateApplicationValues = React.useMemo(
     () => ({

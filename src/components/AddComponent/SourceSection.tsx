@@ -45,7 +45,6 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
   const [detectedComponents, loadError] = useComponentDetection(
     sourceUrl,
     formState.application,
-    formState.namespace,
     gitOptions.isMultiComponent,
     gitOptions.authSecret,
   );

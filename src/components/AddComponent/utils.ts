@@ -62,10 +62,10 @@ export const useAccessTokenBindingAuth = (name: string) => {
 export const useComponentDetection = (
   source: string,
   application: string,
-  namespace: string,
   isMultiComponent?: boolean,
   authSecret?: string,
 ): [DetectedComponents, any] => {
+  const { namespace } = React.useContext(NamespaceContext);
   const [cdqName, setCdqName] = React.useState<string>();
   const [createError, setCreateError] = React.useState();
 
