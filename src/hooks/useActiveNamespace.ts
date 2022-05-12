@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { k8sListResourceItems } from '@openshift/dynamic-plugin-sdk-utils';
-import { useFormValues } from './../components/form-context';
 import { ProjectModel } from './../models';
 
 export const useActiveNamespace = (): [string, boolean] => {
   const [activeNamespace, setActiveNamespace] = useState<string>('');
   const [loaded, setLoaded] = useState<boolean>(false);
-  const [, setFormValues] = useFormValues();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -24,7 +22,6 @@ export const useActiveNamespace = (): [string, boolean] => {
 
       if (ns) {
         setActiveNamespace(ns);
-        setFormValues((formValues) => ({ ...formValues, namespace: ns }));
       } else {
         setActiveNamespace('default');
         // eslint-disable-next-line no-console
@@ -41,7 +38,7 @@ export const useActiveNamespace = (): [string, boolean] => {
       // eslint-disable-next-line no-console
       console.error(e);
     }
-  }, [setFormValues]);
+  }, []);
 
   return [activeNamespace, loaded];
 };
