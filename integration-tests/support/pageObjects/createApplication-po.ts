@@ -1,6 +1,12 @@
 export const addComponentPagePO = {
   samples: 'Start with a sample.',
   addComponent: '[data-testid="add-component"]',
+  enterSource: '[id="form-input-source-field"]',
+  validated: '[id="form-input-source-field-helper"]',
+  gitOptions: 'Git options',
+  gitReference: '[id="form-input-git-reference-field"]',
+  contextDir: '[id="form-input-git-contextDir-field"]',
+  next: '[data-test="submit-button"]'
 };
 
 export const componentSamplesPagePO = {
@@ -31,11 +37,3 @@ export const componentsListPagePO = {
   applicationName: 'pf-c-title pf-m-4xl hacDev-page__heading',
   items: '[pf-c-data-list__item]',
 };
-
-export const buildApplicationWithGitSourcePagePO = {
-  enterSource: '[id="form-input-source-field"]',
-  validated: '[id="form-input-source-field-helper"]',
-  gitOptions: 'Git options',
-  gitReference: '[id="form-input-git-reference-field"]',
-  contextDir: '[id="form-input-git-contextDir-field"]'
-}

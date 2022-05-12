@@ -7,4 +7,27 @@ export class AddComponentPage extends AbstractWizardPage {
   openAddComponentPage() {
     cy.get(addComponentPagePO.addComponent).click();
   }
+  setSource(source: string) {
+    cy.get(addComponentPagePO.enterSource).clear().type(source);
+  }
+
+  isValidated() {
+      cy.get(addComponentPagePO.validated).should('have.text', 'Validated')
+  }
+
+  clickGitOptions() {
+    cy.contains(addComponentPagePO.gitOptions).click();
+  }
+
+  setGitReference(gitReference: string) {
+    cy.get(addComponentPagePO.gitReference).clear().type(gitReference);
+  }
+
+  setContextDir(contextDir: string) {
+    cy.get(addComponentPagePO.contextDir).clear().type(contextDir);
+  }
+
+  clickNext() {
+    cy.get(addComponentPagePO.next).click();
+  }
 }
