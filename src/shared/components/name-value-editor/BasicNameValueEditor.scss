@@ -1,0 +1,22 @@
+$drag-column-width: 28px;
+
+.hacDev-empty__header {
+  padding: 0;
+  width: $drag-column-width;
+}
+
+.pairs-list__heading {
+  margin-bottom: 5px;
+}
+
+.pairs-list__row {
+  padding-bottom: 15px;
+}
+
+.pairs-list__side-btn {
+  cursor: pointer;
+}
+
+.pairs-list__add-icon {
+  margin-right: 0.25em;
+}

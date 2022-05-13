@@ -1,6 +1,8 @@
 import * as React from 'react';
 import classNames from 'classnames';
 
+import './SectionHeading.scss';
+
 export type SectionHeadingProps = {
   children?: any;
   style?: any;

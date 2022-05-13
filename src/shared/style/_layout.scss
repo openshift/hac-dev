@@ -17,10 +17,3 @@ body,
   flex: 1 0 auto;
   flex-direction: column;
 }
-
-.hacDev-m-app__content {
-  display: flex;
-  flex: 1 0 auto;
-  flex-direction: column;
-  height: 100%; // doesn't work on safari without height
-}

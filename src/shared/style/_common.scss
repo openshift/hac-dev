@@ -41,12 +41,6 @@ $co-external-link-padding-right: 15px;
   }
 }
 
-.hacDev-section-heading {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 0 20px 0;
-}
-
 .hacDev-m-loader {
   min-width: 18px;
 }
@@ -75,29 +69,6 @@ $co-external-link-padding-right: 15px;
 
 .hacDev-m-loader-dot__two {
   animation-delay: -0.16s;
-}
-
-.hacDev-toolbar__group {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  min-width: 0;
-
-  @media (max-width: $screen-xs-max) {
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-}
-
-.hacDev-toolbar__group--left {
-  justify-content: flex-start;
-  .hacDev-toolbar__item {
-    padding-right: 15px;
-  }
-  @media (max-width: $screen-xs-max) {
-    align-items: flex-start;
-  }
 }
 
 .hacDev-icon-and-text {
