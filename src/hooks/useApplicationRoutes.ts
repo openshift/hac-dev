@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useK8sWatchResource } from './../dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { RouteGroupVersionKind } from './../models/route';
 import { RouteKind } from './../types/routes';
 

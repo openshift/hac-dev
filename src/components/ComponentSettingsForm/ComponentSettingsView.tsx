@@ -1,8 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { Formik } from 'formik';
-import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import { ComponentGroupVersionKind } from '../../models';
 import { ComponentKind } from '../../types';
 import { createComponent } from '../../utils/create-utils';

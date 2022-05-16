@@ -1,13 +1,13 @@
 import * as React from 'react';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, render, screen } from '@testing-library/react';
 import { shallow } from 'enzyme';
-import { useK8sWatchResource } from '../../../dynamic-plugin-sdk';
 import { PipelineRunLogs } from '../../../shared';
 import { componentCRMocks } from '../../ApplicationDetailsView/__data__/mock-data';
 import { pipelineRunMock } from '../__data__/pipelineRunMocks';
 import { BuildLogViewer } from '../BuildLogViewer';
 
-jest.mock('../../../dynamic-plugin-sdk', () => ({
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 

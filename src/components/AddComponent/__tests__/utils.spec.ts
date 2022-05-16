@@ -1,9 +1,9 @@
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { renderHook } from '@testing-library/react-hooks';
-import { useK8sWatchResource } from '../../../dynamic-plugin-sdk';
 import { createComponentDetectionQuery } from '../../../utils/create-utils';
 import { useComponentDetection } from '../utils';
 
-jest.mock('../../../dynamic-plugin-sdk', () => ({
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 
@@ -49,7 +49,7 @@ describe('useComponentDetection', () => {
     createCDQMock.mockResolvedValue({ metadata: { name: 'test-cdq' } });
 
     renderHook(() => useComponentDetection('', 'test-app'));
-    expect(useK8sWatchMock).toHaveBeenCalledWith({});
+    expect(useK8sWatchMock).toHaveBeenCalledWith(null);
     expect(createCDQMock).toHaveBeenCalledTimes(0);
   });
 });

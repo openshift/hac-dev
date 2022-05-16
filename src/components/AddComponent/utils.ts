@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { useFormikContext } from 'formik';
-import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import {
   ComponentDetectionQueryGroupVersionKind,
   SPIAccessTokenBindingGroupVersionKind,
@@ -77,7 +77,7 @@ export const useComponentDetection = (
           namespace,
           isList: false,
         }
-      : {},
+      : null,
   );
 
   React.useEffect(() => {

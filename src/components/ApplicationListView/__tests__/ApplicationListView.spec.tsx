@@ -1,11 +1,11 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen } from '@testing-library/react';
-import { useK8sWatchResource } from '../../../dynamic-plugin-sdk';
 import { ApplicationKind } from '../../../types';
 import ApplicationListView from '../ApplicationListView';
 
-jest.mock('../../../dynamic-plugin-sdk', () => ({
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 

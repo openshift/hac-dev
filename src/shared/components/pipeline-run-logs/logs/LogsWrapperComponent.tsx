@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useK8sWatchResource, WatchK8sResource } from '../../../../dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { WatchK8sResource } from '../../../../dynamic-plugin-sdk';
 import { LoadingBox } from '../../status-box/StatusBox';
 import { PodKind } from '../../types';
 import { MultiStreamLogs } from './MultiStreamLogs';

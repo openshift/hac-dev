@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { pluralize } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons/dist/js/icons';
-import { useK8sWatchResource } from '../../dynamic-plugin-sdk';
 import { ComponentGroupVersionKind } from '../../models';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';

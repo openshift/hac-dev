@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, fireEvent, within } from '@testing-library/react';
-import { useK8sWatchResource } from '../../../dynamic-plugin-sdk';
 import { componentCRMocks, mockApplication } from '../__data__/mock-data';
 import ApplicationDetailsView from '../ApplicationDetailsView';
 
@@ -13,7 +13,7 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
-jest.mock('../../../dynamic-plugin-sdk', () => ({
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 
