@@ -1,7 +1,5 @@
 @use 'sass:math';
 
-$co-external-link-padding-right: 15px;
-
 .hacDev-m-pane__body {
   margin: $grid-gutter-width 0 0;
   padding: 0 math.div($grid-gutter-width, 2) $grid-gutter-width;

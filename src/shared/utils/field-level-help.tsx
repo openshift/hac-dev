@@ -21,10 +21,10 @@ export const FieldLevelHelp: React.FC<FieldLevelHelpProps> = React.memo(
           aria-label={t('public~Help')}
           variant="link"
           isInline
-          className="co-field-level-help"
+          className="hacDev-field-level-help"
           data-test-id={testId || null}
         >
-          <OutlinedQuestionCircleIcon className="co-field-level-help__icon" />
+          <OutlinedQuestionCircleIcon className="hacDev-field-level-help__icon" />
         </Button>
       </Popover>
     );

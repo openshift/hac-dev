@@ -9,20 +9,18 @@ export const NumberSpinner: React.FC<NumberSpinnerProps> = ({
   ...inputProps
 }) => {
   return (
-    <div className="co-m-number-spinner">
-      <NumberInput
-        min={min}
-        value={value}
-        onMinus={() => changeValueBy(-1)}
-        onChange={inputProps.onChange}
-        onPlus={() => changeValueBy(1)}
-        inputProps={{ ...inputProps }}
-        className={className}
-        minusBtnAriaLabel={'Decrement'}
-        plusBtnAriaLabel={'Increment'}
-        isDisabled={inputProps.disabled}
-      />
-    </div>
+    <NumberInput
+      min={min}
+      value={value}
+      onMinus={() => changeValueBy(-1)}
+      onChange={inputProps.onChange}
+      onPlus={() => changeValueBy(1)}
+      inputProps={{ ...inputProps }}
+      className={className}
+      minusBtnAriaLabel={'Decrement'}
+      plusBtnAriaLabel={'Increment'}
+      isDisabled={inputProps.disabled}
+    />
   );
 };
 

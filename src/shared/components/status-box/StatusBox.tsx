@@ -53,10 +53,7 @@ export const LoadError: React.FC<LoadErrorProps> = ({
 LoadError.displayName = 'LoadError';
 
 export const Loading: React.FC<LoadingProps> = ({ className }) => (
-  <div
-    className={classNames('hacDev-m-loader co-an-fade-in-out', className)}
-    data-test="loading-indicator"
-  >
+  <div className={classNames('hacDev-m-loader', className)} data-test="loading-indicator">
     <div className="hacDev-m-loader-dot__one" />
     <div className="hacDev-m-loader-dot__two" />
     <div className="hacDev-m-loader-dot__three" />
@@ -114,7 +111,7 @@ export const AccessDenied: React.FC<AccessDeniedProps> = ({ message }) => {
         />
       </Box>
       {isString(message) && (
-        <Alert isInline className="co-alert" variant="danger" title={t('public~Error details')}>
+        <Alert isInline variant="danger" title={t('public~Error details')}>
           {message}
         </Alert>
       )}
