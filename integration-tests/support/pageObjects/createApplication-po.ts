@@ -1,11 +1,10 @@
 export const addComponentPagePO = {
   samples: 'Start with a sample.',
   addComponent: '[data-testid="add-component"]',
-  enterSource: '[id="form-input-source-field"]',
-  validated: '[id="form-input-source-field-helper"]',
+  enterSource: '[data-testid="enter-source"]',
   gitOptions: 'Git options',
-  gitReference: '[id="form-input-git-reference-field"]',
-  contextDir: '[id="form-input-git-contextDir-field"]',
+  gitReference: '[data-testid="git-reference"]',
+  contextDir: '[data-testid="context-dir"]',
   next: '[data-test="submit-button"]'
 };
 

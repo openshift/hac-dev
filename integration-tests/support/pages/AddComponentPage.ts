@@ -12,7 +12,7 @@ export class AddComponentPage extends AbstractWizardPage {
   }
 
   isValidated() {
-      cy.get(addComponentPagePO.validated).should('have.text', 'Validated')
+      cy.contains('div', 'Validated')
   }
 
   clickGitOptions() {
