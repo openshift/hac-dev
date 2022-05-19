@@ -5,6 +5,7 @@ import {
   ComponentDetectionQueryGroupVersionKind,
   SPIAccessTokenBindingGroupVersionKind,
 } from '../../models';
+import { useDebounceCallback } from '../../shared/hooks/useDebounceCallback';
 import {
   ComponentDetectionQueryKind,
   DetectedComponents,
@@ -13,6 +14,7 @@ import {
 } from '../../types';
 import { createComponentDetectionQuery } from '../../utils/create-utils';
 import { NamespaceContext } from './../NamespacedPage/NamespacedPage';
+import { AddComponentValues } from './AddComponentForm';
 
 /**
  * Watch the SPIAccessTokenBinding resource and open auth window when provided.
@@ -62,8 +64,7 @@ export const useAccessTokenBindingAuth = (name: string) => {
 export const useComponentDetection = (
   source: string,
   application: string,
-  isMultiComponent?: boolean,
-  authSecret?: string,
+  gitOptions: AddComponentValues['git'],
 ): [DetectedComponents, any] => {
   const { namespace } = React.useContext(NamespaceContext);
   const [cdqName, setCdqName] = React.useState<string>();
@@ -80,15 +81,29 @@ export const useComponentDetection = (
       : null,
   );
 
+  const debouncedCreateCDQ = useDebounceCallback(
+    React.useCallback<(...args: Parameters<typeof createComponentDetectionQuery>) => void>(
+      (...args) =>
+        createComponentDetectionQuery(...args)
+          .then((resource) => setCdqName(resource.metadata.name))
+          .catch(setCreateError),
+      [],
+    ),
+  );
+
   React.useEffect(() => {
     setCdqName(null);
     setCreateError(null);
     if (source) {
-      createComponentDetectionQuery(application, source, namespace, isMultiComponent, authSecret)
-        .then((resource) => setCdqName(resource.metadata.name))
-        .catch(setCreateError);
+      debouncedCreateCDQ(
+        application,
+        source,
+        namespace,
+        gitOptions.isMultiComponent,
+        gitOptions.authSecret,
+      );
     }
-  }, [application, authSecret, isMultiComponent, namespace, source]);
+  }, [debouncedCreateCDQ, application, source, namespace, gitOptions]);
 
   const detectedComponents = React.useMemo(() => {
     if (cdqName && loaded && cdq) {
