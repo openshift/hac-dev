@@ -132,7 +132,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
               helpText={helpText}
               helpTextInvalid={helpTextInvalid}
               required
-              data-testid="enter-source"
+              data-test="enter-source"
             />
           </GridItem>
           <GridItem span={4}>

@@ -1,10 +1,10 @@
 export const addComponentPagePO = {
   samples: 'Start with a sample.',
-  addComponent: '[data-testid="add-component"]',
-  enterSource: '[data-testid="enter-source"]',
+  addComponent: '[data-test="add-component"]',
+  enterSource: '[data-test="enter-source"]',
   gitOptions: 'Git options',
-  gitReference: '[data-testid="git-reference"]',
-  contextDir: '[data-testid="context-dir"]',
+  gitReference: '[data-test="git-reference"]',
+  contextDir: '[data-test="context-dir"]',
   next: '[data-test="submit-button"]'
 };
 
