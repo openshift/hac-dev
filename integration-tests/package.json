@@ -8,6 +8,7 @@
     "cy:open": "../node_modules/.bin/cypress open"
   },
   "devDependencies": {
-    "@types/node": "^17.0.13"
+    "@types/node": "^17.0.13",
+    "cypress-terminal-report": "^3.5.2"
   }
 }
