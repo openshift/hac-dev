@@ -70,7 +70,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
           </ToolbarItem>
           <ToolbarItem>
             <Link
-              data-testid="add-component"
+              data-test="add-component"
               className="pf-c-button pf-m-primary"
               to={`/app-studio/import?application=${applicationName}`}
             >

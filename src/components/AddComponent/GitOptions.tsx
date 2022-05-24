@@ -10,6 +10,7 @@ export const GitOptions: React.FC = () => (
           name="git.reference"
           label="Git reference"
           helpText="Optional branch, tag or commit."
+          data-test="git-reference"
         />
       </StackItem>
       <StackItem>
@@ -17,6 +18,7 @@ export const GitOptions: React.FC = () => (
           name="git.contextDir"
           label="Context dir"
           helpText="Optional subdirectory for the application source code."
+          data-test="context-dir"
         />
       </StackItem>
     </Stack>
