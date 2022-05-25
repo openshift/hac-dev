@@ -45,18 +45,18 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
   const [detectedComponents, loadError] = useComponentDetection(
     sourceUrl,
     formState.application,
-    gitOptions.isMultiComponent,
-    gitOptions.authSecret,
+    gitOptions,
   );
 
   const handleSourceChange = React.useCallback(() => {
     const searchTerm = source;
     const isGitUrlValid = gitUrlRegex.test(searchTerm);
     const isContainerImageValid = containerImageRegex.test(searchTerm);
-    if (!isGitUrlValid && !isContainerImageValid) {
+    if (!searchTerm || (!isGitUrlValid && !isContainerImageValid)) {
       setValidated(ValidatedOptions.error);
       setShowAuthorization(false);
       setShowGitOptions(false);
+      setSourceUrl(null);
       return;
     }
     if (isContainerImageValid) {
@@ -73,7 +73,6 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
       setHelpText('Validating...');
       setHelpTextInvalid('');
       setShowAuthorization(false);
-      setShowGitOptions(false);
       setSourceUrl(source);
     }
   }, [source, setFieldValue]);
@@ -97,7 +96,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
       setHelpTextInvalid('Unable to detect components');
       setFieldValue('detectedComponents', undefined);
       setShowAuthorization(true);
-      setShowGitOptions(false);
+      setShowGitOptions(true);
       // eslint-disable-next-line no-console
       console.error('Unable to detect component: ', loadError);
     }
