@@ -22,6 +22,8 @@ const createComponents = async (
           targetPort: component.targetPort && Number(component.targetPort),
           resources: component.resources && transformResources(component.resources),
           env: component.env,
+          revision: component.source.git?.revision,
+          context: component.source.git?.context,
         },
         application,
         namespace,

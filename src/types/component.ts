@@ -15,6 +15,8 @@ export type ComponentSource = {
   git?: {
     url: string;
     devfileUrl?: string;
+    revision?: string;
+    context?: string;
   };
   image?: {
     containerImage: string;
