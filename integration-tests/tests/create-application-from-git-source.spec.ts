@@ -6,6 +6,7 @@ import { Common } from '../utils/Common';
 
 describe('Create Component from Git Source', () => {
   const applicationName = `test-app${new Date().getTime() / 1000}`;
+  const componentName = 'java-quarkus';
 
   before(function() {
     //set application name
@@ -20,10 +21,10 @@ describe('Create Component from Git Source', () => {
     Common.openApplicationURL(applicationName);
     //Review component page
     const applicationPage = new ApplicationComponentPage();
-    applicationPage.deleteComponent('1-java-quarkus');
+    applicationPage.deleteComponent(componentName);
 
     //Check if application does not exists
-    applicationPage.createdApplicationNotExists('1-java-quarkus');
+    applicationPage.createdApplicationNotExists(componentName);
   });
 
   it('Creating a Quarkus component', () => {
@@ -39,6 +40,6 @@ describe('Create Component from Git Source', () => {
     applicationPage.createApplication();
 
     //Check application
-    applicationPage.createdApplicationExists('1-java-quarkus');
+    applicationPage.createdApplicationExists(componentName);
   });
 });
