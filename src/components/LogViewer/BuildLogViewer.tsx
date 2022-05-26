@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { Stack, StackItem } from '@patternfly/react-core';
+import { ModalVariant, Stack, StackItem } from '@patternfly/react-core';
 import dayjs from 'dayjs';
 import { WatchK8sResource } from '../../dynamic-plugin-sdk';
 import PipelineRunLogs from '../../shared/components/pipeline-run-logs/PipelineRunLogs';
@@ -8,8 +8,10 @@ import { PipelineRunKind } from '../../shared/components/pipeline-run-logs/types
 import { PipelineRunGroupVersionKind } from '../../shared/components/pipeline-run-logs/utils';
 import { EmptyBox, LoadingBox } from '../../shared/components/status-box/StatusBox';
 import { ComponentKind } from '../../types';
+import { ModalComponentProps, createModalLauncher } from '../modal/createModalLauncher';
+import './BuildLogViewer.scss';
 
-type BuildLogViewerProps = {
+type BuildLogViewerProps = ModalComponentProps & {
   component: ComponentKind;
 };
 
@@ -76,3 +78,10 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
     </Stack>
   );
 };
+
+export const buildLogViewerLauncher = createModalLauncher(BuildLogViewer, {
+  className: 'hacDev-build-log-viewer',
+  'data-testid': 'view-build-logs-modal',
+  variant: ModalVariant.large,
+  title: 'View build logs',
+});

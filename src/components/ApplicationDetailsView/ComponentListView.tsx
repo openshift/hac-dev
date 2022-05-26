@@ -13,7 +13,6 @@ import {
 import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useApplicationRoutes } from '../../hooks/useApplicationRoutes';
 import { ComponentKind } from '../../types';
-import { ComponentLogViewerModal } from '../LogViewer/ComponentLogViewerModal';
 import { NamespaceContext } from '../NamespacedPage/NamespacedPage';
 import { ComponentListItem } from './ComponentListItem';
 
@@ -24,8 +23,6 @@ type ComponentListViewProps = {
 
 const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, components }) => {
   const { namespace } = React.useContext(NamespaceContext);
-
-  const [logsComponent, setLogsComponent] = React.useState<ComponentKind | undefined>(undefined);
 
   const [routes, loaded] = useApplicationRoutes(applicationName, namespace);
 
@@ -81,19 +78,9 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
       </Toolbar>
       <DataList aria-label="Components" data-testid="component-list">
         {filteredComponents?.map((component) => (
-          <ComponentListItem
-            key={component.metadata.uid}
-            component={component}
-            routes={routes}
-            showLogsForComponent={setLogsComponent}
-          />
+          <ComponentListItem key={component.metadata.uid} component={component} routes={routes} />
         ))}
       </DataList>
-      <ComponentLogViewerModal
-        component={logsComponent}
-        isOpen={!!logsComponent}
-        onClose={() => setLogsComponent(undefined)}
-      />
     </>
   );
 };
