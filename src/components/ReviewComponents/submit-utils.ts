@@ -18,6 +18,7 @@ const createComponents = async (
           gitRepo: component.source.git?.url,
           image: component.source.image?.containerImage,
           devfileUrl: component.source.git?.devfileUrl,
+          dockerfileUrl: component.source.git?.dockerfileUrl,
           replicas: component.replicas && Number(component.replicas),
           targetPort: component.targetPort && Number(component.targetPort),
           resources: component.resources && transformResources(component.resources),

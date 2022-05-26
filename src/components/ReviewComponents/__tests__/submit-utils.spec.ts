@@ -55,6 +55,34 @@ describe('createResources', () => {
     );
   });
 
+  it('should create component with dockerfileUrl if CDQ has dockerfileUrl', async () => {
+    createApplicationMock.mockResolvedValue({ metadata: { name: 'test-app' } });
+    await createResources(
+      { components: [] },
+      {
+        comp: {
+          name: 'comp',
+          source: { git: { url: 'example.com', dockerfileUrl: 'dockerfile.io/sample' } },
+        },
+      },
+    );
+    expect(createApplicationMock).toHaveBeenCalled();
+    expect(createComponentMock).toHaveBeenCalledWith(
+      {
+        name: 'comp',
+        gitRepo: 'example.com',
+        dockerfileUrl: 'dockerfile.io/sample',
+        replicas: undefined,
+        targetPort: undefined,
+        resources: undefined,
+      },
+      'test-app',
+      undefined,
+      undefined,
+      undefined,
+    );
+  });
+
   it('should only create components if application exists', async () => {
     await createResources(
       { components: [], existingApplication: 'test-app' },

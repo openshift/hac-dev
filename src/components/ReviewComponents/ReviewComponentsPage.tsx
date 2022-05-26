@@ -30,6 +30,7 @@ export const ReviewComponentsPage: React.FC = () => {
                   git: {
                     url: val.data?.source?.git?.url || val.attributes.git.remotes.origin,
                     devfileUrl: val.data?.source?.git.devfileUrl,
+                    dockerfileUrl: val.data?.source?.git.dockerfileUrl,
                     context: val.data?.source?.git?.context,
                     revision: val.data?.source?.git?.revision,
                   },

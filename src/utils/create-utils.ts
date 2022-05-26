@@ -95,6 +95,7 @@ export const createComponent = (
         git: {
           ...(component.gitRepo ? { url: component.gitRepo } : {}),
           ...(component.devfileUrl ? { devfileUrl: component.devfileUrl } : {}),
+          ...(component.dockerfileUrl ? { dockerfileUrl: component.dockerfileUrl } : {}),
           ...(component.revision ? { revision: component.revision } : {}),
           ...(component.context ? { context: component.context } : {}),
         },
