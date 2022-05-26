@@ -15,6 +15,7 @@ export type ComponentSource = {
   git?: {
     url: string;
     devfileUrl?: string;
+    dockerfileUrl?: string;
     revision?: string;
     context?: string;
   };
