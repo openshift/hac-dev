@@ -1,20 +1,17 @@
 import { addComponentPagePO } from '../pageObjects/createApplication-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 export class AddComponentPage extends AbstractWizardPage {
+  waitRepoValidated() {
+    cy.contains('div', 'Validating...');
+    cy.contains('div', 'Validating...', { timeout: 60000 }).should('not.exist');
+    cy.contains('div', 'Validated');
+  }
   openSamplesPage() {
     cy.contains(addComponentPagePO.samples).click();
-  }
-  openAddComponentPage() {
-    cy.get(addComponentPagePO.addComponent).click();
   }
   setSource(source: string) {
     cy.get(addComponentPagePO.enterSource).clear().type(source);
   }
-
-  isValidated() {
-      cy.contains('div', 'Validated')
-  }
-
   clickGitOptions() {
     cy.contains(addComponentPagePO.gitOptions).click();
   }
