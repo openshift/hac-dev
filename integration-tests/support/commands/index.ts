@@ -6,3 +6,9 @@ import './hooks';
 Cypress.on('uncaught:exception', (err) => {
   return false;
 });
+
+// Add browser logs collector
+const logOptions = {
+  enableExtendedCollector: true
+};
+require('cypress-terminal-report/src/installLogsCollector')(logOptions);

@@ -1,4 +1,13 @@
 module.exports = (on, config) => {
+  const logOptions = {
+    outputRoot: `${config.projectRoot}/cypress`,
+    outputTarget: {
+      'cypress-logs.txt': 'txt'
+    },
+    printLogsToFile: 'always'
+  }
+  require('cypress-terminal-report/src/installLogsPrinter')(on, logOptions);
+
   if (!Object.prototype.hasOwnProperty.call(config.env, 'HAC_BASE_URL')) {
     config.env.HAC_BASE_URL = 'https://prod.foo.redhat.com:1337/beta/hac/app-studio';
   }
