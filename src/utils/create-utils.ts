@@ -70,6 +70,7 @@ export const createApplication = (
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
 export const createComponent = (
+  // TODO need better type for `component`
   component,
   application: string,
   namespace: string,
@@ -93,11 +94,13 @@ export const createComponent = (
       source: {
         git: {
           ...(component.gitRepo ? { url: component.gitRepo } : {}),
-          secret,
           ...(component.devfileUrl ? { devfileUrl: component.devfileUrl } : {}),
+          ...(component.revision ? { revision: component.revision } : {}),
+          ...(component.context ? { context: component.context } : {}),
         },
-        ...(component.image ? { image: { containerImage: component.image } } : {}),
       },
+      secret,
+      ...(component.image ? { containerImage: component.image } : {}),
       replicas: component.replicas,
       targetPort: component.targetPort,
       resources: component.resources,
@@ -135,6 +138,8 @@ const uid = () =>
  * @param namespace namespace to deploy resource in. Defaults to current namespace
  * @param isMultiComponent whether or not the git repository contains multiple components
  * @param secret Name of the secret containing the personal access token
+ * @param context Context directory
+ * @param revision Git revision if other than master/main
  * @param dryRun dry run without creating any resources
  * @returns Returns CDQ
  *
@@ -145,6 +150,8 @@ export const createComponentDetectionQuery = async (
   namespace: string,
   isMultiComponent?: boolean,
   secret?: string,
+  context?: string,
+  revision?: string,
   dryRun?: boolean,
 ): Promise<ComponentDetectionQueryKind> => {
   // append name with uid for additional randomness
@@ -161,8 +168,10 @@ export const createComponentDetectionQuery = async (
     spec: {
       git: {
         url,
-        secret,
+        context,
+        revision,
       },
+      secret,
       isMultiComponent,
     },
   };

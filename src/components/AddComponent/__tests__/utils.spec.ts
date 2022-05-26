@@ -25,7 +25,7 @@ describe('useComponentDetection', () => {
 
     renderHook(() =>
       useComponentDetection('https://github.com/test/repo', 'test-app', {
-        reference: '',
+        reference: 'dev',
         contextDir: '/',
         isMultiComponent: true,
         authSecret: 'token',
@@ -39,6 +39,8 @@ describe('useComponentDetection', () => {
       '',
       true,
       'token',
+      '/',
+      'dev',
     );
   });
 
@@ -79,7 +81,7 @@ describe('useComponentDetection', () => {
     let source = 'https://github.com/test/repo';
     const { rerender } = renderHook(() =>
       useComponentDetection(source, 'test-app', {
-        reference: '',
+        reference: 'dev',
         contextDir: '/',
         isMultiComponent: false,
       }),
@@ -91,6 +93,8 @@ describe('useComponentDetection', () => {
       '',
       false,
       undefined,
+      '/',
+      'dev',
     );
     rerender();
     expect(createCDQMock).toHaveBeenCalledWith(
@@ -99,6 +103,8 @@ describe('useComponentDetection', () => {
       '',
       false,
       undefined,
+      '/',
+      'dev',
     );
   });
 });

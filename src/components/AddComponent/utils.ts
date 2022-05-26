@@ -101,6 +101,8 @@ export const useComponentDetection = (
         namespace,
         gitOptions.isMultiComponent,
         gitOptions.authSecret,
+        gitOptions.contextDir,
+        gitOptions.reference,
       );
     }
   }, [debouncedCreateCDQ, application, source, namespace, gitOptions]);

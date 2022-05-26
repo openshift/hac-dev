@@ -57,6 +57,8 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       targetPort: componentValues.targetPort && Number(componentValues.targetPort),
       resources: componentValues.resources && transformResources(componentValues.resources),
       env: componentValues.env,
+      revision: componentValues.source.git.revision,
+      context: componentValues.source.git.context,
     };
     return createComponent(
       transformedComponentValues,
