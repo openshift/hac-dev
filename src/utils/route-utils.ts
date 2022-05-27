@@ -35,7 +35,7 @@ export const getRouteWebURL = (route: RouteKind): string => {
 
 export const getComponentRouteWebURL = (routes: RouteKind[], component: string): string => {
   const componentRoute = routes?.find(
-    (r) => r.metadata?.annotations?.['build.appstudio.openshift.io/component'] === component,
+    (route) => route.metadata?.labels?.['app.kubernetes.io/name'] === component,
   );
 
   return componentRoute && getRouteWebURL(componentRoute);

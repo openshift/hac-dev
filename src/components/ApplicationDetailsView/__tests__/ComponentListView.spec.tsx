@@ -1,6 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, within } from '@testing-library/react';
+import { mockRoutes } from '../../../hooks/__data__/mock-data';
 import { useApplicationRoutes } from '../../../hooks/useApplicationRoutes';
 import { componentCRMocks } from '../__data__/mock-data';
 import ComponentListView from '../ComponentListView';
@@ -45,5 +46,11 @@ describe('ComponentListViewPage', () => {
     const componentList = screen.getByTestId('component-list');
     const componentListItems = within(componentList).getAllByTestId('component-list-item');
     expect(componentListItems.length).toBe(1);
+  });
+
+  it('should render routes URL when route is created on cluster', () => {
+    applicationRoutesMock.mockReturnValue([mockRoutes, true]);
+    render(<ComponentListView applicationName="test" components={componentCRMocks} />);
+    screen.getByText('https://nodejs-test.apps.appstudio-stage.x99m.p1.openshiftapps.com');
   });
 });

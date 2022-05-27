@@ -18,8 +18,7 @@ export const useApplicationRoutes = (
       return [];
     }
     return allRoutes.filter(
-      (route) =>
-        route.metadata?.annotations?.['build.appstudio.openshift.io/application'] === application,
+      (route) => route.metadata?.labels?.['app.kubernetes.io/part-of'] === application,
     );
   }, [application, allRoutes]);
 
