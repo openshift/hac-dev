@@ -97,7 +97,9 @@ export const createComponent = (
           ...(component.devfileUrl ? { devfileUrl: component.devfileUrl } : {}),
           ...(component.dockerfileUrl ? { dockerfileUrl: component.dockerfileUrl } : {}),
           ...(component.revision ? { revision: component.revision } : {}),
-          ...(component.context ? { context: component.context } : {}),
+          // FIXME - context is not supported by the HAS API correctly yet.
+          // Remove after https://issues.redhat.com/browse/DEVHAS-115 is fixed.
+          // ...(component.context ? { context: component.context } : {}),
         },
       },
       secret,
