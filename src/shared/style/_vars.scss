@@ -6,14 +6,9 @@ $font-size-base: 14px;
 $screen-sm: 768px !default;
 $screen-sm-min: $screen-sm !default;
 $grid-gutter-width: 30px !default;
-$grid-float-breakpoint: $screen-sm-min !default;
 $screen-md: 992px !default;
 $screen-md-min: $screen-md !default;
 $screen-sm-max: ($screen-md-min - 1) !default;
 $screen-xs-max: ($screen-sm-min - 1) !default;
 $hacDev-m-catalog-tile-width: 260px;
 $color-text-muted: $pf-color-black-600;
-
-// Can not use --pf-global--gutter --pf-global--gutter--md because you can't get a negative value of a scss variable that is assigned a css custom property.
-$pf-global-gutter: 1rem; // Matches --pf-global--gutter
-$pf-global-gutter--md: 1.5rem; // Matches --pf-global--gutter--md

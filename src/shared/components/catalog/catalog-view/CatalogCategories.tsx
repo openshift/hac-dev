@@ -6,6 +6,8 @@ import map from 'lodash/map';
 import { hasActiveDescendant, isActiveTab } from '../utils/category-utils';
 import { CatalogCategory } from '../utils/types';
 
+import './CatalogCategories.scss';
+
 type CatalogCategoriesProp = {
   categories: CatalogCategory[];
   categorizedIds: Record<string, string[]>;

@@ -7,6 +7,8 @@ import { SearchInput } from '@patternfly/react-core';
 // import { NO_GROUPING } from '../utils/category-utils';
 import { CatalogSortOrder, CatalogStringMap } from '../utils/types';
 
+import './CatalogToolbar.scss';
+
 type CatalogToolbarProps = {
   title: string;
   totalItems: number;

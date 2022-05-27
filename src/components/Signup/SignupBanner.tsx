@@ -6,7 +6,7 @@ import './SignupBanner.scss';
 
 const SignupBanner: React.FC = () => {
   return (
-    <Card className="hacDev-signup-banner" isLarge>
+    <Card className="signup-banner" isLarge>
       <CardTitle>Get Started with Red Hat App Studio</CardTitle>
       <CardBody>
         Red Hat App Studio is a fully managed experience that makes it easier and faster for

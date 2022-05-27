@@ -10,7 +10,9 @@
     > .catalog-tile-pf-description {
       flex: 1 1 auto;
     }
+
+    > .catalog-tile-pf-subtitle {
+      font-size: ($font-size-base - 1);
+    } 
   }
 }
-
-

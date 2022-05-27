@@ -7,6 +7,8 @@ import ExternalLink from '../../links/ExternalLink';
 import { CatalogItem } from '../utils/types';
 // import { Timestamp } from '@console/internal/components/utils';
 
+import './CatalogDetailsPanel.scss';
+
 type CatalogDetailsPanelProps = {
   item: CatalogItem;
 };

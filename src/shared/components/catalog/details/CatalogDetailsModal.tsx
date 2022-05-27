@@ -9,6 +9,8 @@ import { getIconProps } from '../utils/catalog-utils';
 import { CatalogItem } from '../utils/types';
 import CatalogDetailsPanel from './CatalogDetailsPanel';
 
+import './CatalogDetailsModal.scss';
+
 type CatalogDetailsModalProps = {
   item: CatalogItem;
   onClose: () => void;

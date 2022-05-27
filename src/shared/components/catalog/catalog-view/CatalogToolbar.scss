@@ -1,0 +1,36 @@
+.hacDev-catalog-page {
+  &__header {
+    margin: 0 var(--pf-global--spacer--lg) 0 0;
+  }
+
+  &__heading {
+    font-size: 16px;
+    margin: 0 0 20px var(--pf-global--spacer--lg);
+  }
+
+  &__filter {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__input {
+    display: inline-flex !important;
+    margin: 0 0 20px var(--pf-global--spacer--lg);
+    width: auto !important;
+  }
+
+  &__sort {
+    display: inline;
+    margin-left: var(--pf-global--spacer--md);
+  }
+
+  &__btn-group__group-by {
+    display: inline;
+    margin-left: var(--pf-global--spacer--md);
+  }
+
+  &__num-items {
+    font-weight: var(--pf-global--FontWeight--bold);
+    padding: 0 0 20px;
+  }
+}

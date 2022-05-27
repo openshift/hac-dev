@@ -43,6 +43,8 @@ import CatalogGrid from './CatalogGrid';
 import CatalogToolbar from './CatalogToolbar';
 // import CatalogTypeSelector from './CatalogTypeSelector';
 
+import './CatalogView.scss';
+
 type CatalogViewProps = {
   items: CatalogItem[];
   catalogType?: string;

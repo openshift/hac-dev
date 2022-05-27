@@ -24,6 +24,8 @@ import {
   CatalogService,
 } from './utils/types';
 
+import './CatalogController.scss';
+
 type CatalogControllerProps = CatalogService & {
   enableDetailsPanel?: boolean;
   hideSidebar?: boolean;

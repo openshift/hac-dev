@@ -5,6 +5,8 @@ import { VirtualizedGrid } from '../../virtualized-grid';
 import { RenderCell } from '../../virtualized-grid/types';
 import { CatalogItem } from '../utils/types';
 
+import './CatalogGrid.scss';
+
 type CatalogGridProps = {
   items: CatalogItem[] | { [key: string]: CatalogItem[] };
   renderTile: RenderCell;
