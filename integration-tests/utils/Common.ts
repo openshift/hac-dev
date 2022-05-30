@@ -1,4 +1,4 @@
-import { consentButton } from '../support/pageObjects/global-po';
+import { consentButton, spinner } from '../support/pageObjects/global-po';
 
 export class Common {
   static openAppStudioBaseURL() {
@@ -14,6 +14,11 @@ export class Common {
     Common.openURL(
       `${Cypress.env('HAC_BASE_URL')}/applications?name=${applicationName.replace('.', '-')}`,
     );
+  }
+
+  static waitSpinner() {
+    cy.get(spinner).should('exist');
+    cy.get(spinner).should('not.exist');
   }
 
   static clickOnConsentButton() {
