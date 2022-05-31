@@ -16,7 +16,7 @@ describe('useApplicationRoutes', () => {
 
   it('should return routes for given application', async () => {
     mockUseK8sWatchResource.mockReturnValue([mockRoutes, true]);
-    const { result } = renderHook(() => useApplicationRoutes('purple-mermaid-app', 'test'));
+    const { result } = renderHook(() => useApplicationRoutes('new-application', 'test'));
     const [routes, loaded] = result.current;
     expect(loaded).toEqual(true);
     expect(routes.length).toEqual(1);

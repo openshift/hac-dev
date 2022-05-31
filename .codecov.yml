@@ -5,6 +5,14 @@ coverage:
   precision: 2
   round: down
   range: "70...100"
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 0.2%
+
+ignore:
+  - "**/*__data__*/*.ts"
 
 comment:
   layout: "reach,diff,flags,files,footer"
