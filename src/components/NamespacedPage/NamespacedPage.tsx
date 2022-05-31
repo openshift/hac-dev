@@ -4,6 +4,7 @@ import { useActiveNamespace } from '../../hooks';
 import { UserSignupStatus, useSignupStatus } from '../../hooks/useSignupStatus';
 import AppBanner from '../AppBanner/AppBanner';
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
+import { ModalProvider } from '../modal/ModalProvider';
 import SignupView from '../Signup/SignupView';
 
 import './NamespacedPage.scss';
@@ -41,8 +42,10 @@ const NamespacedPage: React.FunctionComponent<NamespacedPageProps> = ({ children
 
   return (
     <NamespaceContext.Provider value={{ namespace: activeNamepace }}>
-      <AppBanner />
-      <ErrorBoundary>{children}</ErrorBoundary>
+      <ModalProvider>
+        <AppBanner />
+        <ErrorBoundary>{children}</ErrorBoundary>
+      </ModalProvider>
     </NamespaceContext.Provider>
   );
 };

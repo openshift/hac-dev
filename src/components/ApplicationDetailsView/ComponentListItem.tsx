@@ -16,25 +16,20 @@ import {
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind, RouteKind } from '../../types';
-import { deleteComponent } from '../../utils/delete-utils';
 import { getComponentRouteWebURL } from '../../utils/route-utils';
-
 import './ComponentListItem.scss';
+import { useComponentActions } from './component-actions';
 
 type ComponentListViewPageProps = {
   component: ComponentKind;
   routes: RouteKind[];
-  showLogsForComponent: (component: ComponentKind) => void;
 };
 
-export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({
-  component,
-  showLogsForComponent,
-  routes,
-}) => {
+export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ component, routes }) => {
   const [expanded, setExpanded] = React.useState(false);
   const { replicas, targetPort, resources } = component.spec;
   const name = component.metadata.name;
+  const actions = useComponentActions(component, name);
   const resourceRequests = resources?.requests;
   const containerImage = component.status?.containerImage;
   const componentRouteWebURL = routes?.length > 0 && getComponentRouteWebURL(routes, name);
@@ -73,27 +68,7 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({
           aria-label={`${name.toLowerCase()}-actions`}
           isPlainButtonAction
         >
-          <ActionMenu
-            actions={[
-              {
-                cta: { href: `/app-studio/component-settings?componentName=${name}` },
-                id: 'component-settings',
-                label: 'Component settings',
-              },
-              {
-                cta: () => showLogsForComponent(component),
-                id: `view-logs-${name.toLowerCase()}`,
-                label: 'View Build Logs',
-              },
-              {
-                cta: () => {
-                  deleteComponent(name, component.metadata.namespace);
-                },
-                id: `delete-${name.toLowerCase()}`,
-                label: 'Delete',
-              },
-            ]}
-          />
+          <ActionMenu actions={actions} />
         </DataListAction>
       </DataListItemRow>
       <DataListContent

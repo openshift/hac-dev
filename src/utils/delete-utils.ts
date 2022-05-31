@@ -1,4 +1,4 @@
-import { k8sDeleteResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { k8sDeleteResource, K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { ComponentModel } from '../models';
 
 /**
@@ -10,7 +10,10 @@ import { ComponentModel } from '../models';
  *
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
  */
-export const deleteComponent = (componentName: string, namespace: string): any => {
+export const deleteComponent = (
+  componentName: string,
+  namespace: string,
+): Promise<K8sResourceCommon> => {
   return k8sDeleteResource({
     model: ComponentModel,
     queryOptions: {
