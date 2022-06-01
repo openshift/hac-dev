@@ -2,11 +2,12 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { pluralize } from '@patternfly/react-core';
-import { EllipsisVIcon } from '@patternfly/react-icons/dist/js/icons';
 import { ComponentGroupVersionKind } from '../../models';
+import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { ApplicationKind, ComponentKind } from '../../types';
+import { useApplicationActions } from './application-actions';
 import { applicationTableColumnClasses } from './ApplicationListHeader';
 
 const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj }) => {
@@ -15,6 +16,7 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
     namespace: obj.metadata.namespace,
     isList: true,
   });
+  const actions = useApplicationActions(obj);
 
   const components = allComponents?.filter((c) => c.spec.application === obj.metadata.name) ?? [];
 
@@ -36,7 +38,7 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
       <TableData className={applicationTableColumnClasses.kebab}>
-        <EllipsisVIcon />
+        <ActionMenu actions={actions} />
       </TableData>
     </>
   );
