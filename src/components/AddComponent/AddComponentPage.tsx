@@ -26,20 +26,7 @@ export const AddComponentPage = () => {
       source: values.source,
       sourceSecret: values.git.authSecret,
       isMultiComponent: values.git.isMultiComponent,
-      components: values.detectedComponents.map((component) => ({
-        name: component.name,
-        uid: component.name,
-        type: 'source',
-        data: {
-          source: component.source,
-          contextDir: component.context,
-          targetPort: component.targetPort,
-          resources: component.resources,
-          replicas: component.replicas,
-          route: component.route,
-          env: component.env,
-        },
-      })),
+      components: values.detectedComponents,
     }));
     increaseStepBy(2);
   };

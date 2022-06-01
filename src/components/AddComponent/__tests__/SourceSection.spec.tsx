@@ -9,6 +9,7 @@ import { useComponentDetection } from '../utils';
 jest.mock('../utils', () => ({
   useComponentDetection: jest.fn(),
   useAccessTokenBindingAuth: jest.fn(),
+  mapDetectedComponents: jest.fn(),
 }));
 
 jest.mock('../../../shared/hooks', () => ({

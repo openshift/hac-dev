@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CatalogItem } from '../shared/components/catalog/utils/types';
 import { ComponentSource } from '../types';
 
-type ComponentData = {
+export type ComponentData = {
   source: ComponentSource;
   contextDir?: string;
   targetPort?: number;
