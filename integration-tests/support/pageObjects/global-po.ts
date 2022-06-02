@@ -7,8 +7,6 @@ export const alertTitle = '.pf-c-alert__title';
 
 export const consentButton = '[id="truste-consent-button"]';
 
-export const spinner = '[aria-valuetext="Loading..."]';
-
 export const loginPO = {
   usernameForm: '.pf-c-login__main',
   username: '#rh-username-verification-form',
@@ -22,4 +20,12 @@ export const kcLoginPO = {
   username: '#username',
   password: '#password',
   loginButton: '#kc-login',
+};
+
+export const waits = {
+  loader: '.co-m-loader',
+  spinner: '.pf-c-spinner',
+  gridPlaceholder: '.skeleton-catalog--grid',
+  tablePlaceholder: '.loading-skeleton--table',
+  viewPlaceholder: '[data-test="skeleton-detail-view"]'
 };

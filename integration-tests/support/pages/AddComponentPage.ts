@@ -1,17 +1,25 @@
+import { Common } from '../../utils/Common';
+import { pageTitles } from '../constants/PageTitle';
 import { addComponentPagePO } from '../pageObjects/createApplication-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
+
 export class AddComponentPage extends AbstractWizardPage {
   waitRepoValidated() {
     cy.contains('div', 'Validating...');
     cy.contains('div', 'Validating...', { timeout: 60000 }).should('not.exist');
     cy.contains('div', 'Validated');
   }
+
   openSamplesPage() {
     cy.contains(addComponentPagePO.samples).click();
+    Common.verifyPageTitle(pageTitles.sampleStart);
+    Common.waitForLoad();
   }
+
   setSource(source: string) {
     cy.get(addComponentPagePO.enterSource).clear().type(source);
   }
+  
   clickGitOptions() {
     cy.contains(addComponentPagePO.gitOptions).click();
   }

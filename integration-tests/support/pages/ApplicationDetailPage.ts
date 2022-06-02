@@ -1,4 +1,5 @@
 import { Common } from '../../utils/Common';
+import { pageTitles } from '../constants/PageTitle';
 import { addComponentPagePO, buildLogModalContentPO } from '../pageObjects/createApplication-po';
 import { applicationDetailPagePO } from '../pageObjects/createApplication-po';
 
@@ -6,18 +7,24 @@ export class ApplicationDetailPage {
   checkReplica(replicaCount: number) {
     cy.contains('div', applicationDetailPagePO.replicaLabel).should('contain.text', replicaCount)
   }
+
   checkCpuAndMemory(cpuVal: number, ramValue: number, ramUnit: string) {
     cy.contains('div', applicationDetailPagePO.cpuRamLabel).should('contain.text', `${cpuVal}, ${ramValue}${ramUnit}`);
   }
+
   expandDetails(componentName: string) {
     cy.get(`[aria-label="${componentName}"]`)
       .find(applicationDetailPagePO.detailsArrow)
       .click();
   }
-  openComponentSettings(componentName) {
+
+  openComponentSettings(componentName: string) {
     this.openActionList(componentName);
     cy.get(applicationDetailPagePO.componentSettings).click();
+    Common.verifyPageTitle(pageTitles.componentSettings);
+    Common.waitForLoad();
   }
+  
   checkBuildLog(componentName: string, textToVerify: string) {
     this.openActionList(componentName);
     cy.get(applicationDetailPagePO.componentBuildLog).click();
@@ -25,9 +32,10 @@ export class ApplicationDetailPage {
     cy.get(buildLogModalContentPO.closeButton).click();
   }
 
-  createdComponentExists(application: string) {
-    Common.waitSpinner();
-    this.getComponentListItem(application).should('exist');
+  createdComponentExists(component: string, application: string) {
+    Common.verifyPageTitle(application);
+    Common.waitForLoad();
+    this.getComponentListItem(component).should('exist');
   }
 
   createdComponentNotExists(application: string) {
@@ -40,6 +48,8 @@ export class ApplicationDetailPage {
 
   openAddComponentPage() {
     cy.get(addComponentPagePO.addComponent).click();
+    Common.verifyPageTitle(pageTitles.buildApp);
+    Common.waitForLoad();
   }  
   
   deleteComponent(componentName: string) {

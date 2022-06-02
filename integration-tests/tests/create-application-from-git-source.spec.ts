@@ -1,16 +1,14 @@
-// <reference types="cypress" />
-
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
-import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
 import { Common } from '../utils/Common';
+import { Applications } from '../utils/Applications';
 
 describe('Create Component from Public Git Source', () => {
   const addComponent = new AddComponentPage();
   const componentPage = new ComponentPage();
   const applicationDetailPage = new ApplicationDetailPage();
-  const applicationName = `test-app${new Date().getTime() / 1000}`;
+  const applicationName = Common.generateAppName();
   const publicRepo = 'https://github.com/dheerajodha/devfile-sample-code-with-quarkus';
   const componentName = 'java-quarkus';
   const ramValue = 1;
@@ -21,10 +19,7 @@ describe('Create Component from Public Git Source', () => {
 
   before(function() {
     //set application name
-    const createApplicationPage = new CreateApplicationPage();
-    createApplicationPage.clickCreateApplication();
-    createApplicationPage.setApplicationName(applicationName);
-    createApplicationPage.clickNext();
+    Applications.createApplication(applicationName);
   });
 
   after(function() {
@@ -70,13 +65,12 @@ describe('Create Component from Public Git Source', () => {
     })
 
     it('Add Environment Variable',() => {
-      componentPage.clickAddEnvVar();
-      componentPage.setEnvVar('secondEnvVar','3000');
+      componentPage.addEnvVar('secondEnvVar','3000');
     });
 
     it('Create Application', () => {
       componentPage.createApplication();
-      applicationDetailPage.createdComponentExists(componentName);
+      applicationDetailPage.createdComponentExists(componentName, applicationName);
     });
 
     it('Check Component Build Log', () => {

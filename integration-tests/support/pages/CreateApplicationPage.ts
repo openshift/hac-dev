@@ -1,5 +1,8 @@
+import { Common } from '../../utils/Common';
+import { pageTitles } from '../constants/PageTitle';
 import { createApplicationPagePO } from '../pageObjects/createApplication-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
+
 export class CreateApplicationPage extends AbstractWizardPage {
   getApplicationName() {
     return cy.get(createApplicationPagePO.applicationName);
@@ -16,6 +19,8 @@ export class CreateApplicationPage extends AbstractWizardPage {
 
   clickCreateApplication() {
     cy.contains(createApplicationPagePO.createApplication).click();
+    Common.verifyPageTitle(pageTitles.createApp);
+    Common.waitForLoad();
   }
 
   clickNext() {

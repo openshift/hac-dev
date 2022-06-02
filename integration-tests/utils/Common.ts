@@ -1,4 +1,4 @@
-import { consentButton, spinner } from '../support/pageObjects/global-po';
+import { consentButton, waits } from '../support/pageObjects/global-po';
 
 export class Common {
   static openAppStudioBaseURL() {
@@ -10,15 +10,27 @@ export class Common {
     cy.visit(URL);
   }
 
+  static generateAppName(prefix = 'test-app') {
+    const name = `${prefix}-${new Date().getTime()}`;
+    return name.substring(0, name.length - 4);
+  }
+
   static openApplicationURL(applicationName: string) {
     Common.openURL(
       `${Cypress.env('HAC_BASE_URL')}/applications?name=${applicationName.replace('.', '-')}`,
     );
+    Common.verifyPageTitle(applicationName);
+    Common.waitForLoad();
   }
 
-  static waitSpinner() {
-    cy.get(spinner).should('exist');
-    cy.get(spinner).should('not.exist');
+  static waitForLoad(timeout = 60000) {
+    for (const item in waits) {
+      cy.get(waits[item], { timeout }).should('not.exist');
+    }
+  }
+
+  static verifyPageTitle(title: string) {
+    cy.contains('h1', title).should('be.visible');
   }
 
   static clickOnConsentButton() {
