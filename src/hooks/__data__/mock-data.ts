@@ -114,3 +114,86 @@ export const mockRoutes: RouteKind[] = [
     },
   },
 ];
+
+export const mockGitOpsDeployment = [
+  {
+    apiVersion: 'managed-gitops.redhat.com/v1alpha1',
+    kind: 'GitOpsDeployment',
+    metadata: {
+      creationTimestamp: '2022-06-01T14:00:56Z',
+      generation: 1,
+      labels: {
+        'appstudio.application.name': 'application-to-test-git-ops',
+      },
+      name: 'application-to-test-git-ops-deployment',
+      namespace: 'sbudhwar-1',
+      ownerReferences: [
+        {
+          apiVersion: 'appstudio.redhat.com/v1alpha1',
+          kind: 'Application',
+          name: 'application-to-test-git-ops',
+          uid: '1935564f-c9a0-4ed5-acea-22ce1315311c',
+        },
+      ],
+      resourceVersion: '548372841',
+      uid: '85fba8b1-a728-4aed-9d17-c874d14c512e',
+    },
+    spec: {
+      destination: {},
+      source: {
+        path: './',
+        repoURL:
+          'https://github.com/redhat-appstudio-appdata/application-to-test-git-ops-sbudhwar-1-rise-stop',
+      },
+      type: 'automated',
+    },
+    status: {
+      health: {
+        status: 'Healthy',
+      },
+      sync: {
+        status: 'Unknown',
+      },
+    },
+  },
+  {
+    apiVersion: 'managed-gitops.redhat.com/v1alpha1',
+    kind: 'GitOpsDeployment',
+    metadata: {
+      creationTimestamp: '2022-06-01T14:00:56Z',
+      generation: 1,
+      labels: {
+        'appstudio.application.name': 'application-to-test',
+      },
+      name: 'application-to-test-deployment',
+      namespace: 'sbudhwar-1',
+      ownerReferences: [
+        {
+          apiVersion: 'appstudio.redhat.com/v1alpha1',
+          kind: 'Application',
+          name: 'application-to-test',
+          uid: '1935564f-c9a0-4ed5-acea-22ce1315311c',
+        },
+      ],
+      resourceVersion: '548372841',
+      uid: '85fba8b1-a728-4aed-9d17-c874d14c512e',
+    },
+    spec: {
+      destination: {},
+      source: {
+        path: './',
+        repoURL:
+          'https://github.com/redhat-appstudio-appdata/application-to-test-git-ops-sbudhwar-1-rise-stop',
+      },
+      type: 'automated',
+    },
+    status: {
+      health: {
+        status: 'Degraded',
+      },
+      sync: {
+        status: 'Unknown',
+      },
+    },
+  },
+];

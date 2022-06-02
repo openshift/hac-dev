@@ -95,23 +95,30 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
               </Link>
             </ToolbarItem>
           </ToolbarGroup>
-          {gitOpsDeploymentLoaded && gitOpsDeployment ? (
-            <ToolbarGroup alignment={{ default: 'alignRight' }}>
-              <ToolbarItem>
-                {gitOpsDeploymentHealthStatusIcon} Application {gitOpsDeploymentHealthStatus}
-              </ToolbarItem>
-              <ToolbarItem
-                style={{
-                  color: 'var(--pf-global--palette--black-600)',
-                }}
-              >
-                |
-              </ToolbarItem>
-              <ToolbarItem>
-                Deployment Strategy: <Label>{getGitOpsDeploymentStrategy(gitOpsDeployment)}</Label>
-              </ToolbarItem>
-            </ToolbarGroup>
-          ) : null}
+          <ToolbarGroup alignment={{ default: 'alignRight' }}>
+            {gitOpsDeploymentLoaded ? (
+              gitOpsDeployment ? (
+                <>
+                  <ToolbarItem>
+                    {gitOpsDeploymentHealthStatusIcon} Application {gitOpsDeploymentHealthStatus}
+                  </ToolbarItem>
+                  <ToolbarItem
+                    style={{
+                      color: 'var(--pf-global--palette--black-600)',
+                    }}
+                  >
+                    |
+                  </ToolbarItem>
+                  <ToolbarItem>
+                    Deployment Strategy:{' '}
+                    <Label>{getGitOpsDeploymentStrategy(gitOpsDeployment)}</Label>
+                  </ToolbarItem>
+                </>
+              ) : null
+            ) : (
+              <Spinner isSVG size="md" />
+            )}
+          </ToolbarGroup>
         </ToolbarContent>
       </Toolbar>
       <DataList aria-label="Components" data-testid="component-list">
