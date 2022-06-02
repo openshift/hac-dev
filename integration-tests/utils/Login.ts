@@ -1,4 +1,6 @@
+import { pageTitles } from '../support/constants/PageTitle';
 import { loginPO, kcLoginPO } from '../support/pageObjects/global-po';
+import { Common } from './Common';
 
 export class Login {
   static login(
@@ -9,17 +11,24 @@ export class Login {
     cy.get(loginPO.usernameForm);
     cy.get(loginPO.username).find('[type="text"]').type(username);
     cy.get(loginPO.nextButton).click();
-    cy.get(loginPO.password).find('[type="password"]').type(password);
+    cy.get(loginPO.password).find('[type="password"]').type(password, { log: false });
     cy.get(loginPO.loginButton).click();
+    this.waitForApps();
   }
 
-  static pr_check_login(
+  static prCheckLogin(
     username: string = Cypress.env('USERNAME'),
     password: string = Cypress.env('PASSWORD'),
   ) {
     cy.visit(Cypress.env('HAC_BASE_URL'));
     cy.get(kcLoginPO.username).type(username);
-    cy.get(kcLoginPO.password).type(password);
+    cy.get(kcLoginPO.password).type(password, { log: false });
     cy.get(kcLoginPO.loginButton).click();
+    this.waitForApps();
+  }
+
+  private static waitForApps() {
+    Common.verifyPageTitle(pageTitles.applications);
+    Common.waitForLoad();
   }
 }

@@ -1,16 +1,14 @@
-// <reference types="cypress" />
-
 import { AddComponentPage } from '../support/pages/AddComponentPage';
-import { ComponentPage } from '../support/pages/ComponentsPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
-import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
+import { ComponentPage } from '../support/pages/ComponentsPage';
+import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
 describe('Create Component from Public Git Source', () => {
   const addComponent = new AddComponentPage();
   const componentPage = new ComponentPage();
   const applicationDetailPage = new ApplicationDetailPage();
-  const applicationName = `test-app${new Date().getTime() / 1000}`;
+  const applicationName = Common.generateAppName();
   const publicRepo = 'https://github.com/dheerajodha/devfile-sample-code-with-quarkus';
   const componentName = 'java-quarkus';
   const ramValue = 1;
@@ -19,15 +17,12 @@ describe('Create Component from Public Git Source', () => {
   const cpuIncrased = 2;
   const cpuDecreased = 1;
 
-  before(function() {
+  before(function () {
     //set application name
-    const createApplicationPage = new CreateApplicationPage();
-    createApplicationPage.clickCreateApplication();
-    createApplicationPage.setApplicationName(applicationName);
-    createApplicationPage.clickNext();
+    Applications.createApplication(applicationName);
   });
 
-  after(function() {
+  after(function () {
     //Open components page
     Common.openApplicationURL(applicationName);
     applicationDetailPage.deleteComponent(componentName);
@@ -43,12 +38,11 @@ describe('Create Component from Public Git Source', () => {
     });
 
     it('Setup Git Options', () => {
-
       addComponent.clickGitOptions();
-  
+
       //Next block commented out because of bug:
       //https://issues.redhat.com/browse/HAC-1285
-  
+
       //addComponent.setGitReference(gitReference);
       //addComponent.setContextDir(contextDir);
       addComponent.clickNext();
@@ -64,24 +58,23 @@ describe('Create Component from Public Git Source', () => {
       componentPage.setReplicas(replicaCount);
     });
 
-    it.skip('Check Route settings', () =>{
-      // Currently not working, waiting for fix. 
+    it.skip('Check Route settings', () => {
+      // Currently not working, waiting for fix.
       // https://coreos.slack.com/archives/C02GG6FUXCH/p1652432446123619
-    })
+    });
 
-    it('Add Environment Variable',() => {
-      componentPage.clickAddEnvVar();
-      componentPage.setEnvVar('secondEnvVar','3000');
+    it('Add Environment Variable', () => {
+      componentPage.addEnvVar('secondEnvVar', '3000');
     });
 
     it('Create Application', () => {
       componentPage.createApplication();
-      applicationDetailPage.createdComponentExists(componentName);
+      applicationDetailPage.createdComponentExists(componentName, applicationName);
     });
 
     it('Check Component Build Log', () => {
       // TODO: implement check for build log appropriate text
-      applicationDetailPage.checkBuildLog(componentName, "text to verify");
+      applicationDetailPage.checkBuildLog(componentName, 'text to verify');
     });
 
     it('Check Resources Value', () => {
@@ -97,6 +90,6 @@ describe('Create Component from Public Git Source', () => {
       componentPage.saveChanges();
       applicationDetailPage.expandDetails(componentName);
       applicationDetailPage.checkCpuAndMemory(cpuDecreased, 2, 'Gi');
-    })
+    });
   });
 });

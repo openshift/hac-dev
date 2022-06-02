@@ -1,13 +1,12 @@
-// <reference types="cypress" />
 import { AddComponentPage } from '../support/pages/AddComponentPage';
-import { ComponentPage } from '../support/pages/ComponentsPage';
-import { ComponentSamplesPage } from '../support/pages/ComponentSamplesPage';
-import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
-import { Common } from '../utils/Common';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
+import { ComponentSamplesPage } from '../support/pages/ComponentSamplesPage';
+import { ComponentPage } from '../support/pages/ComponentsPage';
+import { Applications } from '../utils/Applications';
+import { Common } from '../utils/Common';
 
 describe('Create Application from Sample', () => {
-  const applicationName = `test-app${new Date().getTime() / 1000}`;
+  const applicationName = Common.generateAppName();
   const applicationDetailPage = new ApplicationDetailPage();
   const componentPage = new ComponentPage();
   const addComponent = new AddComponentPage();
@@ -15,10 +14,7 @@ describe('Create Application from Sample', () => {
 
   it('NodeJS app can be created', () => {
     //set application name
-    const createApplicationPage = new CreateApplicationPage();
-    createApplicationPage.clickCreateApplication();
-    createApplicationPage.setApplicationName(applicationName);
-    createApplicationPage.clickNext();
+    Applications.createApplication(applicationName);
 
     //Open app sample page
     addComponent.openSamplesPage();
@@ -28,7 +24,7 @@ describe('Create Application from Sample', () => {
     componentPage.createApplication();
 
     //Check application
-    applicationDetailPage.createdComponentExists('basic-node-js');
+    applicationDetailPage.createdComponentExists('basic-node-js', applicationName);
   });
 
   it('Add quarkus component', () => {
@@ -43,7 +39,7 @@ describe('Create Application from Sample', () => {
     componentPage.createApplication();
 
     //Check if application exists
-    applicationDetailPage.createdComponentExists('basic-quarkus');
+    applicationDetailPage.createdComponentExists('basic-quarkus', applicationName);
   });
 
   it('Delete quarkus component', () => {
