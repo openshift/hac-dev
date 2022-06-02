@@ -1,7 +1,7 @@
 @import '../../style/vars';
 @import '../../style/common';
 
-.hacDev-status-box {
+.status-box {
   padding: 40px 20px;
 
   &__title {
@@ -31,7 +31,7 @@
   }
 }
 
-.hacDev-status-box--loading {
+.status-box--loading {
   align-items: center;
   display: flex;
   height: 100%;
@@ -41,13 +41,13 @@
   flex-direction: column;
 }
 
-.hacDev-m-loader--inline {
+.loader--inline {
   display: inline-block;
   margin: 0;
   position: static;
 }
 
-.hacDev-m-timeout-error {
+.timeout-error {
   margin-bottom: 30px;
   margin-top: 20px;
   text-align: center;

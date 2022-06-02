@@ -42,7 +42,7 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
           dataListCells={[
             <DescriptionList key="name">
               <DescriptionListGroup>
-                <DescriptionListTerm className="hacDev-component-list-item__name">
+                <DescriptionListTerm className="component-list-item__name">
                   {name}
                 </DescriptionListTerm>
                 <DescriptionListDescription>
@@ -72,7 +72,7 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
         </DataListAction>
       </DataListItemRow>
       <DataListContent
-        className="hacDev-component-list-item__details"
+        className="component-list-item__details"
         aria-label={`${name} details`}
         isHidden={!expanded}
       >

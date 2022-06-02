@@ -1,6 +1,6 @@
 @use 'sass:math';
 
-.hacDev-m-pane__body {
+.pane-body {
   margin: $grid-gutter-width 0 0;
   padding: 0 math.div($grid-gutter-width, 2) $grid-gutter-width;
   @media (min-width: $screen-sm-min) {
@@ -16,14 +16,14 @@
   &--section-heading {
     padding-bottom: 0;
   }
-  + .hacDev-m-pane__body {
+  + .pane-body {
     border-top: 1px solid $color-grey-background-border;
     margin-top: 0;
     padding-top: $grid-gutter-width;
   }
 }
 
-.hacDev-m-pane__heading {
+.pane__heading {
   display: flex;
   justify-content: space-between;
   margin: 0 0 $grid-gutter-width;
@@ -39,13 +39,13 @@
   }
 }
 
-.hacDev-m-loader {
+.loader {
   min-width: 18px;
 }
 
-.hacDev-m-loader-dot__one,
-.hacDev-m-loader-dot__two,
-.hacDev-m-loader-dot__three {
+.loader-dot__one,
+.loader-dot__two,
+.loader-dot__three {
   animation-delay: 0;
   animation-direction: normal;
   animation-duration: 1s;
@@ -61,15 +61,15 @@
   width: 6px;
 }
 
-.hacDev-m-loader-dot__one {
+.loader-dot__one {
   animation-delay: -0.32s;
 }
 
-.hacDev-m-loader-dot__two {
+.loader-dot__two {
   animation-delay: -0.16s;
 }
 
-.hacDev-icon-and-text {
+.icon-and-text {
   align-items: baseline;
   display: inline-block;
 
@@ -79,6 +79,6 @@
   }
 }
 
-.hacDev-nowrap {
+.nowrap {
   white-space: nowrap;
 }

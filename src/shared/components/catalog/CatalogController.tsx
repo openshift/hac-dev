@@ -167,13 +167,13 @@ const CatalogController: React.FC<CatalogControllerProps> = ({
 
   return (
     <>
-      <div className="hacDev-catalog">
+      <div className="catalog">
         <PageHeading
           title={title}
           breadcrumbs={type ? breadcrumbs : null}
           description={description}
         />
-        <div className="hacDev-catalog__body">
+        <div className="catalog__body">
           <StatusBox
             skeleton={skeletonCatalog}
             data={items}

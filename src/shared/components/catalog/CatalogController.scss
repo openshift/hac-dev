@@ -1,10 +1,10 @@
-.hacDev-catalog {
+.catalog {
   display: flex;
   flex-direction: column;
   min-height: 100%;
   min-width: 515px; // in order to accommodate filters and tiles at mobile
   &__body {
-    min-width: 575px; // Minimum shrinkable width of .hacDev-catalog child elements => 15 + ((220 + 15) + (30 + 250 + 30)) + 15
+    min-width: 575px; // Minimum shrinkable width of .catalog child elements => 15 + ((220 + 15) + (30 + 250 + 30)) + 15
     @media (min-width: $screen-sm-min) {
       min-width: 590px; // Left margin 30 instead of 15
     }

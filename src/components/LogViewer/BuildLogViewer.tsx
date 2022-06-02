@@ -80,7 +80,7 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
 };
 
 export const buildLogViewerLauncher = createModalLauncher(BuildLogViewer, {
-  className: 'hacDev-build-log-viewer',
+  className: 'build-log-viewer',
   'data-testid': 'view-build-logs-modal',
   variant: ModalVariant.large,
   title: 'View build logs',

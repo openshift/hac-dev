@@ -23,7 +23,7 @@ export const kcLoginPO = {
 };
 
 export const waits = {
-  loader: '.co-m-loader',
+  loader: '.loader',
   spinner: '.pf-c-spinner',
   gridPlaceholder: '.skeleton-catalog--grid',
   tablePlaceholder: '.loading-skeleton--table',

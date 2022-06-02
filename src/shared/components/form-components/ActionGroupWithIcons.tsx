@@ -26,7 +26,7 @@ const ActionGroupWithIcons: React.FC<ActionGroupWithIconsProps> = ({
         </Button>
       )}
       <CloseButton
-        additionalClassName="hacDev-close-button--no-padding"
+        additionalClassName="close-button--no-padding"
         dataTestID="close-icon"
         onClick={onClose}
       />

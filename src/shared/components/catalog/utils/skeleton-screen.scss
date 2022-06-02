@@ -133,7 +133,7 @@ $skeleton-tile-desc-line-bone: linear-gradient(#fff $skeleton-tile-desc-line-hei
 .skeleton-catalog--tile {
   height: $skeleton-tile-height;
   margin: 0 24px 24px 0;
-  width: $hacDev-m-catalog-tile-width;
+  width: $catalog-tile-width;
   &:empty::after {
     animation: $skeleton-animation;
     content: '';

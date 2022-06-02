@@ -48,7 +48,7 @@ const GroupByFilterGrid: React.FC<GroupByFilterGridProps> = ({
   return (
     <GridComponent
       autoHeight
-      className={classNames('hacDev-grid', className)}
+      className={classNames('grid', className)}
       tabIndex={null}
       height={height ?? 0}
       width={width}

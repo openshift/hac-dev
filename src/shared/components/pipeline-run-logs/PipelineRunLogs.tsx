@@ -99,24 +99,24 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
         isList: false,
       };
     return (
-      <div className="hacDev-pipeline-run-logs">
-        <div className="hacDev-pipeline-run-logs__tasklist" data-test-id="logs-tasklist">
+      <div className="pipeline-run-logs">
+        <div className="pipeline-run-logs__tasklist" data-test-id="logs-tasklist">
           {taskCount > 0 ? (
             <Nav onSelect={this.onNavSelect} theme="light">
-              <NavList className="hacDev-pipeline-run-logs__nav">
+              <NavList className="pipeline-run-logs__nav">
                 {taskRuns.map((task) => {
                   return (
                     <NavItem
                       key={task}
                       itemId={task}
                       isActive={activeItem === task}
-                      className="hacDev-pipeline-run-logs__navitem"
+                      className="pipeline-run-logs__navitem"
                     >
                       <span>
                         <ColoredStatusIcon
                           status={pipelineRunFilterReducer(get(obj, ['status', 'taskRuns', task]))}
                         />
-                        <span className="hacDev-pipeline-run-logs__namespan">
+                        <span className="pipeline-run-logs__namespan">
                           {get(taskRunFromYaml, [task, `pipelineTaskName`], '-')}
                         </span>
                       </span>
@@ -126,10 +126,10 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
               </NavList>
             </Nav>
           ) : (
-            <div className="hacDev-pipeline-run-logs__nav">{'No task runs found'}</div>
+            <div className="pipeline-run-logs__nav">{'No task runs found'}</div>
           )}
         </div>
-        <div className="hacDev-pipeline-run-logs__container">
+        <div className="pipeline-run-logs__container">
           {activeItem && resource ? (
             <LogsWrapperComponent
               resource={resource}
@@ -138,13 +138,11 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
               onDownloadAll={downloadAllCallback}
             />
           ) : (
-            <div className="hacDev-pipeline-run-logs__log">
-              <div className="hacDev-pipeline-run-logs__logtext">
+            <div className="pipeline-run-logs__log">
+              <div className="pipeline-run-logs__logtext">
                 {get(obj, ['status', 'conditions', 0, 'message'], 'No logs found')}
                 {logDetails && (
-                  <div className="hacDev-pipeline-run-logs__logsnippet">
-                    {logDetails.staticMessage}
-                  </div>
+                  <div className="pipeline-run-logs__logsnippet">{logDetails.staticMessage}</div>
                 )}
               </div>
             </div>

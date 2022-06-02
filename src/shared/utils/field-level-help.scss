@@ -1,12 +1,12 @@
-.hacDev-field-level-help {
+.field-level-help {
   margin-left: 5px;
 
-  .hacDev-field-level-help__icon {
+  &__icon {
     color: var(--pf-global--Color--dark-200);
     font-size: 12px;
   }
 
-  &:hover .hacDev-field-level-help__icon {
+  &:hover .field-level-help__icon {
     color: var(--pf-global--Color--dark-100);
   }
 }

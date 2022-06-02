@@ -6,7 +6,7 @@ import './AppBanner.scss';
 const AppBanner: React.FC = () => {
   return (
     <div data-test="dev-preview-banner">
-      <Banner variant="info" className="hacDev-banner" isSticky>
+      <Banner variant="info" className="app-banner" isSticky>
         <Popover
           position="bottom"
           bodyContent={

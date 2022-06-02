@@ -22,8 +22,8 @@ const RadioGroupField: React.FC<RadioGroupFieldProps> = ({
   const errorMessage = !isValid ? error : '';
   return (
     <FormGroup
-      className={classNames('hacDev-radio-group-field', {
-        'hacDev-radio-group-field--inline': isInline,
+      className={classNames('radio-group-field', {
+        'radio-group-field--inline': isInline,
       })}
       fieldId={fieldId}
       helperText={helpText}
@@ -38,7 +38,7 @@ const RadioGroupField: React.FC<RadioGroupFieldProps> = ({
         const staticChild = option.children;
 
         const description = (activeChild || staticChild) && (
-          <div className="hacDev-radio-group-field__children">
+          <div className="radio-group-field__children">
             {staticChild}
             {activeChild}
           </div>

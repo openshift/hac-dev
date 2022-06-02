@@ -40,7 +40,7 @@ const DEFAULT_ROW_RENDERER = ({
 }): React.ReactNode => {
   const { t } = useTranslation();
   return (
-    <div className="hacDev-multi-column-field__row" data-test={`row ${fieldName}`}>
+    <div className="multi-column-field__row" data-test={`row ${fieldName}`}>
       <Grid>
         {React.Children.map(children, (child: React.ReactElement, i) => {
           let newProps = child.props;
@@ -51,15 +51,13 @@ const DEFAULT_ROW_RENDERER = ({
           }
           return (
             <GridItem span={spans[i]} key={fieldName}>
-              <div className="hacDev-multi-column-field__col">
-                {React.cloneElement(child, newProps)}
-              </div>
+              <div className="multi-column-field__col">{React.cloneElement(child, newProps)}</div>
             </GridItem>
           );
         })}
       </Grid>
       {!isReadOnly && (
-        <div className={'hacDev-multi-column-field__col--button'}>
+        <div className={'multi-column-field__col--button'}>
           <Tooltip content={toolTip || t('console-shared~Remove')}>
             <Button
               data-test="delete-row"

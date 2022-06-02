@@ -33,7 +33,7 @@ const CatalogCategories: React.FC<CatalogCategoriesProp> = ({
     const { id, label, subcategories, numItems } = category;
     const active = id === selectedCategory;
 
-    const tabClasses = cx('text-capitalize', { 'hacDev-catalog-tab__empty': !numItems });
+    const tabClasses = cx('text-capitalize', { 'catalog-tab__empty': !numItems });
 
     return (
       <VerticalTabsTab

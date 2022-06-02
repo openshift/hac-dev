@@ -60,12 +60,12 @@ const CatalogToolbar = React.forwardRef<HTMLInputElement, CatalogToolbarProps>(
     });
 
     return (
-      <div className="hacDev-catalog-page__header">
-        <div className="hacDev-catalog-page__heading text-capitalize">{title}</div>
-        <div className="hacDev-catalog-page__filter">
+      <div className="catalog-page__header">
+        <div className="catalog-page__heading text-capitalize">{title}</div>
+        <div className="catalog-page__filter">
           <div ref={inputRef}>
             <SearchInput
-              className="hacDev-catalog-page__input"
+              className="catalog-page__input"
               data-test="search-catalog"
               type="text"
               placeholder={t('Filter by keyword...')}
@@ -75,14 +75,14 @@ const CatalogToolbar = React.forwardRef<HTMLInputElement, CatalogToolbarProps>(
               aria-label={t('Filter by keyword...')}
             />
             {/* <Dropdown
-              className="hacDev-catalog-page__sort"
+              className="catalog-page__sort"
               items={catalogSortItems}
               title={catalogSortItems[sortOrder]}
               onChange={onSortOrderChange}
             />
             {showGrouping && (
               <Dropdown
-                className="hacDev-catalog-page__btn-group__group-by"
+                className="catalog-page__btn-group__group-by"
                 menuClassName="dropdown-menu--text-wrap"
                 items={catalogGroupItems}
                 onChange={onGroupingChange}
@@ -91,7 +91,7 @@ const CatalogToolbar = React.forwardRef<HTMLInputElement, CatalogToolbarProps>(
               />
             )} */}
           </div>
-          <div className="hacDev-catalog-page__num-items">{totalItems} items</div>
+          <div className="catalog-page__num-items">{totalItems} items</div>
         </div>
       </div>
     );

@@ -25,7 +25,7 @@ const Grid: React.FC<GridProps> = ({ height, width, scrollTop, items, children }
     <GridComponent
       containerRole="row"
       autoHeight
-      className={classNames('hacDev-grid', className)}
+      className={classNames('grid', className)}
       tabIndex={null}
       height={height ?? 0}
       width={width}

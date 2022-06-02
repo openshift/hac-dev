@@ -15,13 +15,13 @@ type CatalogGridProps = {
 
 const CatalogGrid: React.FC<CatalogGridProps> = ({ items, renderTile, isGrouped }) => {
   const renderGroupHeader = (heading) => (
-    <Title className="hacDev-catalog-page__group-title" headingLevel="h2" size="lg">
+    <Title className="catalog-page__group-title" headingLevel="h2" size="lg">
       {heading} ({size(items[heading])})
     </Title>
   );
 
   return (
-    <div className="hacDev-catalog-page__grid">
+    <div className="catalog-page__grid">
       <VirtualizedGrid
         items={items}
         renderCell={renderTile}

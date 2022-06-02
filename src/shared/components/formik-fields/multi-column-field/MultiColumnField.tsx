@@ -49,7 +49,7 @@ const MultiColumnField: React.FC<MultiColumnFieldProps> = ({
           >
             {fieldValue.length < 1 ? (
               emptyMessage && (
-                <div className="hacDev-multi-column-field__empty-message">
+                <div className="multi-column-field__empty-message">
                   <SecondaryStatus status={emptyMessage} />
                 </div>
               )

@@ -1,4 +1,4 @@
-.hacDev-pipeline-run-logs {
+.pipeline-run-logs {
   display: flex;
   flex: 1;
   width: 100%;
@@ -7,7 +7,7 @@
   &__nav {
     list-style-type: none;
   }
-  &__nav .hacDev-icon-and-text {
+  &__nav .icon-and-text {
     position: relative;
     top: 0.35em;
   }
@@ -40,7 +40,7 @@
     flex: 1;
     padding-right: var(--pf-global--spacer--xl);
   }
-  &__container .hacDev-m-pane__body {
+  &__container .pane-body {
     padding: 0px;
   }
 }

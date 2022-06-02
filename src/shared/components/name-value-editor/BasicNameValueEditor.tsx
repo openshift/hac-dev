@@ -171,7 +171,7 @@ const BasicNameValueEditor: React.FC<NameValueEditorProps> = ({
         <Flex flex={{ default: 'flex_1' }}>
           <FlexItem>{valueString}</FlexItem>
         </Flex>
-        <FlexItem className="hacDev-empty__header" />
+        <FlexItem className="empty__header" />
       </Flex>
       {pairElems}
       <Flex direction={{ default: 'row' }} justifyContent={{ default: 'justifyContentFlexStart' }}>
