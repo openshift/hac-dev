@@ -24,8 +24,8 @@ export class Common {
   }
 
   static waitForLoad(timeout = 60000) {
-    for (const item in waits) {
-      cy.get(waits[item], { timeout }).should('not.exist');
+    for (const item of Object.values(waits)) {
+      cy.get(item, { timeout }).should('not.exist');
     }
   }
 

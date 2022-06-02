@@ -19,7 +19,7 @@ export class AddComponentPage extends AbstractWizardPage {
   setSource(source: string) {
     cy.get(addComponentPagePO.enterSource).clear().type(source);
   }
-  
+
   clickGitOptions() {
     cy.contains(addComponentPagePO.gitOptions).click();
   }

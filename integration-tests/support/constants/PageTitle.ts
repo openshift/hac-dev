@@ -4,5 +4,5 @@ export const pageTitles = {
   buildApp: 'Build your application',
   sampleStart: 'Start with a sample',
   reviewComponent: 'Review your new components',
-  componentSettings: 'Component settings'
-}
+  componentSettings: 'Component settings',
+};

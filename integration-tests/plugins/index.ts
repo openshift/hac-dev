@@ -2,10 +2,10 @@ module.exports = (on, config) => {
   const logOptions = {
     outputRoot: `${config.projectRoot}/cypress`,
     outputTarget: {
-      'cypress-logs.txt': 'txt'
+      'cypress-logs.txt': 'txt',
     },
-    printLogsToFile: 'always'
-  }
+    printLogsToFile: 'always',
+  };
   require('cypress-terminal-report/src/installLogsPrinter')(on, logOptions);
 
   if (!Object.prototype.hasOwnProperty.call(config.env, 'HAC_BASE_URL')) {

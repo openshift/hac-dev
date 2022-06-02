@@ -1,21 +1,25 @@
 import { Common } from '../../utils/Common';
 import { pageTitles } from '../constants/PageTitle';
-import { addComponentPagePO, buildLogModalContentPO } from '../pageObjects/createApplication-po';
-import { applicationDetailPagePO } from '../pageObjects/createApplication-po';
+import {
+  addComponentPagePO,
+  buildLogModalContentPO,
+  applicationDetailPagePO,
+} from '../pageObjects/createApplication-po';
 
 export class ApplicationDetailPage {
   checkReplica(replicaCount: number) {
-    cy.contains('div', applicationDetailPagePO.replicaLabel).should('contain.text', replicaCount)
+    cy.contains('div', applicationDetailPagePO.replicaLabel).should('contain.text', replicaCount);
   }
 
   checkCpuAndMemory(cpuVal: number, ramValue: number, ramUnit: string) {
-    cy.contains('div', applicationDetailPagePO.cpuRamLabel).should('contain.text', `${cpuVal}, ${ramValue}${ramUnit}`);
+    cy.contains('div', applicationDetailPagePO.cpuRamLabel).should(
+      'contain.text',
+      `${cpuVal}, ${ramValue}${ramUnit}`,
+    );
   }
 
   expandDetails(componentName: string) {
-    cy.get(`[aria-label="${componentName}"]`)
-      .find(applicationDetailPagePO.detailsArrow)
-      .click();
+    cy.get(`[aria-label="${componentName}"]`).find(applicationDetailPagePO.detailsArrow).click();
   }
 
   openComponentSettings(componentName: string) {
@@ -24,7 +28,7 @@ export class ApplicationDetailPage {
     Common.verifyPageTitle(pageTitles.componentSettings);
     Common.waitForLoad();
   }
-  
+
   checkBuildLog(componentName: string, textToVerify: string) {
     this.openActionList(componentName);
     cy.get(applicationDetailPagePO.componentBuildLog).click();
@@ -43,15 +47,15 @@ export class ApplicationDetailPage {
   }
 
   getComponentListItem(application: string) {
-    return cy.contains(applicationDetailPagePO.item, application, {timeout: 60000});
+    return cy.contains(applicationDetailPagePO.item, application, { timeout: 60000 });
   }
 
   openAddComponentPage() {
     cy.get(addComponentPagePO.addComponent).click();
     Common.verifyPageTitle(pageTitles.buildApp);
     Common.waitForLoad();
-  }  
-  
+  }
+
   deleteComponent(componentName: string) {
     this.openActionList(componentName);
     cy.get(applicationDetailPagePO.componentDelete).click();

@@ -5,7 +5,7 @@ export const addComponentPagePO = {
   gitOptions: 'Git options',
   gitReference: '[data-test="git-reference"]',
   contextDir: '[data-test="context-dir"]',
-  next: '[data-test="submit-button"]'
+  next: '[data-test="submit-button"]',
 };
 
 export const componentSamplesPagePO = {
@@ -27,7 +27,7 @@ export const ComponentsPagePO = {
   create: '[data-test="submit-button"]',
   createText: 'Create',
   showAdvancedSetting: 'Show advanced deployment options',
-  cpuInput: 'input[name*="cpuValue"]', 
+  cpuInput: 'input[name*="cpuValue"]',
   cpuPlusButton: 'button[data-ouia-component-id="OUIA-Generated-Button-control-2"]',
   cpuMinusButton: 'button[data-ouia-component-id="OUIA-Generated-Button-control-1"]',
   memoryInput: 'input[name*="memoryValue"]',
@@ -48,7 +48,7 @@ export const applicationDetailPagePO = {
   componentSettings: '[data-testid="Component settings"]',
   detailsArrow: '[aria-label="Details"]',
   cpuRamLabel: 'CPU/Mem Requests',
-  replicaLabel: 'Replicas'
+  replicaLabel: 'Replicas',
 };
 
 export const componentsListPagePO = {
@@ -58,5 +58,5 @@ export const componentsListPagePO = {
 };
 
 export const buildLogModalContentPO = {
-  closeButton: '[aria-label="Close"]'
-}
+  closeButton: '[aria-label="Close"]',
+};

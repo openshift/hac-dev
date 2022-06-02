@@ -1,4 +1,4 @@
-import { CreateApplicationPage } from "../support/pages/CreateApplicationPage";
+import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
 
 export class Applications {
   static createApplication(name: string) {

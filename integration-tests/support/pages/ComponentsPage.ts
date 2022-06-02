@@ -10,8 +10,8 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   addEnvVar(name: string, value: string) {
-    cy.get('body').then(body => {
-      if(body.find(ComponentsPagePO.nameInput).length === 0) {
+    cy.get('body').then((body) => {
+      if (body.find(ComponentsPagePO.nameInput).length === 0) {
         this.clickAddEnvVar();
       }
       this.setEnvVar(name, value);
@@ -23,7 +23,7 @@ export class ComponentPage extends AbstractWizardPage {
     cy.get(ComponentsPagePO.valueInput).type(value);
   }
 
-  clickAddEnvVar(){
+  clickAddEnvVar() {
     cy.get(ComponentsPagePO.addEnvVar).click();
   }
 
@@ -32,10 +32,10 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   setCpuByButton(value: number) {
-    cy.get(ComponentsPagePO.cpuInput).then(($cpu) =>{
-      let cpu=Number($cpu.val())
-      while(cpu != value) {
-        if(cpu < value) {
+    cy.get(ComponentsPagePO.cpuInput).then(($cpu) => {
+      let cpu = Number($cpu.val());
+      while (cpu !== value) {
+        if (cpu < value) {
           cy.get(ComponentsPagePO.cpuPlusButton).click();
           cpu++;
         } else {
@@ -49,8 +49,8 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   checkCpu(expectedVal: number) {
-    cy.get(ComponentsPagePO.cpuInput).then(($cpu) =>{
-      let realCpu=Number($cpu.val());
+    cy.get(ComponentsPagePO.cpuInput).then(($cpu) => {
+      const realCpu = Number($cpu.val());
       expect(expectedVal).equal(realCpu);
     });
   }
@@ -64,7 +64,7 @@ export class ComponentPage extends AbstractWizardPage {
   showAdvancedOptions() {
     cy.contains('button', ComponentsPagePO.showAdvancedSetting).click();
   }
-  
+
   createApplication() {
     cy.get(ComponentsPagePO.create).click();
     cy.get(ComponentsPagePO.create).should('be.disabled');

@@ -16,7 +16,7 @@ export class Login {
     this.waitForApps();
   }
 
-  static pr_check_login(
+  static prCheckLogin(
     username: string = Cypress.env('USERNAME'),
     password: string = Cypress.env('PASSWORD'),
   ) {

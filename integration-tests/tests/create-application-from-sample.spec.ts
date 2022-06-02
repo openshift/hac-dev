@@ -1,9 +1,9 @@
 import { AddComponentPage } from '../support/pages/AddComponentPage';
-import { ComponentPage } from '../support/pages/ComponentsPage';
-import { ComponentSamplesPage } from '../support/pages/ComponentSamplesPage';
-import { Common } from '../utils/Common';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
+import { ComponentSamplesPage } from '../support/pages/ComponentSamplesPage';
+import { ComponentPage } from '../support/pages/ComponentsPage';
 import { Applications } from '../utils/Applications';
+import { Common } from '../utils/Common';
 
 describe('Create Application from Sample', () => {
   const applicationName = Common.generateAppName();

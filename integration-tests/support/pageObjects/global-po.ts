@@ -27,5 +27,5 @@ export const waits = {
   spinner: '.pf-c-spinner',
   gridPlaceholder: '.skeleton-catalog--grid',
   tablePlaceholder: '.loading-skeleton--table',
-  viewPlaceholder: '[data-test="skeleton-detail-view"]'
+  viewPlaceholder: '[data-test="skeleton-detail-view"]',
 };
