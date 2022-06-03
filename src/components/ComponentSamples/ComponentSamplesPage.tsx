@@ -95,7 +95,7 @@ export const ComponentSamplesPage = () => {
 
   React.useEffect(() => {
     if (detectedComponents) {
-      const mappedComponents = mapDetectedComponents(detectedComponents);
+      const mappedComponents = mapDetectedComponents(detectedComponents, true);
       const transformedComponents = transformComponentValues(mappedComponents);
       setComponentData(transformedComponents);
     }
@@ -115,13 +115,24 @@ export const ComponentSamplesPage = () => {
       });
   }, [formState, componentData, history]);
 
+  const handleSelect = React.useCallback((item) => {
+    setSelected((prevState) => {
+      if (prevState?.name === item.name) {
+        return undefined;
+      }
+      setComponentData(null);
+      setSubmitError(null);
+      return item;
+    });
+  }, []);
+
   const footer = (
     <FormFooter
       submitLabel="Create"
       resetLabel="Back"
       isSubmitting={submitting || (selected && !componentData)}
       disableSubmit={!selected || !componentData || submitting}
-      errorMessage={submitError}
+      errorMessage={submitError || loadError}
       handleSubmit={handleSubmit}
       handleReset={handleBack}
       handleCancel={() => {
@@ -186,11 +197,7 @@ export const ComponentSamplesPage = () => {
                       </Badge>
                     ))}
                     {...getIconProps(item)}
-                    onClick={() =>
-                      setSelected((prevState) =>
-                        prevState ? (prevState.name !== item.name ? item : undefined) : item,
-                      )
-                    }
+                    onClick={() => handleSelect(item)}
                   />
                 </GalleryItem>
               ))}

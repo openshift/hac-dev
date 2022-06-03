@@ -124,4 +124,9 @@ describe('utils', () => {
     const mappedComponents = mapDetectedComponents(mockCDQ.status.componentDetected as any);
     expect(mappedComponents).toEqual(mockMappedComponents);
   });
+
+  it('should add sample suffix in the name for samples', () => {
+    const mappedComponents = mapDetectedComponents(mockCDQ.status.componentDetected as any, true);
+    expect(mappedComponents[0].name).toEqual('nodejs-sample');
+  });
 });

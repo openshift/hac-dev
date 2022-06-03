@@ -151,9 +151,12 @@ export const useComponentDetection = (
   return [detectedComponents, error];
 };
 
-export const mapDetectedComponents = (detectedComponents: DetectedComponents) => {
+export const mapDetectedComponents = (
+  detectedComponents: DetectedComponents,
+  isSample: boolean = false,
+) => {
   return Object.values(detectedComponents).map(({ componentStub: component }) => ({
-    name: component.componentName,
+    name: isSample ? `${component.componentName}-sample` : component.componentName,
     uid: component.componentName,
     type: 'source',
     data: {

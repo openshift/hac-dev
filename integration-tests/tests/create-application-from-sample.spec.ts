@@ -18,13 +18,13 @@ describe('Create Application from Sample', () => {
 
     //Open app sample page
     addComponent.openSamplesPage();
-    componentSamplesPage.selectNodeJSSampleAndCreate();
+    componentSamplesPage.selectNodeJSSample();
 
-    //Review component page
+    // Create sample component
     componentPage.createApplication();
 
     //Check application
-    applicationDetailPage.createdComponentExists('basic-node-js', applicationName);
+    applicationDetailPage.createdComponentExists('nodejs-sample', applicationName);
   });
 
   it('Add quarkus component', () => {
@@ -33,22 +33,22 @@ describe('Create Application from Sample', () => {
     //open app sample page
     applicationDetailPage.openAddComponentPage();
     addComponent.openSamplesPage();
-    componentSamplesPage.selectQuarkusSampleAndCreate();
+    componentSamplesPage.selectQuarkusSample();
 
-    //Review component page
+    // Create sample component
     componentPage.createApplication();
 
     //Check if application exists
-    applicationDetailPage.createdComponentExists('basic-quarkus', applicationName);
+    applicationDetailPage.createdComponentExists('java-quarkus-sample', applicationName);
   });
 
   it('Delete quarkus component', () => {
     //Open components page
     Common.openApplicationURL(applicationName);
     //Review component page
-    applicationDetailPage.deleteComponent('basic-quarkus');
+    applicationDetailPage.deleteComponent('java-quarkus-sample');
 
     //Check if application does not exists
-    applicationDetailPage.createdComponentNotExists('basic-quarkus');
+    applicationDetailPage.createdComponentNotExists('java-quarkus-sample');
   });
 });

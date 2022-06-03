@@ -2,7 +2,6 @@ import React from 'react';
 import { AlertGroup } from '@patternfly/react-core';
 import classNames from 'classnames';
 import { isObject } from 'lodash-es';
-import { LoadingInline } from '../status-box/StatusBox';
 import ErrorMessage from './ErrorMessage';
 import InfoMessage from './InfoMessage';
 import SuccessMessage from './SuccessMessage';
@@ -44,7 +43,6 @@ const ButtonBar: React.FC<ButtonBarProps> = ({
         {successMessage && <SuccessMessage message={successMessage} />}
         {errorMessage && <ErrorMessage message={errorMessage} />}
         {injectDisabled(children, inProgress)}
-        {inProgress && <LoadingInline />}
         {infoMessage && <InfoMessage message={infoMessage} />}
       </AlertGroup>
     </div>
