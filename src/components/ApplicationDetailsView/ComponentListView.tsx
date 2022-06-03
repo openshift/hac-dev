@@ -9,10 +9,17 @@ import {
   TextInput,
   Bullseye,
   Spinner,
+  ToolbarGroup,
+  Label,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useApplicationRoutes } from '../../hooks/useApplicationRoutes';
+import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { ComponentKind } from '../../types';
+import {
+  getGitOpsDeploymentHealthStatusIcon,
+  getGitOpsDeploymentStrategy,
+} from '../../utils/gitops-utils';
 import { NamespaceContext } from '../NamespacedPage/NamespacedPage';
 import { ComponentListItem } from './ComponentListItem';
 
@@ -25,6 +32,18 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
   const { namespace } = React.useContext(NamespaceContext);
 
   const [routes, loaded] = useApplicationRoutes(applicationName, namespace);
+
+  const [gitOpsDeployment, gitOpsDeploymentLoaded] = useGitOpsDeploymentCR(
+    applicationName,
+    namespace,
+  );
+
+  const gitOpsDeploymentHealthStatus = gitOpsDeploymentLoaded
+    ? gitOpsDeployment?.status?.health?.status
+    : null;
+  const gitOpsDeploymentHealthStatusIcon = getGitOpsDeploymentHealthStatusIcon(
+    gitOpsDeploymentHealthStatus,
+  );
 
   const [nameFilter, setNameFilter] = React.useState<string>('');
 
@@ -50,30 +69,56 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
     <>
       <Toolbar data-testid="component-list-toolbar" clearAllFilters={onClearFilters}>
         <ToolbarContent>
-          <ToolbarItem>
-            <Button variant="control">
-              <FilterIcon /> {'Name'}
-            </Button>
-          </ToolbarItem>
-          <ToolbarItem>
-            <TextInput
-              name="nameInput"
-              data-testid="name-input-filter"
-              type="search"
-              aria-label="name filter"
-              placeholder="Filter by name..."
-              onChange={(name) => onNameInput(name)}
-            />
-          </ToolbarItem>
-          <ToolbarItem>
-            <Link
-              data-test="add-component"
-              className="pf-c-button pf-m-primary"
-              to={`/app-studio/import?application=${applicationName}`}
-            >
-              Add Component
-            </Link>
-          </ToolbarItem>
+          <ToolbarGroup alignment={{ default: 'alignLeft' }}>
+            <ToolbarItem>
+              <Button variant="control">
+                <FilterIcon /> {'Name'}
+              </Button>
+            </ToolbarItem>
+            <ToolbarItem>
+              <TextInput
+                name="nameInput"
+                data-testid="name-input-filter"
+                type="search"
+                aria-label="name filter"
+                placeholder="Filter by name..."
+                onChange={(name) => onNameInput(name)}
+              />
+            </ToolbarItem>
+            <ToolbarItem>
+              <Link
+                data-test="add-component"
+                className="pf-c-button pf-m-primary"
+                to={`/app-studio/import?application=${applicationName}`}
+              >
+                Add Component
+              </Link>
+            </ToolbarItem>
+          </ToolbarGroup>
+          <ToolbarGroup alignment={{ default: 'alignRight' }}>
+            {gitOpsDeploymentLoaded ? (
+              gitOpsDeployment ? (
+                <>
+                  <ToolbarItem>
+                    {gitOpsDeploymentHealthStatusIcon} Application {gitOpsDeploymentHealthStatus}
+                  </ToolbarItem>
+                  <ToolbarItem
+                    style={{
+                      color: 'var(--pf-global--palette--black-600)',
+                    }}
+                  >
+                    |
+                  </ToolbarItem>
+                  <ToolbarItem>
+                    Deployment Strategy:{' '}
+                    <Label>{getGitOpsDeploymentStrategy(gitOpsDeployment)}</Label>
+                  </ToolbarItem>
+                </>
+              ) : null
+            ) : (
+              <Spinner isSVG size="md" />
+            )}
+          </ToolbarGroup>
         </ToolbarContent>
       </Toolbar>
       <DataList aria-label="Components" data-testid="component-list">
