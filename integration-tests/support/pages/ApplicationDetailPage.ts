@@ -59,6 +59,8 @@ export class ApplicationDetailPage {
   deleteComponent(componentName: string) {
     this.openActionList(componentName);
     cy.get(applicationDetailPagePO.componentDelete).click();
+    cy.get(applicationDetailPagePO.deleteModalInput).clear().type(componentName);
+    cy.get(applicationDetailPagePO.deleteModalButton).click();
   }
 
   private openActionList(componentName: string) {

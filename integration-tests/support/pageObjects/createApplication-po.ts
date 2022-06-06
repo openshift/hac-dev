@@ -49,6 +49,8 @@ export const applicationDetailPagePO = {
   detailsArrow: '[aria-label="Details"]',
   cpuRamLabel: 'CPU/Mem Requests',
   replicaLabel: 'Replicas',
+  deleteModalInput: 'input[name*="resourceName"]',
+  deleteModalButton: 'button[data-testid="delete-resource"]',
 };
 
 export const componentsListPagePO = {

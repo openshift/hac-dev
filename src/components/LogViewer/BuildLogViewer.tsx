@@ -8,10 +8,10 @@ import { PipelineRunKind } from '../../shared/components/pipeline-run-logs/types
 import { PipelineRunGroupVersionKind } from '../../shared/components/pipeline-run-logs/utils';
 import { EmptyBox, LoadingBox } from '../../shared/components/status-box/StatusBox';
 import { ComponentKind } from '../../types';
-import { ModalComponentProps, createModalLauncher } from '../modal/createModalLauncher';
+import { ComponentProps, createModalLauncher } from '../modal/createModalLauncher';
 import './BuildLogViewer.scss';
 
-type BuildLogViewerProps = ModalComponentProps & {
+type BuildLogViewerProps = ComponentProps & {
   component: ComponentKind;
 };
 

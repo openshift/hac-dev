@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Modal, ModalProps } from '@patternfly/react-core';
 
-export type ModalComponentProps = Omit<ModalProps, 'children' | 'isOpen' | 'appendTo'> & {
+type ModalComponentProps = Omit<ModalProps, 'children' | 'isOpen' | 'appendTo'> & {
   ref?: React.LegacyRef<Modal>;
 };
 
-type ComponentProps = {
+export type ComponentProps = {
   onClose?: () => void;
 };
 
