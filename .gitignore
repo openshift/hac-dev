@@ -18,3 +18,4 @@ yarn-error.log*
 *.out
 .DS_Store
 coverage
+integration-tests/cypress

@@ -15,7 +15,7 @@ import { useFormValues } from '../form-context';
 import { AddComponentValues } from './AddComponentForm';
 import { GitAuthorization } from './GitAuthorization';
 import { GitOptions } from './GitOptions';
-import { useComponentDetection } from './utils';
+import { mapDetectedComponents, useComponentDetection } from './utils';
 import { gitUrlRegex, containerImageRegex } from './validation-utils';
 
 type SourceSectionProps = {
@@ -84,13 +84,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
       setValidated(ValidatedOptions.success);
       setHelpText('Validated');
       setShowGitOptions(true);
-      setFieldValue(
-        'detectedComponents',
-        Object.values(detectedComponents).map(({ componentStub }) => ({
-          ...componentStub,
-          name: componentStub.componentName,
-        })),
-      );
+      setFieldValue('detectedComponents', mapDetectedComponents(detectedComponents));
     } else if (loadError) {
       setValidated(ValidatedOptions.error);
       setHelpTextInvalid('Unable to detect components');

@@ -42,3 +42,24 @@ export const transformResources = (formResources: FormResources): ResourceRequir
     },
   };
 };
+
+export const transformComponentValues = (components) => {
+  return components.reduce(
+    (acc, val) => ({
+      ...acc,
+      [val.name]: {
+        name: val.name
+          .split(/ |\.|:/)
+          .join('-')
+          .toLowerCase(),
+        source: val.data?.source,
+        resources: createResourceData(val.data.resources || {}),
+        replicas: val.data.replicas || 1,
+        targetPort: val.data.targetPort || 8080,
+        route: val.data.route,
+        env: val.data.env,
+      },
+    }),
+    {},
+  );
+};

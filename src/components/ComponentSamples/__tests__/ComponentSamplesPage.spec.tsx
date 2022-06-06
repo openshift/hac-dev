@@ -28,6 +28,7 @@ jest.mock('react-router-dom', () => ({
   useLocation: jest.fn(() => ({
     search: '',
   })),
+  useHistory: jest.fn(() => ({ push: jest.fn() })),
 }));
 
 jest.mock('react-i18next', () => ({
@@ -37,6 +38,10 @@ jest.mock('react-i18next', () => ({
 jest.mock('../../../shared/hooks/useScrollShadows', () => ({
   useScrollShadows: jest.fn().mockReturnValue('none'),
   Shadows: () => null,
+}));
+
+jest.mock('../../AddComponent/utils', () => ({
+  useComponentDetection: jest.fn().mockReturnValue([null, null]),
 }));
 
 const getDevfileMock = getDevfileSamples as jest.Mock;

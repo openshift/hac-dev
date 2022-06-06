@@ -1,7 +1,8 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { renderHook } from '@testing-library/react-hooks';
 import { createComponentDetectionQuery } from '../../../utils/create-utils';
-import { useComponentDetection } from '../utils';
+import { mapDetectedComponents, useComponentDetection } from '../utils';
+import { mockCDQ, mockMappedComponents } from './../__data__/mock-cdq';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
@@ -19,11 +20,11 @@ const createCDQMock = createComponentDetectionQuery as jest.Mock;
 describe('useComponentDetection', () => {
   afterEach(jest.resetAllMocks);
 
-  it('creates CDQ when source is provided', () => {
+  it('creates CDQ when source is provided', async () => {
     useK8sWatchMock.mockReturnValue([{}, true, null]);
     createCDQMock.mockResolvedValue({ metadata: { name: 'test-cdq' } });
 
-    renderHook(() =>
+    const { waitForNextUpdate } = renderHook(() =>
       useComponentDetection('https://github.com/test/repo', 'test-app', {
         reference: 'dev',
         contextDir: '/',
@@ -31,6 +32,8 @@ describe('useComponentDetection', () => {
         authSecret: 'token',
       }),
     );
+
+    await waitForNextUpdate();
 
     expect(createCDQMock).toHaveBeenCalled();
     expect(createCDQMock).toHaveBeenCalledWith(
@@ -70,16 +73,17 @@ describe('useComponentDetection', () => {
         isMultiComponent: false,
       }),
     );
+
     expect(useK8sWatchMock).toHaveBeenCalledWith(null);
     expect(createCDQMock).toHaveBeenCalledTimes(0);
   });
 
-  it('should create new CDQ if source changes', () => {
+  it('should create new CDQ if source changes', async () => {
     useK8sWatchMock.mockReturnValue([{}, true, null]);
     createCDQMock.mockResolvedValue({ metadata: { name: 'test-cdq' } });
 
     let source = 'https://github.com/test/repo';
-    const { rerender } = renderHook(() =>
+    const { rerender, waitForNextUpdate } = renderHook(() =>
       useComponentDetection(source, 'test-app', {
         reference: 'dev',
         contextDir: '/',
@@ -96,7 +100,13 @@ describe('useComponentDetection', () => {
       '/',
       'dev',
     );
+
+    await waitForNextUpdate();
+
     rerender();
+
+    await waitForNextUpdate();
+
     expect(createCDQMock).toHaveBeenCalledWith(
       'test-app',
       'https://example.com/test/repo',
@@ -106,5 +116,17 @@ describe('useComponentDetection', () => {
       '/',
       'dev',
     );
+  });
+});
+
+describe('utils', () => {
+  it('should map detected component values', () => {
+    const mappedComponents = mapDetectedComponents(mockCDQ.status.componentDetected as any);
+    expect(mappedComponents).toEqual(mockMappedComponents);
+  });
+
+  it('should add sample suffix in the name for samples', () => {
+    const mappedComponents = mapDetectedComponents(mockCDQ.status.componentDetected as any, true);
+    expect(mappedComponents[0].name).toEqual('nodejs-sample');
   });
 });

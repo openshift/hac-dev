@@ -6,7 +6,7 @@ import { useWizardContext } from '../Wizard/Wizard';
 import { ReviewComponentsForm } from './ReviewComponentsForm';
 import { createResources } from './submit-utils';
 import { ReviewComponentsFormValues } from './types';
-import { createResourceData } from './utils';
+import { transformComponentValues } from './utils';
 import { reviewFormSchema } from './validation-utils';
 
 export const ReviewComponentsPage: React.FC = () => {
@@ -16,40 +16,7 @@ export const ReviewComponentsPage: React.FC = () => {
   const history = useHistory();
 
   const initialValues: ReviewComponentsFormValues = {
-    components: formState.components.reduce(
-      (acc, val) => ({
-        ...acc,
-        [val.name]: {
-          name: val.name
-            .split(/ |\.|:/)
-            .join('-')
-            .toLowerCase(),
-          source: {
-            ...(val.data?.source?.git?.url || val.attributes?.git
-              ? {
-                  git: {
-                    url: val.data?.source?.git?.url || val.attributes.git.remotes.origin,
-                    devfileUrl: val.data?.source?.git.devfileUrl,
-                    dockerfileUrl: val.data?.source?.git.dockerfileUrl,
-                    context: val.data?.source?.git?.context,
-                    revision: val.data?.source?.git?.revision,
-                  },
-                }
-              : val.data?.source),
-          },
-          ...(isSample
-            ? {}
-            : {
-                resources: createResourceData(val.data.resources || {}),
-                replicas: val.data.replicas || 1,
-                targetPort: val.data.targetPort || 8080,
-                route: val.data.route,
-                env: val.data.env,
-              }),
-        },
-      }),
-      {},
-    ),
+    components: transformComponentValues(formState.components),
   };
 
   const handleSubmit = React.useCallback(

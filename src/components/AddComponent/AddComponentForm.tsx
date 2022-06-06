@@ -3,8 +3,8 @@ import { Form, PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { FormikProps } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import { FormFooter } from '../../shared';
-import { ComponentSource } from '../../types';
-import { useFormValues } from '../form-context';
+import { CatalogItem } from '../../shared/components/catalog/utils/types';
+import { ComponentData, useFormValues } from '../form-context';
 import PageLayout from '../PageLayout/PageLayout';
 import { useWizardContext } from '../Wizard/Wizard';
 import { SourceSection } from './SourceSection';
@@ -17,20 +17,7 @@ export type AddComponentValues = {
     isMultiComponent: boolean;
     authSecret?: string;
   };
-  detectedComponents?: {
-    name: string;
-    source: ComponentSource;
-    context?: string;
-    resources?: {
-      limits?: { cpu?: string; memory?: string };
-      requests?: { cpu?: string; memory?: string };
-    };
-    devfileFound?: boolean;
-    targetPort?: number;
-    route?: string;
-    replicas?: number;
-    env?: { name: string; value: string }[];
-  }[];
+  detectedComponents?: CatalogItem<ComponentData>[];
 };
 
 type AddComponentFormProps = FormikProps<AddComponentValues>;

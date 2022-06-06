@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { useK8sWatchResource, k8sDeleteResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { useFormikContext } from 'formik';
 import {
   ComponentDetectionQueryGroupVersionKind,
@@ -13,6 +13,7 @@ import {
   SPIAccessTokenBindingPhase,
 } from '../../types';
 import { createComponentDetectionQuery } from '../../utils/create-utils';
+import { ComponentDetectionQueryModel } from './../../models/component';
 import { NamespaceContext } from './../NamespacedPage/NamespacedPage';
 import { AddComponentValues } from './AddComponentForm';
 
@@ -64,7 +65,7 @@ export const useAccessTokenBindingAuth = (name: string) => {
 export const useComponentDetection = (
   source: string,
   application: string,
-  gitOptions: AddComponentValues['git'],
+  gitOptions?: AddComponentValues['git'],
 ): [DetectedComponents, any] => {
   const { namespace } = React.useContext(NamespaceContext);
   const [cdqName, setCdqName] = React.useState<string>();
@@ -99,13 +100,24 @@ export const useComponentDetection = (
         application,
         source,
         namespace,
-        gitOptions.isMultiComponent,
-        gitOptions.authSecret,
-        gitOptions.contextDir,
-        gitOptions.reference,
+        gitOptions?.isMultiComponent,
+        gitOptions?.authSecret,
+        gitOptions?.contextDir,
+        gitOptions?.reference,
       );
     }
   }, [debouncedCreateCDQ, application, source, namespace, gitOptions]);
+
+  React.useEffect(() => {
+    return () => {
+      if (cdqName) {
+        k8sDeleteResource({
+          model: ComponentDetectionQueryModel,
+          queryOptions: { name: cdqName, ns: namespace },
+        });
+      }
+    };
+  }, [cdqName, namespace]);
 
   const detectedComponents = React.useMemo(() => {
     if (cdqName && loaded && cdq) {
@@ -137,4 +149,24 @@ export const useComponentDetection = (
   }, [cdq, cdqName, createError, detectedComponents, loadError, loaded]);
 
   return [detectedComponents, error];
+};
+
+export const mapDetectedComponents = (
+  detectedComponents: DetectedComponents,
+  isSample: boolean = false,
+) => {
+  return Object.values(detectedComponents).map(({ componentStub: component }) => ({
+    name: isSample ? `${component.componentName}-sample` : component.componentName,
+    uid: component.componentName,
+    type: 'source',
+    data: {
+      source: component.source,
+      contextDir: component.context,
+      targetPort: component.targetPort,
+      resources: component.resources,
+      replicas: component.replicas,
+      route: component.route,
+      env: component.env,
+    },
+  }));
 };

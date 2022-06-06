@@ -65,7 +65,7 @@ describe('FormFooter', () => {
   it('should render inline loading if form is submitting', () => {
     render(<FormFooter disableSubmit={false} errorMessage={null} isSubmitting />);
     expect(screen.getByTestId('form-footer')).toBeInTheDocument();
-    expect(screen.getByTestId('loading-indicator')).toBeInTheDocument();
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 });
 

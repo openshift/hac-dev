@@ -67,6 +67,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
               variant={ButtonVariant.primary}
               isDisabled={disableSubmit}
               data-test="submit-button"
+              isLoading={isSubmitting}
             >
               {submitLabel || t('Save')}
             </Button>

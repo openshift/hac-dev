@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import { CatalogTile } from '@patternfly/react-catalog-view-extension';
 import {
   Badge,
@@ -21,8 +22,12 @@ import { skeletonCatalog } from '../../shared/components/catalog/utils/skeleton-
 import { CatalogItem } from '../../shared/components/catalog/utils/types';
 import { StatusBox } from '../../shared/components/status-box/StatusBox';
 import { getDevfileSamples } from '../../utils/devfile-utils';
+import { mapDetectedComponents, useComponentDetection } from '../AddComponent/utils';
 import { useFormValues } from '../form-context';
 import PageLayout from '../PageLayout/PageLayout';
+import { createResources } from '../ReviewComponents/submit-utils';
+import { ReviewComponentsFormValues } from '../ReviewComponents/types';
+import { transformComponentValues } from '../ReviewComponents/utils';
 import { useWizardContext } from '../Wizard/Wizard';
 import SamplesEmptyState from './SamplesEmptyState';
 
@@ -30,13 +35,18 @@ import '../../shared/style.scss';
 import './ComponentSamplesPage.scss';
 
 export const ComponentSamplesPage = () => {
-  const { handleNext, handleBack, handleReset } = useWizardContext();
+  const history = useHistory();
+  const { handleBack, handleReset } = useWizardContext();
   const [formState, setValues] = useFormValues();
   const [selected, setSelected] = React.useState<CatalogItem>();
   const [items, setItems] = React.useState<CatalogItem[]>([]);
   const [loaded, setLoaded] = React.useState<boolean>(false);
   const [loadError, setLoadError] = React.useState<string>();
   const [filter, setFilter] = React.useState('');
+  const [componentData, setComponentData] =
+    React.useState<ReviewComponentsFormValues['components']>();
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [submitError, setSubmitError] = React.useState<string>();
 
   const filteredItems = React.useMemo(
     () =>
@@ -79,18 +89,50 @@ export const ComponentSamplesPage = () => {
     };
   }, []);
 
+  const sourceUrl = selected?.attributes?.git?.remotes?.origin;
+
+  const [detectedComponents] = useComponentDetection(sourceUrl, formState.application);
+
+  React.useEffect(() => {
+    if (detectedComponents) {
+      const mappedComponents = mapDetectedComponents(detectedComponents, true);
+      const transformedComponents = transformComponentValues(mappedComponents);
+      setComponentData(transformedComponents);
+    }
+  }, [detectedComponents]);
+
   const handleSubmit = React.useCallback(() => {
-    setValues((prevValues) => ({ ...prevValues, components: [selected] }));
-    handleNext();
-  }, [selected, setValues, handleNext]);
+    setSubmitting(true);
+    createResources(formState, componentData)
+      .then((appName) => {
+        history.push(`/app-studio/applications?name=${appName}`);
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.warn('Error while submitting import form:', error);
+        setSubmitting(false);
+        setSubmitError(error.message);
+      });
+  }, [formState, componentData, history]);
+
+  const handleSelect = React.useCallback((item) => {
+    setSelected((prevState) => {
+      if (prevState?.name === item.name) {
+        return undefined;
+      }
+      setComponentData(null);
+      setSubmitError(null);
+      return item;
+    });
+  }, []);
 
   const footer = (
     <FormFooter
-      submitLabel="Next"
+      submitLabel="Create"
       resetLabel="Back"
-      isSubmitting={false}
-      disableSubmit={!selected}
-      errorMessage={undefined}
+      isSubmitting={submitting || (selected && !componentData)}
+      disableSubmit={!selected || !componentData || submitting}
+      errorMessage={submitError || loadError}
       handleSubmit={handleSubmit}
       handleReset={handleBack}
       handleCancel={() => {
@@ -155,11 +197,7 @@ export const ComponentSamplesPage = () => {
                       </Badge>
                     ))}
                     {...getIconProps(item)}
-                    onClick={() =>
-                      setSelected((prevState) =>
-                        prevState ? (prevState.name !== item.name ? item : undefined) : item,
-                      )
-                    }
+                    onClick={() => handleSelect(item)}
                   />
                 </GalleryItem>
               ))}

@@ -82,12 +82,5 @@ export const createResources = async (
     console.log('Component creation failed!!', error.message);
   }
 
-  // eslint-disable-next-line no-console
-  console.log(
-    'Application and components created successfully!!',
-    `Created application ${appName} with components ${formState.components
-      .map((c) => c.name)
-      .join(', ')}`,
-  );
   return appName;
 };
