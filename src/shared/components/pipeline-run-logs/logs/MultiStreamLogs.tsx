@@ -84,31 +84,31 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
   };
 
   const containerStatus = resource.status?.containerStatuses ?? [];
-  const divider = <FlexItem className="odc-multi-stream-logs__divider">|</FlexItem>;
+  const divider = <FlexItem className="multi-stream-logs__divider">|</FlexItem>;
   return (
-    <div ref={fullscreenRef} className="odc-multi-stream-logs">
+    <div ref={fullscreenRef} className="multi-stream-logs">
       <Flex
         className={(classNames as any)({
-          'odc-multi-stream-logs--fullscreen': isFullscreen,
+          'multi-stream-logs--fullscreen': isFullscreen,
         })}
       >
-        <FlexItem className="odc-multi-stream-logs__button" align={{ default: 'alignRight' }}>
+        <FlexItem className="multi-stream-logs__button" align={{ default: 'alignRight' }}>
           <Button variant="link" onClick={downloadLogs} isInline>
-            <DownloadIcon className="odc-multi-stream-logs__icon" />
+            <DownloadIcon className="multi-stream-logs__icon" />
             {t('Download')}
           </Button>
         </FlexItem>
         {divider}
         {onDownloadAll && (
           <>
-            <FlexItem className="odc-multi-stream-logs__button">
+            <FlexItem className="multi-stream-logs__button">
               <Button
                 variant="link"
                 onClick={startDownloadAll}
                 isDisabled={downloadAllStatus}
                 isInline
               >
-                <DownloadIcon className="odc-multi-stream-logs__icon" />
+                <DownloadIcon className="multi-stream-logs__icon" />
                 {downloadAllLabel || t('Download all')}
                 {downloadAllStatus && <LoadingInline />}
               </Button>
@@ -117,16 +117,16 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
           </>
         )}
         {fullscreenToggle && (
-          <FlexItem className="odc-multi-stream-logs__button">
+          <FlexItem className="multi-stream-logs__button">
             <Button variant="link" onClick={fullscreenToggle} isInline>
               {isFullscreen ? (
                 <>
-                  <CompressIcon className="odc-multi-stream-logs__icon" />
+                  <CompressIcon className="multi-stream-logs__icon" />
                   {t('Collapse')}
                 </>
               ) : (
                 <>
-                  <ExpandIcon className="odc-multi-stream-logs__icon" />
+                  <ExpandIcon className="multi-stream-logs__icon" />
                   {t('Expand')}
                 </>
               )}
@@ -134,20 +134,20 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
           </FlexItem>
         )}
       </Flex>
-      <div className="odc-multi-stream-logs__taskName">
+      <div className="multi-stream-logs__taskName">
         {taskName}
         {(loadingContainers || stillFetching) && (
-          <span className="odc-multi-stream-logs__taskName__loading-indicator">
+          <span className="multi-stream-logs__taskName__loading-indicator">
             <LoadingInline />
           </span>
         )}
       </div>
       <div
-        className="odc-multi-stream-logs__container"
+        className="multi-stream-logs__container"
         onScroll={handleScrollCallback}
         data-test-id="logs-task-container"
       >
-        <div className="odc-multi-stream-logs__container__logs" ref={scrollPane}>
+        <div className="multi-stream-logs__container__logs" ref={scrollPane}>
           {!loadingContainers &&
             containers.map((container, idx) => {
               const statusIndex = containerStatus.findIndex((c) => c.name === container.name);

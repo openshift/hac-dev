@@ -32,6 +32,6 @@ describe('FormBody', () => {
       </FormBody>,
     );
     const element = screen.getByTestId('flex-parent');
-    expect(element).not.toHaveClass('hacDev-m-pane__body');
+    expect(element).not.toHaveClass('pane-body');
   });
 });

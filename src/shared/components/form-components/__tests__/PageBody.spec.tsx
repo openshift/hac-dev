@@ -22,7 +22,7 @@ describe('FlexForm', () => {
       </PageBody>,
     );
     const element = screen.getByTestId('page-body');
-    expect(element).not.toHaveClass('hacDev-m-page__body');
+    expect(element).not.toHaveClass('page-body');
   });
 
   it('should render with classname for flex layout if flexLayout is true', () => {
@@ -32,6 +32,6 @@ describe('FlexForm', () => {
       </PageBody>,
     );
     const element = screen.getByTestId('page-body');
-    expect(element).toHaveClass('hacDev-m-page__body');
+    expect(element).toHaveClass('page-body');
   });
 });

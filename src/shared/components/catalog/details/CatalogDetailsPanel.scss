@@ -1,0 +1,45 @@
+.catalog-page {
+  &__overlay-body {
+    margin: 0;
+    padding-left: var(--pf-global--spacer--lg);
+    padding-right: var(--pf-global--spacer--lg);
+    padding-top: var(--pf-global--spacer--md);
+    @media (min-width: $screen-sm-min) {
+      display: flex;
+    }
+  }
+
+  &__overlay-description {
+    margin: 20px 0 0;
+    white-space: pre-wrap;
+    // TODO: find fix for urls that don't wrap
+    // fix below causes undesirable wrapping on non-urls
+    // word-break: break-all;
+    h1,
+    h2,
+    h3 {
+      color: #333; // same color as styles hardcoded in markdown text component
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+
+    p,
+    li,
+    ol {
+      color: #333; // same color as styles hardcoded in markdown text component
+      font-size: $font-size-base !important;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      flex: 1 1 auto;
+      margin-left: 20px;
+      margin-top: 0;
+    }
+  }
+}
+
+.properties-side-panel-pf-property-label {
+  font-size: ($font-size-base - 1);
+}

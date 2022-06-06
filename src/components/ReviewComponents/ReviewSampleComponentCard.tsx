@@ -27,7 +27,7 @@ export const ReviewSampleComponentCard: React.FC<ReviewSampleComponentCardProps>
   const origin = component.attributes.git.remotes.origin;
 
   return (
-    <Card className="hacDev-review-component" isExpanded={isExpanded}>
+    <Card className="review-component" isExpanded={isExpanded}>
       <CardHeader
         onExpand={() => setIsExpanded((prevExpanded) => !prevExpanded)}
         toggleButtonProps={{
@@ -35,11 +35,11 @@ export const ReviewSampleComponentCard: React.FC<ReviewSampleComponentCardProps>
           'aria-expanded': isExpanded,
         }}
       >
-        <img className="hacDev-review-component__image" src={url} alt={name} />
-        <span className="hacDev-review-component__name">{name}</span>
+        <img className="review-component__image" src={url} alt={name} />
+        <span className="review-component__name">{name}</span>
       </CardHeader>
       <CardExpandableContent>
-        <Flex className="hacDev-review-component__content" direction={{ default: 'column' }}>
+        <Flex className="review-component__content" direction={{ default: 'column' }}>
           <FlexItem>
             <Text component={TextVariants.p}>{description}</Text>
           </FlexItem>

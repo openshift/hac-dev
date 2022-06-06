@@ -8,7 +8,7 @@ interface PageBodyProps {
 
 const PageBody: React.FC<PageBodyProps> = ({ children, flexLayout }) => (
   <div
-    className={classnames('hacDev-m-pane__body', { 'hacDev-m-page__body': flexLayout })}
+    className={classnames('pane-body', { 'page-body': flexLayout })}
     style={{ paddingBottom: 0 }}
     data-test="page-body"
   >

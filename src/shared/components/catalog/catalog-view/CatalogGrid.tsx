@@ -5,6 +5,8 @@ import { VirtualizedGrid } from '../../virtualized-grid';
 import { RenderCell } from '../../virtualized-grid/types';
 import { CatalogItem } from '../utils/types';
 
+import './CatalogGrid.scss';
+
 type CatalogGridProps = {
   items: CatalogItem[] | { [key: string]: CatalogItem[] };
   renderTile: RenderCell;
@@ -13,13 +15,13 @@ type CatalogGridProps = {
 
 const CatalogGrid: React.FC<CatalogGridProps> = ({ items, renderTile, isGrouped }) => {
   const renderGroupHeader = (heading) => (
-    <Title className="co-catalog-page__group-title" headingLevel="h2" size="lg">
+    <Title className="catalog-page__group-title" headingLevel="h2" size="lg">
       {heading} ({size(items[heading])})
     </Title>
   );
 
   return (
-    <div className="co-catalog-page__grid">
+    <div className="catalog-page__grid">
       <VirtualizedGrid
         items={items}
         renderCell={renderTile}

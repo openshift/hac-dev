@@ -9,7 +9,7 @@ export const addComponentPagePO = {
 };
 
 export const componentSamplesPagePO = {
-  grid: '.co-catalog-page__grid',
+  grid: '.catalog-page__grid',
   nodejs: '[data-test="sample-Basic Node.js"]',
   python: '[data-test="sample-Basic Python"]',
   quarkus: '[data-test="sample-Basic Quarkus"]',

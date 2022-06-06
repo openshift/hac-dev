@@ -6,6 +6,8 @@ import map from 'lodash/map';
 import { hasActiveDescendant, isActiveTab } from '../utils/category-utils';
 import { CatalogCategory } from '../utils/types';
 
+import './CatalogCategories.scss';
+
 type CatalogCategoriesProp = {
   categories: CatalogCategory[];
   categorizedIds: Record<string, string[]>;
@@ -31,7 +33,7 @@ const CatalogCategories: React.FC<CatalogCategoriesProp> = ({
     const { id, label, subcategories, numItems } = category;
     const active = id === selectedCategory;
 
-    const tabClasses = cx('text-capitalize', { 'co-catalog-tab__empty': !numItems });
+    const tabClasses = cx('text-capitalize', { 'catalog-tab__empty': !numItems });
 
     return (
       <VerticalTabsTab

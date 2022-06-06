@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { Button, Tooltip } from '@patternfly/react-core';
+import { Button, Flex, FlexItem, Tooltip } from '@patternfly/react-core';
 import MinusCircleIcon from '@patternfly/react-icons/dist/js/icons/minus-circle-icon';
 import PlusCircleIcon from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
 import cloneDeep from 'lodash/cloneDeep';
 import { NameValueEditorPair } from './types';
+
+import './BasicNameValueEditor.scss';
 
 type PairElementProps = {
   nameString: string;
@@ -39,37 +41,41 @@ const PairElement: React.FC<PairElementProps> = ({
 
   const deleteIcon = (
     <>
-      <MinusCircleIcon className="pairs-list__side-btn pairs-list__delete-icon" />
+      <MinusCircleIcon className="pairs-list__side-btn" />
       <span className="sr-only">Delete</span>
     </>
   );
 
   return (
-    <div className="row pairs-list__row" data-test="pairs-list-row">
-      <div className="col-xs-5 pairs-list__name-field">
-        <input
-          type="text"
-          data-test="pairs-list-name"
-          className="pf-c-form-control"
-          placeholder={nameString}
-          value={pair[NameValueEditorPair.Name]}
-          onChange={onChangeName}
-          disabled={readOnly}
-        />
-      </div>
-      <div className="col-xs-5 pairs-list__value-field">
-        <input
-          type="text"
-          data-test="pairs-list-value"
-          className="pf-c-form-control"
-          placeholder={valueString}
-          value={pair[NameValueEditorPair.Value] || ''}
-          onChange={onChangeValue}
-          disabled={readOnly}
-        />
-      </div>
+    <Flex className="pairs-list__row" data-test="pairs-list-row" direction={{ default: 'row' }}>
+      <Flex flex={{ default: 'flex_1' }}>
+        <FlexItem fullWidth={{ default: 'fullWidth' }}>
+          <input
+            type="text"
+            data-test="pairs-list-name"
+            className="pf-c-form-control"
+            placeholder={nameString}
+            value={pair[NameValueEditorPair.Name]}
+            onChange={onChangeName}
+            disabled={readOnly}
+          />
+        </FlexItem>
+      </Flex>
+      <Flex spacer={{ default: 'spacerNone' }} flex={{ default: 'flex_1' }}>
+        <FlexItem fullWidth={{ default: 'fullWidth' }}>
+          <input
+            type="text"
+            data-test="pairs-list-value"
+            className="pf-c-form-control"
+            placeholder={valueString}
+            value={pair[NameValueEditorPair.Value] || ''}
+            onChange={onChangeValue}
+            disabled={readOnly}
+          />
+        </FlexItem>
+      </Flex>
       {!readOnly && (
-        <div className="col-xs-1 pairs-list__action">
+        <FlexItem>
           <Tooltip content={toolTip || 'Remove'}>
             <Button
               type="button"
@@ -81,9 +87,9 @@ const PairElement: React.FC<PairElementProps> = ({
               {deleteIcon}
             </Button>
           </Tooltip>
-        </div>
+        </FlexItem>
       )}
-    </div>
+    </Flex>
   );
 };
 
@@ -158,30 +164,35 @@ const BasicNameValueEditor: React.FC<NameValueEditorProps> = ({
 
   return (
     <>
-      <div className="row pairs-list__heading">
-        <div className="col-xs-5">{nameString}</div>
-        <div className="col-xs-5">{valueString}</div>
-        <div className="col-xs-1 co-empty__header" />
-      </div>
+      <Flex className="pairs-list__heading" direction={{ default: 'row' }}>
+        <Flex flex={{ default: 'flex_1' }}>
+          <FlexItem>{nameString}</FlexItem>
+        </Flex>
+        <Flex flex={{ default: 'flex_1' }}>
+          <FlexItem>{valueString}</FlexItem>
+        </Flex>
+        <FlexItem className="empty__header" />
+      </Flex>
       {pairElems}
-      <div className="row">
-        <div className="col-xs-12">
-          {readOnly ? null : (
-            <div className="co-toolbar__group co-toolbar__group--left">
-              <Button
-                className="pf-m-link--align-left"
-                data-test="add-button"
-                onClick={onAppend}
-                type="button"
-                variant="link"
-              >
-                <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-r" />
-                {addString}
-              </Button>
-            </div>
-          )}
-        </div>
-      </div>
+      <Flex direction={{ default: 'row' }} justifyContent={{ default: 'justifyContentFlexStart' }}>
+        {readOnly ? null : (
+          <FlexItem>
+            <Button
+              className="pf-m-link--align-left"
+              data-test="add-button"
+              onClick={onAppend}
+              type="button"
+              variant="link"
+            >
+              <PlusCircleIcon
+                data-test-id="pairs-list__add-icon"
+                className="pairs-list__add-icon"
+              />
+              {addString}
+            </Button>
+          </FlexItem>
+        )}
+      </Flex>
     </>
   );
 };

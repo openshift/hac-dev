@@ -32,9 +32,9 @@ const FormFooter: React.FC<FormFooterProps> = ({
   const shadowPosition = useScrollShadows(sticky ? scrollContainer : null);
   return (
     <div
-      className={classNames('hacDev-form-footer', {
-        'hacDev-form-footer__sticky': sticky,
-        'hacDev-form-footer__shadow':
+      className={classNames('form-footer', {
+        'form-footer__sticky': sticky,
+        'form-footer__shadow':
           sticky && (shadowPosition === Shadows.both || shadowPosition === Shadows.bottom),
       })}
       data-test="form-footer"
@@ -59,7 +59,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
               })}
           </Alert>
         )}
-        <ActionGroup className="pf-c-form hacDev-form-footer__no-top-margin">
+        <ActionGroup className="pf-c-form form-footer__no-top-margin">
           {!hideSubmit && (
             <Button
               type={handleSubmit ? 'button' : 'submit'}

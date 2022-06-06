@@ -1,5 +1,4 @@
 import * as React from 'react';
-import classNames from 'classnames';
 
 type ExternalLinkProps = {
   href: string;
@@ -18,7 +17,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
   stopPropagation,
 }) => (
   <a
-    className={classNames('co-external-link', additionalClassName)}
+    className={additionalClassName}
     href={href}
     target="_blank"
     rel="noopener noreferrer"

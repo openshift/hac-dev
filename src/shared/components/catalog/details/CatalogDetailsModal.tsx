@@ -9,6 +9,8 @@ import { getIconProps } from '../utils/catalog-utils';
 import { CatalogItem } from '../utils/types';
 import CatalogDetailsPanel from './CatalogDetailsPanel';
 
+import './CatalogDetailsModal.scss';
+
 type CatalogDetailsModalProps = {
   item: CatalogItem;
   onClose: () => void;
@@ -38,15 +40,15 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose
   const modalHeader = (
     <>
       <CatalogItemHeader
-        className="co-catalog-page__overlay-header"
+        className="catalog-page__overlay-header"
         title={title || name}
         vendor={vendor}
         {...getIconProps(item)}
       />
       {to && (
-        <div className="co-catalog-page__overlay-actions">
+        <div className="catalog-page__overlay-actions">
           <Link
-            className="pf-c-button pf-m-primary co-catalog-page__overlay-action"
+            className="pf-c-button pf-m-primary catalog-page__overlay-action"
             to={to}
             role="button"
             onClick={onClose}
@@ -60,7 +62,7 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose
 
   return (
     <Modal
-      className="co-catalog-page__overlay co-catalog-page__overlay--right"
+      className="catalog-page__overlay catalog-page__overlay--right"
       header={modalHeader}
       isOpen={!!item}
       onClose={onClose}

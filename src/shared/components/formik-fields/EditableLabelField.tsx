@@ -41,7 +41,7 @@ const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
           </FlexItem>
           <FlexItem>
             <ActionGroupWithIcons
-              className="hacDev-editable-label-field__action-group"
+              className="editable-label-field__action-group"
               onSubmit={() => setEditing(false)}
               isDisabled={!!error}
               onClose={() => {
@@ -52,7 +52,7 @@ const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
           </FlexItem>
         </Flex>
       ) : (
-        <div className="hacDev-editable-label-field__label">
+        <div className="editable-label-field__label">
           {value} {!label && editIcon}
         </div>
       )}

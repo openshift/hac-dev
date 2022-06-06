@@ -8,10 +8,10 @@ type CatalogBadgesProps = {
 };
 
 const CatalogBadges: React.FC<CatalogBadgesProps> = ({ badges }) => (
-  <div className="hac-catalog-badges" data-test="catalog-badges">
+  <div className="catalog-badges" data-test="catalog-badges">
     {badges?.map((badge, index) => (
       <Label
-        className="hac-catalog-badges__label"
+        className="catalog-badges__label"
         color={badge.color}
         icon={badge.icon}
         variant={badge.variant}

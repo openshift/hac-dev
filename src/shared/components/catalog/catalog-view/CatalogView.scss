@@ -1,0 +1,22 @@
+.catalog-page {
+  background: var(--pf-global--palette--white);
+  border: 1px solid var(--pf-global--BorderColor--300);
+  display: flex;
+  flex: 1;
+  padding-top: math.div($grid-gutter-width, 2);
+
+  &--with-sidebar {
+    margin: 0 math.div($grid-gutter-width, 2);
+    padding-bottom: math.div($grid-gutter-width, 2);
+  }
+
+  &__content {
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  &__tabs {
+    flex: 0 0 220px;
+    margin: 0 math.div($grid-gutter-width, 2) 0 0;
+  }
+}

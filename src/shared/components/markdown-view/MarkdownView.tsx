@@ -219,7 +219,7 @@ const InlineMarkdownView: React.FC<InnerSyncMarkdownProps> = ({
 }) => {
   const id = React.useMemo(() => uniqueId('markdown'), []);
   return (
-    <div className={cx('co-markdown-view', { ['is-empty']: isEmpty })} id={id}>
+    <div className={cx('markdown-view', { ['is-empty']: isEmpty })} id={id}>
       <div dangerouslySetInnerHTML={{ __html: markup }} />
       <RenderExtension renderExtension={renderExtension} selector={`#${id}`} markup={markup} />
     </div>

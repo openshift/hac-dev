@@ -43,6 +43,8 @@ import CatalogGrid from './CatalogGrid';
 import CatalogToolbar from './CatalogToolbar';
 // import CatalogTypeSelector from './CatalogTypeSelector';
 
+import './CatalogView.scss';
+
 type CatalogViewProps = {
   items: CatalogItem[];
   catalogType?: string;
@@ -220,9 +222,9 @@ const CatalogView: React.FC<CatalogViewProps> = ({
   }, []);
 
   return (
-    <div className={cx('co-catalog-page', { 'co-catalog-page--with-sidebar': showSidebar })}>
+    <div className={cx('catalog-page', { 'catalog-page--with-sidebar': showSidebar })}>
       {showSidebar && (
-        <div className="co-catalog-page__tabs">
+        <div className="catalog-page__tabs">
           {showCategories && (
             <CatalogCategories
               categories={catalogCategories}
@@ -251,7 +253,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({
           )}
         </div>
       )}
-      <div className="co-catalog-page__content">
+      <div className="catalog-page__content">
         <CatalogToolbar
           ref={catalogToolbarRef}
           title={activeCategory.label}

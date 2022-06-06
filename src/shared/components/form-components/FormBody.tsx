@@ -19,7 +19,7 @@ const FormBody: React.FC<FormBodyProps & React.HTMLProps<HTMLDivElement>> = ({
 }) => (
   <div
     {...props}
-    className={classNames('pf-c-form', { 'hacDev-m-pane__body': !disablePaneBody }, className)}
+    className={classNames('pf-c-form', { 'pane-body': !disablePaneBody }, className)}
     style={
       flexLayout
         ? { display: 'flex', flex: 1, flexDirection: 'column', paddingBottom: 0, ...(style ?? {}) }

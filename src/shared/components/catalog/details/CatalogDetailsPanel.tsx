@@ -7,6 +7,8 @@ import ExternalLink from '../../links/ExternalLink';
 import { CatalogItem } from '../utils/types';
 // import { Timestamp } from '@console/internal/components/utils';
 
+import './CatalogDetailsPanel.scss';
+
 type CatalogDetailsPanelProps = {
   item: CatalogItem;
 };
@@ -29,7 +31,7 @@ const CatalogDetailsPanel: React.FC<CatalogDetailsPanelProps> = ({ item }) => {
     <div className="modal-body modal-body-border">
       <div className="modal-body-content">
         <div className="modal-body-inner-shadow-covers">
-          <div className="co-catalog-page__overlay-body">
+          <div className="catalog-page__overlay-body">
             <PropertiesSidePanel>
               {details?.properties?.map((property) => (
                 <PropertyItem
@@ -67,7 +69,7 @@ const CatalogDetailsPanel: React.FC<CatalogDetailsPanelProps> = ({ item }) => {
               />
             </PropertiesSidePanel>
             {(details?.descriptions?.length || description) && (
-              <div className="co-catalog-page__overlay-description">
+              <div className="catalog-page__overlay-description">
                 <Stack hasGutter>
                   {!details?.descriptions?.[0]?.label && (
                     <SectionHeading text={t('devconsole~Description')} />

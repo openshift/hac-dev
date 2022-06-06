@@ -24,6 +24,8 @@ import {
   CatalogService,
 } from './utils/types';
 
+import './CatalogController.scss';
+
 type CatalogControllerProps = CatalogService & {
   enableDetailsPanel?: boolean;
   hideSidebar?: boolean;
@@ -165,13 +167,13 @@ const CatalogController: React.FC<CatalogControllerProps> = ({
 
   return (
     <>
-      <div className="co-catalog">
+      <div className="catalog">
         <PageHeading
           title={title}
           breadcrumbs={type ? breadcrumbs : null}
           description={description}
         />
-        <div className="co-catalog__body">
+        <div className="catalog__body">
           <StatusBox
             skeleton={skeletonCatalog}
             data={items}

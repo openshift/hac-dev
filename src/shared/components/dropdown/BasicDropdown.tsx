@@ -55,7 +55,7 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
       dropdownItems={dropdownItems}
       autoFocus={false}
       disabled={disabled}
-      className="hacDev-basic-dropdown"
+      className="basic-dropdown"
       data-test="dropdown"
     />
   );

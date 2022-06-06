@@ -7,6 +7,8 @@ import { SearchInput } from '@patternfly/react-core';
 // import { NO_GROUPING } from '../utils/category-utils';
 import { CatalogSortOrder, CatalogStringMap } from '../utils/types';
 
+import './CatalogToolbar.scss';
+
 type CatalogToolbarProps = {
   title: string;
   totalItems: number;
@@ -58,12 +60,12 @@ const CatalogToolbar = React.forwardRef<HTMLInputElement, CatalogToolbarProps>(
     });
 
     return (
-      <div className="co-catalog-page__header">
-        <div className="co-catalog-page__heading text-capitalize">{title}</div>
-        <div className="co-catalog-page__filter">
+      <div className="catalog-page__header">
+        <div className="catalog-page__heading text-capitalize">{title}</div>
+        <div className="catalog-page__filter">
           <div ref={inputRef}>
             <SearchInput
-              className="co-catalog-page__input"
+              className="catalog-page__input"
               data-test="search-catalog"
               type="text"
               placeholder={t('Filter by keyword...')}
@@ -73,14 +75,14 @@ const CatalogToolbar = React.forwardRef<HTMLInputElement, CatalogToolbarProps>(
               aria-label={t('Filter by keyword...')}
             />
             {/* <Dropdown
-              className="co-catalog-page__sort"
+              className="catalog-page__sort"
               items={catalogSortItems}
               title={catalogSortItems[sortOrder]}
               onChange={onSortOrderChange}
             />
             {showGrouping && (
               <Dropdown
-                className="co-catalog-page__btn-group__group-by"
+                className="catalog-page__btn-group__group-by"
                 menuClassName="dropdown-menu--text-wrap"
                 items={catalogGroupItems}
                 onChange={onGroupingChange}
@@ -89,7 +91,7 @@ const CatalogToolbar = React.forwardRef<HTMLInputElement, CatalogToolbarProps>(
               />
             )} */}
           </div>
-          <div className="co-catalog-page__num-items">{totalItems} items</div>
+          <div className="catalog-page__num-items">{totalItems} items</div>
         </div>
       </div>
     );

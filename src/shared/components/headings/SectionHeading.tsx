@@ -1,6 +1,8 @@
 import * as React from 'react';
 import classNames from 'classnames';
 
+import './SectionHeading.scss';
+
 export type SectionHeadingProps = {
   children?: any;
   style?: any;
@@ -16,7 +18,7 @@ const SectionHeading: React.SFC<SectionHeadingProps> = ({
   required,
   id,
 }) => (
-  <h2 className="co-section-heading" style={style} data-test-section-heading={text} id={id}>
+  <h2 className="section-heading" style={style} data-test-section-heading={text} id={id}>
     <span
       className={classNames({
         'co-required': required,
