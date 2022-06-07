@@ -23,7 +23,7 @@ export class Common {
     Common.waitForLoad();
   }
 
-  static waitForLoad(timeout = 60000) {
+  static waitForLoad(timeout = 120000) {
     for (const item of Object.values(waits)) {
       cy.get(item, { timeout }).should('not.exist');
     }
