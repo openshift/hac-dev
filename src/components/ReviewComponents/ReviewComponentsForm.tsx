@@ -1,40 +1,44 @@
 import * as React from 'react';
-import { Form, FormSection, PageSection } from '@patternfly/react-core';
+import { Bullseye, Form, FormSection, PageSection, Spinner } from '@patternfly/react-core';
 import { FormikProps } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import { FormFooter } from '../../shared';
-import { useFormValues } from '../form-context';
+import { DetectedComponentData, useFormValues } from '../form-context';
 import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 import PageLayout from '../PageLayout/PageLayout';
 import { useWizardContext } from '../Wizard/Wizard';
-import { ReviewSampleComponentCard } from './ReviewSampleComponentCard';
 import { ReviewSourceComponentCard } from './ReviewSourceComponentCard';
 
-type ReviewComponentsFormProps = FormikProps<{}>;
+type ReviewComponentsFormProps = FormikProps<{}> & {
+  detectedComponents: DetectedComponentData[];
+  detectedComponentsLoaded: boolean;
+};
 
 export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
   handleSubmit,
-  handleReset,
   isSubmitting,
   status,
   errors,
+  detectedComponents,
+  detectedComponentsLoaded,
 }) => {
-  const [formState, setFormState] = useFormValues();
-  const { handleReset: wizardHandleReset } = useWizardContext();
-  const isSample = formState.components[0].type === 'sample';
+  const [, setFormState] = useFormValues();
+  const { handleReset: wizardHandleReset, decreaseStepBy } = useWizardContext();
 
   const footer = (
     <FormFooter
       submitLabel="Create"
       resetLabel="Back"
-      handleReset={handleReset}
+      handleReset={() => {
+        decreaseStepBy(2);
+      }}
       handleCancel={() => {
         wizardHandleReset();
         setFormState({});
       }}
       handleSubmit={handleSubmit}
       isSubmitting={isSubmitting}
-      disableSubmit={!isEmpty(errors) || isSubmitting}
+      disableSubmit={!detectedComponentsLoaded || !isEmpty(errors) || isSubmitting}
       errorMessage={status?.submitError}
     />
   );
@@ -57,22 +61,22 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
       <PageSection isFilled>
         <Form onSubmit={handleSubmit}>
           <FormSection>
-            {isSample ? (
-              <ReviewSampleComponentCard component={formState.components[0]} />
+            {detectedComponentsLoaded ? (
+              detectedComponents.map((component) => (
+                <ReviewSourceComponentCard
+                  key={component.name}
+                  component={{
+                    name: component.name,
+                    source: component.data.source,
+                    envs: component.data.env,
+                  }}
+                  isExpanded={detectedComponents.length === 1}
+                />
+              ))
             ) : (
-              <>
-                {formState.components.map((component) => (
-                  <ReviewSourceComponentCard
-                    key={component.name}
-                    component={{
-                      name: component.name,
-                      source: component.data.source,
-                      envs: component.data.env,
-                    }}
-                    isExpanded={formState.components.length === 1}
-                  />
-                ))}
-              </>
+              <Bullseye>
+                <Spinner size="lg" />
+              </Bullseye>
             )}
           </FormSection>
         </Form>

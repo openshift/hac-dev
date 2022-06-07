@@ -1,22 +1,27 @@
 import * as React from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ServiceProviderType } from '../../../types';
 import { formikRenderer } from '../../../utils/test-utils';
 import { SourceSection } from '../SourceSection';
 import '@testing-library/jest-dom';
-import { useComponentDetection } from '../utils';
+import { useAccessCheck } from '../utils';
 
 jest.mock('../utils', () => ({
-  useComponentDetection: jest.fn(),
-  useAccessTokenBindingAuth: jest.fn(),
+  useAccessTokenBindingAuth: () => ['', true],
   mapDetectedComponents: jest.fn(),
+  useAccessCheck: jest.fn(),
+}));
+
+jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
+  useChrome: () => ({ auth: { getToken: () => Promise.resolve('token') } }),
 }));
 
 jest.mock('../../../shared/hooks', () => ({
   useFormikValidationFix: jest.fn(),
 }));
 
-const useComponentDetectionMock = useComponentDetection as jest.Mock;
+const useAccessCheckMock = useAccessCheck as jest.Mock;
 
 const renderSourceSection = () => {
   const onClick = jest.fn();
@@ -31,7 +36,7 @@ afterEach(jest.resetAllMocks);
 
 describe('SourceField', () => {
   it('renders input field and sample button', () => {
-    useComponentDetectionMock.mockReturnValue([null, null]);
+    useAccessCheckMock.mockReturnValue([{}, false]);
     renderSourceSection();
 
     expect(screen.getByPlaceholderText('Enter your source')).toBeInTheDocument();
@@ -39,7 +44,7 @@ describe('SourceField', () => {
   });
 
   it('fires callback on sample button click', () => {
-    useComponentDetectionMock.mockReturnValue([null, null]);
+    useAccessCheckMock.mockReturnValue([{}, false]);
 
     const { onClick } = renderSourceSection();
 
@@ -47,19 +52,22 @@ describe('SourceField', () => {
     expect(onClick).toHaveBeenCalled();
   });
 
-  it('displays error when components cannot be detected', async () => {
-    useComponentDetectionMock.mockReturnValue([null, 'Error']);
+  it('displays error when repo is not accessible', async () => {
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: false, serviceProvider: ServiceProviderType.GitHub },
+      true,
+    ]);
 
     renderSourceSection();
 
     expect(screen.getByPlaceholderText('Enter your source')).toBeInvalid();
-    expect(screen.getByText('Unable to detect components')).toBeVisible();
+    expect(screen.getByText('Unable to access repository')).toBeVisible();
   });
 
-  it('validates input field when components are detected', async () => {
-    useComponentDetectionMock.mockReturnValue([
-      { comp: { componentStub: { componentName: 'test' } } },
-      null,
+  it('validates input field when repo is accessible', async () => {
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: true, serviceProvider: ServiceProviderType.GitHub },
+      true,
     ]);
 
     renderSourceSection();
@@ -68,8 +76,24 @@ describe('SourceField', () => {
     expect(screen.getByText('Validated')).toBeVisible();
   });
 
+  it('should show Authorization when github repo is not accessible', async () => {
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: false, serviceProvider: ServiceProviderType.GitHub },
+      true,
+    ]);
+
+    renderSourceSection();
+
+    expect(screen.getByPlaceholderText('Enter your source')).toBeInvalid();
+    expect(screen.getByText('Unable to access repository')).toBeVisible();
+    await waitFor(() => expect(screen.getByText('Authorization')).toBeInTheDocument());
+  });
+
   it('should show Authorization if input is container image', async () => {
-    useComponentDetectionMock.mockReturnValue([null, null]);
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: true, isGit: false, serviceProvider: ServiceProviderType.Quay },
+      null,
+    ]);
 
     const { input, user } = renderSourceSection();
 
@@ -80,7 +104,7 @@ describe('SourceField', () => {
   });
 
   it('should not show Authorization or Git options if input is invalid', async () => {
-    useComponentDetectionMock.mockReturnValue([null, null]);
+    useAccessCheckMock.mockReturnValue([{}, false]);
 
     const { input, user } = renderSourceSection();
 
@@ -90,10 +114,10 @@ describe('SourceField', () => {
     await waitFor(() => expect(screen.queryByText('Git options')).toBeNull());
   });
 
-  it('should show git options for a valid git url and components are detected', async () => {
-    useComponentDetectionMock.mockReturnValue([
-      { comp: { componentStub: { componentName: 'test' } } },
-      null,
+  it('should show git options for a valid git url and accessible', async () => {
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: true, isGit: true, serviceProvider: ServiceProviderType.GitHub },
+      true,
     ]);
 
     const { input, user } = renderSourceSection();
@@ -108,22 +132,35 @@ describe('SourceField', () => {
   });
 
   it('should validate a container image url starting with https:// or quay.io/', async () => {
-    useComponentDetectionMock.mockReturnValue([null, null]);
+    useAccessCheckMock.mockReturnValue([{}, false]);
 
     const { input, user } = renderSourceSection();
 
     await user.type(input, 'https://quay.io/example/repo');
 
-    await (() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
+    await waitFor(() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
     await waitFor(() => screen.getByText('Validated'));
+  });
 
-    await user.type(input, 'http://quay.io/example/repo');
+  it('should show proper states for valid url based on useAccessCheck Values', async () => {
+    useAccessCheckMock.mockReturnValue([{}, false]);
 
-    await (() => expect(screen.getByPlaceholderText('Enter your source')).toBeInvalid());
+    const { input, user } = renderSourceSection();
 
-    await user.type(input, 'quay.io/example/repo');
+    await user.type(input, 'https://github.com/example/repo');
 
-    await (() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
+    await waitFor(() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
+    await waitFor(() => screen.getByText('Validating...'));
+
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: true, isGit: true, serviceProvider: ServiceProviderType.GitHub },
+      true,
+    ]);
+
+    await user.type(input, 's');
+
+    await waitFor(() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
     await waitFor(() => screen.getByText('Validated'));
+    await waitFor(() => expect(screen.getByText('Git options')).toBeInTheDocument());
   });
 });

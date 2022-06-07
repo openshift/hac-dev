@@ -28,7 +28,8 @@ export type ComponentKind = K8sResourceCommon & {
   spec: {
     componentName: string;
     application: string;
-    source: ComponentSource;
+    source?: ComponentSource;
+    containerImage?: string;
     context?: string;
     resources?: ResourceRequirements;
     replicas?: number;

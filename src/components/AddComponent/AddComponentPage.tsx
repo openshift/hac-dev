@@ -16,17 +16,20 @@ export const AddComponentPage = () => {
       reference: '',
       contextDir: '/',
       isMultiComponent: formState.isMultiComponent,
-      authSecret: formState.sourceSecret,
+      authSecret: formState.git?.authSecret,
     },
+    validated: false,
   };
 
   const handleSubmit = (values: AddComponentValues) => {
     setFormValues((prevVal) => ({
       ...prevVal,
       source: values.source,
+      git: {
+        ...values.git,
+      },
       sourceSecret: values.git.authSecret,
       isMultiComponent: values.git.isMultiComponent,
-      components: values.detectedComponents,
     }));
     increaseStepBy(2);
   };

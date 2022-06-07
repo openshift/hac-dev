@@ -41,12 +41,14 @@ export const useAccessTokenBindingAuth = (source: string): [string, boolean] => 
   const [name, setName] = React.useState<string>();
 
   React.useEffect(() => {
-    initiateAccessTokenBinding(source, namespace)
-      .then((resource) => {
-        setName(resource.metadata.name);
-      })
-      // eslint-disable-next-line no-console
-      .catch((e) => console.error('Error when initiating access token binding: ', e));
+    if (source) {
+      initiateAccessTokenBinding(source, namespace)
+        .then((resource) => {
+          setName(resource.metadata.name);
+        })
+        // eslint-disable-next-line no-console
+        .catch((e) => console.error('Error when initiating access token binding: ', e));
+    }
   }, [namespace, source]);
 
   const [binding, loaded] = useK8sWatchResource<SPIAccessTokenBindingKind>(
@@ -148,6 +150,7 @@ export const useComponentDetection = (
         return cdq?.status?.componentDetected;
       }
     }
+    return undefined;
   }, [cdqName, cdq, loaded]);
 
   const error = React.useMemo(() => {
@@ -255,8 +258,8 @@ export const useAccessCheck = (
         accessibility: accessCheck?.status?.accessibility,
         serviceProvider: accessCheck?.status?.serviceProvider,
       },
-      loaded,
+      name && loaded,
     ],
-    [accessCheck, loaded],
+    [accessCheck, loaded, name],
   );
 };

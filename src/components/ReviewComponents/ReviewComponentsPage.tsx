@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
-import { useFormValues } from '../form-context';
-import { useWizardContext } from '../Wizard/Wizard';
+import { mapDetectedComponents, useComponentDetection } from '../AddComponent/utils';
+import { containerImageRegex } from '../AddComponent/validation-utils';
+import { DetectedComponentData, useFormValues } from '../form-context';
 import { ReviewComponentsForm } from './ReviewComponentsForm';
 import { createResources } from './submit-utils';
 import { ReviewComponentsFormValues } from './types';
@@ -10,18 +11,41 @@ import { transformComponentValues } from './utils';
 import { reviewFormSchema } from './validation-utils';
 
 export const ReviewComponentsPage: React.FC = () => {
-  const { decreaseStepBy } = useWizardContext();
   const [formState] = useFormValues();
-  const isSample = formState.components[0].type === 'sample';
   const history = useHistory();
 
-  // const name = searchTerm.split('/')?.[2];
-  // setFieldValue('detectedComponents', [
-  //   { source: { image: { containerImage: searchTerm } }, name },
-  // ]);
+  const isContainerImage = containerImageRegex.test(formState.source);
+
+  const [detectedComponents, loadError] = useComponentDetection(
+    !isContainerImage ? formState.source : null,
+    formState.application,
+    formState.git,
+  );
+
+  const [components, loaded]: [DetectedComponentData[], boolean] = React.useMemo(() => {
+    if (isContainerImage) {
+      const sourceLength = formState.source.split('/').length;
+      return [
+        [
+          {
+            data: { source: { image: { containerImage: formState.source } } },
+            name: formState.source.split('/')?.[sourceLength - 1],
+          },
+        ] as DetectedComponentData[],
+        true,
+      ];
+    }
+    if (detectedComponents && !loadError) {
+      return [mapDetectedComponents(detectedComponents), true];
+    }
+    if (loadError) {
+      return [[], true];
+    }
+    return [[], false];
+  }, [detectedComponents, loadError, formState.source, isContainerImage]);
 
   const initialValues: ReviewComponentsFormValues = {
-    components: transformComponentValues(formState.components),
+    components: transformComponentValues(loaded ? components : []),
   };
 
   const handleSubmit = React.useCallback(
@@ -43,13 +67,17 @@ export const ReviewComponentsPage: React.FC = () => {
   return (
     <Formik
       onSubmit={handleSubmit}
-      onReset={() => {
-        decreaseStepBy(isSample ? 1 : 2);
-      }}
       initialValues={initialValues}
+      enableReinitialize
       validationSchema={reviewFormSchema}
     >
-      {(props) => <ReviewComponentsForm {...props} />}
+      {(props) => (
+        <ReviewComponentsForm
+          {...props}
+          detectedComponents={components}
+          detectedComponentsLoaded={loaded}
+        />
+      )}
     </Formik>
   );
 };

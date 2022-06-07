@@ -1,8 +1,7 @@
-import { commonFetch, useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { waitFor } from '@testing-library/react';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { renderHook } from '@testing-library/react-hooks';
 import { createComponentDetectionQuery } from '../../../utils/create-utils';
-import { mapDetectedComponents, useAccessTokenBindingAuth, useComponentDetection } from '../utils';
+import { mapDetectedComponents, useComponentDetection } from '../utils';
 import { mockCDQ, mockMappedComponents } from './../__data__/mock-cdq';
 
 import '@testing-library/jest-dom';
@@ -24,7 +23,6 @@ jest.mock('formik', () => ({
 
 const useK8sWatchMock = useK8sWatchResource as jest.Mock;
 const createCDQMock = createComponentDetectionQuery as jest.Mock;
-const commonFetchMock = commonFetch as jest.Mock;
 
 describe('useComponentDetection', () => {
   afterEach(jest.resetAllMocks);
@@ -137,35 +135,5 @@ describe('utils', () => {
   it('should add sample suffix in the name for samples', () => {
     const mappedComponents = mapDetectedComponents(mockCDQ.status.componentDetected as any, true);
     expect(mappedComponents[0].name).toEqual('nodejs-sample');
-  });
-});
-
-describe('useAccessTokenBindingAuth', () => {
-  it('should call commonFetch with github auth url', async () => {
-    useK8sWatchMock.mockReturnValue([
-      { status: { oAuthUrl: 'https://xyz.com/github/authenticate?state=dummy-token' } },
-      true,
-      null,
-    ]);
-
-    renderHook(() => useAccessTokenBindingAuth('test-app'));
-
-    await waitFor(() =>
-      expect(commonFetchMock).toHaveBeenCalledWith('/auth/github/authenticate?state=dummy-token'),
-    );
-  });
-
-  it('should call commonFetch with quay auth url', async () => {
-    useK8sWatchMock.mockReturnValue([
-      { status: { oAuthUrl: 'https://xyz.com/quay/authenticate?state=dummy-token' } },
-      true,
-      null,
-    ]);
-
-    renderHook(() => useAccessTokenBindingAuth('test-app'));
-
-    await waitFor(() =>
-      expect(commonFetchMock).toHaveBeenCalledWith('/auth/quay/authenticate?state=dummy-token'),
-    );
   });
 });

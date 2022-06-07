@@ -9,9 +9,16 @@ import {
   ValidatedOptions,
 } from '@patternfly/react-core';
 import { useField, useFormikContext } from 'formik';
+import { useOnMount } from '../../hooks/useOnMount';
 import { getFieldId, HelpTooltipIcon, InputField } from '../../shared';
 import { useDebounceCallback } from '../../shared/hooks/useDebounceCallback';
-import { ServiceProviderType } from '../../types';
+import {
+  ServiceProviderType,
+  SPIAccessCheckAccessibilityStatus,
+  SPIAccessTokenBindingPhase,
+} from '../../types';
+import { initiateAccessTokenBinding } from '../../utils/create-utils';
+import { useNamespace } from '../NamespacedPage/NamespacedPage';
 import { GitAuthorization } from './GitAuthorization';
 import { GitOptions } from './GitOptions';
 import { useAccessCheck } from './utils';
@@ -22,8 +29,9 @@ type SourceSectionProps = {
 };
 
 export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) => {
+  const { namespace } = useNamespace();
   const [authorizationExpanded, setAuthorizationExpanded] = React.useState<boolean>(true);
-  const [showAuthorization, setShowAuthorization] = React.useState<boolean>(true);
+  const [showAuthorization, setShowAuthorization] = React.useState<boolean>(false);
   const [showGitOptions, setShowGitOptions] = React.useState<boolean>(false);
   const [, { value: source, touched, error }] = useField<string>({
     name: 'source',
@@ -38,11 +46,10 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
   const fieldId = getFieldId('source', 'input');
   const isValid = !(touched && error);
   const label = 'Git repo URL or container image';
+  const isContainerImage = containerImageRegex.test(source);
 
-  const [{ isGit, isRepoAccessible, serviceProvider }, accessCheckLoaded] = useAccessCheck(
-    sourceUrl,
-    authSecret,
-  );
+  const [{ isGit, isRepoAccessible, serviceProvider, accessibility }, accessCheckLoaded] =
+    useAccessCheck(!isContainerImage ? sourceUrl : null, authSecret);
 
   const handleSourceChange = React.useCallback(() => {
     const searchTerm = source;
@@ -50,6 +57,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
     const isContainerImageValid = containerImageRegex.test(searchTerm);
     setShowAuthorization(false);
     setShowGitOptions(false);
+    setFieldValue('validated', false);
     setFieldValue('git.authSecret', '');
     if (!searchTerm || (!isGitUrlValid && !isContainerImageValid)) {
       setValidated(ValidatedOptions.error);
@@ -57,22 +65,33 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
       setSourceUrl(null);
       return;
     }
-    if (isContainerImageValid || isGitUrlValid) {
+    if (isGitUrlValid) {
       setValidated(ValidatedOptions.default);
       setHelpText('Validating...');
       setHelpTextInvalid('');
       setShowAuthorization(false);
-      setSourceUrl(source);
+      setSourceUrl(searchTerm);
+    }
+    //[TODO] remove this condition once SPIAccessCheck for Quay is implemented
+    if (isContainerImageValid) {
+      setValidated(ValidatedOptions.success);
+      setHelpText('Validated');
+      setFieldValue('validated', true);
+      setHelpTextInvalid('');
+      setShowAuthorization(true);
+      setShowGitOptions(false);
+      setSourceUrl(searchTerm);
     }
   }, [source, setFieldValue]);
 
   const debouncedHandleSourceChange = useDebounceCallback(handleSourceChange);
 
   React.useEffect(() => {
-    if (accessCheckLoaded) {
+    if (accessCheckLoaded && !isContainerImage) {
       if (isRepoAccessible) {
         setValidated(ValidatedOptions.success);
         setHelpText('Validated');
+        setFieldValue('validated', true);
         isGit && setShowGitOptions(true);
       } else if (
         serviceProvider === ServiceProviderType.GitHub ||
@@ -83,7 +102,43 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
         setShowAuthorization(true);
       }
     }
-  }, [accessCheckLoaded, isRepoAccessible, isGit, serviceProvider]);
+  }, [
+    accessCheckLoaded,
+    isRepoAccessible,
+    isGit,
+    serviceProvider,
+    isContainerImage,
+    setFieldValue,
+  ]);
+
+  // only run this effect to set the authSecret if a repo is already authenticated
+  React.useEffect(() => {
+    (async () => {
+      if (
+        accessCheckLoaded &&
+        isRepoAccessible &&
+        !showAuthorization &&
+        accessibility === SPIAccessCheckAccessibilityStatus.private
+      ) {
+        const binding = await initiateAccessTokenBinding(source, namespace);
+        if (binding.status?.phase === SPIAccessTokenBindingPhase.Injected) {
+          setFieldValue('git.authSecret', binding.status.syncedObjectRef.name);
+        }
+      }
+    })();
+  }, [
+    accessCheckLoaded,
+    accessibility,
+    isRepoAccessible,
+    namespace,
+    setFieldValue,
+    showAuthorization,
+    source,
+  ]);
+
+  useOnMount(() => {
+    source && handleSourceChange();
+  });
 
   return (
     <>
