@@ -4,11 +4,14 @@
   "description": "HAC-DEV Cypress tests",
   "private": true,
   "scripts": {
-    "cy:run": "../node_modules/.bin/cypress run",
+    "clean-reports": "rm -rf cypress/",
+    "cy:run": "npm run clean-reports && ../node_modules/.bin/cypress run",
     "cy:open": "../node_modules/.bin/cypress open"
   },
   "devDependencies": {
     "@types/node": "^17.0.13",
-    "cypress-terminal-report": "^3.5.2"
+    "cypress-multi-reporters": "^1.6.0",
+    "cypress-terminal-report": "^3.5.2",
+    "mocha-junit-reporter": "^2.0.2"
   }
 }
