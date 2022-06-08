@@ -80,7 +80,7 @@ export const useAccessTokenBindingAuth = (source: string): [string, boolean] => 
     binding?.status?.syncedObjectRef?.name,
   ]);
 
-  return [binding?.status?.oAuthUrl, name && loaded];
+  return [binding?.status?.oAuthUrl, !!(name && loaded)];
 };
 
 /**
@@ -258,7 +258,7 @@ export const useAccessCheck = (
         accessibility: accessCheck?.status?.accessibility,
         serviceProvider: accessCheck?.status?.serviceProvider,
       },
-      name && loaded,
+      !!(name && loaded),
     ],
     [accessCheck, loaded, name],
   );
