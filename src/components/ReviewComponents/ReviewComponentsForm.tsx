@@ -1,5 +1,16 @@
 import * as React from 'react';
-import { Bullseye, Form, FormSection, PageSection, Spinner } from '@patternfly/react-core';
+import {
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
+  Form,
+  FormSection,
+  PageSection,
+  Spinner,
+  Title,
+} from '@patternfly/react-core';
+import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import { SearchIcon } from '@patternfly/react-icons/dist/esm/icons/search-icon';
 import { FormikProps } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import { FormFooter } from '../../shared';
@@ -12,6 +23,35 @@ import { ReviewSourceComponentCard } from './ReviewSourceComponentCard';
 type ReviewComponentsFormProps = FormikProps<{}> & {
   detectedComponents: DetectedComponentData[];
   detectedComponentsLoaded: boolean;
+  detectedComponentsError: unknown;
+};
+
+const NoComponentsFound: React.FC<{ error: unknown }> = ({ error }) => (
+  <EmptyState>
+    <EmptyStateIcon
+      style={error ? { color: 'var(--pf-global--danger-color--100)' } : {}}
+      icon={error ? ExclamationCircleIcon : SearchIcon}
+    />
+    <Title size="lg" headingLevel="h4">
+      No Components detected
+    </Title>
+    <EmptyStateBody>
+      {error
+        ? error || (error as Error)?.message || 'Error while detecting components'
+        : 'No components were detected in the source.'}
+    </EmptyStateBody>
+  </EmptyState>
+);
+
+const ComponentLoadingState: React.FC = () => {
+  return (
+    <EmptyState>
+      <EmptyStateIcon variant="container" component={Spinner} />
+      <Title size="lg" headingLevel="h4">
+        Detecting Components
+      </Title>
+    </EmptyState>
+  );
 };
 
 export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
@@ -21,6 +61,7 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
   errors,
   detectedComponents,
   detectedComponentsLoaded,
+  detectedComponentsError,
 }) => {
   const [, setFormState] = useFormValues();
   const { handleReset: wizardHandleReset, decreaseStepBy } = useWizardContext();
@@ -38,10 +79,40 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
       }}
       handleSubmit={handleSubmit}
       isSubmitting={isSubmitting}
-      disableSubmit={!detectedComponentsLoaded || !isEmpty(errors) || isSubmitting}
+      disableSubmit={
+        !detectedComponentsLoaded ||
+        !!detectedComponentsError ||
+        detectedComponents.length === 0 ||
+        !isEmpty(errors) ||
+        isSubmitting
+      }
       errorMessage={status?.submitError}
     />
   );
+
+  let reviewComponents = null;
+
+  if (!detectedComponentsLoaded) {
+    reviewComponents = <ComponentLoadingState />;
+  }
+
+  if ((detectedComponentsLoaded && detectedComponents.length === 0) || detectedComponentsError) {
+    reviewComponents = <NoComponentsFound error={detectedComponentsError} />;
+  }
+
+  if (detectedComponentsLoaded && detectedComponents.length > 0 && !detectedComponentsError) {
+    reviewComponents = detectedComponents.map((component) => (
+      <ReviewSourceComponentCard
+        key={component.name}
+        component={{
+          name: component.name,
+          source: component.data.source,
+          envs: component.data.env,
+        }}
+        isExpanded={detectedComponents.length === 1}
+      />
+    ));
+  }
 
   return (
     <PageLayout
@@ -60,25 +131,7 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
     >
       <PageSection isFilled>
         <Form onSubmit={handleSubmit}>
-          <FormSection>
-            {detectedComponentsLoaded ? (
-              detectedComponents.map((component) => (
-                <ReviewSourceComponentCard
-                  key={component.name}
-                  component={{
-                    name: component.name,
-                    source: component.data.source,
-                    envs: component.data.env,
-                  }}
-                  isExpanded={detectedComponents.length === 1}
-                />
-              ))
-            ) : (
-              <Bullseye>
-                <Spinner size="lg" />
-              </Bullseye>
-            )}
-          </FormSection>
+          <FormSection>{reviewComponents}</FormSection>
         </Form>
       </PageSection>
     </PageLayout>

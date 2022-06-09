@@ -46,7 +46,7 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
                   {name}
                 </DescriptionListTerm>
                 <DescriptionListDescription>
-                  Code Repo:{' '}
+                  Source:{' '}
                   <ExternalLink
                     href={
                       component.spec.source?.git?.url ||

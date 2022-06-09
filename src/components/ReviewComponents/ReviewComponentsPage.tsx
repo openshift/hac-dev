@@ -22,30 +22,32 @@ export const ReviewComponentsPage: React.FC = () => {
     formState.git,
   );
 
-  const [components, loaded]: [DetectedComponentData[], boolean] = React.useMemo(() => {
-    if (isContainerImage) {
-      const sourceLength = formState.source.split('/').length;
-      return [
-        [
-          {
-            data: { source: { image: { containerImage: formState.source } } },
-            name: formState.source.split('/')?.[sourceLength - 1],
-          },
-        ] as DetectedComponentData[],
-        true,
-      ];
-    }
-    if (detectedComponents && !loadError) {
-      return [mapDetectedComponents(detectedComponents), true];
-    }
-    if (loadError) {
-      return [[], true];
-    }
-    return [[], false];
-  }, [detectedComponents, loadError, formState.source, isContainerImage]);
+  const [components, loaded, detectionError]: [DetectedComponentData[], boolean, string] =
+    React.useMemo(() => {
+      if (isContainerImage) {
+        const sourceLength = formState.source.split('/').length;
+        return [
+          [
+            {
+              data: { source: { image: { containerImage: formState.source } } },
+              name: formState.source.split('/')?.[sourceLength - 1],
+            },
+          ] as DetectedComponentData[],
+          true,
+          null,
+        ];
+      }
+      if (detectedComponents && !loadError) {
+        return [mapDetectedComponents(detectedComponents), true, null];
+      }
+      if (loadError) {
+        return [[], true, loadError];
+      }
+      return [[], false, null];
+    }, [detectedComponents, loadError, formState.source, isContainerImage]);
 
   const initialValues: ReviewComponentsFormValues = {
-    components: transformComponentValues(loaded ? components : []),
+    components: transformComponentValues(loaded && !detectionError ? components : []),
   };
 
   const handleSubmit = React.useCallback(
@@ -76,6 +78,7 @@ export const ReviewComponentsPage: React.FC = () => {
           {...props}
           detectedComponents={components}
           detectedComponentsLoaded={loaded}
+          detectedComponentsError={detectionError}
         />
       )}
     </Formik>
