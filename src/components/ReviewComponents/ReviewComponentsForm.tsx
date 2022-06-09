@@ -108,6 +108,7 @@ export const ReviewComponentsForm: React.FC<ReviewComponentsFormProps> = ({
           name: component.name,
           source: component.data.source,
           envs: component.data.env,
+          containerImage: component.data.source.image.containerImage,
         }}
         isExpanded={detectedComponents.length === 1}
       />

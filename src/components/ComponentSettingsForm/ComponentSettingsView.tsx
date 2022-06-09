@@ -51,14 +51,14 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
 
     const transformedComponentValues = {
       name: componentValues.name,
-      gitRepo: componentValues.source.git.url,
-      devfileUrl: componentValues.source.git.devfileUrl,
+      gitRepo: componentValues.source?.git?.url,
+      devfileUrl: componentValues.source?.git?.devfileUrl,
       replicas: componentValues.replicas && Number(componentValues.replicas),
       targetPort: componentValues.targetPort && Number(componentValues.targetPort),
       resources: componentValues.resources && transformResources(componentValues.resources),
       env: componentValues.env,
-      revision: componentValues.source.git.revision,
-      context: componentValues.source.git.context,
+      revision: componentValues.source?.git?.revision,
+      context: componentValues.source?.git?.context,
     };
     return createComponent(
       transformedComponentValues,

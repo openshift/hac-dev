@@ -53,6 +53,7 @@ const ComponentSettingsForm: React.FunctionComponent<ComponentSettingsFormProps>
                 name: component.metadata.name,
                 source: component.spec.source,
                 envs: component.spec.env,
+                containerImage: component.spec.containerImage,
               }}
               isExpanded
               editMode

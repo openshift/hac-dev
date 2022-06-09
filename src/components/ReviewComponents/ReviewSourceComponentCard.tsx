@@ -30,6 +30,7 @@ type ReviewSourceComponentCardProps = {
     name: string;
     source: ComponentSource;
     envs?: { name: string; value: string }[];
+    containerImage?: string;
   };
   editMode?: boolean;
   isExpanded?: boolean;
@@ -63,9 +64,12 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
               )}
               <ExternalLink
                 href={
-                  component.source.git?.url ?? `https://${component.source.image?.containerImage}`
+                  component.source.git?.url ??
+                  (component.containerImage?.includes('http')
+                    ? component.containerImage
+                    : `https://${component.containerImage}`)
                 }
-                text={component.source.git?.url ?? component.source.image?.containerImage}
+                text={component.source.git?.url ?? component.containerImage}
               />
             </FlexItem>
             <FlexItem>
