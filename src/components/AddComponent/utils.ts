@@ -1,42 +1,65 @@
 import * as React from 'react';
-import { useK8sWatchResource, k8sDeleteResource } from '@openshift/dynamic-plugin-sdk-utils';
+import {
+  useK8sWatchResource,
+  k8sDeleteResource,
+  k8sCreateResource,
+} from '@openshift/dynamic-plugin-sdk-utils';
 import { useFormikContext } from 'formik';
 import {
   ComponentDetectionQueryGroupVersionKind,
+  SPIAccessCheckGroupVersionKind,
+  SPIAccessCheckModel,
   SPIAccessTokenBindingGroupVersionKind,
 } from '../../models';
 import { useDebounceCallback } from '../../shared/hooks/useDebounceCallback';
 import {
   ComponentDetectionQueryKind,
   DetectedComponents,
+  ServiceProviderType,
+  SPIAccessCheckAccessibilityStatus,
+  SPIAccessCheckKind,
   SPIAccessTokenBindingKind,
   SPIAccessTokenBindingPhase,
 } from '../../types';
-import { createComponentDetectionQuery } from '../../utils/create-utils';
+import {
+  createComponentDetectionQuery,
+  initiateAccessTokenBinding,
+} from '../../utils/create-utils';
 import { ComponentDetectionQueryModel } from './../../models/component';
 import { NamespaceContext } from './../NamespacedPage/NamespacedPage';
 import { AddComponentValues } from './AddComponentForm';
 
 /**
- * Watch the SPIAccessTokenBinding resource and open auth window when provided.
- * Upon successful injection, set the specified secret.
+ * Create the SPIAccessTokenBinding resource when source changes
+ * and set the specified secret upon successful injection.
+ *
+ * @returns oAuth URL provided by the binding
  */
-export const useAccessTokenBindingAuth = (name: string) => {
+export const useAccessTokenBindingAuth = (source: string): [string, boolean] => {
   const { namespace } = React.useContext(NamespaceContext);
   const { setFieldValue } = useFormikContext();
-  const [binding, loaded] = useK8sWatchResource<SPIAccessTokenBindingKind>({
-    groupVersionKind: SPIAccessTokenBindingGroupVersionKind,
-    name,
-    namespace,
-  });
+  const [name, setName] = React.useState<string>();
 
   React.useEffect(() => {
-    if (!name || !loaded) return;
-    const oAuthUrl = binding.status?.oAuthUrl;
-    if (oAuthUrl) {
-      window.open(oAuthUrl);
+    if (source) {
+      initiateAccessTokenBinding(source, namespace)
+        .then((resource) => {
+          setName(resource.metadata.name);
+        })
+        // eslint-disable-next-line no-console
+        .catch((e) => console.error('Error when initiating access token binding: ', e));
     }
-  }, [binding?.status?.oAuthUrl, loaded, name]);
+  }, [namespace, source]);
+
+  const [binding, loaded] = useK8sWatchResource<SPIAccessTokenBindingKind>(
+    name
+      ? {
+          groupVersionKind: SPIAccessTokenBindingGroupVersionKind,
+          name,
+          namespace,
+        }
+      : null,
+  );
 
   React.useEffect(() => {
     if (!name || !loaded) return;
@@ -56,6 +79,8 @@ export const useAccessTokenBindingAuth = (name: string) => {
     binding?.status?.errorMessage,
     binding?.status?.syncedObjectRef?.name,
   ]);
+
+  return [binding?.status?.oAuthUrl, !!(name && loaded)];
 };
 
 /**
@@ -125,6 +150,7 @@ export const useComponentDetection = (
         return cdq?.status?.componentDetected;
       }
     }
+    return undefined;
   }, [cdqName, cdq, loaded]);
 
   const error = React.useMemo(() => {
@@ -169,4 +195,71 @@ export const mapDetectedComponents = (
       env: component.env,
     },
   }));
+};
+/**
+ * Create a new SPIAccessCheck when source changes,
+ * and return true if the source is accessible.
+ */
+export const useAccessCheck = (
+  source: string,
+  dependency,
+): [
+  {
+    isRepoAccessible: boolean;
+    isGit: boolean;
+    accessibility: SPIAccessCheckAccessibilityStatus;
+    serviceProvider: ServiceProviderType;
+  },
+  boolean,
+] => {
+  const { namespace } = React.useContext(NamespaceContext);
+  const [name, setName] = React.useState<string>();
+
+  React.useEffect(() => {
+    if (source) {
+      k8sCreateResource({
+        model: SPIAccessCheckModel,
+        queryOptions: {
+          ns: namespace,
+        },
+        resource: {
+          apiVersion: `${SPIAccessCheckModel.apiGroup}/${SPIAccessCheckModel.apiVersion}`,
+          kind: SPIAccessCheckModel.kind,
+          metadata: {
+            generateName: 'hacdev-check-',
+            namespace,
+          },
+          spec: {
+            repoUrl: source,
+          },
+        },
+      }).then((res) => {
+        // TODO fix type for generateName resources not having name?
+        setName((res.metadata as any).name);
+      });
+    }
+  }, [namespace, source, dependency]);
+
+  const [accessCheck, loaded] = useK8sWatchResource<SPIAccessCheckKind>(
+    name
+      ? {
+          groupVersionKind: SPIAccessCheckGroupVersionKind,
+          name,
+          namespace,
+        }
+      : null,
+  );
+
+  return React.useMemo(
+    () => [
+      {
+        isRepoAccessible: accessCheck?.status?.accessible,
+        isGit: accessCheck?.status?.repoType === 'git',
+        accessibility: accessCheck?.status?.accessibility,
+        serviceProvider: accessCheck?.status?.serviceProvider,
+      },
+      !!(name && loaded),
+    ],
+    [accessCheck, loaded, name],
+  );
 };

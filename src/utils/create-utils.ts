@@ -91,17 +91,21 @@ export const createComponent = (
     spec: {
       componentName: component.name,
       application,
-      source: {
-        git: {
-          ...(component.gitRepo ? { url: component.gitRepo } : {}),
-          ...(component.devfileUrl ? { devfileUrl: component.devfileUrl } : {}),
-          ...(component.dockerfileUrl ? { dockerfileUrl: component.dockerfileUrl } : {}),
-          ...(component.revision ? { revision: component.revision } : {}),
-          // FIXME - context is not supported by the HAS API correctly yet.
-          // Remove after https://issues.redhat.com/browse/DEVHAS-115 is fixed.
-          // ...(component.context ? { context: component.context } : {}),
-        },
-      },
+      ...(component.image
+        ? {}
+        : {
+            source: {
+              git: {
+                ...(component.gitRepo ? { url: component.gitRepo } : {}),
+                ...(component.devfileUrl ? { devfileUrl: component.devfileUrl } : {}),
+                ...(component.dockerfileUrl ? { dockerfileUrl: component.dockerfileUrl } : {}),
+                ...(component.revision ? { revision: component.revision } : {}),
+                // FIXME - context is not supported by the HAS API correctly yet.
+                // Remove after https://issues.redhat.com/browse/DEVHAS-115 is fixed.
+                // ...(component.context ? { context: component.context } : {}),
+              },
+            },
+          }),
       secret,
       ...(component.image ? { containerImage: component.image } : {}),
       replicas: component.replicas,

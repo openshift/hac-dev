@@ -9,8 +9,22 @@ export const SPIAccessTokenBindingModel: K8sModelCommon = {
   namespaced: true,
 };
 
+export const SPIAccessCheckModel: K8sModelCommon = {
+  apiGroup: 'appstudio.redhat.com',
+  apiVersion: 'v1beta1',
+  kind: 'SPIAccessCheck',
+  plural: 'spiaccesschecks',
+  namespaced: true,
+};
+
 export const SPIAccessTokenBindingGroupVersionKind: K8sGroupVersionKind = {
   group: 'appstudio.redhat.com',
   version: 'v1beta1',
   kind: 'SPIAccessTokenBinding',
+};
+
+export const SPIAccessCheckGroupVersionKind: K8sGroupVersionKind = {
+  group: 'appstudio.redhat.com',
+  version: 'v1beta1',
+  kind: 'SPIAccessCheck',
 };

@@ -17,6 +17,8 @@ export const NamespaceContext = React.createContext<NamespaceContextData>({
   namespace: '',
 });
 
+export const useNamespace = () => React.useContext(NamespaceContext);
+
 type NamespacedPageProps = {
   children: React.ReactNode;
 };

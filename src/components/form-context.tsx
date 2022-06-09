@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { CatalogItem } from '../shared/components/catalog/utils/types';
 import { ComponentSource } from '../types';
+import { AddComponentValues } from './AddComponent/AddComponentForm';
 
 export type ComponentData = {
   source: ComponentSource;
@@ -12,13 +13,15 @@ export type ComponentData = {
   env?: { name: string; value: string }[];
 };
 
+export type DetectedComponentData = CatalogItem<ComponentData>;
+
 export type FormState = {
   workspace?: string;
   namespace?: string;
   application?: string;
   existingApplication?: string;
   source?: string;
-  sourceSecret?: string;
+  git?: AddComponentValues['git'];
   components?: CatalogItem<ComponentData>[];
   isMultiComponent?: boolean;
 };

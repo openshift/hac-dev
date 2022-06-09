@@ -9,13 +9,19 @@ import {
   ValidatedOptions,
 } from '@patternfly/react-core';
 import { useField, useFormikContext } from 'formik';
+import { useOnMount } from '../../hooks/useOnMount';
 import { getFieldId, HelpTooltipIcon, InputField } from '../../shared';
 import { useDebounceCallback } from '../../shared/hooks/useDebounceCallback';
-import { useFormValues } from '../form-context';
-import { AddComponentValues } from './AddComponentForm';
+import {
+  ServiceProviderType,
+  SPIAccessCheckAccessibilityStatus,
+  SPIAccessTokenBindingPhase,
+} from '../../types';
+import { initiateAccessTokenBinding } from '../../utils/create-utils';
+import { useNamespace } from '../NamespacedPage/NamespacedPage';
 import { GitAuthorization } from './GitAuthorization';
 import { GitOptions } from './GitOptions';
-import { mapDetectedComponents, useComponentDetection } from './utils';
+import { useAccessCheck } from './utils';
 import { gitUrlRegex, containerImageRegex } from './validation-utils';
 
 type SourceSectionProps = {
@@ -23,6 +29,7 @@ type SourceSectionProps = {
 };
 
 export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) => {
+  const { namespace } = useNamespace();
   const [authorizationExpanded, setAuthorizationExpanded] = React.useState<boolean>(true);
   const [showAuthorization, setShowAuthorization] = React.useState<boolean>(false);
   const [showGitOptions, setShowGitOptions] = React.useState<boolean>(false);
@@ -30,78 +37,108 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
     name: 'source',
     type: 'input',
   });
-  const [, { value: gitOptions = {} as AddComponentValues['git'] }] =
-    useField<AddComponentValues['git']>('git');
+  const [, { value: authSecret }] = useField<string>('git.authSecret');
   const { setFieldValue } = useFormikContext();
   const [sourceUrl, setSourceUrl] = React.useState('');
   const [validated, setValidated] = React.useState(ValidatedOptions.default);
   const [helpText, setHelpText] = React.useState('');
   const [helpTextInvalid, setHelpTextInvalid] = React.useState('');
-  const [formState] = useFormValues();
   const fieldId = getFieldId('source', 'input');
   const isValid = !(touched && error);
   const label = 'Git repo URL or container image';
+  const isContainerImage = containerImageRegex.test(source);
 
-  const [detectedComponents, loadError] = useComponentDetection(
-    sourceUrl,
-    formState.application,
-    gitOptions,
-  );
+  const [{ isGit, isRepoAccessible, serviceProvider, accessibility }, accessCheckLoaded] =
+    useAccessCheck(!isContainerImage ? sourceUrl : null, authSecret);
 
   const handleSourceChange = React.useCallback(() => {
     const searchTerm = source;
     const isGitUrlValid = gitUrlRegex.test(searchTerm);
     const isContainerImageValid = containerImageRegex.test(searchTerm);
+    setShowAuthorization(false);
+    setShowGitOptions(false);
+    setFieldValue('validated', false);
+    setFieldValue('git.authSecret', '');
     if (!searchTerm || (!isGitUrlValid && !isContainerImageValid)) {
       setValidated(ValidatedOptions.error);
-      setShowAuthorization(false);
-      setShowGitOptions(false);
+      setHelpTextInvalid('Invalid URL');
       setSourceUrl(null);
       return;
     }
-    if (isContainerImageValid) {
-      setValidated(ValidatedOptions.success);
-      setHelpText('Validated');
-      setShowAuthorization(true);
-      const name = searchTerm.split('/')?.[2];
-      setFieldValue('detectedComponents', [
-        { source: { image: { containerImage: searchTerm } }, name },
-      ]);
-    } else if (isGitUrlValid) {
+    if (isGitUrlValid) {
       setValidated(ValidatedOptions.default);
-      setFieldValue('detectedComponents', undefined);
       setHelpText('Validating...');
       setHelpTextInvalid('');
       setShowAuthorization(false);
-      setSourceUrl(source);
+      setSourceUrl(searchTerm);
+    }
+    //[TODO] remove this condition once SPIAccessCheck for Quay is implemented
+    if (isContainerImageValid) {
+      setValidated(ValidatedOptions.success);
+      setHelpText('Validated');
+      setFieldValue('validated', true);
+      setHelpTextInvalid('');
+      setShowAuthorization(true);
+      setShowGitOptions(false);
+      setSourceUrl(searchTerm);
     }
   }, [source, setFieldValue]);
 
   const debouncedHandleSourceChange = useDebounceCallback(handleSourceChange);
 
   React.useEffect(() => {
-    if (detectedComponents) {
-      setValidated(ValidatedOptions.success);
-      setHelpText('Validated');
-      setShowGitOptions(true);
-      setFieldValue('detectedComponents', mapDetectedComponents(detectedComponents));
-    } else if (loadError) {
-      setValidated(ValidatedOptions.error);
-      setHelpTextInvalid('Unable to detect components');
-      setFieldValue('detectedComponents', undefined);
-      setShowAuthorization(true);
-      setShowGitOptions(true);
-      // eslint-disable-next-line no-console
-      console.error('Unable to detect component: ', loadError);
+    if (accessCheckLoaded && !isContainerImage) {
+      if (isRepoAccessible) {
+        setValidated(ValidatedOptions.success);
+        setHelpText('Validated');
+        setFieldValue('validated', true);
+        isGit && setShowGitOptions(true);
+      } else if (
+        serviceProvider === ServiceProviderType.GitHub ||
+        serviceProvider === ServiceProviderType.Quay
+      ) {
+        setValidated(ValidatedOptions.error);
+        setHelpTextInvalid('Unable to access repository');
+        setShowAuthorization(true);
+      }
     }
-  }, [detectedComponents, loadError, setFieldValue]);
+  }, [
+    accessCheckLoaded,
+    isRepoAccessible,
+    isGit,
+    serviceProvider,
+    isContainerImage,
+    setFieldValue,
+  ]);
 
+  // only run this effect to set the authSecret if a repo is already authenticated
   React.useEffect(() => {
-    source && gitOptions && debouncedHandleSourceChange();
-    // Run detection on mount if initial value exists
-    // or if git options are changed
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gitOptions]);
+    (async () => {
+      if (
+        accessCheckLoaded &&
+        isRepoAccessible &&
+        !showAuthorization &&
+        accessibility === SPIAccessCheckAccessibilityStatus.private
+      ) {
+        const binding = await initiateAccessTokenBinding(source, namespace);
+        if (binding.status?.phase === SPIAccessTokenBindingPhase.Injected) {
+          setFieldValue('git.authSecret', binding.status.syncedObjectRef.name);
+        }
+      }
+    })();
+  }, [
+    accessCheckLoaded,
+    accessibility,
+    isRepoAccessible,
+    namespace,
+    setFieldValue,
+    showAuthorization,
+    source,
+  ]);
+
+  useOnMount(() => {
+    source && handleSourceChange();
+  });
 
   return (
     <>
