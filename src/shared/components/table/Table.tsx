@@ -8,11 +8,11 @@ import {
   TableBody,
 } from '@patternfly/react-table';
 import { AutoSizer, WindowScroller } from '@patternfly/react-virtualized-extension';
-import classNames from 'classnames';
 import { useDeepCompareMemoize } from '../../hooks';
 import { WithScrollContainer } from '../../utils';
 import { StatusBox } from '../status-box/StatusBox';
 import { RowFunctionArgs, VirtualBody, VirtualBodyProps } from './VirtualBody';
+import './Table.scss';
 
 export type Filter = { key: string; value: string };
 
@@ -144,7 +144,7 @@ const Table: React.FC<TableProps> = ({
     </WindowScroller>
   );
   const children = (
-    <div className={classNames({ 'co-virtualized-table': virtualize })}>
+    <div className="table">
       <TableWrapper virtualize={virtualize} ariaLabel={ariaLabel} ariaRowCount={ariaRowCount}>
         <PfTable
           cells={columns}
@@ -162,20 +162,18 @@ const Table: React.FC<TableProps> = ({
     </div>
   );
   return (
-    <div className="co-m-table-grid co-m-table-grid--bordered">
-      <StatusBox
-        skeleton={<div className="loading-skeleton--table" />}
-        data={data}
-        loaded={loaded}
-        loadError={loadError}
-        unfilteredData={data}
-        label={label}
-        NoDataEmptyMsg={NoDataEmptyMsg}
-        EmptyMsg={EmptyMsg}
-      >
-        {children}
-      </StatusBox>
-    </div>
+    <StatusBox
+      skeleton={<div className="loading-skeleton--table" />}
+      data={data}
+      loaded={loaded}
+      loadError={loadError}
+      unfilteredData={data}
+      label={label}
+      NoDataEmptyMsg={NoDataEmptyMsg}
+      EmptyMsg={EmptyMsg}
+    >
+      {children}
+    </StatusBox>
   );
 };
 
