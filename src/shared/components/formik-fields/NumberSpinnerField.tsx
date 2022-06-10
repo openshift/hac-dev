@@ -3,10 +3,15 @@ import { FormGroup } from '@patternfly/react-core';
 import { useField, useFormikContext, FormikValues } from 'formik';
 import { toInteger } from 'lodash-es';
 import NumberSpinner from '../spinner/NumberSpinner';
-import { FieldProps } from './field-types';
+import { NumberSpinnerFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
 
-const NumberSpinnerField: React.FC<FieldProps> = ({ label, helpText, required, ...props }) => {
+const NumberSpinnerField: React.FC<NumberSpinnerFieldProps> = ({
+  label,
+  helpText,
+  required,
+  ...props
+}) => {
   const [field, { touched, error }] = useField(props.name);
   const { setFieldValue, setFieldTouched } = useFormikContext<FormikValues>();
   const fieldId = getFieldId(props.name, 'number-spinner');

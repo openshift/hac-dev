@@ -15,6 +15,11 @@ export const reviewFormSchema = object({
             .min(1, 'Port must be between 1 and 65535.')
             .max(65535, 'Port must be between 1 and 65535.')
             .optional(),
+          resources: object({
+            cpu: number().typeError('Must be an integer').min(0, 'Value must be greater than 0'),
+            memory: number().typeError('Must be an integer').min(0, 'Value must be greater than 0'),
+          }),
+          replicas: number().typeError('Must be an integer').min(0, 'Value must be greater than 0'),
         }),
       ),
     ),

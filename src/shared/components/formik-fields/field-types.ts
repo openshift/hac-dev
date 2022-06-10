@@ -84,6 +84,7 @@ export interface ResourceLimitFieldProps extends FieldProps {
   unitName: string;
   unitOptions: object;
   fullWidth?: boolean;
+  minValue?: number;
 }
 
 export interface MultiColumnFieldProps extends FieldProps {
@@ -157,4 +158,8 @@ export interface SelectInputFieldProps extends FieldProps {
 export interface EnvironmentFieldProps extends FieldProps {
   envs?: (NameValuePair | NameValueFromPair)[];
   description?: string;
+}
+
+export interface NumberSpinnerFieldProps extends FieldProps {
+  min?: number;
 }
