@@ -5,9 +5,7 @@ import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class AddComponentPage extends AbstractWizardPage {
   waitRepoValidated() {
-    cy.contains('div', 'Validating...');
-    cy.contains('div', 'Validating...', { timeout: 60000 }).should('not.exist');
-    cy.contains('div', 'Validated');
+    cy.contains('div', 'Validated', {timeout: 60000});
   }
 
   openSamplesPage() {
