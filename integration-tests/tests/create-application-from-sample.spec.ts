@@ -51,4 +51,8 @@ describe('Create Application from Sample', () => {
     //Check if application does not exists
     applicationDetailPage.createdComponentNotExists('java-quarkus-sample');
   });
+
+  it('Delete application with existing component', () => {
+    Applications.deleteApplication(applicationName);
+  })
 });

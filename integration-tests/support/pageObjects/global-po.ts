@@ -29,3 +29,10 @@ export const waits = {
   tablePlaceholder: '.loading-skeleton--table',
   viewPlaceholder: '[data-test="skeleton-detail-view"]',
 };
+
+export const actions = {
+  kebabButton: '[data-testid="kebab-button"]',
+  deleteItem: '[data-testid="Delete"]',
+  deleteModalInput: 'input[name*="resourceName"]',
+  deleteModalButton: 'button[data-testid="delete-resource"]',
+}

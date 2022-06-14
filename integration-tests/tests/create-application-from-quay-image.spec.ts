@@ -4,6 +4,7 @@ import { ComponentPage } from '../support/pages/ComponentsPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
 import { Common } from '../utils/Common';
+import { Applications } from '../utils/Applications';
 
 describe('Create Component from Quay Image', () => {
   const addComponent = new AddComponentPage();
@@ -24,6 +25,7 @@ describe('Create Component from Quay Image', () => {
     Common.openApplicationURL(applicationName);
     applicationDetailPage.deleteComponent(componentName);
     applicationDetailPage.createdComponentNotExists(componentName);
+    Applications.deleteApplication(applicationName);
   });
 
   describe('Creating a Quay Component', () => {

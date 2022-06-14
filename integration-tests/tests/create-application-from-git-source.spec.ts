@@ -27,6 +27,7 @@ describe('Create Component from Public Git Source', () => {
     Common.openApplicationURL(applicationName);
     applicationDetailPage.deleteComponent(componentName);
     applicationDetailPage.createdComponentNotExists(componentName);
+    Applications.deleteApplication(applicationName);
   });
 
   describe('Creating a Quarkus Component', () => {

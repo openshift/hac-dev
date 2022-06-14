@@ -3,7 +3,6 @@ import { consentButton, waits } from '../support/pageObjects/global-po';
 export class Common {
   static openAppStudioBaseURL() {
     cy.visit(Cypress.env('HAC_BASE_URL'));
-    Common.clickOnConsentButton();
   }
 
   static openURL(URL: string) {
