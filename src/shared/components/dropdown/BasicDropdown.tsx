@@ -24,10 +24,8 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
   disabled,
 }) => {
   const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
-  const [currentSelection, setCurrentSelection] = React.useState<string>(selected || placeholder);
   const onToggle = (isOpen: boolean) => setDropdownOpen(isOpen);
   const onSelect = (event: React.SyntheticEvent<HTMLDivElement>) => {
-    setCurrentSelection(event.currentTarget.textContent);
     onChange && onChange(event.currentTarget.textContent);
     setDropdownOpen(false);
   };
@@ -48,7 +46,7 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
       onSelect={onSelect}
       toggle={
         <DropdownToggle onToggle={onToggle} data-test="dropdown-toggle">
-          {currentSelection}
+          {selected || placeholder}
         </DropdownToggle>
       }
       isOpen={dropdownOpen}
