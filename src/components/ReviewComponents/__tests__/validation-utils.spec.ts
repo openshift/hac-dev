@@ -37,6 +37,10 @@ describe('Review form validation schema', () => {
       components: {
         comp1: {
           name: 'test-comp',
+          resources: {
+            cpu: 1,
+            memory: 512,
+          },
         },
       },
     };
@@ -54,5 +58,21 @@ describe('Review form validation schema', () => {
       },
     };
     await expect(reviewFormSchema.validate(values)).rejects.toThrow('Must be an integer');
+  });
+
+  it('should fail when resource unit is negative', async () => {
+    const values = {
+      deployMethod: 1,
+      components: {
+        comp1: {
+          name: 'test-comp',
+          resources: {
+            cpu: -1,
+            memory: 512,
+          },
+        },
+      },
+    };
+    await expect(reviewFormSchema.validate(values)).rejects.toThrow('Value must be greater than 0');
   });
 });

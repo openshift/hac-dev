@@ -93,6 +93,7 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
                     name={`${fieldPrefix}.resources.cpu`}
                     unitName={`${fieldPrefix}.resources.cpuUnit`}
                     label="CPU"
+                    minValue={0}
                     unitOptions={CPUUnits}
                     helpText="The amount of CPU the container is guaranteed"
                   />
@@ -102,6 +103,7 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
                     name={`${fieldPrefix}.resources.memory`}
                     unitName={`${fieldPrefix}.resources.memoryUnit`}
                     label="Memory"
+                    minValue={0}
                     unitOptions={MemoryUnits}
                     helpText="The amount of memory the container is guaranteed"
                   />
@@ -112,6 +114,7 @@ export const ReviewSourceComponentCard: React.FC<ReviewSourceComponentCardProps>
                   <NumberSpinnerField
                     name={`${fieldPrefix}.replicas`}
                     label="Replicas"
+                    min={0}
                     helpText="Number of instances of your image"
                   />
                   <InputField
