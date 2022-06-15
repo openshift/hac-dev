@@ -5,6 +5,7 @@ import {
   buildLogModalContentPO,
   applicationDetailPagePO,
 } from '../pageObjects/createApplication-po';
+import { actions } from '../pageObjects/global-po';
 
 export class ApplicationDetailPage {
   checkReplica(replicaCount: number) {
@@ -58,14 +59,14 @@ export class ApplicationDetailPage {
 
   deleteComponent(componentName: string) {
     this.openActionList(componentName);
-    cy.get(applicationDetailPagePO.componentDelete).click();
-    cy.get(applicationDetailPagePO.deleteModalInput).clear().type(componentName);
-    cy.get(applicationDetailPagePO.deleteModalButton).click();
+    cy.get(actions.deleteItem).click();
+    cy.get(actions.deleteModalInput).clear().type(componentName);
+    cy.get(actions.deleteModalButton).click();
   }
 
   private openActionList(componentName: string) {
     cy.get(`[aria-label="${componentName}"]`)
-      .find(applicationDetailPagePO.componentPreferences)
+      .find(actions.kebabButton)
       .click();
   }
 }

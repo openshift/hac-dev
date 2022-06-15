@@ -42,15 +42,11 @@ export const ComponentsPagePO = {
 
 export const applicationDetailPagePO = {
   item: '.pf-c-description-list__text',
-  componentPreferences: '[data-testid="kebab-button"]',
-  componentDelete: '[data-testid="Delete"]',
   componentBuildLog: '[data-testid="View Build Logs"]',
   componentSettings: '[data-testid="Component settings"]',
   detailsArrow: '[aria-label="Details"]',
   cpuRamLabel: 'CPU/Mem Requests',
   replicaLabel: 'Replicas',
-  deleteModalInput: 'input[name*="resourceName"]',
-  deleteModalButton: 'button[data-testid="delete-resource"]',
 };
 
 export const componentsListPagePO = {
