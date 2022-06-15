@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { pluralize } from '@patternfly/react-core';
+import { pluralize, Skeleton } from '@patternfly/react-core';
 import { ComponentGroupVersionKind } from '../../models';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
@@ -11,7 +11,7 @@ import { useApplicationActions } from './application-actions';
 import { applicationTableColumnClasses } from './ApplicationListHeader';
 
 const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj }) => {
-  const [allComponents] = useK8sWatchResource<ComponentKind[]>({
+  const [allComponents, loaded] = useK8sWatchResource<ComponentKind[]>({
     groupVersionKind: ComponentGroupVersionKind,
     namespace: obj.metadata.namespace,
     isList: true,
@@ -31,7 +31,11 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
         </Link>
       </TableData>
       <TableData className={applicationTableColumnClasses.components}>
-        {pluralize(components.length, 'Component', 'Components')}
+        {loaded ? (
+          pluralize(components.length, 'Component')
+        ) : (
+          <Skeleton width="50%" screenreaderText="Loading component count" />
+        )}
       </TableData>
       <TableData className={applicationTableColumnClasses.environments}>-</TableData>
       <TableData className={applicationTableColumnClasses.lastDeploy}>
