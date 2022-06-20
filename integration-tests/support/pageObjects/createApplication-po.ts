@@ -6,6 +6,9 @@ export const addComponentPagePO = {
   gitReference: '[data-test="git-reference"]',
   contextDir: '[data-test="context-dir"]',
   next: 'button[type=submit]',
+  username: '[data-testid="auth-username"]',
+  token: '[data-testid="auth-token"]',
+  authenticatebutton: '[data-testid="authenticate-token"]',
 };
 
 export const componentSamplesPagePO = {

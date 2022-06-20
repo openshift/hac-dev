@@ -4,29 +4,34 @@ import { ComponentPage } from '../support/pages/ComponentsPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
-describe.skip('Create Component from Quay Image', () => {
+describe('Create Component from Private Git Source', () => {
   const addComponent = new AddComponentPage();
   const componentPage = new ComponentPage();
   const applicationDetailPage = new ApplicationDetailPage();
   const applicationName = Common.generateAppName();
-  const quayImage = 'quay.io/quarkus/code-quarkus-app';
-  const componentName = 'code-quarkus-app';
+  const privateRepo = 'https://github.com/hac-test/private-repo-check';
+  const componentName = 'python';
 
-  before(() => {
+  before(function () {
+    //set application name
     Applications.createApplication(applicationName);
   });
 
-  after(() => {
+  after(function () {
+    //Open components page
     Common.openApplicationURL(applicationName);
-    applicationDetailPage.deleteComponent(componentName);
-    applicationDetailPage.createdComponentNotExists(componentName);
     Applications.deleteApplication(applicationName);
   });
 
-  describe('Creating a Quay Component', () => {
+  describe('Creating Component', () => {
     it('Validate Repo', () => {
-      addComponent.setSource(quayImage);
-      addComponent.waitRepoValidated();
+      // Enter git repo URL
+      addComponent.setSource(privateRepo);
+      addComponent.waitUnableToAccess();
+      cy.wait(60000);
+      addComponent.loginToGitubByToken();
+      // Check if the source is validated
+      addComponent.waitRepoValidated(180000);
       addComponent.clickNext();
     });
 

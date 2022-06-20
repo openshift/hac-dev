@@ -1,11 +1,15 @@
+import { env } from 'process';
 import { Common } from '../../utils/Common';
 import { pageTitles } from '../constants/PageTitle';
 import { addComponentPagePO } from '../pageObjects/createApplication-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class AddComponentPage extends AbstractWizardPage {
-  waitRepoValidated() {
-    cy.contains('div', 'Validated', { timeout: 60000 });
+  waitUnableToAccess(timeoutDuration: number = 30000) {
+    cy.contains('div', 'Unable to access repository', { timeout: timeoutDuration });
+  }
+  waitRepoValidated(timeoutDuration: number = 60000) {
+    cy.contains('div', 'Validated', { timeout: timeoutDuration });
   }
 
   openSamplesPage() {
@@ -32,5 +36,12 @@ export class AddComponentPage extends AbstractWizardPage {
 
   clickNext() {
     cy.get(addComponentPagePO.next).trigger('click');
+  }
+
+  loginToGitubByToken(){
+    cy.contains('button', 'Use a token instead', {timeout : 120000}).click();
+    cy.get(addComponentPagePO.username).type('hac-test');
+    cy.get(addComponentPagePO.token).type(Cypress.env("GH_TOKEN"), { log: false });
+    cy.get(addComponentPagePO.authenticatebutton).click();
   }
 }

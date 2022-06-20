@@ -5,7 +5,7 @@ import { ComponentPage } from '../support/pages/ComponentsPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
-describe('Create Component from Public Git Source', () => {
+describe.skip('Create Component from Public Git Source', () => {
   const addComponent = new AddComponentPage();
   const componentPage = new ComponentPage();
   const applicationDetailPage = new ApplicationDetailPage();
@@ -26,8 +26,6 @@ describe('Create Component from Public Git Source', () => {
   after(() => {
     //Open components page
     Common.openApplicationURL(applicationName);
-    applicationDetailPage.deleteComponent(componentName);
-    applicationDetailPage.createdComponentNotExists(componentName);
     Applications.deleteApplication(applicationName);
   });
 
