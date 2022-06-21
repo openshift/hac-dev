@@ -17,9 +17,7 @@ import {
   FlexItem,
   Tooltip,
 } from '@patternfly/react-core';
-import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-icon';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
-import { global_palette_green_400 as greenColor } from '@patternfly/react-tokens/dist/js/global_palette_green_400';
 import { global_palette_red_100 as redColor } from '@patternfly/react-tokens/dist/js/global_palette_red_100';
 import { useLatestPipelineRunForComponent } from '../../hooks/usePipelineRunsForApplication';
 import { pipelineRunFilterReducer } from '../../shared';
@@ -45,14 +43,8 @@ const getConditionStatus = (condition: ResourceStatusCondition) => {
         <ExclamationCircleIcon color={redColor.value} /> Component {condition.type}
       </>
     );
-  } else if (condition.reason === 'OK') {
-    return (
-      <>
-        <CheckCircleIcon color={greenColor.value} /> Component {condition.type}
-      </>
-    );
   }
-  return condition.type;
+  return null;
 };
 
 export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ component, routes }) => {
@@ -100,7 +92,7 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
                 </FlexItem>
               </Flex>
             </DataListCell>,
-            condition ? (
+            condition && getConditionStatus(condition) ? (
               <DataListCell key={`${name}-component-status`} alignRight>
                 <Tooltip content={condition.message}>
                   <span>{getConditionStatus(condition)}</span>
