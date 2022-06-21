@@ -33,15 +33,14 @@ export class ComponentPage extends AbstractWizardPage {
 
   setCpuByButton(value: number) {
     cy.get(ComponentsPagePO.cpuInput).then(($cpu) => {
-      let cpu = Number($cpu.val());
-      while (cpu !== value) {
-        if (cpu < value) {
-          cy.get(ComponentsPagePO.cpuPlusButton).click();
-          cpu++;
-        } else {
-          cy.get(ComponentsPagePO.cpuMinusButton).click();
-          cpu--;
-        }
+      const diff = value - Number($cpu.val());
+      if (diff === 0) {
+        return;
+      }
+      const button = diff > 0 ? ComponentsPagePO.cpuPlusButton : ComponentsPagePO.cpuMinusButton;
+
+      for (let i = 0; i < Math.abs(diff); i++) {
+        cy.get(button).click();
       }
     });
 
