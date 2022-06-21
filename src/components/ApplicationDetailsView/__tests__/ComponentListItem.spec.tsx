@@ -68,15 +68,10 @@ describe('ComponentListItem', () => {
     await waitFor(() => screen.getByText('Component settings'));
   });
 
-  it('should render Success component condition status on UI', async () => {
-    render(<ComponentListItem component={componentCRMocks[0]} routes={[]} />);
-    await waitFor(() => screen.getByText('Component Created'));
-  });
-
-  it('should render Success component condition status on UI', async () => {
+  it('should not render Success component condition status on UI', async () => {
     const component = componentCRMocks[0];
     component.status.conditions = [];
     render(<ComponentListItem component={component} routes={[]} />);
-    await waitFor(() => expect(screen.queryByText('Component Created')).toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByText('Component Created')).not.toBeInTheDocument());
   });
 });
