@@ -88,4 +88,10 @@ describe('Application List Row', () => {
     const { getByText } = render(<ApplicationListRow columns={null} obj={application} />);
     expect(getByText('0 Components')).toBeInTheDocument();
   });
+
+  it('renders skeleton in the component column if the components are not loaded', () => {
+    watchResourceMock.mockReturnValue([[], false]);
+    const { getByText } = render(<ApplicationListRow columns={null} obj={application} />);
+    expect(getByText('Loading component count')).toBeInTheDocument();
+  });
 });
