@@ -35,6 +35,6 @@ describe('ComponentListItem', () => {
     const component = componentCRMocks[0];
     component.status.conditions = [];
     render(<ComponentListItem component={component} routes={[]} />);
-    await waitFor(() => expect(screen.queryByText('Component Created')).toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByText('Component Created')).not.toBeInTheDocument());
   });
 });
