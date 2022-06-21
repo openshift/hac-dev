@@ -5,6 +5,7 @@ import { useLatestPipelineRunForComponent } from '../../../hooks/usePipelineRuns
 import { componentCRMocks } from '../__data__/mock-data';
 import { mockPipelineRuns } from '../__data__/mock-pipeline-run';
 import { ComponentListItem } from '../ComponentListItem';
+import '@testing-library/jest-dom';
 
 configure({ testIdAttribute: 'data-testId' });
 
@@ -65,5 +66,17 @@ describe('ComponentListItem', () => {
     const kebabButton = screen.getByTestId('kebab-button');
     fireEvent.click(kebabButton);
     await waitFor(() => screen.getByText('Component settings'));
+  });
+
+  it('should render Success component condition status on UI', async () => {
+    render(<ComponentListItem component={componentCRMocks[0]} routes={[]} />);
+    await waitFor(() => screen.getByText('Component Created'));
+  });
+
+  it('should render Success component condition status on UI', async () => {
+    const component = componentCRMocks[0];
+    component.status.conditions = [];
+    render(<ComponentListItem component={component} routes={[]} />);
+    await waitFor(() => expect(screen.queryByText('Component Created')).toBeInTheDocument());
   });
 });

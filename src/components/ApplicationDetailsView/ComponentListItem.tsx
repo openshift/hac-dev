@@ -15,12 +15,18 @@ import {
   DescriptionListTermHelpTextButton,
   Flex,
   FlexItem,
+  Tooltip,
 } from '@patternfly/react-core';
+import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-icon';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
+import { global_palette_green_400 as greenColor } from '@patternfly/react-tokens/dist/js/global_palette_green_400';
+import { global_palette_red_100 as redColor } from '@patternfly/react-tokens/dist/js/global_palette_red_100';
 import { useLatestPipelineRunForComponent } from '../../hooks/usePipelineRunsForApplication';
 import { pipelineRunFilterReducer } from '../../shared';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
-import { ComponentKind, RouteKind } from '../../types';
+import { ComponentKind, RouteKind, ResourceStatusCondition } from '../../types';
+import { getConditionForResource } from '../../utils/common-utils';
 import { getBuildStatusIcon } from '../../utils/gitops-utils';
 import { getComponentRouteWebURL } from '../../utils/route-utils';
 import './ComponentListItem.scss';
@@ -30,6 +36,23 @@ import { useComponentActions } from './component-actions';
 type ComponentListViewPageProps = {
   component: ComponentKind;
   routes: RouteKind[];
+};
+
+const getConditionStatus = (condition: ResourceStatusCondition) => {
+  if (condition.reason === 'Error') {
+    return (
+      <>
+        <ExclamationCircleIcon color={redColor.value} /> Component {condition.type}
+      </>
+    );
+  } else if (condition.reason === 'OK') {
+    return (
+      <>
+        <CheckCircleIcon color={greenColor.value} /> Component {condition.type}
+      </>
+    );
+  }
+  return condition.type;
 };
 
 export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ component, routes }) => {
@@ -43,13 +66,19 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
   const resourceRequests = resources?.requests;
   const containerImage = component.status?.containerImage;
   const componentRouteWebURL = routes?.length > 0 && getComponentRouteWebURL(routes, name);
+  const condition = getConditionForResource<ComponentKind>(component);
 
   const isContainerImage = !component.spec.source?.git?.url;
 
   return (
     <DataListItem aria-label={name} isExpanded={expanded} data-testid="component-list-item">
       <DataListItemRow>
-        <DataListToggle id={name} onClick={() => setExpanded((x) => !x)} isExpanded={expanded} />
+        <DataListToggle
+          id={name}
+          data-testId={`${name}-toggle`}
+          onClick={() => setExpanded((x) => !x)}
+          isExpanded={expanded}
+        />
         <DataListItemCells
           dataListCells={[
             <DataListCell key="name">
@@ -71,6 +100,13 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
                 </FlexItem>
               </Flex>
             </DataListCell>,
+            condition ? (
+              <DataListCell key={`${name}-component-status`} alignRight>
+                <Tooltip content={condition.message}>
+                  <span>{getConditionStatus(condition)}</span>
+                </Tooltip>
+              </DataListCell>
+            ) : null,
             <DataListCell key="build" alignRight>
               <Flex direction={{ default: 'column' }}>
                 {pipelineRun && (

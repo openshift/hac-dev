@@ -1,4 +1,5 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
+import { ResourceStatusCondition } from './common-types';
 
 export type ResourceRequirements = {
   requests?: {
@@ -42,7 +43,7 @@ export type ComponentKind = K8sResourceCommon & {
   spec: ComponentSpecs;
   status?: {
     containerImage?: string;
-    conditions?: any;
+    conditions?: ResourceStatusCondition[];
     devfile?: string;
     gitops?: { repositoryURL?: string; branch?: string; context?: string };
     webhook?: string;
