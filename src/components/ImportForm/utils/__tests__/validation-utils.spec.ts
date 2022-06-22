@@ -1,4 +1,4 @@
-import { reviewValidationSchema } from '../validation-utils';
+import { containerImageRegex, reviewValidationSchema } from '../validation-utils';
 
 describe('Review form validation schema', () => {
   it('should fail when component name is missing', async () => {
@@ -86,5 +86,17 @@ describe('Review form validation schema', () => {
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
       'Value must be greater than 0',
     );
+  });
+});
+
+describe('containerImageRegex', () => {
+  it('should validate a container image url starting with https:// or quay.io/', () => {
+    expect('https://quay.io/example/repo').toMatch(containerImageRegex);
+    expect('quay.io/example/repo').toMatch(containerImageRegex);
+  });
+
+  it('should not validate a non-quay container image url', () => {
+    expect('https://docker.io/example/repo').not.toMatch(containerImageRegex);
+    expect('quay.com/example/repo').not.toMatch(containerImageRegex);
   });
 });

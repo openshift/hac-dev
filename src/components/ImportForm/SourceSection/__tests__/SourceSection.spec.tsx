@@ -95,15 +95,13 @@ describe('SourceSection', () => {
     await waitFor(() => expect(screen.getByText('Authorization')).toBeInTheDocument());
   });
 
-  it('should show Authorization if input is container image', async () => {
+  it('should show Authorization if container image is not accessible', async () => {
     useAccessCheckMock.mockReturnValue([
-      { isRepoAccessible: true, isGit: false, serviceProvider: ServiceProviderType.Quay },
-      null,
+      { isRepoAccessible: false, isGit: false, serviceProvider: ServiceProviderType.Quay },
+      true,
     ]);
 
-    const { input, user } = renderSourceSection();
-
-    await user.type(input, 'quay.io/example/repo');
+    renderSourceSection();
 
     await waitFor(() => expect(screen.getByText('Authorization')).toBeInTheDocument());
     await waitFor(() => expect(screen.queryByText('Git options')).toBeNull());
@@ -135,17 +133,6 @@ describe('SourceSection', () => {
     await user.type(input, 'dummy text');
 
     await waitFor(() => expect(screen.queryByText('Git options')).toBeNull());
-  });
-
-  it('should validate a container image url starting with https:// or quay.io/', async () => {
-    useAccessCheckMock.mockReturnValue([{}, false]);
-
-    const { input, user } = renderSourceSection();
-
-    await user.type(input, 'https://quay.io/example/repo');
-
-    await waitFor(() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
-    await waitFor(() => screen.getByText('Validated'));
   });
 
   it('should show proper states for valid url based on useAccessCheck Values', async () => {
@@ -183,12 +170,13 @@ describe('SourceSection', () => {
 
     instantiateAccessBindingMock.mockResolvedValue({
       status: { phase: 'Injected', syncedObjectRef: { name: 'test-token' } },
+      spec: { repoUrl: 'https://github.com/example/repo' },
     });
 
     const { input, user } = renderSourceSection();
 
     await user.type(input, 'https://github.com/example/repo');
 
-    await waitFor(() => expect(screen.getByText('Validated')).toBeInTheDocument());
+    expect(instantiateAccessBindingMock).toHaveBeenCalled();
   });
 });

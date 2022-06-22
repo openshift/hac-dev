@@ -30,24 +30,25 @@ const renderAuthOptions = () => namespaceRenderer(<AuthOptions />, 'test-ns');
 
 describe('AuthOptions', () => {
   it('should show spinner if auth url is not loaded', () => {
-    useAccessTokenBindingMock.mockReturnValue([undefined, false]);
+    useAccessTokenBindingMock.mockReturnValue([{}, false]);
     useFormikContextMock.mockReturnValue({ values: { source: 'test-source', secret: null } });
     renderAuthOptions();
     screen.getByRole('progressbar');
   });
 
   it('should show success message if secret is available', () => {
-    useAccessTokenBindingMock.mockReturnValue(['', true]);
+    useAccessTokenBindingMock.mockReturnValue([{}, true]);
     useFormikContextMock.mockReturnValue({
       values: { source: 'test-source', secret: 'test-secret' },
     });
     renderAuthOptions();
     expect(screen.getByText('Authorized access')).toBeInTheDocument();
     expect(screen.queryByText('Sign in')).not.toBeInTheDocument();
+    expect(screen.queryByText('Use a token instead')).not.toBeInTheDocument();
   });
 
   it('should not call window.open if auth url is not available', async () => {
-    useAccessTokenBindingMock.mockReturnValue(['', true]);
+    useAccessTokenBindingMock.mockReturnValue([{}, true]);
     useFormikContextMock.mockReturnValue({
       values: { source: 'https://github.com/test/repository', secret: null },
     });
@@ -60,11 +61,11 @@ describe('AuthOptions', () => {
       fireEvent.click(button);
     });
 
-    await expect(windowOpenMock).not.toHaveBeenCalled();
+    expect(windowOpenMock).not.toHaveBeenCalled();
   });
 
   it('should call window.open with auth url and token', async () => {
-    useAccessTokenBindingMock.mockReturnValue(['example.com/auth?state=abcd', true]);
+    useAccessTokenBindingMock.mockReturnValue([{ oAuthUrl: 'example.com/auth?state=abcd' }, true]);
     useFormikContextMock.mockReturnValue({
       values: { source: 'https://github.com/test/repository', secret: null },
     });
@@ -76,7 +77,7 @@ describe('AuthOptions', () => {
       fireEvent.click(button);
     });
 
-    await expect(windowOpenMock).toHaveBeenCalledWith(
+    expect(windowOpenMock).toHaveBeenCalledWith(
       'example.com/auth?state=abcd&k8s_token=token',
       '_blank',
     );
