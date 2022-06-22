@@ -6,11 +6,8 @@ import '@testing-library/jest-dom';
 
 const containerImageComponent = {
   name: 'demo-latest',
-  source: {
-    image: {
-      containerImage: 'quay.io/sbudhwar/demo:latest',
-    },
-  },
+  source: {},
+  containerImage: 'quay.io/sbudhwar/demo:latest',
 };
 
 const gitRepoComponent = {
