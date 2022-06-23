@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   KEY_CODES,
   MenuItem,
@@ -32,7 +32,7 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
   const { href, external } = cta as { href: string; external?: boolean };
   const isDisabled = !isAllowed || disabled;
   const classes = classNames({ 'pf-m-disabled': isDisabled });
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClick = React.useCallback(
     (event) => {
@@ -41,12 +41,12 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
         cta();
       } else if (isObject(cta)) {
         if (!cta.external) {
-          history.push(cta.href);
+          navigate(cta.href);
         }
       }
       onClick && onClick();
     },
-    [cta, history, onClick],
+    [cta, navigate, onClick],
   );
 
   const handleKeyDown = (event) => {

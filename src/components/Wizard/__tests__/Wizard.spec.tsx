@@ -1,12 +1,17 @@
 import * as React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { useWizardContext, Wizard } from '../Wizard';
 
 const mockGoBack = jest.fn();
 
-jest.mock('react-router-dom', () => ({
-  useHistory: jest.fn(() => ({ goBack: mockGoBack })),
-}));
+jest.mock('react-router-dom', () => {
+  const originalModule = (jest as any).requireActual('react-router-dom');
+  return {
+    ...originalModule,
+    useNavigate: () => mockGoBack,
+  };
+});
 
 const DummyComponent = () => {
   const { handleNext, handleBack, handleReset, currentStep } = useWizardContext();
@@ -56,7 +61,11 @@ describe('Wizard', () => {
   });
 
   it('should reset current step to 0', () => {
-    render(<WrapperComponent />);
+    render(
+      <BrowserRouter>
+        <WrapperComponent />
+      </BrowserRouter>,
+    );
     fireEvent.click(screen.getByTestId('next')); // 1
     fireEvent.click(screen.getByTestId('next')); // 2
     fireEvent.click(screen.getByTestId('reset')); // 0

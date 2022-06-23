@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import { RouteComponentProps } from 'react-router-dom';
+import { RoutesProps } from 'react-router-dom';
 import { useQueryParams } from '../../hooks';
 import CatalogController from './CatalogController';
 import { searchCatalog } from './utils/catalog-utils';
 import { CatalogQueryParams, CatalogService } from './utils/types';
 
-type CatalogPageProps = RouteComponentProps;
+type CatalogPageProps = RoutesProps;
 
 const CatalogPage: React.FC<CatalogPageProps> = () => {
   const { t } = useTranslation();

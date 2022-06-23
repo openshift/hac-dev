@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   EmptyState,
   EmptyStateVariant,
@@ -16,7 +16,7 @@ import { getQueryArgument } from '../shared/utils';
 
 const ComponentSettingsPage: React.FunctionComponent = () => {
   const componentName = getQueryArgument('componentName');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const emptyState = (
     <PageLayout
@@ -32,7 +32,7 @@ const ComponentSettingsPage: React.FunctionComponent = () => {
         <Title headingLevel="h4" size="lg">
           No component specified
         </Title>
-        <Button variant="primary" onClick={() => history.goBack()}>
+        <Button variant="primary" onClick={() => navigate(-1)}>
           Go back
         </Button>
       </EmptyState>
