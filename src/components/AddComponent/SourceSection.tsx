@@ -51,6 +51,18 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
   const [{ isGit, isRepoAccessible, serviceProvider, accessibility }, accessCheckLoaded] =
     useAccessCheck(!isContainerImage ? sourceUrl : null, authSecret);
 
+  const setFormValidating = React.useCallback(() => {
+    setValidated(ValidatedOptions.default);
+    setHelpText('Validating...');
+    setFieldValue('validated', false);
+  }, [setFieldValue]);
+
+  const setFormValidated = React.useCallback(() => {
+    setValidated(ValidatedOptions.success);
+    setHelpText('Validated');
+    setFieldValue('validated', true);
+  }, [setFieldValue]);
+
   const handleSourceChange = React.useCallback(() => {
     const searchTerm = source;
     const isGitUrlValid = gitUrlRegex.test(searchTerm);
@@ -66,32 +78,27 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
       return;
     }
     if (isGitUrlValid) {
-      setValidated(ValidatedOptions.default);
-      setHelpText('Validating...');
+      setFormValidating();
       setHelpTextInvalid('');
       setShowAuthorization(false);
       setSourceUrl(searchTerm);
     }
     //[TODO] remove this condition once SPIAccessCheck for Quay is implemented
     if (isContainerImageValid) {
-      setValidated(ValidatedOptions.success);
-      setHelpText('Validated');
-      setFieldValue('validated', true);
+      setFormValidated();
       setHelpTextInvalid('');
       setShowAuthorization(true);
       setShowGitOptions(false);
       setSourceUrl(searchTerm);
     }
-  }, [source, setFieldValue]);
+  }, [source, setFieldValue, setFormValidating, setFormValidated]);
 
   const debouncedHandleSourceChange = useDebounceCallback(handleSourceChange);
 
   React.useEffect(() => {
     if (accessCheckLoaded && !isContainerImage) {
       if (isRepoAccessible) {
-        setValidated(ValidatedOptions.success);
-        setHelpText('Validated');
-        setFieldValue('validated', true);
+        setFormValidated();
         isGit && setShowGitOptions(true);
       } else if (
         serviceProvider === ServiceProviderType.GitHub ||
@@ -109,6 +116,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
     serviceProvider,
     isContainerImage,
     setFieldValue,
+    setFormValidated,
   ]);
 
   // only run this effect to set the authSecret if a repo is already authenticated
@@ -120,9 +128,11 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
         !showAuthorization &&
         accessibility === SPIAccessCheckAccessibilityStatus.private
       ) {
+        setFormValidating();
         const binding = await initiateAccessTokenBinding(source, namespace);
         if (binding.status?.phase === SPIAccessTokenBindingPhase.Injected) {
           setFieldValue('git.authSecret', binding.status.syncedObjectRef.name);
+          setFormValidated();
         }
       }
     })();
@@ -132,6 +142,8 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onSamplesClick }) 
     isRepoAccessible,
     namespace,
     setFieldValue,
+    setFormValidated,
+    setFormValidating,
     showAuthorization,
     source,
   ]);

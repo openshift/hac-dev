@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ServiceProviderType } from '../../../types';
+import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../../types';
+import { initiateAccessTokenBinding } from '../../../utils/create-utils';
 import { formikRenderer } from '../../../utils/test-utils';
 import { SourceSection } from '../SourceSection';
 import '@testing-library/jest-dom';
@@ -21,7 +22,12 @@ jest.mock('../../../shared/hooks', () => ({
   useFormikValidationFix: jest.fn(),
 }));
 
+jest.mock('../../../utils/create-utils', () => ({
+  initiateAccessTokenBinding: jest.fn(),
+}));
+
 const useAccessCheckMock = useAccessCheck as jest.Mock;
+const instantiateAccessBindingMock = initiateAccessTokenBinding as jest.Mock;
 
 const renderSourceSection = () => {
   const onClick = jest.fn();
@@ -162,5 +168,27 @@ describe('SourceField', () => {
     await waitFor(() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
     await waitFor(() => screen.getByText('Validated'));
     await waitFor(() => expect(screen.getByText('Git options')).toBeInTheDocument());
+  });
+
+  it('should fetch secret if private repository has been previously authenticated', async () => {
+    useAccessCheckMock.mockReturnValue([
+      {
+        isRepoAccessible: true,
+        isGit: true,
+        serviceProvider: ServiceProviderType.GitHub,
+        accessibility: SPIAccessCheckAccessibilityStatus.private,
+      },
+      true,
+    ]);
+
+    instantiateAccessBindingMock.mockResolvedValue({
+      status: { phase: 'Injected', syncedObjectRef: { name: 'test-token' } },
+    });
+
+    const { input, user } = renderSourceSection();
+
+    await user.type(input, 'https://github.com/example/repo');
+
+    await waitFor(() => expect(screen.getByText('Validated')).toBeInTheDocument());
   });
 });
