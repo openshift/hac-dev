@@ -8,6 +8,19 @@ module.exports = (on, config) => {
   };
   require('cypress-terminal-report/src/installLogsPrinter')(on, logOptions);
 
+  on('task', {
+    log(message) {
+      // eslint-disable-next-line no-console
+      console.log(message);
+      return null;
+    },
+    logTable(data) {
+      // eslint-disable-next-line no-console
+      console.table(data);
+      return null;
+    }
+  });
+
   if (!Object.prototype.hasOwnProperty.call(config.env, 'HAC_BASE_URL')) {
     config.env.HAC_BASE_URL = 'https://prod.foo.redhat.com:1337/beta/hac/app-studio';
   }

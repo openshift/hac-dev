@@ -1,4 +1,5 @@
 import { Common } from '../../utils/Common';
+import { pageTitles } from '../constants/PageTitle';
 import { addComponentPagePO } from '../pageObjects/createApplication-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
@@ -10,6 +11,7 @@ export class AddComponentPage extends AbstractWizardPage {
   openSamplesPage() {
     cy.contains(addComponentPagePO.samples).click();
     Common.waitForLoad();
+    cy.testA11y(`${pageTitles.sampleStart} page`);
   }
 
   setSource(source: string) {

@@ -72,6 +72,7 @@ export class ComponentPage extends AbstractWizardPage {
 
   showAdvancedOptions() {
     cy.contains('button', ComponentsPagePO.showAdvancedSetting).click();
+    cy.testA11y(`Component deployment options`);
   }
 
   createApplication() {
