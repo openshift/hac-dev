@@ -12,6 +12,7 @@ export class AddComponentPage extends AbstractWizardPage {
     cy.contains(addComponentPagePO.samples).click();
     Common.verifyPageTitle(pageTitles.sampleStart);
     Common.waitForLoad();
+    cy.testA11y(`${pageTitles.sampleStart} page`);
   }
 
   setSource(source: string) {

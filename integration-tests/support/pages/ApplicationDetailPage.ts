@@ -30,6 +30,7 @@ export class ApplicationDetailPage {
     cy.get(applicationDetailPagePO.componentSettings).click();
     Common.verifyPageTitle(pageTitles.componentSettings);
     Common.waitForLoad();
+    cy.testA11y(`${pageTitles.componentSettings} page`);
   }
 
   checkBuildLog(componentName: string, textToVerify: string) {
@@ -43,6 +44,7 @@ export class ApplicationDetailPage {
     Common.verifyPageTitle(application);
     Common.waitForLoad();
     this.getComponentListItem(component).should('exist');
+    cy.testA11y('Application details page');
   }
 
   createdComponentNotExists(application: string) {
@@ -57,6 +59,7 @@ export class ApplicationDetailPage {
     cy.get(addComponentPagePO.addComponent).click();
     Common.verifyPageTitle(pageTitles.buildApp);
     Common.waitForLoad();
+    cy.testA11y(`${pageTitles.buildApp} page`);
   }
 
   deleteComponent(componentName: string) {
