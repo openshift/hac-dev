@@ -60,7 +60,7 @@
   "devDependencies": {
     "@openshift/dynamic-plugin-sdk-webpack": "^1.0.0-alpha2",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^1.2.1",
-    "@redhat-cloud-services/frontend-components-config": "^4.6.1",
+    "@redhat-cloud-services/frontend-components-config": "^4.6.14",
     "@redhat-cloud-services/frontend-components-config-utilities": "^1.5.15",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^12.1.2",
