@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { match as RMatch } from 'react-router-dom';
+import { RouteMatch } from 'react-router-dom';
 import {
   Table as PfTable,
   TableHeader,
@@ -50,7 +50,7 @@ export type ComponentProps<D = any> = {
   data: D[];
   filters: Filter[];
   selected: boolean;
-  match: RMatch<any>;
+  match: RouteMatch<any>;
   kindObj: any;
 };
 
@@ -79,7 +79,7 @@ const getComponentProps = (
   data: any[],
   filters: Filter[],
   selected: boolean,
-  match: RMatch<any>,
+  match: RouteMatch<any>,
   kindObj: any,
 ): ComponentProps => ({
   data,

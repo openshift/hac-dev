@@ -11,9 +11,7 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
-  useHistory: jest.fn(() => ({
-    history: { goBack: jest.fn() },
-  })),
+  useNavigate: jest.fn(),
 }));
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({

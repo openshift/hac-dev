@@ -28,7 +28,7 @@ jest.mock('react-router-dom', () => ({
   useLocation: jest.fn(() => ({
     search: '',
   })),
-  useHistory: jest.fn(() => ({ push: jest.fn() })),
+  useNavigate: jest.fn(),
 }));
 
 jest.mock('react-i18next', () => ({

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { Router } from 'react-router';
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import { createBrowserHistory } from 'history';
 import PageLayout from '../PageLayout';
@@ -18,7 +18,7 @@ describe('Page', () => {
 
   it('should render breadcrumbs', () => {
     render(
-      <Router history={createBrowserHistory()}>
+      <HistoryRouter history={createBrowserHistory()}>
         <PageLayout
           breadcrumbs={[
             { path: '/', name: 'Home' },
@@ -29,7 +29,7 @@ describe('Page', () => {
         >
           <span data-testid="children-text">children</span>
         </PageLayout>
-      </Router>,
+      </HistoryRouter>,
     );
     expect(screen.getByTestId('children-text')).toBeInTheDocument();
     expect(screen.getByText('Home')).toBeInTheDocument();

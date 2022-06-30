@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { Formik } from 'formik';
@@ -18,7 +18,7 @@ type ComponentSettingsViewProps = {
 const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps> = ({
   componentName,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { namespace } = React.useContext(NamespaceContext);
 
   const [component, loaded] = useK8sWatchResource<ComponentKind>({
@@ -70,7 +70,7 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       'update',
     )
       .then(() => {
-        history.push(`/app-studio/applications?name=${applicationName}`);
+        navigate(`/app-studio/applications?name=${applicationName}`);
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
@@ -83,7 +83,7 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
   return (
     <Formik
       onSubmit={handleSubmit}
-      onReset={history.goBack}
+      onReset={() => navigate(-1)}
       initialValues={initialValues}
       validationSchema={reviewFormSchema}
     >

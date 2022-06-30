@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CatalogTile } from '@patternfly/react-catalog-view-extension';
 import {
   Badge,
@@ -35,7 +35,7 @@ import '../../shared/style.scss';
 import './ComponentSamplesPage.scss';
 
 export const ComponentSamplesPage = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { handleBack, handleReset } = useWizardContext();
   const [formState, setValues] = useFormValues();
   const [selected, setSelected] = React.useState<CatalogItem>();
@@ -105,7 +105,7 @@ export const ComponentSamplesPage = () => {
     setSubmitting(true);
     createResources(formState, componentData)
       .then((appName) => {
-        history.push(`/app-studio/applications?name=${appName}`);
+        navigate(`/app-studio/applications?name=${appName}`);
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
@@ -113,7 +113,7 @@ export const ComponentSamplesPage = () => {
         setSubmitting(false);
         setSubmitError(error.message);
       });
-  }, [formState, componentData, history]);
+  }, [formState, componentData, navigate]);
 
   const handleSelect = React.useCallback((item) => {
     setSelected((prevState) => {

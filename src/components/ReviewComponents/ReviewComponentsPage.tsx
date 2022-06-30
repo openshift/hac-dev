@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import { mapDetectedComponents, useComponentDetection } from '../AddComponent/utils';
 import { containerImageRegex } from '../AddComponent/validation-utils';
@@ -12,7 +12,7 @@ import { reviewFormSchema } from './validation-utils';
 
 export const ReviewComponentsPage: React.FC = () => {
   const [formState] = useFormValues();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const isContainerImage = containerImageRegex.test(formState.source);
 
@@ -54,7 +54,7 @@ export const ReviewComponentsPage: React.FC = () => {
     (data: ReviewComponentsFormValues, actions) => {
       createResources(formState, data.components)
         .then((appName) => {
-          history.push(`/app-studio/applications?name=${appName}`);
+          navigate(`/app-studio/applications?name=${appName}`);
         })
         .catch((error) => {
           // eslint-disable-next-line no-console
@@ -63,7 +63,7 @@ export const ReviewComponentsPage: React.FC = () => {
           actions.setStatus({ submitError: error.message });
         });
     },
-    [formState, history],
+    [formState, navigate],
   );
 
   return (
