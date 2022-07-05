@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { Form } from '@patternfly/react-core';
 import { RenderOptions, render } from '@testing-library/react';
 import { FormikValues, Formik } from 'formik';
@@ -27,5 +28,14 @@ export const namespaceRenderer = (
     wrapper: ({ children }) => (
       <NamespaceContext.Provider value={{ namespace }}>{children}</NamespaceContext.Provider>
     ),
+    ...options,
+  });
+
+export const routerRenderer = (
+  element: React.ReactElement,
+  options?: Omit<RenderOptions, 'wrapper'>,
+) =>
+  render(element, {
+    wrapper: ({ children }) => <BrowserRouter>{children}</BrowserRouter>,
     ...options,
   });

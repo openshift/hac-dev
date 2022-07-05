@@ -8,29 +8,23 @@ import { PipelineRunKind } from '../../shared/components/pipeline-run-logs/types
 import { PipelineRunGroupVersionKind } from '../../shared/components/pipeline-run-logs/utils';
 import { EmptyBox, LoadingBox } from '../../shared/components/status-box/StatusBox';
 import { ComponentKind } from '../../types';
+import { BUILD_APPLICATION_LABEL, BUILD_COMPONENT_LABEL } from '../../utils/const';
 import { ComponentProps, createModalLauncher } from '../modal/createModalLauncher';
 import './BuildLogViewer.scss';
+import { useModalLauncher } from '../modal/ModalProvider';
 
 type BuildLogViewerProps = ComponentProps & {
   component: ComponentKind;
 };
 
-const BUILD_COMPONENT_LABEL = 'build.appstudio.openshift.io/component';
-const BUILD_APPLICATION_LABEL = 'build.appstudio.openshift.io/application';
-
 export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => {
   const watchResource: WatchK8sResource = React.useMemo(() => {
-    const matchLabels = {
-      BUILD_COMPONENT_LABEL: component.metadata.name,
-      BUILD_APPLICATION_LABEL: component.spec.application,
-    };
     return {
       groupVersionKind: PipelineRunGroupVersionKind,
       namespace: component.metadata.namespace,
-      selector: { matchLabels },
       isList: true,
     };
-  }, [component.metadata.name, component.spec.application, component.metadata.namespace]);
+  }, [component.metadata.namespace]);
 
   const [pipelineRuns, loaded, error] = useK8sWatchResource(watchResource);
 
@@ -85,3 +79,11 @@ export const buildLogViewerLauncher = createModalLauncher(BuildLogViewer, {
   variant: ModalVariant.large,
   title: 'View build logs',
 });
+
+export const useBuildLogViewerModal = (component: ComponentKind) => {
+  const showModal = useModalLauncher();
+  return React.useCallback(
+    () => showModal(buildLogViewerLauncher({ component })),
+    [component, showModal],
+  );
+};

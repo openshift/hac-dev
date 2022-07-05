@@ -143,9 +143,9 @@ export const pipelineRunStatus = (pipelineRun): string => {
   }
   return status;
 };
-export const pipelineRunFilterReducer = (pipelineRun): string => {
+export const pipelineRunFilterReducer = (pipelineRun): runStatus => {
   const status = pipelineRunStatus(pipelineRun);
-  return status || '-';
+  return (status || '-') as runStatus;
 };
 
 export enum runStatus {

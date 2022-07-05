@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
 
-export type BreadCrumbsProps = {
+type BreadCrumbsProps = {
   breadcrumbs: { name: string; path: string }[];
   className?: string;
 };

@@ -5,24 +5,26 @@ type ModalComponentProps = Omit<ModalProps, 'children' | 'isOpen' | 'appendTo'> 
   ref?: React.LegacyRef<Modal>;
 };
 
+type OnModalClose<D = {}> = (obj?: D) => void;
+
 export type ComponentProps = {
-  onClose?: () => void;
+  onClose?: (obj?: object) => void;
 };
 
-export type ModalLauncher = (onClose: () => void) => React.ReactElement;
+export type ModalLauncher<OBJ = {}> = (onClose: OnModalClose<OBJ>) => React.ReactElement;
 
-export type CreateModalLauncher = <P extends ComponentProps>(
-  Component: React.ComponentType<P>,
-  modalProps?: ModalComponentProps & {
-    'data-testid': string;
-  },
-) => (componentProps?: P) => ModalLauncher;
-
-export const createModalLauncher: CreateModalLauncher =
-  (Component, modalProps) => (componentProps) => (onClose) => {
-    const handleClose = () => {
+export const createModalLauncher =
+  <P extends ComponentProps, OBJ extends {}>(
+    Component: React.ComponentType<P>,
+    modalProps: ModalComponentProps & {
+      'data-testid': string;
+    },
+  ) =>
+  (componentProps?: P): ModalLauncher<OBJ> =>
+  (onClose) => {
+    const handleClose = (obj?: OBJ) => {
       componentProps?.onClose && componentProps.onClose();
-      onClose();
+      onClose(obj);
     };
 
     return (

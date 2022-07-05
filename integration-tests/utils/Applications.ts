@@ -4,7 +4,7 @@ import { Common } from './Common';
 
 export class Applications {
   static deleteApplication(applicationName: string) {
-    Common.openAppStudioBaseURL();    
+    cy.get('[data-ouia-component-id="Applications"] > a').click();   
     this.openKebabMenu(applicationName);
     cy.get(actions.deleteItem).click();
     cy.get(actions.deleteModalInput).clear().type(applicationName);

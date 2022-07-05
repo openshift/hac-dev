@@ -5,6 +5,7 @@ import { mockRoutes } from '../../../hooks/__data__/mock-data';
 import { useApplicationRoutes } from '../../../hooks/useApplicationRoutes';
 import { useGitOpsDeploymentCR } from '../../../hooks/useGitOpsDeploymentCR';
 import { componentCRMocks } from '../__data__/mock-data';
+import { mockPipelineRuns } from '../__data__/mock-pipeline-run';
 import ComponentListView from '../ComponentListView';
 
 jest.mock('../../../hooks/useApplicationRoutes', () => ({
@@ -23,6 +24,10 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
+jest.mock('../../../hooks/usePipelineRunsForApplication', () => ({
+  useLatestPipelineRunForComponent: () => mockPipelineRuns[0],
+}));
+
 const applicationRoutesMock = useApplicationRoutes as jest.Mock;
 const gitOpsDeploymentMock = useGitOpsDeploymentCR as jest.Mock;
 
@@ -30,6 +35,7 @@ describe('ComponentListViewPage', () => {
   beforeAll(() => {
     gitOpsDeploymentMock.mockReturnValue([[], false]);
   });
+
   it('should render spinner if routes are not loaded', () => {
     applicationRoutesMock.mockReturnValue([[], false]);
     render(<ComponentListView applicationName="test" components={componentCRMocks} />);
@@ -54,7 +60,7 @@ describe('ComponentListViewPage', () => {
     fireEvent.change(searchInput, { target: { value: 'nodejs' } });
     const componentList = screen.getByTestId('component-list');
     const componentListItems = within(componentList).getAllByTestId('component-list-item');
-    expect(componentListItems.length).toBe(1);
+    expect(componentListItems.length).toBe(2);
   });
 
   it('should render routes URL when route is created on cluster', () => {

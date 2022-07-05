@@ -41,8 +41,8 @@ export const ComponentsPagePO = {
 };
 
 export const applicationDetailPagePO = {
-  item: '.pf-c-description-list__text',
-  componentBuildLog: '[data-testid="View Build Logs"]',
+  item: '[data-testid="component-list-item"] > b',
+  componentBuildLog: '[data-testid="view-build-logs"]',
   componentSettings: '[data-testid="Component settings"]',
   detailsArrow: '[aria-label="Details"]',
   cpuRamLabel: 'CPU/Mem Requests',
