@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",
-    "@openshift/dynamic-plugin-sdk": "^1.0.0-alpha2",
+    "@openshift/dynamic-plugin-sdk": "1.0.0-alpha10",
     "@openshift/dynamic-plugin-sdk-utils": "^1.0.0-alpha4",
     "@patternfly/quickstarts": "^2.2.1",
     "@patternfly/react-catalog-view-extension": "4.13.18",
@@ -58,7 +58,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@openshift/dynamic-plugin-sdk-webpack": "^1.0.0-alpha2",
+    "@openshift/dynamic-plugin-sdk-webpack": "1.0.0-alpha3",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^1.2.1",
     "@redhat-cloud-services/frontend-components-config": "^4.6.14",
     "@redhat-cloud-services/frontend-components-config-utilities": "^1.5.15",

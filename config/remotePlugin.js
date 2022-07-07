@@ -9,6 +9,7 @@ module.exports = {
       Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
       Import: resolve(__dirname, '../src/pages/ImportPage'),
       ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
+      HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
     },
   },
   extensions: [
@@ -89,6 +90,16 @@ module.exports = {
         exact: true,
         component: {
           $codeRef: 'ComponentSettings',
+        },
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/hacbs',
+        exact: true,
+        component: {
+          $codeRef: 'HACBSFlag.EnableHACBSFlagRoute',
         },
       },
     },
