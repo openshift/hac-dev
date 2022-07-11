@@ -1,6 +1,6 @@
 // /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
-  collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!src/**/stories/*'],
+  collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!src/**/stories/*', '!src/hacbs/*'],
   coverageDirectory: './coverage/',
   moduleNameMapper: {
     '\\.(css|scss)$': 'identity-obj-proxy',
