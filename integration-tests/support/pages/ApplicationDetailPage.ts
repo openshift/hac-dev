@@ -1,5 +1,6 @@
 import { Common } from '../../utils/Common';
 import { pageTitles } from '../constants/PageTitle';
+import { CPUUnit, MemoryUnit } from '../constants/Units';
 import {
   addComponentPagePO,
   buildLogModalContentPO,
@@ -12,10 +13,11 @@ export class ApplicationDetailPage {
     cy.contains('div', applicationDetailPagePO.replicaLabel).should('contain.text', replicaCount);
   }
 
-  checkCpuAndMemory(cpuVal: number, ramValue: number, ramUnit: string) {
+  checkCpuAndMemory(cpuValue: number, cpuUnit: CPUUnit, ramValue: number, ramUnit: MemoryUnit) {
+    const shortCpuUnit = cpuUnit === CPUUnit.core ? '' : 'm';
     cy.contains('div', applicationDetailPagePO.cpuRamLabel).should(
       'contain.text',
-      `${cpuVal}, ${ramValue}${ramUnit}`,
+      `${cpuValue}${shortCpuUnit}, ${ramValue}${ramUnit}`,
     );
   }
 
