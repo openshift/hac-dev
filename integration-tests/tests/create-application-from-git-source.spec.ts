@@ -1,3 +1,4 @@
+import { CPUUnit, MemoryUnit } from '../support/constants/Units';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
@@ -12,10 +13,11 @@ describe('Create Component from Public Git Source', () => {
   const publicRepo = 'https://github.com/dheerajodha/devfile-sample-code-with-quarkus';
   const componentName = 'java-quarkus';
   const ramValue = 1;
-  const ramUnit = 'Gi';
+  const ramUnit = MemoryUnit.gigabyte;
   const replicaCount = 2;
-  const cpuIncrased = 2;
-  const cpuDecreased = 1;
+  const cpuIncrased = 101;
+  const cpuDecreased = 100;
+  const cpuUnit = CPUUnit.millicore;
 
   before(function () {
     //set application name
@@ -50,7 +52,7 @@ describe('Create Component from Public Git Source', () => {
     });
 
     it('Check Changing Resources', () => {
-      componentPage.setCpuByButton(cpuIncrased);
+      componentPage.setCpuByButton(cpuIncrased, cpuUnit);
       componentPage.setRam(ramValue, ramUnit);
     });
 
@@ -80,17 +82,17 @@ describe('Create Component from Public Git Source', () => {
 
     it('Check Resources Value', () => {
       applicationDetailPage.expandDetails(componentName);
-      applicationDetailPage.checkCpuAndMemory(cpuIncrased, ramValue, ramUnit);
+      applicationDetailPage.checkCpuAndMemory(cpuIncrased, cpuUnit, ramValue, ramUnit);
       applicationDetailPage.checkReplica(replicaCount);
     });
 
     it('Change Resources Value', () => {
       applicationDetailPage.openComponentSettings(componentName);
-      componentPage.setRam(2, 'Gi');
-      componentPage.setCpuByButton(cpuDecreased);
+      componentPage.setRam(2, MemoryUnit.gigabyte);
+      componentPage.setCpuByButton(cpuDecreased, cpuUnit);
       componentPage.saveChanges();
       applicationDetailPage.expandDetails(componentName);
-      applicationDetailPage.checkCpuAndMemory(cpuDecreased, 2, 'Gi');
+      applicationDetailPage.checkCpuAndMemory(cpuDecreased, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
     });
   });
 });

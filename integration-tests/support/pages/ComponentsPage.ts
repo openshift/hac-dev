@@ -1,4 +1,5 @@
 import { Common } from '../../utils/Common';
+import { CPUUnit, MemoryUnit } from '../constants/Units';
 import { ComponentsPagePO } from '../pageObjects/createApplication-po';
 import { alertTitle } from '../pageObjects/global-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
@@ -31,7 +32,10 @@ export class ComponentPage extends AbstractWizardPage {
     cy.get(ComponentsPagePO.replicaInput).clear().type(value.toString());
   }
 
-  setCpuByButton(value: number) {
+  setCpuByButton(value: number, unit: CPUUnit) {
+    cy.contains(`.pf-c-dropdown__toggle-text`, 'cores').parent().click();
+    cy.contains('li', new RegExp(`^${unit}$`)).click();
+
     cy.get(ComponentsPagePO.cpuInput).then(($cpu) => {
       const diff = value - Number($cpu.val());
       if (diff === 0) {
@@ -54,7 +58,7 @@ export class ComponentPage extends AbstractWizardPage {
     });
   }
 
-  setRam(value: number, unit: string) {
+  setRam(value: number, unit: MemoryUnit) {
     cy.get(ComponentsPagePO.memoryInput).clear().type(value.toString());
     cy.contains('div[class="pf-c-form__group"]', 'Memory').find(ComponentsPagePO.dropdown).click();
     cy.contains('li', unit).click();
