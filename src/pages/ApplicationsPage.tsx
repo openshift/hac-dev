@@ -5,12 +5,14 @@ import ApplicationDetailsView from '../components/ApplicationDetailsView/Applica
 import ApplicationListView from '../components/ApplicationListView/ApplicationListView';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
+import HacbsApplicationDetails from '../hacbs/components/ApplicationDetails/HacbsApplicationDetails';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 import { getQueryArgument } from '../shared/utils';
 
 const ApplicationsPage = () => {
   useQuickstartCloseOnUnmount();
   const applicationName = getQueryArgument('name');
+  const hacbs = JSON.parse(getQueryArgument('hacbs'));
 
   return (
     <NamespacedPage>
@@ -19,7 +21,11 @@ const ApplicationsPage = () => {
           <Helmet>
             <title>Application Details Page</title>
           </Helmet>
-          <ApplicationDetailsView applicationName={applicationName} />
+          {hacbs ? (
+            <HacbsApplicationDetails applicationName={applicationName} />
+          ) : (
+            <ApplicationDetailsView applicationName={applicationName} />
+          )}
         </React.Fragment>
       ) : (
         <React.Fragment>
