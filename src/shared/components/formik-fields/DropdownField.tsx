@@ -13,6 +13,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
   name,
   onChange,
   fullWidth,
+  validateOnChange = false,
   ...props
 }) => {
   const [field, { touched, error }] = useField(name);
@@ -38,7 +39,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
         aria-describedby={helpText ? `${fieldId}-helper` : undefined}
         onChange={(value: string) => {
           onChange && onChange(value);
-          setFieldValue(name, value, false);
+          setFieldValue(name, value, validateOnChange);
           setFieldTouched(name, true, false);
         }}
       />
