@@ -10,6 +10,7 @@ module.exports = {
       Import: resolve(__dirname, '../src/pages/ImportPage'),
       ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
       HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
+      WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),
     },
   },
   extensions: [
@@ -104,6 +105,26 @@ module.exports = {
       },
     },
     {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/workspace-settings',
+        exact: true,
+        component: {
+          $codeRef: 'WorkspaceSettings',
+        },
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/workspace-settings',
+        exact: true,
+        component: {
+          $codeRef: 'WorkspaceSettings',
+        },
+      },
+    },
+    {
       type: 'console.navigation/href',
       properties: {
         href: '/app-studio',
@@ -115,6 +136,20 @@ module.exports = {
       properties: {
         href: '/app-studio',
         name: 'Applications',
+      },
+    },
+    {
+      type: 'console.navigation/href',
+      properties: {
+        href: '/app-studio/workspace-settings',
+        name: 'Settings',
+      },
+    },
+    {
+      type: 'core.navigation/href',
+      properties: {
+        href: '/app-studio/workspace-settings',
+        name: 'Settings',
       },
     },
   ],
