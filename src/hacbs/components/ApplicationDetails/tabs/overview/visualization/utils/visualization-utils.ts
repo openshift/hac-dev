@@ -1,18 +1,9 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { getEdgesFromNodes, getSpacerNodes } from '@patternfly/react-topology';
-import * as dagre from 'dagre';
 import get from 'lodash/get';
 import { EnvironmentKind } from '../../../../../../types/coreBuildService';
 import { DAG } from '../../../../../topology/dag';
-import {
-  NODE_HEIGHT,
-  NodeType,
-  NODE_WIDTH,
-  PipelineLayout,
-  DAGRE_VIEWER_PROPS,
-  NODE_ICON_WIDTH,
-  NODE_PADDING,
-} from '../const';
+import { NODE_HEIGHT, NodeType, NODE_WIDTH, NODE_ICON_WIDTH, NODE_PADDING } from '../const';
 import {
   PipelineEdgeModel,
   NodeCreatorSetup,
@@ -67,15 +58,6 @@ export const getTopologyNodesEdges = (
   return { nodes, edges };
 };
 
-export const getLayoutData = (layout: PipelineLayout): dagre.GraphLabel => {
-  switch (layout) {
-    case PipelineLayout.DAGRE_VIEWER:
-      return DAGRE_VIEWER_PROPS;
-    default:
-      return null;
-  }
-};
-
 export const dagtoNodes = (dag: DAG): WorkflowNode[] => {
   if (!(dag instanceof DAG)) {
     return [];
@@ -104,7 +86,7 @@ export const getMaxName = (resources: K8sResourceCommon[]): string | null => {
   return resources.sort((a, b) => b.metadata.name.length - a.metadata.name.length)[0].metadata.name;
 };
 
-const getTextWidth = (text: string, font: string = '0.875rem RedHatText'): number => {
+export const getTextWidth = (text: string, font: string = '0.875rem RedHatText'): number => {
   if (!text || text.length === 0) {
     return 0;
   }
@@ -154,6 +136,7 @@ export const workflowToNodes = (workflow: Workflow): WorkflowNode[] => {
           ? get(resource, runAfterResourceKey, runAfter)
           : runAfter;
         let validRunAfters = runAfter;
+
         if (Array.isArray(resourceRunAfter)) {
           resourceRunAfter?.forEach((rName) => {
             if (validResources.includes(rName)) {

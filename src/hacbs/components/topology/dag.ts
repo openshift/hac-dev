@@ -1,4 +1,4 @@
-interface Vertex {
+export interface Vertex {
   name: string;
   level: number;
   dependancy: {};

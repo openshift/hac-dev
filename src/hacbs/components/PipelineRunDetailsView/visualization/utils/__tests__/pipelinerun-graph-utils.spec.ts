@@ -1,13 +1,14 @@
 import omit from 'lodash/omit';
-import { testPipeline, testPipelineRun } from '../__data__/pipeline-test-data';
+import { NodeType } from '../../../../ApplicationDetails/tabs/overview/visualization/const';
+import { testPipeline, testPipelineRun } from '../../../../topology/__data__/pipeline-test-data';
 import {
   extractDepsFromContextVariables,
   getPipelineDataModel,
   getPipelineFromPipelineRun,
   getPipelineRunDataModel,
-} from '../topology-utils';
+} from '../pipelinerun-graph-utils';
 
-describe('topology-utils: ', () => {
+describe('pipelinerun-graph-utils: ', () => {
   describe('extractDepsFromContextVariables: ', () => {
     it('should return emtpy array for invalid values', () => {
       expect(extractDepsFromContextVariables('')).toEqual([]);
@@ -59,10 +60,16 @@ describe('topology-utils: ', () => {
       expect(getPipelineDataModel(undefined)).toBe(null);
     });
 
-    it('should return a nodes and edges for a given pipeline ', () => {
-      const { nodes, edges } = getPipelineDataModel(testPipeline);
-      expect(nodes).toHaveLength(6);
+    it('should return graph, nodes and edges for a given pipeline ', () => {
+      const { graph, nodes, edges } = getPipelineDataModel(testPipeline);
+      expect(graph).toBeDefined();
+      expect(nodes).toHaveLength(7);
       expect(edges).toHaveLength(6);
+    });
+
+    it('should return a spacer node ', () => {
+      const { nodes } = getPipelineDataModel(testPipeline);
+      expect(nodes.filter((n) => n.type === NodeType.SPACER_NODE)).toHaveLength(1);
     });
   });
 
@@ -76,10 +83,16 @@ describe('topology-utils: ', () => {
       expect(getPipelineRunDataModel(omit(testPipelineRun, 'status'))).toBe(null);
     });
 
-    it('should return a nodes and edges for a given pipeline ', () => {
-      const { nodes, edges } = getPipelineRunDataModel(testPipelineRun);
-      expect(nodes).toHaveLength(6);
+    it('should return graph, nodes and edges for a given pipeline ', () => {
+      const { graph, nodes, edges } = getPipelineRunDataModel(testPipelineRun);
+      expect(graph).toBeDefined();
+      expect(nodes).toHaveLength(7);
       expect(edges).toHaveLength(6);
+    });
+
+    it('should return a spacer node ', () => {
+      const { nodes } = getPipelineRunDataModel(testPipelineRun);
+      expect(nodes.filter((n) => n.type === NodeType.SPACER_NODE)).toHaveLength(1);
     });
   });
 });

@@ -2,7 +2,7 @@ import { Point } from '@patternfly/react-topology';
 import { DrawDesign, NODE_SEPARATION_HORIZONTAL } from '../const';
 
 type SingleDraw = (p: Point) => string;
-type DoubleDraw = (p1: Point, p2: Point, indentedStart?: number) => string;
+type DoubleDraw = (p1: Point, p2: Point, indentedStart?: number, indentedEnd?: number) => string;
 type TripleDraw = (p1: Point, p2: Point, p3: Point) => string;
 type DetermineDirection = (p1: Point, p2: Point) => boolean;
 
@@ -57,13 +57,18 @@ const curve: TripleDraw = (fromPoint, cornerPoint, toPoint) => {
 
 export const straightPath: DoubleDraw = (start, finish) => join(moveTo(start), lineTo(finish));
 
-export const integralShapePath: DoubleDraw = (start, finish, startIndentX = 0) => {
+export const integralShapePath: DoubleDraw = (
+  start,
+  finish,
+  startIndentX = 0,
+  endIndentX = NODE_SEPARATION_HORIZONTAL,
+) => {
   // Integral shape: ∫
   let firstCurve: string = null;
   let secondCurve: string = null;
 
   if (start.y !== finish.y) {
-    const cornerX = Math.floor(start.x + NODE_SEPARATION_HORIZONTAL / 3);
+    const cornerX = Math.floor(start.x + endIndentX);
     const firstCorner = new Point(cornerX, start.y);
     const secondCorner = new Point(cornerX, finish.y);
 

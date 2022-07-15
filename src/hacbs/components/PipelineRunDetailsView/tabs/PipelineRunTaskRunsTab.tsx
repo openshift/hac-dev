@@ -6,11 +6,12 @@ type PipelineRunTaskRunsTabProps = {
   pipelineRun: PipelineRunKind;
 };
 
-const PipelineRunTaskRunsTab: React.FC<PipelineRunTaskRunsTabProps> = ({ pipelineRun }) => (
-  <TaskRunListView
-    pipelineName={pipelineRun.metadata.name}
-    namespace={pipelineRun.metadata.namespace}
-  />
-);
+const PipelineRunTaskRunsTab: React.FC<PipelineRunTaskRunsTabProps> = ({ pipelineRun }) =>
+  Object.keys(pipelineRun).length ? (
+    <TaskRunListView
+      pipelineName={pipelineRun.metadata.name}
+      namespace={pipelineRun.metadata.namespace}
+    />
+  ) : null;
 
 export default PipelineRunTaskRunsTab;

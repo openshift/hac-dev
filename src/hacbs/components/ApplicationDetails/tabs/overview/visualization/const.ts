@@ -1,5 +1,3 @@
-import * as dagre from 'dagre';
-
 export const NODE_SEPARATION_HORIZONTAL = 15;
 export const NODE_SEPARATION_VERTICAL = 20;
 export const DROP_SHADOW_SPACING = 5;
@@ -21,21 +19,3 @@ export enum DrawDesign {
   INTEGRAL_SHAPE = 'integral-shape',
   STRAIGHT = 'line',
 }
-
-export enum PipelineLayout {
-  DAGRE_VIEWER = 'dagre-viewer',
-}
-
-const DAGRE_SHARED_PROPS: dagre.GraphLabel = {
-  nodesep: NODE_SEPARATION_VERTICAL,
-  ranksep: NODE_SEPARATION_HORIZONTAL,
-  edgesep: 60,
-  ranker: 'longest-path',
-  rankdir: 'LR',
-  marginx: 20,
-  marginy: 20,
-};
-
-export const DAGRE_VIEWER_PROPS: dagre.GraphLabel = {
-  ...DAGRE_SHARED_PROPS,
-};
