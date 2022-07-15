@@ -1,18 +1,20 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import ApplicationDetailsView from '../components/ApplicationDetailsView/ApplicationDetailsView';
 import ApplicationListView from '../components/ApplicationListView/ApplicationListView';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
 import HacbsApplicationDetails from '../hacbs/components/ApplicationDetails/HacbsApplicationDetails';
+import { HACBS_FLAG } from '../hacbs/hacbsFeatureFlag';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 import { getQueryArgument } from '../shared/utils';
 
 const ApplicationsPage = () => {
   useQuickstartCloseOnUnmount();
   const applicationName = getQueryArgument('name');
-  const hacbs = JSON.parse(getQueryArgument('hacbs'));
+  const [hacbs] = useFeatureFlag(HACBS_FLAG);
 
   return (
     <NamespacedPage>
