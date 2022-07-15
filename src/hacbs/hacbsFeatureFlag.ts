@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
+import { SetFeatureFlag, useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 
 export const HACBS_FLAG = 'HACBS';
 
@@ -16,4 +16,13 @@ export const EnableHACBSFlagRoute: React.FC = () => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
   return null;
+};
+
+export const enableHACBSFlagFromQueryParam = (setFlag: SetFeatureFlag): void => {
+  const enabled = new URLSearchParams(window.location.search).get('hacbs') === 'true';
+  if (enabled) {
+    /* eslint-disable-next-line no-console */
+    console.log('HACBS Flag enabled');
+  }
+  setFlag(HACBS_FLAG, enabled);
 };
