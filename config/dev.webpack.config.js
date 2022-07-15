@@ -80,6 +80,7 @@ const { config: webpackConfig, plugins } = config({
   sassPrefix: '.hacCore, .hacDev',
   debug: true,
   useFileHash: false,
+  bundlePfModules: true,
   ...webpackProxy,
 });
 

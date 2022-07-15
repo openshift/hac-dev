@@ -1,0 +1,6 @@
+.hacbs-workload-node__disabled > .pf-topology-pipelines__pill-background {
+  fill: var(--pf-global--BackgroundColor--200);
+}
+.hacbs-workload-node__disabled .pf-topology-pipelines__pill-text {
+  fill: var(--pf-global--disabled-color--100);
+}
