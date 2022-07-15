@@ -52,4 +52,8 @@ export class Common {
         .should('contain', 'Done running the script');
     }
   }
+
+  static clickBreadcrumbs(breadcrumbPO: string) {
+    cy.get(breadcrumbPO).click();
+  }
 }
