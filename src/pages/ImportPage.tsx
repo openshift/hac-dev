@@ -5,9 +5,12 @@ import ImportForm from '../components/ImportForm/ImportForm';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
+import { getQueryArgument } from '../shared/utils';
 
 const ImportPage: React.FunctionComponent = () => {
-  const title = 'Import your application';
+  const applicationName = getQueryArgument('application');
+
+  const title = applicationName ? 'Build your application' : 'Create your application';
   const description = (
     <>
       Import your code repo or start with a sample.{' '}
@@ -28,7 +31,7 @@ const ImportPage: React.FunctionComponent = () => {
         title={title}
         description={description}
       >
-        <ImportForm />
+        <ImportForm applicationName={applicationName} />
       </PageLayout>
     </NamespacedPage>
   );

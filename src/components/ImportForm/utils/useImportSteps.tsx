@@ -21,7 +21,7 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
         : [
             {
               id: 'application',
-              name: 'Create Application',
+              name: 'Create application',
               component: <ApplicationSection />,
               validationSchema: applicationValidationSchema,
             },
@@ -30,13 +30,13 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
         ? [
             {
               id: 'source',
-              name: 'Select Source',
+              name: 'Select source',
               component: <SourceSection onStrategyChange={setStrategy} />,
               validationSchema: sourceValidationSchema,
             },
             {
               id: 'review',
-              name: 'Review Components',
+              name: 'Review components',
               component: <ReviewSection />,
               nextButtonText: 'Create',
               canJumpTo: false,
@@ -49,7 +49,7 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
         ? [
             {
               id: 'sample',
-              name: 'Select Sample',
+              name: 'Select sample',
               component: <SampleSection onStrategyChange={setStrategy} />,
               hasNoBodyPadding: true,
               nextButtonText: 'Create',
