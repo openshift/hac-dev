@@ -1,101 +1,13 @@
 const { resolve } = require('path');
 const packageInfo = require('../package.json');
 
-module.exports = {
-  pluginMetadata: {
-    name: packageInfo.name,
-    version: packageInfo.version,
-    exposedModules: {
-      Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
-      Import: resolve(__dirname, '../src/pages/ImportPage'),
-      ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
-      PipelineRuns: resolve(__dirname, '../src/hacbs/pages/PipelineRunPage'),
-      HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
-      WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),
-      CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
-    },
+const hacbs = {
+  exposedModules: {
+    PipelineRuns: resolve(__dirname, '../src/hacbs/pages/PipelineRunPage'),
+    HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
+    HACBSImport: resolve(__dirname, '../src/hacbs/pages/ImportPage'),
   },
   extensions: [
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/app-studio',
-        exact: true,
-        component: {
-          $codeRef: 'Applications',
-        },
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/app-studio',
-        exact: true,
-        component: {
-          $codeRef: 'Applications',
-        },
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/app-studio/applications',
-        exact: true,
-        component: {
-          $codeRef: 'Applications',
-        },
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/app-studio/applications',
-        exact: true,
-        component: {
-          $codeRef: 'Applications',
-        },
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/app-studio/import',
-        exact: true,
-        component: {
-          $codeRef: 'Import',
-        },
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/app-studio/import',
-        exact: true,
-        component: {
-          $codeRef: 'Import',
-        },
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/app-studio/component-settings',
-        exact: true,
-        component: {
-          $codeRef: 'ComponentSettings',
-        },
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/app-studio/component-settings',
-        exact: true,
-        component: {
-          $codeRef: 'ComponentSettings',
-        },
-      },
-    },
     {
       type: 'console.page/route',
       properties: {
@@ -123,6 +35,136 @@ module.exports = {
         exact: true,
         component: {
           $codeRef: 'HACBSFlag.EnableHACBSFlagRoute',
+        },
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/import',
+        exact: true,
+        component: {
+          $codeRef: 'HACBSImport',
+        },
+      },
+      flags: {
+        required: ['HACBS'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/import',
+        exact: true,
+        component: {
+          $codeRef: 'HACBSImport',
+        },
+      },
+      flags: {
+        required: ['HACBS'],
+      },
+    },
+  ],
+};
+
+module.exports = {
+  pluginMetadata: {
+    name: packageInfo.name,
+    version: packageInfo.version,
+    exposedModules: {
+      // HACBS
+      ...hacbs.exposedModules,
+
+      // App Studio
+      Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
+      Import: resolve(__dirname, '../src/pages/ImportPage'),
+      ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
+      WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),
+      CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
+    },
+  },
+  extensions: [
+    // HACBS
+    ...hacbs.extensions,
+
+    // App Studio
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio',
+        exact: true,
+        component: {
+          $codeRef: 'Applications',
+        },
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio',
+        exact: true,
+        component: {
+          $codeRef: 'Applications',
+        },
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/applications',
+        exact: true,
+        component: {
+          $codeRef: 'Applications',
+        },
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/applications',
+        exact: true,
+        component: {
+          $codeRef: 'Applications',
+        },
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/import',
+        exact: true,
+        component: {
+          $codeRef: 'Import',
+        },
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/import',
+        exact: true,
+        component: {
+          $codeRef: 'Import',
+        },
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/component-settings',
+        exact: true,
+        component: {
+          $codeRef: 'ComponentSettings',
+        },
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/component-settings',
+        exact: true,
+        component: {
+          $codeRef: 'ComponentSettings',
         },
       },
     },

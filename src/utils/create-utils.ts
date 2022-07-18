@@ -20,6 +20,7 @@ import {
 } from '../types';
 import { ComponentSpecs } from './../types/component';
 
+export const sanitizeName = (name: string) => name.split(/ |\./).join('-').toLowerCase();
 /**
  * Create HAS Application CR
  * @param application application name
@@ -34,7 +35,7 @@ export const createApplication = (
   namespace: string,
   dryRun?: boolean,
 ): Promise<ApplicationKind> => {
-  const name = application.split(/ |\./).join('-').toLowerCase();
+  const name = sanitizeName(application);
   // const uniqueName = uniqueId(`${name}-`);
   const requestData = {
     apiVersion: `${ApplicationModel.apiGroup}/${ApplicationModel.apiVersion}`,

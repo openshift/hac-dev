@@ -19,10 +19,14 @@ import AuthOptions from './AuthOptions';
 import GitOptions from './GitOptions';
 
 type SourceSectionProps = {
-  onStrategyChange: (strategy: ImportStrategy) => void;
+  onStrategyChange?: (strategy: ImportStrategy) => void;
+  gitOnly?: boolean;
 };
 
-export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }) => {
+export const SourceSection: React.FC<SourceSectionProps> = ({
+  onStrategyChange,
+  gitOnly = false,
+}) => {
   const [showAuthOptions, setShowAuthOptions] = React.useState<boolean>(false);
   const [showGitOptions, setShowGitOptions] = React.useState<boolean>(false);
 
@@ -42,7 +46,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
 
   const fieldId = getFieldId('source', 'input');
   const isValid = !(touched && error);
-  const label = 'Git repo URL or container image';
+  const label = gitOnly ? 'Git repo URL' : 'Git repo URL or container image';
 
   const [{ isGit, isRepoAccessible, serviceProvider, accessibility }, accessCheckLoaded] =
     useAccessCheck(sourceUrl, authSecret);
@@ -62,7 +66,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
   const handleSourceChange = React.useCallback(() => {
     const searchTerm = source;
     const isGitUrlValid = gitUrlRegex.test(searchTerm);
-    const isContainerImageValid = containerImageRegex.test(searchTerm);
+    const isContainerImageValid = !gitOnly && containerImageRegex.test(searchTerm);
     setShowAuthOptions(false);
     setShowGitOptions(false);
     setFieldValue('secret', '');
@@ -75,7 +79,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
     setFormValidating();
     setHelpTextInvalid('');
     setSourceUrl(searchTerm);
-  }, [source, setFieldValue, setFormValidating]);
+  }, [source, setFieldValue, setFormValidating, gitOnly]);
 
   const debouncedHandleSourceChange = useDebounceCallback(handleSourceChange);
 
@@ -135,13 +139,19 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
         fieldId={fieldId}
         label={label}
         labelIcon={
-          <HelpTooltipIcon content="Provide a link to your Git repository or container registry, or start with a code sample." />
+          <HelpTooltipIcon
+            content={
+              gitOnly
+                ? 'Provide a link to your Git repository.'
+                : 'Provide a link to your Git repository or container registry, or start with a code sample.'
+            }
+          />
         }
         validated={!isValid && ValidatedOptions.error}
         isRequired
       >
         <Grid hasGutter>
-          <GridItem span={8}>
+          <GridItem span={onStrategyChange ? 8 : 12}>
             <InputField
               name="source"
               placeholder="Enter your source"
@@ -153,12 +163,14 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
               data-test="enter-source"
             />
           </GridItem>
-          <GridItem span={4}>
-            No code?{' '}
-            <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
-              Start with a sample.
-            </Button>
-          </GridItem>
+          {onStrategyChange ? (
+            <GridItem span={4}>
+              No code?{' '}
+              <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
+                Start with a sample.
+              </Button>
+            </GridItem>
+          ) : null}
         </Grid>
       </FormGroup>
       {showAuthOptions && <AuthOptions />}
