@@ -2,7 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { render } from '@testing-library/react';
-import { HACBS_FLAG, EnableHACBSFlagRoute } from '../hacbsFeatureFlag';
+import {
+  HACBS_FLAG,
+  EnableHACBSFlagRoute,
+  enableHACBSFlagFromQueryParam,
+} from '../hacbsFeatureFlag';
 
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
@@ -27,5 +31,41 @@ describe('hacbsFeatureFlag', () => {
     expect(useFeatureFlag).toHaveBeenCalledWith(HACBS_FLAG);
     expect(setFlagMock).toHaveBeenCalledWith(true);
     expect(navigateMock).toHaveBeenCalledWith('/app-studio', { replace: true });
+  });
+});
+
+describe('hacbsFeatureFlag#enableHACBSFlagFromQueryParam', () => {
+  let windowSpy;
+
+  beforeEach(() => {
+    windowSpy = jest.spyOn(window, 'window', 'get');
+  });
+
+  afterEach(() => {
+    windowSpy.mockRestore();
+  });
+
+  it('should set hacbs flag with URL query param', () => {
+    windowSpy.mockImplementation(() => ({
+      location: {
+        search: '',
+      },
+    }));
+
+    const setFlag = jest.fn();
+
+    enableHACBSFlagFromQueryParam(setFlag);
+    expect(setFlag).toHaveBeenCalledWith(HACBS_FLAG, false);
+
+    setFlag.mockReset();
+
+    windowSpy.mockImplementation(() => ({
+      location: {
+        search: '?hacbs=true',
+      },
+    }));
+
+    enableHACBSFlagFromQueryParam(setFlag);
+    expect(setFlag).toHaveBeenCalledWith(HACBS_FLAG, true);
   });
 });

@@ -152,6 +152,14 @@ module.exports = {
         name: 'Settings',
       },
     },
+    {
+      type: 'core.flag',
+      properties: {
+        handler: {
+          $codeRef: 'HACBSFlag.enableHACBSFlagFromQueryParam',
+        },
+      },
+    },
   ],
   sharedModules: {
     'react-router-dom': { singleton: true },
