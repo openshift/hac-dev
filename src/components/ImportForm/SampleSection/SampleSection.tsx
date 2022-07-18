@@ -28,7 +28,6 @@ const SampleSection = ({ onStrategyChange }) => {
   const {
     values: { source, application },
     setFieldValue,
-    setStatus,
   } = useFormikContext<ImportFormValues>();
   const [selected, setSelected] = React.useState<CatalogItem>();
   const [samples, setSamples] = React.useState<CatalogItem[]>([]);
@@ -36,7 +35,7 @@ const SampleSection = ({ onStrategyChange }) => {
   const [loadError, setLoadError] = React.useState<string>();
 
   const [detectedComponents, detectedComponentsLoaded, detectedComponentsError] =
-    useComponentDetection(source, application.name);
+    useComponentDetection(source, application);
 
   const detectingComponents = selected && !detectedComponentsLoaded;
 
@@ -68,7 +67,7 @@ const SampleSection = ({ onStrategyChange }) => {
     if (unmounted) return;
 
     if (detectingComponents) {
-      setStatus({ isValidating: true });
+      setFieldValue('isValidated', false);
     }
 
     if (!unmounted && !detectingComponents && detectedComponents) {
@@ -82,13 +81,13 @@ const SampleSection = ({ onStrategyChange }) => {
         }),
       );
       setFieldValue('components', transformedComponents);
-      setStatus({ isValidating: false });
+      setFieldValue('isValidated', true);
     }
 
     return () => {
       unmounted = true;
     };
-  }, [detectedComponents, detectingComponents, setFieldValue, setStatus]);
+  }, [detectedComponents, detectingComponents, setFieldValue]);
 
   const handleSelect = React.useCallback(
     (item) => {
@@ -123,11 +122,7 @@ const SampleSection = ({ onStrategyChange }) => {
             labelInfo={
               <>
                 Could not find what you need?{' '}
-                <Button
-                  variant={ButtonVariant.link}
-                  onClick={handleStrategyChange}
-                  style={{ paddingLeft: 0 }}
-                >
+                <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
                   Import your code.
                 </Button>
               </>

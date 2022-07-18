@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { createApplication } from '../../../utils/create-utils';
 
 export const gitUrlRegex =
   /^((((ssh|git|https?:?):\/\/:?)(([^\s@]+@|[^@]:?)[-\w.]+(:\d\d+:?)?(\/[-\w.~/?[\]!$&'()*+,;=:@%]*:?)?:?))|([^\s@]+@[-\w.]+:[-\w.~/?[\]!$&'()*+,;=:@%]*?:?))$/;
@@ -14,9 +15,17 @@ const combineRegExps = (...regexps: RegExp[]) => {
 };
 
 export const applicationValidationSchema = yup.object({
-  application: yup.object({
-    name: yup.string().required('Required'),
-  }),
+  application: yup
+    .string()
+    .required('Required')
+    .test('isUnique', 'Application name already exists.', async (value, context) => {
+      try {
+        await createApplication(value, context.parent.namespace, true);
+        return true;
+      } catch {
+        return false;
+      }
+    }),
 });
 
 export const sourceValidationSchema = yup.object({
@@ -29,6 +38,7 @@ export const sourceValidationSchema = yup.object({
     ref: yup.string(),
     context: yup.string(),
   }),
+  isValidated: yup.boolean().isTrue().required('Required'),
 });
 
 export const reviewValidationSchema = yup.object({
@@ -59,4 +69,5 @@ export const reviewValidationSchema = yup.object({
       }),
     }),
   ),
+  isDetected: yup.boolean().isTrue().required('Required'),
 });

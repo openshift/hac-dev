@@ -18,10 +18,8 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
   const { namespace } = useNamespace();
 
   const initialValues: ImportFormValues = {
-    application: {
-      name: applicationName || 'Purple Mermaid App',
-      inContext: applicationName ? true : false,
-    },
+    application: applicationName || 'My Application',
+    inAppContext: applicationName ? true : false,
     components: [],
     git: {
       context: '',
@@ -64,7 +62,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
         onSubmit={handleSubmit}
         onReset={handleReset}
         initialValues={initialValues}
-        steps={steps as any}
+        steps={steps}
       />
     </PageSection>
   );

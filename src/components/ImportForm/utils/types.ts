@@ -33,10 +33,8 @@ export type DetectedFormComponent = {
 };
 
 export type ImportFormValues = {
-  application: {
-    name: string;
-    inContext?: boolean;
-  };
+  application: string;
+  inAppContext?: boolean;
   components?: DetectedFormComponent[];
   git?: {
     context?: string;

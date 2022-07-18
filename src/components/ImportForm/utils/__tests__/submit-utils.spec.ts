@@ -15,9 +15,7 @@ describe('Submit Utils: createResources', () => {
   it('should create application and components', async () => {
     createApplicationMock.mockResolvedValue({ metadata: { name: 'test-app' } });
     await createResources({
-      application: {
-        name: 'test-app',
-      },
+      application: 'test-app',
       components: [
         {
           componentStub: {
@@ -36,10 +34,8 @@ describe('Submit Utils: createResources', () => {
 
   it('should only create components if application exists', async () => {
     await createResources({
-      application: {
-        name: 'test-app',
-        inContext: true,
-      },
+      application: 'test-app',
+      inAppContext: true,
       components: [
         {
           componentStub: {
@@ -60,9 +56,7 @@ describe('Submit Utils: createResources', () => {
     createApplicationMock.mockRejectedValue(new Error('App already exists!'));
     expect(
       createResources({
-        application: {
-          name: 'test-app',
-        },
+        application: 'test-app',
         components: [
           {
             componentStub: {
@@ -85,9 +79,7 @@ describe('Submit Utils: createResources', () => {
     createComponentMock.mockRejectedValue(new Error('Component already exists!'));
     expect(
       createResources({
-        application: {
-          name: 'test-app',
-        },
+        application: 'test-app',
         components: [
           {
             componentStub: {

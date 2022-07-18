@@ -44,6 +44,7 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
         },
       },
     ],
+    isDetected: true,
   };
 
   const handleSubmit = (values, actions) => {

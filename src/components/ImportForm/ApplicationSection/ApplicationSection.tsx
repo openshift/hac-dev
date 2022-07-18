@@ -5,7 +5,7 @@ import { InputField } from '../../../shared';
 const ApplicationSection: React.FunctionComponent = () => {
   return (
     <Form isWidthLimited>
-      <InputField name="application.name" label="Application Name" required />
+      <InputField name="application" label="Application name" required />
     </Form>
   );
 };

@@ -24,19 +24,19 @@ export const createComponents = async (
 };
 
 export const createResources = async (formValues: ImportFormValues) => {
-  const { application, components, secret, namespace } = formValues;
-  const shouldCreateApplication = !application.inContext;
-  let applicationName = application.name;
+  const { application, inAppContext, components, secret, namespace } = formValues;
+  const shouldCreateApplication = !inAppContext;
+  let applicationName = application;
 
   if (shouldCreateApplication) {
-    const applicationData = await createApplication(application.name, namespace, true);
+    const applicationData = await createApplication(application, namespace, true);
     applicationName = applicationData.metadata.name;
   }
 
   await createComponents(components, applicationName, namespace, secret, true);
 
   if (shouldCreateApplication) {
-    const applicationData = await createApplication(application.name, namespace);
+    const applicationData = await createApplication(application, namespace);
     applicationName = applicationData.metadata.name;
   }
 

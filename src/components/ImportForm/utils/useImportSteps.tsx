@@ -21,9 +21,10 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
         : [
             {
               id: 'application',
-              name: 'Create application',
+              name: 'Name application',
               component: <ApplicationSection />,
               validationSchema: applicationValidationSchema,
+              validateOnChange: false,
             },
           ]),
       ...(strategy === ImportStrategy.GIT

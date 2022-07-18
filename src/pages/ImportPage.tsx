@@ -10,7 +10,7 @@ import { getQueryArgument } from '../shared/utils';
 const ImportPage: React.FunctionComponent = () => {
   const applicationName = getQueryArgument('application');
 
-  const title = applicationName ? 'Build your application' : 'Create your application';
+  const title = applicationName ? 'Add component' : 'Create application';
   const description = (
     <>
       Import your code repo or start with a sample.{' '}

@@ -63,7 +63,7 @@ describe('SampleSection', () => {
 
   it('renders run useComponentDetection hook when a sample is selected', async () => {
     useFormikContextMock.mockReturnValue({
-      values: { source: 'https://github.com/repo', application: { name: 'test-app' } },
+      values: { source: 'https://github.com/repo', application: 'test-app' },
       setFieldValue: jest.fn(),
       setStatus: jest.fn(),
     });

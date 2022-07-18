@@ -120,7 +120,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 <FormSection>
                   <NumberSpinnerField
                     name={`${fieldPrefix}.replicas`}
-                    label="Replicas"
+                    label="Instances"
                     min={0}
                     helpText="Number of instances of your image"
                   />

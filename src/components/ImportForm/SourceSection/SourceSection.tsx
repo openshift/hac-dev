@@ -41,7 +41,6 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
   const {
     values: { secret: authSecret },
     setFieldValue,
-    setStatus,
   } = useFormikContext<ImportFormValues>();
 
   const [sourceUrl, setSourceUrl] = React.useState('');
@@ -60,14 +59,14 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
   const setFormValidating = React.useCallback(() => {
     setValidated(ValidatedOptions.default);
     setHelpText('Validating...');
-    setStatus({ isValidating: true });
-  }, [setStatus]);
+    setFieldValue('isValidated', false);
+  }, [setFieldValue]);
 
   const setFormValidated = React.useCallback(() => {
     setValidated(ValidatedOptions.success);
     setHelpText('Validated');
-    setStatus({ isValidating: false });
-  }, [setStatus]);
+    setFieldValue('isValidated', true);
+  }, [setFieldValue]);
 
   const handleSourceChange = React.useCallback(() => {
     const searchTerm = source;
@@ -188,11 +187,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
           </GridItem>
           <GridItem span={4}>
             No code?{' '}
-            <Button
-              variant={ButtonVariant.link}
-              onClick={handleStrategyChange}
-              style={{ paddingLeft: 0 }}
-            >
+            <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
               Start with a sample.
             </Button>
           </GridItem>

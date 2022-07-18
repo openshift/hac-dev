@@ -18,7 +18,7 @@ export const componentSamplesPagePO = {
 };
 
 export const createApplicationPagePO = {
-  applicationName: '[id="form-input-application-name-field"]',
+  applicationName: '[id="form-input-application-field"]',
   next: 'button[type=submit]',
   createApplication: 'Create application',
 };

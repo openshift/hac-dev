@@ -11,6 +11,7 @@ describe('Review form validation schema', () => {
             },
           },
         ],
+        isDetected: true,
       }),
     ).rejects.toThrow('Required');
   });
@@ -25,6 +26,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      isDetected: true,
     };
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow('Invalid component name');
     values.components[0].componentStub.componentName = 'Test-';
@@ -46,6 +48,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      isDetected: true,
     };
     await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
   });
@@ -60,6 +63,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      isDetected: true,
     };
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow('Must be an integer');
   });
@@ -77,6 +81,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      isDetected: true,
     };
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
       'Value must be greater than 0',

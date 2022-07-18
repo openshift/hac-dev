@@ -56,7 +56,6 @@ const ReviewSection: React.FunctionComponent = () => {
   const {
     values: { source, secret, application, git },
     setFieldValue,
-    setStatus,
   } = useFormikContext<ImportFormValues>();
   const cachedComponents = React.useRef([]);
   const cachedComponentsLoaded = React.useRef(false);
@@ -64,7 +63,7 @@ const ReviewSection: React.FunctionComponent = () => {
 
   const [detectedComponents, detectionLoaded, detectionError] = useComponentDetection(
     !isContainerImage ? source : null,
-    application.name,
+    application,
     secret,
     git.context,
     git.ref,
@@ -76,7 +75,7 @@ const ReviewSection: React.FunctionComponent = () => {
 
     if (unmounted) return;
 
-    setStatus({ isValidating: true });
+    setFieldValue('isDetected', false);
 
     if (isContainerImage) {
       const sourceLength = source.split('/').length;
@@ -97,16 +96,17 @@ const ReviewSection: React.FunctionComponent = () => {
 
     if (components) {
       const transformedComponents = transformComponentValues(components);
+      // To avoid formik validating on old values due to a formik bug - https://github.com/jaredpalmer/formik/issues/2083.
+      setTimeout(() => setFieldValue('isDetected', true));
       setFieldValue('components', transformedComponents);
       cachedComponents.current = transformedComponents;
       cachedComponentsLoaded.current = true;
-      setStatus({ isValidating: false });
     }
 
     return () => {
       unmounted = true;
     };
-  }, [detectedComponents, detectionLoaded, isContainerImage, setFieldValue, setStatus, source]);
+  }, [detectedComponents, detectionLoaded, isContainerImage, setFieldValue, source]);
 
   if (!cachedComponentsLoaded.current) {
     return <ComponentLoadingState />;
