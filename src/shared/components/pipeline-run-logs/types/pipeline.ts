@@ -50,6 +50,7 @@ export type PipelineTask = {
   taskSpec?: TektonTaskSpec;
   when?: WhenExpression[];
   workspaces?: PipelineTaskWorkspace[];
+  status?: { [key: string]: unknown };
 };
 
 export type PipelineSpec = {
