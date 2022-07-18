@@ -5,11 +5,17 @@ before(() => {
   //Clear namespace before running the tests
   Common.cleanNamespace();
   Cypress.Cookies.debug(true);
-  
+
   const url = new URL(Cypress.env('HAC_BASE_URL'));
   cy.setCookie('notice_gdpr_prefs', '0,1,2:', { domain: url.hostname });
   cy.setCookie('cmapi_cookie_privacy', 'permit 1,2,3', { domain: url.hostname });
   cy.setCookie('notice_preferences', '2:', { domain: url.hostname });
+
+  // set local storage to avoid getting started modal
+  localStorage.setItem(
+    'getting-started-modal',
+    JSON.stringify({ 'application-list-getting-started-modal': true }),
+  );
 
   if (Cypress.env('PR_CHECK') === true) {
     Login.prCheckLogin();
@@ -30,4 +36,9 @@ beforeEach(() => {
     Cypress.Cookies.preserveOnce(...namesOfCookies);
   });
   Cypress.Cookies.debug(true);
+
+  localStorage.setItem(
+    'getting-started-modal',
+    JSON.stringify({ 'application-list-getting-started-modal': true }),
+  );
 });
