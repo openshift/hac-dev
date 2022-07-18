@@ -2,10 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageSection, PageSectionTypes, PageSectionVariants } from '@patternfly/react-core';
 import { FormikWizard } from 'formik-pf';
-import { useNamespace } from '../NamespacedPage/NamespacedPage';
-import { createResources } from './utils/submit-utils';
-import { ImportFormValues } from './utils/types';
-import { useImportSteps } from './utils/useImportSteps';
+import { ImportFormValues } from '../../../components/ImportForm/utils/types';
+import { useNamespace } from '../../../components/NamespacedPage/NamespacedPage';
+import { useImportSteps } from './useImportSteps';
 
 type ImportFormProps = {
   applicationName?: string;
@@ -31,23 +30,15 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
   const steps = useImportSteps(applicationName);
 
   const handleSubmit = React.useCallback(
-    (values, formikHelpers) => {
-      return createResources(values)
-        .then((appName) => {
-          navigate(`/app-studio/applications?name=${appName}`);
-        })
-        .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.warn('Error while submitting import form:', error);
-          formikHelpers.setSubmitting(false);
-          formikHelpers.setStatus({ submitError: error.message });
-        });
+    // TODO type
+    (values) => {
+      navigate(`/app-studio/applications?name=${values.application}`);
     },
     [navigate],
   );
 
   const handleReset = () => {
-    navigate(-1);
+    // TODO
   };
 
   return (
@@ -57,6 +48,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
         onReset={handleReset}
         initialValues={initialValues}
         steps={steps}
+        cancelButtonText="Cancel"
       />
     </PageSection>
   );
