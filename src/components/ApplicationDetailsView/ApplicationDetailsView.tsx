@@ -13,12 +13,16 @@ import {
   Title,
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
+import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { ApplicationGroupVersionKind, ComponentGroupVersionKind } from '../../models';
 import { ApplicationKind, ComponentKind } from '../../types';
+import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
 import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 import { NamespaceContext } from '../NamespacedPage/NamespacedPage';
 import PageLayout from '../PageLayout/PageLayout';
 import ComponentListView from './ComponentListView';
+
+const GETTING_STARTED_CARD_KEY = 'application-details-getting-started';
 
 type ApplicationViewProps = {
   applicationName: string;
@@ -81,6 +85,16 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
 
   return (
     <React.Fragment>
+      <GettingStartedCard
+        imgClassName="pf-u-w-25 pf-u-px-4xl"
+        localStorageKey={GETTING_STARTED_CARD_KEY}
+        title="Manage you applications"
+        imgSrc={imageUrl}
+        imgAlt="Illustration showing users managing applications"
+      >
+        Add new components to the development environment. You can automatically or manually deploy
+        components to an environment and promote components between environments.
+      </GettingStartedCard>
       <PageLayout
         breadcrumbs={[
           { path: '/app-studio/applications', name: 'Applications' },
