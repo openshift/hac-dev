@@ -11,6 +11,7 @@ module.exports = {
       ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
       HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
       WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),
+      CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
     },
   },
   extensions: [
@@ -157,6 +158,26 @@ module.exports = {
       properties: {
         handler: {
           $codeRef: 'HACBSFlag.enableHACBSFlagFromQueryParam',
+        },
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/environment/create',
+        exact: true,
+        component: {
+          $codeRef: 'CreateEnvironment',
+        },
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/environment/create',
+        exact: true,
+        component: {
+          $codeRef: 'CreateEnvironment',
         },
       },
     },

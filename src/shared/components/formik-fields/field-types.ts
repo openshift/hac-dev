@@ -63,6 +63,8 @@ export interface DropdownFieldProps extends FieldProps {
   title?: React.ReactNode;
   fullWidth?: boolean;
   disabled?: boolean;
+  placeholder?: string;
+  validateOnChange?: boolean;
   autocompleteFilter?: (text: string, item: object, key?: string) => boolean;
   onChange?: (value: string) => void;
 }

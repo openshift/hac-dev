@@ -45,7 +45,7 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
     <Dropdown
       onSelect={onSelect}
       toggle={
-        <DropdownToggle onToggle={onToggle} data-test="dropdown-toggle">
+        <DropdownToggle onToggle={onToggle} isDisabled={disabled} data-test="dropdown-toggle">
           {selected || placeholder}
         </DropdownToggle>
       }
