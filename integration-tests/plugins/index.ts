@@ -11,6 +11,9 @@ module.exports = (on, config) => {
   if (!Object.prototype.hasOwnProperty.call(config.env, 'HAC_BASE_URL')) {
     config.env.HAC_BASE_URL = 'https://prod.foo.redhat.com:1337/beta/hac/app-studio';
   }
+  if (!Object.prototype.hasOwnProperty.call(config.env, 'ENABLE_HACBS')) {
+    config.env.ENABLE_HACBS = 'https://prod.foo.redhat.com:1337/beta/hac/hacbs';
+  }
   if (!Object.prototype.hasOwnProperty.call(config.env, 'USERNAME')) {
     config.env.USERNAME = '';
   }

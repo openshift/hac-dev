@@ -36,3 +36,7 @@ export const actions = {
   deleteModalInput: 'input[name*="resourceName"]',
   deleteModalButton: 'button[data-testid="delete-resource"]',
 }
+
+export const breadcrumbs = {
+  applications: '[data-test-id="breadcrumb-link-0"]'
+}

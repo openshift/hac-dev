@@ -22,6 +22,13 @@ export class Common {
     Common.waitForLoad();
   }
 
+  static enableHACBS() {
+    Common.openURL(
+      `${Cypress.env('ENABLE_HACBS')}/`,
+    );
+    Common.waitForLoad();
+  }
+
   static waitForLoad(timeout = 120000) {
     for (const item of Object.values(waits)) {
       cy.get(item, { timeout }).should('not.exist');
@@ -51,5 +58,9 @@ export class Common {
         .its('stdout')
         .should('contain', 'Done running the script');
     }
+  }
+
+  static clickBreadcrumbs(breadcrumbPO: string) {
+    cy.get(breadcrumbPO).click();
   }
 }
