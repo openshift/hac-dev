@@ -69,12 +69,16 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   createApplication() {
-    cy.get(ComponentsPagePO.create).click();
+    cy.get(ComponentsPagePO.create).trigger('click');
     cy.get(ComponentsPagePO.create).should('be.disabled');
     Common.waitForLoad();
   }
 
   checkAlert(message: string) {
     cy.contains(alertTitle, message).should('exist');
+  }
+
+  expandDetails(componentName: string) {
+    cy.get(`[aria-label="${componentName}"]`).click();
   }
 }

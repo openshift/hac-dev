@@ -19,34 +19,32 @@ export type ComponentSource = {
     revision?: string;
     context?: string;
   };
-  image?: {
-    containerImage: string;
-  };
+};
+
+export type ComponentSpecs = {
+  componentName: string;
+  application: string;
+  secret?: string;
+  source?: ComponentSource;
+  containerImage?: string;
+  resources?: ResourceRequirements;
+  replicas?: number;
+  releaseStrategies?: string[];
+  targetPort?: number;
+  route?: string;
+  env?: {
+    name: string;
+    value: string;
+  }[];
 };
 
 export type ComponentKind = K8sResourceCommon & {
-  spec: {
-    componentName: string;
-    application: string;
-    source?: ComponentSource;
-    containerImage?: string;
-    context?: string;
-    resources?: ResourceRequirements;
-    replicas?: number;
-    targetPort?: number;
-    route?: string;
-    env?: {
-      name: string;
-      value: string;
-    }[];
-    build?: {
-      containerImage: string;
-    };
-  };
+  spec: ComponentSpecs;
   status?: {
     containerImage?: string;
     conditions?: any;
     devfile?: string;
-    gitops?: { repositoryURL?: string };
+    gitops?: { repositoryURL?: string; branch?: string; context?: string };
+    webhook?: string;
   };
 };

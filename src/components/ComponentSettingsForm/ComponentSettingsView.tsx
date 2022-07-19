@@ -6,9 +6,9 @@ import { Formik } from 'formik';
 import { ComponentGroupVersionKind } from '../../models';
 import { ComponentKind } from '../../types';
 import { createComponent } from '../../utils/create-utils';
+import { createResourceData, transformResources } from '../ImportForm/utils/transform-utils';
+import { reviewValidationSchema } from '../ImportForm/utils/validation-utils';
 import { NamespaceContext } from '../NamespacedPage/NamespacedPage';
-import { createResourceData, transformResources } from '../ReviewComponents/utils';
-import { reviewFormSchema } from '../ReviewComponents/validation-utils';
 import ComponentSettingsForm from './ComponentSettingsForm';
 
 type ComponentSettingsViewProps = {
@@ -36,30 +36,28 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
   }
 
   const initialValues = {
-    components: {
-      [componentName]: {
-        ...component.spec,
-        name: component.spec.componentName,
-        resources: createResourceData(component.spec.resources || {}),
+    components: [
+      {
+        componentStub: {
+          ...component.spec,
+          resources: createResourceData(component.spec.resources || {}),
+        },
       },
-    },
+    ],
+    isDetected: true,
   };
 
   const handleSubmit = (values, actions) => {
-    const componentValues = values.components[componentName];
+    const componentValues = values.components[0].componentStub;
     const applicationName = componentValues.application;
 
     const transformedComponentValues = {
-      name: componentValues.name,
-      gitRepo: componentValues.source?.git?.url,
-      devfileUrl: componentValues.source?.git?.devfileUrl,
+      ...componentValues,
       replicas: componentValues.replicas && Number(componentValues.replicas),
       targetPort: componentValues.targetPort && Number(componentValues.targetPort),
       resources: componentValues.resources && transformResources(componentValues.resources),
-      env: componentValues.env,
-      revision: componentValues.source?.git?.revision,
-      context: componentValues.source?.git?.context,
     };
+
     return createComponent(
       transformedComponentValues,
       applicationName,
@@ -85,9 +83,9 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       onSubmit={handleSubmit}
       onReset={() => navigate(-1)}
       initialValues={initialValues}
-      validationSchema={reviewFormSchema}
+      validationSchema={reviewValidationSchema}
     >
-      {(props) => <ComponentSettingsForm {...props} component={component} />}
+      {(props) => <ComponentSettingsForm {...props} />}
     </Formik>
   );
 };

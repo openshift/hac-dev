@@ -1,25 +1,25 @@
 import React from 'react';
 import { PageSection, FormSection, Form } from '@patternfly/react-core';
-import { FormikProps } from 'formik';
+import { FormikProps, FormikValues, useFormikContext } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import startCase from 'lodash/startCase';
 import { FormFooter } from '../../shared';
-import { ComponentKind } from '../../types';
+import { ReviewComponentCard } from '../ImportForm/ReviewSection/ReviewComponentCard';
 import PageLayout from '../PageLayout/PageLayout';
-import { ReviewSourceComponentCard } from '../ReviewComponents/ReviewSourceComponentCard';
 
 import '../../shared/style.scss';
 
-type ComponentSettingsFormProps = { component: ComponentKind } & FormikProps<{}>;
-
-const ComponentSettingsForm: React.FunctionComponent<ComponentSettingsFormProps> = ({
-  component,
+const ComponentSettingsForm: React.FunctionComponent<FormikProps<FormikValues>> = ({
   handleSubmit,
   handleReset,
   isSubmitting,
   status,
   errors,
 }) => {
+  const {
+    values: { components },
+  } = useFormikContext<FormikValues>();
+
   const footer = (
     <FormFooter
       submitLabel="Save"
@@ -36,8 +36,8 @@ const ComponentSettingsForm: React.FunctionComponent<ComponentSettingsFormProps>
       breadcrumbs={[
         { path: '/app-studio/applications', name: 'Applications' },
         {
-          path: `/app-studio/applications?name=${component.spec.application}`,
-          name: startCase(component.spec.application),
+          path: `/app-studio/applications?name=${components[0].componentStub.application}`,
+          name: startCase(components[0].componentStub.application),
         },
         { path: '#', name: 'Component settings' },
       ]}
@@ -48,16 +48,15 @@ const ComponentSettingsForm: React.FunctionComponent<ComponentSettingsFormProps>
       <PageSection isFilled>
         <Form onSubmit={handleSubmit}>
           <FormSection>
-            <ReviewSourceComponentCard
-              component={{
-                name: component.metadata.name,
-                source: component.spec.source,
-                envs: component.spec.env,
-                containerImage: component.spec.containerImage,
-              }}
-              isExpanded
-              editMode
-            />
+            {components.map((component) => (
+              <ReviewComponentCard
+                key={component.componentStub.componentName}
+                detectedComponent={component}
+                detectedComponentIndex={0}
+                isExpanded
+                editMode
+              />
+            ))}
           </FormSection>
         </Form>
       </PageSection>
