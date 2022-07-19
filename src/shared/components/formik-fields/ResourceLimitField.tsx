@@ -31,7 +31,7 @@ const ResourceLimitField: React.FC<ResourceLimitFieldProps> = ({
       <RequestSizeInput
         {...props}
         onChange={(val) => {
-          setFieldValue(props.name, val.value);
+          setTimeout(() => setFieldValue(props.name, val.value));
           setFieldTouched(props.name, true);
           setFieldValue(unitName, val.unit);
         }}
