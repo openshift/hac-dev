@@ -13,8 +13,10 @@ import {
 import { CheckIcon } from '@patternfly/react-icons/dist/js/icons/check-icon';
 import { useFormikContext } from 'formik';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
+import { useModalLauncher } from '../../modal/ModalProvider';
 import { useAccessTokenBinding } from '../utils/auth-utils';
 import { ImportFormValues } from '../utils/types';
+import { createAuthTokenModal } from './AuthTokenModal';
 
 const AuthOptions: React.FC = () => {
   const [expanded, setExpanded] = React.useState<boolean>(true);
@@ -25,16 +27,17 @@ const AuthOptions: React.FC = () => {
   const {
     auth: { getToken },
   } = useChrome();
+  const showModal = useModalLauncher();
 
-  const [authUrl, loaded] = useAccessTokenBinding(source);
+  const [{ oAuthUrl, accessTokenName }, loaded] = useAccessTokenBinding(source);
 
   const startAuthorization = React.useCallback(async () => {
-    if (authUrl) {
+    if (oAuthUrl) {
       const token = await getToken();
-      window.open(`${authUrl}&k8s_token=${token}`, '_blank');
+      window.open(`${oAuthUrl}&k8s_token=${token}`, '_blank');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authUrl]);
+  }, [oAuthUrl]);
 
   return (
     <ExpandableSection
@@ -51,19 +54,26 @@ const AuthOptions: React.FC = () => {
               Authorized access
             </HelperTextItem>
           </HelperText>
+        ) : !loaded ? (
+          <Spinner size="lg" aria-label="Creating access token binding" isSVG />
         ) : (
-          <Button
-            variant={ButtonVariant.link}
-            onClick={startAuthorization}
-            isDisabled={!loaded}
-            isInline
-          >
-            {!loaded ? (
-              <Spinner size="lg" aria-label="Creating access token binding" isSVG />
-            ) : (
-              'Sign in'
-            )}
-          </Button>
+          <>
+            <Button
+              variant={ButtonVariant.link}
+              onClick={startAuthorization}
+              isDisabled={!loaded}
+              isInline
+            >
+              Sign in
+            </Button>
+            <Button
+              variant={ButtonVariant.link}
+              onClick={() => showModal(createAuthTokenModal({ accessTokenName }))}
+              isDisabled={!loaded}
+            >
+              Use a token instead
+            </Button>
+          </>
         )}
       </TextContent>
     </ExpandableSection>

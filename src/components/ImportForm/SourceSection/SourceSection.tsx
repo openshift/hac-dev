@@ -51,10 +51,9 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
   const fieldId = getFieldId('source', 'input');
   const isValid = !(touched && error);
   const label = 'Git repo URL or container image';
-  const isContainerImage = containerImageRegex.test(source);
 
   const [{ isGit, isRepoAccessible, serviceProvider, accessibility }, accessCheckLoaded] =
-    useAccessCheck(!isContainerImage ? sourceUrl : null, authSecret);
+    useAccessCheck(sourceUrl, authSecret);
 
   const setFormValidating = React.useCallback(() => {
     setValidated(ValidatedOptions.default);
@@ -81,26 +80,15 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
       setSourceUrl(null);
       return;
     }
-    if (isGitUrlValid) {
-      setFormValidating();
-      setHelpTextInvalid('');
-      setShowAuthOptions(false);
-      setSourceUrl(searchTerm);
-    }
-    //[TODO] remove this condition once SPIAccessCheck for Quay is implemented
-    if (isContainerImageValid) {
-      setFormValidated();
-      setHelpTextInvalid('');
-      setShowAuthOptions(true);
-      setShowGitOptions(false);
-      setSourceUrl(searchTerm);
-    }
-  }, [source, setFieldValue, setFormValidating, setFormValidated]);
+    setFormValidating();
+    setHelpTextInvalid('');
+    setSourceUrl(searchTerm);
+  }, [source, setFieldValue, setFormValidating]);
 
   const debouncedHandleSourceChange = useDebounceCallback(handleSourceChange);
 
   React.useEffect(() => {
-    if (accessCheckLoaded && !isContainerImage) {
+    if (accessCheckLoaded) {
       if (isRepoAccessible) {
         setFormValidated();
         isGit && setShowGitOptions(true);
@@ -118,7 +106,6 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
     isRepoAccessible,
     isGit,
     serviceProvider,
-    isContainerImage,
     setFieldValue,
     setFormValidated,
   ]);
@@ -134,12 +121,17 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
       ) {
         setFormValidating();
         const binding = await initiateAccessTokenBinding(source, namespace);
-        if (binding.status?.phase === SPIAccessTokenBindingPhase.Injected) {
+        // set injected token only if source hasn't changed after call
+        if (
+          binding.status?.phase === SPIAccessTokenBindingPhase.Injected &&
+          binding.spec.repoUrl === source
+        ) {
           setFieldValue('git.secret', binding.status.syncedObjectRef.name);
           setFormValidated();
         }
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     accessCheckLoaded,
     accessibility,
@@ -149,7 +141,6 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
     setFormValidated,
     setFormValidating,
     showAuthOptions,
-    source,
   ]);
 
   useOnMount(() => {

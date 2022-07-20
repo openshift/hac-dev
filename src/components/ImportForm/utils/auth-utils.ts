@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { k8sCreateResource, useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { useFormikContext } from 'formik';
+import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import {
   SPIAccessCheckModel,
   SPIAccessCheckGroupVersionKind,
@@ -15,6 +16,9 @@ import {
 } from '../../../types';
 import { initiateAccessTokenBinding } from '../../../utils/create-utils';
 import { useNamespace } from '../../NamespacedPage/NamespacedPage';
+
+const SPI_API_URL =
+  'https://spi-oauth-route-spi-system.apps.appstudio-stage.x99m.p1.openshiftapps.com';
 
 /**
  * Create a new SPIAccessCheck when source changes,
@@ -90,7 +94,9 @@ export const useAccessCheck = (
  *
  * @returns oAuth URL provided by the binding
  */
-export const useAccessTokenBinding = (source: string): [string, boolean] => {
+export const useAccessTokenBinding = (
+  source: string,
+): [{ oAuthUrl: string; accessTokenName: string }, boolean] => {
   const { namespace } = useNamespace();
   const { setFieldValue } = useFormikContext();
   const [name, setName] = React.useState<string>();
@@ -135,5 +141,47 @@ export const useAccessTokenBinding = (source: string): [string, boolean] => {
     binding?.status?.syncedObjectRef?.name,
   ]);
 
-  return [binding?.status?.oAuthUrl, !!(name && loaded)];
+  return [
+    {
+      oAuthUrl: binding?.status?.oAuthUrl,
+      accessTokenName: binding?.status?.linkedAccessTokenName,
+    },
+    !!(name && loaded),
+  ];
+};
+
+/**
+ * Utils for interaction with the SPI API.
+ *
+ * Utils:
+ * - uploadToken: Upload access token to the `POST /token/{ns}/{name}` endpoint
+ *
+ * @returns object of utils
+ */
+export const useSpiAPI = () => {
+  const { namespace } = useNamespace();
+  const {
+    auth: { getToken },
+  } = useChrome();
+
+  return React.useMemo(
+    () => ({
+      uploadToken: async (accessTokenName: string, username: string, accessToken: string) => {
+        const token = await getToken();
+        return fetch(`${SPI_API_URL}/token/${namespace}/${accessTokenName}`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            username,
+            // eslint-disable-next-line camelcase
+            access_token: accessToken,
+          }),
+        });
+      },
+    }),
+    [getToken, namespace],
+  );
 };
