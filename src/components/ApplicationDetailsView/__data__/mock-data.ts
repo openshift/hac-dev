@@ -73,9 +73,9 @@ export const componentCRMocks: ComponentKind[] = [
       conditions: [
         {
           lastTransitionTime: '2022-04-11T19:36:28Z',
-          message: 'Component has been successfully created',
-          reason: 'OK',
-          status: 'True',
+          message: 'Error while creating component',
+          reason: 'Error',
+          status: 'False',
           type: 'Created',
         },
       ],
