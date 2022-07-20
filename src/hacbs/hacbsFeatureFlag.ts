@@ -19,7 +19,13 @@ export const EnableHACBSFlagRoute: React.FC = () => {
 };
 
 export const enableHACBSFlagFromQueryParam = (setFlag: SetFeatureFlag): void => {
-  const enabled = new URLSearchParams(window.location.search).get('hacbs') === 'true';
+  let enabled = false;
+  const hacbsParam = new URLSearchParams(window.location.search).get('hacbs');
+  if (['true', 'false'].includes(hacbsParam)) {
+    enabled = hacbsParam === 'true';
+  } else {
+    enabled = localStorage.getItem('hacbs') === 'true';
+  }
   if (enabled) {
     /* eslint-disable-next-line no-console */
     console.log('HACBS Flag enabled');
