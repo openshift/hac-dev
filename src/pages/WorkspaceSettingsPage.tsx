@@ -6,6 +6,7 @@ import { GettingStartedCard } from '../components/GettingStartedCard/GettingStar
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
 import imageUrl from '../imgs/getting-started-illustration.svg';
+import './WorkspaceSettingsPage.scss';
 
 const GETTING_STARTED_CARD_KEY = 'environments-list-getting-started-card';
 
@@ -16,7 +17,7 @@ const WorkspaceSettingsPage: React.FC = () => {
         <title>Workspace settings page</title>
       </Helmet>
       <GettingStartedCard
-        imgClassName="pf-u-px-2xl pf-u-w-33"
+        imgClassName="pf-u-px-md-on-xl pf-u-min-width workspace-settings-page__card-img"
         localStorageKey={GETTING_STARTED_CARD_KEY}
         title="Manage your workspace settings"
         imgSrc={imageUrl}
