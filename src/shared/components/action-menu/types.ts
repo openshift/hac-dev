@@ -33,4 +33,5 @@ export enum MenuOptionType {
 export enum ActionMenuVariant {
   KEBAB = 'plain',
   DROPDOWN = 'default',
+  PRIMARY = 'primary',
 }

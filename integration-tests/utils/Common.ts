@@ -15,9 +15,9 @@ export class Common {
   }
 
   static openApplicationURL(applicationName: string) {
-    Common.openURL(
-      `${Cypress.env('HAC_BASE_URL')}/applications?name=${applicationName.replace('.', '-')}`,
-    );
+    if(!cy.contains('h1', applicationName, { timeout: 90000 })) {
+      cy.get('[data-ouia-component-id="Applications"] > a').click();
+    }
     Common.verifyPageTitle(applicationName);
     Common.waitForLoad();
   }

@@ -1,10 +1,7 @@
-import * as React from 'react';
-import { ComponentModel } from '../../models';
 import { Action } from '../../shared/components/action-menu/types';
 import { ComponentKind } from '../../types';
-import { buildLogViewerLauncher } from '../LogViewer/BuildLogViewer';
-import { createDeleteModalLauncher } from '../modal/DeleteResourceModal';
 import { useModalLauncher } from '../modal/ModalProvider';
+import { componentDeleteModal } from '../modal/resource-modals';
 
 export const useComponentActions = (component: ComponentKind, name: string): Action[] => {
   const showModal = useModalLauncher();
@@ -15,29 +12,7 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
       label: 'Component settings',
     },
     {
-      cta: () =>
-        showModal(
-          buildLogViewerLauncher({
-            component,
-          }),
-        ),
-      id: `view-logs-${name.toLowerCase()}`,
-      label: 'View Build Logs',
-    },
-    {
-      cta: () =>
-        showModal(
-          createDeleteModalLauncher(component.kind)({
-            obj: component,
-            model: ComponentModel,
-            description: (
-              <>
-                The component <strong>{component.metadata.name}</strong> will be deleted from the
-                components view and all the environments it is currently deployed.
-              </>
-            ),
-          }),
-        ),
+      cta: () => showModal(componentDeleteModal(component)),
       id: `delete-${name.toLowerCase()}`,
       label: 'Delete',
     },

@@ -86,13 +86,18 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
               />
             </ToolbarItem>
             <ToolbarItem>
-              <Link
-                data-test="add-component"
-                className="pf-c-button pf-m-primary"
-                to={`/app-studio/import?application=${applicationName}`}
+              <Button
+                variant="secondary"
+                component={(p) => (
+                  <Link
+                    {...p}
+                    data-test="add-component"
+                    to={`/app-studio/import?application=${applicationName}`}
+                  />
+                )}
               >
                 Add Component
-              </Link>
+              </Button>
             </ToolbarItem>
           </ToolbarGroup>
           <ToolbarGroup alignment={{ default: 'alignRight' }}>

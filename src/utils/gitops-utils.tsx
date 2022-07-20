@@ -5,6 +5,7 @@ import InProgressIcon from '@patternfly/react-icons/dist/js/icons/in-progress-ic
 import NotStartedIcon from '@patternfly/react-icons/dist/js/icons/not-started-icon';
 import { global_palette_green_400 as greenColor } from '@patternfly/react-tokens/dist/js/global_palette_green_400';
 import { global_palette_red_100 as redColor } from '@patternfly/react-tokens/dist/js/global_palette_red_100';
+import { runStatus } from '../shared';
 import {
   GitOpsDeploymentKind,
   GitOpsDeploymentHealthStatus,
@@ -30,4 +31,18 @@ export const getGitOpsDeploymentHealthStatusIcon = (status: GitOpsDeploymentHeal
 
 export const getGitOpsDeploymentStrategy = (resource: GitOpsDeploymentKind) => {
   return GitOpsDeploymentStrategy[resource.spec?.type];
+};
+
+export const getBuildStatusIcon = (status: runStatus) => {
+  switch (status) {
+    case runStatus.Succeeded:
+      return <CheckCircleIcon color={greenColor.value} />;
+    case runStatus.Failed:
+      return <ExclamationCircleIcon color={redColor.value} />;
+    case runStatus.Running:
+    case runStatus['In Progress']:
+      return <InProgressIcon />;
+    default:
+      return <NotStartedIcon />;
+  }
 };

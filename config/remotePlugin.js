@@ -185,7 +185,7 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/environment/create',
+        path: '/app-studio/workspace-settings/environment/create',
         exact: true,
         component: {
           $codeRef: 'CreateEnvironment',
@@ -195,7 +195,7 @@ module.exports = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/environment/create',
+        path: '/app-studio/workspace-settings/environment/create',
         exact: true,
         component: {
           $codeRef: 'CreateEnvironment',
