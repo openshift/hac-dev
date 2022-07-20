@@ -9,6 +9,7 @@ module.exports = {
       Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
       Import: resolve(__dirname, '../src/pages/ImportPage'),
       ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
+      PipelineRuns: resolve(__dirname, '../src/hacbs/pages/PipelineRunPage'),
       HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
       WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),
       CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
@@ -92,6 +93,26 @@ module.exports = {
         exact: true,
         component: {
           $codeRef: 'ComponentSettings',
+        },
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/pipelineruns',
+        exact: true,
+        component: {
+          $codeRef: 'PipelineRuns',
+        },
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/pipelineruns',
+        exact: true,
+        component: {
+          $codeRef: 'PipelineRuns',
         },
       },
     },
