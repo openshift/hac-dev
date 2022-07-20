@@ -6,6 +6,7 @@ import {
 import { SPIAccessTokenBindingModel } from '../../models';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
+import { ComponentSpecs } from './../../types/component';
 import {
   createApplication,
   createComponent,
@@ -30,10 +31,24 @@ const mockApplicationRequestData = {
   },
 };
 
-const mockComponent = { name: 'Test Component', gitRepo: 'http://github.com/test-repo' };
+const mockComponent: ComponentSpecs = {
+  componentName: 'Test Component',
+  application: 'test-application',
+  source: {
+    git: {
+      url: 'http://github.com/test-repo',
+    },
+  },
+};
+
 const mockComponentWithDevfile = {
   ...mockComponent,
-  devfileUrl: 'https://registry.devfile.io/sample-devfile',
+  source: {
+    git: {
+      ...mockComponent.source.git,
+      devfileUrl: 'https://registry.devfile.io/sample-devfile',
+    },
+  },
 };
 
 const mockComponentData = {
@@ -44,11 +59,16 @@ const mockComponentData = {
     namespace: 'test-ns',
   },
   spec: {
-    componentName: mockComponent.name,
+    componentName: mockComponent.componentName,
     application: 'test-application',
     source: {
-      git: { url: mockComponent.gitRepo },
+      git: { url: mockComponent.source.git.url },
     },
+    containerImage: undefined,
+    env: undefined,
+    replicas: undefined,
+    resources: undefined,
+    secret: undefined,
   },
 };
 
@@ -58,8 +78,8 @@ const mockComponentDataWithDevfile = {
     ...mockComponentData.spec,
     source: {
       git: {
-        url: mockComponentWithDevfile.gitRepo,
-        devfileUrl: mockComponentWithDevfile.devfileUrl,
+        url: mockComponent.source.git.url,
+        devfileUrl: 'https://registry.devfile.io/sample-devfile',
       },
     },
   },
@@ -74,7 +94,6 @@ const mockCDQData = {
   },
   spec: {
     git: { url: 'https://github.com/test/repository' },
-    isMultiComponent: true,
   },
 };
 
@@ -173,7 +192,6 @@ describe('Create Utils', () => {
       'test-application',
       'https://github.com/test/repository',
       'test-ns',
-      true,
     );
 
     expect(k8sCreateResource).toHaveBeenCalledWith({

@@ -8,6 +8,8 @@ import {
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateVariant,
+  PageSection,
+  PageSectionVariants,
   Spinner,
   Title,
   Toolbar,
@@ -15,21 +17,29 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
+import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { ApplicationGroupVersionKind } from '../../models';
 import { Table } from '../../shared';
 import { ApplicationKind } from '../../types';
-import { NamespaceContext } from '../NamespacedPage/NamespacedPage';
+import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
+import { useNamespace } from '../NamespacedPage/NamespacedPage';
+import PageLayout from '../PageLayout/PageLayout';
 import { ApplicationListHeader } from './ApplicationListHeader';
 import ApplicationListRow from './ApplicationListRow';
 
-const ApplicationView: React.FC = () => {
-  const { namespace } = React.useContext(NamespaceContext);
+const GETTING_STARTED_CARD_KEY = 'application-list-getting-started-card';
 
+const ApplicationListView: React.FC = () => {
+  const { namespace } = useNamespace();
   const [applications, loaded] = useK8sWatchResource<ApplicationKind[]>({
     groupVersionKind: ApplicationGroupVersionKind,
     namespace,
     isList: true,
   });
+  applications?.sort(
+    (app1, app2) =>
+      +new Date(app2.metadata.creationTimestamp) - +new Date(app1.metadata.creationTimestamp),
+  );
 
   if (!loaded) {
     return (
@@ -39,55 +49,73 @@ const ApplicationView: React.FC = () => {
     );
   }
 
-  applications?.sort(
-    (app1, app2) =>
-      +new Date(app2.metadata.creationTimestamp) - +new Date(app1.metadata.creationTimestamp),
-  );
-
-  if (!applications || applications.length === 0) {
-    return (
-      <EmptyState variant={EmptyStateVariant.large}>
-        <EmptyStateIcon icon={CubesIcon} />
-        <Title headingLevel="h4" size="lg">
-          No applications
-        </Title>
-        <EmptyStateBody>To get started, create an application.</EmptyStateBody>
-        <Button
-          variant="primary"
-          component={(props) => <Link {...props} to="/app-studio/import" />}
-        >
-          Create application
-        </Button>
-      </EmptyState>
-    );
-  }
-
   return (
     <>
-      <Toolbar usePageInsets>
-        <ToolbarContent>
-          <ToolbarItem>
-            <Button
-              variant="primary"
-              component={(props) => <Link {...props} to="/app-studio/import" />}
-            >
-              Create application
-            </Button>
-          </ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
-      <Table
-        data={applications}
-        aria-label="Application List"
-        Header={ApplicationListHeader}
-        Row={ApplicationListRow}
-        loaded={loaded}
-        getRowProps={(obj: ApplicationKind) => ({
-          id: obj.metadata.name,
-        })}
-      />
+      {applications.length === 0 && (
+        <GettingStartedCard
+          imgClassName="pf-u-w-25 pf-u-px-4xl"
+          localStorageKey={GETTING_STARTED_CARD_KEY}
+          title="Create and manage you applications"
+          imgSrc={imageUrl}
+          imgAlt="Illustration showing users managing applications"
+        >
+          Your application will automatically be deployed to the development environment. Promote it
+          across your stages and add components.
+        </GettingStartedCard>
+      )}
+      <PageLayout
+        title="Applications"
+        description="Applications are a set of components that run together on environments."
+      >
+        <PageSection
+          padding={{ default: 'noPadding' }}
+          variant={PageSectionVariants.light}
+          isFilled
+        >
+          {!applications || applications.length === 0 ? (
+            <EmptyState variant={EmptyStateVariant.large}>
+              <EmptyStateIcon icon={CubesIcon} />
+              <Title headingLevel="h4" size="lg">
+                No applications
+              </Title>
+              <EmptyStateBody>To get started, create an application.</EmptyStateBody>
+              <Button
+                variant="primary"
+                component={(props) => <Link {...props} to="/app-studio/import" />}
+              >
+                Create application
+              </Button>
+            </EmptyState>
+          ) : (
+            <>
+              <Toolbar usePageInsets>
+                <ToolbarContent>
+                  <ToolbarItem>
+                    <Button
+                      variant="primary"
+                      component={(props) => <Link {...props} to="/app-studio/import" />}
+                    >
+                      Create application
+                    </Button>
+                  </ToolbarItem>
+                </ToolbarContent>
+              </Toolbar>
+              <Table
+                data={applications}
+                aria-label="Application List"
+                Header={ApplicationListHeader}
+                Row={ApplicationListRow}
+                loaded
+                getRowProps={(obj: ApplicationKind) => ({
+                  id: obj.metadata.name,
+                })}
+              />
+            </>
+          )}
+        </PageSection>
+      </PageLayout>
     </>
   );
 };
 
-export default ApplicationView;
+export default ApplicationListView;

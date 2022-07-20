@@ -1,15 +1,17 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import ApplicationDetailsView from '../components/ApplicationDetailsView/ApplicationDetailsView';
 import ApplicationListView from '../components/ApplicationListView/ApplicationListView';
+import { GettingStartedModal } from '../components/modal/GettingStartedModal';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
-import PageLayout from '../components/PageLayout/PageLayout';
 import HacbsApplicationDetails from '../hacbs/components/ApplicationDetails/HacbsApplicationDetails';
 import { HACBS_FLAG } from '../hacbs/hacbsFeatureFlag';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
+import imageUrl from '../imgs/getting-started-illustration.svg';
 import { getQueryArgument } from '../shared/utils';
+
+const GETTING_STARTED_MODAL_KEY = 'application-list-getting-started-modal';
 
 const ApplicationsPage = () => {
   useQuickstartCloseOnUnmount();
@@ -18,6 +20,16 @@ const ApplicationsPage = () => {
 
   return (
     <NamespacedPage>
+      <GettingStartedModal
+        imgClassName="pf-u-justify-content-center pf-u-px-4xl"
+        localStorageKey={GETTING_STARTED_MODAL_KEY}
+        title="Developing apps just got easier"
+        imgSrc={imageUrl}
+        imgAlt="Illustration showing users developing applications"
+      >
+        Build apps quickly, deploy and automate anywhere, and troubleshoot your apps - all in one
+        space.
+      </GettingStartedModal>
       {applicationName ? (
         <React.Fragment>
           <Helmet>
@@ -30,23 +42,12 @@ const ApplicationsPage = () => {
           )}
         </React.Fragment>
       ) : (
-        <React.Fragment>
+        <>
           <Helmet>
             <title>Application List Page</title>
           </Helmet>
-          <PageLayout
-            title="Applications"
-            description="Applications are a set of components that run together on environments."
-          >
-            <PageSection
-              padding={{ default: 'noPadding' }}
-              variant={PageSectionVariants.light}
-              isFilled
-            >
-              <ApplicationListView />
-            </PageSection>
-          </PageLayout>
-        </React.Fragment>
+          <ApplicationListView />
+        </>
       )}
     </NamespacedPage>
   );

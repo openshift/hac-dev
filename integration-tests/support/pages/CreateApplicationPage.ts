@@ -24,6 +24,6 @@ export class CreateApplicationPage extends AbstractWizardPage {
   }
 
   clickNext() {
-    cy.get(createApplicationPagePO.next).click();
+    cy.get(createApplicationPagePO.next).trigger('click');
   }
 }

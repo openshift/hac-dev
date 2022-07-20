@@ -52,6 +52,7 @@ describe('Create Component from Public Git Source', () => {
     });
 
     it('Check Changing Resources', () => {
+      componentPage.expandDetails(componentName);
       componentPage.setCpuByButton(cpuIncrased, cpuUnit);
       componentPage.setRam(ramValue, ramUnit);
     });
@@ -92,7 +93,12 @@ describe('Create Component from Public Git Source', () => {
       componentPage.setCpuByButton(cpuDecreased, cpuUnit);
       componentPage.saveChanges();
       applicationDetailPage.expandDetails(componentName);
-      applicationDetailPage.checkCpuAndMemory(cpuDecreased, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
+      applicationDetailPage.checkCpuAndMemory(
+        cpuDecreased,
+        CPUUnit.millicore,
+        2,
+        MemoryUnit.gigabyte,
+      );
     });
   });
 });

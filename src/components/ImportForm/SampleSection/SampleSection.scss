@@ -1,0 +1,9 @@
+.hac-catalog {
+  margin: var(--pf-global--spacer--lg);
+  --pf-l-gallery--m-gutter--GridGap: var(--pf-global--gutter--md);
+
+  &__tile {
+    height: 100%;
+    color: black;
+  }
+}

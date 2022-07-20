@@ -18,6 +18,7 @@ import {
   ComponentDetectionQueryKind,
   SPIAccessTokenBindingKind,
 } from '../types';
+import { ComponentSpecs } from './../types/component';
 
 /**
  * Create HAS Application CR
@@ -61,7 +62,7 @@ export const createApplication = (
 /**
  * Create HAS Component CR
  *
- * @param component component data TODO: Data might change based on the API requirements
+ * @param component component data
  * @param application application name
  * @param namespace namespace of the application
  * @param dryRun dry run without creating any resources
@@ -71,7 +72,7 @@ export const createApplication = (
  */
 export const createComponent = (
   // TODO need better type for `component`
-  component,
+  component: ComponentSpecs,
   application: string,
   namespace: string,
   secret?: string,
@@ -79,8 +80,15 @@ export const createComponent = (
   originalComponent?: ComponentKind,
   verb: 'create' | 'update' = 'create',
 ): any => {
-  const name = component.name.split(/ |\./).join('-').toLowerCase();
+  const { componentName, containerImage, source, replicas, resources, env, targetPort } = component;
+
+  const name = component.componentName.split(/ |\./).join('-').toLowerCase();
   // const uniqueName = uniqueId(name);
+
+  // FIXME - context is not supported by the HAS API correctly yet.
+  // Remove after https://issues.redhat.com/browse/DEVHAS-115 is fixed.
+  delete source?.git?.context;
+
   const newComponent = {
     apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
     kind: ComponentModel.kind,
@@ -89,29 +97,15 @@ export const createComponent = (
       namespace,
     },
     spec: {
-      componentName: component.name,
+      componentName,
       application,
-      ...(component.image
-        ? {}
-        : {
-            source: {
-              git: {
-                ...(component.gitRepo ? { url: component.gitRepo } : {}),
-                ...(component.devfileUrl ? { devfileUrl: component.devfileUrl } : {}),
-                ...(component.dockerfileUrl ? { dockerfileUrl: component.dockerfileUrl } : {}),
-                ...(component.revision ? { revision: component.revision } : {}),
-                // FIXME - context is not supported by the HAS API correctly yet.
-                // Remove after https://issues.redhat.com/browse/DEVHAS-115 is fixed.
-                // ...(component.context ? { context: component.context } : {}),
-              },
-            },
-          }),
+      source,
       secret,
-      ...(component.image ? { containerImage: component.image } : {}),
-      replicas: component.replicas,
-      targetPort: component.targetPort,
-      resources: component.resources,
-      env: component.env,
+      containerImage,
+      replicas,
+      targetPort,
+      resources,
+      env,
     },
   };
 
@@ -143,7 +137,6 @@ const uid = () =>
  * @param appName application name
  * @param url the URL of the repository that will be analyzed for components
  * @param namespace namespace to deploy resource in. Defaults to current namespace
- * @param isMultiComponent whether or not the git repository contains multiple components
  * @param secret Name of the secret containing the personal access token
  * @param context Context directory
  * @param revision Git revision if other than master/main
@@ -155,7 +148,6 @@ export const createComponentDetectionQuery = async (
   appName: string,
   url: string,
   namespace: string,
-  isMultiComponent?: boolean,
   secret?: string,
   context?: string,
   revision?: string,
@@ -179,7 +171,6 @@ export const createComponentDetectionQuery = async (
         revision,
       },
       secret,
-      isMultiComponent,
     },
   };
 

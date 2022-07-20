@@ -1,7 +1,7 @@
 export const pageTitles = {
   applications: 'Applications',
-  createApp: 'Create your application',
-  buildApp: 'Build your application',
+  createApp: 'Create application',
+  buildApp: 'Add component',
   sampleStart: 'Start with a sample',
   reviewComponent: 'Review your new components',
   componentSettings: 'Component settings',

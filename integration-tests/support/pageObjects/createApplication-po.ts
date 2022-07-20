@@ -5,7 +5,7 @@ export const addComponentPagePO = {
   gitOptions: 'Git options',
   gitReference: '[data-test="git-reference"]',
   contextDir: '[data-test="context-dir"]',
-  next: '[data-test="submit-button"]',
+  next: 'button[type=submit]',
 };
 
 export const componentSamplesPagePO = {
@@ -19,12 +19,12 @@ export const componentSamplesPagePO = {
 
 export const createApplicationPagePO = {
   applicationName: '[id="form-input-application-field"]',
-  next: '[data-test="submit-button"]',
+  next: 'button[type=submit]',
   createApplication: 'Create application',
 };
 
 export const ComponentsPagePO = {
-  create: '[data-test="submit-button"]',
+  create: 'button[type=submit]',
   createText: 'Create',
   showAdvancedSetting: 'Show advanced deployment options',
   cpuInput: 'input[name*="cpuValue"]',
