@@ -31,7 +31,9 @@ const EnvironmentListView: React.FC = () => {
       <ToolbarItem>
         <Button
           variant="primary"
-          component={(props) => <Link {...props} to="/app-studio/environment/create" />}
+          component={(props) => (
+            <Link {...props} to="/app-studio/workspace-settings/environment/create" />
+          )}
         >
           Create Environment
         </Button>

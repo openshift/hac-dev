@@ -10,7 +10,7 @@ export const EnvironmentModel: K8sModelCommon = {
 };
 
 export const EnvironmentGroupVersionKind: K8sGroupVersionKind = {
-  group: 'appstudio.redhat.com',
-  version: 'v1alpha1',
-  kind: 'Environment',
+  group: EnvironmentModel.apiGroup,
+  version: EnvironmentModel.apiVersion,
+  kind: EnvironmentModel.kind,
 };

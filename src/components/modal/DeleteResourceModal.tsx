@@ -48,11 +48,15 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
     } catch (e) {
       setError(e);
     }
-    onClose();
+    onClose({ submitClicked: true });
+  };
+
+  const onReset = () => {
+    onClose({ submitClicked: false });
   };
 
   return (
-    <Formik onSubmit={deleteResource} initialValues={{ resourceName: '' }} onReset={onClose}>
+    <Formik onSubmit={deleteResource} initialValues={{ resourceName: '' }} onReset={onReset}>
       {({
         handleSubmit,
         handleReset,

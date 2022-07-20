@@ -1,26 +1,28 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
   Button,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStateVariant,
+  Divider,
+  Flex,
+  FlexItem,
   PageSection,
   Spinner,
-  Title,
 } from '@patternfly/react-core';
-import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
-import { ApplicationGroupVersionKind, ComponentGroupVersionKind } from '../../models';
-import { ApplicationKind, ComponentKind } from '../../types';
+import { ApplicationGroupVersionKind } from '../../models';
+import { ApplicationKind } from '../../types';
+import { ApplicationEnvironmentCards } from '../Environment/ApplicationEnvironmentCards';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
 import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
-import { NamespaceContext } from '../NamespacedPage/NamespacedPage';
+import { useModalLauncher } from '../modal/ModalProvider';
+import { applicationDeleteModal } from '../modal/resource-modals';
+import { useNamespace } from '../NamespacedPage/NamespacedPage';
+import { OutlinedHelpPopperIcon } from '../OutlinedHelpTooltipIcon';
 import PageLayout from '../PageLayout/PageLayout';
-import ComponentListView from './ComponentListView';
+import { ComponentCard } from './ComponentCard';
+import { ComponentDetails } from './ComponentDetails';
 
 const GETTING_STARTED_CARD_KEY = 'application-details-getting-started';
 
@@ -31,24 +33,41 @@ type ApplicationViewProps = {
 const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
   applicationName,
 }) => {
-  const { namespace } = React.useContext(NamespaceContext);
+  const { namespace } = useNamespace();
+  const showModal = useModalLauncher();
+  const navigate = useNavigate();
 
-  const [application, applicationsLoaded] = useK8sWatchResource<ApplicationKind>({
-    groupVersionKind: ApplicationGroupVersionKind,
-    name: applicationName,
-    namespace,
-  });
+  const [cardsExpanded, setCardExpanded] = React.useState<boolean>(true);
 
-  const [components, componentsLoaded] = useK8sWatchResource<ComponentKind[]>({
-    groupVersionKind: ComponentGroupVersionKind,
-    namespace,
-    isList: true,
-  });
+  const resource = React.useMemo(() => {
+    return {
+      groupVersionKind: ApplicationGroupVersionKind,
+      name: applicationName,
+      namespace,
+    };
+  }, [applicationName, namespace]);
 
-  const filteredComponents = React.useMemo(
-    () =>
-      componentsLoaded ? components?.filter((c) => c.spec.application === applicationName) : [],
-    [components, applicationName, componentsLoaded],
+  const [application, applicationsLoaded] = useK8sWatchResource<ApplicationKind>(resource);
+
+  const actions = React.useMemo(
+    () => [
+      {
+        id: 'add-component-header-action',
+        label: 'Add Component',
+        cta: { href: `/app-studio/import?application=${applicationName}` },
+      },
+      {
+        id: 'delete-application-header-action',
+        label: 'Delete Application',
+        cta: () =>
+          showModal<{ submitClicked: boolean }>(applicationDeleteModal(application)).closed.then(
+            ({ submitClicked }) => {
+              if (submitClicked) navigate('/app-studio');
+            },
+          ),
+      },
+    ],
+    [application, applicationName, navigate, showModal],
   );
 
   const loading = (
@@ -60,28 +79,6 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
   if (!applicationsLoaded) {
     return loading;
   }
-
-  const emptyState = (
-    <EmptyState variant={EmptyStateVariant.large}>
-      <EmptyStateIcon icon={CubesIcon} />
-      <Title headingLevel="h4" size="lg">
-        No components
-      </Title>
-      <EmptyStateBody>To get started, add a component to your application.</EmptyStateBody>
-      <Button
-        variant="primary"
-        component={(props) => (
-          <Link {...props} to={`/app-studio/import?application=${application?.metadata?.name}`} />
-        )}
-      >
-        Add component
-      </Button>
-    </EmptyState>
-  );
-
-  const componentList = (
-    <ComponentListView applicationName={applicationName} components={filteredComponents} />
-  );
 
   return (
     <React.Fragment>
@@ -110,10 +107,52 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
             <HelpTopicLink topicId="app-view">Learn more</HelpTopicLink>
           </>
         }
+        actions={actions}
       >
-        <PageSection isFilled>
-          {!componentsLoaded ? loading : filteredComponents.length > 0 ? componentList : emptyState}
+        <PageSection>
+          <Flex>
+            <Flex direction={{ default: 'column' }}>
+              <FlexItem>
+                <b>Application components:</b>
+                {'  '}
+                <OutlinedHelpPopperIcon
+                  heading="Application components"
+                  content="Manage and add components from the components detail view. Note: Components from code repositories are rebuilt to capture the latest code changes. These updates will deploy to your development environment based on your deployment strategy."
+                />
+              </FlexItem>
+              <FlexItem>
+                <ComponentCard applicationName={applicationName} isExpanded={cardsExpanded} />
+              </FlexItem>
+            </Flex>
+            <Divider isVertical />
+            <Flex direction={{ default: 'column' }} grow={{ default: 'grow' }}>
+              <Flex>
+                <FlexItem>
+                  <b>Environments:</b>
+                  {'  '}
+                  <OutlinedHelpPopperIcon
+                    heading="Application environments"
+                    content="View components and their settings as deployed to environments. Component updates can be promoted between environments. Additional environments can be added via the workspace."
+                  />
+                </FlexItem>
+                <FlexItem align={{ default: 'alignRight' }}>
+                  <Button
+                    onClick={() => setCardExpanded((e) => !e)}
+                    variant="link"
+                    isInline
+                    style={{ textDecoration: 'none' }}
+                  >
+                    {cardsExpanded ? 'Collapse' : 'Expand'}
+                  </Button>
+                </FlexItem>
+              </Flex>
+              <Flex>
+                <ApplicationEnvironmentCards isExpanded={cardsExpanded} />
+              </Flex>
+            </Flex>
+          </Flex>
         </PageSection>
+        <ComponentDetails application={application} />
       </PageLayout>
     </React.Fragment>
   );

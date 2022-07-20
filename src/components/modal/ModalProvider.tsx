@@ -2,30 +2,30 @@ import React from 'react';
 import { ModalLauncher } from './createModalLauncher';
 import { ModalPortal } from './ModalPortal';
 
-type ModalContextType = (launcher: ModalLauncher) => void;
+type ModalContextType = <T = {}>(launcher: ModalLauncher) => { closed?: Promise<T> };
 
-const ModalContext = React.createContext<ModalContextType>(() => {});
+const ModalContext = React.createContext<ModalContextType>(null);
 
 type ModalProviderProps = {
   children: React.ReactNode;
 };
 
-export const useModalLauncher = () => React.useContext(ModalContext);
+export const useModalLauncher = () => React.useContext<ModalContextType>(ModalContext);
 
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [modal, setModal] = React.useState<React.ReactElement>();
 
-  const handleClose = React.useCallback(() => {
-    setModal(null);
-  }, []);
-
-  const showModal = React.useCallback(
-    (launcherCallback) => {
+  const showModal = React.useCallback(<T extends {}>(launcherCallback): { closed?: Promise<T> } => {
+    const closed = new Promise<T>((resolve) => {
+      const handleClose = (obj?: T) => {
+        setModal(null);
+        resolve(obj);
+      };
       const element = launcherCallback(handleClose);
       setModal(element);
-    },
-    [handleClose],
-  );
+    });
+    return { closed };
+  }, []);
 
   return (
     <>

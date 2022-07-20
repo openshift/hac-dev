@@ -33,8 +33,7 @@ export class ApplicationDetailPage {
   }
 
   checkBuildLog(componentName: string, textToVerify: string) {
-    this.openActionList(componentName);
-    cy.get(applicationDetailPagePO.componentBuildLog).click();
+    cy.get(`[data-testid="view-build-logs-${componentName}"]`, { timeout: 60000 }).click();
     //verify text
     cy.get(buildLogModalContentPO.closeButton).click();
   }
@@ -67,8 +66,6 @@ export class ApplicationDetailPage {
   }
 
   private openActionList(componentName: string) {
-    cy.get(`[aria-label="${componentName}"]`)
-      .find(actions.kebabButton)
-      .click();
+    cy.get(`[aria-label="${componentName}"]`).find(actions.kebabButton).click();
   }
 }

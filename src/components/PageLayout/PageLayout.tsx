@@ -1,5 +1,7 @@
 import * as React from 'react';
 import {
+  Flex,
+  FlexItem,
   PageBreadcrumb,
   PageGroup,
   PageSection,
@@ -7,6 +9,8 @@ import {
   Text,
   TextContent,
 } from '@patternfly/react-core';
+import ActionMenu from '../../shared/components/action-menu/ActionMenu';
+import { Action, ActionMenuVariant } from '../../shared/components/action-menu/types';
 import BreadCrumbs from '../../shared/components/breadcrumbs/BreadCrumbs';
 
 type PageLayoutProps = {
@@ -15,6 +19,7 @@ type PageLayoutProps = {
   footer?: React.ReactNode;
   description?: React.ReactNode;
   breadcrumbs?: { name: string; path: string }[];
+  actions?: Action[];
 };
 
 const PageLayout: React.FC<PageLayoutProps> = ({
@@ -23,6 +28,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   footer,
   description,
   breadcrumbs,
+  actions,
 }) => {
   return (
     <>
@@ -33,10 +39,19 @@ const PageLayout: React.FC<PageLayoutProps> = ({
           </PageBreadcrumb>
         )}
         <PageSection variant={PageSectionVariants.light}>
-          <TextContent>
-            <Text component="h1">{title}</Text>
-            {description && <Text component="p">{description}</Text>}
-          </TextContent>
+          <Flex>
+            <FlexItem>
+              <TextContent>
+                <Text component="h1">{title}</Text>
+                {description && <Text component="p">{description}</Text>}
+              </TextContent>
+            </FlexItem>
+            {actions && (
+              <FlexItem align={{ default: 'alignRight' }}>
+                <ActionMenu variant={ActionMenuVariant.PRIMARY} actions={actions} />
+              </FlexItem>
+            )}
+          </Flex>
         </PageSection>
       </PageGroup>
       {children}
