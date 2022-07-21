@@ -1,7 +1,10 @@
-.details {
+.hacbs-details__tabs {
+  display: flex;
+  flex-direction: column;
+
   &__tabItem {
-    &.isFilled {
-      height: 100%;
+    &.isFilled.pf-c-tab-content {
+      flex: 1;
     }
   }
 }
