@@ -129,7 +129,7 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
           {replicas && (
             <DescriptionListGroup>
               <DescriptionListTermHelpText>
-                <DescriptionListTermHelpTextButton>Replicas</DescriptionListTermHelpTextButton>
+                <DescriptionListTermHelpTextButton>Instances</DescriptionListTermHelpTextButton>
               </DescriptionListTermHelpText>
               <DescriptionListDescription>{replicas}</DescriptionListDescription>
             </DescriptionListGroup>

@@ -78,8 +78,9 @@ const ReviewSection: React.FunctionComponent = () => {
     setFieldValue('isDetected', false);
 
     if (isContainerImage) {
-      const sourceLength = source.split('/').length;
-      const componentName = source.split('/')[sourceLength - 1];
+      const sourceItems = source.split('/');
+      const containerImageName = sourceItems[sourceItems.length - 1];
+      const componentName = containerImageName.split(':').join('-');
       components = {
         [componentName]: {
           componentStub: {
