@@ -53,7 +53,7 @@ const ApplicationListView: React.FC = () => {
     <>
       {applications.length === 0 && (
         <GettingStartedCard
-          imgClassName="pf-u-w-25 pf-u-px-4xl"
+          imgClassName="pf-u-px-2xl-on-xl"
           localStorageKey={GETTING_STARTED_CARD_KEY}
           title="Create and manage you applications"
           imgSrc={imageUrl}
