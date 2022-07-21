@@ -46,7 +46,7 @@ export const applicationDetailPagePO = {
   componentSettings: '[data-testid="Component settings"]',
   detailsArrow: '[aria-label="Details"]',
   cpuRamLabel: 'CPU/Mem Requests',
-  replicaLabel: 'Replicas',
+  replicaLabel: 'Instances',
 };
 
 export const componentsListPagePO = {
