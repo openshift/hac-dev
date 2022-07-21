@@ -26,7 +26,7 @@ import AuthOptions from './AuthOptions';
 import GitOptions from './GitOptions';
 
 type SourceSectionProps = {
-  onStrategyChange: (strategy: ImportStrategy) => void;
+  onStrategyChange?: (strategy: ImportStrategy) => void;
 };
 
 export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }) => {
@@ -164,7 +164,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
         isRequired
       >
         <Grid hasGutter>
-          <GridItem span={8}>
+          <GridItem span={onStrategyChange ? 8 : 12}>
             <InputField
               name="source"
               placeholder="Enter your source"
@@ -176,12 +176,14 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
               data-test="enter-source"
             />
           </GridItem>
-          <GridItem span={4}>
-            No code?{' '}
-            <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
-              Start with a sample.
-            </Button>
-          </GridItem>
+          {onStrategyChange ? (
+            <GridItem span={4}>
+              No code?{' '}
+              <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
+                Start with a sample.
+              </Button>
+            </GridItem>
+          ) : null}
         </Grid>
       </FormGroup>
       {showAuthOptions && <AuthOptions />}
