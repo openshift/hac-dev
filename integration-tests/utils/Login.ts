@@ -30,5 +30,6 @@ export class Login {
   private static waitForApps() {
     Common.verifyPageTitle(pageTitles.applications);
     Common.waitForLoad();
+    cy.testA11y(`${pageTitles.applications} page`);
   }
 }

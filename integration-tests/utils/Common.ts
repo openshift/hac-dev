@@ -20,6 +20,7 @@ export class Common {
     }
     Common.verifyPageTitle(applicationName);
     Common.waitForLoad();
+    cy.testA11y('Application details page');
   }
 
   static waitForLoad(timeout = 120000) {
@@ -29,7 +30,7 @@ export class Common {
   }
 
   static verifyPageTitle(title: string) {
-    cy.contains('h1', title, { timeout: 90000 }).should('be.visible');
+    cy.contains('h1', title, { timeout: 180000 }).should('be.visible');
   }
 
   static clickOnConsentButton() {

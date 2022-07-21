@@ -1,3 +1,4 @@
+import { pageTitles } from '../support/constants/PageTitle';
 import { CPUUnit, MemoryUnit } from '../support/constants/Units';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
@@ -48,6 +49,7 @@ describe('Create Component from Public Git Source', () => {
 
       //addComponent.setGitReference(gitReference);
       //addComponent.setContextDir(contextDir);
+      cy.testA11y(`${pageTitles.buildApp} page`);
       addComponent.clickNext();
     });
 
@@ -69,6 +71,7 @@ describe('Create Component from Public Git Source', () => {
 
     it('Add Environment Variable', () => {
       componentPage.addEnvVar('secondEnvVar', '3000');
+      cy.testA11y(`${pageTitles.reviewComponent} page`);
     });
 
     it('Create Application', () => {
