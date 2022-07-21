@@ -24,4 +24,9 @@ export class Applications {
     createApplicationPage.setApplicationName(name);
     createApplicationPage.clickNext();
   }
+
+  static createdApplicationExists(applicationName: string) {
+    Common.openAppStudioBaseURL();
+    cy.get(`[data-id="${applicationName}"]`).should('exist');
+  }
 }
