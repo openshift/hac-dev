@@ -6,7 +6,11 @@ export class Common {
   }
 
   static openURL(URL: string) {
-    cy.visit(URL);
+    cy.url().then(($url) => {
+      if ($url != URL){
+        cy.visit(URL);  
+      }
+    })
   }
 
   static generateAppName(prefix = 'test-app') {
@@ -15,9 +19,7 @@ export class Common {
   }
 
   static openApplicationURL(applicationName: string) {
-    if(!cy.contains('h1', applicationName, { timeout: 90000 })) {
-      cy.get('[data-ouia-component-id="Applications"] > a').click();
-    }
+    Common.openURL(`${Cypress.env('HAC_BASE_URL')}/applications?name=${applicationName.replace('.', '-')}`);
     Common.verifyPageTitle(applicationName);
     Common.waitForLoad();
   }
