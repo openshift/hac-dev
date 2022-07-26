@@ -11,7 +11,9 @@ import {
   SplitItem,
 } from '@patternfly/react-core';
 import CloseIcon from '@patternfly/react-icons/dist/js/icons/close-icon';
+import classnames from 'classnames';
 import { useLocalStorage } from '../../hooks';
+import './GettingStartedCard.scss';
 
 type GettingStartedCardProps = {
   imgClassName?: string;
@@ -43,7 +45,9 @@ export const GettingStartedCard: React.FC<GettingStartedCardProps> = ({
         <Card>
           <Split>
             {imgSrc && (
-              <SplitItem className={imgClassName}>
+              <SplitItem
+                className={classnames('pf-u-min-width getting-started-card__img', imgClassName)}
+              >
                 <img src={imgSrc} alt={imgAlt} />
               </SplitItem>
             )}
@@ -53,7 +57,7 @@ export const GettingStartedCard: React.FC<GettingStartedCardProps> = ({
                 <CardActions>
                   <Button
                     variant="plain"
-                    aria-label="close"
+                    aria-label="Hide card"
                     onClick={() => setStorageKeys({ ...keys, [localStorageKey]: true })}
                   >
                     <CloseIcon />

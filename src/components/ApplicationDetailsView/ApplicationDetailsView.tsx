@@ -83,9 +83,9 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
   return (
     <React.Fragment>
       <GettingStartedCard
-        imgClassName="pf-u-w-25 pf-u-px-4xl"
+        imgClassName="pf-u-px-2xl-on-xl"
         localStorageKey={GETTING_STARTED_CARD_KEY}
-        title="Manage you applications"
+        title="Manage your applications"
         imgSrc={imageUrl}
         imgAlt="Illustration showing users managing applications"
       >
