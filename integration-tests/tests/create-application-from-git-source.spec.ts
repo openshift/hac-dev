@@ -15,8 +15,7 @@ describe('Create Component from Public Git Source', () => {
   const ramValue = 1;
   const ramUnit = MemoryUnit.gigabyte;
   const replicaCount = 2;
-  const cpuIncrased = 101;
-  const cpuDecreased = 100;
+  const cpuCount = 10;
   const cpuUnit = CPUUnit.millicore;
 
   before(function () {
@@ -53,7 +52,7 @@ describe('Create Component from Public Git Source', () => {
 
     it('Check Changing Resources', () => {
       componentPage.expandDetails(componentName);
-      componentPage.setCpuByButton(cpuIncrased, cpuUnit);
+      componentPage.setCpuByButton(cpuCount + 1, cpuUnit);
       componentPage.setRam(ramValue, ramUnit);
     });
 
@@ -83,18 +82,18 @@ describe('Create Component from Public Git Source', () => {
 
     it('Check Resources Value', () => {
       applicationDetailPage.expandDetails(componentName);
-      applicationDetailPage.checkCpuAndMemory(cpuIncrased, cpuUnit, ramValue, ramUnit);
+      applicationDetailPage.checkCpuAndMemory(cpuCount + 1, cpuUnit, ramValue, ramUnit);
       applicationDetailPage.checkReplica(replicaCount);
     });
 
     it('Change Resources Value', () => {
       applicationDetailPage.openComponentSettings(componentName);
       componentPage.setRam(2, MemoryUnit.gigabyte);
-      componentPage.setCpuByButton(cpuDecreased, cpuUnit);
+      componentPage.setCpuByButton(cpuCount, cpuUnit);
       componentPage.saveChanges();
       applicationDetailPage.expandDetails(componentName);
       applicationDetailPage.checkCpuAndMemory(
-        cpuDecreased,
+        cpuCount,
         CPUUnit.millicore,
         2,
         MemoryUnit.gigabyte,

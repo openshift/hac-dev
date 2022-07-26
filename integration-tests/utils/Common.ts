@@ -1,8 +1,16 @@
-import { consentButton, waits } from '../support/pageObjects/global-po';
+import { NavItem } from '../support/constants/PageTitle';
+import { consentButton, navigation, waits } from '../support/pageObjects/global-po';
 
 export class Common {
   static openAppStudioBaseURL() {
     cy.visit(Cypress.env('HAC_BASE_URL'));
+  }
+
+  static navigateTo(link: NavItem) {
+    cy.get(navigation.sideNavigation)
+      .find(`[data-ouia-component-id="${link}"]`)
+      .click();
+    Common.waitForLoad();
   }
 
   static openURL(URL: string) {
