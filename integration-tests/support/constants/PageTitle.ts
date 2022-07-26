@@ -6,3 +6,8 @@ export const pageTitles = {
   reviewComponent: 'Review your new components',
   componentSettings: 'Component settings',
 };
+
+export enum NavItem {
+  applications = 'Applications',
+  settings = 'Settings',
+}

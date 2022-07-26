@@ -1,10 +1,10 @@
 // <reference types="cypress" />
 import { AddComponentPage } from '../support/pages/AddComponentPage';
-import { ComponentPage } from '../support/pages/ComponentsPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
+import { ComponentPage } from '../support/pages/ComponentsPage';
 import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
-import { Common } from '../utils/Common';
 import { Applications } from '../utils/Applications';
+import { Common } from '../utils/Common';
 
 describe('Create Component from Quay Image', () => {
   const addComponent = new AddComponentPage();
@@ -14,14 +14,14 @@ describe('Create Component from Quay Image', () => {
   const quayImage = 'quay.io/quarkus/code-quarkus-app';
   const componentName = 'code-quarkus-app';
 
-  before(function() {
+  before(function () {
     const createApplicationPage = new CreateApplicationPage();
     createApplicationPage.clickCreateApplication();
     createApplicationPage.setApplicationName(applicationName);
     createApplicationPage.clickNext();
   });
 
-  after(function() {
+  after(function () {
     Common.openApplicationURL(applicationName);
     applicationDetailPage.deleteComponent(componentName);
     applicationDetailPage.createdComponentNotExists(componentName);

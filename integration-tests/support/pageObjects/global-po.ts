@@ -35,4 +35,8 @@ export const actions = {
   deleteItem: '[data-testid="Delete"]',
   deleteModalInput: 'input[name*="resourceName"]',
   deleteModalButton: 'button[data-testid="delete-resource"]',
-}
+};
+
+export const navigation = {
+  sideNavigation: '[data-ouia-component-id="SideNavigation"]',
+};

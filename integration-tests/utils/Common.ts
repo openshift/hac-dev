@@ -1,16 +1,22 @@
-import { consentButton, waits } from '../support/pageObjects/global-po';
+import { NavItem } from '../support/constants/PageTitle';
+import { consentButton, navigation, waits } from '../support/pageObjects/global-po';
 
 export class Common {
   static openAppStudioBaseURL() {
     cy.visit(Cypress.env('HAC_BASE_URL'));
   }
 
+  static navigateTo(link: NavItem) {
+    cy.get(navigation.sideNavigation).find(`[data-ouia-component-id="${link}"]`).click();
+    Common.waitForLoad();
+  }
+
   static openURL(URL: string) {
     cy.url().then(($url) => {
-      if ($url != URL){
-        cy.visit(URL);  
+      if ($url !== URL) {
+        cy.visit(URL);
       }
-    })
+    });
   }
 
   static generateAppName(prefix = 'test-app') {
@@ -19,7 +25,9 @@ export class Common {
   }
 
   static openApplicationURL(applicationName: string) {
-    Common.openURL(`${Cypress.env('HAC_BASE_URL')}/applications?name=${applicationName.replace('.', '-')}`);
+    Common.openURL(
+      `${Cypress.env('HAC_BASE_URL')}/applications?name=${applicationName.replace('.', '-')}`,
+    );
     Common.verifyPageTitle(applicationName);
     Common.waitForLoad();
   }

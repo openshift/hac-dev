@@ -54,5 +54,5 @@ describe('Create Application from Sample', () => {
 
   it('Delete application with existing component', () => {
     Applications.deleteApplication(applicationName);
-  })
+  });
 });
