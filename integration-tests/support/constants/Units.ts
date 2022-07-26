@@ -1,9 +1,9 @@
 export enum MemoryUnit {
   megabyte = 'Mi',
-  gigabyte = 'Gi'
+  gigabyte = 'Gi',
 }
 
 export enum CPUUnit {
   core = 'cores',
-  millicore = 'millicores'
+  millicore = 'millicores',
 }

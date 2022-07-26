@@ -10,13 +10,11 @@ export class Applications {
     cy.get(actions.deleteItem).click();
     cy.get(actions.deleteModalInput).clear().type(applicationName);
     cy.get(actions.deleteModalButton).click();
-    cy.get(`[data-id="${applicationName}"]`).should("not.exist");
+    cy.get(`[data-id="${applicationName}"]`).should('not.exist');
   }
 
   private static openKebabMenu(applicationName: string) {
-      cy.get(`[data-id="${applicationName}"]`)
-          .find(actions.kebabButton)
-          .click();
+    cy.get(`[data-id="${applicationName}"]`).find(actions.kebabButton).click();
   }
 
   static createApplication(name: string) {

@@ -92,12 +92,7 @@ describe('Create Component from Public Git Source', () => {
       componentPage.setCpuByButton(cpuCount, cpuUnit);
       componentPage.saveChanges();
       applicationDetailPage.expandDetails(componentName);
-      applicationDetailPage.checkCpuAndMemory(
-        cpuCount,
-        CPUUnit.millicore,
-        2,
-        MemoryUnit.gigabyte,
-      );
+      applicationDetailPage.checkCpuAndMemory(cpuCount, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
     });
   });
 });

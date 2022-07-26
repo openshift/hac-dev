@@ -9,5 +9,5 @@ export const pageTitles = {
 
 export enum NavItem {
   applications = 'Applications',
-  settings = 'Settings'
+  settings = 'Settings',
 }
