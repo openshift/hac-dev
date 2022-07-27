@@ -6,6 +6,7 @@ import ApplicationListView from '../components/ApplicationListView/ApplicationLi
 import { GettingStartedModal } from '../components/modal/GettingStartedModal';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import HacbsApplicationDetails from '../hacbs/components/ApplicationDetails/HacbsApplicationDetails';
+import { GettingStartedModal as HacBSGettingStartedModal } from '../hacbs/components/Modals/GettingStartedModal';
 import { HACBS_FLAG } from '../hacbs/hacbsFeatureFlag';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 import imageUrl from '../imgs/getting-started-illustration.svg';
@@ -20,16 +21,24 @@ const ApplicationsPage = () => {
 
   return (
     <NamespacedPage>
-      <GettingStartedModal
-        imgClassName="pf-u-justify-content-center pf-u-px-4xl"
-        localStorageKey={GETTING_STARTED_MODAL_KEY}
-        title="Developing apps just got easier"
-        imgSrc={imageUrl}
-        imgAlt="Illustration showing users developing applications"
-      >
-        Build apps quickly, deploy and automate anywhere, and troubleshoot your apps - all in one
-        space.
-      </GettingStartedModal>
+      {hacbs ? (
+        <HacBSGettingStartedModal
+          imgAlt="App studio"
+          imgSrc={imageUrl}
+          imgClassName="pf-u-justify-content-center pf-u-px-4xl"
+        />
+      ) : (
+        <GettingStartedModal
+          imgClassName="pf-u-justify-content-center pf-u-px-4xl"
+          localStorageKey={GETTING_STARTED_MODAL_KEY}
+          title="Developing apps just got easier"
+          imgSrc={imageUrl}
+          imgAlt="Illustration showing users developing applications"
+        >
+          Build apps quickly, deploy and automate anywhere, and troubleshoot your apps - all in one
+          space.
+        </GettingStartedModal>
+      )}
       {applicationName ? (
         <React.Fragment>
           <Helmet>

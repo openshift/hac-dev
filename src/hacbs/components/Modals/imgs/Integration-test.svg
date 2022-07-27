@@ -1,0 +1,65 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 498 85" width="498" height="85">
+	<title>Onboarding - Integration test (2)-svg</title>
+	<style>
+		tspan { white-space:pre } 
+		.s0 { fill: #f1f1f1 } 
+		.s1 { fill: #ffffff;stroke: #d2d2d2 } 
+		.t2 { font-size: 14px;fill: #030303;font-weight: 400;font-family: "RedHatText-Regular", "Red Hat Text" } 
+		.s3 { fill: #979797 } 
+		.s4 { fill: #ffffff } 
+		.s5 { fill: none;stroke: #d2d2d2;stroke-linejoin: undefined } 
+		.s6 { fill: none;stroke: #0066cc;stroke-width: 3 } 
+		.s7 { fill: #0268d4 } 
+	</style>
+	<g id="Onboarding---Integration-test">
+		<g id="Group-12-Copy-2">
+			<path id="Rectangle" class="s0" d="m-21-7c0-5.5 4.5-10 10-10h520c5.5 0 10 4.5 10 10v100c0 5.5-4.5 10-10 10h-520c-5.5 0-10-4.5-10-10z"/>
+			<g id="Group-5">
+				<g id="Group-10-Copy">
+					<g id="task-success--default-copy">
+						<path id="Rectangle-Copy-11" class="s1" d="m7.5 43c0-8.6 6.9-15.5 15.5-15.5h33c8.6 0 15.5 6.9 15.5 15.5 0 8.6-6.9 15.5-15.5 15.5h-33c-8.6 0-15.5-6.9-15.5-15.5z"/>
+						<text id="Build" style="transform: matrix(1,0,0,1,22,48)" >
+							<tspan x="0" y="0" class="t2">Build
+</tspan>
+						</text>
+					</g>
+					<path id="Line" class="s3" d="m83.5 39l9 4.5-9 4.5v-4h-12v-1h12z"/>
+				</g>
+				<g id="Group-10-Copy">
+					<path id="Line" class="s3" d="m243.5 39l9 4.5-9 4.5v-4h-12v-1h12z"/>
+					<g id="task-success--default-copy">
+						<path id="Rectangle-Copy-11" class="s1" d="m92.5 43c0-8.6 6.9-15.5 15.5-15.5h108c8.6 0 15.5 6.9 15.5 15.5 0 8.6-6.9 15.5-15.5 15.5h-108c-8.6 0-15.5-6.9-15.5-15.5z"/>
+						<text id="Enterprise C…test" style="transform: matrix(1,0,0,1,107,48)" >
+							<tspan x="0" y="0" class="t2">Enterprise C…test
+</tspan>
+						</text>
+					</g>
+				</g>
+				<g id="Group-10-Copy">
+					<path id="Line" class="s3" d="m403.5 39l9 4.5-9 4.5v-4h-12v-1h12z"/>
+					<g id="task-success--default-copy">
+						<g id="Rectangle-Copy-11">
+							<path id="path-1" class="s4" d="m252 43c0-8.8 7.2-16 16-16h108c8.8 0 16 7.2 16 16 0 8.8-7.2 16-16 16h-108c-8.8 0-16-7.2-16-16z"/>
+							<path id="Layer" class="s5" d="m252.5 43c0-8.6 6.9-15.5 15.5-15.5h108c8.6 0 15.5 6.9 15.5 15.5 0 8.6-6.9 15.5-15.5 15.5h-108c-8.6 0-15.5-6.9-15.5-15.5z"/>
+							<path id="path-1" class="s6" d="m252 43c0-8.8 7.2-16 16-16h108c8.8 0 16 7.2 16 16 0 8.8-7.2 16-16 16h-108c-8.8 0-16-7.2-16-16z"/>
+						</g>
+						<text id="Integration test" style="transform: matrix(1,0,0,1,284,48)" >
+							<tspan x="0" y="0" class="t2">Integration test
+</tspan>
+						</text>
+						<g id="refresh---FontAwesome">
+							<path id="Shape" class="s7" d="m275.8 44.3q0 0 0 0-0.5 2.1-2.1 3.4-1.6 1.3-3.7 1.3-1.2 0-2.2-0.4-1.1-0.5-1.9-1.3l-1 1.1q-0.2 0.1-0.4 0.1-0.2 0-0.4-0.1-0.1-0.2-0.1-0.4v-3.5q0-0.2 0.1-0.4 0.2-0.1 0.4-0.1h3.5q0.2 0 0.4 0.1 0.1 0.2 0.1 0.4 0 0.2-0.1 0.4l-1.1 1q0.5 0.5 1.2 0.8 0.7 0.3 1.5 0.3 1 0 2-0.5 0.9-0.5 1.4-1.4 0.1-0.1 0.4-0.9 0.1-0.2 0.3-0.2h1.5q0.1 0 0.1 0.1 0.1 0 0.1 0.2zm0.2-6.3v3.5q0 0.2-0.1 0.4-0.2 0.1-0.4 0.1h-3.5q-0.2 0-0.4-0.1-0.1-0.2-0.1-0.4 0-0.2 0.1-0.4l1.1-1q-1.1-1.1-2.7-1.1-1 0-2 0.5-0.9 0.5-1.4 1.4-0.1 0.1-0.4 0.9-0.1 0.2-0.3 0.2h-1.5q-0.1 0-0.2-0.1-0.1 0-0.1-0.1v-0.1q0.5-2.1 2.1-3.4 1.7-1.3 3.8-1.3 1.1 0 2.2 0.4 1.1 0.5 1.9 1.3l1-1.1q0.2-0.1 0.4-0.1 0.2 0 0.4 0.1 0.1 0.2 0.1 0.4z"/>
+						</g>
+					</g>
+				</g>
+				<g id="task-success--default-copy">
+					<path id="Rectangle-Copy-11" class="s1" d="m412.5 43c0-8.6 6.9-15.5 15.5-15.5h48c8.6 0 15.5 6.9 15.5 15.5 0 8.6-6.9 15.5-15.5 15.5h-48c-8.6 0-15.5-6.9-15.5-15.5z"/>
+					<text id="Release" style="transform: matrix(1,0,0,1,427,48)" >
+						<tspan x="0" y="0" class="t2">Release
+</tspan>
+					</text>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>
