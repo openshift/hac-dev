@@ -1,5 +1,6 @@
 import { createApplication, createComponent } from '../../../../utils/create-utils';
-import { createResources } from '../submit-utils';
+import { createResources, checkApplicationName } from '../submit-utils';
+import { ImportFormValues } from './../types';
 
 jest.mock('@redhat-cloud-services/frontend-components-notifications/redux');
 
@@ -98,5 +99,46 @@ describe('Submit Utils: createResources', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+});
+
+describe('Submit Utils: createResources', () => {
+  const mockValues = {
+    application: 'test-app',
+    namespace: 'test-ns',
+  } as ImportFormValues;
+
+  const mockHelpers = {
+    setStatus: jest.fn(),
+  } as any;
+
+  it('should not set any error if application can be created', async () => {
+    createApplicationMock.mockResolvedValue({ message: 'Application can be created!' });
+    await checkApplicationName(mockValues, mockHelpers);
+    expect(mockHelpers.setStatus).toHaveBeenCalledWith({});
+  });
+
+  it('should set specific error message if application name already exists', async () => {
+    createApplicationMock.mockRejectedValue({ code: 409, message: 'App already exist!' });
+    try {
+      await checkApplicationName(mockValues, mockHelpers);
+    } catch (error) {
+      expect(error.message).toEqual('App already exist!');
+    }
+    expect(mockHelpers.setStatus).toHaveBeenCalledWith({
+      submitError: 'Application name already exists.',
+    });
+  });
+
+  it('should set passed error message if some other error happens', async () => {
+    createApplicationMock.mockRejectedValue({ code: 500, message: 'Server error!' });
+    try {
+      await checkApplicationName(mockValues, mockHelpers);
+    } catch (error) {
+      expect(error.message).toEqual('Server error!');
+    }
+    expect(mockHelpers.setStatus).toHaveBeenCalledWith({
+      submitError: 'Server error!',
+    });
   });
 });
