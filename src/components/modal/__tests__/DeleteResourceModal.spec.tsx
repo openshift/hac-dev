@@ -47,4 +47,21 @@ describe('DeleteResourceModal', () => {
     await waitFor(() => expect(k8sDeleteMock).toHaveBeenCalled());
     expect(onClose).toHaveBeenCalled();
   });
+
+  it('should use display name instead of resource name when provided', () => {
+    const obj = { apiVersion: 'v1', kind: 'Application', metadata: { name: 'test' } };
+    const onClose = jest.fn();
+    render(
+      <DeleteResourceModal
+        obj={obj}
+        model={ApplicationModel}
+        onClose={onClose}
+        displayName="My App"
+      />,
+    );
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test' } });
+    expect(screen.getByText('Delete')).toBeDisabled();
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'My App' } });
+    expect(screen.getByText('Delete')).toBeEnabled();
+  });
 });

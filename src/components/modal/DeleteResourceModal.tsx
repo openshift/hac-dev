@@ -26,6 +26,7 @@ import { ComponentProps, createModalLauncher } from './createModalLauncher';
 type DeleteResourceModalProps = ComponentProps & {
   obj: K8sResourceCommon;
   model: K8sModelCommon;
+  displayName?: string;
   description?: React.ReactNode;
 };
 
@@ -33,9 +34,11 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
   obj,
   model,
   onClose,
+  displayName,
   description,
 }) => {
   const [error, setError] = React.useState();
+  const resourceName = displayName || obj.metadata.name;
   const deleteResource = async () => {
     try {
       await k8sDeleteResource({
@@ -65,7 +68,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
         touched: { resourceName: touched },
       }) => {
         const input = values.resourceName;
-        const isValid = input === obj.metadata.name;
+        const isValid = input === resourceName;
         const helpText = touched && !input ? 'Missing information' : undefined;
         const validatedState = touched
           ? !input
@@ -85,7 +88,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
                       description
                     ) : (
                       <>
-                        The {obj.kind} <strong>{obj.metadata.name}</strong> will be deleted.
+                        The {obj.kind} <strong>{resourceName}</strong> will be deleted.
                       </>
                     )}
                   </Text>
