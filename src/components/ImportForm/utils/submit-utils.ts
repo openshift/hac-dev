@@ -1,3 +1,4 @@
+import { FormikHelpers } from 'formik';
 import { createApplication, createComponent } from '../../../utils/create-utils';
 import { transformResources } from './transform-utils';
 import { DetectedFormComponent, ImportFormValues } from './types';
@@ -43,4 +44,19 @@ export const createResources = async (formValues: ImportFormValues) => {
   await createComponents(components, applicationName, namespace, secret);
 
   return applicationName;
+};
+
+export const checkApplicationName = async (
+  values: ImportFormValues,
+  formikHelpers: FormikHelpers<ImportFormValues>,
+) => {
+  const { application, namespace } = values;
+  try {
+    await createApplication(application, namespace, true);
+    formikHelpers.setStatus({});
+  } catch (error) {
+    const message = error.code === 409 ? 'Application name already exists.' : error.message;
+    formikHelpers.setStatus({ submitError: message });
+    throw error;
+  }
 };

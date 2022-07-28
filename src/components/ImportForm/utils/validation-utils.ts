@@ -1,5 +1,4 @@
 import * as yup from 'yup';
-import { createApplication } from '../../../utils/create-utils';
 
 export const gitUrlRegex =
   /^((((ssh|git|https?:?):\/\/:?)(([^\s@]+@|[^@]:?)[-\w.]+(:\d\d+:?)?(\/[-\w.~/?[\]!$&'()*+,;=:@%]*:?)?:?))|([^\s@]+@[-\w.]+:[-\w.~/?[\]!$&'()*+,;=:@%]*?:?))$/;
@@ -15,17 +14,7 @@ const combineRegExps = (...regexps: RegExp[]) => {
 };
 
 export const applicationValidationSchema = yup.object({
-  application: yup
-    .string()
-    .required('Required')
-    .test('isUnique', 'Application name already exists.', async (value, context) => {
-      try {
-        await createApplication(value, context.parent.namespace, true);
-        return true;
-      } catch {
-        return false;
-      }
-    }),
+  application: yup.string().required('Required'),
 });
 
 export const sourceValidationSchema = yup.object({

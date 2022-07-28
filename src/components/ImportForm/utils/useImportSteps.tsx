@@ -4,6 +4,7 @@ import ApplicationSection from '../ApplicationSection/ApplicationSection';
 import ReviewSection from '../ReviewSection/ReviewSection';
 import SampleSection from '../SampleSection/SampleSection';
 import { SourceSection } from '../SourceSection/SourceSection';
+import { checkApplicationName } from './submit-utils';
 import { ImportStrategy } from './types';
 import {
   applicationValidationSchema,
@@ -24,7 +25,7 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
               name: 'Name application',
               component: <ApplicationSection />,
               validationSchema: applicationValidationSchema,
-              validateOnChange: false,
+              onSubmit: checkApplicationName,
             },
           ]),
       ...(strategy === ImportStrategy.GIT
