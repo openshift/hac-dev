@@ -61,6 +61,9 @@ describe('Auth Utils: useAccessTokenBinding', () => {
           oAuthUrl: 'https://test-app.auth.svc.cluster.local/oauth/token',
           phase: '',
           linkedAccessTokenName: 'test-token',
+          syncedObjectRef: {
+            name: 'secret',
+          },
         },
       },
       true,

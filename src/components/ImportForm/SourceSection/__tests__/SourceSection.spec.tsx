@@ -2,15 +2,14 @@ import * as React from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../../../types';
-import { initiateAccessTokenBinding } from '../../../../utils/create-utils';
 import { formikRenderer } from '../../../../utils/test-utils';
-import { useAccessCheck } from '../../utils/auth-utils';
+import { useAccessCheck, useAccessTokenBinding } from '../../utils/auth-utils';
 import { SourceSection } from '../SourceSection';
 
 import '@testing-library/jest-dom';
 
 jest.mock('../../utils/auth-utils', () => ({
-  useAccessTokenBinding: () => ['', true],
+  useAccessTokenBinding: jest.fn(),
   useAccessCheck: jest.fn(),
 }));
 
@@ -22,12 +21,8 @@ jest.mock('../../../../shared/hooks', () => ({
   useFormikValidationFix: jest.fn(),
 }));
 
-jest.mock('../../../../utils/create-utils', () => ({
-  initiateAccessTokenBinding: jest.fn(),
-}));
-
 const useAccessCheckMock = useAccessCheck as jest.Mock;
-const instantiateAccessBindingMock = initiateAccessTokenBinding as jest.Mock;
+const useBindingMock = useAccessTokenBinding as jest.Mock;
 
 const renderSourceSection = () => {
   const onClick = jest.fn();
@@ -63,6 +58,7 @@ describe('SourceSection', () => {
       { isRepoAccessible: false, serviceProvider: ServiceProviderType.GitHub },
       true,
     ]);
+    useBindingMock.mockReturnValue(['', true]);
 
     renderSourceSection();
 
@@ -87,6 +83,7 @@ describe('SourceSection', () => {
       { isRepoAccessible: false, serviceProvider: ServiceProviderType.GitHub },
       true,
     ]);
+    useBindingMock.mockReturnValue(['', true]);
 
     renderSourceSection();
 
@@ -100,6 +97,7 @@ describe('SourceSection', () => {
       { isRepoAccessible: false, isGit: false, serviceProvider: ServiceProviderType.Quay },
       true,
     ]);
+    useBindingMock.mockReturnValue(['', true]);
 
     renderSourceSection();
 
@@ -168,15 +166,10 @@ describe('SourceSection', () => {
       true,
     ]);
 
-    instantiateAccessBindingMock.mockResolvedValue({
-      status: { phase: 'Injected', syncedObjectRef: { name: 'test-token' } },
-      spec: { repoUrl: 'https://github.com/example/repo' },
-    });
-
     const { input, user } = renderSourceSection();
 
+    expect(useBindingMock).toHaveBeenCalledWith('');
     await user.type(input, 'https://github.com/example/repo');
-
-    expect(instantiateAccessBindingMock).toHaveBeenCalled();
+    expect(useBindingMock).toHaveBeenCalledWith('https://github.com/example/repo');
   });
 });
