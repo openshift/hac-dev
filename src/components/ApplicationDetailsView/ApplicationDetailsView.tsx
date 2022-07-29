@@ -5,13 +5,21 @@ import {
   Bullseye,
   Button,
   Divider,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
+  EmptyStateVariant,
   Flex,
   FlexItem,
   PageSection,
   Spinner,
+  Title,
 } from '@patternfly/react-core';
+import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import { global_palette_red_100 as redColor } from '@patternfly/react-tokens/dist/js/global_palette_red_100';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { ApplicationGroupVersionKind } from '../../models';
+import { HttpError } from '../../shared/utils/error/http-error';
 import { ApplicationKind } from '../../types';
 import { ApplicationEnvironmentCards } from '../Environment/ApplicationEnvironmentCards';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
@@ -23,7 +31,6 @@ import { OutlinedHelpPopperIcon } from '../OutlinedHelpTooltipIcon';
 import PageLayout from '../PageLayout/PageLayout';
 import { ComponentCard } from './ComponentCard';
 import { ComponentDetails } from './ComponentDetails';
-
 const GETTING_STARTED_CARD_KEY = 'application-details-getting-started';
 
 type ApplicationViewProps = {
@@ -47,7 +54,8 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
     };
   }, [applicationName, namespace]);
 
-  const [application, applicationsLoaded] = useK8sWatchResource<ApplicationKind>(resource);
+  const [application, applicationsLoaded, applicationError] =
+    useK8sWatchResource<ApplicationKind>(resource);
 
   const actions = React.useMemo(
     () => [
@@ -76,8 +84,22 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
     </Bullseye>
   );
 
-  if (!applicationsLoaded) {
+  if (!applicationsLoaded && !applicationError) {
     return loading;
+  }
+
+  if (applicationError) {
+    return (
+      <Bullseye>
+        <EmptyState variant={EmptyStateVariant.large}>
+          <EmptyStateIcon color={redColor.value} icon={ExclamationCircleIcon} />
+          <Title headingLevel="h4" size="lg">
+            Application loading error
+          </Title>
+          <EmptyStateBody>{(applicationError as HttpError).message}</EmptyStateBody>
+        </EmptyState>
+      </Bullseye>
+    );
   }
 
   return (

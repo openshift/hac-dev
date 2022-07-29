@@ -19,7 +19,9 @@ jest.mock('../../../hooks/useQuickstartCloseOnUnmount', () => ({
 }));
 
 jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
-  useChrome: () => ({ helpTopics: { setActiveTopic: jest.fn(), enableTopics: jest.fn() } }),
+  useChrome: () => ({
+    helpTopics: { setActiveTopic: jest.fn(), enableTopics: jest.fn(), disableTopics: jest.fn() },
+  }),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -61,5 +63,11 @@ describe('ApplicationDetailsView', () => {
     screen.getByText('Expand');
     expect(screen.queryByText('Succeeded')).toBeInTheDocument();
     expect(screen.queryByText('Last Build')).not.toBeInTheDocument();
+  });
+
+  it('should show error state if application cannot be loaded', () => {
+    watchResourceMock.mockReturnValue([[], false, { message: 'Application does not exist' }]);
+    render(<ApplicationDetailsView applicationName="test" />);
+    screen.getByText('Application does not exist');
   });
 });
