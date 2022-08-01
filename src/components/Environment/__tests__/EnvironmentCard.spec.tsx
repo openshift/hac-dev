@@ -43,9 +43,15 @@ describe('EnvironmentCard', () => {
     watchResourceMock.mockReturnValue([[], true]);
     render(<EnvironmentCard environment={environment} />);
     screen.getByText(environment.spec.displayName);
-    screen.getByText('Environment Link:');
-    screen.getByText(environment.spec.clusterCredentials.apiServerURL);
-    screen.getByText('Deployment Strategy:');
-    screen.getByText(environment.spec.deploymentStrategy);
+    screen.getByText('Applications: 4');
+  });
+
+  it('should render correct Deployment strategy CardBody sections', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    environment.spec.deploymentStrategy = 'AppStudioAutomated';
+    render(<EnvironmentCard environment={environment} />);
+    screen.getByText(environment.spec.displayName);
+    screen.getByText('Deployment strategy:');
+    screen.getByText('Automatic');
   });
 });

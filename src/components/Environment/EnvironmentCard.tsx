@@ -8,11 +8,11 @@ import {
   Text,
   TextContent,
   TextVariants,
-  Badge,
+  Label,
 } from '@patternfly/react-core';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
-import ExternalLink from '../../shared/components/links/ExternalLink';
 import { EnvironmentKind } from '../../types';
+import { getEnvironmentDeploymentStrategyLabel } from '../../utils/environment-utils';
 import { useEnvironmentActions } from './environment-actions';
 
 type EnvironmentCardProps = {
@@ -20,15 +20,13 @@ type EnvironmentCardProps = {
 };
 const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment }) => {
   const actions = useEnvironmentActions(environment);
-  const dummyLink = 'www.example.com/cluster-link';
-  const apiServerURL = environment.spec?.clusterCredentials?.apiServerURL;
 
   return (
-    <Card>
+    <Card isFlat>
       <CardHeader>
         <CardTitle>
           <TextContent>
-            <Text component={TextVariants.h4}>
+            <Text component={TextVariants.h3}>
               {environment.spec?.displayName ?? environment.metadata.name}
             </Text>
           </TextContent>
@@ -37,22 +35,20 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment }) => {
           <ActionMenu actions={actions} />
         </CardActions>
       </CardHeader>
-      {(apiServerURL || dummyLink) && (
-        <CardBody>
-          <TextContent>
-            <Text component={TextVariants.h6}>Environment Link:</Text>
-          </TextContent>
-          <ExternalLink
-            href={environment.spec?.clusterCredentials?.apiServerURL || dummyLink}
-            text={environment.spec?.clusterCredentials?.apiServerURL || dummyLink}
-          />
-        </CardBody>
-      )}
       <CardBody>
         <TextContent>
-          <Text component={TextVariants.h6}>Deployment Strategy:</Text>
+          <Text>
+            <b>Deployment strategy:</b>
+          </Text>
         </TextContent>
-        <Badge isRead>{environment.spec.deploymentStrategy}</Badge>
+        <Label>{getEnvironmentDeploymentStrategyLabel(environment)}</Label>
+      </CardBody>
+      <CardBody>
+        <TextContent>
+          <Text>
+            <b>Applications: 4</b>
+          </Text>
+        </TextContent>
       </CardBody>
     </Card>
   );
