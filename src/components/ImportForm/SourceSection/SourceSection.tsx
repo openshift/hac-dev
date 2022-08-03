@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   Button,
   ButtonVariant,
-  Form,
   FormGroup,
   Grid,
   GridItem,
@@ -131,7 +130,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
   }, [onStrategyChange, setFieldValue]);
 
   return (
-    <Form isWidthLimited>
+    <>
       <FormGroup
         fieldId={fieldId}
         label={label}
@@ -164,6 +163,6 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
       </FormGroup>
       {showAuthOptions && <AuthOptions />}
       {showGitOptions && <GitOptions />}
-    </Form>
+    </>
   );
 };
