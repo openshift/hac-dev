@@ -7,7 +7,6 @@ import {
   PageSection,
   Spinner,
   Title,
-  Form,
   Bullseye,
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
@@ -119,17 +118,15 @@ const ReviewSection: React.FunctionComponent = () => {
 
   return (
     <PageSection isFilled style={{ height: '100%' }}>
-      <Form>
-        <FormSection>
-          {cachedComponents.current.map((component, index) => (
-            <ReviewComponentCard
-              key={component.componentStub.componentName}
-              detectedComponent={component}
-              detectedComponentIndex={index}
-            />
-          ))}
-        </FormSection>
-      </Form>
+      <FormSection>
+        {cachedComponents.current.map((component, index) => (
+          <ReviewComponentCard
+            key={component.componentStub.componentName}
+            detectedComponent={component}
+            detectedComponentIndex={index}
+          />
+        ))}
+      </FormSection>
     </PageSection>
   );
 };

@@ -25,6 +25,7 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
               name: 'Name application',
               component: <ApplicationSection />,
               validationSchema: applicationValidationSchema,
+              isFormWidthLimited: true,
               onSubmit: checkApplicationName,
             },
           ]),

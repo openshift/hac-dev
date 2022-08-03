@@ -4,7 +4,6 @@ import {
   Badge,
   Button,
   ButtonVariant,
-  Form,
   FormGroup,
   Gallery,
   GalleryItem,
@@ -118,30 +117,28 @@ const SampleSection = ({ onStrategyChange }) => {
   return (
     <>
       <PageSection variant="light" isFilled>
-        <Form>
-          <FormGroup
-            fieldId="sample-selector"
-            label="Select a sample"
-            labelIcon={
-              <HelpTooltipIcon content="Get started using applications by choosing a code sample." />
-            }
-            labelInfo={
-              <>
-                Could not find what you need?{' '}
-                <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
-                  Import your code.
-                </Button>
-              </>
-            }
-            helperText={
-              (detectingComponents && 'Detecting sample component values...') ||
-              (detectedComponents && 'Detected component values.')
-            }
-            helperTextInvalid={detectedComponentsError}
-            isHelperTextBeforeField
-            isRequired
-          />
-        </Form>
+        <FormGroup
+          fieldId="sample-selector"
+          label="Select a sample"
+          labelIcon={
+            <HelpTooltipIcon content="Get started using applications by choosing a code sample." />
+          }
+          labelInfo={
+            <>
+              Could not find what you need?{' '}
+              <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
+                Import your code.
+              </Button>
+            </>
+          }
+          helperText={
+            (detectingComponents && 'Detecting sample component values...') ||
+            (detectedComponents && 'Detected component values.')
+          }
+          helperTextInvalid={detectedComponentsError}
+          isHelperTextBeforeField
+          isRequired
+        />
       </PageSection>
       <PageSection padding={{ default: 'noPadding' }} isFilled>
         <StatusBox
