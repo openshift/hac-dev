@@ -70,18 +70,23 @@ const SampleSection = ({ onStrategyChange }) => {
       setFieldValue('isValidated', false);
     }
 
-    if (!unmounted && !detectingComponents && detectedComponents) {
-      const transformedComponents = transformComponentValues(detectedComponents).map(
-        (component) => ({
-          ...component,
-          componentStub: {
-            ...component.componentStub,
-            componentName: `${component.componentStub.componentName}-sample`,
-          },
-        }),
-      );
-      setFieldValue('components', transformedComponents);
-      setFieldValue('isValidated', true);
+    if (!detectingComponents) {
+      if (detectedComponents) {
+        const transformedComponents = transformComponentValues(detectedComponents).map(
+          (component) => ({
+            ...component,
+            componentStub: {
+              ...component.componentStub,
+              componentName: `${component.componentStub.componentName}-sample`,
+            },
+          }),
+        );
+        setFieldValue('components', transformedComponents);
+        setFieldValue('isValidated', true);
+      } else {
+        setFieldValue('components', null);
+        setFieldValue('isValidated', false);
+      }
     }
 
     return () => {
@@ -93,6 +98,7 @@ const SampleSection = ({ onStrategyChange }) => {
     (item) => {
       setSelected((prevState) => {
         if (prevState?.name === item.name) {
+          setFieldValue('source', undefined);
           return undefined;
         }
         const sourceUrl = item?.attributes?.git?.remotes?.origin;
