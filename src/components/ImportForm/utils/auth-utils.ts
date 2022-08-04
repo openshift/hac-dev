@@ -95,7 +95,7 @@ export const useAccessCheck = (
  * @returns oAuth URL provided by the binding
  */
 export const useAccessTokenBinding = (
-  source: string,
+  source?: string,
 ): [{ oAuthUrl: string; accessTokenName: string }, boolean] => {
   const { namespace } = useNamespace();
   const { setFieldValue } = useFormikContext();
@@ -109,6 +109,8 @@ export const useAccessTokenBinding = (
         })
         // eslint-disable-next-line no-console
         .catch((e) => console.error('Error when initiating access token binding: ', e));
+    } else {
+      setName(null);
     }
   }, [namespace, source]);
 
@@ -124,7 +126,11 @@ export const useAccessTokenBinding = (
 
   React.useEffect(() => {
     if (!name || !loaded) return;
-    if (binding.status?.phase === SPIAccessTokenBindingPhase.Injected) {
+    // set injected token only if source hasn't changed after call
+    if (
+      binding.status?.phase === SPIAccessTokenBindingPhase.Injected &&
+      binding.spec?.repoUrl === source
+    ) {
       setFieldValue('secret', binding.status.syncedObjectRef.name);
       // eslint-disable-next-line no-console
       console.log('Git repository successfully authorized.');
@@ -135,10 +141,12 @@ export const useAccessTokenBinding = (
   }, [
     name,
     loaded,
+    source,
     setFieldValue,
     binding?.status?.phase,
     binding?.status?.errorMessage,
-    binding?.status?.syncedObjectRef?.name,
+    binding?.status?.syncedObjectRef.name,
+    binding?.spec?.repoUrl,
   ]);
 
   return [

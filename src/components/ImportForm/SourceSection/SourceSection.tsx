@@ -12,14 +12,8 @@ import { useField, useFormikContext } from 'formik';
 import { useOnMount } from '../../../hooks/useOnMount';
 import { getFieldId, HelpTooltipIcon, InputField } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
-import {
-  ServiceProviderType,
-  SPIAccessCheckAccessibilityStatus,
-  SPIAccessTokenBindingPhase,
-} from '../../../types';
-import { initiateAccessTokenBinding } from '../../../utils/create-utils';
-import { useNamespace } from '../../NamespacedPage/NamespacedPage';
-import { useAccessCheck } from '../utils/auth-utils';
+import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../../types';
+import { useAccessCheck, useAccessTokenBinding } from '../utils/auth-utils';
 import { ImportFormValues, ImportStrategy } from '../utils/types';
 import { gitUrlRegex, containerImageRegex } from '../utils/validation-utils';
 import AuthOptions from './AuthOptions';
@@ -30,7 +24,6 @@ type SourceSectionProps = {
 };
 
 export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }) => {
-  const { namespace } = useNamespace();
   const [showAuthOptions, setShowAuthOptions] = React.useState<boolean>(false);
   const [showGitOptions, setShowGitOptions] = React.useState<boolean>(false);
 
@@ -110,38 +103,23 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
     setFormValidated,
   ]);
 
-  // only run this effect to set the authSecret if a repo is already authenticated
+  const isPrivateAuthorized =
+    accessCheckLoaded &&
+    isRepoAccessible &&
+    !showAuthOptions &&
+    accessibility === SPIAccessCheckAccessibilityStatus.private;
+
+  useAccessTokenBinding(isPrivateAuthorized && source);
+
   React.useEffect(() => {
-    (async () => {
-      if (
-        accessCheckLoaded &&
-        isRepoAccessible &&
-        !showAuthOptions &&
-        accessibility === SPIAccessCheckAccessibilityStatus.private
-      ) {
+    if (isPrivateAuthorized) {
+      if (authSecret) {
+        setFormValidated();
+      } else {
         setFormValidating();
-        const binding = await initiateAccessTokenBinding(source, namespace);
-        // set injected token only if source hasn't changed after call
-        if (
-          binding.status?.phase === SPIAccessTokenBindingPhase.Injected &&
-          binding.spec.repoUrl === source
-        ) {
-          setFieldValue('git.secret', binding.status.syncedObjectRef.name);
-          setFormValidated();
-        }
       }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    accessCheckLoaded,
-    accessibility,
-    isRepoAccessible,
-    namespace,
-    setFieldValue,
-    setFormValidated,
-    setFormValidating,
-    showAuthOptions,
-  ]);
+    }
+  }, [authSecret, isPrivateAuthorized, setFormValidated, setFormValidating]);
 
   useOnMount(() => {
     source && handleSourceChange();
