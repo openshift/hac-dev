@@ -89,6 +89,7 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
           {
             key: 'overview',
             label: 'Overview',
+            isFilled: true,
             component: <ApplicationOverviewTab applicationName={applicationName} />,
           },
           {

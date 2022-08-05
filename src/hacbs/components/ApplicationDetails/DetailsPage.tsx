@@ -82,14 +82,14 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
     [actions],
   );
 
-  const tabComponents = tabs?.map(({ key, label, component, isFilled = false, ...rest }) => {
+  const tabComponents = tabs?.map(({ key, label, component, isFilled = true, ...rest }) => {
     return (
       <Tab
         data-test={`details__tabItem ${key}`}
         key={key}
         eventKey={key}
         title={<TabTitleText>{label}</TabTitleText>}
-        className={cx('details__tabItem', { isFilled })}
+        className={cx('hacbs-details__tabs__tabItem', { isFilled })}
         {...rest}
       >
         {component}
@@ -132,7 +132,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
         </Flex>
       </PageSection>
       {tabs?.length && (
-        <PageSection isFilled variant={PageSectionVariants.light}>
+        <PageSection className="hacbs-details__tabs" isFilled variant={PageSectionVariants.light}>
           <Tabs
             data-test="details__tabs"
             onSelect={(e, k: string) => {
