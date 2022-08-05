@@ -71,7 +71,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
     () =>
       actions?.map((action) => {
         const { type, key, label, ...props } = action;
-        return type === 'seperator' ? (
+        return type === 'separator' ? (
           <DropdownSeparator key={key} />
         ) : (
           <DropdownItem key={key} {...props}>
@@ -124,6 +124,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
                     Actions
                   </DropdownToggle>
                 }
+                onSelect={() => setIsOpen(!isOpen)}
                 isOpen={isOpen}
                 dropdownItems={dropdownItems}
               />
