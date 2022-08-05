@@ -76,6 +76,15 @@ describe('SourceSection', () => {
     expect(screen.getByText('Unable to access repository')).toBeVisible();
   });
 
+  it('displays error when provider is not supported', async () => {
+    useAccessCheckMock.mockReturnValue([{ isRepoAccessible: false, serviceProvider: '' }, true]);
+
+    renderSourceSection();
+
+    expect(screen.getByPlaceholderText('Enter your source')).toBeInvalid();
+    expect(screen.getByText('This provider is not supported')).toBeVisible();
+  });
+
   it('validates input field when repo is accessible', async () => {
     useAccessCheckMock.mockReturnValue([
       { isRepoAccessible: true, serviceProvider: ServiceProviderType.GitHub },

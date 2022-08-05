@@ -88,13 +88,18 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
       if (isRepoAccessible) {
         setFormValidated();
         isGit && setShowGitOptions(true);
-      } else if (
-        serviceProvider === ServiceProviderType.GitHub ||
-        serviceProvider === ServiceProviderType.Quay
-      ) {
-        setValidated(ValidatedOptions.error);
-        setHelpTextInvalid('Unable to access repository');
-        setShowAuthOptions(true);
+      } else {
+        if (
+          serviceProvider === ServiceProviderType.GitHub ||
+          serviceProvider === ServiceProviderType.Quay
+        ) {
+          setValidated(ValidatedOptions.error);
+          setHelpTextInvalid('Unable to access repository');
+          setShowAuthOptions(true);
+        } else if (!serviceProvider) {
+          setValidated(ValidatedOptions.error);
+          setHelpTextInvalid('This provider is not supported');
+        }
       }
     }
   }, [
