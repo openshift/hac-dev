@@ -12,6 +12,7 @@ import {
   createComponent,
   createComponentDetectionQuery,
   createAccessTokenBinding,
+  sanitizeName,
 } from './../create-utils';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
@@ -219,5 +220,12 @@ describe('Create Utils', () => {
       },
       resource: expect.objectContaining(mockAccessTokenBinding),
     });
+  });
+
+  it('should sanize spaces in resource names', () => {
+    expect(sanitizeName('my app')).toBe('my-app');
+    expect(sanitizeName('my-app')).toBe('my-app');
+    // does not handle special characters
+    expect(sanitizeName('!  @  #')).toBe('!--@--#');
   });
 });

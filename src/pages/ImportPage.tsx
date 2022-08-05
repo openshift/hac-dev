@@ -1,13 +1,19 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { HelpTopicLink } from '../components/HelpTopicLink/HelpTopicLink';
 import ImportForm from '../components/ImportForm/ImportForm';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
+import HacbsImportForm from '../hacbs/components/ImportForm/ImportForm';
+import { HACBS_FLAG } from '../hacbs/hacbsFeatureFlag';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 import { getQueryArgument } from '../shared/utils';
 
 const ImportPage: React.FunctionComponent = () => {
+  const [hacbsFlag] = useFeatureFlag(HACBS_FLAG);
+  useQuickstartCloseOnUnmount();
+
   const applicationName = getQueryArgument('application');
 
   const title = applicationName ? 'Add component' : 'Create application';
@@ -17,7 +23,9 @@ const ImportPage: React.FunctionComponent = () => {
       <HelpTopicLink topicId="create-app">Learn more</HelpTopicLink>
     </>
   );
-  useQuickstartCloseOnUnmount();
+
+  const Form = hacbsFlag ? HacbsImportForm : ImportForm;
+
   return (
     <NamespacedPage>
       <Helmet>
@@ -31,7 +39,7 @@ const ImportPage: React.FunctionComponent = () => {
         title={title}
         description={description}
       >
-        <ImportForm applicationName={applicationName} />
+        <Form applicationName={applicationName} />
       </PageLayout>
     </NamespacedPage>
   );

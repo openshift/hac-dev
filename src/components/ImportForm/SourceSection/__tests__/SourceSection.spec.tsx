@@ -24,10 +24,13 @@ jest.mock('../../../../shared/hooks', () => ({
 const useAccessCheckMock = useAccessCheck as jest.Mock;
 const useBindingMock = useAccessTokenBinding as jest.Mock;
 
-const renderSourceSection = () => {
+const renderSourceSection = (showSamples = true, gitOnly = false) => {
   const onClick = jest.fn();
 
-  const utils = formikRenderer(<SourceSection onStrategyChange={onClick} />, { source: '' });
+  const utils = formikRenderer(
+    <SourceSection onStrategyChange={showSamples ? onClick : undefined} gitOnly={gitOnly} />,
+    { source: '' },
+  );
   const user = userEvent.setup();
 
   return { input: utils.getByPlaceholderText('Enter your source'), ...utils, onClick, user };
@@ -42,6 +45,13 @@ describe('SourceSection', () => {
 
     expect(screen.getByPlaceholderText('Enter your source')).toBeInTheDocument();
     expect(screen.getByText('Start with a sample.')).toBeInTheDocument();
+  });
+
+  it('hides sample button', () => {
+    useAccessCheckMock.mockReturnValue([{}, false]);
+    renderSourceSection(false);
+
+    expect(screen.queryByText('Start with a sample.')).toBeNull();
   });
 
   it('fires callback on sample button click', () => {
@@ -171,5 +181,11 @@ describe('SourceSection', () => {
     expect(useBindingMock).toHaveBeenCalledWith('');
     await user.type(input, 'https://github.com/example/repo');
     expect(useBindingMock).toHaveBeenCalledWith('https://github.com/example/repo');
+  });
+
+  it('should render git only option', () => {
+    useAccessCheckMock.mockReturnValue([{}, false]);
+    renderSourceSection(false, true);
+    expect(screen.queryByText(/container/)).toBeNull();
   });
 });
