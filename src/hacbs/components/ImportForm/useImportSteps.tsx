@@ -34,6 +34,8 @@ export const componentStep = (): FormikWizardStep => ({
   component: <SourceSection gitOnly />,
   validationSchema: gitSourceValidationSchema,
   canJumpTo: false,
+  disableBack: true,
+  cancelButtonText: 'Go to application',
 });
 
 export const reviewStep = (): FormikWizardStep => ({
@@ -46,6 +48,7 @@ export const reviewStep = (): FormikWizardStep => ({
   validationSchema: reviewValidationSchema,
   onSubmit: ({ components, applicationData, namespace, secret }: FormValues) =>
     createComponents(components, applicationData.metadata.name, namespace, secret, false),
+  cancelButtonText: 'Go to application',
 });
 
 export const buildStep = (): FormikWizardStep => ({
@@ -53,6 +56,8 @@ export const buildStep = (): FormikWizardStep => ({
   name: 'Create build',
   component: <BuildSection />,
   canJumpTo: false,
+  disableBack: true,
+  cancelButtonText: 'Go to application',
   nextButtonText: 'Done! Go to app',
 });
 
