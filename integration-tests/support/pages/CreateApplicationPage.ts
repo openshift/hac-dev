@@ -18,7 +18,7 @@ export class CreateApplicationPage extends AbstractWizardPage {
   }
 
   clickCreateApplication() {
-    cy.contains(createApplicationPagePO.createApplication).click();
+    cy.contains(`.pf-c-button`, createApplicationPagePO.createApplication).click();
     Common.verifyPageTitle(pageTitles.createApp);
     Common.waitForLoad();
   }
