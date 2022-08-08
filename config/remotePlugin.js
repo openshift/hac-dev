@@ -17,6 +17,9 @@ const hacbs = {
           $codeRef: 'PipelineRuns',
         },
       },
+      flags: {
+        required: ['SIGNUP'],
+      },
     },
     {
       type: 'core.page/route',
@@ -26,6 +29,9 @@ const hacbs = {
         component: {
           $codeRef: 'PipelineRuns',
         },
+      },
+      flags: {
+        required: ['SIGNUP'],
       },
     },
     {
@@ -48,7 +54,7 @@ const hacbs = {
         },
       },
       flags: {
-        required: ['HACBS'],
+        required: ['HACBS', 'SIGNUP'],
       },
     },
     {
@@ -61,7 +67,7 @@ const hacbs = {
         },
       },
       flags: {
-        required: ['HACBS'],
+        required: ['HACBS', 'SIGNUP'],
       },
     },
   ],
@@ -82,6 +88,8 @@ module.exports = {
       WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),
       CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
       NamespaceContext: resolve(__dirname, '../src/utils/namespace-context-utils'),
+      SignupView: resolve(__dirname, '../src/components/Signup/SignupView'),
+      FlagUtils: resolve(__dirname, '../src/utils/flag-utils'),
     },
   },
   extensions: [
@@ -98,6 +106,9 @@ module.exports = {
           $codeRef: 'Applications',
         },
       },
+      flags: {
+        required: ['SIGNUP'],
+      },
     },
     {
       type: 'core.page/route',
@@ -108,6 +119,9 @@ module.exports = {
           $codeRef: 'Applications',
         },
       },
+      flags: {
+        required: ['SIGNUP'],
+      },
     },
     {
       type: 'console.page/route',
@@ -118,6 +132,9 @@ module.exports = {
           $codeRef: 'Applications',
         },
       },
+      flags: {
+        required: ['SIGNUP'],
+      },
     },
     {
       type: 'core.page/route',
@@ -127,6 +144,9 @@ module.exports = {
         component: {
           $codeRef: 'Applications',
         },
+      },
+      flags: {
+        required: ['SIGNUP'],
       },
     },
     {
@@ -138,6 +158,9 @@ module.exports = {
           $codeRef: 'Import',
         },
       },
+      flags: {
+        required: ['SIGNUP'],
+      },
     },
     {
       type: 'core.page/route',
@@ -148,6 +171,9 @@ module.exports = {
           $codeRef: 'Import',
         },
       },
+      flags: {
+        required: ['SIGNUP'],
+      },
     },
     {
       type: 'console.page/route',
@@ -157,6 +183,9 @@ module.exports = {
         component: {
           $codeRef: 'ComponentSettings',
         },
+      },
+      flags: {
+        required: ['SIGNUP'],
       },
     },
     {
@@ -168,6 +197,9 @@ module.exports = {
           $codeRef: 'ComponentSettings',
         },
       },
+      flags: {
+        required: ['SIGNUP'],
+      },
     },
     {
       type: 'console.page/route',
@@ -177,6 +209,9 @@ module.exports = {
         component: {
           $codeRef: 'WorkspaceSettings',
         },
+      },
+      flags: {
+        required: ['SIGNUP'],
       },
     },
     {
@@ -188,12 +223,18 @@ module.exports = {
           $codeRef: 'WorkspaceSettings',
         },
       },
+      flags: {
+        required: ['SIGNUP'],
+      },
     },
     {
       type: 'console.navigation/href',
       properties: {
         href: '/app-studio',
         name: 'Applications',
+      },
+      flags: {
+        required: ['SIGNUP'],
       },
     },
     {
@@ -202,6 +243,9 @@ module.exports = {
         href: '/app-studio',
         name: 'Applications',
       },
+      flags: {
+        required: ['SIGNUP'],
+      },
     },
     {
       type: 'console.navigation/href',
@@ -209,12 +253,18 @@ module.exports = {
         href: '/app-studio/workspace-settings',
         name: 'Settings',
       },
+      flags: {
+        required: ['SIGNUP'],
+      },
     },
     {
       type: 'core.navigation/href',
       properties: {
         href: '/app-studio/workspace-settings',
         name: 'Settings',
+      },
+      flags: {
+        required: ['SIGNUP'],
       },
     },
     {
@@ -226,6 +276,14 @@ module.exports = {
       },
     },
     {
+      type: 'core.flag',
+      properties: {
+        handler: {
+          $codeRef: 'FlagUtils.setSignupFeatureFlags',
+        },
+      },
+    },
+    {
       type: 'console.page/route',
       properties: {
         path: '/app-studio/workspace-settings/environment/create',
@@ -233,6 +291,9 @@ module.exports = {
         component: {
           $codeRef: 'CreateEnvironment',
         },
+      },
+      flags: {
+        required: ['SIGNUP'],
       },
     },
     {
@@ -243,6 +304,53 @@ module.exports = {
         component: {
           $codeRef: 'CreateEnvironment',
         },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio',
+        component: {
+          $codeRef: 'SignupView',
+        },
+      },
+      flags: {
+        disallowed: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio',
+        component: {
+          $codeRef: 'SignupView',
+        },
+      },
+      flags: {
+        disallowed: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'console.navigation/href',
+      properties: {
+        href: '/app-studio',
+        name: 'Signup',
+      },
+      flags: {
+        disallowed: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'core.navigation/href',
+      properties: {
+        href: '/app-studio',
+        name: 'Signup',
+      },
+      flags: {
+        disallowed: ['SIGNUP'],
       },
     },
     {
