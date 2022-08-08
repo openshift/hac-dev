@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { commonFetch } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Alert,
@@ -15,21 +16,14 @@ import {
 } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/js/icons';
 import { Formik } from 'formik';
-import { UserSignupStatus } from '../../hooks/useSignupStatus';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { SignupValues } from '../../types/signup';
+import { SIGNUP_PENDING_FLAG } from '../../utils/flag-utils';
 import SignupBanner from './SignupBanner';
 import SignupForm from './SignupForm';
 
-export type SignupViewProps = {
-  status: string;
-  onStatusChange: React.Dispatch<React.SetStateAction<string>>;
-};
-
-const SignupView: React.FC<SignupViewProps> = ({
-  status = UserSignupStatus.NOT_SIGNEDUP,
-  onStatusChange,
-}) => {
+const SignupView: React.FC = () => {
+  const [signupPendingFlag, setSignupPending] = useFeatureFlag(SIGNUP_PENDING_FLAG);
   const initialValues: SignupValues = {
     signUpText: '',
   };
@@ -38,7 +32,7 @@ const SignupView: React.FC<SignupViewProps> = ({
     return commonFetch('/registration/api/v1/signup', { method: 'POST' })
       .then((res: Response) => {
         if (res.status === 202) {
-          onStatusChange(UserSignupStatus.PENDING_APPROVAL);
+          setSignupPending(true);
         }
       })
       .catch((e) => {
@@ -57,7 +51,7 @@ const SignupView: React.FC<SignupViewProps> = ({
       <PageSection isFilled>
         <Stack hasGutter>
           <StackItem>
-            {status === UserSignupStatus.PENDING_APPROVAL ? (
+            {signupPendingFlag ? (
               <Card isLarge>
                 <CardTitle>Thank you for requesting App Studio early access</CardTitle>
                 <CardBody>

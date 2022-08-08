@@ -18,7 +18,7 @@ describe('Application List', () => {
         <h1>Test Component</h1>
       </NamespacedPage>,
     );
-    screen.getByRole('progressbar');
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 
   it('should render children if namespace is loaded', () => {
@@ -28,6 +28,6 @@ describe('Application List', () => {
         <h1>Test Component</h1>
       </NamespacedPage>,
     );
-    screen.getByText('Test Component');
+    expect(screen.getByText('Test Component')).toBeInTheDocument();
   });
 });
