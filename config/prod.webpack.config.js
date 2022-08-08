@@ -7,6 +7,7 @@ const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
   sassPrefix: '.hacCore, .hacDev',
   deployment: process.env.BETA ? 'beta/api/plugins' : 'api/plugins',
+  bundlePfModules: true,
 });
 
 module.exports = (env) => {
