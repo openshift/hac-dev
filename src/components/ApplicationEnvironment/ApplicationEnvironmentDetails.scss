@@ -1,0 +1,36 @@
+.application-environment-details  {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+
+  &__contents {
+    display: flex;
+    flex-direction: column;
+  }
+  &__toolbar {
+    border-top: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+    border-bottom: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+  }
+  .pf-c-data-list {
+    height: 100%;
+    width: 100%;
+  }
+
+  .pf-c-drawer__panel {
+    border-top: solid var(--pf-c-drawer__splitter--after--BorderColor);
+    border-top-width: var(--pf-global--BorderWidth--sm);
+  }
+  &__header-info {
+    background-color: var(--pf-c-page__main-section--m-light--BackgroundColor);
+    padding: 0 var(--pf-c-page__main-section--PaddingRight) var(--pf-global--spacer--sm) var(--pf-c-page__main-section--PaddingLeft);
+    &-item {
+      border-left: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+      padding-left: var(--pf-global--spacer--md);
+      &:first-of-type {
+        border-left: 0;
+        padding-left: 0;
+      }
+    }
+  }
+}
+

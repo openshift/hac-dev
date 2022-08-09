@@ -1,14 +1,10 @@
 import * as React from 'react';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { ModalVariant, Stack, StackItem } from '@patternfly/react-core';
 import dayjs from 'dayjs';
-import { WatchK8sResource } from '../../dynamic-plugin-sdk';
+import { useComponentPipelineRun } from '../../hooks';
 import PipelineRunLogs from '../../shared/components/pipeline-run-logs/PipelineRunLogs';
-import { PipelineRunKind } from '../../shared/components/pipeline-run-logs/types';
-import { PipelineRunGroupVersionKind } from '../../shared/components/pipeline-run-logs/utils';
 import { EmptyBox, LoadingBox } from '../../shared/components/status-box/StatusBox';
 import { ComponentKind } from '../../types';
-import { BUILD_APPLICATION_LABEL, BUILD_COMPONENT_LABEL } from '../../utils/const';
 import { ComponentProps, createModalLauncher } from '../modal/createModalLauncher';
 import './BuildLogViewer.scss';
 import { useModalLauncher } from '../modal/ModalProvider';
@@ -18,32 +14,11 @@ type BuildLogViewerProps = ComponentProps & {
 };
 
 export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => {
-  const watchResource: WatchK8sResource = React.useMemo(() => {
-    return {
-      groupVersionKind: PipelineRunGroupVersionKind,
-      namespace: component.metadata.namespace,
-      isList: true,
-    };
-  }, [component.metadata.namespace]);
-
-  const [pipelineRuns, loaded, error] = useK8sWatchResource(watchResource);
-
-  const pipelineRun = React.useMemo(() => {
-    if (loaded && !error) {
-      return (pipelineRuns as PipelineRunKind[])
-        ?.filter?.(
-          (plr) =>
-            plr.metadata.labels[BUILD_COMPONENT_LABEL] === component.metadata.name &&
-            plr.metadata.labels[BUILD_APPLICATION_LABEL] === component.spec.application,
-        )
-        ?.sort?.(
-          (a, b) =>
-            new Date(b.metadata.creationTimestamp).getTime() -
-            new Date(a.metadata.creationTimestamp).getTime(),
-        )?.[0];
-    }
-    return undefined;
-  }, [pipelineRuns, component.metadata.name, component.spec.application, loaded, error]);
+  const { pipelineRun, loaded } = useComponentPipelineRun(
+    component.metadata.name,
+    component.spec.application,
+    component.metadata.namespace,
+  );
 
   if (loaded && !pipelineRun) {
     return <EmptyBox label="pipeline runs" />;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { mockApplication } from '../__data__/mock-data';
 import { mockPipelineRuns } from '../__data__/mock-pipeline-run';
 import ApplicationDetailsView from '../ApplicationDetailsView';
@@ -51,18 +51,6 @@ describe('ApplicationDetailsView', () => {
     watchResourceMock.mockReturnValueOnce([mockApplication, true]).mockReturnValue([[], true]);
     render(<ApplicationDetailsView applicationName="test-application" />);
     screen.getAllByText('Test Application');
-  });
-
-  it('should render spinner if components data is not loaded', () => {
-    watchResourceMock.mockReturnValueOnce([mockApplication, true]).mockReturnValue([[], true]);
-    render(<ApplicationDetailsView applicationName="test-application" />);
-    const button = screen.getByText('Collapse');
-    expect(screen.queryByText('Build Succeeded')).toBeInTheDocument();
-    expect(screen.queryByText('Last Build')).toBeInTheDocument();
-    fireEvent.click(button);
-    screen.getByText('Expand');
-    expect(screen.queryByText('Succeeded')).toBeInTheDocument();
-    expect(screen.queryByText('Last Build')).not.toBeInTheDocument();
   });
 
   it('should show error state if application cannot be loaded', () => {

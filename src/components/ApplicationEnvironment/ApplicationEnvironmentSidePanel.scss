@@ -1,0 +1,34 @@
+.application-environment-details__component-side-panel {
+  .pf-c-drawer__actions {
+    justify-content: flex-end;
+    padding-top: var(--pf-global--spacer--md);
+    padding-right: var(--pf-global--spacer--md);
+  }
+  .pf-c-drawer__body:first-of-type {
+    padding: 0;
+  }
+  &__header {
+    padding-top: 5px;
+  }
+  &__header-heading {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--pf-global--FontSize--xl);
+    padding: 0 var(--pf-c-drawer--child--PaddingRight) 0 var(--pf-c-drawer--child--PaddingLeft);
+  }
+
+  &__actions {
+    align-items: flex-end;
+    display: flex;
+    margin-top: -3px;
+    @media(max-width: 480px){
+      flex-direction: column;
+    }
+  }
+
+  &__name {
+    min-width: 0; // required by FF and Edge
+    overflow-wrap: break-word; // new name as per the CSS3 spec
+    word-break: break-word; // required by FF and Edge
+  }
+}

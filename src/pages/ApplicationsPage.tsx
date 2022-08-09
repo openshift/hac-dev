@@ -17,8 +17,8 @@ const GETTING_STARTED_MODAL_KEY = 'application-list-getting-started-modal';
 const ApplicationsPage = () => {
   useQuickstartCloseOnUnmount();
   const applicationName = getQueryArgument('name');
-  const [hacbs] = useFeatureFlag(HACBS_FLAG);
-
+  let [hacbs] = useFeatureFlag(HACBS_FLAG);
+  hacbs = hacbs && false;
   return (
     <NamespacedPage>
       {hacbs ? (

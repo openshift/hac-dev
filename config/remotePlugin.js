@@ -45,6 +45,16 @@ const hacbs = {
       },
     },
     {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/application-environment-details',
+        exact: true,
+        component: {
+          $codeRef: 'ApplicationEnvironmentDetails',
+        },
+      },
+    },
+    {
       type: 'console.page/route',
       properties: {
         path: '/app-studio/import',
@@ -83,6 +93,10 @@ module.exports = {
 
       // App Studio
       Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
+      ApplicationEnvironmentDetails: resolve(
+        __dirname,
+        '../src/pages/ApplicationEnvironmentDetailsPage',
+      ),
       Import: resolve(__dirname, '../src/pages/ImportPage'),
       ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
       WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),

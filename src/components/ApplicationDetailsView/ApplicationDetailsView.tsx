@@ -4,7 +4,6 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
   Button,
-  Divider,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
@@ -29,7 +28,6 @@ import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
 import { OutlinedHelpPopperIcon } from '../OutlinedHelpTooltipIcon';
 import PageLayout from '../PageLayout/PageLayout';
-import { ComponentCard } from './ComponentCard';
 import { ComponentDetails } from './ComponentDetails';
 
 const GETTING_STARTED_CARD_KEY = 'application-details-getting-started';
@@ -78,6 +76,12 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
     ],
     [application, applicationName, navigate, showModal],
   );
+
+  const navigateToEnvironment = (environmentName: string) => {
+    navigate(
+      `/app-studio/application-environment-details?application=${applicationName}&name=${environmentName}`,
+    );
+  };
 
   const loading = (
     <Bullseye>
@@ -134,20 +138,6 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
       >
         <PageSection>
           <Flex>
-            <Flex direction={{ default: 'column' }}>
-              <FlexItem>
-                <b>Application components:</b>
-                {'  '}
-                <OutlinedHelpPopperIcon
-                  heading="Application components"
-                  content="Manage and add components from the components detail view. Note: Components from code repositories are rebuilt to capture the latest code changes. These updates will deploy to your development environment based on your deployment strategy."
-                />
-              </FlexItem>
-              <FlexItem>
-                <ComponentCard applicationName={applicationName} isExpanded={cardsExpanded} />
-              </FlexItem>
-            </Flex>
-            <Divider isVertical />
             <Flex direction={{ default: 'column' }} grow={{ default: 'grow' }}>
               <Flex>
                 <FlexItem>
@@ -169,9 +159,10 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
                   </Button>
                 </FlexItem>
               </Flex>
-              <Flex>
-                <ApplicationEnvironmentCards isExpanded={cardsExpanded} />
-              </Flex>
+              <ApplicationEnvironmentCards
+                isExpanded={cardsExpanded}
+                onSelect={navigateToEnvironment}
+              />
             </Flex>
           </Flex>
         </PageSection>
