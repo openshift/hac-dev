@@ -3,17 +3,15 @@ import { FormikWizardStep } from 'formik-pf';
 import ApplicationSection from '../../../components/ImportForm/ApplicationSection/ApplicationSection';
 import ReviewSection from '../../../components/ImportForm/ReviewSection/ReviewSection';
 import { SourceSection } from '../../../components/ImportForm/SourceSection/SourceSection';
-import { createComponents } from '../../../components/ImportForm/utils/submit-utils';
 import {
-  applicationValidationSchema,
   reviewValidationSchema,
   gitSourceValidationSchema,
+  applicationValidationSchema,
 } from '../../../components/ImportForm/utils/validation-utils';
-import { createApplication } from '../../../utils/create-utils';
 import BuildSection from './BuildSection';
 import IntegrationTestSection from './IntegrationTestSection';
 import { createAppIntegrationTest } from './submit-utils';
-import { FormValues } from './types';
+import { onApplicationSubmit, onComponentsSubmit } from './utils/submit-utils';
 import { integrationTestValidationSchema } from './utils/validation-utils';
 
 export const applicationStep = (): FormikWizardStep => ({
@@ -22,12 +20,7 @@ export const applicationStep = (): FormikWizardStep => ({
   component: <ApplicationSection />,
   validationSchema: applicationValidationSchema,
   nextButtonText: 'Create application & continue',
-  validateOnChange: false,
-  validateOnBlur: false,
-  onSubmit: async ({ application, namespace }: FormValues, formikBag) => {
-    const applicationData = await createApplication(application, namespace, false);
-    formikBag.setFieldValue('applicationData', applicationData);
-  },
+  onSubmit: onApplicationSubmit,
   canJumpTo: false,
 });
 
@@ -49,8 +42,7 @@ export const reviewStep = (): FormikWizardStep => ({
   canJumpTo: false,
   hasNoBodyPadding: true,
   validationSchema: reviewValidationSchema,
-  onSubmit: ({ components, applicationData, namespace, secret }: FormValues) =>
-    createComponents(components, applicationData.metadata.name, namespace, secret, false),
+  onSubmit: onComponentsSubmit,
   cancelButtonText: 'Go to application',
 });
 
