@@ -16,7 +16,7 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from '@patternfly/react-core';
-import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
+import emptyStateImgUrl from '../../imgs/application-list-empty.png';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { ApplicationGroupVersionKind } from '../../models';
 import { Table } from '../../shared';
@@ -28,6 +28,8 @@ import { ApplicationListHeader } from './ApplicationListHeader';
 import ApplicationListRow from './ApplicationListRow';
 
 const GETTING_STARTED_CARD_KEY = 'application-list-getting-started-card';
+
+const EmptyStateImg = () => <img className="pf-u-w-33" src={emptyStateImgUrl} alt="" />;
 
 const ApplicationListView: React.FC = () => {
   const { namespace } = useNamespace();
@@ -74,7 +76,7 @@ const ApplicationListView: React.FC = () => {
         >
           {!applications || applications.length === 0 ? (
             <EmptyState variant={EmptyStateVariant.large}>
-              <EmptyStateIcon icon={CubesIcon} />
+              <EmptyStateIcon icon={EmptyStateImg} />
               <Title headingLevel="h4" size="lg">
                 No applications
               </Title>
