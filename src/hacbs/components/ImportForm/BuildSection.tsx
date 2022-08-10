@@ -16,14 +16,14 @@ import {
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/js/icons';
 import { TableComposable, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { useFormikContext } from 'formik';
-import { useNamespace } from '../../../components/NamespacedPage/NamespacedPage';
 import { PipelineRunGroupVersionKind } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { PipelineKind } from '../../../shared/components/pipeline-run-logs/types';
+import { useNamespace } from '../../../utils/namespace-context-utils';
 import { FormValues } from './types';
 
 const BuildSection: React.FunctionComponent = () => {
-  const { namespace } = useNamespace();
+  const namespace = useNamespace();
   const {
     values: { source, components, applicationData },
   } = useFormikContext<FormValues>();

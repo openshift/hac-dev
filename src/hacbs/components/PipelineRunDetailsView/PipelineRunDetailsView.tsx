@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
-import { NamespaceContext } from '../../../components/NamespacedPage/NamespacedPage';
+import { useNamespace } from '../../../utils/namespace-context-utils';
 import { PipelineRunGroupVersionKind } from '../../models';
 import { PipelineRunKind } from '../../types';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
@@ -19,7 +19,7 @@ type PipelineRunDetailsViewProps = {
 export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
   pipelineRunName,
 }) => {
-  const { namespace } = React.useContext(NamespaceContext);
+  const namespace = useNamespace();
 
   const [pipelineRun, loaded] = useK8sWatchResource<PipelineRunKind>({
     groupVersionKind: PipelineRunGroupVersionKind,

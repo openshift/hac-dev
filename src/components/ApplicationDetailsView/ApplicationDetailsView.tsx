@@ -21,16 +21,17 @@ import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { ApplicationGroupVersionKind } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { ApplicationKind } from '../../types';
+import { useNamespace } from '../../utils/namespace-context-utils';
 import { ApplicationEnvironmentCards } from '../Environment/ApplicationEnvironmentCards';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
 import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
-import { useNamespace } from '../NamespacedPage/NamespacedPage';
 import { OutlinedHelpPopperIcon } from '../OutlinedHelpTooltipIcon';
 import PageLayout from '../PageLayout/PageLayout';
 import { ComponentCard } from './ComponentCard';
 import { ComponentDetails } from './ComponentDetails';
+
 const GETTING_STARTED_CARD_KEY = 'application-details-getting-started';
 
 type ApplicationViewProps = {
@@ -40,7 +41,7 @@ type ApplicationViewProps = {
 const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
   applicationName,
 }) => {
-  const { namespace } = useNamespace();
+  const namespace = useNamespace();
   const showModal = useModalLauncher();
   const navigate = useNavigate();
 

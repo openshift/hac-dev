@@ -7,7 +7,7 @@ import {
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
 import { ComponentDetectionQueryKind, DetectedComponents } from '../../../types';
 import { createComponentDetectionQuery } from '../../../utils/create-utils';
-import { useNamespace } from '../../NamespacedPage/NamespacedPage';
+import { useNamespace } from '../../../utils/namespace-context-utils';
 
 /**
  * Create a ComponentDetectionQuery when any of the params change,
@@ -20,7 +20,7 @@ export const useComponentDetection = (
   context?: string,
   ref?: string,
 ): [DetectedComponents, boolean, any] => {
-  const { namespace } = useNamespace();
+  const namespace = useNamespace();
 
   const [cdqName, setCdqName] = React.useState<string>();
   const [createError, setCreateError] = React.useState();

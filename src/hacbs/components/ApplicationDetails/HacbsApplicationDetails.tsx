@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
-import { NamespaceContext } from '../../../components/NamespacedPage/NamespacedPage';
 import { ApplicationGroupVersionKind } from '../../../models';
 import { ApplicationKind } from '../../../types';
+import { useNamespace } from '../../../utils/namespace-context-utils';
 import { applicationQuickstartContent } from './ApplicationQuickstartContent';
 import DetailsPage from './DetailsPage';
 import ApplicationOverviewTab from './tabs/ApplicationOverviewTab';
@@ -19,7 +19,7 @@ type HacbsApplicationDetailsProps = {
 };
 
 const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicationName }) => {
-  const { namespace } = React.useContext(NamespaceContext);
+  const namespace = useNamespace();
   const navigate = useNavigate();
   const { quickStarts } = useChrome();
 

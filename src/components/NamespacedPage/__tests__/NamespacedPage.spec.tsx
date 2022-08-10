@@ -1,18 +1,18 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { useActiveNamespace } from '../../../hooks/useActiveNamespace';
 import NamespacedPage from '../NamespacedPage';
 
-jest.mock('../../../hooks/useActiveNamespace', () => ({
-  useActiveNamespace: jest.fn(() => ['test-ns', true]),
+jest.mock('react', () => ({
+  ...(jest as any).requireActual('react'),
+  useContext: jest.fn(() => ({ namespace: 'test-ns', namespaceLoaded: true })),
 }));
 
-const activeNamepaceMock = useActiveNamespace as jest.Mock;
+const activeNamepaceMock = React.useContext as jest.Mock;
 
 describe('Application List', () => {
   it('should render spinner if namespace is not loaded', () => {
-    activeNamepaceMock.mockReturnValue(['', false]);
+    activeNamepaceMock.mockReturnValue({ namespace: '', namespaceLoaded: false });
     render(
       <NamespacedPage>
         <h1>Test Component</h1>
@@ -22,7 +22,7 @@ describe('Application List', () => {
   });
 
   it('should render children if namespace is loaded', () => {
-    activeNamepaceMock.mockReturnValue(['test-ns', true]);
+    activeNamepaceMock.mockReturnValue({ namespace: 'test-ns', namespaceLoaded: true });
     render(
       <NamespacedPage>
         <h1>Test Component</h1>

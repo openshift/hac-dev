@@ -1,7 +1,7 @@
 import React from 'react';
 import { Bullseye, Spinner } from '@patternfly/react-core';
-import { useActiveNamespace } from '../../hooks';
 import { UserSignupStatus, useSignupStatus } from '../../hooks/useSignupStatus';
+import { NamespaceContext } from '../../utils/namespace-context-utils';
 import AppBanner from '../AppBanner/AppBanner';
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 import { ModalProvider } from '../modal/ModalProvider';
@@ -9,23 +9,13 @@ import SignupView from '../Signup/SignupView';
 
 import './NamespacedPage.scss';
 
-type NamespaceContextData = {
-  namespace: string;
-};
-
-export const NamespaceContext = React.createContext<NamespaceContextData>({
-  namespace: '',
-});
-
-export const useNamespace = () => React.useContext(NamespaceContext);
-
 type NamespacedPageProps = {
   children: React.ReactNode;
 };
 
 const NamespacedPage: React.FunctionComponent<NamespacedPageProps> = ({ children }) => {
   const [status, setStatus, statusLoaded] = useSignupStatus();
-  const [activeNamepace, namespaceLoaded] = useActiveNamespace();
+  const { namespaceLoaded } = React.useContext(NamespaceContext);
 
   if (
     statusLoaded &&
@@ -43,12 +33,10 @@ const NamespacedPage: React.FunctionComponent<NamespacedPageProps> = ({ children
   }
 
   return (
-    <NamespaceContext.Provider value={{ namespace: activeNamepace }}>
-      <ModalProvider>
-        <AppBanner />
-        <ErrorBoundary>{children}</ErrorBoundary>
-      </ModalProvider>
-    </NamespaceContext.Provider>
+    <ModalProvider>
+      <AppBanner />
+      <ErrorBoundary>{children}</ErrorBoundary>
+    </ModalProvider>
   );
 };
 

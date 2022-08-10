@@ -1,12 +1,23 @@
-import { useState, useEffect } from 'react';
+import * as React from 'react';
 import { k8sListResourceItems } from '@openshift/dynamic-plugin-sdk-utils';
-import { ProjectModel } from './../models';
+import { ProjectModel } from '../models';
 
-export const useActiveNamespace = (): [string, boolean] => {
-  const [activeNamespace, setActiveNamespace] = useState<string>('');
-  const [loaded, setLoaded] = useState<boolean>(false);
+type NamespaceContextData = { namespace: string; namespaceLoaded: boolean };
 
-  useEffect(() => {
+export const NamespaceContext = React.createContext<NamespaceContextData>({
+  namespace: '',
+  namespaceLoaded: false,
+});
+
+export const NamespaceProvider = NamespaceContext.Provider;
+
+export const useNamespace = () => React.useContext(NamespaceContext).namespace;
+
+export const useActiveNamespace = (): NamespaceContextData => {
+  const [activeNamespace, setActiveNamespace] = React.useState<string>('');
+  const [loaded, setLoaded] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
     const fetchProjects = async () => {
       const projects: any = await k8sListResourceItems({
         model: ProjectModel,
@@ -40,5 +51,5 @@ export const useActiveNamespace = (): [string, boolean] => {
     }
   }, []);
 
-  return [activeNamespace, loaded];
+  return { namespace: activeNamespace, namespaceLoaded: loaded };
 };
