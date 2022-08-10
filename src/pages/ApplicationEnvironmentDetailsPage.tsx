@@ -7,7 +7,7 @@ import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmoun
 import imageUrl from '../imgs/getting-started-illustration.svg';
 import { getQueryArgument } from '../shared/utils';
 
-const GETTING_STARTED_MODAL_KEY = 'application-list-getting-started-modal';
+const GETTING_STARTED_MODAL_KEY = 'application-environment-details-getting-started-modal';
 
 const ApplicationEnvironmentDetailsPage = () => {
   useQuickstartCloseOnUnmount();

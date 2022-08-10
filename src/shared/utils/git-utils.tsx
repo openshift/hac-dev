@@ -3,6 +3,7 @@ import { BitbucketIcon } from '@patternfly/react-icons/dist/js/icons/bitbucket-i
 import { GitAltIcon } from '@patternfly/react-icons/dist/js/icons/git-alt-icon';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
 import { GitlabIcon } from '@patternfly/react-icons/dist/js/icons/gitlab-icon';
+import { gitUrlRegex } from '../../components/ImportForm/utils/validation-utils';
 
 export enum GitProvider {
   GITHUB = 'github',
@@ -11,9 +12,6 @@ export enum GitProvider {
   UNSURE = 'other',
   INVALID = '',
 }
-
-export const gitUrlRegex =
-  /^((((ssh|git|https?:?):\/\/:?)(([^\s@]+@|[^@]:?)[-\w.]+(:\d\d+:?)?(\/[-\w.~/?[\]!$&'()*+,;=:@%]*:?)?:?))|([^\s@]+@[-\w.]+:[-\w.~/?[\]!$&'()*+,;=:@%]*?:?))$/;
 
 const hasDomain = (url: string, domain: string): boolean => {
   return (

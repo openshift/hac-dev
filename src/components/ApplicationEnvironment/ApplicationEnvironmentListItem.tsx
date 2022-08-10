@@ -48,7 +48,11 @@ export const ApplicationEnvironmentListItem: React.FC<ApplicationEnvironmentList
                 </FlexItem>
                 <FlexItem>
                   <Tooltip content="Route">
-                    <ExternalLink href={componentRouteWebURL} text={<ExternalLinkAltIcon />} />
+                    <ExternalLink
+                      href={componentRouteWebURL}
+                      text={<ExternalLinkAltIcon />}
+                      stopPropagation
+                    />
                   </Tooltip>
                 </FlexItem>
               </Flex>
@@ -60,7 +64,11 @@ export const ApplicationEnvironmentListItem: React.FC<ApplicationEnvironmentList
               <Flex spaceItems={{ default: 'spaceItemsSm' }}>
                 <FlexItem>Image:</FlexItem>
                 <FlexItem>
-                  <ExternalLink href={`https://${containerImage}`} text={imageName} />
+                  <ExternalLink
+                    href={`https://${containerImage}`}
+                    text={imageName}
+                    stopPropagation
+                  />
                 </FlexItem>
               </Flex>
             </DataListCell>,

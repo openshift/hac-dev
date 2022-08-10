@@ -136,12 +136,18 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
   }, [components, selectedComponentId]);
 
   const loading = (
-    <Bullseye>
+    <Bullseye className="pf-u-mt-md">
       <Spinner />
     </Bullseye>
   );
 
-  if (applicationError || !applicationLoaded || environmentError || !environmentLoaded) {
+  if (
+    applicationError ||
+    !applicationLoaded ||
+    environmentError ||
+    !environmentLoaded ||
+    !componentsLoaded
+  ) {
     return loading;
   }
 

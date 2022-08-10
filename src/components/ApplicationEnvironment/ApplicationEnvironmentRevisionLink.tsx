@@ -10,9 +10,20 @@ const ApplicationEnvironmentRevisionLink: React.FC<{ component: ComponentKind }>
   return (
     <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsXs' }}>
       <FlexItem>
-        <Label variant="outline" icon={<GithubIcon />}>
-          72c1a29
-        </Label>
+        <ExternalLink
+          href={
+            component.spec.source?.git?.url ||
+            (component.spec.containerImage.includes('http')
+              ? component.spec.containerImage
+              : `https://${component.spec.containerImage}`)
+          }
+          text={
+            <Label variant="outline" icon={<GithubIcon />}>
+              72c1a29
+            </Label>
+          }
+          stopPropagation
+        />
       </FlexItem>
       <FlexItem>
         <Flex spaceItems={{ default: 'spaceItemsSm' }}>
@@ -29,6 +40,7 @@ const ApplicationEnvironmentRevisionLink: React.FC<{ component: ComponentKind }>
                   <b>#196</b> Linter updates
                 </span>
               }
+              stopPropagation
             />
           </FlexItem>
           <FlexItem>
@@ -41,6 +53,7 @@ const ApplicationEnvironmentRevisionLink: React.FC<{ component: ComponentKind }>
                   : `https://${component.spec.containerImage}`)
               }
               text="by e_cary"
+              stopPropagation
             />
           </FlexItem>
         </Flex>

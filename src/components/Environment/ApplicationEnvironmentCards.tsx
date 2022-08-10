@@ -22,7 +22,7 @@ import { getEnvironmentDeploymentStrategyLabel } from '../../utils/environment-u
 type ApplicationEnvironmentCardProps = {
   environment: EnvironmentKind;
   isExpanded: boolean;
-  onSelect: () => void;
+  onSelect?: () => void;
 };
 
 const ApplicationEnvironmentCard: React.FC<ApplicationEnvironmentCardProps> = ({
