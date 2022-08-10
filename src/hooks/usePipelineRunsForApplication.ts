@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { useNamespace } from '../components/NamespacedPage/NamespacedPage';
 import { ComponentGroupVersionKind } from '../models';
 import { PipelineRunGroupVersionKind } from '../shared';
 import { PipelineRunKind } from '../shared/components/pipeline-run-logs/types';
 import { ComponentKind } from '../types';
 import { BUILD_APPLICATION_LABEL, BUILD_COMPONENT_LABEL } from '../utils/const';
+import { useNamespace } from '../utils/namespace-context-utils';
 
 export const useLatestPipelineRunForComponent = (
   component: ComponentKind,
 ): PipelineRunKind | undefined => {
-  const { namespace } = useNamespace();
+  const namespace = useNamespace();
   const [pipelineRuns, prLoaded, prError] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
     namespace,
@@ -37,7 +37,7 @@ export const useLatestPipelineRunForComponent = (
 export const usePipelineRunsForApplication = (
   applicationName: string,
 ): [{ [componentName: string]: PipelineRunKind[] } | undefined, boolean, any] => {
-  const { namespace } = useNamespace();
+  const namespace = useNamespace();
   const [pipelineRuns, prLoaded, prError] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
     namespace,

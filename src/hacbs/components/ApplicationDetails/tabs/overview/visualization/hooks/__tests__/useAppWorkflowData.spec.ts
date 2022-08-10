@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { renderHook } from '@testing-library/react-hooks';
-import { useActiveNamespace } from '../../../../../../../../hooks';
+import { useNamespace } from '../../../../../../../../utils/namespace-context-utils';
 import {
   useBuildPipelines,
   useComponents,
@@ -20,8 +20,8 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 
-jest.mock('../../../../../../../../hooks/useActiveNamespace', () => ({
-  useActiveNamespace: jest.fn(() => ['test-ns', true]),
+jest.mock('../../../../../../../../utils/namespace-context-utils', () => ({
+  useNamespace: jest.fn(() => 'test-ns'),
 }));
 
 jest.mock('../../../../../../../hooks/', () => ({
@@ -32,7 +32,7 @@ jest.mock('../../../../../../../hooks/', () => ({
   useReleaseLinks: jest.fn(() => [[], true]),
 }));
 
-const useActiveNamespaceMock = useActiveNamespace as jest.Mock;
+const useActiveNamespaceMock = useNamespace as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
 const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
 const useBuildPipelinesMock = useBuildPipelines as jest.Mock;
@@ -40,7 +40,7 @@ const useEnvironmentsMock = useEnvironments as jest.Mock;
 const useReleaseLinksMock = useReleaseLinks as jest.Mock;
 
 beforeEach(() => {
-  useActiveNamespaceMock.mockReturnValue(['test-ns', true]);
+  useActiveNamespaceMock.mockReturnValue('test-ns');
   useComponentsMock.mockReturnValue([[], true]);
   useIntegrationTestScenariosMock.mockReturnValue([[], true]);
   useBuildPipelinesMock.mockReturnValue([[], true]);

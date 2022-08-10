@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Form } from '@patternfly/react-core';
 import { RenderOptions, render } from '@testing-library/react';
 import { FormikValues, Formik } from 'formik';
-import { NamespaceContext } from '../components/NamespacedPage/NamespacedPage';
+import { NamespaceProvider } from './namespace-context-utils';
 
 export const formikRenderer = (
   element: React.ReactElement,
@@ -26,7 +26,7 @@ export const namespaceRenderer = (
 ) =>
   render(element, {
     wrapper: ({ children }) => (
-      <NamespaceContext.Provider value={{ namespace }}>{children}</NamespaceContext.Provider>
+      <NamespaceProvider value={{ namespace, namespaceLoaded: true }}>{children}</NamespaceProvider>
     ),
     ...options,
   });

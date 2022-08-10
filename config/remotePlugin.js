@@ -81,6 +81,7 @@ module.exports = {
       ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
       WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),
       CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
+      NamespaceContext: resolve(__dirname, '../src/utils/namespace-context-utils'),
     },
   },
   extensions: [
@@ -241,6 +242,17 @@ module.exports = {
         exact: true,
         component: {
           $codeRef: 'CreateEnvironment',
+        },
+      },
+    },
+    {
+      type: 'core.context-provider',
+      properties: {
+        provider: {
+          $codeRef: 'NamespaceContext.NamespaceProvider',
+        },
+        useValueHook: {
+          $codeRef: 'NamespaceContext.useActiveNamespace',
         },
       },
     },

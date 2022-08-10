@@ -1,4 +1,4 @@
-import { useNamespace } from '../../../../../../../components/NamespacedPage/NamespacedPage';
+import { useNamespace } from '../../../../../../../utils/namespace-context-utils';
 import {
   useComponents,
   useEnvironments,
@@ -12,7 +12,7 @@ import { getLastEnvironment, workflowToNodes } from '../utils/visualization-util
 export const useAppWorkflowData = (
   applicationName: string,
 ): [nodes: WorkflowNode[], loaded: boolean] => {
-  const { namespace } = useNamespace();
+  const namespace = useNamespace();
 
   const [components, componentsLoaded] = useComponents(namespace, applicationName);
   const [integrationTestScenario, integrationTestsLoaded] = useIntegrationTestScenarios(

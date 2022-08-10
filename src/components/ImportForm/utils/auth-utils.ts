@@ -15,7 +15,7 @@ import {
   SPIAccessTokenBindingPhase,
 } from '../../../types';
 import { initiateAccessTokenBinding } from '../../../utils/create-utils';
-import { useNamespace } from '../../NamespacedPage/NamespacedPage';
+import { useNamespace } from '../../../utils/namespace-context-utils';
 
 const SPI_API_URL =
   'https://spi-oauth-route-spi-system.apps.appstudio-stage.x99m.p1.openshiftapps.com';
@@ -36,7 +36,7 @@ export const useAccessCheck = (
   },
   boolean,
 ] => {
-  const { namespace } = useNamespace();
+  const namespace = useNamespace();
   const [name, setName] = React.useState<string>();
 
   React.useEffect(() => {
@@ -97,7 +97,7 @@ export const useAccessCheck = (
 export const useAccessTokenBinding = (
   source?: string,
 ): [{ oAuthUrl: string; accessTokenName: string }, boolean] => {
-  const { namespace } = useNamespace();
+  const namespace = useNamespace();
   const { setFieldValue } = useFormikContext();
   const [name, setName] = React.useState<string>();
 
@@ -167,7 +167,7 @@ export const useAccessTokenBinding = (
  * @returns object of utils
  */
 export const useSpiAPI = () => {
-  const { namespace } = useNamespace();
+  const namespace = useNamespace();
   const {
     auth: { getToken },
   } = useChrome();

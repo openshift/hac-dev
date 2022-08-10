@@ -21,8 +21,8 @@ import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { ApplicationGroupVersionKind } from '../../models';
 import { Table } from '../../shared';
 import { ApplicationKind } from '../../types';
+import { useNamespace } from '../../utils/namespace-context-utils';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
-import { useNamespace } from '../NamespacedPage/NamespacedPage';
 import PageLayout from '../PageLayout/PageLayout';
 import { ApplicationListHeader } from './ApplicationListHeader';
 import ApplicationListRow from './ApplicationListRow';
@@ -32,7 +32,7 @@ const GETTING_STARTED_CARD_KEY = 'application-list-getting-started-card';
 const EmptyStateImg = () => <img className="pf-u-w-33" src={emptyStateImgUrl} alt="" />;
 
 const ApplicationListView: React.FC = () => {
-  const { namespace } = useNamespace();
+  const namespace = useNamespace();
   const [applications, loaded] = useK8sWatchResource<ApplicationKind[]>({
     groupVersionKind: ApplicationGroupVersionKind,
     namespace,

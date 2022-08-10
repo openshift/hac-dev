@@ -19,7 +19,7 @@ import {
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import { ComponentGroupVersionKind } from '../../models';
 import { ApplicationKind, ComponentKind } from '../../types';
-import { useNamespace } from '../NamespacedPage/NamespacedPage';
+import { useNamespace } from '../../utils/namespace-context-utils';
 import ComponentListView from './ComponentListView';
 
 type ComponentDetailsProps = {
@@ -45,7 +45,7 @@ const ComponentDetailsEmptyState: React.FC<{ applicationName: string }> = ({ app
 );
 
 export const ComponentDetails: React.FC<ComponentDetailsProps> = ({ application }) => {
-  const { namespace } = useNamespace();
+  const namespace = useNamespace();
   const [components, componentsLoaded] = useK8sWatchResource<ComponentKind[]>({
     groupVersionKind: ComponentGroupVersionKind,
     namespace,

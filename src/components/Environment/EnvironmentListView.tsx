@@ -20,12 +20,12 @@ import {
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import { EnvironmentGroupVersionKind } from '../../models';
 import { EnvironmentKind } from '../../types';
-import { NamespaceContext } from '../NamespacedPage/NamespacedPage';
+import { useNamespace } from '../../utils/namespace-context-utils';
 import EnvironmentCard from './EnvironmentCard';
 import './EnvironmentListView.scss';
 
 const EnvironmentListView: React.FC = () => {
-  const { namespace } = React.useContext(NamespaceContext);
+  const namespace = useNamespace();
   const createEnvironment = (
     <Toolbar usePageInsets>
       <ToolbarItem>

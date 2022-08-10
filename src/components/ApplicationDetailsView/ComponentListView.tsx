@@ -20,7 +20,7 @@ import {
   getGitOpsDeploymentHealthStatusIcon,
   getGitOpsDeploymentStrategy,
 } from '../../utils/gitops-utils';
-import { NamespaceContext } from '../NamespacedPage/NamespacedPage';
+import { useNamespace } from '../../utils/namespace-context-utils';
 import { ComponentListItem } from './ComponentListItem';
 
 type ComponentListViewProps = {
@@ -29,7 +29,7 @@ type ComponentListViewProps = {
 };
 
 const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, components }) => {
-  const { namespace } = React.useContext(NamespaceContext);
+  const namespace = useNamespace();
 
   const [routes, loaded] = useApplicationRoutes(applicationName, namespace);
 

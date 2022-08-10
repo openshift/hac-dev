@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageSection, PageSectionTypes, PageSectionVariants } from '@patternfly/react-core';
 import { FormikWizard } from 'formik-pf';
-import { useNamespace } from '../../../components/NamespacedPage/NamespacedPage';
+import { useNamespace } from '../../../utils/namespace-context-utils';
 import { FormValues } from './types';
 import { useImportSteps } from './useImportSteps';
 
@@ -12,7 +12,7 @@ type ImportFormProps = {
 
 const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName }) => {
   const navigate = useNavigate();
-  const { namespace } = useNamespace();
+  const namespace = useNamespace();
 
   const initialValues: FormValues = {
     application: applicationName || 'My Application',

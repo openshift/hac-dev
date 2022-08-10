@@ -12,8 +12,8 @@ import {
   Title,
 } from '@patternfly/react-core';
 import { OutlinedFileImageIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-file-image-icon';
-import { NamespaceContext } from '../../../components/NamespacedPage/NamespacedPage';
 import { Table } from '../../../shared';
+import { useNamespace } from '../../../utils/namespace-context-utils';
 import { PipelineRunGroupVersionKind } from '../../models';
 import { PipelineRunKind } from '../../types';
 import { PipelineRunListHeader } from './PipelineRunListHeader';
@@ -21,7 +21,7 @@ import PipelineRunListRow from './PipelineRunListRow';
 
 type PipelineRunsListViewProps = { applicationName: string };
 const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ applicationName }) => {
-  const { namespace } = React.useContext(NamespaceContext);
+  const namespace = useNamespace();
 
   const [pipelineRuns, loaded] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
