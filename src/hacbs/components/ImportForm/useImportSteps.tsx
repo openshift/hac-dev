@@ -11,7 +11,10 @@ import {
 } from '../../../components/ImportForm/utils/validation-utils';
 import { createApplication } from '../../../utils/create-utils';
 import BuildSection from './BuildSection';
+import IntegrationTestSection from './IntegrationTestSection';
+import { createAppIntegrationTest } from './submit-utils';
 import { FormValues } from './types';
+import { integrationTestValidationSchema } from './utils/validation-utils';
 
 export const applicationStep = (): FormikWizardStep => ({
   id: 'application',
@@ -58,7 +61,27 @@ export const buildStep = (): FormikWizardStep => ({
   canJumpTo: false,
   disableBack: true,
   cancelButtonText: 'Go to application',
+  nextButtonText: 'Next',
+});
+
+export const integrationTestStep = (): FormikWizardStep => ({
+  id: 'integraiontest',
+  name: 'Add integration test',
+  component: <IntegrationTestSection />,
+  canJumpTo: false,
+  nextButtonText: 'Next',
+  validationSchema: integrationTestValidationSchema,
+  cancelButtonText: 'Go to application',
+  onSubmit: createAppIntegrationTest,
+});
+
+export const environmentStep = (): FormikWizardStep => ({
+  id: 'environment',
+  name: 'Manage Environment',
+  component: <></>,
+  canJumpTo: false,
   nextButtonText: 'Done! Go to app',
+  cancelButtonText: 'Go to application',
 });
 
 export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
@@ -68,6 +91,8 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
       componentStep(),
       reviewStep(),
       buildStep(),
+      integrationTestStep(),
+      environmentStep(),
     ],
     [applicationName],
   );

@@ -25,6 +25,12 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
     namespace,
     secret: '',
     source: '',
+    integrationTest: {
+      name: '',
+      bundle: '',
+      pipeline: '',
+      optional: false,
+    },
   };
 
   const steps = useImportSteps(applicationName);

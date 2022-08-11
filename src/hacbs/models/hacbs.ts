@@ -1,9 +1,18 @@
+import { K8sModelCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { K8sGroupVersionKind } from '../../dynamic-plugin-sdk';
 
 export const EnterpriseContractPolicyGroupVersionKind: K8sGroupVersionKind = {
   group: 'appstudio.redhat.com',
   version: 'v1alpha1',
   kind: 'EnterpriseContractPolicy',
+};
+
+export const IntegrationTestScenarioModel: K8sModelCommon = {
+  apiGroup: 'appstudio.redhat.com',
+  apiVersion: 'v1alpha1',
+  kind: 'IntegrationTestScenario',
+  plural: 'integrationtestscenarios',
+  namespaced: true,
 };
 
 export const IntegrationTestScenarioGroupVersionKind: K8sGroupVersionKind = {
