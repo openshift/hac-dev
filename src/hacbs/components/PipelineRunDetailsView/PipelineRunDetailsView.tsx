@@ -68,7 +68,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
             },
             {
               key: 'taskruns',
-              label: 'Task runs',
+              label: 'TaskRuns',
               component: <PipelineRunTaskRunsTab pipelineRun={pipelineRun} />,
             },
             {
