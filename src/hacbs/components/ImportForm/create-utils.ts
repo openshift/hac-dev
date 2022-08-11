@@ -66,19 +66,16 @@ export const createIntegrationTest = (
 };
 
 export const createAppIntegrationTest = async (
-  { integrationTest, applicationData, namespace }: FormValues,
+  { application, inAppContext, integrationTest, applicationData, namespace }: FormValues,
   formHelpers: FormikHelpers<FormValues>,
 ) => {
-  await createIntegrationTest(
-    integrationTest,
-    applicationData.metadata.name,
-    namespace,
-    false,
-  ).catch((e) => {
+  const appName = inAppContext ? application : applicationData?.metadata?.name;
+  try {
+    await createIntegrationTest(integrationTest, appName, namespace, false);
+  } catch (e) {
     if (e.code === 409) {
-      formHelpers.setStatus({ submitError: 'Integration test name already exists' });
+      formHelpers.setFieldError('integrationTest.name', 'Integration test name already exists');
     }
     throw e;
-  });
-  formHelpers.setStatus({});
+  }
 };

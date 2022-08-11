@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   Alert,
   AlertActionCloseButton,
-  Form,
+  FormSection,
   Text,
   TextContent,
   TextVariants,
@@ -37,8 +37,7 @@ const IntegrationTestSection: React.FunctionComponent = () => {
           Learn more about setting up an integration test pipeline <ExternalLinkAltIcon />
         </ExternalLink>
       </TextContent>
-      <br />
-      <Form isWidthLimited>
+      <FormSection>
         <InputField
           label="Display name"
           name="integrationTest.name"
@@ -80,7 +79,7 @@ const IntegrationTestSection: React.FunctionComponent = () => {
             {/* <a href="#">Learn more</a> */}
           </Alert>
         )}
-      </Form>
+      </FormSection>
     </>
   );
 };

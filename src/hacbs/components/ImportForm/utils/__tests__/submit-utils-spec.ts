@@ -1,4 +1,3 @@
-import { ImportFormValues } from '../../../../../components/ImportForm/utils/types';
 import { createApplication, createComponent } from '../../../../../utils/create-utils';
 import { FormValues } from '../../types';
 import { mockApplication } from '../__data__/application-data';
@@ -29,7 +28,7 @@ describe('Submit Utils', () => {
       });
       try {
         await onApplicationSubmit(
-          { application: 'test-application', namespace: 'test-ns' } as ImportFormValues,
+          { application: 'test-application', namespace: 'test-ns' } as FormValues,
           mockHelpers,
         );
       } catch (e) {
@@ -50,7 +49,7 @@ describe('Submit Utils', () => {
       createApplicationMock.mockRejectedValue({ code: 400, message: 'Bad request' });
       try {
         await onApplicationSubmit(
-          { application: 'test-application', namespace: 'test-ns' } as ImportFormValues,
+          { application: 'test-application', namespace: 'test-ns' } as FormValues,
           mockHelpers,
         );
       } catch (e) {
@@ -68,7 +67,7 @@ describe('Submit Utils', () => {
       createApplicationMock.mockResolvedValue(mockApplication);
       try {
         await onApplicationSubmit(
-          { application: 'test-application', namespace: 'test-ns' } as ImportFormValues,
+          { application: 'test-application', namespace: 'test-ns' } as FormValues,
           mockHelpers,
         );
       } catch (e) {

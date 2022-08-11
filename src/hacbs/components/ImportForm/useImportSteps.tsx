@@ -9,8 +9,8 @@ import {
   applicationValidationSchema,
 } from '../../../components/ImportForm/utils/validation-utils';
 import BuildSection from './BuildSection';
+import { createAppIntegrationTest } from './create-utils';
 import IntegrationTestSection from './IntegrationTestSection';
-import { createAppIntegrationTest } from './submit-utils';
 import { onApplicationSubmit, onComponentsSubmit } from './utils/submit-utils';
 import { integrationTestValidationSchema } from './utils/validation-utils';
 
