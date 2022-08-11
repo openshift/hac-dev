@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { configure, render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { configure, render, screen, fireEvent, waitFor, within, act } from '@testing-library/react';
 import { Formik, FormikConfig } from 'formik';
 import EditableLabelField from '../EditableLabelField';
 import '@testing-library/jest-dom';
@@ -13,7 +13,7 @@ const Wrapper: React.FC<FormikConfig<FormData>> = ({ children, ...formikConfig }
     {(formikProps) => (
       <form onSubmit={formikProps.handleSubmit}>
         {children}
-        <input type="submit" value="Submit" />
+        <input type="submit" data-test="submit" value="Submit" />
       </form>
     )}
   </Formik>
@@ -145,19 +145,26 @@ describe('EditableLabelField', () => {
     });
   });
 
-  it('renders input field and submit and close buttons on edit icon click, but disabled submit button if formik error is thrown', async () => {
+  it('should set the component name field to editable mode and show the inline error message', async () => {
     render(
       <Wrapper
         initialValues={initialValues}
-        onSubmit={jest.fn()}
-        initialErrors={{ [fieldName]: { e: 'error' } }}
+        onSubmit={(_, helpers) => {
+          helpers.setErrors({ editableLabel: 'Component already exists' });
+        }}
       >
         <EditableLabelField name={fieldName} />
       </Wrapper>,
     );
-    fireEvent.click(screen.getByTestId('pencil-icon'));
+
+    act(() => {
+      fireEvent.click(screen.getByTestId('submit'));
+    });
+
     await waitFor(() => {
-      expect(screen.getByTestId('editable-label-input')).toBeInTheDocument();
+      expect(
+        within(screen.getByTestId('editable-label-input')).getByText('Component already exists'),
+      ).toBeInTheDocument();
       expect(screen.getByTestId('check-icon')).toBeInTheDocument();
       expect(screen.getByTestId('check-icon')).toBeDisabled();
       expect(screen.getByTestId('close-icon')).toBeInTheDocument();

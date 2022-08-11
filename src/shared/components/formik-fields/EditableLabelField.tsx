@@ -23,6 +23,12 @@ const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
   const [oldValue, setOldValue] = React.useState('');
   const fieldId = getFieldId(name, 'label-field');
 
+  React.useEffect(() => {
+    if (error && !editing) {
+      setEditing(true);
+    }
+  }, [error, editing]);
+
   const editIcon = (
     <GrayPencilAltIcon
       onClick={() => {

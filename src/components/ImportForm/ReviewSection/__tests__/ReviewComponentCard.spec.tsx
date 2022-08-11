@@ -35,7 +35,6 @@ describe('ReviewComponentCard', () => {
   it('should render git url if component has git repo', () => {
     formikRenderer(
       <ReviewComponentCard detectedComponent={gitRepoComponent} detectedComponentIndex={0} />,
-      { components: [gitRepoComponent] },
     );
 
     expect(
@@ -51,7 +50,6 @@ describe('ReviewComponentCard', () => {
         detectedComponent={containerImageComponent}
         detectedComponentIndex={0}
       />,
-      { components: [containerImageComponent] },
     );
 
     expect(screen.getByText('quay.io/sbudhwar/demo:latest')).toBeInTheDocument();

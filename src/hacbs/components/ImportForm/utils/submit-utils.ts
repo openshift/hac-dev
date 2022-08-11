@@ -5,15 +5,25 @@ import { createApplication } from '../../../../utils/create-utils';
 import { FormValues } from '../types';
 
 export const onComponentsSubmit = async (
-  { components, applicationData, namespace, secret }: FormValues,
+  { inAppContext, application, components, applicationData, namespace, secret }: FormValues,
   formikBag: FormikHelpers<ImportFormValues>,
 ) => {
+  const applicationName = inAppContext ? application : applicationData.metadata.name;
   try {
-    await createComponents(components, applicationData.metadata.name, namespace, secret, true);
-    await createComponents(components, applicationData.metadata.name, namespace, secret, false);
+    await createComponents(components, applicationName, namespace, secret, true);
+    await createComponents(components, applicationName, namespace, secret, false);
   } catch (error) {
-    const message = error.code === 409 ? 'Component name already exists.' : error.message;
-    formikBag.setStatus({ submitError: message });
+    const message = error.code === 409 ? 'Component name already exists' : error.message;
+    const errorComponent = error.json.details.name;
+    const errorComponentIndex = components.findIndex(
+      (c) => c.componentStub.componentName === errorComponent,
+    );
+    if (errorComponentIndex >= 0) {
+      formikBag.setFieldError(
+        `components[${errorComponentIndex}].componentStub.componentName`,
+        message,
+      );
+    }
     throw error;
   }
 };

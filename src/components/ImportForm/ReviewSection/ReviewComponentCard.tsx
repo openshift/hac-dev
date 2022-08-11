@@ -13,7 +13,6 @@ import {
   GridItem,
   TextInputTypes,
 } from '@patternfly/react-core';
-import { useFormikContext } from 'formik';
 import {
   EditableLabelField,
   EnvironmentField,
@@ -23,7 +22,7 @@ import {
   ResourceLimitField,
 } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
-import { CPUUnits, DetectedFormComponent, ImportFormValues, MemoryUnits } from '../utils/types';
+import { CPUUnits, DetectedFormComponent, MemoryUnits } from '../utils/types';
 
 type ReviewComponentCardProps = {
   detectedComponent: DetectedFormComponent;
@@ -43,14 +42,6 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
   const fieldPrefix = `components[${detectedComponentIndex}].componentStub`;
   const [expandedComponent, setExpandedComponent] = React.useState(isExpanded);
   const [expandedConfig, setExpandedConfig] = React.useState(true);
-  const { values, setStatus } = useFormikContext<ImportFormValues>();
-
-  React.useEffect(() => {
-    if (values[`${fieldPrefix}.componentName`] !== name) {
-      //Reset the status to remove the previous form errors
-      setStatus({});
-    }
-  }, [fieldPrefix, values, setStatus, name]);
 
   return (
     <Card isSelectable isSelected={expandedComponent} isExpanded={expandedComponent}>

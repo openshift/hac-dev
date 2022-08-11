@@ -1,8 +1,8 @@
 import { ImportFormValues } from '../../../../../components/ImportForm/utils/types';
 import { createApplication, createComponent } from '../../../../../utils/create-utils';
 import { FormValues } from '../../types';
+import { mockApplication } from '../__data__/application-data';
 import { onApplicationSubmit, onComponentsSubmit } from '../submit-utils';
-import { mockApplication } from './application-data';
 
 jest.mock('../../../../../utils/create-utils', () => ({
   createApplication: jest.fn(),
@@ -13,7 +13,6 @@ const createApplicationMock = createApplication as jest.Mock;
 const createComponentMock = createComponent as jest.Mock;
 
 const mockHelpers = {
-  setStatus: jest.fn(),
   setFieldValue: jest.fn(),
   setFieldError: jest.fn(),
 } as any;
@@ -86,6 +85,20 @@ describe('Submit Utils', () => {
   });
 
   describe('onComponentsSubmit', () => {
+    const getRejectedMockValue = (
+      componentName: string = 'nodejs',
+      errorMessage: string = '"nodejs" already exists!',
+      code: number = 409,
+    ) => ({
+      code,
+      message: errorMessage,
+      json: {
+        details: {
+          name: componentName,
+        },
+      },
+    });
+
     const mockComponent = {
       applicationData: { metadata: { name: 'test-app' } },
       components: [
@@ -104,27 +117,62 @@ describe('Submit Utils', () => {
     } as FormValues;
 
     it('should throw component name already exists error', async () => {
-      createComponentMock.mockRejectedValue({
-        code: 409,
-        message: '"nodejs" already exists!',
-      });
+      createComponentMock.mockRejectedValue(getRejectedMockValue());
       try {
         await onComponentsSubmit(mockComponent, mockHelpers);
       } catch (e) {
-        expect(mockHelpers.setStatus).toHaveBeenCalledWith({
-          submitError: 'Component name already exists.',
-        });
+        expect(mockHelpers.setFieldError).toHaveBeenCalledWith(
+          'components[0].componentStub.componentName',
+          'Component name already exists',
+        );
+      }
+    });
+
+    it('should throw component name already exists error when multiple components is passed', async () => {
+      const mockMultipleComponent = {
+        ...mockComponent,
+        components: [
+          ...mockComponent.components,
+          {
+            componentStub: {
+              application: 'java-app',
+              componentName: 'java',
+              replicas: 1,
+              targetPort: 3000,
+              source: { git: { url: 'example.com' } },
+            },
+          },
+        ],
+      };
+      createComponentMock.mockRejectedValue(getRejectedMockValue('java'));
+      try {
+        await onComponentsSubmit(mockMultipleComponent, mockHelpers);
+      } catch (e) {
+        expect(mockHelpers.setFieldError).toHaveBeenCalledWith(
+          'components[1].componentStub.componentName',
+          'Component name already exists',
+        );
+      }
+    });
+
+    it('should not throw error if the error object name mismatches with provided components', async () => {
+      createComponentMock.mockRejectedValue(getRejectedMockValue('missing-component'));
+      try {
+        await onComponentsSubmit(mockComponent, mockHelpers);
+      } catch (e) {
+        expect(mockHelpers.setFieldError).toHaveBeenCalledTimes(0);
       }
     });
 
     it('should throw same message from api response', async () => {
-      createComponentMock.mockRejectedValue({ code: 400, message: 'Bad request' });
+      createComponentMock.mockRejectedValue(getRejectedMockValue('nodejs', 'Bad request', 400));
       try {
         await onComponentsSubmit(mockComponent, mockHelpers);
       } catch (e) {
-        expect(mockHelpers.setStatus).toHaveBeenCalledWith({
-          submitError: 'Bad request',
-        });
+        expect(mockHelpers.setFieldError).toHaveBeenCalledWith(
+          'components[0].componentStub.componentName',
+          'Bad request',
+        );
       }
     });
 
