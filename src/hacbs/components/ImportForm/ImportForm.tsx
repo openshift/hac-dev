@@ -36,15 +36,17 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
   const steps = useImportSteps(applicationName);
 
   const handleSubmit = React.useCallback(
-    (values: FormValues) => {
-      navigate(`/app-studio/applications?name=${values.applicationData.metadata.name}`);
+    ({ application, inAppContext, applicationData }: FormValues) => {
+      const appName = inAppContext ? application : applicationData?.metadata?.name;
+      navigate(`/app-studio/applications?name=${appName}`);
     },
     [navigate],
   );
 
   const handleReset = React.useCallback(
     (values: FormValues) => {
-      const appName = values.applicationData?.metadata.name;
+      const { application, inAppContext, applicationData } = values;
+      const appName = inAppContext ? application : applicationData?.metadata?.name;
       if (appName) {
         handleSubmit(values);
       } else {

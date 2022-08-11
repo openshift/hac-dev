@@ -25,8 +25,10 @@ import { FormValues } from './types';
 const BuildSection: React.FunctionComponent = () => {
   const { namespace } = useNamespace();
   const {
-    values: { source, components, applicationData },
+    values: { source, components, inAppContext, application, applicationData },
   } = useFormikContext<FormValues>();
+
+  const applicationName = inAppContext ? application : applicationData.metadata.name;
 
   const [pipelineRuns, pipelineRunsLoaded] = useK8sWatchResource<PipelineKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
@@ -48,7 +50,7 @@ const BuildSection: React.FunctionComponent = () => {
         {
           key: 'build.appstudio.openshift.io/application',
           operator: 'Equals',
-          values: [applicationData.metadata.name],
+          values: [applicationName],
         },
       ],
     },
