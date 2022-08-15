@@ -35,7 +35,6 @@ objects:
     metadata:
       annotations:
         haproxy.router.openshift.io/rewrite-target: /
-        route.openshift.io/termination: reencrypt
       labels:
         frontend: hac-proxy
       name: hac-proxy
@@ -47,6 +46,13 @@ objects:
           http:
             paths:
               - path: /api/k8s
+                pathType: Prefix
+                backend:
+                  service:
+                    name: hac-proxy
+                    port:
+                      number: 8080
+              - path: /wss/k8s
                 pathType: Prefix
                 backend:
                   service:
@@ -83,7 +89,9 @@ objects:
                   value: https://api-toolchain-host-operator.apps.hac-devsandbox.5unc.p1.openshiftapps.com
                 - name: HJ_SERVE
                   value: :8080
-              image: quay.io/psav/hac-proxy:banana
+                - name: HJ_SSL
+                  value: 'false'
+              image: quay.io/psav/hac-proxy:098a9d8
               imagePullPolicy: Always
               name: hac-proxy
               ports:
