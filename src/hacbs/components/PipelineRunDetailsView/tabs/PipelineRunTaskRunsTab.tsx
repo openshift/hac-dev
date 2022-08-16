@@ -1,25 +1,16 @@
 import * as React from 'react';
-import { EmptyState, EmptyStateIcon, Title, EmptyStateBody } from '@patternfly/react-core';
-import { OutlinedFileImageIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-file-image-icon';
+import { PipelineRunKind } from '../../../types';
+import TaskRunListView from '../../TaskRunListView/TaskRunListView';
 
 type PipelineRunTaskRunsTabProps = {
-  pipelineRun: any;
+  pipelineRun: PipelineRunKind;
 };
 
-const PipelineRunTaskRunsTab: React.FC<PipelineRunTaskRunsTabProps> = () => {
-  return (
-    <EmptyState>
-      <EmptyStateIcon icon={OutlinedFileImageIcon} />
-      <Title headingLevel="h4" size="lg">
-        View task runs for this pipelinerun
-      </Title>
-      <EmptyStateBody>
-        No task runs found yet.
-        <br />
-        To get Started, create a pipelinerun or connect to a pipelinerun environment.
-      </EmptyStateBody>
-    </EmptyState>
-  );
-};
+const PipelineRunTaskRunsTab: React.FC<PipelineRunTaskRunsTabProps> = ({ pipelineRun }) => (
+  <TaskRunListView
+    pipelineName={pipelineRun.metadata.name}
+    namespace={pipelineRun.metadata.namespace}
+  />
+);
 
 export default PipelineRunTaskRunsTab;

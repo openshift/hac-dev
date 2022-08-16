@@ -126,7 +126,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
               </NavList>
             </Nav>
           ) : (
-            <div className="pipeline-run-logs__nav">{'No task runs found'}</div>
+            <div className="pipeline-run-logs__nav">{'No TaskRuns found'}</div>
           )}
         </div>
         <div className="pipeline-run-logs__container">
