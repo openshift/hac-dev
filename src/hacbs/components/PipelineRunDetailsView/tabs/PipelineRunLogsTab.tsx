@@ -1,25 +1,13 @@
 import * as React from 'react';
-import { EmptyState, EmptyStateIcon, Title, EmptyStateBody } from '@patternfly/react-core';
-import { OutlinedFileImageIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-file-image-icon';
+import { PipelineRunLogs } from '../../../../shared';
+import { PipelineRunKind } from '../../../types';
 
 type PipelineRunLogsTabProps = {
-  pipelineRun: any;
+  pipelineRun: PipelineRunKind;
 };
 
-const PipelineRunLogsTab: React.FC<PipelineRunLogsTabProps> = () => {
-  return (
-    <EmptyState>
-      <EmptyStateIcon icon={OutlinedFileImageIcon} />
-      <Title headingLevel="h4" size="lg">
-        View logs for this pipelinerun
-      </Title>
-      <EmptyStateBody>
-        No logs found yet.
-        <br />
-        To get Started, create a pipelinerun or connect to a pipelinerun environment.
-      </EmptyStateBody>
-    </EmptyState>
-  );
-};
+const PipelineRunLogsTab: React.FC<PipelineRunLogsTabProps> = ({ pipelineRun }) => (
+  <PipelineRunLogs obj={pipelineRun} />
+);
 
 export default PipelineRunLogsTab;
