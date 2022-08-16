@@ -61,19 +61,10 @@ export const integrationTestStep = (): FormikWizardStep => ({
   name: 'Add integration test',
   component: <IntegrationTestSection />,
   canJumpTo: false,
-  nextButtonText: 'Next',
+  nextButtonText: 'Done! Go to app',
   validationSchema: integrationTestValidationSchema,
   cancelButtonText: 'Go to application',
   onSubmit: createAppIntegrationTest,
-});
-
-export const environmentStep = (): FormikWizardStep => ({
-  id: 'environment',
-  name: 'Manage Environment',
-  component: <></>,
-  canJumpTo: false,
-  nextButtonText: 'Done! Go to app',
-  cancelButtonText: 'Go to application',
 });
 
 export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
@@ -84,7 +75,6 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
       reviewStep(),
       buildStep(),
       integrationTestStep(),
-      environmentStep(),
     ],
     [applicationName],
   );
