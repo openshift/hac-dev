@@ -12,6 +12,7 @@ import ApplicationOverviewTab from './tabs/ApplicationOverviewTab';
 import CommitsTab from './tabs/CommitsTab';
 import ComponentsTab from './tabs/ComponentsTab';
 import EnvironmentsTab from './tabs/EnvironmentsTab';
+import IntegrationTestsTab from './tabs/IntegrationTestsTab';
 import PipelineRunsTab from './tabs/PipelineRunsTab';
 
 type HacbsApplicationDetailsProps = {
@@ -132,6 +133,11 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
             key: 'pipelineruns',
             label: 'Pipelineruns',
             component: <PipelineRunsTab applicationName={applicationName} />,
+          },
+          {
+            key: 'integrationtests',
+            label: 'Integration tests',
+            component: <IntegrationTestsTab applicationName={applicationName} />,
           },
           {
             key: 'environments',

@@ -10,11 +10,11 @@ import {
 } from '@patternfly/react-core';
 import { OutlinedFileImageIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-file-image-icon';
 
-type EnvironmentTabProps = {
+type EnvironmentsTabProps = {
   applicationName: string;
 };
 
-const EnvironmentTab: React.FC<EnvironmentTabProps> = ({ applicationName }) => {
+const EnvironmentsTab: React.FC<EnvironmentsTabProps> = ({ applicationName }) => {
   return (
     <EmptyState>
       <EmptyStateIcon icon={OutlinedFileImageIcon} />
@@ -44,4 +44,4 @@ const EnvironmentTab: React.FC<EnvironmentTabProps> = ({ applicationName }) => {
   );
 };
 
-export default EnvironmentTab;
+export default EnvironmentsTab;
