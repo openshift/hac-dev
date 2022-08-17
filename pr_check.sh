@@ -33,7 +33,7 @@ curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
 
 # Note: PoC will be cleaned up with Bonfire changes
 # Get a namespace in the eph cluster and set vars accordingly
-NAMESPACE=$(bonfire namespace reserve)
+NAMESPACE=$(bonfire namespace reserve --pool minimal)
 ENV_NAME=env-${NAMESPACE}
 oc project ${NAMESPACE}
 HOSTNAME=$(oc get feenv ${ENV_NAME} -o json | jq ".spec.hostname" | tr -d '"')
