@@ -78,9 +78,7 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
   );
 
   const navigateToEnvironment = (environmentName: string) => {
-    navigate(
-      `/app-studio/application-environment-details?application=${applicationName}&name=${environmentName}`,
-    );
+    navigate(`/app-studio/applications/${applicationName}/environments/${environmentName}`);
   };
 
   const loading = (
@@ -137,33 +135,31 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
         actions={actions}
       >
         <PageSection>
-          <Flex>
-            <Flex direction={{ default: 'column' }} grow={{ default: 'grow' }}>
-              <Flex>
-                <FlexItem>
-                  <b>Environments:</b>
-                  {'  '}
-                  <OutlinedHelpPopperIcon
-                    heading="Application environments"
-                    content="View components and their settings as deployed to environments. Component updates can be promoted between environments. Additional environments can be added via the workspace."
-                  />
-                </FlexItem>
-                <FlexItem align={{ default: 'alignRight' }}>
-                  <Button
-                    onClick={() => setCardExpanded((e) => !e)}
-                    variant="link"
-                    isInline
-                    style={{ textDecoration: 'none' }}
-                  >
-                    {cardsExpanded ? 'Collapse' : 'Expand'}
-                  </Button>
-                </FlexItem>
-              </Flex>
-              <ApplicationEnvironmentCards
-                isExpanded={cardsExpanded}
-                onSelect={navigateToEnvironment}
-              />
+          <Flex direction={{ default: 'column' }} grow={{ default: 'grow' }}>
+            <Flex>
+              <FlexItem>
+                <b>Environments:</b>
+                {'  '}
+                <OutlinedHelpPopperIcon
+                  heading="Application environments"
+                  content="View components and their settings as deployed to environments. Component updates can be promoted between environments. Additional environments can be added via the workspace."
+                />
+              </FlexItem>
+              <FlexItem align={{ default: 'alignRight' }}>
+                <Button
+                  onClick={() => setCardExpanded((e) => !e)}
+                  variant="link"
+                  isInline
+                  style={{ textDecoration: 'none' }}
+                >
+                  {cardsExpanded ? 'Collapse' : 'Expand'}
+                </Button>
+              </FlexItem>
             </Flex>
+            <ApplicationEnvironmentCards
+              isExpanded={cardsExpanded}
+              onSelect={navigateToEnvironment}
+            />
           </Flex>
         </PageSection>
         <ComponentDetails application={application} />

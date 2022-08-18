@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
+import { useSearchParam } from '../../../hooks/useSearchParam';
 import {
   ApplicationGroupVersionKind,
   ComponentGroupVersionKind,
@@ -36,7 +37,12 @@ jest.mock('../../modal/ModalProvider', () => ({
   useModalLauncher: () => {},
 }));
 
+jest.mock('../../../hooks/useSearchParam', () => ({
+  useSearchParam: jest.fn(),
+}));
+
 const watchResourceMock = useK8sWatchResource as jest.Mock;
+const useSearchParamMock = useSearchParam as jest.Mock;
 
 const getMockedResources = (kind: WatchK8sResource) => {
   if (kind.groupVersionKind === ApplicationGroupVersionKind) {
@@ -67,9 +73,22 @@ class MockResizeObserver {
 
 window.ResizeObserver = MockResizeObserver;
 
+const params = {};
+
+const mockUseSearchParam = (name: string) => {
+  const setter = (value) => {
+    params[name] = value;
+  };
+  const unset = () => {
+    params[name] = '';
+  };
+  return [params[name], setter, unset];
+};
+
 describe('ApplicationEnvironmentDetailsView', () => {
   it('should render spinner if data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
+    useSearchParamMock.mockImplementation(mockUseSearchParam);
     render(
       <ApplicationEnvironmentDetailsView
         environmentName="production"
@@ -81,6 +100,7 @@ describe('ApplicationEnvironmentDetailsView', () => {
 
   it('should render environment display name if environment data is loaded', () => {
     watchResourceMock.mockImplementation(getMockedResources);
+    useSearchParamMock.mockImplementation(mockUseSearchParam);
     render(
       <ApplicationEnvironmentDetailsView
         environmentName="production"
@@ -92,6 +112,7 @@ describe('ApplicationEnvironmentDetailsView', () => {
 
   it('should render a list view of components by default', async () => {
     watchResourceMock.mockImplementation(getMockedResources);
+    useSearchParamMock.mockImplementation(mockUseSearchParam);
     render(
       <ApplicationEnvironmentDetailsView
         environmentName="production"
@@ -107,6 +128,7 @@ describe('ApplicationEnvironmentDetailsView', () => {
 
   it('should render a graph view when the user changes views', async () => {
     watchResourceMock.mockImplementation(getMockedResources);
+    useSearchParamMock.mockImplementation(mockUseSearchParam);
 
     render(
       <ApplicationEnvironmentDetailsView
@@ -118,6 +140,13 @@ describe('ApplicationEnvironmentDetailsView', () => {
     expect(graphToggle).toBeTruthy();
     fireEvent.click(graphToggle);
 
-    await waitFor(() => screen.getByTestId('application-environment-graph'));
+    const updated = render(
+      <ApplicationEnvironmentDetailsView
+        environmentName="production"
+        applicationName="test-application"
+      />,
+    );
+
+    await waitFor(() => updated.getByTestId('application-environment-graph'));
   });
 });

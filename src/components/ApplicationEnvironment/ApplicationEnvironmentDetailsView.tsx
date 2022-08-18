@@ -34,6 +34,7 @@ import { FilterIcon, ListIcon, TopologyIcon } from '@patternfly/react-icons/dist
 import { css } from '@patternfly/react-styles';
 import viewStyles from '@patternfly/react-styles/css/components/Topology/topology-view';
 import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
+import { useSearchParam } from '../../hooks/useSearchParam';
 import {
   ApplicationGroupVersionKind,
   ComponentGroupVersionKind,
@@ -81,8 +82,9 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
   environmentName,
 }) => {
   const namespace = useNamespace();
+  const [viewType, setViewType] = useSearchParam('view', 'list');
+  const [selectedId, setSelectedId] = useSearchParam('selected', '');
   const [nameFilter, setNameFilter] = React.useState<string>('');
-
   const [application, applicationLoaded, applicationError] = useK8sWatchResource<ApplicationKind>({
     groupVersionKind: ApplicationGroupVersionKind,
     name: applicationName,
@@ -122,8 +124,7 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
     );
   }, [components, applicationName, componentsLoaded, nameFilter]);
 
-  const [selectedComponentId, setSelectedComponentId] = React.useState<string | null>(null);
-  const [showGraphView, setShowGraphView] = React.useState<boolean>(false);
+  const showGraphView = viewType === 'graph';
 
   const onClearFilters = () => setNameFilter('');
   const onNameInput = (name: string) => setNameFilter(name);
@@ -132,8 +133,8 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
     if (!components?.length) {
       return undefined;
     }
-    return components.find((component) => component.metadata.uid === selectedComponentId);
-  }, [components, selectedComponentId]);
+    return components.find((component) => component.metadata.uid === selectedId);
+  }, [components, selectedId]);
 
   const loading = (
     <Bullseye className="pf-u-mt-md">
@@ -151,18 +152,18 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
     return loading;
   }
 
-  const onSelect = (id: string) => setSelectedComponentId(id === selectedComponentId ? null : id);
+  const onSelect = (id: string) => setSelectedId(id === selectedId ? null : id);
 
   return (
     <PageLayout
       breadcrumbs={[
         { path: `/app-studio/applications`, name: 'Applications' },
         {
-          path: `/app-studio/applications?name=${application?.metadata.name}`,
+          path: `/app-studio/applications/${application?.metadata.name}`,
           name: application?.spec?.displayName,
         },
         {
-          path: `/app-studio/environmentDetails/:${environment.metadata.name}`,
+          path: `/app-studio/application/${application?.metadata.name}/environments/${environment.metadata.name}`,
           name: environment.metadata.name,
         },
       ]}
@@ -237,7 +238,7 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
                             aria-label="list view"
                             buttonId="application-environment-list-toggle"
                             isSelected={!showGraphView}
-                            onChange={() => setShowGraphView((prev) => !prev)}
+                            onChange={() => setViewType('list')}
                             data-testid="list-view-toggle"
                           />
                         </Tooltip>
@@ -247,7 +248,7 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
                             aria-label="graph view"
                             buttonId="application-environment-graph-toggle"
                             isSelected={showGraphView}
-                            onChange={() => setShowGraphView((prev) => !prev)}
+                            onChange={() => setViewType('graph')}
                             data-testid="graph-view-toggle"
                           />
                         </Tooltip>
@@ -264,7 +265,7 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
                         {selectedComponent && (
                           <ApplicationEnvironmentSidePanel
                             component={selectedComponent}
-                            onClose={() => setSelectedComponentId(null)}
+                            onClose={() => setSelectedId(null)}
                           />
                         )}
                       </DrawerPanelContent>
@@ -275,13 +276,13 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
                         showGraphView ? (
                           <ApplicationEnvironmentGraphView
                             components={filteredComponents}
-                            selectedId={selectedComponentId}
+                            selectedId={selectedId}
                             onSelect={onSelect}
                           />
                         ) : (
                           <ApplicationEnvironmentListView
                             components={filteredComponents}
-                            selectedId={selectedComponentId}
+                            selectedId={selectedId}
                             onSelect={onSelect}
                             applicationName={applicationName}
                           />

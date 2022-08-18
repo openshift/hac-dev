@@ -45,9 +45,29 @@ const hacbs = {
       },
     },
     {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/applications/:appName',
+        exact: true,
+        component: {
+          $codeRef: 'ApplicationDetails',
+        },
+      },
+    },
+    {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/application-environment-details',
+        path: '/app-studio/applications/:appName',
+        exact: true,
+        component: {
+          $codeRef: 'ApplicationDetails',
+        },
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/applications/:appName/environments/:envName',
         exact: true,
         component: {
           $codeRef: 'ApplicationEnvironmentDetails',
@@ -93,6 +113,7 @@ module.exports = {
 
       // App Studio
       Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
+      ApplicationDetails: resolve(__dirname, '../src/pages/ApplicationDetailsPage'),
       ApplicationEnvironmentDetails: resolve(
         __dirname,
         '../src/pages/ApplicationEnvironmentDetailsPage',
