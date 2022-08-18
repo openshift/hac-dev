@@ -80,6 +80,7 @@ export const createComponent = (
   dryRun?: boolean,
   originalComponent?: ComponentKind,
   verb: 'create' | 'update' = 'create',
+  enablePac: boolean = false,
 ): any => {
   const { componentName, containerImage, source, replicas, resources, env, targetPort } = component;
 
@@ -96,6 +97,12 @@ export const createComponent = (
     metadata: {
       name,
       namespace,
+      ...(enablePac &&
+        verb === 'create' && {
+          annotations: {
+            pipelinesascode: '1',
+          },
+        }),
     },
     spec: {
       componentName,

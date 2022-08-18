@@ -1,6 +1,7 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { PipelineRunGroupVersionKind } from '../../shared';
 import { PipelineRunKind } from '../../shared/components/pipeline-run-logs/types';
+import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 
 export const useBuildPipelines = (
   namespace: string,
@@ -11,8 +12,8 @@ export const useBuildPipelines = (
     namespace,
     selector: {
       matchLabels: {
-        ['build.appstudio.openshift.io/type']: 'build',
-        ['build.appstudio.openshift.io/application']: applicationName,
+        [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
+        [PipelineRunLabel.APPLICATION]: applicationName,
       },
     },
     isList: true,

@@ -6,6 +6,7 @@ import {
   DescriptionListDescription,
   Title,
 } from '@patternfly/react-core';
+import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { calculateDuration } from '../../../utils/pipeline-utils';
 
 type PipelineRunDetailsTabProps = {
@@ -85,7 +86,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
         <DescriptionListGroup>
           <DescriptionListTerm>Component</DescriptionListTerm>
           <DescriptionListDescription>
-            {pipelineRun.metadata.labels['build.appstudio.openshift.io/component']}
+            {pipelineRun.metadata.labels[PipelineRunLabel.COMPONENT]}
           </DescriptionListDescription>
         </DescriptionListGroup>
         <DescriptionListGroup />

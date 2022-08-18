@@ -192,6 +192,9 @@ describe('Submit Utils', () => {
         'test-ns',
         'my-secret',
         false, // dryRun
+        null,
+        'create',
+        true, // enabledPAC
       );
     });
   });

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { RowFunctionArgs, TableData } from '../../../shared/components/table';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
+import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunKind } from '../../types';
 import { calculateDuration } from '../../utils/pipeline-utils';
 import { pipelineRunTableColumnClasses } from './PipelineRunListHeader';
@@ -35,7 +36,7 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
         {obj.status?.conditions[0].status === 'False' ? 'Failed' : 'Succeeded'}
       </TableData>
       <TableData className={pipelineRunTableColumnClasses.type}>
-        {capitalize(obj.metadata.labels['pipelines.appstudio.openshift.io/type'])}
+        {capitalize(obj.metadata.labels[PipelineRunLabel.PIPELINE_TYPE])}
       </TableData>
       <TableData className={pipelineRunTableColumnClasses.kebab}>
         <Dropdown
