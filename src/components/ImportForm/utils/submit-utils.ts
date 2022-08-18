@@ -9,6 +9,7 @@ export const createComponents = async (
   namespace: string,
   secret?: string,
   dryRun?: boolean,
+  enablePac?: boolean,
 ) => {
   const createComponentPromises = components.map((component) => {
     const componentData = component.componentStub;
@@ -18,7 +19,16 @@ export const createComponents = async (
       replicas: componentData.replicas && Number(componentData.replicas),
       targetPort: componentData.targetPort && Number(componentData.targetPort),
     };
-    return createComponent(componentValues, application, namespace, secret, dryRun);
+    return createComponent(
+      componentValues,
+      application,
+      namespace,
+      secret,
+      dryRun,
+      null,
+      'create',
+      enablePac,
+    );
   });
 
   return Promise.all(createComponentPromises);

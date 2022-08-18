@@ -14,6 +14,7 @@ import {
 import { OutlinedFileImageIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-file-image-icon';
 import { Table } from '../../../shared';
 import { useNamespace } from '../../../utils/namespace-context-utils';
+import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../models';
 import { PipelineRunKind } from '../../types';
 import { PipelineRunListHeader } from './PipelineRunListHeader';
@@ -29,7 +30,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
     isList: true,
     selector: {
       matchLabels: {
-        'build.appstudio.openshift.io/application': applicationName,
+        [PipelineRunLabel.APPLICATION]: applicationName,
       },
     },
   });

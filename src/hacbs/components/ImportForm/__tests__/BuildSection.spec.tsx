@@ -1,6 +1,7 @@
 import React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render } from '@testing-library/react';
+import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import BuildSection from '../BuildSection';
 
 jest.mock('../../../../components/NamespacedPage/NamespacedPage', () => ({
@@ -61,13 +62,13 @@ describe('BuildSection', () => {
         {
           metadata: {
             name: 'p1',
-            labels: { ['build.appstudio.openshift.io/component']: 'nodejs' },
+            labels: { [PipelineRunLabel.COMPONENT]: 'nodejs' },
           },
         },
         {
           metadata: {
             name: 'p2',
-            labels: { ['build.appstudio.openshift.io/component']: 'nodejs' },
+            labels: { [PipelineRunLabel.COMPONENT]: 'nodejs' },
           },
         },
       ],

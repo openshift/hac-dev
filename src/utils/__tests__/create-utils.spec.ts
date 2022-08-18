@@ -86,6 +86,16 @@ const mockComponentDataWithDevfile = {
   },
 };
 
+const mockComponentDataWithPAC = {
+  ...mockComponentDataWithDevfile,
+  metadata: {
+    ...mockComponentDataWithDevfile.metadata,
+    annotations: {
+      pipelinesascode: '1',
+    },
+  },
+};
+
 const mockCDQData = {
   apiVersion: `${ComponentDetectionQueryModel.apiGroup}/${ComponentDetectionQueryModel.apiVersion}`,
   kind: ComponentDetectionQueryModel.kind,
@@ -157,6 +167,64 @@ describe('Create Utils', () => {
         ns: 'test-ns',
       },
       resource: mockComponentDataWithDevfile,
+    });
+  });
+
+  it('Should call k8s create util with pipelines-as-code annotations', async () => {
+    await createComponent(
+      mockComponentWithDevfile,
+      'test-application',
+      'test-ns',
+      undefined,
+      false,
+      null,
+      'create',
+      true,
+    );
+
+    expect(k8sCreateResource).toHaveBeenCalledWith({
+      model: ComponentModel,
+      queryOptions: {
+        name: 'test-component',
+        ns: 'test-ns',
+      },
+      resource: mockComponentDataWithPAC,
+    });
+  });
+
+  it('Should not update pipelines-as-code annotations for the existing components without pac annotations', async () => {
+    await createComponent(
+      mockComponentWithDevfile,
+      'test-application',
+      'test-ns',
+      undefined,
+      false,
+      mockComponentDataWithDevfile,
+      'update',
+      true,
+    );
+
+    expect(k8sUpdateResource).toHaveBeenCalledWith({
+      model: ComponentModel,
+      resource: mockComponentDataWithDevfile,
+    });
+  });
+
+  it('Should contain pipelines-as-code annotations for the existing components with pac annotations', async () => {
+    await createComponent(
+      mockComponentWithDevfile,
+      'test-application',
+      'test-ns',
+      undefined,
+      false,
+      mockComponentDataWithPAC,
+      'update',
+      true,
+    );
+
+    expect(k8sUpdateResource).toHaveBeenCalledWith({
+      model: ComponentModel,
+      resource: mockComponentDataWithPAC,
     });
   });
 

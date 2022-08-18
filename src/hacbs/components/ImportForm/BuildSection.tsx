@@ -20,6 +20,7 @@ import { PipelineRunGroupVersionKind } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { PipelineKind } from '../../../shared/components/pipeline-run-logs/types';
 import { useNamespace } from '../../../utils/namespace-context-utils';
+import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
 import { FormValues } from './types';
 
 const BuildSection: React.FunctionComponent = () => {
@@ -37,20 +38,20 @@ const BuildSection: React.FunctionComponent = () => {
     selector: {
       matchExpressions: [
         {
-          key: 'build.appstudio.openshift.io/component',
+          key: PipelineRunLabel.COMPONENT,
           operator: 'In',
           // find all pipelines related to the newly created components
           values: components.map((component) => component.componentStub.componentName),
         },
         {
-          key: 'build.appstudio.openshift.io/type',
-          operator: 'Equals',
-          values: ['build'],
-        },
-        {
-          key: 'build.appstudio.openshift.io/application',
+          key: PipelineRunLabel.APPLICATION,
           operator: 'Equals',
           values: [applicationName],
+        },
+        {
+          key: PipelineRunLabel.PIPELINE_TYPE,
+          operator: 'Equals',
+          values: [PipelineRunType.BUILD],
         },
       ],
     },
@@ -61,8 +62,7 @@ const BuildSection: React.FunctionComponent = () => {
         if (
           pipelineRuns.find(
             ({ metadata: { labels } }) =>
-              labels?.['build.appstudio.openshift.io/component'] ===
-              component.componentStub.componentName,
+              labels?.[PipelineRunLabel.COMPONENT] === component.componentStub.componentName,
           )
         ) {
           acc.push(component);

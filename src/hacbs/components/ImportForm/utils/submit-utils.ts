@@ -16,7 +16,7 @@ export const onComponentsSubmit = async (
 ) => {
   const applicationName = inAppContext ? application : applicationData.metadata.name;
   try {
-    await createComponents(components, applicationName, namespace, secret, false);
+    await createComponents(components, applicationName, namespace, secret, false, true);
   } catch (error) {
     const message = error.code === 409 ? 'Component name already exists' : error.message;
     const errorComponent = error.json.details.name;
