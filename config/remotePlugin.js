@@ -11,7 +11,7 @@ const hacbs = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/pipelineruns',
+        path: '/app-studio/pipelineruns/:plrName',
         exact: true,
         component: {
           $codeRef: 'PipelineRuns',
@@ -24,7 +24,7 @@ const hacbs = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/pipelineruns',
+        path: '/app-studio/pipelineruns/:plrName',
         exact: true,
         component: {
           $codeRef: 'PipelineRuns',
@@ -41,36 +41,6 @@ const hacbs = {
         exact: true,
         component: {
           $codeRef: 'HACBSFlag.EnableHACBSFlagRoute',
-        },
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/app-studio/applications/:appName',
-        exact: true,
-        component: {
-          $codeRef: 'ApplicationDetails',
-        },
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/app-studio/applications/:appName',
-        exact: true,
-        component: {
-          $codeRef: 'ApplicationDetails',
-        },
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/app-studio/applications/:appName/environments/:envName',
-        exact: true,
-        component: {
-          $codeRef: 'ApplicationEnvironmentDetails',
         },
       },
     },
@@ -152,6 +122,45 @@ module.exports = {
         exact: true,
         component: {
           $codeRef: 'Applications',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/applications/:appName',
+        exact: true,
+        component: {
+          $codeRef: 'ApplicationDetails',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/applications/:appName',
+        exact: true,
+        component: {
+          $codeRef: 'ApplicationDetails',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/applications/:appName/environments/:envName',
+        exact: true,
+        component: {
+          $codeRef: 'ApplicationEnvironmentDetails',
         },
       },
       flags: {

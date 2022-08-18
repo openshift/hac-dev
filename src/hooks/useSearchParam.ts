@@ -11,13 +11,15 @@ export const useSearchParam = (
   name: string,
   defaultValue: string = null,
   options?: {
-    unsetWhenDefaultValue: boolean;
+    replace?: boolean;
+    unsetWhenDefaultValue?: boolean;
   },
 ): [string, (newValue: string) => void, () => void] => {
   const defaultValueRef = React.useRef(defaultValue);
   const [searchParams, setSearchParams] = useSearchParams();
   const value = searchParams.has(name) ? searchParams.get(name) : defaultValueRef.current;
   const unsetWhenDefaultValue = options?.unsetWhenDefaultValue ?? true;
+  const replace = options?.replace ?? true;
   const set = React.useCallback(
     (newValue: string) => {
       if (searchParams.get(name) !== newValue) {
@@ -27,10 +29,10 @@ export const useSearchParam = (
         } else {
           newSearchParams.set(name, newValue);
         }
-        setSearchParams(newSearchParams);
+        setSearchParams(newSearchParams, { replace });
       }
     },
-    [name, searchParams, setSearchParams, unsetWhenDefaultValue],
+    [name, searchParams, setSearchParams, unsetWhenDefaultValue, replace],
   );
 
   const unset = React.useCallback(() => {

@@ -31,7 +31,8 @@ const environment: EnvironmentKind = {
     clusterCredentials: {
       apiServerURL: 'link1',
     },
-    deploymentStrategy: 'manual',
+    deploymentStrategy: 'Manual',
+    type: 'poc',
   },
 };
 configure({ testIdAttribute: 'data-test' });

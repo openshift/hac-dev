@@ -26,7 +26,7 @@ export class Common {
 
   static openApplicationURL(applicationName: string) {
     Common.openURL(
-      `${Cypress.env('HAC_BASE_URL')}/applications?name=${applicationName.replace('.', '-')}`,
+      `${Cypress.env('HAC_BASE_URL')}/applications/${applicationName.replace('.', '-')}`,
     );
     Common.verifyPageTitle(applicationName);
     Common.waitForLoad();

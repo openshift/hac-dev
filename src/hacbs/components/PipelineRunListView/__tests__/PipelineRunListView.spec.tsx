@@ -105,12 +105,12 @@ describe('Pipelinerun List', () => {
     render(<PipelineRunsListView applicationName={appName} />);
     screen.getByText(/No pipeline run triggered yet./);
     screen.getByText(
-      /To get Started, create components and merge their pull request for build pipeline/,
+      /To get started, create components and merge their pull request for build pipeline/,
     );
     const button = screen.getByText('Go to components tab');
     expect(button).toBeInTheDocument();
     expect(button.closest('a').href).toContain(
-      `/app-studio/applications?name=${appName}&activeTab=components`,
+      `/app-studio/applications/${appName}?activeTab=components`,
     );
   });
 

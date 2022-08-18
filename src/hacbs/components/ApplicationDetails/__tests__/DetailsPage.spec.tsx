@@ -3,6 +3,14 @@ import '@testing-library/jest-dom';
 import { act, configure, fireEvent, render, screen } from '@testing-library/react';
 import DetailsPage from '../DetailsPage';
 
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
+  return {
+    ...actual,
+    useSearchParams: () => React.useState(() => new URLSearchParams()),
+  };
+});
+
 configure({ testIdAttribute: 'data-test' });
 
 describe('DetailsPage', () => {

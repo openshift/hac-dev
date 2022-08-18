@@ -65,7 +65,7 @@ const CommitsTab: React.FC<CommitTabProps> = ({ applicationName }) => {
           component={(props) => (
             <Link
               {...props}
-              to={`/app-studio/applications/${applicationName}?activeTab=components&hacbs=true`}
+              to={`/app-studio/applications/${applicationName}?activeTab=components`}
             />
           )}
           variant="secondary"

@@ -1,16 +1,17 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { useParams } from 'react-router-dom';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import NamespacedPage from '../../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import { useQuickstartCloseOnUnmount } from '../../hooks/useQuickstartCloseOnUnmount';
-import { getQueryArgument } from '../../shared/utils';
 import { PipelineRunDetailsView } from '../components/PipelineRunDetailsView/PipelineRunDetailsView';
 import PipelineRunsListView from '../components/PipelineRunListView/PipelineRunsListView';
 
 const PipelineRunPage = () => {
   useQuickstartCloseOnUnmount();
-  const name = getQueryArgument('name');
+  const params = useParams();
+  const name = params.plrName;
 
   return (
     <NamespacedPage>

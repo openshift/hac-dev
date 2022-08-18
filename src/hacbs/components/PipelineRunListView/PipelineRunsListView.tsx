@@ -53,14 +53,14 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
         <EmptyStateBody>
           No pipeline run triggered yet.
           <br />
-          To get Started, create components and merge their pull request for build pipeline.
+          To get started, create components and merge their pull request for build pipeline.
         </EmptyStateBody>
         <EmptyStateSecondaryActions>
           <Button
             component={(props) => (
               <Link
                 {...props}
-                to={`/app-studio/applications?name=${applicationName}&activeTab=components&hacbs=true`}
+                to={`/app-studio/applications/${applicationName}?activeTab=components`}
               />
             )}
             variant="secondary"

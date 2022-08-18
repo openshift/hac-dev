@@ -22,13 +22,13 @@ describe('ParentEnvironmentField', () => {
       apiVersion: 'appstudio.redhat.com/v1alpha1',
       kind: 'environment',
       metadata: { name: 'env-1' },
-      spec: { displayName: 'Mock Environment 1' },
+      spec: { displayName: 'Mock Environment 1', deploymentStrategy: 'Manual', type: 'poc' },
     },
     {
       apiVersion: 'appstudio.redhat.com/v1alpha1',
       kind: 'environment',
       metadata: { name: 'env-2' },
-      spec: { displayName: 'Mock Environment 2' },
+      spec: { displayName: 'Mock Environment 2', deploymentStrategy: 'Manual', type: 'poc' },
     },
   ];
 

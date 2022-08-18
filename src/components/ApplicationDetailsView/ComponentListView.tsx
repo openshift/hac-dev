@@ -11,6 +11,7 @@ import {
   Spinner,
   ToolbarGroup,
   Label,
+  InputGroup,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useApplicationRoutes } from '../../hooks/useApplicationRoutes';
@@ -71,19 +72,19 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
         <ToolbarContent>
           <ToolbarGroup alignment={{ default: 'alignLeft' }}>
             <ToolbarItem>
-              <Button variant="control">
-                <FilterIcon /> {'Name'}
-              </Button>
-            </ToolbarItem>
-            <ToolbarItem>
-              <TextInput
-                name="nameInput"
-                data-testid="name-input-filter"
-                type="search"
-                aria-label="name filter"
-                placeholder="Filter by name..."
-                onChange={(name) => onNameInput(name)}
-              />
+              <InputGroup>
+                <Button variant="control">
+                  <FilterIcon /> Name
+                </Button>
+                <TextInput
+                  name="nameInput"
+                  data-testid="name-input-filter"
+                  type="search"
+                  aria-label="name filter"
+                  placeholder="Filter by name..."
+                  onChange={(name) => onNameInput(name)}
+                />
+              </InputGroup>
             </ToolbarItem>
             <ToolbarItem>
               <Button

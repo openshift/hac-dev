@@ -21,6 +21,7 @@ const devEnv: EnvironmentKind = {
   spec: {
     displayName: 'Dev',
     deploymentStrategy: 'AppStudioAutomated',
+    type: 'poc',
   },
 };
 
@@ -34,6 +35,7 @@ const prodEnv: EnvironmentKind = {
   spec: {
     displayName: 'Prod',
     deploymentStrategy: 'Manual',
+    type: 'poc',
   },
 };
 

@@ -14,6 +14,7 @@ import {
   EmptyStateVariant,
   Flex,
   FlexItem,
+  InputGroup,
   Label,
   PageSection,
   Panel,
@@ -222,19 +223,19 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
                 <ToolbarContent>
                   <ToolbarGroup alignment={{ default: 'alignLeft' }}>
                     <ToolbarItem>
-                      <Button variant="control">
-                        <FilterIcon /> {'Name'}
-                      </Button>
-                    </ToolbarItem>
-                    <ToolbarItem>
-                      <TextInput
-                        name="nameInput"
-                        data-testid="name-input-filter"
-                        type="search"
-                        aria-label="name filter"
-                        placeholder="Filter by name..."
-                        onChange={(name) => onNameInput(name)}
-                      />
+                      <InputGroup>
+                        <Button variant="control">
+                          <FilterIcon /> Name
+                        </Button>
+                        <TextInput
+                          name="nameInput"
+                          data-testid="name-input-filter"
+                          type="search"
+                          aria-label="name filter"
+                          placeholder="Filter by name..."
+                          onChange={(name) => onNameInput(name)}
+                        />
+                      </InputGroup>
                     </ToolbarItem>
                   </ToolbarGroup>
                   <ToolbarGroup alignment={{ default: 'alignRight' }}>

@@ -10,6 +10,7 @@ import HacbsApplicationDetails from '../HacbsApplicationDetails';
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
   useNavigate: () => jest.fn(),
+  useSearchParams: () => React.useState(() => new URLSearchParams()),
 }));
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
