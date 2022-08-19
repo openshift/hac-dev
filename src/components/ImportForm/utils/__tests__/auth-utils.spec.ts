@@ -109,7 +109,8 @@ describe('Auth Utils: useAccessCheck', () => {
     expect(result.current[1]).toBe(false);
   });
 
-  it('should return loaded true if source is present and loaded is true', async () => {
+  it('should return loaded false if source is present with no status and loaded is true', async () => {
+    // return value has no status
     useK8sWatchMock.mockReturnValue([{}, true, null]);
     createResourceMock.mockReturnValue(
       Promise.resolve({ metadata: { name: 'test-access-check' } }),
@@ -119,7 +120,7 @@ describe('Auth Utils: useAccessCheck', () => {
     );
     await act(async () => await waitForNextUpdate());
     expect(result.current[0]).toEqual(defaultMockData);
-    expect(result.current[1]).toBe(true);
+    expect(result.current[1]).toBe(false);
   });
 
   it('should return valid data when source is present and AccessCheck is loaded', async () => {
