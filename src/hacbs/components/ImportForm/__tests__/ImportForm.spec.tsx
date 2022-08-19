@@ -2,7 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { FormikWizard } from 'formik-pf';
+import { act } from 'react-dom/test-utils';
 import ImportForm from '../ImportForm';
+import { useImportSteps } from '../useImportSteps';
 
 jest.mock('../../../../components/NamespacedPage/NamespacedPage', () => ({
   useNamespace: jest.fn(() => 'test'),
@@ -16,8 +18,13 @@ jest.mock('formik-pf', () => ({
   FormikWizard: jest.fn(() => null),
 }));
 
+jest.mock('../useImportSteps', () => ({
+  useImportSteps: jest.fn(),
+}));
+
 const useNavigateMock = useNavigate as jest.Mock;
 const FormikWizardMock = FormikWizard as jest.Mock;
+const useImportStepsMock = useImportSteps as jest.Mock;
 
 describe('ImportForm', () => {
   it('should handle form reset', () => {
@@ -34,18 +41,19 @@ describe('ImportForm', () => {
     wizardProps.onReset({}, {} as any);
     expect(navigateMock).toHaveBeenCalledWith(-1);
 
-    // navigate to application page when an application has been created
     navigateMock.mockReset();
-    wizardProps.onReset(
-      {
-        applicationData: {
-          metadata: {
-            name: 'my-app',
-          },
+
+    // navigate to application page when an application has been created
+    expect(useImportStepsMock).toHaveBeenCalledTimes(1);
+    const { onApplicationCreated } = useImportStepsMock.mock.calls[0][1];
+    act(() => {
+      onApplicationCreated({
+        metadata: {
+          name: 'my-app',
         },
-      },
-      {} as any,
-    );
+      });
+    });
+    wizardProps.onReset({}, {} as any);
     expect(navigateMock).toHaveBeenCalledWith('/app-studio/applications?name=my-app');
   });
 });

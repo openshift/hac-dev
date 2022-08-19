@@ -41,6 +41,7 @@ export const onApplicationSubmit = async (
     await createApplication(application, namespace, true);
     const applicationData = await createApplication(application, namespace, false);
     formikBag.setFieldValue('applicationData', applicationData);
+    return applicationData;
   } catch (error) {
     const message = error.code === 409 ? 'Application name already exists.' : error.message;
     formikBag.setFieldError('application', message);

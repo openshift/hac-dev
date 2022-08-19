@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageSection, PageSectionTypes, PageSectionVariants } from '@patternfly/react-core';
 import { FormikWizard } from 'formik-pf';
+import { ApplicationKind } from '../../../types';
 import { useNamespace } from '../../../utils/namespace-context-utils';
 import { FormValues } from './types';
 import { useImportSteps } from './useImportSteps';
@@ -13,6 +14,16 @@ type ImportFormProps = {
 const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName }) => {
   const navigate = useNavigate();
   const namespace = useNamespace();
+
+  const [applicationData, setApplicationData] = React.useState<ApplicationKind>();
+  const [componentsCreated, setComponentsCreated] = React.useState(false);
+
+  // use a refs because formik doesn't update the `onReset` function
+  const applicationDataRef = React.useRef(applicationData);
+  applicationDataRef.current = applicationData;
+
+  const goToApplicationRef = React.useRef(false);
+  goToApplicationRef.current = !!applicationData || componentsCreated;
 
   const initialValues: FormValues = {
     application: applicationName || 'My Application',
@@ -33,11 +44,14 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
     },
   };
 
-  const steps = useImportSteps(applicationName);
+  const steps = useImportSteps(applicationName, {
+    onApplicationCreated: setApplicationData,
+    onComponentsCreated: () => setComponentsCreated(true),
+  });
 
   const handleSubmit = React.useCallback(
-    ({ application, inAppContext, applicationData }: FormValues) => {
-      const appName = inAppContext ? application : applicationData?.metadata?.name;
+    ({ application, inAppContext }: FormValues) => {
+      const appName = inAppContext ? application : applicationDataRef.current?.metadata?.name;
       navigate(`/app-studio/applications?name=${appName}`);
     },
     [navigate],
@@ -45,9 +59,8 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
 
   const handleReset = React.useCallback(
     (values: FormValues) => {
-      const { application, inAppContext, applicationData } = values;
-      const appName = inAppContext ? application : applicationData?.metadata?.name;
-      if (appName) {
+      const { inAppContext } = values;
+      if (inAppContext || goToApplicationRef.current) {
         handleSubmit(values);
       } else {
         navigate(-1);
@@ -63,7 +76,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
         onReset={handleReset}
         initialValues={initialValues}
         steps={steps}
-        cancelButtonText="Cancel"
+        cancelButtonText={goToApplicationRef.current ? 'Go to application' : 'Cancel'}
       />
     </PageSection>
   );
