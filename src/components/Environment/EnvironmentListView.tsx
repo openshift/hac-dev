@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
   Button,
@@ -19,15 +18,24 @@ import {
   Text,
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
-import { EnvironmentGroupVersionKind } from '../../models';
-import { EnvironmentKind } from '../../types';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useSortedEnvironments } from '../../hooks/useEnvironments';
 import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 import EnvironmentCard from './EnvironmentCard';
 import './EnvironmentListView.scss';
 
 const EnvironmentListView: React.FC = () => {
-  const namespace = useNamespace();
+  const [environments, loaded] = useSortedEnvironments();
+
+  if (!loaded) {
+    return (
+      <PageSection variant={PageSectionVariants.light} isFilled>
+        <Bullseye>
+          <Spinner />
+        </Bullseye>
+      </PageSection>
+    );
+  }
+
   const createEnvironment = (
     <Toolbar usePageInsets>
       <ToolbarItem>
@@ -42,22 +50,6 @@ const EnvironmentListView: React.FC = () => {
       </ToolbarItem>
     </Toolbar>
   );
-
-  const [environments, loaded] = useK8sWatchResource<EnvironmentKind[]>({
-    groupVersionKind: EnvironmentGroupVersionKind,
-    namespace,
-    isList: true,
-  });
-
-  if (!loaded) {
-    return (
-      <PageSection variant={PageSectionVariants.light} isFilled>
-        <Bullseye>
-          <Spinner />
-        </Bullseye>
-      </PageSection>
-    );
-  }
 
   return (
     <>

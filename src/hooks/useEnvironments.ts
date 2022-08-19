@@ -1,6 +1,8 @@
+import { useMemo } from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { EnvironmentGroupVersionKind } from '../models/environment';
 import { EnvironmentKind } from '../types';
+import { sortEnvironmentsBasedonParent } from '../utils/environment-utils';
 import { useNamespace } from '../utils/namespace-context-utils';
 
 export const useEnvironments = () => {
@@ -10,4 +12,14 @@ export const useEnvironments = () => {
     namespace,
     isList: true,
   });
+};
+
+export const useSortedEnvironments = (): [EnvironmentKind[], boolean, unknown] => {
+  const [envs, loaded, error] = useEnvironments();
+
+  const environments = useMemo(() => {
+    return loaded && !error ? sortEnvironmentsBasedonParent(envs) : [];
+  }, [envs, error, loaded]);
+
+  return [environments, loaded, error];
 };

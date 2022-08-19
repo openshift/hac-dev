@@ -33,6 +33,7 @@ export const ParentEnvironmentField: React.FC = () => {
       items={dropdownItems}
       onChange={handleChange}
       helpText="Set the default continuous delivery order for your application"
+      required
     />
   ) : null;
 };
