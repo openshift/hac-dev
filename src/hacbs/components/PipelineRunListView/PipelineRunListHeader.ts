@@ -27,7 +27,7 @@ export const PipelineRunListHeader = () => {
     },
     {
       title: 'Type',
-      props: { className: pipelineRunTableColumnClasses.duration },
+      props: { className: pipelineRunTableColumnClasses.type },
     },
     {
       title: '',
