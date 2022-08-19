@@ -16,7 +16,7 @@ import {
 } from '@patternfly/react-core';
 import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-icon';
 import { global_palette_green_400 as greenColor } from '@patternfly/react-tokens/dist/js/global_palette_green_400';
-import { useEnvironments } from '../../hooks/useEnvironments';
+import { useSortedEnvironments } from '../../hooks/useEnvironments';
 import { EnvironmentKind } from '../../types';
 import { getEnvironmentDeploymentStrategyLabel } from '../../utils/environment-utils';
 import { OutlinedHelpPopperIcon } from '../OutlinedHelpTooltipIcon';
@@ -81,7 +81,7 @@ export const ApplicationEnvironmentCards: React.FC<ApplicationEnvironmentCardsPr
   onSelect,
 }) => {
   const [cardsExpanded, setCardExpanded] = React.useState<boolean>(true);
-  const [environments, loaded] = useEnvironments();
+  const [environments, loaded] = useSortedEnvironments();
 
   return (
     <Flex direction={{ default: 'column' }} grow={{ default: 'grow' }}>
