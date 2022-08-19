@@ -11,9 +11,22 @@ import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useFormikContext } from 'formik';
 import { CheckboxField, HelpTooltipIcon, InputField } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
-import { FormValues } from './types';
+import { FormValues } from '../ImportForm/types';
 
-const IntegrationTestSection: React.FunctionComponent = () => {
+const IntegrationTestDescription: React.FunctionComponent = () => (
+  <>
+    <Text component={TextVariants.p}>
+      Add an integration test pipeline to test all your components.
+      <br />
+      By default, previous GitHub credentials will be used to validate your URL. If it fails, you
+      must revalidate with a different repo.
+    </Text>
+    <ExternalLink href="#">
+      Learn more about setting up an integration test pipeline <ExternalLinkAltIcon />
+    </ExternalLink>
+  </>
+);
+const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = ({ isInPage }) => {
   const [infoAlert, setInfoAlert] = React.useState<boolean>(true);
   const { setTouched } = useFormikContext<FormValues>();
 
@@ -25,18 +38,14 @@ const IntegrationTestSection: React.FunctionComponent = () => {
 
   return (
     <>
-      <TextContent>
-        <Text component={TextVariants.h1}>Add integration test pipeline</Text>
-        <Text component={TextVariants.p}>
-          Add an integration test pipeline to test all your components.
-          <br />
-          By default, previous GitHub credentials will be used to validate your URL. If it fails,
-          you must revalidate with a different repo.
-        </Text>
-        <ExternalLink href="#">
-          Learn more about setting up an integration test pipeline <ExternalLinkAltIcon />
-        </ExternalLink>
-      </TextContent>
+      {!isInPage ? (
+        <>
+          <TextContent>
+            <Text component={TextVariants.h1}>Add integration test pipeline</Text>
+            <IntegrationTestDescription />
+          </TextContent>
+        </>
+      ) : null}
       <FormSection>
         <InputField
           label="Display name"
@@ -84,4 +93,4 @@ const IntegrationTestSection: React.FunctionComponent = () => {
   );
 };
 
-export default IntegrationTestSection;
+export { IntegrationTestSection as default, IntegrationTestDescription };

@@ -6,6 +6,7 @@ const hacbs = {
     PipelineRuns: resolve(__dirname, '../src/hacbs/pages/PipelineRunPage'),
     HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
     HACBSImport: resolve(__dirname, '../src/hacbs/pages/ImportPage'),
+    HACBSIntegrationTest: resolve(__dirname, '../src/hacbs/pages/IntegrationTestPage'),
   },
   extensions: [
     {
@@ -58,6 +59,32 @@ const hacbs = {
         exact: true,
         component: {
           $codeRef: 'HACBSImport',
+        },
+      },
+      flags: {
+        required: ['HACBS'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/applications/:appName/integration-test',
+        exact: true,
+        component: {
+          $codeRef: 'HACBSIntegrationTest',
+        },
+      },
+      flags: {
+        required: ['HACBS'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/applications/:appName/integration-test',
+        exact: true,
+        component: {
+          $codeRef: 'HACBSIntegrationTest',
         },
       },
       flags: {

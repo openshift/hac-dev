@@ -35,7 +35,9 @@ type IntegrationTestsListViewProps = {
   applicationName: string;
 };
 
-const IntegrationTestsEmptyState: React.FC = () => (
+const IntegrationTestsEmptyState: React.FC<IntegrationTestsListViewProps> = ({
+  applicationName,
+}) => (
   <EmptyState data-test="integration-tests__empty">
     <EmptyStateIcon icon={CodeBranchIcon} />
     <Title headingLevel="h4" size="lg">
@@ -62,7 +64,12 @@ const IntegrationTestsEmptyState: React.FC = () => (
       />
     </EmptyStateBody>
     <EmptyStateSecondaryActions>
-      <Button isDisabled component={(props) => <Link {...props} to="#" />} variant="primary">
+      <Button
+        component={(props) => (
+          <Link {...props} to={`/app-studio/applications/${applicationName}/integration-test`} />
+        )}
+        variant="primary"
+      >
         Add integration test
       </Button>
     </EmptyStateSecondaryActions>
@@ -127,7 +134,7 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
   }
 
   if (!applicationIntegrationTests?.length) {
-    return <IntegrationTestsEmptyState />;
+    return <IntegrationTestsEmptyState applicationName={applicationName} />;
   }
   const onClearFilters = () => setNameFilter('');
   const onNameInput = (name: string) => setNameFilter(name);

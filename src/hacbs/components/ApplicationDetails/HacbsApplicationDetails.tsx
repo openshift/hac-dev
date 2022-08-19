@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
@@ -75,15 +75,22 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
           },
           {
             key: 'add-environment',
-            label: 'Add Environement',
+            label: 'Add Environment',
             href: '',
             isDisabled: true,
           },
           {
-            key: 'add-integration-tests',
+            key: 'add-integration-test',
             label: 'Add Integration test',
-            href: '',
-            isDisabled: true,
+            component: (
+              <Link
+                title="Add integration test"
+                to={`/app-studio/applications/${applicationName}/integration-test`}
+              >
+                Add integration test
+              </Link>
+            ),
+            isDisabled: false,
           },
           {
             key: 'delete-application',
