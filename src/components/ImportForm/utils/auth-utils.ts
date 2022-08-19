@@ -74,6 +74,9 @@ export const useAccessCheck = (
       : null,
   );
 
+  // wait for the access check to have a status
+  const accessCheckProcessed = loaded && !!accessCheck?.status;
+
   return React.useMemo(
     () => [
       {
@@ -82,9 +85,9 @@ export const useAccessCheck = (
         accessibility: accessCheck?.status?.accessibility,
         serviceProvider: accessCheck?.status?.serviceProvider,
       },
-      !!(name && loaded),
+      !!(name && accessCheckProcessed),
     ],
-    [accessCheck, loaded, name],
+    [accessCheck, accessCheckProcessed, name],
   );
 };
 
