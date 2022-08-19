@@ -184,14 +184,17 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
             gitOpsDeployment ? (
               <>
                 <FlexItem className="application-environment-details__header-info-item">
-                  {gitOpsDeploymentHealthStatusIcon} Application {gitOpsDeploymentHealthStatus}
+                  {gitOpsDeploymentHealthStatusIcon} Application{' '}
+                  <span className="application-environment-details__health-status">
+                    {gitOpsDeploymentHealthStatus}
+                  </span>
                 </FlexItem>
                 <FlexItem className="application-environment-details__header-info-item">
-                  Deployment Strategy:{' '}
+                  Deployment strategy:{' '}
                   <Label>{getEnvironmentDeploymentStrategyLabel(environment)}</Label>
                 </FlexItem>
                 <FlexItem className="application-environment-details__header-info-item">
-                  Last deploy: Nov 29, 2021 2:11 PM
+                  Last deployment: Nov 29, 2021 2:11 PM
                 </FlexItem>
               </>
             ) : null
