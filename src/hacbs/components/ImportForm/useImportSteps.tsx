@@ -1,26 +1,33 @@
 import React, { useMemo } from 'react';
+import { FormikHelpers } from 'formik';
 import { FormikWizardStep } from 'formik-pf';
 import ApplicationSection from '../../../components/ImportForm/ApplicationSection/ApplicationSection';
 import ReviewSection from '../../../components/ImportForm/ReviewSection/ReviewSection';
 import { SourceSection } from '../../../components/ImportForm/SourceSection/SourceSection';
+import { ImportFormValues } from '../../../components/ImportForm/utils/types';
 import {
   reviewValidationSchema,
   gitSourceValidationSchema,
   applicationValidationSchema,
 } from '../../../components/ImportForm/utils/validation-utils';
+import { ApplicationKind } from '../../../types';
 import BuildSection from './BuildSection';
 import { createAppIntegrationTest } from './create-utils';
 import IntegrationTestSection from './IntegrationTestSection';
+import { FormValues } from './types';
 import { onApplicationSubmit, onComponentsSubmit } from './utils/submit-utils';
 import { integrationTestValidationSchema } from './utils/validation-utils';
 
-export const applicationStep = (): FormikWizardStep => ({
+export const applicationStep = (
+  onApplicationCreated?: (app: ApplicationKind) => void,
+): FormikWizardStep => ({
   id: 'application',
   name: 'Create application',
   component: <ApplicationSection />,
   validationSchema: applicationValidationSchema,
   nextButtonText: 'Create application & continue',
-  onSubmit: onApplicationSubmit,
+  onSubmit: async (formValues: FormValues, formikBag: FormikHelpers<ImportFormValues>) =>
+    onApplicationCreated?.(await onApplicationSubmit(formValues, formikBag)),
   canJumpTo: false,
 });
 
@@ -31,10 +38,9 @@ export const componentStep = (): FormikWizardStep => ({
   validationSchema: gitSourceValidationSchema,
   canJumpTo: false,
   disableBack: true,
-  cancelButtonText: 'Go to application',
 });
 
-export const reviewStep = (): FormikWizardStep => ({
+export const reviewStep = (onComponentsCreated?: () => void): FormikWizardStep => ({
   id: 'review',
   name: 'Review components',
   component: <ReviewSection />,
@@ -42,8 +48,10 @@ export const reviewStep = (): FormikWizardStep => ({
   canJumpTo: false,
   hasNoBodyPadding: true,
   validationSchema: reviewValidationSchema,
-  onSubmit: onComponentsSubmit,
-  cancelButtonText: 'Go to application',
+  onSubmit: async (formValues: FormValues, formikBag: FormikHelpers<ImportFormValues>) => {
+    await onComponentsSubmit(formValues, formikBag);
+    onComponentsCreated?.();
+  },
 });
 
 export const buildStep = (): FormikWizardStep => ({
@@ -52,7 +60,6 @@ export const buildStep = (): FormikWizardStep => ({
   component: <BuildSection />,
   canJumpTo: false,
   disableBack: true,
-  cancelButtonText: 'Go to application',
   nextButtonText: 'Next',
 });
 
@@ -63,20 +70,25 @@ export const integrationTestStep = (): FormikWizardStep => ({
   canJumpTo: false,
   nextButtonText: 'Done! Go to app',
   validationSchema: integrationTestValidationSchema,
-  cancelButtonText: 'Go to application',
   onSubmit: createAppIntegrationTest,
 });
 
-export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
+export const useImportSteps = (
+  applicationName: string,
+  options?: {
+    onApplicationCreated?: (app: ApplicationKind) => void;
+    onComponentsCreated?: () => void;
+  },
+): FormikWizardStep[] => {
   const steps = useMemo(
     () => [
-      ...(applicationName ? [] : [applicationStep()]),
+      ...(applicationName ? [] : [applicationStep(options?.onApplicationCreated)]),
       componentStep(),
-      reviewStep(),
+      reviewStep(options?.onComponentsCreated),
       buildStep(),
       integrationTestStep(),
     ],
-    [applicationName],
+    [applicationName, options?.onApplicationCreated, options?.onComponentsCreated],
   );
 
   return steps;
