@@ -11,11 +11,26 @@ export const getEnvironmentDeploymentStrategyLabel = (
   EnvironmentDeploymentStrategy[environment.spec.deploymentStrategy];
 
 const findIndexForEnv = (env: EnvironmentKind, currentEnvs: EnvironmentKind[]): number => {
+  if (env.spec.parentEnvironment === undefined) {
+    return 0;
+  }
+  let finalIndex = -1;
   const index = currentEnvs.findIndex((e) => e.metadata.name === env.spec.parentEnvironment);
   if (index >= 0) {
-    return index + 1;
+    const alphaIndex = currentEnvs
+      .slice(index + 1)
+      .findIndex(
+        (e) =>
+          e.spec.parentEnvironment === env.spec.parentEnvironment &&
+          e.metadata.name.localeCompare(env.metadata.name) > 0,
+      );
+    finalIndex = alphaIndex >= 0 ? index + 1 + alphaIndex : alphaIndex;
   }
-  return index;
+  const indexBefore = currentEnvs.findIndex((e) => e.spec.parentEnvironment === env.metadata.name);
+  if (indexBefore >= 0 && finalIndex === -1) {
+    finalIndex = Math.max(0, indexBefore - 1);
+  }
+  return finalIndex;
 };
 
 const isPositionedEnvironment = (env: EnvironmentKind, allEnvs: EnvironmentKind[]): boolean =>

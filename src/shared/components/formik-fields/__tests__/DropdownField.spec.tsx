@@ -65,6 +65,28 @@ describe('DropdownField', () => {
   });
 
   it('fires callback, renders dropdown field with newly selected value and closes menu on dropdown item click', async () => {
+    render(
+      <Wrapper initialValues={initialValues} onSubmit={jest.fn()}>
+        <DropdownField name={fieldName} label="label" helpText="helpText" items={items} />
+      </Wrapper>,
+    );
+    expect(screen.getByTestId('dropdown-toggle').firstChild).toHaveTextContent(
+      initialValues.dropdownValue,
+    );
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByText(initialValues.dropdownValue));
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).toBeInTheDocument();
+      const menuItem = screen.getByText(items[1].value);
+      fireEvent.click(menuItem);
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('dropdown-toggle').firstChild).toHaveTextContent(items[1].value);
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    });
+  });
+
+  it('fires onChange callback if passed throught props', async () => {
     const onChange = jest.fn();
     render(
       <Wrapper initialValues={initialValues} onSubmit={jest.fn()}>
@@ -89,7 +111,6 @@ describe('DropdownField', () => {
     });
     await waitFor(() => {
       expect(onChange).toHaveBeenCalled();
-      expect(screen.getByTestId('dropdown-toggle').firstChild).toHaveTextContent(items[1].value);
       expect(screen.queryByRole('menu')).not.toBeInTheDocument();
     });
   });
