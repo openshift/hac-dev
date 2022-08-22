@@ -14,6 +14,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
   onChange,
   fullWidth,
   validateOnChange = false,
+  value,
   ...props
 }) => {
   const [field, { touched, error }] = useField(name);
@@ -34,12 +35,15 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
       <BasicDropdown
         {...props}
         items={items}
-        selected={field.value}
+        selected={value ?? field.value}
         fullWidth={fullWidth}
         aria-describedby={helpText ? `${fieldId}-helper` : undefined}
-        onChange={(value: string) => {
-          onChange && onChange(value);
-          setFieldValue(name, value, validateOnChange);
+        onChange={(val: string) => {
+          if (onChange) {
+            onChange(val);
+            return;
+          }
+          setFieldValue(name, val, validateOnChange);
           setFieldTouched(name, true, false);
         }}
       />
