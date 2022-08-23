@@ -3,27 +3,25 @@ import { Link } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
-  EmptyState,
-  EmptyStateIcon,
-  Title,
-  EmptyStateBody,
   Button,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
   EmptyStateSecondaryActions,
   Spinner,
+  Title,
 } from '@patternfly/react-core';
 import { OutlinedFileImageIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-file-image-icon';
-import { useNamespace } from '../../../../utils/namespace-context-utils';
-import { PipelineRunLabel } from '../../../consts/pipelinerun';
-import { PipelineRunGroupVersionKind } from '../../../models';
-import { PipelineRunKind } from '../../../types';
-import { getCommitsFromPLRs } from '../../../utils/commits-utils';
-import CommitsListView from '../../Commits/CommitsListView';
+import { useNamespace } from '../../../utils/namespace-context-utils';
+import { PipelineRunLabel } from '../../consts/pipelinerun';
+import { PipelineRunGroupVersionKind } from '../../models';
+import { PipelineRunKind } from '../../types';
+import { getCommitsFromPLRs } from '../../utils/commits-utils';
+import CommitsListView from './CommitsListView';
 
-type CommitTabProps = {
-  applicationName: string;
-};
+const COMMIT_LIMIT = 5;
 
-const CommitsTab: React.FC<CommitTabProps> = ({ applicationName }) => {
+const AppRecentCommits = ({ applicationName }) => {
   const namespace = useNamespace();
 
   const [pipelineRuns, loaded] = useK8sWatchResource<PipelineRunKind[]>({
@@ -38,7 +36,7 @@ const CommitsTab: React.FC<CommitTabProps> = ({ applicationName }) => {
   });
 
   const commits = React.useMemo(
-    () => (loaded && pipelineRuns && getCommitsFromPLRs(pipelineRuns)) ?? [],
+    () => (loaded && pipelineRuns && getCommitsFromPLRs(pipelineRuns, COMMIT_LIMIT)) ?? [],
     [pipelineRuns, loaded],
   );
 
@@ -75,8 +73,8 @@ const CommitsTab: React.FC<CommitTabProps> = ({ applicationName }) => {
       </EmptyStateSecondaryActions>
     </EmptyState>
   ) : (
-    <CommitsListView commits={commits} />
+    <CommitsListView commits={commits} applicationName={applicationName} recentOnly />
   );
 };
 
-export default CommitsTab;
+export default AppRecentCommits;

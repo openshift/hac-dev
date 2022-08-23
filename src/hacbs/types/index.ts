@@ -4,3 +4,4 @@ export * from './pipelineRun';
 export * from './task';
 export * from './taskRun';
 export * from './pipelineResource';
+export * from './commit';
