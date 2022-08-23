@@ -51,18 +51,23 @@ const ApplicationEnvironmentGraphView: React.FC<ApplicationEnvironmentGraphViewP
   onSelect,
 }) => {
   const [model, setModel] = React.useState<Model>(graphModel);
+  const handleSelection = React.useRef<(selected: string | null) => void>(onSelect);
 
-  const createVisualization = React.useCallback(() => {
+  React.useEffect(() => {
+    handleSelection.current = onSelect;
+  }, [onSelect]);
+
+  const createVisualization = () => {
     const newVisualization = new Visualization();
     newVisualization.registerLayoutFactory(layoutFactory);
     newVisualization.registerComponentFactory(componentFactory);
 
     newVisualization.fromModel(graphModel);
-    newVisualization.addEventListener<SelectionEventListener>(SELECTION_EVENT, (ids: string[]) => {
-      onSelect(ids[0]);
-    });
+    newVisualization.addEventListener<SelectionEventListener>(SELECTION_EVENT, (ids: string[]) =>
+      handleSelection.current(ids[0] || ''),
+    );
     return newVisualization;
-  }, [onSelect]);
+  };
 
   const visualizationRef = React.useRef<Visualization>();
   if (!visualizationRef.current) {

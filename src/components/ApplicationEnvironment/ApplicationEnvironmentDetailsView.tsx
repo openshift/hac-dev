@@ -60,7 +60,7 @@ type ApplicationEnvironmentDetailsProps = {
 const ApplicationEnvironmentDetailsEmptyState: React.FC<{ environmentName: string }> = ({
   environmentName,
 }) => (
-  <EmptyState variant={EmptyStateVariant.large}>
+  <EmptyState variant={EmptyStateVariant.large} data-testid="env-details-empty-state">
     <EmptyStateIcon icon={CubesIcon} />
     <Title headingLevel="h4" size="lg">
       No deployed components
@@ -83,8 +83,8 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
 }) => {
   const namespace = useNamespace();
   const [viewType, setViewType] = useSearchParam('view', 'list');
-  const [selectedId, setSelectedId] = useSearchParam('selected', '');
   const [nameFilter, setNameFilter] = React.useState<string>('');
+  const [selectedId, setSelectedId] = useSearchParam('selected', null);
   const [application, applicationLoaded, applicationError] = useK8sWatchResource<ApplicationKind>({
     groupVersionKind: ApplicationGroupVersionKind,
     name: applicationName,
@@ -136,6 +136,13 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
     return components.find((component) => component.metadata.uid === selectedId);
   }, [components, selectedId]);
 
+  const onSelect = React.useCallback(
+    (id: string) => {
+      setSelectedId(id === selectedId ? null : id || null);
+    },
+    [selectedId, setSelectedId],
+  );
+
   const loading = (
     <Bullseye className="pf-u-mt-md">
       <Spinner />
@@ -151,8 +158,6 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
   ) {
     return loading;
   }
-
-  const onSelect = (id: string) => setSelectedId(id === selectedId ? null : id);
 
   return (
     <PageLayout

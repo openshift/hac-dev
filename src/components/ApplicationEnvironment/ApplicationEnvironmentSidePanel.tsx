@@ -101,18 +101,20 @@ const ApplicationEnvironmentSidePanel: React.FC<EnvironmentSidePanelProps> = ({
               </DescriptionListDescription>
             </DescriptionListGroup>
           )}
-          <DescriptionListGroup>
-            <Flex spaceItems={{ default: 'spaceItems4xl' }}>
-              <FlexItem>
-                <DescriptionListTerm>CPU</DescriptionListTerm>
-                <DescriptionListDescription>{resourceRequests.cpu}</DescriptionListDescription>
-              </FlexItem>
-              <FlexItem>
-                <DescriptionListTerm>Memory</DescriptionListTerm>
-                <DescriptionListDescription>{resourceRequests.memory}</DescriptionListDescription>
-              </FlexItem>
-            </Flex>
-          </DescriptionListGroup>
+          {resourceRequests && (
+            <DescriptionListGroup>
+              <Flex spaceItems={{ default: 'spaceItems4xl' }}>
+                <FlexItem>
+                  <DescriptionListTerm>CPU</DescriptionListTerm>
+                  <DescriptionListDescription>{resourceRequests.cpu}</DescriptionListDescription>
+                </FlexItem>
+                <FlexItem>
+                  <DescriptionListTerm>Memory</DescriptionListTerm>
+                  <DescriptionListDescription>{resourceRequests.memory}</DescriptionListDescription>
+                </FlexItem>
+              </Flex>
+            </DescriptionListGroup>
+          )}
           <DescriptionListGroup>
             <DescriptionListTerm>Instances</DescriptionListTerm>
             <DescriptionListDescription>{replicas}</DescriptionListDescription>

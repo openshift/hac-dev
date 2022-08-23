@@ -9,7 +9,13 @@ import {
   ComponentGroupVersionKind,
   EnvironmentGroupVersionKind,
 } from '../../../models';
-import { mockApplication, mockComponents, mockEnvironment } from '../__data__/mock-data';
+import { GitOpsDeploymentGroupVersionKind } from '../../../models/gitops-deployment';
+import {
+  mockApplication,
+  mockComponents,
+  mockEnvironment,
+  mockGitOpsDeployments,
+} from '../__data__/mock-data';
 import { ApplicationEnvironmentDetailsView } from '../ApplicationEnvironmentDetailsView';
 
 jest.mock('react-i18next', () => ({
@@ -54,6 +60,36 @@ const getMockedResources = (kind: WatchK8sResource) => {
   if (kind.groupVersionKind === ComponentGroupVersionKind) {
     return [mockComponents, true];
   }
+  if (kind.groupVersionKind === GitOpsDeploymentGroupVersionKind) {
+    return [mockGitOpsDeployments, true];
+  }
+  return [[], true];
+};
+const getMockedEmptyComponents = (kind: WatchK8sResource) => {
+  if (kind.groupVersionKind === ApplicationGroupVersionKind) {
+    return [mockApplication, true];
+  }
+  if (kind.groupVersionKind === EnvironmentGroupVersionKind) {
+    return [mockEnvironment, true];
+  }
+  if (kind.groupVersionKind === GitOpsDeploymentGroupVersionKind) {
+    return [mockGitOpsDeployments, true];
+  }
+  return [[], true];
+};
+const getMockedLoadingComponents = (kind: WatchK8sResource) => {
+  if (kind.groupVersionKind === ApplicationGroupVersionKind) {
+    return [mockApplication, true];
+  }
+  if (kind.groupVersionKind === EnvironmentGroupVersionKind) {
+    return [mockEnvironment, true];
+  }
+  if (kind.groupVersionKind === GitOpsDeploymentGroupVersionKind) {
+    return [mockGitOpsDeployments, true];
+  }
+  if (kind.groupVersionKind === ComponentGroupVersionKind) {
+    return [[], false];
+  }
   return [[], true];
 };
 
@@ -88,6 +124,30 @@ const mockUseSearchParam = (name: string) => {
 describe('ApplicationEnvironmentDetailsView', () => {
   it('should render spinner if data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
+    useSearchParamMock.mockImplementation(mockUseSearchParam);
+    render(
+      <ApplicationEnvironmentDetailsView
+        environmentName="production"
+        applicationName="test-application"
+      />,
+    );
+    screen.getByRole('progressbar');
+  });
+
+  it('should render the empty state if there are no components', () => {
+    watchResourceMock.mockImplementation(getMockedEmptyComponents);
+    useSearchParamMock.mockImplementation(mockUseSearchParam);
+    render(
+      <ApplicationEnvironmentDetailsView
+        environmentName="production"
+        applicationName="test-application"
+      />,
+    );
+    screen.getByTestId('env-details-empty-state');
+  });
+
+  it('should render spinner if components are not loaded', () => {
+    watchResourceMock.mockImplementation(getMockedLoadingComponents);
     useSearchParamMock.mockImplementation(mockUseSearchParam);
     render(
       <ApplicationEnvironmentDetailsView
