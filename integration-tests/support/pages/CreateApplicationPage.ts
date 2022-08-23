@@ -18,6 +18,7 @@ export class CreateApplicationPage extends AbstractWizardPage {
   }
 
   clickCreateApplication() {
+    cy.wait(1000);
     cy.contains(createApplicationPagePO.createApplication).click();
     Common.verifyPageTitle(pageTitles.createApp);
     Common.waitForLoad();
