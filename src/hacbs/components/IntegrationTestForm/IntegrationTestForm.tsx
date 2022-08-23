@@ -1,16 +1,12 @@
 import React from 'react';
-import {
-  PageSection,
-  FormSection,
-  Form,
-  TextContent,
-  PageSectionVariants,
-} from '@patternfly/react-core';
-import { FormikProps, FormikValues } from 'formik';
+import { Form, FormSection, PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/js/icons';
+import { useFormikContext } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import PageLayout from '../../../components/PageLayout/PageLayout';
 import { FormFooter } from '../../../shared';
-import IntegrationTestSection, { IntegrationTestDescription } from './IntegrationTestSection';
+import ExternalLink from '../../../shared/components/links/ExternalLink';
+import IntegrationTestSection from './IntegrationTestSection';
 
 import '../../../shared/style.scss';
 
@@ -18,16 +14,17 @@ type IntegrationTestFormProps = {
   applicationName: string;
 };
 
-const IntegrationTestForm: React.FunctionComponent<
-  FormikProps<FormikValues> & IntegrationTestFormProps
-> = ({ applicationName, handleSubmit, handleReset, isSubmitting, status, errors }) => {
+const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = ({
+  applicationName,
+}) => {
+  const { dirty, handleSubmit, handleReset, isSubmitting, status, errors } = useFormikContext();
   const footer = (
     <FormFooter
       submitLabel="Save"
       handleCancel={handleReset}
       handleSubmit={handleSubmit}
       isSubmitting={isSubmitting}
-      disableSubmit={!isEmpty(errors) || isSubmitting}
+      disableSubmit={!dirty || !isEmpty(errors) || isSubmitting}
       errorMessage={status?.submitError}
     />
   );
@@ -41,9 +38,17 @@ const IntegrationTestForm: React.FunctionComponent<
       ]}
       title="Add integration test pipeline"
       description={
-        <TextContent>
-          <IntegrationTestDescription />
-        </TextContent>
+        <>
+          Add an integration test pipeline to test all your components.
+          <br />
+          By default, previous GitHub credentials will be used to validate your URL. If it fails,
+          you must revalidate with a different repo.
+          <br />
+          <br />
+          <ExternalLink href="#">
+            Learn more about setting up an integration test pipeline <ExternalLinkAltIcon />
+          </ExternalLink>
+        </>
       }
       footer={footer}
     >

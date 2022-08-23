@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
-import { reviewValidationSchema } from '../../../components/ImportForm/utils/validation-utils';
 import { useNamespace } from '../../../utils/namespace-context-utils';
 import { createIntegrationTest } from '../ImportForm/create-utils';
+import { integrationTestValidationSchema } from '../ImportForm/utils/validation-utils';
 import IntegrationTestForm from './IntegrationTestForm';
 
 type IntegrationTestViewProps = {
@@ -45,7 +45,7 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
       onSubmit={handleSubmit}
       onReset={() => navigate(-1)}
       initialValues={initialValues}
-      validationSchema={reviewValidationSchema}
+      validationSchema={integrationTestValidationSchema}
     >
       {(props) => <IntegrationTestForm applicationName={applicationName} {...props} />}
     </Formik>
