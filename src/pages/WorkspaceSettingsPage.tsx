@@ -3,7 +3,6 @@ import { Helmet } from 'react-helmet';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import EnvironmentListView from '../components/Environment/EnvironmentListView';
 import { GettingStartedCard } from '../components/GettingStartedCard/GettingStartedCard';
-import { HelpTopicLink } from '../components/HelpTopicLink/HelpTopicLink';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
@@ -37,14 +36,7 @@ const WorkspaceSettingsPage: React.FC = () => {
         default roles with permissions and tasks to make collaboration easier, but you can customize
         all roles to meet the needs of your team.
       </GettingStartedCard>
-      <PageLayout
-        title="Settings"
-        description={
-          <>
-            Lorem Ipsum. <HelpTopicLink topicId="settings">Learn more</HelpTopicLink>{' '}
-          </>
-        }
-      >
+      <PageLayout title="Settings">
         <PageSection variant={PageSectionVariants.light} isFilled>
           <EnvironmentListView />
         </PageSection>

@@ -16,11 +16,13 @@ import {
   PageSectionVariants,
   Toolbar,
   ToolbarItem,
+  Text,
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import { EnvironmentGroupVersionKind } from '../../models';
 import { EnvironmentKind } from '../../types';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 import EnvironmentCard from './EnvironmentCard';
 import './EnvironmentListView.scss';
 
@@ -59,7 +61,11 @@ const EnvironmentListView: React.FC = () => {
 
   return (
     <>
-      <Title headingLevel="h4">Environments</Title>
+      <Title headingLevel="h3">Environments</Title>
+      <Text component="p">
+        Manage the continuous delivery process for your applications with environments.{' '}
+        <HelpTopicLink topicId="settings">Learn more</HelpTopicLink>
+      </Text>
       {!environments || environments.length === 0 ? (
         <>
           <EmptyState variant={EmptyStateVariant.large}>
