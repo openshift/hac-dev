@@ -3,13 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
-  Button,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateVariant,
-  Flex,
-  FlexItem,
   PageSection,
   Spinner,
   Title,
@@ -26,7 +23,6 @@ import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
 import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
-import { OutlinedHelpPopperIcon } from '../OutlinedHelpTooltipIcon';
 import PageLayout from '../PageLayout/PageLayout';
 import { ComponentDetails } from './ComponentDetails';
 
@@ -42,8 +38,6 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
   const namespace = useNamespace();
   const showModal = useModalLauncher();
   const navigate = useNavigate();
-
-  const [cardsExpanded, setCardExpanded] = React.useState<boolean>(true);
 
   const resource = React.useMemo(() => {
     return {
@@ -135,32 +129,7 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
         actions={actions}
       >
         <PageSection>
-          <Flex direction={{ default: 'column' }} grow={{ default: 'grow' }}>
-            <Flex>
-              <FlexItem>
-                <b>Environments:</b>
-                {'  '}
-                <OutlinedHelpPopperIcon
-                  heading="Application environments"
-                  content="View components and their settings as deployed to environments. Component updates can be promoted between environments. Additional environments can be added via the workspace."
-                />
-              </FlexItem>
-              <FlexItem align={{ default: 'alignRight' }}>
-                <Button
-                  onClick={() => setCardExpanded((e) => !e)}
-                  variant="link"
-                  isInline
-                  style={{ textDecoration: 'none' }}
-                >
-                  {cardsExpanded ? 'Collapse' : 'Expand'}
-                </Button>
-              </FlexItem>
-            </Flex>
-            <ApplicationEnvironmentCards
-              isExpanded={cardsExpanded}
-              onSelect={navigateToEnvironment}
-            />
-          </Flex>
+          <ApplicationEnvironmentCards onSelect={navigateToEnvironment} />
         </PageSection>
         <ComponentDetails application={application} />
       </PageLayout>

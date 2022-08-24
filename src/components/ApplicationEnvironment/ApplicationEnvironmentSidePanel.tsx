@@ -115,10 +115,12 @@ const ApplicationEnvironmentSidePanel: React.FC<EnvironmentSidePanelProps> = ({
               </Flex>
             </DescriptionListGroup>
           )}
-          <DescriptionListGroup>
-            <DescriptionListTerm>Instances</DescriptionListTerm>
-            <DescriptionListDescription>{replicas}</DescriptionListDescription>
-          </DescriptionListGroup>
+          {replicas !== undefined && (
+            <DescriptionListGroup>
+              <DescriptionListTerm>Instances</DescriptionListTerm>
+              <DescriptionListDescription>{replicas}</DescriptionListDescription>
+            </DescriptionListGroup>
+          )}
           {resourceRequests && (
             <DescriptionListGroup>
               <DescriptionListTerm>Code repository</DescriptionListTerm>
