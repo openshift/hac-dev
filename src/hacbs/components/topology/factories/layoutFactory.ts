@@ -14,11 +14,6 @@ export enum PipelineLayout {
 const DAGRE_SHARED_PROPS: dagre.GraphLabel = {
   nodesep: NODE_SEPARATION_VERTICAL,
   ranksep: NODE_SEPARATION_HORIZONTAL,
-  edgesep: 60,
-  ranker: 'longest-path',
-  rankdir: 'LR',
-  marginx: 20,
-  marginy: 20,
 };
 
 export const PIPELINERUN_VISUALIZATION_PROPS: dagre.GraphLabel = {

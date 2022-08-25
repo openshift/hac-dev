@@ -4,8 +4,8 @@ import {
   DefaultTaskGroup,
   SpacerNode,
   ComponentFactory,
+  TaskEdge,
 } from '@patternfly/react-topology';
-import PipelineRunEdge from './visualization/edges/PipelineRunEdge';
 import PipelineRunNode from './visualization/nodes/PipelineRunNode';
 import { PipelineRunNodeType } from './visualization/types';
 
@@ -22,7 +22,7 @@ export const pipelineRuncomponentFactory: ComponentFactory = (kind: ModelKind, t
     case PipelineRunNodeType.SPACER_NODE:
       return SpacerNode;
     case PipelineRunNodeType.EDGE:
-      return PipelineRunEdge;
+      return TaskEdge;
     default:
       return undefined;
   }

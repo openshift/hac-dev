@@ -17,7 +17,7 @@ const moveTo: SingleDraw = (p) => `M ${point(p)}`;
 const lineTo: SingleDraw = (p) => `L ${point(p)}`;
 const quadTo: DoubleDraw = (corner, end) => `Q ${point(corner)} ${point(end)}`;
 
-const CURVE_SIZE = { x: 0, y: 0 };
+const CURVE_SIZE = { x: 8, y: 10 };
 const curve: TripleDraw = (fromPoint, cornerPoint, toPoint) => {
   const topToBottom = topDown(fromPoint, toPoint);
   if (topToBottom) {

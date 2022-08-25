@@ -10,6 +10,9 @@ const PipelineRunVisualization = ({ pipelineRun }) => {
     return getPipelineRunDataModel(pipelineRun);
   }, [pipelineRun]);
 
+  if (!model) {
+    return null;
+  }
   return (
     <div className="hacbs-pipelinerun-graph" data-test="pipelinerun-graph">
       <VisualizationFactory
