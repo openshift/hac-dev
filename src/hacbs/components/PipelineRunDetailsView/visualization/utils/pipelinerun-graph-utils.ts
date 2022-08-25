@@ -26,7 +26,7 @@ import {
   createSpacerNode,
   getTextWidth,
 } from '../../../ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
-import { DEFAULT_NODE_HEIGHT } from '../../../topology/const';
+import { DEFAULT_FINALLLY_GROUP_PADDING, DEFAULT_NODE_HEIGHT } from '../../../topology/const';
 import { DAG, Vertex } from '../../../topology/dag';
 import { PipelineLayout } from '../../../topology/factories';
 import { createGenericNode } from '../../../topology/utils/create-utils';
@@ -227,11 +227,14 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
 
   const finallyTaskList = appendStatus(pipeline, pipelineRun, true);
 
+  const maxFinallyNodeName =
+    finallyTaskList.sort((a, b) => b.name.length - a.name.length)[0]?.name || '';
   const finallyNodes = finallyTaskList.map((fTask) =>
     createPipelineRunNode(PipelineRunNodeType.FINALLY_NODE, {
       id: fTask.name,
       label: fTask.name,
-      width: 200,
+      width:
+        getTextWidth(maxFinallyNodeName) + NODE_PADDING * 2 + DEFAULT_FINALLLY_GROUP_PADDING * 2,
       height: DEFAULT_NODE_HEIGHT,
       runAfterTasks: [],
       status: fTask.status.reason,
@@ -246,7 +249,7 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
           type: PipelineRunNodeType.FINALLY_GROUP,
           children: finallyNodes.map((n) => n.id),
           group: true,
-          style: { marginLeft: 20, padding: 20 },
+          style: { padding: DEFAULT_FINALLLY_GROUP_PADDING },
         },
       ]
     : [];
