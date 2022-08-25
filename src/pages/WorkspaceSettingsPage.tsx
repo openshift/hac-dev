@@ -5,12 +5,14 @@ import EnvironmentListView from '../components/Environment/EnvironmentListView';
 import { GettingStartedCard } from '../components/GettingStartedCard/GettingStartedCard';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
+import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 import imageUrl from '../imgs/getting-started-illustration.svg';
 import './WorkspaceSettingsPage.scss';
 
 const GETTING_STARTED_CARD_KEY = 'environments-list-getting-started-card';
 
 const WorkspaceSettingsPage: React.FC = () => {
+  useQuickstartCloseOnUnmount();
   return (
     <NamespacedPage>
       <Helmet>
