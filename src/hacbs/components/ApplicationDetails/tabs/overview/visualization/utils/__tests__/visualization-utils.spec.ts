@@ -1,14 +1,16 @@
 import { DAG } from '../../../../../../topology/dag';
 import { NodeType } from '../../const';
-import { sampleEnvironments } from '../../hooks/__data__/workflow-data';
+import {
+  sampleEnvironments,
+  sampleEnvironmentsWithInvalidParentEnvironment,
+} from '../../hooks/__data__/workflow-data';
 import { Workflow, WorkflowNodeType } from '../../types';
 import {
   dagtoNodes,
-  getLastEnvironment,
+  getLastEnvironments,
   getMaxName,
   getTopologyNodesEdges,
   getWorkflowNodes,
-  sortEnvironments,
   workflowToNodes,
 } from '../visualization-utils';
 
@@ -130,60 +132,49 @@ describe('workflowToNodes', () => {
   });
 });
 
-describe('sortEnvironments', () => {
-  test('should return empty array for invalid values', () => {
-    expect(sortEnvironments(null)).toHaveLength(0);
-    expect(sortEnvironments(undefined)).toHaveLength(0);
-    expect(sortEnvironments([])).toHaveLength(0);
+describe('getLastEnvironments', () => {
+  test('should return default environment for invalid values', () => {
+    expect(getLastEnvironments([])).toEqual(['static-env']);
+    expect(getLastEnvironments(null)).toEqual(['static-env']);
+    expect(getLastEnvironments(undefined)).toEqual(['static-env']);
   });
 
-  test('should return sorted array of environments', () => {
-    const sortedEnvironments = sortEnvironments(sampleEnvironments);
-    expect(sortedEnvironments).toHaveLength(3);
-    expect(sortedEnvironments[0]).toBe('test-environment');
-    expect(sortedEnvironments[1]).toBe('staging-environment');
-    expect(sortedEnvironments[2]).toBe('production-environment');
+  test('should return the last environments in the list', () => {
+    expect(getLastEnvironments(sampleEnvironments)).toEqual(['production-environment']);
+  });
+
+  test('should contain the environments with non existing parent name', () => {
+    expect(getLastEnvironments(sampleEnvironmentsWithInvalidParentEnvironment)).toEqual([
+      'production-environment',
+      'testing-environment',
+    ]);
   });
 });
 
-describe('getLastEnvironment', () => {
-  test('should return default environment for invalid values', () => {
-    expect(getLastEnvironment([])).toBe('static-env');
-    expect(getLastEnvironment(null)).toBe('static-env');
-    expect(getLastEnvironment(undefined)).toBe('static-env');
-  });
+describe('getMaxName', () => {
+  test('should return the max length resources', () => {
+    expect(getMaxName([])).toBe(null);
+    expect(getMaxName(undefined)).toBe(null);
+    expect(getMaxName(null)).toBe(null);
 
-  test('should return the last environment in the list', () => {
-    expect(getLastEnvironment(sampleEnvironments)).toBe('production-environment');
-  });
-
-  describe('getMaxName', () => {
-    test('should return the max length resources', () => {
-      expect(getMaxName([])).toBe(null);
-      expect(getMaxName(undefined)).toBe(null);
-      expect(getMaxName(null)).toBe(null);
-    });
-
-    test('should return the max length resources', () => {
-      const comp1 = {
-        ...sampleEnvironments[0],
-        metadata: {
-          name: 'one',
-        },
-      };
-      const comp2 = {
-        ...sampleEnvironments[0],
-        metadata: {
-          name: 'two',
-        },
-      };
-      const comp3 = {
-        ...sampleEnvironments[0],
-        metadata: {
-          name: 'three',
-        },
-      };
-      expect(getMaxName([comp1, comp2, comp3])).toBe('three');
-    });
+    const comp1 = {
+      ...sampleEnvironments[0],
+      metadata: {
+        name: 'one',
+      },
+    };
+    const comp2 = {
+      ...sampleEnvironments[0],
+      metadata: {
+        name: 'two',
+      },
+    };
+    const comp3 = {
+      ...sampleEnvironments[0],
+      metadata: {
+        name: 'three',
+      },
+    };
+    expect(getMaxName([comp1, comp2, comp3])).toBe('three');
   });
 });

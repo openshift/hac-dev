@@ -127,8 +127,8 @@ export const workflowToNodes = (workflow: Workflow): WorkflowNode[] => {
 
   Object.keys(workflow).map((key) => {
     const { id, data, runBefore, runAfter, isAbstractNode, runAfterResourceKey } = workflow[key];
-    const resources = data.resources || [];
-    const isParallelNode = !isAbstractNode && !runAfterResourceKey && resources.length > 1;
+    const resources: K8sResourceCommon[] = data.resources || [];
+    const isParallelNode = !isAbstractNode && resources.length > 1;
     const isDisabled = resources.length === 0;
 
     if (isAbstractNode || isDisabled) {
@@ -145,6 +145,7 @@ export const workflowToNodes = (workflow: Workflow): WorkflowNode[] => {
       workflowDag.addEdges(id, wData, runBefore, runAfter);
     } else {
       const maxWidth = getlabelWidth(getMaxName(resources));
+      const validResources = resources.map((r) => r.metadata.name);
       resources.forEach((resource: K8sResourceCommon) => {
         const {
           metadata: { name },
@@ -152,7 +153,19 @@ export const workflowToNodes = (workflow: Workflow): WorkflowNode[] => {
         const resourceRunAfter = runAfterResourceKey
           ? get(resource, runAfterResourceKey, runAfter)
           : runAfter;
-        // const width = isParallelNode ? maxWidth : resource.metadata.name.length * 6 + 55;
+        let validRunAfters = runAfter;
+        if (Array.isArray(resourceRunAfter)) {
+          resourceRunAfter?.forEach((rName) => {
+            if (validResources.includes(rName)) {
+              validRunAfters.push(rName);
+            }
+          });
+        } else {
+          validRunAfters = validResources.includes(resourceRunAfter)
+            ? [resourceRunAfter]
+            : runAfter;
+        }
+
         const width = isParallelNode ? maxWidth : getlabelWidth(name);
         const workflowData = {
           ...data,
@@ -164,39 +177,36 @@ export const workflowToNodes = (workflow: Workflow): WorkflowNode[] => {
           resources: [resource],
         };
 
-        workflowDag.addEdges(name, workflowData, runBefore, resourceRunAfter);
+        workflowDag.addEdges(name, workflowData, runBefore, validRunAfters);
       });
     }
   });
   return dagtoNodes(workflowDag);
 };
 
-export const sortEnvironments = (environments: EnvironmentKind[]): string[] => {
-  if (!environments) {
-    return [];
+export const getLastEnvironments = (environments: EnvironmentKind[]): string[] => {
+  if (!environments || environments?.length === 0) {
+    return ['static-env'];
   }
-  const environmentDag = new DAG();
 
+  const environmentDag = new DAG();
+  const validEnvironments = environments.map((e) => e.metadata.name);
   environments.forEach((env: EnvironmentKind) => {
     const {
       metadata: { name },
       spec: { parentEnvironment },
     } = env;
+    const foundEnv = validEnvironments.includes(parentEnvironment);
+    const runAfter = parentEnvironment && foundEnv ? parentEnvironment : [];
 
-    const runAfter = parentEnvironment ? parentEnvironment : [];
     environmentDag.addEdges(name, env, [], runAfter);
   });
 
-  const sortedEnvironments: string[] = [];
+  const lastEnvironments: string[] = [];
   environmentDag.topologicalSort((n) => {
-    sortedEnvironments.push(n.name);
+    if (!n.hasOutgoing) {
+      lastEnvironments.push(n.name);
+    }
   });
-  return sortedEnvironments;
-};
-
-export const getLastEnvironment = (environments: EnvironmentKind[]): string => {
-  if (!environments || environments?.length === 0) {
-    return 'static-env';
-  }
-  return sortEnvironments(environments).pop();
+  return lastEnvironments;
 };

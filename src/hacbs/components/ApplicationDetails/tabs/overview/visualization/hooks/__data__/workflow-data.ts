@@ -202,6 +202,33 @@ export const sampleEnvironments: EnvironmentKind[] = [
   },
 ];
 
+export const sampleEnvironmentsWithInvalidParentEnvironment: EnvironmentKind[] = [
+  ...sampleEnvironments,
+  {
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    kind: 'Environment',
+    metadata: {
+      name: 'testing-environment',
+      uid: '210d9440-2ebf-49c7-a6df-1fa5d21cb111',
+    },
+    spec: {
+      configuration: {
+        env: [
+          {
+            name: 'env',
+            value: 'prod',
+          },
+        ],
+      },
+      parentEnvironment: 'invalid-environment',
+      deploymentStrategy: 'Manual',
+      displayName: 'Staging Environment',
+      tags: ['prod'],
+      type: 'poc',
+    },
+  },
+];
+
 export const sampleIntegrationTestScenarios: IntegrationTestScenarioKind[] = [
   {
     apiVersion: 'appstudio.redhat.com/v1alpha1',
