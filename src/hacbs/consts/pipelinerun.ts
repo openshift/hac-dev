@@ -1,6 +1,6 @@
 export enum PipelineRunLabel {
-  APPLICATION = 'appstudio.openshift.io/application',
-  COMPONENT = 'appstudio.openshift.io/component',
+  APPLICATION = 'build.appstudio.openshift.io/application',
+  COMPONENT = 'build.appstudio.openshift.io/component',
   PIPELINE_TYPE = 'pipelines.appstudio.openshift.io/type',
 }
 
