@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Badge } from '@patternfly/react-core';
 import {
   AngleDoubleRightIcon,
   BanIcon,
@@ -11,12 +12,12 @@ import {
 import cx from 'classnames';
 import { getRunStatusColor, runStatus } from './utils';
 
-interface StatusIconProps {
+type StatusIconProps = {
   status: string;
   height?: number;
   width?: number;
   disableSpin?: boolean;
-}
+};
 
 export const StatusIcon: React.FC<StatusIconProps> = ({ status, disableSpin, ...props }) => {
   switch (status) {
@@ -56,5 +57,26 @@ export const ColoredStatusIcon: React.FC<StatusIconProps> = ({ status, ...others
     >
       <StatusIcon status={status} {...others} />
     </div>
+  );
+};
+
+export const StatusIconWithText: React.FC<StatusIconProps & { text?: string }> = ({
+  status,
+  text,
+  ...others
+}) => {
+  return (
+    <Badge isRead>
+      <span
+        style={{
+          color: status
+            ? getRunStatusColor(status).pftoken.value
+            : getRunStatusColor(runStatus.Cancelled).pftoken.value,
+        }}
+      >
+        <StatusIcon status={status} {...others} />
+      </span>{' '}
+      {text ?? status}
+    </Badge>
   );
 };

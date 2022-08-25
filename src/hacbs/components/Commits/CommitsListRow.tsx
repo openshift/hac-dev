@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
 import ActionMenu from '../../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
@@ -13,7 +14,10 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
   return (
     <>
       <TableData className={commitsTableColumnClasses.name}>
-        {`${obj.sha.slice(0, 7)} `}
+        <Link to={`/app-studio/${obj.application}/commit/${obj.sha}`}>{`${obj.sha.slice(
+          0,
+          7,
+        )} `}</Link>
         {obj.shaURL && (
           <ExternalLink href={obj.shaURL}>
             <GithubIcon />

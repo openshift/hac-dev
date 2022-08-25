@@ -15,4 +15,6 @@ export type Commit = {
   branch?: string[];
   creationTime?: string;
   pipelineRuns: PipelineRunKind[];
+  application: string;
+  shaTitle?: string;
 };

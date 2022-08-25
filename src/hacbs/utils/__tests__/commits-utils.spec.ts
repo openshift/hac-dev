@@ -2,7 +2,7 @@ import {
   pipelineWithoutCommits,
   pipelineWithCommits,
 } from '../../components/Commits/__data__/pipeline-with-commits';
-import { getCommitsFromPLRs } from '../commits-utils';
+import { getCommitByName, getCommitByNameFromAllPLRs, getCommitsFromPLRs } from '../commits-utils';
 
 describe('commit-utils', () => {
   it('Should return 7 commits with correct details', () => {
@@ -38,5 +38,38 @@ describe('commit-utils', () => {
   it('Should return 0 commits', () => {
     const result = getCommitsFromPLRs(pipelineWithoutCommits);
     expect(result.length).toBe(0);
+  });
+});
+
+describe('commit-utils commit by name', () => {
+  it('Should return correct commit', () => {
+    const result = getCommitByName(pipelineWithCommits, 'commit123');
+    expect(result).not.toBe(null);
+    expect(result.sha).toBe('commit123');
+    expect(result.branch[0]).toBe('branch_1');
+    expect(result.components[0]).toBe('sample-component');
+    expect(result.user).toBe('abhi');
+  });
+
+  it('Should return no commit', () => {
+    const result = getCommitByName(pipelineWithCommits, 'commitunknown');
+    expect(result).toBe(null);
+  });
+});
+
+describe('commit-utils commit by name from all PLRs', () => {
+  it('Should return correct commit', () => {
+    const result = getCommitByNameFromAllPLRs(pipelineWithCommits, 'commit123');
+    expect(result).not.toBe(null);
+    expect(result.sha).toBe('commit123');
+    expect(result.branch[0]).toBe('branch_1');
+    expect(result.components[0]).toBe('sample-component');
+    expect(result.pipelineRuns).toHaveLength(5);
+    expect(result.user).toBe('abhi');
+  });
+
+  it('Should return no commit', () => {
+    const result = getCommitByName(pipelineWithCommits, 'commitunknown');
+    expect(result).toBe(null);
   });
 });
