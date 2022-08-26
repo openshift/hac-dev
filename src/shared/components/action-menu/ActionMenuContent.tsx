@@ -7,12 +7,12 @@ import { Action, GroupedMenuOption, MenuOption, MenuOptionType } from './types';
 
 type GroupMenuContentProps = {
   option: GroupedMenuOption;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 type ActionMenuContentProps = {
   options: MenuOption[];
-  onClick: () => void;
+  onClick?: () => void;
   focusItem?: MenuOption;
 };
 

@@ -52,7 +52,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
   const handleSubmit = React.useCallback(
     ({ application, inAppContext }: FormValues) => {
       const appName = inAppContext ? application : applicationDataRef.current?.metadata?.name;
-      navigate(`/app-studio/applications?name=${appName}`);
+      navigate(`/app-studio/applications/${appName}`);
     },
     [navigate],
   );

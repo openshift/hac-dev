@@ -115,7 +115,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
                     |
                   </ToolbarItem>
                   <ToolbarItem>
-                    Deployment Strategy:{' '}
+                    Deployment strategy:{' '}
                     <Label>{getGitOpsDeploymentStrategy(gitOpsDeployment)}</Label>
                   </ToolbarItem>
                 </>

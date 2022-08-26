@@ -6,8 +6,8 @@ import { GitOpsDeploymentKind } from './../types/gitops-deployment';
 export const useGitOpsDeploymentCR = (
   application: string,
   namespace: string,
-): [GitOpsDeploymentKind, boolean] => {
-  const [gitOpsDeployments, loaded] = useK8sWatchResource<GitOpsDeploymentKind[]>({
+): [GitOpsDeploymentKind, boolean, string] => {
+  const [gitOpsDeployments, loaded, error] = useK8sWatchResource<GitOpsDeploymentKind[]>({
     groupVersionKind: GitOpsDeploymentGroupVersionKind,
     namespace,
     isList: true,
@@ -22,5 +22,5 @@ export const useGitOpsDeploymentCR = (
     );
   }, [application, gitOpsDeployments]);
 
-  return [gitOpsDeployment, loaded];
+  return [gitOpsDeployment, loaded, `${error}`];
 };

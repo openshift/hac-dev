@@ -54,6 +54,6 @@ describe('ImportForm', () => {
       });
     });
     wizardProps.onReset({}, {} as any);
-    expect(navigateMock).toHaveBeenCalledWith('/app-studio/applications?name=my-app');
+    expect(navigateMock).toHaveBeenCalledWith('/app-studio/applications/my-app');
   });
 });
