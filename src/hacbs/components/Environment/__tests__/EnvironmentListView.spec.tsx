@@ -103,6 +103,7 @@ describe('EnvironmentListView', () => {
   });
 
   it('should filter cards by type', async () => {
+    watchResourceMock.mockReturnValue([testEnvironments, true]);
     render(<EnvironmentListView />);
     expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
 
@@ -142,7 +143,7 @@ describe('EnvironmentListView', () => {
     render(<EnvironmentListView />);
     expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
 
-    const textFilterInput = screen.getByRole('searchbox', { name: 'name filter' });
+    const textFilterInput = screen.getByRole('textbox', { name: 'name filter' });
     fireEvent.change(textFilterInput, { target: { value: '1' } });
     expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
   });
@@ -151,7 +152,7 @@ describe('EnvironmentListView', () => {
     render(<EnvironmentListView />);
     expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
 
-    const textFilterInput = screen.getByRole('searchbox', { name: 'name filter' });
+    const textFilterInput = screen.getByRole('textbox', { name: 'name filter' });
     fireEvent.change(textFilterInput, { target: { value: 'no match' } });
 
     expect(screen.queryAllByTestId('environment-card')).toHaveLength(0);

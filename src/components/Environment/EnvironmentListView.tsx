@@ -17,13 +17,14 @@ import {
   ToolbarContent,
   ToolbarItem,
   EmptyStateSecondaryActions,
-  TextInput,
+  SearchInput,
 } from '@patternfly/react-core';
 import { CubesIcon, SearchIcon } from '@patternfly/react-icons/dist/esm/icons';
 import { useSortedEnvironments } from '../../hooks/useEnvironments';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { EnvironmentKind } from '../../types';
 import EnvironmentCard from './EnvironmentCard';
+
 import './EnvironmentListView.scss';
 
 const FilteredEmptyState: React.FC<{ onClearFilters: () => void }> = ({ onClearFilters }) => (
@@ -43,10 +44,14 @@ const FilteredEmptyState: React.FC<{ onClearFilters: () => void }> = ({ onClearF
   </EmptyState>
 );
 
+export type ToolbarGroupsProps = {
+  environments: EnvironmentKind[];
+};
+
 type Props = {
   preFilter?: (environment: EnvironmentKind) => boolean;
   filter?: (environment: EnvironmentKind) => boolean;
-  filterToolbar?: React.ReactNode;
+  renderToolbarGroups?: (environments: EnvironmentKind[]) => React.ReactNode;
   CardComponent?: React.ComponentType<{ environment: EnvironmentKind }>;
   onClearAllFilters?: () => void;
   emptyStateContent?: React.ReactNode;
@@ -54,13 +59,13 @@ type Props = {
 
 const EnvironmentListView: React.FC<Props> = ({
   preFilter,
-  filterToolbar,
+  renderToolbarGroups,
   filter,
   CardComponent = EnvironmentCard,
   onClearAllFilters,
   emptyStateContent,
 }) => {
-  const [nameFilter, setNameFilter, unsetNameFilter] = useSearchParam('envName', '');
+  const [nameFilter, setNameFilter, unsetNameFilter] = useSearchParam('name', '');
   const [allEnvironments, loaded] = useSortedEnvironments();
 
   const environments = React.useMemo(
@@ -92,7 +97,7 @@ const EnvironmentListView: React.FC<Props> = ({
 
   const createEnvironmentButton = (
     <Button
-      variant="primary"
+      variant="secondary"
       component={(props) => (
         <Link {...props} to="/app-studio/workspace-settings/environment/create" />
       )}
@@ -110,9 +115,9 @@ const EnvironmentListView: React.FC<Props> = ({
       <ToolbarContent>
         {environments.length > 0 ? (
           <>
-            {filterToolbar}
+            {renderToolbarGroups ? renderToolbarGroups(environments) : null}
             <ToolbarItem>
-              <TextInput
+              <SearchInput
                 name="nameInput"
                 type="search"
                 aria-label="name filter"

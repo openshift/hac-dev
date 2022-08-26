@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import '@testing-library/jest-dom';
 import { configure, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useLatestPipelineRunForComponent } from '../../../hooks/usePipelineRunsForApplication';
-import { componentCRMocks } from '../__data__/mock-data';
-import { mockPipelineRuns } from '../__data__/mock-pipeline-run';
+import { componentCRMocks } from '../../ApplicationDetailsView/__data__/mock-data';
+import { mockPipelineRuns } from '../../ApplicationDetailsView/__data__/mock-pipeline-run';
+import BuildStatusColumn from '../BuildStatusColumn';
 import { ComponentListItem } from '../ComponentListItem';
-import '@testing-library/jest-dom';
 
 configure({ testIdAttribute: 'data-testId' });
 
@@ -71,7 +72,13 @@ describe('ComponentListItem', () => {
   it('should not render Success component condition status on UI', async () => {
     const component = componentCRMocks[0];
     component.status.conditions = [];
-    render(<ComponentListItem component={component} routes={[]} />);
+    render(
+      <ComponentListItem
+        component={component}
+        routes={[]}
+        BuildStatusComponent={BuildStatusColumn}
+      />,
+    );
     await waitFor(() => expect(screen.queryByText('Component Created')).not.toBeInTheDocument());
   });
 });

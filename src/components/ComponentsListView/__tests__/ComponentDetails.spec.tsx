@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { fireEvent, screen, within } from '@testing-library/react';
+import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
+import { ComponentGroupVersionKind } from '../../../models';
+import { PipelineRunGroupVersionKind } from '../../../shared';
 import { routerRenderer } from '../../../utils/test-utils';
-import { componentCRMocks, mockApplication } from '../__data__/mock-data';
-import { mockPipelineRuns } from '../__data__/mock-pipeline-run';
+import { componentCRMocks, mockApplication } from '../../ApplicationDetailsView/__data__/mock-data';
+import { mockPipelineRuns } from '../../ApplicationDetailsView/__data__/mock-pipeline-run';
 import { ComponentDetails } from '../ComponentDetails';
 import '@testing-library/jest-dom';
 
@@ -11,9 +14,15 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 
-jest.mock('../../../hooks/usePipelineRunsForApplication', () => ({
-  useLatestPipelineRunForComponent: () => mockPipelineRuns[0],
-}));
+const getMockedResources = (kind: WatchK8sResource) => {
+  if (kind.groupVersionKind === ComponentGroupVersionKind) {
+    return [componentCRMocks, true];
+  }
+  if (kind.groupVersionKind === PipelineRunGroupVersionKind) {
+    return [mockPipelineRuns, true];
+  }
+  return [[], true];
+};
 
 describe('ComponentDetails', () => {
   const mockK8sWatchResource = useK8sWatchResource as jest.Mock;
@@ -43,14 +52,14 @@ describe('ComponentDetails', () => {
   });
 
   it('should render component details if component CR is available', () => {
-    mockK8sWatchResource.mockReturnValue([componentCRMocks, true, undefined]);
+    mockK8sWatchResource.mockImplementation(getMockedResources);
     routerRenderer(<ComponentDetails application={mockApplication} />);
     expect(screen.queryByText('No components')).not.toBeInTheDocument();
     expect(screen.getByTestId('component-list-toolbar')).toBeInTheDocument();
-    const searchInput = screen.getByTestId('name-input-filter');
+    const searchInput = screen.getByRole('textbox', { name: 'name filter' });
     fireEvent.change(searchInput, { target: { value: 'nodejs' } });
     const componentList = screen.getByTestId('component-list');
     const componentListItems = within(componentList).getAllByTestId('component-list-item');
-    expect(componentListItems.length).toBe(2);
+    expect(componentListItems.length).toBe(1);
   });
 });

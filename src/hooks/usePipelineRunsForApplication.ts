@@ -15,23 +15,22 @@ export const useLatestPipelineRunForComponent = (
     groupVersionKind: PipelineRunGroupVersionKind,
     namespace,
     isList: true,
+    selector: {
+      matchLabels: {
+        [BUILD_COMPONENT_LABEL]: component.metadata.name,
+      },
+    },
   });
   return React.useMemo(() => {
     if (prLoaded && !prError) {
-      return pipelineRuns
-        ?.filter?.(
-          (plr) =>
-            plr.metadata.labels[BUILD_COMPONENT_LABEL] === component.metadata.name &&
-            plr.metadata.labels[BUILD_APPLICATION_LABEL] === component.spec.application,
-        )
-        ?.sort?.(
-          (a, b) =>
-            new Date(b.metadata.creationTimestamp).getTime() -
-            new Date(a.metadata.creationTimestamp).getTime(),
-        )?.[0];
+      return pipelineRuns?.sort?.(
+        (a, b) =>
+          new Date(b.metadata.creationTimestamp).getTime() -
+          new Date(a.metadata.creationTimestamp).getTime(),
+      )?.[0];
     }
     return undefined;
-  }, [component.metadata.name, component.spec.application, pipelineRuns, prError, prLoaded]);
+  }, [pipelineRuns, prError, prLoaded]);
 };
 
 export const usePipelineRunsForApplication = (

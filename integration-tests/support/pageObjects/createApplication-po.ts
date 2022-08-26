@@ -41,7 +41,7 @@ export const ComponentsPagePO = {
 };
 
 export const applicationDetailPagePO = {
-  item: '[data-testid="component-list-item"] > b',
+  item: '[data-testid="component-list-item-name"] > b',
   componentBuildLog: '[data-testid="view-build-logs"]',
   componentSettings: '[data-testid="Component settings"]',
   detailsArrow: '[aria-label="Details"]',
