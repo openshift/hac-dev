@@ -4,15 +4,19 @@ import {
   EmptyStateBody,
   EmptyStateIcon,
   FormSection,
-  PageSection,
   Spinner,
   Title,
   Bullseye,
+  HelperText,
+  TextContent,
+  Text,
+  HelperTextItem,
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import { SearchIcon } from '@patternfly/react-icons/dist/esm/icons/search-icon';
 import { useFormikContext } from 'formik';
 import isEmpty from 'lodash/isEmpty';
+import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
 import { useComponentDetection } from '../utils/cdq-utils';
 import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues } from '../utils/types';
@@ -117,7 +121,16 @@ const ReviewSection: React.FunctionComponent = () => {
   }
 
   return (
-    <PageSection isFilled style={{ height: '100%' }}>
+    <>
+      <TextContent>
+        <Text component="h2">Configure your components for deployment</Text>
+        <HelperText>
+          <HelperTextItem>
+            Review and define deployment settings and options.{' '}
+            <HelpTopicLink topicId="create-app-config">Learn more</HelpTopicLink>
+          </HelperTextItem>
+        </HelperText>
+      </TextContent>
       <FormSection>
         {cachedComponents.current.map((component, index) => (
           <ReviewComponentCard
@@ -127,7 +140,7 @@ const ReviewSection: React.FunctionComponent = () => {
           />
         ))}
       </FormSection>
-    </PageSection>
+    </>
   );
 };
 

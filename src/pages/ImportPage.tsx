@@ -1,7 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { HelpTopicLink } from '../components/HelpTopicLink/HelpTopicLink';
 import ImportForm from '../components/ImportForm/ImportForm';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
@@ -17,12 +16,6 @@ const ImportPage: React.FunctionComponent = () => {
   const applicationName = getQueryArgument('application');
 
   const title = applicationName ? 'Add component' : 'Create application';
-  const description = (
-    <>
-      Import your code repo or start with a sample.{' '}
-      <HelpTopicLink topicId="create-app">Learn more</HelpTopicLink>
-    </>
-  );
 
   const Form = hacbsFlag ? HacbsImportForm : ImportForm;
 
@@ -37,7 +30,6 @@ const ImportPage: React.FunctionComponent = () => {
           { path: '#', name: 'Import' },
         ]}
         title={title}
-        description={description}
       >
         <Form applicationName={applicationName} />
       </PageLayout>

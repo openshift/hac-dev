@@ -25,7 +25,6 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
               name: 'Name application',
               component: <ApplicationSection />,
               validationSchema: applicationValidationSchema,
-              isFormWidthLimited: true,
               onSubmit: checkApplicationName,
             },
           ]),
@@ -39,11 +38,10 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
             },
             {
               id: 'review',
-              name: 'Review components',
+              name: 'Configure components',
               component: <ReviewSection />,
               nextButtonText: 'Create',
               canJumpTo: false,
-              hasNoBodyPadding: true,
               validationSchema: reviewValidationSchema,
             },
           ]

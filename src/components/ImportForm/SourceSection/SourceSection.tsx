@@ -3,15 +3,21 @@ import {
   Button,
   ButtonVariant,
   FormGroup,
+  FormSection,
   Grid,
   GridItem,
+  HelperText,
+  HelperTextItem,
+  Text,
+  TextContent,
   ValidatedOptions,
 } from '@patternfly/react-core';
 import { useField, useFormikContext } from 'formik';
 import { useOnMount } from '../../../hooks/useOnMount';
-import { getFieldId, HelpTooltipIcon, InputField } from '../../../shared';
+import { getFieldId, InputField } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
 import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../../types';
+import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
 import { useAccessCheck, useAccessTokenBinding } from '../utils/auth-utils';
 import { ImportFormValues, ImportStrategy } from '../utils/types';
 import { gitUrlRegex, containerImageRegex } from '../utils/validation-utils';
@@ -138,48 +144,53 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
     onStrategyChange(ImportStrategy.SAMPLE);
   }, [onStrategyChange, setFieldValue]);
 
+  const description = gitOnly
+    ? 'Provide a link to your GitHub repo.'
+    : 'Provide a link to your GitHub repo or Quay container image, or start with a code sample.';
+
   return (
     <>
-      <FormGroup
-        fieldId={fieldId}
-        label={label}
-        labelIcon={
-          <HelpTooltipIcon
-            content={
-              gitOnly
-                ? 'Provide a link to your Git repository.'
-                : 'Provide a link to your Git repository or container registry, or start with a code sample.'
-            }
-          />
-        }
-        validated={!isValid && ValidatedOptions.error}
-        isRequired
-      >
-        <Grid hasGutter>
-          <GridItem span={onStrategyChange ? 8 : 12}>
-            <InputField
-              name="source"
-              placeholder="Enter your source"
-              onChange={debouncedHandleSourceChange}
-              validated={validated}
-              helpText={helpText}
-              helpTextInvalid={helpTextInvalid}
-              required
-              data-test="enter-source"
-            />
-          </GridItem>
-          {onStrategyChange ? (
-            <GridItem span={4}>
-              No code?{' '}
-              <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
-                Start with a sample.
-              </Button>
+      <TextContent>
+        <Text component="h2">Add components to your application</Text>
+        <HelperText>
+          <HelperTextItem>
+            {description} <HelpTopicLink topicId="add-component">Learn more</HelpTopicLink>
+          </HelperTextItem>
+        </HelperText>
+      </TextContent>
+      <FormSection>
+        <FormGroup
+          fieldId={fieldId}
+          label={label}
+          validated={!isValid && ValidatedOptions.error}
+          isRequired
+        >
+          <Grid hasGutter>
+            <GridItem span={onStrategyChange ? 8 : 12}>
+              <InputField
+                name="source"
+                placeholder="Enter your source"
+                onChange={debouncedHandleSourceChange}
+                validated={validated}
+                helpText={helpText}
+                helpTextInvalid={helpTextInvalid}
+                required
+                data-test="enter-source"
+              />
             </GridItem>
-          ) : null}
-        </Grid>
-      </FormGroup>
-      {showAuthOptions && <AuthOptions />}
-      {showGitOptions && <GitOptions />}
+            {onStrategyChange ? (
+              <GridItem span={4}>
+                No code?{' '}
+                <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
+                  Start with a sample.
+                </Button>
+              </GridItem>
+            ) : null}
+          </Grid>
+        </FormGroup>
+        {showAuthOptions && <AuthOptions />}
+        {showGitOptions && <GitOptions />}
+      </FormSection>
     </>
   );
 };

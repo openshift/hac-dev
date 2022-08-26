@@ -14,7 +14,10 @@ jest.mock('../../utils/auth-utils', () => ({
 }));
 
 jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
-  useChrome: () => ({ auth: { getToken: () => Promise.resolve('token') } }),
+  useChrome: () => ({
+    auth: { getToken: () => Promise.resolve('token') },
+    helpTopics: { setActiveTopic: jest.fn(), enableTopics: jest.fn(), disableTopics: jest.fn() },
+  }),
 }));
 
 jest.mock('../../../../shared/hooks', () => ({
