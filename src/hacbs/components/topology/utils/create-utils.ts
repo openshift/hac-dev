@@ -20,15 +20,15 @@ export type NodeCreatorSetup = <T>(
   type: T,
   width?: number,
   height?: number,
-) => <D extends GenericNodeData>(name: string, data: D) => NodeModel<D, T>;
+) => <D extends GenericNodeData>(name: string, data?: D) => NodeModel<D, T>;
 
 export const createGenericNode: NodeCreatorSetup =
   <T>(type: T, width?: number, height?: number) =>
-  <D extends GenericNodeData>(name: string, data: D) => ({
+  <D extends GenericNodeData>(name: string, data?: D) => ({
     id: name,
-    label: data.label,
-    runAfterTasks: data.runAfterTasks || [],
-    data,
+    label: data?.label || name,
+    runAfterTasks: data?.runAfterTasks || [],
+    ...(data && { data }),
     height,
     width,
     type,

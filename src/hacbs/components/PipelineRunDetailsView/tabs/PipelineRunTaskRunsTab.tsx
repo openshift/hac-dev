@@ -7,7 +7,7 @@ type PipelineRunTaskRunsTabProps = {
 };
 
 const PipelineRunTaskRunsTab: React.FC<PipelineRunTaskRunsTabProps> = ({ pipelineRun }) =>
-  Object.keys(pipelineRun).length ? (
+  pipelineRun && Object.keys(pipelineRun).length ? (
     <TaskRunListView
       pipelineName={pipelineRun.metadata.name}
       namespace={pipelineRun.metadata.namespace}

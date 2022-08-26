@@ -14,7 +14,7 @@ const PipelineRunVisualization = ({ pipelineRun }) => {
     return null;
   }
   return (
-    <div className="hacbs-pipelinerun-graph" data-test="pipelinerun-graph">
+    <div className="hacbs-pipelinerun-graph" data-test="hacbs-pipelinerun-graph">
       <VisualizationFactory
         componentFactory={pipelineRuncomponentFactory}
         layoutFactory={layoutFactory}

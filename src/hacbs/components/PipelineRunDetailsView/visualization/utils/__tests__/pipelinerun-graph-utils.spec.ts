@@ -1,7 +1,11 @@
+import { RunStatus } from '@patternfly/react-topology';
 import omit from 'lodash/omit';
+import { SucceedConditionReason } from '../../../../../../shared';
+import { PipelineRunKind } from '../../../../../types';
 import { NodeType } from '../../../../ApplicationDetails/tabs/overview/visualization/const';
 import { testPipeline, testPipelineRun } from '../../../../topology/__data__/pipeline-test-data';
 import {
+  appendStatus,
   extractDepsFromContextVariables,
   getPipelineDataModel,
   getPipelineFromPipelineRun,
@@ -9,6 +13,20 @@ import {
 } from '../pipelinerun-graph-utils';
 
 describe('pipelinerun-graph-utils: ', () => {
+  beforeEach(() => {
+    const createElement = document.createElement.bind(document);
+    document.createElement = (tagName) => {
+      if (tagName === 'canvas') {
+        return {
+          getContext: () => ({
+            measureText: () => ({}),
+          }),
+        };
+      }
+      return createElement(tagName);
+    };
+  });
+
   describe('extractDepsFromContextVariables: ', () => {
     it('should return emtpy array for invalid values', () => {
       expect(extractDepsFromContextVariables('')).toEqual([]);
@@ -93,6 +111,91 @@ describe('pipelinerun-graph-utils: ', () => {
     it('should return a spacer node ', () => {
       const { nodes } = getPipelineRunDataModel(testPipelineRun);
       expect(nodes.filter((n) => n.type === NodeType.SPACER_NODE)).toHaveLength(1);
+    });
+  });
+
+  describe('appendStatus', () => {
+    it('should append Idle status if a taskrun status reason is missing', () => {
+      const taskList = appendStatus(getPipelineFromPipelineRun(testPipelineRun), testPipelineRun);
+      expect(taskList.filter((t) => t.status.reason === RunStatus.Idle)).toHaveLength(1);
+    });
+
+    it('should append Skipped status for the skipped tasks', () => {
+      const taskList = appendStatus(getPipelineFromPipelineRun(testPipelineRun), testPipelineRun);
+      expect(taskList.filter((t) => t.status.reason === RunStatus.Skipped)).toHaveLength(2);
+    });
+
+    it('should append Idle status if the taskruns are missing and overall pipelinerun status is PipelineRunPending', () => {
+      const pendingPipelineRun: PipelineRunKind = {
+        ...testPipelineRun,
+        status: {
+          ...testPipelineRun.status,
+          taskRuns: undefined,
+          conditions: [
+            {
+              reason: SucceedConditionReason.PipelineRunPending,
+              status: 'False',
+              type: 'Succeeded',
+            },
+          ],
+        },
+      };
+      const taskList = appendStatus(
+        getPipelineFromPipelineRun(pendingPipelineRun),
+        pendingPipelineRun,
+      );
+      expect(taskList.filter((t) => t.status.reason === RunStatus.Pending)).toHaveLength(6);
+    });
+
+    it('should append Cancelled status if the taskruns are missing and overall pipelinerun status is Cancelled', () => {
+      const cancelledPipelineRun: PipelineRunKind = {
+        ...testPipelineRun,
+        status: {
+          ...testPipelineRun.status,
+          taskRuns: undefined,
+          conditions: [
+            {
+              reason: 'Cancelled',
+              status: 'False',
+              type: 'Succeeded',
+            },
+          ],
+        },
+      };
+      const taskList = appendStatus(
+        getPipelineFromPipelineRun(cancelledPipelineRun),
+        cancelledPipelineRun,
+      );
+      expect(taskList.filter((t) => t.status.reason === RunStatus.Cancelled)).toHaveLength(6);
+    });
+
+    it('should append Idle status if the status is missing in pipelinerun and taskrun', () => {
+      const idlePipelineRun: PipelineRunKind = {
+        ...testPipelineRun,
+        status: {
+          ...testPipelineRun.status,
+          taskRuns: {
+            'sum-and-multiply-pipeline-ybpufp-task1': {
+              pipelineTaskName: 'task1',
+              status: undefined,
+            },
+          },
+          conditions: [],
+          pipelineSpec: {
+            tasks: [
+              {
+                name: 'task1',
+                taskRef: {
+                  kind: 'Task',
+                  name: 'sum',
+                },
+              },
+            ],
+          },
+        },
+      };
+      const taskList = appendStatus(getPipelineFromPipelineRun(idlePipelineRun), idlePipelineRun);
+      expect(taskList.filter((t) => t.status.reason === RunStatus.Idle)).toHaveLength(1);
     });
   });
 });

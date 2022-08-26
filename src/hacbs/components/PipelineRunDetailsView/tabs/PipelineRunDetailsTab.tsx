@@ -15,7 +15,7 @@ type PipelineRunDetailsTabProps = {
   pipelineRun: PipelineRunKind;
 };
 const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineRun }) => {
-  if (Object.keys(pipelineRun).length <= 0) {
+  if (!pipelineRun || Object.keys(pipelineRun).length <= 0) {
     return null;
   }
   const duration = calculateDuration(
@@ -31,6 +31,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
       </Title>
       <PipelineRunVisualization pipelineRun={pipelineRun} />
       <DescriptionList
+        data-test="pipelinerun-details"
         columnModifier={{
           default: '2Col',
         }}

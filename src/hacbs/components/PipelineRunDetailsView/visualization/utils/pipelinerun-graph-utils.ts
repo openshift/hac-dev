@@ -10,7 +10,7 @@ import { uniq } from 'lodash-es';
 import find from 'lodash/find';
 import merge from 'lodash/merge';
 import minBy from 'lodash/minBy';
-import { SucceedConditionReason, pipelineRunStatus } from '../../../../../shared';
+import { pipelineRunStatus } from '../../../../../shared';
 import { formatPrometheusDuration } from '../../../../../shared/components/timestamp/datetime';
 import { PipelineKind, PipelineTask } from '../../../../types/pipeline';
 import { PipelineRunKind } from '../../../../types/pipelineRun';
@@ -42,7 +42,7 @@ export const extractDepsFromContextVariables = (contextVariable: string) => {
   let matches;
   const deps = [];
   while ((matches = regex.exec(contextVariable)) !== null) {
-    // This is necessary to avoid infinite loops with non-matches
+    // This is necessary to avoid infinite loops with zero-width matches
     if (matches.index === regex.lastIndex) {
       regex.lastIndex++;
     }
@@ -87,19 +87,13 @@ export const appendStatus = (
   isFinallyTasks = false,
 ): PipelineTaskWithStatus[] => {
   const tasks = (isFinallyTasks ? pipeline.spec.finally : pipeline.spec.tasks) || [];
-
+  const overallPipelineRunStatus = pipelineRunStatus(pipelineRun);
   return tasks.map((task) => {
     if (!pipelineRun?.status) {
       return task;
     }
     if (!pipelineRun?.status?.taskRuns) {
-      if (pipelineRun.spec.status === SucceedConditionReason.PipelineRunCancelled) {
-        return merge(task, { status: { reason: RunStatus.Cancelled } });
-      }
-      if (pipelineRun.spec.status === SucceedConditionReason.PipelineRunPending) {
-        return merge(task, { status: { reason: RunStatus.Idle } });
-      }
-      return merge(task, { status: { reason: RunStatus.Failed } });
+      return merge(task, { status: { reason: overallPipelineRunStatus } });
     }
     const mTask = merge(task, {
       status: find(pipelineRun.status.taskRuns, { pipelineTaskName: task.name })?.status,
