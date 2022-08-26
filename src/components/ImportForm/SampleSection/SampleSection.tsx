@@ -36,7 +36,7 @@ const SampleSection = ({ onStrategyChange }) => {
   const [detectedComponents, detectedComponentsLoaded, detectedComponentsError] =
     useComponentDetection(source, application);
 
-  const detectingComponents = selected && !detectedComponentsLoaded;
+  const detectingComponents = selected && !detectedComponents && !detectedComponentsLoaded;
 
   React.useEffect(() => {
     let unmounted = false;
