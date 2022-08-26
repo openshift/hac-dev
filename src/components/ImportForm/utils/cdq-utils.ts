@@ -67,12 +67,12 @@ export const useComponentDetection = (
 
   const detectedComponents = React.useMemo(() => {
     if (cdqName && loaded && cdq) {
-      if (cdqName === cdq.metadata.name) {
+      if (source === cdq.spec.git.url) {
         return cdq?.status?.componentDetected;
       }
     }
     return undefined;
-  }, [cdqName, cdq, loaded]);
+  }, [source, cdqName, loaded, cdq]);
 
   const error = React.useMemo(() => {
     if (createError) {

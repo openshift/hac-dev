@@ -1,4 +1,4 @@
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { useK8sWatchResource, k8sDeleteResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { renderHook } from '@testing-library/react-hooks';
 import { createComponentDetectionQuery } from '../../../../utils/create-utils';
 import { useComponentDetection } from '../cdq-utils';
@@ -8,6 +8,7 @@ import '@testing-library/jest-dom';
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
   k8sCreateResource: jest.fn(),
+  k8sDeleteResource: jest.fn(),
 }));
 
 jest.mock('../../../../utils/create-utils', () => ({
@@ -95,5 +96,17 @@ describe('CDQ Utils: useComponentDetection', () => {
       '/',
       'dev',
     );
+  });
+
+  it('should should delete created CDQ on unmount', async () => {
+    useK8sWatchMock.mockReturnValue([{}, true, null]);
+    createCDQMock.mockResolvedValue({ metadata: { name: 'test-cdq' } });
+
+    const { waitFor, waitForNextUpdate, unmount } = renderHook(() =>
+      useComponentDetection('https://github.com/test/repo', 'test-app', 'token', '/', 'dev'),
+    );
+    await waitForNextUpdate();
+    unmount();
+    waitFor(() => expect(k8sDeleteResource).toHaveBeenCalled());
   });
 });
