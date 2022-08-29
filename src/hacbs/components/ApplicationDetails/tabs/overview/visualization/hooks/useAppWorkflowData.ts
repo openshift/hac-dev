@@ -7,7 +7,7 @@ import {
   useBuildPipelines,
 } from '../../../../../../hooks';
 import { Workflow, WorkflowNode, WorkflowNodeType } from '../types';
-import { getLastEnvironment, workflowToNodes } from '../utils/visualization-utils';
+import { getLastEnvironments, workflowToNodes } from '../utils/visualization-utils';
 
 export const useAppWorkflowData = (
   applicationName: string,
@@ -118,7 +118,7 @@ export const useAppWorkflowData = (
       },
       runBefore: [],
       runAfter: isResourcesAvailable(environments)
-        ? [getLastEnvironment(environments)]
+        ? getLastEnvironments(environments)
         : ['static-env'],
     },
   };
