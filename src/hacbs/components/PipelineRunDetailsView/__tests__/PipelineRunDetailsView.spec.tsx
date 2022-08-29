@@ -48,6 +48,56 @@ const mockApplication = {
         completionTime: '2022-08-04T16:24:02Z',
       },
     ],
+    taskRuns: {
+      'java-springboot-sample-b4trz-show-summary': {
+        pipelineTaskName: 'show-summary',
+        status: {
+          completionTime: '2022-08-23T19:08:18Z',
+          conditions: [
+            {
+              lastTransitionTime: '2022-08-23T19:08:18Z',
+              message:
+                'failed to create task run pod "java-springboot-sample-b4trz-show-summary": Pod "java-springboot-sample-b4trz-show-summary-pod" is invalid: spec.activeDeadlineSeconds: Invalid value: 0: must be between 1 and 2147483647, inclusive. Maybe missing or invalid Task mfrances/summary',
+              reason: 'CouldntGetTask',
+              status: 'False',
+              type: 'Succeeded',
+            },
+          ],
+          podName: '',
+          startTime: '2022-08-23T19:08:18Z',
+          taskSpec: {
+            description: 'App Studio Summary Pipeline Task.',
+            params: [
+              {
+                description: 'pipeline-run to annotate',
+                name: 'pipeline-run-name',
+                type: 'string',
+              },
+              {
+                description: 'Git URL',
+                name: 'git-url',
+                type: 'string',
+              },
+              {
+                description: 'Image URL',
+                name: 'image-url',
+                type: 'string',
+              },
+            ],
+            steps: [
+              {
+                image:
+                  'registry.redhat.io/openshift4/ose-cli@sha256:e6b307c51374607294d1756b871d3c702251c396efdd44d4ef8db68e239339d3',
+                name: 'appstudio-summary',
+                resources: {},
+                script:
+                  '#!/usr/bin/env bash\necho\necho "App Studio Build Summary:"\necho\necho "Build repository: $(params.git-url)"\necho "Generated Image is in : $(params.image-url)"\necho\noc annotate pipelinerun $(params.pipeline-run-name) build.appstudio.openshift.io/repo=$(params.git-url)\noc annotate pipelinerun $(params.pipeline-run-name) build.appstudio.openshift.io/image=$(params.image-url)\n\necho "Output is in the following annotations:"\n\necho "Build Repo is in \'build.appstudio.openshift.io/repo\' "\necho \'oc get pr $(params.pipeline-run-name) -o jsonpath="{.metadata.annotations.build\\.appstudio\\.openshift\\.io/repo}"\'\n\necho "Build Image is in \'build.appstudio.openshift.io/image\' "\necho \'oc get pr $(params.pipeline-run-name) -o jsonpath="{.metadata.annotations.build\\.appstudio\\.openshift\\.io/image}"\'\n\necho End Summary\n',
+              },
+            ],
+          },
+        },
+      },
+    },
   },
 };
 
