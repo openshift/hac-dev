@@ -9,6 +9,8 @@ export type EnvironmentKind = K8sResourceCommon & {
     };
     deploymentStrategy?: string;
     parentEnvironment?: string;
+    type?: string;
+    tags?: string[];
   };
   status?: {};
 };

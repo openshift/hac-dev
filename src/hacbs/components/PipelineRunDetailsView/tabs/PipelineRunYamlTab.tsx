@@ -16,7 +16,7 @@ const PipelineRunYamlTab: React.FC<PipelineRunYamlTabProps> = () => {
       <EmptyStateBody>
         No YAML markup found yet.
         <br />
-        To get Started, create a pipelinerun or connect to a pipelinerun environment.
+        To get started, create a pipelinerun or connect to a pipelinerun environment.
       </EmptyStateBody>
     </EmptyState>
   );

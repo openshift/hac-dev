@@ -17,7 +17,7 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
   return (
     <>
       <TableData className={pipelineRunTableColumnClasses.name}>
-        <Link to={`/app-studio/pipelineruns?name=${obj.metadata.name}`} title={obj.metadata.name}>
+        <Link to={`/app-studio/pipelineruns/${obj.metadata.name}`} title={obj.metadata.name}>
           {obj.metadata.name}
         </Link>
       </TableData>

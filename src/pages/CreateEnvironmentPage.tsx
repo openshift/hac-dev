@@ -6,7 +6,7 @@ import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 const CreateEnvironmentPage: React.FC = () => {
   return (
     <NamespacedPage>
-      <Helmet>Create Environment</Helmet>
+      <Helmet>Create environment</Helmet>
       <CreateEnvironment />
     </NamespacedPage>
   );

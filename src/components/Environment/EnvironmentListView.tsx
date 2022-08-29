@@ -14,17 +14,71 @@ import {
   PageSection,
   PageSectionVariants,
   Toolbar,
+  ToolbarContent,
   ToolbarItem,
-  Text,
+  EmptyStateSecondaryActions,
+  TextInput,
 } from '@patternfly/react-core';
-import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
+import { CubesIcon, SearchIcon } from '@patternfly/react-icons/dist/esm/icons';
 import { useSortedEnvironments } from '../../hooks/useEnvironments';
-import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
+import { useSearchParam } from '../../hooks/useSearchParam';
+import { EnvironmentKind } from '../../types';
 import EnvironmentCard from './EnvironmentCard';
 import './EnvironmentListView.scss';
 
-const EnvironmentListView: React.FC = () => {
-  const [environments, loaded] = useSortedEnvironments();
+const FilteredEmptyState: React.FC<{ onClearFilters: () => void }> = ({ onClearFilters }) => (
+  <EmptyState>
+    <EmptyStateIcon icon={SearchIcon} />
+    <Title headingLevel="h2" size="lg">
+      No results found
+    </Title>
+    <EmptyStateBody>
+      No results match the filter criteria. Remove filters or clear all filters to show results.
+    </EmptyStateBody>
+    <EmptyStateSecondaryActions>
+      <Button variant="link" onClick={onClearFilters}>
+        Clear all filters
+      </Button>
+    </EmptyStateSecondaryActions>
+  </EmptyState>
+);
+
+type Props = {
+  preFilter?: (environment: EnvironmentKind) => boolean;
+  filter?: (environment: EnvironmentKind) => boolean;
+  filterToolbar?: React.ReactNode;
+  CardComponent?: React.ComponentType<{ environment: EnvironmentKind }>;
+  onClearAllFilters?: () => void;
+  emptyStateContent?: React.ReactNode;
+};
+
+const EnvironmentListView: React.FC<Props> = ({
+  preFilter,
+  filterToolbar,
+  filter,
+  CardComponent = EnvironmentCard,
+  onClearAllFilters,
+  emptyStateContent,
+}) => {
+  const [nameFilter, setNameFilter, unsetNameFilter] = useSearchParam('envName', '');
+  const [allEnvironments, loaded] = useSortedEnvironments();
+
+  const environments = React.useMemo(
+    () => (preFilter ? allEnvironments.filter(preFilter) : allEnvironments),
+    [preFilter, allEnvironments],
+  );
+
+  const filteredEnvironments = React.useMemo(() => {
+    // apply name filter
+    let result = nameFilter
+      ? environments.filter(({ metadata: { name } }) => name.indexOf(nameFilter) !== -1)
+      : environments;
+
+    // apply filter if present
+    result = filter ? result.filter(filter) : result;
+
+    return result;
+  }, [environments, filter, nameFilter]);
 
   if (!loaded) {
     return (
@@ -36,44 +90,74 @@ const EnvironmentListView: React.FC = () => {
     );
   }
 
+  const createEnvironmentButton = (
+    <Button
+      variant="primary"
+      component={(props) => (
+        <Link {...props} to="/app-studio/workspace-settings/environment/create" />
+      )}
+    >
+      Create environment
+    </Button>
+  );
+
   const createEnvironment = (
-    <Toolbar usePageInsets>
-      <ToolbarItem>
-        <Button
-          variant="primary"
-          component={(props) => (
-            <Link {...props} to="/app-studio/workspace-settings/environment/create" />
-          )}
-        >
-          Create Environment
-        </Button>
-      </ToolbarItem>
+    <Toolbar
+      collapseListedFiltersBreakpoint="xl"
+      clearAllFilters={onClearAllFilters}
+      clearFiltersButtonText="Clear filters"
+    >
+      <ToolbarContent>
+        {environments.length > 0 ? (
+          <>
+            {filterToolbar}
+            <ToolbarItem>
+              <TextInput
+                name="nameInput"
+                type="search"
+                aria-label="name filter"
+                placeholder="Filter by name..."
+                value={nameFilter}
+                onChange={(name) => setNameFilter(name)}
+              />
+            </ToolbarItem>
+          </>
+        ) : null}
+        <ToolbarItem>{createEnvironmentButton}</ToolbarItem>
+      </ToolbarContent>
     </Toolbar>
   );
 
   return (
     <>
-      <Title headingLevel="h3">Environments</Title>
-      <Text component="p">
-        Manage the continuous delivery process for your applications with environments.{' '}
-        <HelpTopicLink topicId="settings">Learn more</HelpTopicLink>
-      </Text>
-      {!environments || environments.length === 0 ? (
+      {environments.length === 0 ? (
+        <EmptyState variant={EmptyStateVariant.large}>
+          <EmptyStateIcon icon={CubesIcon} />
+          {emptyStateContent ?? (
+            <>
+              <Title headingLevel="h4" size="lg">
+                No Environments
+              </Title>
+              <EmptyStateBody>To get started, create an environment.</EmptyStateBody>
+            </>
+          )}
+          {createEnvironmentButton}
+        </EmptyState>
+      ) : filteredEnvironments.length === 0 ? (
         <>
-          <EmptyState variant={EmptyStateVariant.large}>
-            <EmptyStateIcon icon={CubesIcon} />
-            <Title headingLevel="h4" size="lg">
-              No Environments
-            </Title>
-            <EmptyStateBody>To get started, create an environment.</EmptyStateBody>
-            {createEnvironment}
-          </EmptyState>
+          {createEnvironment}
+          <FilteredEmptyState
+            onClearFilters={() => {
+              unsetNameFilter();
+              onClearAllFilters?.();
+            }}
+          />
         </>
       ) : (
         <>
           {createEnvironment}
           <Grid hasGutter>
-            {environments.map((env) => (
+            {filteredEnvironments.map((env) => (
               <GridItem
                 span={12}
                 md={6}
@@ -82,7 +166,7 @@ const EnvironmentListView: React.FC = () => {
                 data-test="environment-card"
                 className="environment-list-view_card"
               >
-                <EnvironmentCard environment={env} />
+                <CardComponent environment={env} />
               </GridItem>
             ))}
           </Grid>

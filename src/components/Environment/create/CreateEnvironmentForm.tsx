@@ -60,7 +60,7 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
     />
   );
   return (
-    <PageLayout title="Create Environment" footer={footer}>
+    <PageLayout title="Create environment" footer={footer}>
       <PageSection variant={PageSectionVariants.light} isFilled isWidthLimited>
         <Form onSubmit={handleSubmit} className="hacDev-create-environment-form">
           <FormSection title="Define environment">

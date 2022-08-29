@@ -1,18 +1,25 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
+import { PageSection, PageSectionVariants, Text, Title } from '@patternfly/react-core';
 import EnvironmentListView from '../components/Environment/EnvironmentListView';
 import { GettingStartedCard } from '../components/GettingStartedCard/GettingStartedCard';
+import { HelpTopicLink } from '../components/HelpTopicLink/HelpTopicLink';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
+import HacbsEnvironmentListView from '../hacbs/components/Environment/EnvironmentListView';
+import { EnvironmentType } from '../hacbs/components/Environment/utils';
+import { HACBS_FLAG } from '../hacbs/hacbsFeatureFlag';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 import imageUrl from '../imgs/getting-started-illustration.svg';
+
 import './WorkspaceSettingsPage.scss';
 
 const GETTING_STARTED_CARD_KEY = 'environments-list-getting-started-card';
 
 const WorkspaceSettingsPage: React.FC = () => {
   useQuickstartCloseOnUnmount();
+  const [hacbs] = useFeatureFlag(HACBS_FLAG);
   return (
     <NamespacedPage>
       <Helmet>
@@ -38,7 +45,18 @@ const WorkspaceSettingsPage: React.FC = () => {
       </GettingStartedCard>
       <PageLayout title="Settings">
         <PageSection variant={PageSectionVariants.light} isFilled>
-          <EnvironmentListView />
+          <Title headingLevel="h3">Environments</Title>
+          <Text component="p">
+            Manage the continuous delivery process for your applications with environments.{' '}
+            <HelpTopicLink topicId="settings">Learn more</HelpTopicLink>
+          </Text>
+          {hacbs ? (
+            <HacbsEnvironmentListView
+              validTypes={[EnvironmentType.static, EnvironmentType.managed]}
+            />
+          ) : (
+            <EnvironmentListView />
+          )}
         </PageSection>
       </PageLayout>
     </NamespacedPage>

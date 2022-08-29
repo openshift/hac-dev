@@ -11,6 +11,7 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
   useNavigate: () => {},
+  useSearchParams: () => React.useState(() => new URLSearchParams()),
 }));
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;

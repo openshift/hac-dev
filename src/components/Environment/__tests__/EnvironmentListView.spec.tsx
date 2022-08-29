@@ -14,6 +14,7 @@ jest.mock('react-i18next', () => ({
 }));
 
 jest.mock('react-router-dom', () => ({
+  useSearchParams: () => React.useState(() => new URLSearchParams()),
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
@@ -33,6 +34,8 @@ const environments: EnvironmentKind[] = [
     },
     spec: {
       displayName: 'Prod',
+      deploymentStrategy: 'Manual',
+      type: 'poc',
     },
   },
   {
@@ -44,6 +47,8 @@ const environments: EnvironmentKind[] = [
     },
     spec: {
       displayName: 'Staging',
+      deploymentStrategy: 'Manual',
+      type: 'poc',
     },
   },
 ];
@@ -64,14 +69,14 @@ describe('EnvironmentListView', () => {
     render(<EnvironmentListView />);
     screen.getByText('No Environments');
     screen.getByText('To get started, create an environment.');
-    const button = screen.getByText('Create Environment');
+    const button = screen.getByText('Create environment');
     expect(button).toBeInTheDocument();
   });
 
   it('should render application list when environment(s) is(are) present', () => {
     watchResourceMock.mockReturnValue([environments, true]);
     render(<EnvironmentListView />);
-    screen.getByText('Create Environment');
+    screen.getByText('Create environment');
     expect(screen.getAllByTestId('environment-card').length).toBe(2);
   });
 });

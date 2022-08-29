@@ -50,7 +50,7 @@ const CreateEnvironment: React.FC = () => {
   );
 
   const handleReset = React.useCallback(() => {
-    navigate(`/app-studio/workspace-settings`);
+    navigate(-1);
   }, [navigate]);
 
   return (

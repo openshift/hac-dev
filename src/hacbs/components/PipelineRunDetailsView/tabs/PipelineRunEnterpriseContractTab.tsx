@@ -16,7 +16,7 @@ const PipelineRunEnterpriseContractTab: React.FC<PipelineRunEnterpriseContractTa
       <EmptyStateBody>
         No enterprise contracts found yet.
         <br />
-        To get Started, create a pipelinerun or connect to a pipelinerun environment.
+        To get started, create a pipelinerun or connect to a pipelinerun environment.
       </EmptyStateBody>
     </EmptyState>
   );

@@ -8,6 +8,7 @@ import {
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateSecondaryActions,
+  InputGroup,
   Spinner,
   Text,
   TextContent,
@@ -169,20 +170,20 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
           <ToolbarContent>
             <ToolbarGroup alignment={{ default: 'alignLeft' }}>
               <ToolbarItem>
-                <Button variant="control">
-                  <FilterIcon /> {'Name'}
-                </Button>
-              </ToolbarItem>
-              <ToolbarItem>
-                <TextInput
-                  name="nameInput"
-                  data-test="name-input-filter"
-                  type="search"
-                  aria-label="name filter"
-                  placeholder="Filter by name..."
-                  onChange={(name) => onNameInput(name)}
-                  value={nameFilter}
-                />
+                <InputGroup>
+                  <Button variant="control">
+                    <FilterIcon /> Name
+                  </Button>
+                  <TextInput
+                    name="nameInput"
+                    data-test="name-input-filter"
+                    type="search"
+                    aria-label="name filter"
+                    placeholder="Filter by name..."
+                    onChange={(name) => onNameInput(name)}
+                    value={nameFilter}
+                  />
+                </InputGroup>
               </ToolbarItem>
             </ToolbarGroup>
           </ToolbarContent>

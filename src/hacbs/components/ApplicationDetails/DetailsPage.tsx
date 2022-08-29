@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Dropdown,
   DropdownItem,
@@ -19,7 +20,6 @@ import {
 import { CaretDownIcon } from '@patternfly/react-icons/dist/esm/icons/caret-down-icon';
 import cx from 'classnames';
 import BreadCrumbs from '../../../shared/components/breadcrumbs/BreadCrumbs';
-import { getQueryArgument, removeQueryArguments, setQueryArgument } from '../../../shared/utils';
 
 import './DetailsPage.scss';
 
@@ -54,18 +54,31 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
   tabs = [],
   onTabSelect,
 }) => {
-  const tabMatched =
-    tabs?.find((t) => t.key === getQueryArgument('activeTab'))?.key || tabs?.[0]?.key;
-  const [activeTab, setActiveTab] = React.useState(tabMatched);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('activeTab');
+  const tabMatched = tabs?.find((t) => t.key === activeTab)?.key || tabs?.[0]?.key;
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const setActiveTab = React.useCallback(
+    (tab: string, replace = false) => {
+      if (activeTab !== tab) {
+        const params = new URLSearchParams();
+        params.set('activeTab', tab);
+        setSearchParams(params, { replace });
+      }
+    },
+    [setSearchParams, activeTab],
+  );
 
   React.useEffect(() => {
     if (!tabMatched) {
-      removeQueryArguments('activeTab');
-    } else if (activeTab !== tabMatched) {
-      setActiveTab(tabMatched);
+      setSearchParams(new URLSearchParams(), { replace: true });
+    } else {
+      setActiveTab(tabMatched, true);
     }
-  }, [tabMatched, activeTab]);
+    // Only run once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const dropdownItems = React.useMemo(
     () =>
@@ -137,7 +150,6 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
           <Tabs
             data-test="details__tabs"
             onSelect={(e, k: string) => {
-              setQueryArgument('activeTab', k);
               setActiveTab(k);
               onTabSelect && onTabSelect(k);
             }}

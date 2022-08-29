@@ -42,16 +42,16 @@ describe('CreateEnvironment', () => {
     fireEvent.click(typeDropdownOption);
   };
 
-  it('should render Create Environment form', () => {
+  it('should render Create environment form', () => {
     render(<CreateEnvironment />);
-    screen.getByText('Create Environment');
+    screen.getAllByText('Create environment', { selector: 'h1' });
     screen.getByText('Define environment');
     screen.getByText('Select compute');
   });
 
   it('submit button should be disabled untill all the required fields are filled', () => {
     render(<CreateEnvironment />);
-    const submitButton = screen.getByText('Create environment');
+    const submitButton = screen.getByRole('button', { name: 'Create environment' });
     expect(submitButton).toBeDisabled();
     fillEnvironmentForm();
     expect(submitButton).toBeEnabled();
@@ -67,7 +67,7 @@ describe('CreateEnvironment', () => {
   it('should call K8sCreateResource with args', async () => {
     render(<CreateEnvironment />);
     fillEnvironmentForm();
-    const submitButton = screen.getByText('Create environment');
+    const submitButton = screen.getByRole('button', { name: 'Create environment' });
     expect(submitButton).toBeEnabled();
     fireEvent.click(submitButton);
     await waitFor(() =>
@@ -95,7 +95,7 @@ describe('CreateEnvironment', () => {
     mockK8sCreate.mockResolvedValue({});
     render(<CreateEnvironment />);
     fillEnvironmentForm();
-    const submitButton = screen.getByText('Create environment');
+    const submitButton = screen.getByRole('button', { name: 'Create environment' });
     fireEvent.click(submitButton);
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith('/app-studio/workspace-settings'),
