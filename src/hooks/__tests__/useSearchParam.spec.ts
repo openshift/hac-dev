@@ -1,6 +1,9 @@
 import { useSearchParams } from 'react-router-dom';
 import { renderHook } from '@testing-library/react-hooks';
+import { mockLocation } from '../../utils/test-utils';
 import { useSearchParam } from '../useSearchParam';
+
+mockLocation();
 
 jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
@@ -16,6 +19,7 @@ describe('useSearchParam', () => {
       params,
       (newParams: URLSearchParams) => {
         params = newParams;
+        window.location.search = `?${newParams.toString()}`;
       },
     ]);
   });
