@@ -3,8 +3,11 @@ import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, configure, cleanup, fireEvent } from '@testing-library/react';
 import { EnvironmentKind } from '../../../../types';
+import { mockLocation } from '../../../../utils/test-utils';
 import EnvironmentListView from '../EnvironmentListView';
 import { EnvironmentType } from '../utils';
+
+mockLocation();
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
@@ -15,7 +18,14 @@ jest.mock('react-i18next', () => ({
 }));
 
 jest.mock('react-router-dom', () => ({
-  useSearchParams: () => React.useState(() => new URLSearchParams()),
+  useSearchParams: () => {
+    const [params, setParams] = React.useState(() => new URLSearchParams());
+    const setParamsCb = React.useCallback((newParams: URLSearchParams) => {
+      setParams(newParams);
+      window.location.search = `?${newParams.toString()}`;
+    }, []);
+    return [params, setParamsCb];
+  },
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
