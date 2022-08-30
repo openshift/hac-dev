@@ -58,6 +58,11 @@ export type ReleasePlanKind = K8sResourceCommon & {
 export type ReleasePlanSpec = {
   displayName: string;
   application: string;
-  target: string;
+  target: ReleaseTarget;
   releaseStrategy?: string;
+};
+
+export type ReleaseTarget = {
+  workspace?: string;
+  namespace: string;
 };

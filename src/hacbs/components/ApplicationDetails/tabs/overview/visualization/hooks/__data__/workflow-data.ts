@@ -303,7 +303,9 @@ export const sampleReleasePlans: ReleasePlanKind[] = [
     spec: {
       displayName: "Managed Workspace's ReleasePlan",
       application: 'm5-app',
-      target: 'demo',
+      target: {
+        namespace: 'demo',
+      },
       releaseStrategy: 'm5-strategy',
     },
   },
