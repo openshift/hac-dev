@@ -4,7 +4,7 @@ import { PipelineRunKind } from '../../../../../types';
 import {
   EnvironmentKind,
   IntegrationTestScenarioKind,
-  ReleaseLinkKind,
+  ReleasePlanKind,
 } from '../../../../../types/coreBuildService';
 import { NodeType } from './const';
 
@@ -19,7 +19,7 @@ export type WorkflowResources =
   | IntegrationTestScenarioKind[]
   | PipelineRunKind[]
   | EnvironmentKind[]
-  | ReleaseLinkKind[];
+  | ReleasePlanKind[];
 
 export type Workflow = {
   [key: string]: {

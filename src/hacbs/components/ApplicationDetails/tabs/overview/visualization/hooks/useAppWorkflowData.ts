@@ -3,7 +3,7 @@ import {
   useComponents,
   useEnvironments,
   useIntegrationTestScenarios,
-  useReleaseLinks,
+  useReleasePlans,
   useBuildPipelines,
 } from '../../../../../../hooks';
 import { Workflow, WorkflowNode, WorkflowNodeType } from '../types';
@@ -20,13 +20,13 @@ export const useAppWorkflowData = (
     applicationName,
   );
   const [environments, environmentsLoaded] = useEnvironments(namespace);
-  const [releaseLinks, releaseLinksLoaded] = useReleaseLinks(namespace);
+  const [releasePlans, releasePlansLoaded] = useReleasePlans(namespace);
   const [buildPipelines] = useBuildPipelines(namespace, applicationName);
   let componentIntegrationTests = [];
   let applicationIntegrationTests = [];
 
   const allResourcesLoaded: boolean =
-    componentsLoaded && integrationTestsLoaded && environmentsLoaded && releaseLinksLoaded;
+    componentsLoaded && integrationTestsLoaded && environmentsLoaded && releasePlansLoaded;
 
   if (!allResourcesLoaded) {
     return [[], allResourcesLoaded];
@@ -108,13 +108,13 @@ export const useAppWorkflowData = (
         ? getNodeNames(applicationIntegrationTests)
         : ['application-integration-test'],
     },
-    releaseLink: {
+    releasePlan: {
       id: 'release-links',
       data: {
         label: 'managed environment',
         workflowType: WorkflowNodeType.ENVIRONMENT,
-        isDisabled: releaseLinks.length === 0,
-        resources: releaseLinks,
+        isDisabled: releasePlans.length === 0,
+        resources: releasePlans,
       },
       runBefore: [],
       runAfter: isResourcesAvailable(environments)

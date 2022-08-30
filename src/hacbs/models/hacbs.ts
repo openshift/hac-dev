@@ -27,10 +27,10 @@ export const ReleaseGroupVersionKind: K8sGroupVersionKind = {
   kind: 'Release',
 };
 
-export const ReleaseLinkGroupVersionKind: K8sGroupVersionKind = {
+export const ReleasePlanGroupVersionKind: K8sGroupVersionKind = {
   group: 'appstudio.redhat.com',
   version: 'v1alpha1',
-  kind: 'ReleaseLink',
+  kind: 'ReleasePlan',
 };
 
 export const ReleaseStrategyGroupVersionKind: K8sGroupVersionKind = {
