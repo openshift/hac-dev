@@ -24,6 +24,7 @@ export const useEnvironmentActions = (environment: EnvironmentKind): Action[] =>
           createDeleteModalLauncher(environment.kind)({
             obj: environment,
             model: EnvironmentModel,
+            displayName: environment.spec.displayName,
           }),
         ),
       id: `delete-${environment.metadata.name.toLowerCase()}`,
