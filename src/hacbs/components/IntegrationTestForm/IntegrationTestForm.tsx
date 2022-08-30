@@ -20,7 +20,7 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
   const { dirty, handleSubmit, handleReset, isSubmitting, status, errors } = useFormikContext();
   const footer = (
     <FormFooter
-      submitLabel="Save"
+      submitLabel="Add integration test pipeline"
       handleCancel={handleReset}
       handleSubmit={handleSubmit}
       isSubmitting={isSubmitting}

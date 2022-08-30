@@ -56,14 +56,14 @@ describe('IntegrationTestView', () => {
     wrapper.getByLabelText('Display name');
     wrapper.getByLabelText('Container image');
     wrapper.getByLabelText('Pipeline specified in container image');
-    wrapper.getByRole('button', { name: 'Save' });
+    wrapper.getByRole('button', { name: 'Add integration test pipeline' });
   });
 
   it('should enable the submit button when there are no errors', async () => {
     const wrapper = render(<IntegrationTestView applicationName="test-app" />);
     await expect(wrapper).toBeTruthy();
 
-    const submitButton = wrapper.getByRole('button', { name: 'Save' });
+    const submitButton = wrapper.getByRole('button', { name: 'Add integration test pipeline' });
     expect(submitButton).toBeDisabled();
     fillIntegrationTestForm(wrapper);
     expect(submitButton).toBeEnabled();
@@ -80,7 +80,7 @@ describe('IntegrationTestView', () => {
 
     fillIntegrationTestForm(wrapper);
 
-    const submitButton = wrapper.getByRole('button', { name: 'Save' });
+    const submitButton = wrapper.getByRole('button', { name: 'Add integration test pipeline' });
     expect(submitButton).toBeTruthy();
     expect(submitButton).toBeEnabled();
 
