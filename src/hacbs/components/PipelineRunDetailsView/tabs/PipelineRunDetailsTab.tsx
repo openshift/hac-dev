@@ -7,13 +7,17 @@ import {
   Title,
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
+import { PipelineRunKind } from '../../../types';
 import { calculateDuration } from '../../../utils/pipeline-utils';
+import PipelineRunVisualization from '../PipelineRunVisualization';
 
 type PipelineRunDetailsTabProps = {
-  pipelineRun: any;
+  pipelineRun: PipelineRunKind;
 };
-
 const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineRun }) => {
+  if (!pipelineRun || Object.keys(pipelineRun).length <= 0) {
+    return null;
+  }
   const duration = calculateDuration(
     typeof pipelineRun.status?.startTime === 'string' ? pipelineRun.status?.startTime : '',
     typeof pipelineRun.status?.completionTime === 'string'
@@ -25,7 +29,9 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
       <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg">
         Pipelinerun details
       </Title>
+      <PipelineRunVisualization pipelineRun={pipelineRun} />
       <DescriptionList
+        data-test="pipelinerun-details"
         columnModifier={{
           default: '2Col',
         }}
@@ -114,4 +120,4 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
   );
 };
 
-export default PipelineRunDetailsTab;
+export default React.memo(PipelineRunDetailsTab);

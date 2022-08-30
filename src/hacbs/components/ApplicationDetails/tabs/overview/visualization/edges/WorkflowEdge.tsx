@@ -3,6 +3,7 @@ import { css } from '@patternfly/react-styles';
 import styles from '@patternfly/react-styles/css/components/Topology/topology-components';
 import { Edge } from '@patternfly/react-topology';
 import { observer } from 'mobx-react';
+import { NODE_SEPARATION_HORIZONTAL } from '../const';
 import { integralShapePath } from '../utils/draw-utils';
 
 interface WorkflowEdgeProps {
@@ -23,6 +24,7 @@ const WorkflowEdge: React.FunctionComponent<WorkflowEdgeProps> = ({ element, cla
           startPoint,
           endPoint,
           element.getData()?.indent || sourceNode.getBounds().width,
+          NODE_SEPARATION_HORIZONTAL / 3,
         )}
         shapeRendering="geometricPrecision"
         transform="translate(0,0.5)"

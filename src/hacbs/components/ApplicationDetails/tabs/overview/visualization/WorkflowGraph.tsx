@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ModelKind } from '@patternfly/react-topology';
-import { PipelineLayout } from './const';
+import { PipelineLayout } from '../../../../topology/factories';
 import { PipelineEdgeModel, PipelineMixedNodeModel } from './types';
 import WorkflowVisualizationSurface from './WorkflowVisualizationSurface';
 
@@ -21,7 +21,7 @@ const WorkflowGraph: React.FC<WorkflowGraphProps> = ({ nodes, edges }) => {
             y: 0,
             id: 'application-overview-graph',
             type: ModelKind.graph,
-            layout: PipelineLayout.DAGRE_VIEWER,
+            layout: PipelineLayout.WORKFLOW_VISUALIZATION,
           },
           nodes,
           edges,
