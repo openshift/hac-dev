@@ -6,7 +6,7 @@ import {
   useComponents,
   useEnvironments,
   useIntegrationTestScenarios,
-  useReleaseLinks,
+  useReleasePlans,
 } from '../../../../../../../hooks';
 import { WorkflowNodeType } from '../../types';
 import {
@@ -29,7 +29,7 @@ jest.mock('../../../../../../../hooks/', () => ({
   useIntegrationTestScenarios: jest.fn(() => [[], true]),
   useBuildPipelines: jest.fn(() => [[], true]),
   useEnvironments: jest.fn(() => [[], true]),
-  useReleaseLinks: jest.fn(() => [[], true]),
+  useReleasePlans: jest.fn(() => [[], true]),
 }));
 
 const useActiveNamespaceMock = useNamespace as jest.Mock;
@@ -37,7 +37,7 @@ const useComponentsMock = useComponents as jest.Mock;
 const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
 const useBuildPipelinesMock = useBuildPipelines as jest.Mock;
 const useEnvironmentsMock = useEnvironments as jest.Mock;
-const useReleaseLinksMock = useReleaseLinks as jest.Mock;
+const useReleasePlansMock = useReleasePlans as jest.Mock;
 
 beforeEach(() => {
   useActiveNamespaceMock.mockReturnValue('test-ns');
@@ -45,7 +45,7 @@ beforeEach(() => {
   useIntegrationTestScenariosMock.mockReturnValue([[], true]);
   useBuildPipelinesMock.mockReturnValue([[], true]);
   useEnvironmentsMock.mockReturnValue([[], true]);
-  useReleaseLinksMock.mockReturnValue([[], true]);
+  useReleasePlansMock.mockReturnValue([[], true]);
 
   const createElement = document.createElement.bind(document);
   document.createElement = (tagName) => {

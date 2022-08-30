@@ -51,13 +51,18 @@ export type Env = {
   value: string;
 };
 
-export type ReleaseLinkKind = K8sResourceCommon & {
-  spec: ReleaseLinkSpec;
+export type ReleasePlanKind = K8sResourceCommon & {
+  spec: ReleasePlanSpec;
 };
 
-export type ReleaseLinkSpec = {
+export type ReleasePlanSpec = {
   displayName: string;
   application: string;
-  target: string;
+  target: ReleaseTarget;
   releaseStrategy?: string;
+};
+
+export type ReleaseTarget = {
+  workspace?: string;
+  namespace: string;
 };

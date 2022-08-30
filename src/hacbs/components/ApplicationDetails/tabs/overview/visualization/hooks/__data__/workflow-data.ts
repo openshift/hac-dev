@@ -3,7 +3,7 @@ import { ComponentKind } from '../../../../../../../../types';
 import {
   EnvironmentKind,
   IntegrationTestScenarioKind,
-  ReleaseLinkKind,
+  ReleasePlanKind,
 } from '../../../../../../../types/coreBuildService';
 
 export const sampleBuildPipelines: PipelineRunKind[] = [
@@ -292,18 +292,20 @@ export const sampleIntegrationTestScenarios: IntegrationTestScenarioKind[] = [
   },
 ];
 
-export const sampleReleaseLinks: ReleaseLinkKind[] = [
+export const sampleReleasePlans: ReleasePlanKind[] = [
   {
     apiVersion: 'appstudio.redhat.com/v1alpha1',
-    kind: 'ReleaseLink',
+    kind: 'ReleasePlan',
     metadata: {
       name: 'm5-release-link-managed',
       namespace: 'managed',
     },
     spec: {
-      displayName: "Managed Workspace's ReleaseLink",
+      displayName: "Managed Workspace's ReleasePlan",
       application: 'm5-app',
-      target: 'demo',
+      target: {
+        namespace: 'demo',
+      },
       releaseStrategy: 'm5-strategy',
     },
   },
