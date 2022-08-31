@@ -11,9 +11,9 @@ import {
   applicationValidationSchema,
 } from '../../../components/ImportForm/utils/validation-utils';
 import { ApplicationKind } from '../../../types';
+import IntegrationTestSection from '../IntegrationTestForm/IntegrationTestSection';
 import BuildSection from './BuildSection';
 import { createAppIntegrationTest } from './create-utils';
-import IntegrationTestSection from './IntegrationTestSection';
 import { FormValues } from './types';
 import { onApplicationSubmit, onComponentsSubmit } from './utils/submit-utils';
 import { integrationTestValidationSchema } from './utils/validation-utils';

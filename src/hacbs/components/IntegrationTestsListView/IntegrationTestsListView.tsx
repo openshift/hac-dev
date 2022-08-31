@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
   Button,
+  ButtonVariant,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
@@ -36,7 +37,7 @@ type IntegrationTestsListViewProps = {
   applicationName: string;
 };
 
-const IntegrationTestsEmptyState: React.FC = () => (
+const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ handleAddTest }) => (
   <EmptyState data-test="integration-tests__empty">
     <EmptyStateIcon icon={CodeBranchIcon} />
     <Title headingLevel="h4" size="lg">
@@ -63,7 +64,11 @@ const IntegrationTestsEmptyState: React.FC = () => (
       />
     </EmptyStateBody>
     <EmptyStateSecondaryActions>
-      <Button isDisabled component={(props) => <Link {...props} to="#" />} variant="primary">
+      <Button
+        variant={ButtonVariant.primary}
+        onClick={handleAddTest}
+        data-test="add-integration-test"
+      >
         Add integration test
       </Button>
     </EmptyStateSecondaryActions>
@@ -90,6 +95,7 @@ const IntegrationTestsFilteredState: React.FC<{ onClearFilters: () => void }> = 
 );
 const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ applicationName }) => {
   const namespace = useNamespace();
+  const navigate = useNavigate();
   const [integrationTests, integrationTestsLoaded] = useK8sWatchResource<
     IntegrationTestScenarioKind[]
   >({
@@ -117,6 +123,10 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
     [nameFilter, applicationIntegrationTests],
   );
 
+  const handleAddTest = React.useCallback(() => {
+    navigate(`/app-studio/applications/${applicationName}/integration-test`);
+  }, [navigate, applicationName]);
+
   const loading = (
     <Bullseye className="pf-u-mt-md" data-test="integration-tests__loading">
       <Spinner />
@@ -128,7 +138,7 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
   }
 
   if (!applicationIntegrationTests?.length) {
-    return <IntegrationTestsEmptyState />;
+    return <IntegrationTestsEmptyState handleAddTest={handleAddTest} />;
   }
   const onClearFilters = () => setNameFilter('');
   const onNameInput = (name: string) => setNameFilter(name);
