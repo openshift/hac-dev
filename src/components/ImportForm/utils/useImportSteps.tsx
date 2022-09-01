@@ -32,7 +32,7 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
         ? [
             {
               id: 'source',
-              name: 'Select source',
+              name: 'Add components',
               component: <SourceSection onStrategyChange={setStrategy} />,
               validationSchema: sourceValidationSchema,
             },
