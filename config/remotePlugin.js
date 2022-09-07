@@ -82,7 +82,7 @@ const hacbs = {
         },
       },
       flags: {
-        required: ['HACBS'],
+        required: ['HACBS', 'SIGNUP'],
       },
     },
     {
@@ -95,7 +95,7 @@ const hacbs = {
         },
       },
       flags: {
-        required: ['HACBS'],
+        required: ['HACBS', 'SIGNUP'],
       },
     },
     {
@@ -108,7 +108,7 @@ const hacbs = {
         },
       },
       flags: {
-        required: ['HACBS'],
+        required: ['HACBS', 'SIGNUP'],
       },
     },
     {
@@ -121,7 +121,7 @@ const hacbs = {
         },
       },
       flags: {
-        required: ['HACBS'],
+        required: ['HACBS', 'SIGNUP'],
       },
     },
   ],
