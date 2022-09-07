@@ -14,14 +14,11 @@ describe('Create Component from Quay Image', () => {
   const quayImage = 'quay.io/quarkus/code-quarkus-app';
   const componentName = 'code-quarkus-app';
 
-  before(function () {
-    const createApplicationPage = new CreateApplicationPage();
-    createApplicationPage.clickCreateApplication();
-    createApplicationPage.setApplicationName(applicationName);
-    createApplicationPage.clickNext();
+  before(() => {
+    Applications.createApplication(applicationName);
   });
 
-  after(function () {
+  after(() => {
     Common.openApplicationURL(applicationName);
     applicationDetailPage.deleteComponent(componentName);
     applicationDetailPage.createdComponentNotExists(componentName);
