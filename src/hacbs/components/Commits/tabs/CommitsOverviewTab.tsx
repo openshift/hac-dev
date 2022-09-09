@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Commit } from '../../../types';
+import { getCommitDisplayName } from '../../../utils/commits-utils';
 
 type ApplicationOverviewTabProps = {
   commit: Commit;
 };
 
 const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ commit }) => {
-  return <>Overview of {commit.sha.slice(0, 7)}</>;
+  return <>Overview of {getCommitDisplayName(commit)}</>;
 };
 
 export default ApplicationOverviewTab;

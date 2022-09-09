@@ -25,23 +25,14 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
         )}
       </TableData>
       <TableData className={commitsTableColumnClasses.branch}>
-        {obj.branch.length > 0
-          ? obj.branch.map((branch, index) => {
-              return (
-                <>
-                  {obj.gitProvider === 'github' && obj.repoOrg ? (
-                    <ExternalLink
-                      href={`https://github.com/${obj.repoOrg}/${obj.repoURL}/tree/${branch}`}
-                      text={`${branch}`}
-                    />
-                  ) : (
-                    `${branch}`
-                  )}
-                  {index < obj.branch.length - 1 && `,`}
-                </>
-              );
-            })
-          : '-'}
+        {obj.gitProvider === 'github' && obj.repoOrg ? (
+          <ExternalLink
+            href={`https://github.com/${obj.repoOrg}/${obj.repoURL}/tree/${obj.branch}`}
+            text={`${obj.branch}`}
+          />
+        ) : (
+          `${obj.branch}`
+        )}
       </TableData>
       <TableData className={commitsTableColumnClasses.component}>
         {obj.components.length > 0

@@ -7,12 +7,13 @@ export type Commit = {
   };
   sha: string;
   shaURL: string;
+  displayName?: string;
   user: string;
   components: string[];
   repoURL?: string;
   repoOrg?: string;
   gitProvider?: string;
-  branch?: string[];
+  branch: string;
   creationTime?: string;
   pipelineRuns: PipelineRunKind[];
   application: string;

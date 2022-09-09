@@ -1,4 +1,4 @@
-import { PipelineRunKind } from '../../../types';
+import { Commit, PipelineRunKind } from '../../../types';
 
 export const pipelineWithCommits: PipelineRunKind[] = [
   {
@@ -18,7 +18,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'results.tekton.dev/record':
           'test/results/558677f8-e01c-4d15-8729-5e838bd492aa/records/558677f8-e01c-4d15-8729-5e838bd492aa',
         'results.tekton.dev/result': 'test/results/558677f8-e01c-4d15-8729-5e838bd492aa',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_1]',
+        'build.appstudio.redhat.com/target_branch': 'branch_1',
       },
       creationTimestamp: '2022-07-19T11:35:46Z',
       generation: 1,
@@ -67,7 +67,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
           'test/results/358168a2-e2f1-4fc6-90a5-90ad80079e17/records/358168a2-e2f1-4fc6-90a5-90ad80079e17',
         'results.tekton.dev/result': 'test/results/358168a2-e2f1-4fc6-90a5-90ad80079e17',
         'build.appstudio.redhat.com/commit_sha': 'commit14rt',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_b]',
+        'build.appstudio.redhat.com/target_branch': 'branch_b',
       },
       creationTimestamp: '2022-06-20T12:47:24Z',
       generateName: 'nodejs-sample-',
@@ -116,7 +116,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'results.tekton.dev/result': 'test/results/358168a2-e2f1-4fc6-90a5-90ad80079e17',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_b]',
+        'build.appstudio.redhat.com/target_branch': 'branch_b',
       },
       creationTimestamp: '2022-06-20T12:47:24Z',
       generateName: 'nodejs-sample-',
@@ -214,7 +214,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'results.tekton.dev/result': 'test/results/358168a2-e2f1-4fc6-90a5-90ad80079e17',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_b]',
+        'build.appstudio.redhat.com/target_branch': 'branch_b',
       },
       creationTimestamp: '2022-06-20T12:47:24Z',
       generateName: 'nodejs-sample-',
@@ -340,7 +340,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
           'test/results/358168a2-e2f1-4fc6-90a5-90ad80079e17/records/358168a2-e2f1-4fc6-90a5-90ad80079e17',
         'results.tekton.dev/result': 'test/results/358168a2-e2f1-4fc6-90a5-90ad80079e17',
         'build.appstudio.redhat.com/commit_sha': 'commit14rt',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_b]',
+        'build.appstudio.redhat.com/target_branch': 'branch_b',
         'build.appstudio.openshift.io/component': 'sample-component',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
@@ -431,7 +431,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
         'build.appstudio.redhat.com/commit_sha': 'commit123',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_1]',
+        'build.appstudio.redhat.com/target_branch': 'branch_1',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
         'build.appstudio.redhat.com/sha_url': 'https://github.com/openshift/console',
@@ -461,7 +461,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
         'build.appstudio.redhat.com/commit_sha': 'commit123',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_1]',
+        'build.appstudio.redhat.com/target_branch': 'branch_1',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
       },
@@ -471,7 +471,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       labels: {
         'build.appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
-        'appstudio.openshift.io/component': 'go-3',
+        'appstudio.openshift.io/component': 'sample-component',
         'pipelinesascode.tekton.dev/sender': 'abhinandan13jan',
         'pipelinesascode.tekton.dev/sha': 'commit123',
         'pipelinesascode.tekton.dev/url-org': 'openshift',
@@ -490,7 +490,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
         'build.appstudio.redhat.com/commit_sha': 'commit123',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_1]',
+        'build.appstudio.redhat.com/target_branch': 'branch_1',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
       },
@@ -500,7 +500,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       labels: {
         'build.appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
-        'appstudio.openshift.io/component': 'go-3',
+        'appstudio.openshift.io/component': 'sample-component',
         'pipelinesascode.tekton.dev/sender': 'abhinandan13jan',
         'pipelinesascode.tekton.dev/sha': 'commit123',
         'pipelinesascode.tekton.dev/url-org': 'openshift',
@@ -519,7 +519,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
         'build.appstudio.redhat.com/commit_sha': 'commit123',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_1]',
+        'build.appstudio.redhat.com/target_branch': 'branch_1',
         'build.appstudio.redhat.com/sha_url': 'https://github.com/openshift/console',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
@@ -530,7 +530,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       labels: {
         'build.appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
-        'appstudio.openshift.io/component': 'go-3',
+        'appstudio.openshift.io/component': 'sample-component',
         'pipelinesascode.tekton.dev/sender': 'abhi',
         'pipelinesascode.tekton.dev/sha': 'commit123',
         'pipelinesascode.tekton.dev/url-org': 'openshift',
@@ -549,7 +549,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
         'build.appstudio.redhat.com/commit_sha': 'commit-ment',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_ment]',
+        'build.appstudio.redhat.com/target_branch': 'branch_ment',
         'build.appstudio.redhat.com/sha_url': 'https://github.com/openshift/console',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
@@ -579,7 +579,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
         'build.appstudio.redhat.com/commit_sha': 'commitson',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_1]',
+        'build.appstudio.redhat.com/target_branch': 'branch_1',
         'build.appstudio.redhat.com/sha_url': 'https://github.com/openshift/console',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
@@ -609,7 +609,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
         'build.appstudio.redhat.com/commit_sha': 'commit_try1',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_1]',
+        'build.appstudio.redhat.com/target_branch': 'branch_1',
         'build.appstudio.redhat.com/sha_url': 'https://github.com/openshift/console',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
@@ -639,7 +639,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
         'build.appstudio.redhat.com/commit_sha': 'ertxyz',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_1]',
+        'build.appstudio.redhat.com/target_branch': 'branch_1',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
       },
@@ -668,7 +668,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
         'build.appstudio.redhat.com/commit_sha': 'commit_try1',
-        'pipelinesascode.tekton.dev/on-target-branch': 'branch_try',
+        'build.appstudio.redhat.com/target_branch': 'branch_try',
         'build.appstudio.redhat.com/sha_url': 'https://github.com/openshift/console',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
@@ -698,7 +698,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
         'build.appstudio.redhat.com/commit_sha': 'commitabc',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_x]',
+        'build.appstudio.redhat.com/target_branch': 'branch_x',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
       },
@@ -706,7 +706,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       name: 'sample-5',
       generation: 1,
       labels: {
-        'appstudio.openshift.io/component': 'go-3,sample-component',
+        'appstudio.openshift.io/component': 'go-3',
         'build.appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'pipelinesascode.tekton.dev/sender': 'abhi',
@@ -727,7 +727,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
         'build.appstudio.redhat.com/commit_sha': 'ertxyz',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_1]',
+        'build.appstudio.redhat.com/target_branch': 'branch_1',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
       },
@@ -794,7 +794,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
         'build.appstudio.redhat.com/commit_sha': 'commitabc',
-        'pipelinesascode.tekton.dev/on-target-branch': '[branch_x]',
+        'build.appstudio.redhat.com/target_branch': 'branch_x',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
       },
@@ -802,7 +802,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       name: 'nodejs-sample-3',
       generation: 1,
       labels: {
-        'appstudio.openshift.io/component': 'go-3,sample-component',
+        'appstudio.openshift.io/component': 'sample-component',
         'build.appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'pipelinesascode.tekton.dev/sender': 'abhinandan13jan',
@@ -902,5 +902,21 @@ export const pipelineWithoutCommits: PipelineRunKind[] = [
       labels: {},
     },
     spec: {},
+  },
+];
+
+export const mockCommits: Commit[] = [
+  {
+    sha: 'comm0123456789abcdefghijklmnopqrstuvwxyz',
+    metadata: {
+      name: 'comm0123456789abcdefghijklmnopqrstuvwxyz',
+      uid: 'comm0123456789abcdefghijklmnopqrstuvwxyz',
+    },
+    branch: 'main',
+    application: 'sample-application',
+    components: ['my-comp'],
+    user: 'abhi',
+    shaURL: 'https://github.com/abhinandan13jan/comm0123456789abcdefghijklmnopqrstuvwxyz',
+    pipelineRuns: [...pipelineWithCommits.slice(0, 1)],
   },
 ];

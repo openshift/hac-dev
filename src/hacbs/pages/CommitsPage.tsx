@@ -16,12 +16,10 @@ const CommitsPage = () => {
 
   return (
     <NamespacedPage>
-      <>
-        <Helmet>
-          <title>Commit Details</title>
-        </Helmet>
-        <CommitDetailsView commitName={commitName} applicationName={appName} />
-      </>
+      <Helmet>
+        <title>Commit Details</title>
+      </Helmet>
+      <CommitDetailsView commitName={commitName} applicationName={appName} />
     </NamespacedPage>
   );
 };

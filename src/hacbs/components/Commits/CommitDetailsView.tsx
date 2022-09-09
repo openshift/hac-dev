@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
@@ -21,22 +20,18 @@ import { useNamespace } from '../../../utils/namespace-context-utils';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../models/';
 import { PipelineRunKind } from '../../types';
-import { getCommitByName } from '../../utils/commits-utils';
+import { createCommitObjectFromPLR, getCommitShortName } from '../../utils/commits-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import CommitsOverviewTab from './tabs/CommitsOverviewTab';
-import CommitsPLRTab from './tabs/CommitsPLRTab';
+import CommitsPipelineRunTab from './tabs/CommitsPipelineRunTab';
 
-type HacbsApplicationDetailsProps = {
+type CommitDetailsViewProps = {
   applicationName: string;
   commitName: string;
 };
 
-const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({
-  commitName,
-  applicationName,
-}) => {
+const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, applicationName }) => {
   const namespace = useNamespace();
-  const navigate = useNavigate();
 
   const [pipelineruns, loaded, loadErr] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
@@ -52,8 +47,12 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({
   });
 
   const commit = React.useMemo(
-    () => loaded && Array.isArray(pipelineruns) && getCommitByName(pipelineruns, commitName),
-    [loaded, pipelineruns, commitName],
+    () =>
+      loaded &&
+      Array.isArray(pipelineruns) &&
+      pipelineruns.length > 0 &&
+      createCommitObjectFromPLR(pipelineruns[0]),
+    [loaded, pipelineruns],
   );
 
   const status = React.useMemo(
@@ -61,11 +60,16 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({
       loaded &&
       Array.isArray(pipelineruns) &&
       pipelineruns.length > 0 &&
-      pipelineRunFilterReducer(pipelineruns[pipelineruns.length - 1]),
+      pipelineRunFilterReducer(
+        pipelineruns.sort(
+          (a, b) =>
+            parseInt(a.metadata.creationTimestamp, 10) - parseInt(b.metadata.creationTimestamp, 10),
+        )[pipelineruns.length - 1],
+      ),
     [loaded, pipelineruns],
   );
 
-  const commitDisplayName = commitName.slice(0, 7);
+  const commitDisplayName = getCommitShortName(commitName);
 
   if (loadErr || (loaded && !commit)) {
     return (
@@ -110,31 +114,24 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({
                 <span className="pf-u-mr-sm">Commit ID:</span>
                 <ExternalLink href={commit.shaURL}>
                   {commitName}
-                  <span className="pf-u-mr-sm pf-u-ml-sm">
-                    <GithubIcon />
-                  </span>
+                  {commit.gitProvider === 'github' && (
+                    <span className="pf-u-mr-sm pf-u-ml-sm">
+                      <GithubIcon />
+                    </span>
+                  )}
                 </ExternalLink>
                 <StatusIconWithText status={status} />
               </Text>
               <Text component="p" className="pf-u-mt-xs pf-u-mb-xs">
                 Branch:{' '}
-                {commit.branch.length > 0
-                  ? commit.branch.map((branch, index) => {
-                      return (
-                        <>
-                          {commit.gitProvider === 'github' && commit.repoOrg ? (
-                            <ExternalLink
-                              href={`https://github.com/${commit.repoOrg}/${commit.repoURL}/tree/${branch}`}
-                              text={`${branch}`}
-                            />
-                          ) : (
-                            `${branch}`
-                          )}
-                          {index < commit.branch.length - 1 && `,`}
-                        </>
-                      );
-                    })
-                  : '-'}
+                {commit.gitProvider === 'github' && commit.repoOrg ? (
+                  <ExternalLink
+                    href={`https://github.com/${commit.repoOrg}/${commit.repoURL}/tree/${commit.branch}`}
+                    text={`${commit.branch}`}
+                  />
+                ) : (
+                  `${commit.branch}`
+                )}
               </Text>
               <Text component="p" className="pf-u-mt-xs pf-u-mb-xs">
                 <span className="pf-u-color-200">
@@ -158,10 +155,8 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({
           actions={[
             {
               key: 'go-to-source',
-              label: 'go to source',
-              onClick: () => {
-                navigate(`/app-studio/import?application=${applicationName}`);
-              },
+              label: 'Go to source',
+              onClick: () => window.open(commit.shaURL),
             },
           ]}
           tabs={[
@@ -174,12 +169,7 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({
             {
               key: 'pipelineruns',
               label: 'Pipeline runs',
-              component: <CommitsPLRTab commit={commit} />,
-            },
-            {
-              key: 'events',
-              label: 'Events',
-              component: <CommitsPLRTab commit={commit} />,
+              component: <CommitsPipelineRunTab commit={commit} />,
             },
           ]}
         />
@@ -194,4 +184,4 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({
   );
 };
 
-export default HacbsApplicationDetails;
+export default CommitDetailsView;
