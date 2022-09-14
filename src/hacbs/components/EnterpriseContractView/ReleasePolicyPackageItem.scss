@@ -1,0 +1,11 @@
+.release-policy-item {
+  --pf-c-data-list__expandable-content--BorderTopWidth: 0;
+  --pf-c-data-list__expandable-content-body--PaddingTop: 0;
+  --pf-c-data-list__item-control--MarginRight: var(--pf-global--spacer--sm);
+  &__details {
+    margin-left: var(--pf-global--spacer--3xl);
+  }
+  &__annotation-link {
+    width: fit-content;
+  }
+}
