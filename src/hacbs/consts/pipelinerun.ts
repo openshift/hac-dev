@@ -4,12 +4,13 @@ export enum PipelineRunLabel {
   PIPELINE_TYPE = 'pipelines.appstudio.openshift.io/type',
   COMMIT_LABEL = 'pipelinesascode.tekton.dev/sha',
   COMMIT_URL_ANNOTATION = 'pipelinesascode.tekton.dev/sha-url',
-  COMMIT_BRANCH_ANNOTATION = 'pipelinesascode.tekton.dev/on-target-branch',
+  COMMIT_BRANCH_ANNOTATION = 'build.appstudio.redhat.com/target_branch',
   COMMIT_COMPONENT_LABEL = 'appstudio.openshift.io/component',
   COMMIT_USER_LABEL = 'pipelinesascode.tekton.dev/sender',
   COMMIT_REPO_ORG_LABEL = 'pipelinesascode.tekton.dev/url-org',
   COMMIT_REPO_URL_LABEL = 'pipelinesascode.tekton.dev/url-repository',
   COMMIT_PROVIDER_LABEL = 'pipelinesascode.tekton.dev/git-provider',
+  COMMIT_SHA_TITLE_ANNOTATION = 'pipelinesascode.tekton.dev/sha-title',
 }
 
 export enum PipelineRunType {

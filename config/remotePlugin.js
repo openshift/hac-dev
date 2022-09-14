@@ -7,6 +7,7 @@ const hacbs = {
     HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
     HACBSImport: resolve(__dirname, '../src/hacbs/pages/ImportPage'),
     HACBSIntegrationTest: resolve(__dirname, '../src/hacbs/pages/IntegrationTestPage'),
+    CommitsPage: resolve(__dirname, '../src/hacbs/pages/CommitsPage'),
   },
   extensions: [
     {
@@ -91,6 +92,32 @@ const hacbs = {
         exact: true,
         component: {
           $codeRef: 'HACBSIntegrationTest',
+        },
+      },
+      flags: {
+        required: ['HACBS'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/:appName/commit/:commitName',
+        exact: true,
+        component: {
+          $codeRef: 'CommitsPage',
+        },
+      },
+      flags: {
+        required: ['HACBS'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/:appName/commit/:commitName',
+        exact: true,
+        component: {
+          $codeRef: 'CommitsPage',
         },
       },
       flags: {

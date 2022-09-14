@@ -1,59 +1,70 @@
 import { PipelineRunLabel } from '../consts/pipelinerun';
 import { PipelineRunKind, Commit } from '../types';
 
+export const createCommitObjectFromPLR = (plr: PipelineRunKind): Commit => {
+  if (!plr || !plr?.metadata.labels?.[PipelineRunLabel.COMMIT_LABEL]) {
+    return null;
+  }
+  const commitSHA = plr.metadata.labels?.[PipelineRunLabel.COMMIT_LABEL];
+  const commitBranch = plr.metadata.annotations?.[PipelineRunLabel.COMMIT_BRANCH_ANNOTATION] ?? '';
+  const commitUser = plr.metadata.labels?.[PipelineRunLabel.COMMIT_USER_LABEL];
+  const shaURL = plr.metadata.annotations?.[PipelineRunLabel.COMMIT_URL_ANNOTATION];
+  const shaTitle = plr.metadata.annotations?.[PipelineRunLabel.COMMIT_SHA_TITLE_ANNOTATION];
+  const creationTime = plr.metadata.creationTimestamp;
+  const application = plr.metadata.labels[PipelineRunLabel.APPLICATION];
+  const component = plr.metadata.labels[PipelineRunLabel.COMMIT_COMPONENT_LABEL] ?? '';
+  const repoURL = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_URL_LABEL];
+  const repoOrg = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_ORG_LABEL];
+  const gitProvider = plr.metadata.labels[PipelineRunLabel.COMMIT_PROVIDER_LABEL];
+
+  return {
+    metadata: {
+      uid: commitSHA,
+      name: commitSHA,
+    },
+    components: [component],
+    user: commitUser,
+    sha: commitSHA,
+    shaURL,
+    repoURL,
+    repoOrg,
+    gitProvider,
+    branch: commitBranch,
+    creationTime,
+    pipelineRuns: [plr],
+    application,
+    shaTitle,
+  };
+};
+
+const updateCommitObject = (plr: PipelineRunKind, commit: Commit): Commit => {
+  const newCommit = commit;
+  const creationTime = plr.metadata.creationTimestamp;
+  const component = plr.metadata.labels[PipelineRunLabel.COMPONENT] ?? '';
+
+  if (newCommit.creationTime < creationTime) {
+    newCommit.creationTime = creationTime;
+  }
+  if (!newCommit.components) {
+    newCommit.components = [component];
+  } else {
+    const compIndex = newCommit.components.findIndex((comp) => comp === component);
+    if (compIndex < 0) newCommit.components.push(component);
+  }
+  newCommit.pipelineRuns.push(plr);
+  return newCommit;
+};
+
 export const getCommitsFromPLRs = (plrList: PipelineRunKind[], limit?: number): Commit[] => {
   const commits: Commit[] = [];
   plrList.map((plr) => {
     const commitSHA = plr.metadata.labels?.[PipelineRunLabel.COMMIT_LABEL];
-    const commitBranch =
-      plr.metadata.annotations?.[PipelineRunLabel.COMMIT_BRANCH_ANNOTATION]
-        ?.slice(1, -1)
-        .split(',') ?? [];
-    const commitUser = plr.metadata.labels?.[PipelineRunLabel.COMMIT_USER_LABEL];
-    const shaURL = plr.metadata.annotations?.[PipelineRunLabel.COMMIT_URL_ANNOTATION];
-    const creationTime = plr.metadata.creationTimestamp;
-    const components =
-      plr.metadata.labels[PipelineRunLabel.COMMIT_COMPONENT_LABEL]?.split(',') ?? [];
-    const repoURL = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_URL_LABEL];
-    const repoOrg = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_ORG_LABEL];
-    const gitProvider = plr.metadata.labels[PipelineRunLabel.COMMIT_PROVIDER_LABEL];
-
     if (commitSHA) {
       const existingCommitIndex = commits.findIndex((commit) => commit.sha === commitSHA);
       if (existingCommitIndex > -1) {
-        if (commits[existingCommitIndex].creationTime < creationTime) {
-          commits[existingCommitIndex].creationTime = creationTime;
-        }
-        if (!commits[existingCommitIndex].components) {
-          commits[existingCommitIndex].components = components;
-        }
-        if (!commits[existingCommitIndex].repoURL) {
-          commits[existingCommitIndex].repoURL = repoURL;
-        }
-        if (!commits[existingCommitIndex].shaURL) {
-          commits[existingCommitIndex].shaURL = shaURL;
-        }
-        if (!commits[existingCommitIndex].user) {
-          commits[existingCommitIndex].user = commitUser;
-        }
-        commits[existingCommitIndex].pipelineRuns.push(plr);
+        commits[existingCommitIndex] = updateCommitObject(plr, commits[existingCommitIndex]);
       } else {
-        commits.push({
-          metadata: {
-            uid: commitSHA,
-            name: commitSHA,
-          },
-          components,
-          user: commitUser,
-          sha: commitSHA,
-          shaURL,
-          repoURL,
-          repoOrg,
-          gitProvider,
-          branch: commitBranch,
-          creationTime,
-          pipelineRuns: [plr],
-        });
+        commits.push(createCommitObjectFromPLR(plr));
       }
     }
   });
@@ -62,3 +73,7 @@ export const getCommitsFromPLRs = (plrList: PipelineRunKind[], limit?: number): 
   );
   return limit && limit < sortedCommits.length ? sortedCommits.slice(0, limit) : sortedCommits;
 };
+
+export const getCommitDisplayName = (commit: Commit): string => commit.sha.slice(0, 7);
+
+export const getCommitShortName = (commitName: string): string => commitName.slice(0, 7);
