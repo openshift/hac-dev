@@ -1,6 +1,6 @@
 import React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { Bullseye, DataList, Flex, FlexItem, Spinner, Text, Title } from '@patternfly/react-core';
+import { Bullseye, Flex, FlexItem, Spinner, Text, Title } from '@patternfly/react-core';
 import { ArrowRightIcon } from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
@@ -12,6 +12,8 @@ import {
 } from './const';
 import ReleasePolicyPackageItem from './ReleasePolicyPackageItem';
 import { useEnterpriseContractPolicies } from './useEnterpriseContractPolicies';
+
+import './EnterpriseContractView.scss';
 
 const EnterpriseContractView: React.FC = () => {
   const namespace = useNamespace();
@@ -44,17 +46,18 @@ const EnterpriseContractView: React.FC = () => {
         by HACBS. Follow these rules to be able to release successfully.
       </Text>
       {contractPolicies ? (
-        <div data-testid="enterprise-contract-package-list">
-          <DataList aria-label="release policies listing">
-            {contractPolicies?.releasePackages &&
-              Object.keys(contractPolicies.releasePackages)?.map((packageKey) => (
-                <ReleasePolicyPackageItem
-                  key={packageKey}
-                  releasePackageInfo={contractPolicies.releasePackages[packageKey]}
-                  releasePackageAnnotations={contractPolicies.releaseAnnotations[packageKey]}
-                />
-              ))}
-          </DataList>
+        <div
+          data-testid="enterprise-contract-package-list"
+          className="enterprise-contract-view__package-list"
+        >
+          {contractPolicies?.releasePackages &&
+            Object.keys(contractPolicies.releasePackages)?.map((packageKey) => (
+              <ReleasePolicyPackageItem
+                key={packageKey}
+                releasePackageInfo={contractPolicies.releasePackages[packageKey]}
+                releasePackageAnnotations={contractPolicies.releaseAnnotations[packageKey]}
+              />
+            ))}
         </div>
       ) : (
         <Bullseye className="pf-u-mt-lg">

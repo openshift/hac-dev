@@ -51,9 +51,9 @@ describe('EnterpriseContractView', () => {
     const testAnnotations = MockEnterpriseContractPolicies.releaseAnnotations[testPackageKey];
 
     const packageItem = screen.getByTestId(`release-package-item-${testPackageItem.shortName}`);
-    expect(packageItem.querySelectorAll('.release-policy-item__annotation-link').length).toBe(
-      testAnnotations.length,
-    );
+    expect(
+      packageItem.querySelectorAll('.release-policy-item__package-annotation-link').length,
+    ).toBe(testAnnotations.length);
 
     let annotation = screen.getByText(testAnnotations[0].title);
     expect(annotation).not.toBeVisible();
