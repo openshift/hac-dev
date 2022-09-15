@@ -2,16 +2,16 @@ import * as React from 'react';
 import { configure, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useFormikContext } from 'formik';
 import { mockCatalogItem } from '../../../../utils/__data__/mock-devfile-data';
-import { getDevfileSamples } from '../../../../utils/devfile-utils';
 import { useComponentDetection } from '../../utils/cdq-utils';
+import { useDevfileSamples } from '../../utils/useDevfileSamples';
 import SampleSection from '../SampleSection';
 
 import '@testing-library/jest-dom';
 
 configure({ testIdAttribute: 'data-test' });
 
-jest.mock('../../../../utils/devfile-utils', () => ({
-  getDevfileSamples: jest.fn(),
+jest.mock('../../utils/useDevfileSamples', () => ({
+  useDevfileSamples: jest.fn(),
 }));
 
 jest.mock('../../utils/cdq-utils', () => ({
@@ -32,7 +32,7 @@ const useFormikContextMock = useFormikContext as jest.Mock;
 
 const useComponentDetectionMock = useComponentDetection as jest.Mock;
 
-const getDevfileMock = getDevfileSamples as jest.Mock;
+const useDevfileSamplesMock = useDevfileSamples as jest.Mock;
 
 describe('SampleSection', () => {
   it('renders component samples page with a progressbar when samples are loading', async () => {
@@ -40,7 +40,7 @@ describe('SampleSection', () => {
       values: { source: '', application: { name: '' } },
       setFieldValue: jest.fn(),
     });
-    getDevfileMock.mockReturnValue(Promise.resolve(null));
+    useDevfileSamplesMock.mockReturnValue([[], false, null]);
     render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
     await screen.getByText('Select a sample');
     await screen.getByRole('progressbar');
@@ -51,7 +51,7 @@ describe('SampleSection', () => {
       values: { source: '', application: { name: '' } },
       setFieldValue: jest.fn(),
     });
-    getDevfileMock.mockReturnValue(Promise.resolve([]));
+    useDevfileSamplesMock.mockReturnValue([[], true, null]);
     render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
     await waitFor(() => {
       screen.getByText('No Catalog items found');
@@ -63,7 +63,7 @@ describe('SampleSection', () => {
       values: { source: '', application: { name: '' } },
       setFieldValue: jest.fn(),
     });
-    getDevfileMock.mockReturnValue(Promise.resolve([mockCatalogItem[0]]));
+    useDevfileSamplesMock.mockReturnValue([[mockCatalogItem[0]], true, null]);
     render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
     await waitFor(() => {
       screen.getByText('Basic Node.js');
@@ -77,7 +77,7 @@ describe('SampleSection', () => {
       setStatus: jest.fn(),
     });
     useComponentDetectionMock.mockReturnValue([[], true, null]);
-    getDevfileMock.mockReturnValue(Promise.resolve(mockCatalogItem));
+    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
 
     render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
 
@@ -96,7 +96,7 @@ describe('SampleSection', () => {
       setStatus: jest.fn(),
     });
     useComponentDetectionMock.mockReturnValue([[], true, null]);
-    getDevfileMock.mockReturnValue(Promise.resolve(mockCatalogItem));
+    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
 
     render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
 
@@ -115,7 +115,7 @@ describe('SampleSection', () => {
       setStatus: jest.fn(),
     });
     useComponentDetectionMock.mockReturnValue([[], true, null]);
-    getDevfileMock.mockReturnValue(Promise.resolve(mockCatalogItem));
+    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
 
     render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
 

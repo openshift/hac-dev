@@ -92,10 +92,14 @@ const ReviewSection: React.FunctionComponent = () => {
           },
         },
       };
+      cachedComponentsLoaded.current = true;
     }
 
-    if (!isContainerImage && detectionLoaded && detectedComponents) {
-      components = detectedComponents;
+    if (!isContainerImage && detectionLoaded) {
+      if (detectedComponents) {
+        components = detectedComponents;
+      }
+      cachedComponentsLoaded.current = true;
     }
 
     if (components) {
@@ -104,7 +108,6 @@ const ReviewSection: React.FunctionComponent = () => {
       setTimeout(() => setFieldValue('isDetected', true));
       setFieldValue('components', transformedComponents);
       cachedComponents.current = transformedComponents;
-      cachedComponentsLoaded.current = true;
     }
 
     return () => {
