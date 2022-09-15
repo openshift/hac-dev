@@ -18,12 +18,12 @@ describe('Create Component from Public Git Source', () => {
   const cpuCount = 10;
   const cpuUnit = CPUUnit.millicore;
 
-  before(function () {
+  before(() => {
     //set application name
     Applications.createApplication(applicationName);
   });
 
-  after(function () {
+  after(() => {
     //Open components page
     Common.openApplicationURL(applicationName);
     applicationDetailPage.deleteComponent(componentName);
