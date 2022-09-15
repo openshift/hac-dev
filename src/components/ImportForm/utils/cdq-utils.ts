@@ -83,13 +83,13 @@ export const useComponentDetection = (
         return loadError;
       }
 
-      const completeCondition = cdq?.status?.conditions?.find(
-        (condition) => condition.type === 'Completed',
+      const errorCondition = cdq?.status?.conditions?.find(
+        (condition) => condition.type === 'Completed' && condition.reason === 'Error',
       );
 
-      if (loaded && !detectedComponents && completeCondition) {
+      if (loaded && !detectedComponents && errorCondition) {
         if (cdqName === cdq.metadata.name) {
-          return completeCondition.message;
+          return errorCondition.message;
         }
       }
     }

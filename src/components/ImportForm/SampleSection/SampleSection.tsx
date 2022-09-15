@@ -15,10 +15,10 @@ import { getIconProps } from '../../../shared/components/catalog/utils/catalog-u
 import { skeletonTileSelector } from '../../../shared/components/catalog/utils/skeleton-catalog';
 import { CatalogItem } from '../../../shared/components/catalog/utils/types';
 import { StatusBox } from '../../../shared/components/status-box/StatusBox';
-import { getDevfileSamples } from '../../../utils/devfile-utils';
 import { useComponentDetection } from '../utils/cdq-utils';
 import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues, ImportStrategy } from '../utils/types';
+import { useDevfileSamples } from '../utils/useDevfileSamples';
 
 import './SampleSection.scss';
 import '../../../shared/style.scss';
@@ -29,37 +29,13 @@ const SampleSection = ({ onStrategyChange }) => {
     setFieldValue,
   } = useFormikContext<ImportFormValues>();
   const [selected, setSelected] = React.useState<CatalogItem>();
-  const [samples, setSamples] = React.useState<CatalogItem[]>([]);
-  const [loaded, setLoaded] = React.useState<boolean>(false);
-  const [loadError, setLoadError] = React.useState<string>();
+
+  const [samples, loaded, loadError] = useDevfileSamples();
 
   const [detectedComponents, detectedComponentsLoaded, detectedComponentsError] =
     useComponentDetection(source, application);
 
   const detectingComponents = selected && !detectedComponents && !detectedComponentsLoaded;
-
-  React.useEffect(() => {
-    let unmounted = false;
-    const fetchDevfileSamples = async () => {
-      if (unmounted) return;
-
-      try {
-        const devfileSamples = await getDevfileSamples();
-
-        if (devfileSamples) {
-          setSamples(devfileSamples);
-          setLoaded(true);
-        }
-      } catch (e) {
-        setLoadError(`Failed to load devfile samples: ${e.message}`);
-      }
-    };
-
-    fetchDevfileSamples();
-    return () => {
-      unmounted = true;
-    };
-  }, []);
 
   React.useEffect(() => {
     let unmounted = false;
