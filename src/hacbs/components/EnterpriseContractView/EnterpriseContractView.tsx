@@ -1,7 +1,18 @@
 import React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { Bullseye, Flex, FlexItem, Spinner, Text, Title } from '@patternfly/react-core';
+import {
+  Bullseye,
+  EmptyState,
+  EmptyStateIcon,
+  EmptyStateVariant,
+  Flex,
+  FlexItem,
+  Spinner,
+  Text,
+  Title,
+} from '@patternfly/react-core';
 import { ArrowRightIcon } from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
+import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { useNamespace } from '../../../utils/namespace-context-utils';
@@ -15,14 +26,33 @@ import { useEnterpriseContractPolicies } from './useEnterpriseContractPolicies';
 
 import './EnterpriseContractView.scss';
 
+const EnterpriseContractViewEmptyState: React.FC = () => (
+  <EmptyState data-testid="enterprise-contract-view-empty-state" variant={EmptyStateVariant.large}>
+    <EmptyStateIcon icon={CubesIcon} />
+    <Title headingLevel="h4" size="lg">
+      No release policies
+    </Title>
+  </EmptyState>
+);
+
 const EnterpriseContractView: React.FC = () => {
   const namespace = useNamespace();
-  const contractPolicies = useEnterpriseContractPolicies(HACBS_ENTERPRISE_CONTRACT_POLICIES_DATA);
+  const [contractPolicies, loaded] = useEnterpriseContractPolicies(
+    HACBS_ENTERPRISE_CONTRACT_POLICIES_DATA,
+  );
 
-  const [enterpriseContractPolicy, loaded] = useK8sWatchResource<any>({
+  const [enterpriseContractPolicy, policyLoaded] = useK8sWatchResource<any>({
     groupVersionKind: EnterpriseContractPolicyGroupVersionKind,
     namespace,
   });
+
+  const releasePolicies = React.useMemo(
+    () =>
+      loaded && contractPolicies?.releasePackages
+        ? Object.keys(contractPolicies.releasePackages)
+        : [],
+    [contractPolicies, loaded],
+  );
 
   return (
     <>
@@ -32,9 +62,9 @@ const EnterpriseContractView: React.FC = () => {
         <ExternalLink
           href={HACBS_ENTERPRISE_CONTRACT_INFO_LINK}
           text={
-            <span>
+            <>
               Learn more <ExternalLinkAltIcon />
-            </span>
+            </>
           }
         />
       </Text>
@@ -45,26 +75,32 @@ const EnterpriseContractView: React.FC = () => {
         These rules are applied to pipeline run attestations associated with container images build
         by HACBS. Follow these rules to be able to release successfully.
       </Text>
-      {contractPolicies ? (
-        <div
-          data-testid="enterprise-contract-package-list"
-          className="enterprise-contract-view__package-list"
-        >
-          {contractPolicies?.releasePackages &&
-            Object.keys(contractPolicies.releasePackages)?.map((packageKey) => (
-              <ReleasePolicyPackageItem
-                key={packageKey}
-                releasePackageInfo={contractPolicies.releasePackages[packageKey]}
-                releasePackageAnnotations={contractPolicies.releaseAnnotations[packageKey]}
-              />
-            ))}
-        </div>
+      {loaded ? (
+        <>
+          {releasePolicies.length ? (
+            <div
+              data-testid="enterprise-contract-package-list"
+              className="enterprise-contract-view__package-list"
+            >
+              {contractPolicies?.releasePackages &&
+                releasePolicies.map((packageKey) => (
+                  <ReleasePolicyPackageItem
+                    key={packageKey}
+                    releasePackageInfo={contractPolicies.releasePackages[packageKey]}
+                    releasePackageAnnotations={contractPolicies.releaseAnnotations[packageKey]}
+                  />
+                ))}
+            </div>
+          ) : (
+            <EnterpriseContractViewEmptyState />
+          )}
+        </>
       ) : (
         <Bullseye className="pf-u-mt-lg">
           <Spinner />
         </Bullseye>
       )}
-      {loaded && enterpriseContractPolicy ? (
+      {policyLoaded && enterpriseContractPolicy ? (
         <div data-testid="enterprise-contract-github-link" className="pf-u-mt-md">
           <ExternalLink href={enterpriseContractPolicy.sources?.git?.repository}>
             <Flex

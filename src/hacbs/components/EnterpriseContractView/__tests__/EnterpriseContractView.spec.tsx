@@ -24,7 +24,23 @@ configure({ testIdAttribute: 'data-testid' });
 
 describe('EnterpriseContractView', () => {
   beforeEach(() => {
-    useEnterpriseContractPoliciesMock.mockImplementation(() => MockEnterpriseContractPolicies);
+    useEnterpriseContractPoliciesMock.mockImplementation(() => [
+      MockEnterpriseContractPolicies,
+      true,
+      null,
+    ]);
+  });
+  it('should render the loading state', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    useEnterpriseContractPoliciesMock.mockReturnValueOnce([undefined, false, null]);
+    render(<EnterpriseContractView />);
+    expect(screen.getByRole('progressbar')).toBeVisible();
+  });
+  it('should render the empty state', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    useEnterpriseContractPoliciesMock.mockReturnValueOnce([{}, true, null]);
+    render(<EnterpriseContractView />);
+    expect(screen.getByTestId('enterprise-contract-view-empty-state')).toBeVisible();
   });
   it('should render the release policy section', () => {
     watchResourceMock.mockReturnValue([[], true]);
