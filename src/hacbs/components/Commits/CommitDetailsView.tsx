@@ -12,6 +12,7 @@ import {
 import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
+import { useLocalStorage } from '../../../hooks';
 import { pipelineRunFilterReducer } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { StatusIconWithText } from '../../../shared/components/pipeline-run-logs/StatusIcon';
@@ -22,6 +23,7 @@ import { PipelineRunGroupVersionKind } from '../../models/';
 import { PipelineRunKind } from '../../types';
 import { createCommitObjectFromPLR, getCommitShortName } from '../../utils/commits-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
+import CommitsGettingStartedModal from './CommitsGettingStartedModal';
 import CommitsOverviewTab from './tabs/CommitsOverviewTab';
 import CommitsPipelineRunTab from './tabs/CommitsPipelineRunTab';
 
@@ -30,8 +32,18 @@ type CommitDetailsViewProps = {
   commitName: string;
 };
 
+export const COMMITS_GS_LOCAL_STORAGE_KEY = 'hacbs/commits-getting-started-modal';
+
 const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, applicationName }) => {
   const namespace = useNamespace();
+  const [storageKeys, setStorageKeys] = useLocalStorage<{ [key: string]: boolean }>(
+    COMMITS_GS_LOCAL_STORAGE_KEY,
+  );
+  const keys = storageKeys && typeof storageKeys === 'object' ? storageKeys : {};
+
+  const setGettingStartedShown = (shown: boolean) => {
+    setStorageKeys({ ...keys, [COMMITS_GS_LOCAL_STORAGE_KEY]: !shown });
+  };
 
   const [pipelineruns, loaded, loadErr] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
@@ -91,6 +103,10 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
   if (commit) {
     return (
       <React.Fragment>
+        <CommitsGettingStartedModal
+          shown={!keys?.[COMMITS_GS_LOCAL_STORAGE_KEY]}
+          onHide={() => setGettingStartedShown(false)}
+        />
         <DetailsPage
           breadcrumbs={[
             { path: '/app-studio/applications', name: 'Applications' },
@@ -140,15 +156,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
               </Text>
               {commit.shaTitle && <p className="pf-u-mt-xs pf-u-mb-xs">{`"${commit.shaTitle}"`}</p>}
               <Text component="p" className="pf-u-mt-sm pf-u-mb-sm">
-                Component:{' '}
-                {commit.components.map((component, index) => {
-                  return (
-                    <>
-                      {component}
-                      {index < commit.components.length - 1 && ','}
-                    </>
-                  );
-                })}
+                Component:{`${commit.components.join(', ')}`}
               </Text>
             </>
           }
@@ -164,7 +172,12 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
               key: 'overview',
               label: 'Overview',
               isFilled: true,
-              component: <CommitsOverviewTab commit={commit} />,
+              component: (
+                <CommitsOverviewTab
+                  commit={commit}
+                  onLearnMore={() => setGettingStartedShown(true)}
+                />
+              ),
             },
             {
               key: 'pipelineruns',
