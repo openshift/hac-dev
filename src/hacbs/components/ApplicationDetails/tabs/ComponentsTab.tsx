@@ -12,9 +12,9 @@ import {
   EmptyStateVariant,
 } from '@patternfly/react-core';
 import { OutlinedFileImageIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-file-image-icon';
-import ComponentListView from '../../../../components/ApplicationDetailsView/ComponentListView';
 import { ComponentGroupVersionKind } from '../../../../models';
 import { ComponentKind } from '../../../../types';
+import ComponentListView from '../../Components/ComponentListView';
 
 type ComponentTabProps = {
   applicationName: string;

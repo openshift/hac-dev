@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  Button,
   DataListAction,
   DataListCell,
   DataListContent,
@@ -19,21 +18,24 @@ import {
 } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import { global_palette_red_100 as redColor } from '@patternfly/react-tokens/dist/js/global_palette_red_100';
-import { useLatestPipelineRunForComponent } from '../../hooks/usePipelineRunsForApplication';
-import { pipelineRunFilterReducer } from '../../shared';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind, RouteKind, ResourceStatusCondition } from '../../types';
 import { getConditionForResource } from '../../utils/common-utils';
-import { getBuildStatusIcon } from '../../utils/gitops-utils';
 import { getComponentRouteWebURL } from '../../utils/route-utils';
-import './ComponentListItem.scss';
-import { useBuildLogViewerModal } from '../LogViewer/BuildLogViewer';
-import { useComponentActions } from './component-actions';
+import { useComponentActions } from '../ApplicationDetailsView/component-actions';
+import BuildStatusColumn from './BuildStatusColumn';
 
-type ComponentListViewPageProps = {
+import './ComponentListItem.scss';
+
+export type ComponentListViewItemProps = {
   component: ComponentKind;
   routes: RouteKind[];
+  allComponents?: ComponentKind[];
+  BuildStatusComponent?: React.ComponentType<{
+    component: ComponentKind;
+    allComponents?: ComponentKind[];
+  }>;
 };
 
 const getConditionStatus = (condition: ResourceStatusCondition) => {
@@ -47,20 +49,20 @@ const getConditionStatus = (condition: ResourceStatusCondition) => {
   return null;
 };
 
-export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ component, routes }) => {
+export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
+  component,
+  routes,
+  allComponents,
+  BuildStatusComponent = BuildStatusColumn,
+}) => {
   const [expanded, setExpanded] = React.useState(false);
   const { replicas, targetPort, resources } = component.spec;
   const name = component.metadata.name;
-  const buildLogsModal = useBuildLogViewerModal(component);
   const actions = useComponentActions(component, name);
-  const pipelineRun = useLatestPipelineRunForComponent(component);
-  const status = pipelineRunFilterReducer(pipelineRun);
   const resourceRequests = resources?.requests;
   const containerImage = component.status?.containerImage;
   const componentRouteWebURL = routes?.length > 0 && getComponentRouteWebURL(routes, name);
   const condition = getConditionForResource<ComponentKind>(component);
-
-  const isContainerImage = !component.spec.source?.git?.url;
 
   return (
     <DataListItem aria-label={name} isExpanded={expanded} data-testid="component-list-item">
@@ -75,7 +77,7 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
           dataListCells={[
             <DataListCell key="name">
               <Flex direction={{ default: 'column' }}>
-                <FlexItem data-testid="component-list-item">
+                <FlexItem data-testid="component-list-item-name">
                   <b>{name}</b>
                 </FlexItem>
                 <FlexItem>
@@ -99,27 +101,11 @@ export const ComponentListItem: React.FC<ComponentListViewPageProps> = ({ compon
                 </Tooltip>
               </DataListCell>
             ) : null,
-            <DataListCell key="build" alignRight>
-              <Flex direction={{ default: 'column' }}>
-                {pipelineRun && (
-                  <FlexItem align={{ default: 'alignRight' }}>
-                    {getBuildStatusIcon(status)} Build {status}
-                  </FlexItem>
-                )}
-                {!isContainerImage && (
-                  <FlexItem align={{ default: 'alignRight' }}>
-                    <Button
-                      onClick={buildLogsModal}
-                      variant="link"
-                      data-testid={`view-build-logs-${component.metadata.name}`}
-                      isInline
-                    >
-                      View logs
-                    </Button>
-                  </FlexItem>
-                )}
-              </Flex>
-            </DataListCell>,
+            <BuildStatusComponent
+              key="status"
+              component={component}
+              allComponents={allComponents}
+            />,
           ]}
         />
         <DataListAction
