@@ -39,7 +39,6 @@ oc project ${NAMESPACE}
 HOSTNAME=$(oc get feenv ${ENV_NAME} -o json | jq ".spec.hostname" | tr -d '"')
 
 # Temp: setup proxy and patch SSO for devsandbox
-oc patch feenv ${ENV_NAME} --type merge  -p '{"spec":{"sso": "'$HAC_KC_SSO_URL'" }}'
 oc process -f tmp/hac-proxy.yaml -n ${NAMESPACE} -p NAMESPACE=${NAMESPACE} -p ENV_NAME=${ENV_NAME} -p HOSTNAME=${HOSTNAME} | oc create -f -
 
 # Deploy hac-dev with PR git ref and mainline hac-core ref
@@ -50,7 +49,8 @@ bonfire deploy \
         --clowd-env ${ENV_NAME} \
         --set-template-ref ${COMPONENT}=${GIT_COMMIT} \
         --set-image-tag ${IMAGE}=${TAG} \
-        --namespace ${NAMESPACE}
+        --namespace ${NAMESPACE} \
+        --set-parameter frontend-configs/SSO_URL={$HAC_KC_SSO_URL}
 
 # Call the keycloak API and add a user
 B64_USER=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.username'| tr -d '"')
