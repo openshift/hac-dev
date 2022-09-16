@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
+import { useModalLauncher } from '../../../components/modal/ModalProvider';
+import { applicationDeleteModal } from '../../../components/modal/resource-modals';
 import { ApplicationGroupVersionKind } from '../../../models';
 import { ApplicationKind } from '../../../types';
 import { useNamespace } from '../../../utils/namespace-context-utils';
@@ -23,6 +25,7 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
   const namespace = useNamespace();
   const navigate = useNavigate();
   const { quickStarts } = useChrome();
+  const showModal = useModalLauncher();
 
   const [application, applicationsLoaded] = useK8sWatchResource<ApplicationKind>({
     groupVersionKind: ApplicationGroupVersionKind,
@@ -68,35 +71,37 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
         actions={[
           {
             key: 'add-component',
-            label: 'Add Component',
-            onClick: () => {
-              navigate(`/app-studio/import?application=${applicationName}`);
-            },
-          },
-          {
-            key: 'add-environment',
-            label: 'Add Environment',
-            href: '',
-            isDisabled: true,
+            label: 'Add component',
+            component: (
+              <Link to={`/app-studio/import?application=${applicationName}`}>Add component</Link>
+            ),
           },
           {
             key: 'add-integration-test',
-            label: 'Add Integration test',
+            label: 'Add integration test',
             component: (
-              <Link
-                title="Add integration test"
-                to={`/app-studio/applications/${applicationName}/integration-test`}
-              >
+              <Link to={`/app-studio/applications/${applicationName}/integration-test`}>
                 Add integration test
               </Link>
             ),
             isDisabled: false,
           },
           {
+            key: 'create-environment',
+            label: 'Create environment',
+            component: (
+              <Link to="/app-studio/workspace-settings/environment/create">Create environment</Link>
+            ),
+          },
+          {
             key: 'delete-application',
-            label: 'Delete Application',
-            href: '',
-            isDisabled: true,
+            label: 'Delete application',
+            onClick: () =>
+              showModal<{ submitClicked: boolean }>(
+                applicationDeleteModal(application),
+              ).closed.then(({ submitClicked }) => {
+                if (submitClicked) navigate('/app-studio');
+              }),
           },
           {
             type: 'separator',
@@ -113,7 +118,7 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
           },
           {
             key: 'learning-resources',
-            label: 'Learning Resources',
+            label: 'Learning resources',
             href: '',
             isDisabled: true,
           },
@@ -138,7 +143,7 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
           },
           {
             key: 'pipelineruns',
-            label: 'Pipelineruns',
+            label: 'Pipeline runs',
             component: <PipelineRunsTab applicationName={applicationName} />,
           },
           {

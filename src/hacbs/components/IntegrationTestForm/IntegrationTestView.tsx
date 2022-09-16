@@ -30,7 +30,7 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
   const handleSubmit = (values, actions) => {
     return createIntegrationTest(values.integrationTest, applicationName, namespace)
       .then(() => {
-        navigate(`/app-studio/applications?name=${applicationName}&activeTab=integrationtests`);
+        navigate(`/app-studio/applications/${applicationName}?activeTab=integrationtests`);
       })
       .catch((error) => {
         // eslint-disable-next-line no-console

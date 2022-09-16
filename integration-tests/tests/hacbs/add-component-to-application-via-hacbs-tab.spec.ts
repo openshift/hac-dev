@@ -74,7 +74,7 @@ describe('Create Components using the HACBS UI', () => {
     describe('Add a new component using the "Actions" dropdown', () => {
         it("Click 'Actions' dropdown to add a component", () => {
             cy.get(actionsDropdown.dropdown).click();
-            cy.contains('Add Component').click();
+            cy.contains('Add component').click();
         });
 
         it('Add a component to Application', () => {

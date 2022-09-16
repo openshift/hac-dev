@@ -145,13 +145,13 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
 
   return (
     <>
-      <Title headingLevel="h4" className="pf-u-mt-lg pf-u-mb-sm">
+      <Title headingLevel="h3" className="pf-u-mt-lg pf-u-mb-sm">
         Integration test pipelines
       </Title>
       <Flex spaceItems={{ default: 'spaceItemsXs' }}>
         <FlexItem>
           <TextContent>
-            <Text component={TextVariants.small}>
+            <Text component={TextVariants.p}>
               Add an integration test pipeline to test all your components after you commit code.
             </Text>
           </TextContent>

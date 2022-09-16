@@ -26,8 +26,8 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
   );
   return (
     <>
-      <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg">
-        Pipelinerun details
+      <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
+        Pipeline run details
       </Title>
       <PipelineRunVisualization pipelineRun={pipelineRun} />
       <DescriptionList

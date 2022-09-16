@@ -16,7 +16,7 @@ To get started using your app, follow the steps in this quick start guide.`,
       {
         title: `Add components and builds`,
         description: `
-1. Go to the **Actions** dropdown and select "Add Component".
+1. Go to the **Actions** dropdown and select "Add component".
 2. Add the components you want included, then you will receive a PR to add the build pipeline to your code.
 3. View the Pull Requests we have sent you by clicking on the **Merge Pull Requests** button. You will be directed to the Pull Requests list.
 4. Customize this build pipeline according to your development needs.

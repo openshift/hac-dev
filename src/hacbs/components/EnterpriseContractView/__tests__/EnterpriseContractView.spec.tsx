@@ -82,12 +82,12 @@ describe('EnterpriseContractView', () => {
     expect(annotation).toBeVisible();
   });
   it('should a link to the github repository when available', () => {
-    watchResourceMock.mockReturnValue([MockECPolicy, true]);
+    watchResourceMock.mockReturnValue([[MockECPolicy], true]);
     act(() => {
       render(<EnterpriseContractView />);
     });
     const linkContainer = screen.getByTestId('enterprise-contract-github-link');
     expect(linkContainer).toBeVisible();
-    expect(linkContainer.querySelector('a').href).toBe(MockECPolicy.sources.git.repository);
+    expect(linkContainer.querySelector('a').href).toBe(MockECPolicy.spec.sources[0].git.repository);
   });
 });

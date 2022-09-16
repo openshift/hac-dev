@@ -93,7 +93,7 @@ const pipelineRuns: PipelineRunKind[] = [
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
-describe('Pipelinerun List', () => {
+describe('Pipeline run List', () => {
   it('should render spinner if application data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
     render(<PipelineRunsListView applicationName={appName} />);
@@ -117,7 +117,7 @@ describe('Pipelinerun List', () => {
   it('should render pipelineRuns list when pipelineRuns are present', () => {
     watchResourceMock.mockReturnValue([pipelineRuns, true]);
     render(<PipelineRunsListView applicationName={appName} />);
-    screen.getByText(/Pipelineruns/);
+    screen.getByText(/Pipeline runs/);
     screen.getByText('Name');
     screen.getByText('Started');
     screen.getByText('Duration');

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
@@ -16,6 +17,7 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from '@patternfly/react-core';
+import { HACBS_FLAG } from '../../hacbs/hacbsFeatureFlag';
 import emptyStateImgUrl from '../../imgs/application-list-empty.png';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { ApplicationGroupVersionKind } from '../../models';
@@ -32,6 +34,7 @@ const GETTING_STARTED_CARD_KEY = 'application-list-getting-started-card';
 const EmptyStateImg = () => <img className="pf-u-w-33" src={emptyStateImgUrl} alt="" />;
 
 const ApplicationListView: React.FC = () => {
+  const [hacbs] = useFeatureFlag(HACBS_FLAG);
   const namespace = useNamespace();
   const [applications, loaded] = useK8sWatchResource<ApplicationKind[]>({
     groupVersionKind: ApplicationGroupVersionKind,
@@ -53,11 +56,11 @@ const ApplicationListView: React.FC = () => {
 
   return (
     <>
-      {applications.length === 0 && (
+      {!hacbs && applications.length === 0 && (
         <GettingStartedCard
           imgClassName="pf-u-px-2xl-on-xl"
           localStorageKey={GETTING_STARTED_CARD_KEY}
-          title="Create and manage you applications"
+          title="Create and manage your applications"
           imgSrc={imageUrl}
           imgAlt="Illustration showing users managing applications"
         >

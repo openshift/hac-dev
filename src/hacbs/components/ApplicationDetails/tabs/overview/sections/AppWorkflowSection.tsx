@@ -35,8 +35,8 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
     <Grid hasGutter className="hacbs-app-workflow">
       <GridItem>
         <TextContent>
-          <Text component={TextVariants.h4}>App Workflow</Text>
-          <Text component={TextVariants.small}>Manage your CI/CD workflow</Text>
+          <Text component={TextVariants.h3}>Appplication workflow</Text>
+          <Text component={TextVariants.p}>Manage your CI/CD workflow</Text>
         </TextContent>
       </GridItem>
       <GridItem>
