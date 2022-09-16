@@ -12,7 +12,6 @@ import {
 import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
-import { useLocalStorage } from '../../../hooks';
 import { pipelineRunFilterReducer } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { StatusIconWithText } from '../../../shared/components/pipeline-run-logs/StatusIcon';
@@ -36,13 +35,15 @@ export const COMMITS_GS_LOCAL_STORAGE_KEY = 'hacbs/commits-getting-started-modal
 
 const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, applicationName }) => {
   const namespace = useNamespace();
-  const [storageKeys, setStorageKeys] = useLocalStorage<{ [key: string]: boolean }>(
-    COMMITS_GS_LOCAL_STORAGE_KEY,
+  const [showGettingStarted, setShowGettingStarted] = React.useState<boolean>(
+    !window.localStorage.getItem(COMMITS_GS_LOCAL_STORAGE_KEY),
   );
-  const keys = storageKeys && typeof storageKeys === 'object' ? storageKeys : {};
 
   const setGettingStartedShown = (shown: boolean) => {
-    setStorageKeys({ ...keys, [COMMITS_GS_LOCAL_STORAGE_KEY]: !shown });
+    if (!shown) {
+      window.localStorage.setItem(COMMITS_GS_LOCAL_STORAGE_KEY, 'true');
+    }
+    setShowGettingStarted(shown);
   };
 
   const [pipelineruns, loaded, loadErr] = useK8sWatchResource<PipelineRunKind[]>({
@@ -104,7 +105,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
     return (
       <React.Fragment>
         <CommitsGettingStartedModal
-          shown={!keys?.[COMMITS_GS_LOCAL_STORAGE_KEY]}
+          shown={showGettingStarted}
           onHide={() => setGettingStartedShown(false)}
         />
         <DetailsPage
