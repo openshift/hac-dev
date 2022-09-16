@@ -9,6 +9,7 @@ import {
   FlexItem,
   Spinner,
   Text,
+  TextContent,
   Title,
 } from '@patternfly/react-core';
 import { ArrowRightIcon } from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
@@ -78,19 +79,29 @@ const EnterpriseContractView: React.FC = () => {
       {loaded ? (
         <>
           {releasePolicies.length ? (
-            <div
-              data-testid="enterprise-contract-package-list"
-              className="enterprise-contract-view__package-list"
-            >
-              {contractPolicies?.releasePackages &&
-                releasePolicies.map((packageKey) => (
-                  <ReleasePolicyPackageItem
-                    key={packageKey}
-                    releasePackageInfo={contractPolicies.releasePackages[packageKey]}
-                    releasePackageAnnotations={contractPolicies.releaseAnnotations[packageKey]}
-                  />
-                ))}
-            </div>
+            <>
+              <TextContent className="enterprise-contract-view__package-titles">
+                <Text component="h5" className="pf-u-pl-lg pf-u-m-0">
+                  Rule
+                </Text>
+                <Text component="h5" className="pf-u-m-0">
+                  Description
+                </Text>
+              </TextContent>
+              <div
+                data-testid="enterprise-contract-package-list"
+                className="enterprise-contract-view__package-list"
+              >
+                {contractPolicies?.releasePackages &&
+                  releasePolicies.map((packageKey) => (
+                    <ReleasePolicyPackageItem
+                      key={packageKey}
+                      releasePackageInfo={contractPolicies.releasePackages[packageKey]}
+                      releasePackageAnnotations={contractPolicies.releaseAnnotations[packageKey]}
+                    />
+                  ))}
+              </div>
+            </>
           ) : (
             <EnterpriseContractViewEmptyState />
           )}

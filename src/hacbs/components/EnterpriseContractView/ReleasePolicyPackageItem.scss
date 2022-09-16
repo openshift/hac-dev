@@ -2,8 +2,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   border-bottom: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
-  &:first-of-type {
-    border-top: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+  @media (min-width: 769px) {
+    grid-template-columns: 400px 1fr;
   }
   &__list {
     border: 0;

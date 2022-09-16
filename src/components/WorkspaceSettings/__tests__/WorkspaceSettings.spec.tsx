@@ -2,7 +2,6 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useSearchParams } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { Tab, TabTitleText } from '@patternfly/react-core';
 import { configure, fireEvent, screen } from '@testing-library/react';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { mockLocation, routerRenderer } from '../../../utils/test-utils';
@@ -66,16 +65,11 @@ describe('WorkspaceSettings', () => {
     expect(screen.getByText('Test Getting Started Info')).toBeVisible();
   });
   it('should render additional tabs', async () => {
-    const additionalTab = (
-      <Tab
-        key="test-tab"
-        data-test="test-tab"
-        eventKey="test-tab"
-        title={<TabTitleText>Test Tab</TabTitleText>}
-      >
-        <span data-test="test-tab-content">Test Content</span>
-      </Tab>
-    );
+    const additionalTab = {
+      key: 'test-tab',
+      title: 'Test Tab',
+      content: <span data-test="test-tab-content">Test Content</span>,
+    };
     const original = routerRenderer(<WorkspaceSettings tabs={[additionalTab]} />);
     const testTab = screen.getByText('Test Tab');
     expect(testTab).toBeVisible();

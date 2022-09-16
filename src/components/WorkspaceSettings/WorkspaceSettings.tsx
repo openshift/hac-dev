@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Flex,
   FlexItem,
@@ -10,12 +11,11 @@ import {
   Text,
 } from '@patternfly/react-core';
 import EnvironmentListView from '../../components/Environment/EnvironmentListView';
-import { GettingStartedCard } from '../../components/GettingStartedCard/GettingStartedCard';
-import { HelpTopicLink } from '../../components/HelpTopicLink/HelpTopicLink';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import { useQuickstartCloseOnUnmount } from '../../hooks/useQuickstartCloseOnUnmount';
-import { useSearchParam } from '../../hooks/useSearchParam';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
+import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
+import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 
 import './WorkspaceSettings.scss';
 
@@ -41,8 +41,14 @@ export const GettingStartedWithUsers = (
 export type WorkspaceSettingsProps = {
   gettingStartedSections?: React.ReactNode[];
   environmentsView?: React.ReactNode;
-  tabs?: React.ReactNode[];
+  tabs?: {
+    key: string;
+    title: string;
+    content: React.ReactNode;
+  }[];
 };
+
+const ENVIRONMENTS_TAB_KEY = 'environments';
 
 const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = ({
   gettingStartedSections = [GettingStartedWithEnvironments, GettingStartedWithUsers],
@@ -50,8 +56,33 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = ({
   tabs,
 }) => {
   useQuickstartCloseOnUnmount();
-  const [activeTabParam, setActiveTab] = useSearchParam('activeTab', '');
-  const activeTab = activeTabParam || 'environments';
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('activeTab');
+  const tabMatched =
+    activeTab === ENVIRONMENTS_TAB_KEY
+      ? ENVIRONMENTS_TAB_KEY
+      : tabs?.find((t) => t.key === activeTab)?.key;
+
+  const setActiveTab = React.useCallback(
+    (tab: string, replace = false) => {
+      if ((activeTab || ENVIRONMENTS_TAB_KEY) !== tab) {
+        const params = new URLSearchParams();
+        params.set('activeTab', tab);
+        setSearchParams(params, { replace });
+      }
+    },
+    [setSearchParams, activeTab],
+  );
+
+  React.useEffect(() => {
+    if (!tabMatched) {
+      setSearchParams(new URLSearchParams(), { replace: true });
+    } else {
+      setActiveTab(tabMatched, true);
+    }
+    // Only run once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const environments = (
     <>
@@ -89,12 +120,20 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = ({
             onSelect={(e, k: string) => {
               setActiveTab(k);
             }}
-            activeKey={activeTab}
+            activeKey={activeTab || ENVIRONMENTS_TAB_KEY}
           >
             <Tab eventKey="environments" title={<TabTitleText>Environments</TabTitleText>}>
               {environments}
             </Tab>
-            {...tabs}
+            {tabs?.map((tab) => (
+              <Tab
+                key={tab.key}
+                eventKey={tab.key}
+                title={<TabTitleText>{tab.title}</TabTitleText>}
+              >
+                {tab.content}
+              </Tab>
+            ))}
           </Tabs>
         </PageSection>
       </PageLayout>

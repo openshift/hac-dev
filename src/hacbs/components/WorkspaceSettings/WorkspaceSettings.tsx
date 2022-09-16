@@ -1,5 +1,4 @@
 import React from 'react';
-import { Tab, TabTitleText } from '@patternfly/react-core';
 import {
   default as BaseWorkspaceSettings,
   GettingStartedWithEnvironments,
@@ -26,13 +25,11 @@ const WorkspaceSettings: React.FC = () => {
         <HacbsEnvironmentListView validTypes={[EnvironmentType.static, EnvironmentType.managed]} />
       }
       tabs={[
-        <Tab
-          key="enterprise-contract"
-          eventKey="enterprise-contract"
-          title={<TabTitleText>Enterprise Contract</TabTitleText>}
-        >
-          <EnterpriseContractView />
-        </Tab>,
+        {
+          key: 'enterprise-contract',
+          title: 'Enterprise Contract',
+          content: <EnterpriseContractView />,
+        },
       ]}
     />
   );
