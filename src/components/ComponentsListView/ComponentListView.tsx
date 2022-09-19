@@ -199,7 +199,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({
               component={(p) => (
                 <Link
                   {...p}
-                  data-test="add-component"
+                  data-test="add-component-button"
                   to={`/app-studio/import?application=${applicationName}`}
                 />
               )}

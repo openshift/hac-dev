@@ -48,6 +48,7 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
           component={(props) => (
             <Link {...props} to={`/app-studio/import?application=${applicationName}`} />
           )}
+          data-test="add-component"
         >
           Add component
         </Button>

@@ -67,6 +67,7 @@ const AppRecentCommits = ({ applicationName }) => {
             />
           )}
           variant="secondary"
+          data-test="go-to-components-tab"
         >
           Go to components tab
         </Button>

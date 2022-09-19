@@ -87,7 +87,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
         return type === 'separator' ? (
           <DropdownSeparator key={key} />
         ) : (
-          <DropdownItem key={key} {...props}>
+          <DropdownItem key={key} data-test={key} {...props}>
             {label}
           </DropdownItem>
         );
