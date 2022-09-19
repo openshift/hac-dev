@@ -112,7 +112,7 @@ const EnvironmentListView: React.FC<Props> = ({
       clearAllFilters={onClearAllFilters}
       clearFiltersButtonText="Clear filters"
     >
-      <ToolbarContent>
+      <ToolbarContent className="pf-u-pl-0">
         {environments.length > 0 ? (
           <>
             {renderToolbarGroups ? renderToolbarGroups(environments) : null}
