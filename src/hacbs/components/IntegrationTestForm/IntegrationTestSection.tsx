@@ -47,6 +47,7 @@ const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = 
           label="Display name"
           name="integrationTest.name"
           placeholder="Enter the integration test pipeline name"
+          data-test="display-name-input"
           required
         />
         <InputField
@@ -55,12 +56,14 @@ const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = 
           label="Container image"
           labelIcon={<HelpTooltipIcon content={'Provide your image bundle'} />}
           name="integrationTest.bundle"
+          data-test="container-image-input"
         />
         <InputField
           aria-label="Pipeline specified in container image"
           label="Pipeline specified in container image"
           name="integrationTest.pipeline"
           helpText="Specify the pipeline name as it appears in the image bundle."
+          data-test="pipeline-name-input"
           required
         />
         <CheckboxField
@@ -68,6 +71,7 @@ const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = 
           aria-label="Mark as optional for release"
           label="Mark as optional for release"
           helpText="Passing this test is optional, and it cannot prevent the application from being deployed or released."
+          data-test="optional-release-checkbox"
         />
         {infoAlert && (
           <Alert

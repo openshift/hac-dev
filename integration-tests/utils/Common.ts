@@ -39,7 +39,7 @@ export class Common {
   }
 
   static verifyPageTitle(title: string) {
-    cy.contains('h1', title, { timeout: 90000 }).should('be.visible');
+    cy.contains('h1', title, { timeout: 250000 }).should('be.visible');
   }
 
   static clickOnConsentButton() {

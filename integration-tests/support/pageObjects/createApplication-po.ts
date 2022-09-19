@@ -1,6 +1,6 @@
 export const addComponentPagePO = {
   samples: 'Start with a sample.',
-  addComponent: '[data-test="add-component"]',
+  addComponent: '[data-test="add-component-button"]',
   enterSource: '[data-test="enter-source"]',
   gitOptions: 'Git options',
   gitReference: '[data-test="git-reference"]',
@@ -26,6 +26,9 @@ export const createApplicationPagePO = {
 export const ComponentsPagePO = {
   create: 'button[type=submit]',
   createText: 'Create',
+  editComponentNameIcon: '[data-test="pencil-icon"]',
+  checkIcon: '[data-test="check-icon"]',
+  closeIcon: '[data-test="close-icon"]',
   showAdvancedSetting: 'Show advanced deployment options',
   cpuInput: 'input[name*="cpuValue"]',
   cpuPlusButton: 'button[data-ouia-component-id="OUIA-Generated-Button-control-2"]',
