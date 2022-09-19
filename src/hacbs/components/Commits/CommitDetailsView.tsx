@@ -169,7 +169,13 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
             {
               key: 'pipelineruns',
               label: 'Pipeline runs',
-              component: <CommitsPipelineRunTab commit={commit} />,
+
+              component: (
+                <CommitsPipelineRunTab
+                  pipelineRuns={pipelineruns}
+                  applicationName={applicationName}
+                />
+              ),
             },
           ]}
         />
