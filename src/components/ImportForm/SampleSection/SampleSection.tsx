@@ -52,7 +52,7 @@ const SampleSection = ({ onStrategyChange }) => {
             ...component,
             componentStub: {
               ...component.componentStub,
-              componentName: `${component.componentStub.componentName}-sample`,
+              componentName: `${application}-${component.componentStub.componentName}-sample`,
             },
           }),
         );
@@ -67,7 +67,7 @@ const SampleSection = ({ onStrategyChange }) => {
     return () => {
       unmounted = true;
     };
-  }, [detectedComponents, detectingComponents, setFieldValue]);
+  }, [application, detectedComponents, detectingComponents, setFieldValue]);
 
   const handleSelect = React.useCallback(
     (item) => {
