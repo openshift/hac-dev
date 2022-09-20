@@ -25,9 +25,10 @@ export const kcLoginPO = {
 export const waits = {
   loader: '.loader',
   spinner: '.pf-c-spinner',
-  gridPlaceholder: '.skeleton-catalog--grid',
+  gridPlaceholder: '.skeleton-catalog--tile',
   tablePlaceholder: '.loading-skeleton--table',
   viewPlaceholder: '[data-test="skeleton-detail-view"]',
+  linkPlaceholder: 'pf-c-skeleton',
 };
 
 export const actions = {

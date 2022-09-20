@@ -1,5 +1,6 @@
 // Include the cypress customized commands related files
 import './hooks';
+import './a11y';
 
 //Handling errors from application
 // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
