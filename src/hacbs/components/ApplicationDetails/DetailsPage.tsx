@@ -23,7 +23,10 @@ import BreadCrumbs from '../../../shared/components/breadcrumbs/BreadCrumbs';
 
 import './DetailsPage.scss';
 
-type Action = { type?: string; key: string; label: string } & DropdownItemProps;
+type Action = { type?: string; key: string; label: React.ReactNode } & Omit<
+  DropdownItemProps,
+  'label'
+>;
 type DetailsPageTabProps = {
   key: string;
   label: string;
@@ -35,7 +38,7 @@ type DetailsPageTabProps = {
 };
 
 type DetailsPageProps = {
-  title: string;
+  title: React.ReactNode;
   children?: React.ReactNode;
   footer?: React.ReactNode;
   description?: React.ReactNode;
@@ -110,6 +113,17 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
     );
   });
 
+  const renderTitle = () => {
+    if (typeof title === 'string') {
+      return (
+        <Text component="h1" data-test="details__title">
+          {title}
+        </Text>
+      );
+    }
+    return title;
+  };
+
   return (
     <PageGroup data-test="details">
       <PageSection type="breadcrumb">
@@ -117,9 +131,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
         <Flex>
           <FlexItem>
             <TextContent>
-              <Text component="h1" data-test="details__title">
-                {title}
-              </Text>
+              {renderTitle()}
               {description && <Text component="p">{description}</Text>}
             </TextContent>
           </FlexItem>

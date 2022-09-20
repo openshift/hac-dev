@@ -18,7 +18,7 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ commit,
         className="pf-u-pl-sm"
         onClick={onLearnMore}
       >
-        read more
+        Learn more
       </Button>
     </Text>
     <>Overview of {getCommitDisplayName(commit)}</>

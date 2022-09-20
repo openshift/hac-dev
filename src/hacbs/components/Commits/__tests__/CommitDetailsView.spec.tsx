@@ -2,6 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { getCommitShortName } from '../../../utils/commits-utils';
 import { pipelineWithCommits } from '../__data__/pipeline-with-commits';
 import CommitDetailsView, { COMMITS_GS_LOCAL_STORAGE_KEY } from '../CommitDetailsView';
 
@@ -53,7 +54,7 @@ describe('CommitDetailsView', () => {
 
   it('should render proper commit details', () => {
     render(<CommitDetailsView applicationName="test-application" commitName="commit123" />);
-    screen.getAllByText('commit123');
+    screen.getAllByText(getCommitShortName('commit123'));
   });
 
   it('should show the getting started modal when not dismissed', () => {

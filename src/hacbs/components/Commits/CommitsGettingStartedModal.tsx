@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Button, Modal, ModalVariant, Text, Title } from '@patternfly/react-core';
-import imageUrl from '../../imgs/app-workflow.svg';
+import { Button, Modal, Text, Title } from '@patternfly/react-core';
+import imageUrl from '../../imgs/commit-getting-started.svg';
 
 type CommitsGettingStartedModalProps = {
   shown: boolean;
@@ -26,6 +26,8 @@ const CommitsGettingStartedModal: React.FC<CommitsGettingStartedModalProps> = ({
         View Commit activity, triggered pipelines and environment deployment in a single view.
         <br />
         Each node represents a github action, pipeline or an environment.
+        <br />
+        Click on nodes to view more details.
       </Text>
     </>
   );
@@ -44,7 +46,7 @@ const CommitsGettingStartedModal: React.FC<CommitsGettingStartedModalProps> = ({
   return (
     <Modal
       aria-label="commits-getting-started-modal"
-      variant={ModalVariant.large}
+      width="fit-content"
       appendTo={document.querySelector('#hacDev-modal-container') as HTMLElement}
       header={header}
       footer={footer}
