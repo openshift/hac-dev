@@ -164,30 +164,32 @@ export enum runStatus {
 export const getRunStatusColor = (status: string) => {
   switch (status) {
     case runStatus.Succeeded:
-      return { message: i18next.t('Succeeded'), pftoken: successColor };
+      return { message: i18next.t('Succeeded'), pftoken: successColor, labelColor: 'green' };
     case runStatus.Failed:
-      return { message: i18next.t('Failed'), pftoken: failureColor };
+      return { message: i18next.t('Failed'), pftoken: failureColor, labelColor: 'red' };
     case runStatus.FailedToStart:
       return {
         message: i18next.t('PipelineRun failed to start'),
         pftoken: failureColor,
+        labelColor: 'orange',
       };
     case runStatus.Running:
-      return { message: i18next.t('Running'), pftoken: runningColor };
+      return { message: i18next.t('Running'), pftoken: runningColor, labelColor: 'blue' };
     case runStatus['In Progress']:
-      return { message: i18next.t('Running'), pftoken: runningColor };
+      return { message: i18next.t('Running'), pftoken: runningColor, labelColor: 'blue' };
 
     case runStatus.Skipped:
-      return { message: i18next.t('Skipped'), pftoken: skippedColor };
+      return { message: i18next.t('Skipped'), pftoken: skippedColor, labelColor: 'grey' };
     case runStatus.Cancelled:
-      return { message: i18next.t('Cancelled'), pftoken: cancelledColor };
+      return { message: i18next.t('Cancelled'), pftoken: cancelledColor, labelColor: 'grey' };
     case runStatus.Idle:
     case runStatus.Pending:
-      return { message: i18next.t('Pending'), pftoken: pendingColor };
+      return { message: i18next.t('Pending'), pftoken: pendingColor, labelColor: 'yellow' };
     default:
       return {
         message: i18next.t('PipelineRun not started yet'),
         pftoken: pendingColor,
+        labelColor: 'grey',
       };
   }
 };

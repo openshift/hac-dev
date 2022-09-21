@@ -11,6 +11,7 @@ export enum PipelineRunLabel {
   COMMIT_REPO_URL_LABEL = 'pipelinesascode.tekton.dev/url-repository',
   COMMIT_PROVIDER_LABEL = 'pipelinesascode.tekton.dev/git-provider',
   COMMIT_SHA_TITLE_ANNOTATION = 'pipelinesascode.tekton.dev/sha-title',
+  COMMIT_TYPE_LABEL = 'pipelines.appstudio.openshift.io/type',
 }
 
 export enum PipelineRunType {

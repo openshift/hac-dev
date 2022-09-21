@@ -8,6 +8,8 @@ import {
   getCommitDisplayName,
   getCommitsFromPLRs,
   getCommitShortName,
+  showPLRMessage,
+  showPLRType,
 } from '../commits-utils';
 
 describe('commit-utils', () => {
@@ -72,5 +74,37 @@ describe('commit short name', () => {
   it('Should return correct short name', () => {
     const shortName = getCommitShortName(mockCommits[0].sha);
     expect(shortName).toBe('comm012');
+  });
+});
+
+describe('showPLRType and Message', () => {
+  it('Should return correct type for build', () => {
+    const type = showPLRType(pipelineWithCommits[0]);
+    expect(type).toBe('Build');
+  });
+
+  it('Should return correct type for release', () => {
+    const type = showPLRType(pipelineWithCommits[1]);
+    expect(type).toBe('Release');
+  });
+
+  it('Should return correct type for test', () => {
+    const type = showPLRType(pipelineWithCommits[3]);
+    expect(type).toBe('Integration test');
+  });
+
+  it('Should return correct message for build', () => {
+    const message = showPLRMessage(pipelineWithCommits[0]);
+    expect(message).toBe('Build deploying');
+  });
+
+  it('Should return correct message for release', () => {
+    const message = showPLRMessage(pipelineWithCommits[1]);
+    expect(message).toBe('Releasing');
+  });
+
+  it('Should return correct message for test', () => {
+    const message = showPLRMessage(pipelineWithCommits[3]);
+    expect(message).toBe('Testing');
   });
 });

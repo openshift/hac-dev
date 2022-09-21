@@ -25,6 +25,9 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       labels: {
         'build.appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
+        'build.appstudio.openshift.io/type': 'build',
+        'build.appstudio.openshift.io/version': '0.1',
+        'pipelines.appstudio.openshift.io/type': 'build',
         'appstudio.openshift.io/component': 'sample-component',
         'pipelinesascode.tekton.dev/sender': 'abhi',
         'pipelinesascode.tekton.dev/sha': 'commit123',
@@ -74,6 +77,9 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generation: 1,
       labels: {
         'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'build.appstudio.openshift.io/type': 'release',
+        'build.appstudio.openshift.io/version': '0.1',
+        'pipelines.appstudio.openshift.io/type': 'release',
         'build.appstudio.openshift.io/build': 'true',
         'appstudio.openshift.io/component': 'go-3',
         'pipelinesascode.tekton.dev/sender': 'abhi',
@@ -123,6 +129,9 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generation: 1,
       labels: {
         'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'build.appstudio.openshift.io/type': 'build',
+        'build.appstudio.openshift.io/version': '0.1',
+        'pipelines.appstudio.openshift.io/type': 'build',
         'build.appstudio.openshift.io/build': 'true',
         'appstudio.openshift.io/component': 'go-3',
         'pipelinesascode.tekton.dev/sender': 'abhi',
@@ -221,6 +230,9 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generation: 1,
       labels: {
         'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'build.appstudio.openshift.io/type': 'test',
+        'build.appstudio.openshift.io/version': '0.1',
+        'pipelines.appstudio.openshift.io/type': 'test',
         'build.appstudio.openshift.io/build': 'true',
         'appstudio.openshift.io/component': 'sample-component',
         'pipelinesascode.tekton.dev/sender': 'abhi',
