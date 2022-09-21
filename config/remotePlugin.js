@@ -128,10 +128,6 @@ module.exports = {
       // App Studio
       Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
       ApplicationDetails: resolve(__dirname, '../src/pages/ApplicationDetailsPage'),
-      ApplicationEnvironmentDetails: resolve(
-        __dirname,
-        '../src/pages/ApplicationEnvironmentDetailsPage',
-      ),
       Import: resolve(__dirname, '../src/pages/ImportPage'),
       ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
       WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),
@@ -192,19 +188,6 @@ module.exports = {
         exact: true,
         component: {
           $codeRef: 'ApplicationDetails',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/app-studio/applications/:appName/environments/:envName',
-        exact: true,
-        component: {
-          $codeRef: 'ApplicationEnvironmentDetails',
         },
       },
       flags: {

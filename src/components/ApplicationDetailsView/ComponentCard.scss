@@ -1,0 +1,7 @@
+.component-card {
+  min-width: 234px;
+  &.pf-c-card.pf-m-compact {
+    --pf-c-card--child--PaddingBottom: var(--pf-global--spacer--sm);
+  }
+}
+

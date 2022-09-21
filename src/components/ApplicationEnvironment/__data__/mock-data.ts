@@ -43,7 +43,7 @@ export const mockEnvironment: EnvironmentKind = {
   apiVersion: 'appstudio.redhat.com/v1alpha1',
   kind: 'environment',
   metadata: { name: 'production' },
-  spec: { displayName: 'Production' },
+  spec: { displayName: 'Production', deploymentStrategy: 'Automatic' },
 };
 
 export const mockComponents: ComponentKind[] = [
