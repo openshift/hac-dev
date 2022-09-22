@@ -59,6 +59,7 @@ describe('Auth Utils: useAccessTokenBinding', () => {
       {
         status: {
           oAuthUrl: 'https://test-app.auth.svc.cluster.local/oauth/token',
+          uploadUrl: 'https://test-app.auth.svc.cluster.local/token/upload',
           phase: '',
           linkedAccessTokenName: 'test-token',
           syncedObjectRef: {
