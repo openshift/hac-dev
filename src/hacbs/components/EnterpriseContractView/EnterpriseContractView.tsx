@@ -18,6 +18,7 @@ import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/exte
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { useNamespace } from '../../../utils/namespace-context-utils';
 import { EnterpriseContractPolicyGroupVersionKind } from '../../models';
+import { EnterpriseContractPolicyKind } from '../../types/enterpriseContractPolicy';
 import {
   HACBS_ENTERPRISE_CONTRACT_INFO_LINK,
   HACBS_ENTERPRISE_CONTRACT_POLICIES_DATA,
@@ -42,9 +43,13 @@ const EnterpriseContractView: React.FC = () => {
     HACBS_ENTERPRISE_CONTRACT_POLICIES_DATA,
   );
 
-  const [enterpriseContractPolicy, policyLoaded] = useK8sWatchResource<any>({
+  const [enterpriseContractPolicy, policyLoaded] = useK8sWatchResource<
+    EnterpriseContractPolicyKind[]
+  >({
     groupVersionKind: EnterpriseContractPolicyGroupVersionKind,
     namespace,
+    isList: true,
+    limit: 1,
   });
 
   const releasePolicies = React.useMemo(
@@ -111,9 +116,9 @@ const EnterpriseContractView: React.FC = () => {
           <Spinner />
         </Bullseye>
       )}
-      {policyLoaded && enterpriseContractPolicy ? (
+      {policyLoaded && enterpriseContractPolicy[0]?.spec.sources[0]?.git?.repository ? (
         <div data-testid="enterprise-contract-github-link" className="pf-u-mt-md">
-          <ExternalLink href={enterpriseContractPolicy.sources?.git?.repository}>
+          <ExternalLink href={enterpriseContractPolicy[0].spec.sources[0].git.repository}>
             <Flex
               alignItems={{ default: 'alignItemsCenter' }}
               spaceItems={{ default: 'spaceItemsXs' }}

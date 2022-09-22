@@ -25,7 +25,7 @@ const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = 
 
   return (
     <>
-      {!isInPage ? (
+      {!isInPage && (
         <>
           <TextContent data-test="integration-test-section-header">
             <Text component={TextVariants.h1}>Add integration test pipeline</Text>
@@ -40,8 +40,26 @@ const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = 
             </ExternalLink>
           </TextContent>
         </>
-      ) : null}
+      )}
       <FormSection>
+        {infoAlert && (
+          <Alert
+            variant="info"
+            isInline
+            title="This pipeline will appear twice on your application workflow"
+            actionClose={
+              <AlertActionCloseButton
+                data-test="hacbs-close-info"
+                onClose={() => setInfoAlert(false)}
+              />
+            }
+          >
+            After adding your pipeline, it will run on your component and then again on the entire
+            app. You can see this on your application workflow.
+            <br />
+            {/* <a href="#">Learn more</a> */}
+          </Alert>
+        )}
         <InputField
           aria-label="Display name"
           label="Display name"
@@ -73,24 +91,6 @@ const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = 
           helpText="Passing this test is optional, and it cannot prevent the application from being deployed or released."
           data-test="optional-release-checkbox"
         />
-        {infoAlert && (
-          <Alert
-            variant="info"
-            isInline
-            title="This pipeline will appear twice on your application workflow"
-            actionClose={
-              <AlertActionCloseButton
-                data-test="hacbs-close-info"
-                onClose={() => setInfoAlert(false)}
-              />
-            }
-          >
-            After adding your pipeline, it will run on your component and then again on the entire
-            app. You can see this on your application workflow.
-            <br />
-            {/* <a href="#">Learn more</a> */}
-          </Alert>
-        )}
       </FormSection>
     </>
   );

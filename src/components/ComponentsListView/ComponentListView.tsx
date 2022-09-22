@@ -204,7 +204,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({
                 />
               )}
             >
-              Add Component
+              Add component
             </Button>
           </ToolbarItem>
           <ToolbarGroup alignment={{ default: 'alignRight' }}>

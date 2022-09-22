@@ -73,7 +73,7 @@ const ApplicationEnvironmentDetailsEmptyState: React.FC<{ environmentName: strin
         <Link {...props} to={`/app-studio/import?environment=${environmentName}`} />
       )}
     >
-      Deploy Components
+      Deploy components
     </Button>
   </EmptyState>
 );

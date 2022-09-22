@@ -55,6 +55,16 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
               Rerun
             </DropdownItem>,
             <DropdownItem
+              key="cancel"
+              component="button"
+              onClick={() => {
+                setKebabOpen(false);
+              }}
+              isDisabled={true}
+            >
+              Cancel
+            </DropdownItem>,
+            <DropdownItem
               key="stopAction"
               component="button"
               onClick={() => {

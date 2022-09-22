@@ -18,16 +18,16 @@ const PipelineRunPage = () => {
       {name ? (
         <React.Fragment>
           <Helmet>
-            <title>Pipelinerun Details Page</title>
+            <title>Pipeline run Details Page</title>
           </Helmet>
           <PipelineRunDetailsView pipelineRunName={name} />
         </React.Fragment>
       ) : (
         <React.Fragment>
           <Helmet>
-            <title>Pipelineruns</title>
+            <title>Pipeline runs</title>
           </Helmet>
-          <PageLayout title="Pipelineruns" description="Pipelineruns are listed here.">
+          <PageLayout title="Pipeline runs" description="Pipeline runs are listed here.">
             <PageSection
               padding={{ default: 'noPadding' }}
               variant={PageSectionVariants.light}

@@ -46,7 +46,6 @@ export const reviewStep = (onComponentsCreated?: () => void): FormikWizardStep =
   component: <ReviewSection />,
   nextButtonText: 'Create components & continue',
   canJumpTo: false,
-  hasNoBodyPadding: true,
   validationSchema: reviewValidationSchema,
   onSubmit: async (formValues: FormValues, formikBag: FormikHelpers<ImportFormValues>) => {
     await onComponentsSubmit(formValues, formikBag);

@@ -1,7 +1,21 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, configure, fireEvent } from '@testing-library/react';
+import { EnterpriseContractPolicyKind } from '../../../types/enterpriseContractPolicy';
 import { GettingStartedModal, LOCAL_STORAGE_KEY } from '../GettingStartedModal';
+
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  useK8sWatchResource: jest.fn((): [EnterpriseContractPolicyKind[], boolean] => [
+    [
+      {
+        apiVersion: 'appstudio.redhat.com/v1alpha1',
+        kind: 'EnterpriseContractPolicy',
+        spec: { sources: [{ git: { repository: 'test' } }] },
+      },
+    ],
+    true,
+  ]),
+}));
 
 jest.mock('../../../../hooks', () => ({
   useLocalStorage: jest.fn(),

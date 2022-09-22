@@ -33,7 +33,11 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
     <PageLayout
       breadcrumbs={[
         { path: '/app-studio/applications', name: 'Applications' },
-        { path: `/app-studio/applications?name=${applicationName}`, name: applicationName },
+        { path: `/app-studio/applications/${applicationName}`, name: applicationName },
+        {
+          path: `/app-studio/applications/${applicationName}?activeTab=integrationtests`,
+          name: 'Integration tests',
+        },
         { path: '#', name: 'Integration test pipeline' },
       ]}
       title="Add integration test pipeline"

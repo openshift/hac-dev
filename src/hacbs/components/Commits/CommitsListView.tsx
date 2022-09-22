@@ -39,7 +39,13 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
 
   const filteredCommits = React.useMemo(
     () =>
-      nameFilter ? commits.filter((commit) => commit.sha.indexOf(nameFilter) !== -1) : commits,
+      nameFilter
+        ? commits.filter(
+            (commit) =>
+              commit.sha.indexOf(nameFilter) !== -1 ||
+              commit.components.some((c) => c.indexOf(nameFilter) !== -1),
+          )
+        : commits,
     [nameFilter, commits],
   );
 
@@ -69,9 +75,9 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
         {recentOnly ? 'Recent commits' : 'Commits'}
       </Title>
       <Text className="pf-u-mb-lg">
-        Monitor your commits and their pipeline progression across all components
+        Monitor your commits and their pipeline progression across all components.{' '}
         <Button variant="link" className="pf-u-pl-sm">
-          learn more
+          Learn more
         </Button>
       </Text>
       {!recentOnly && (

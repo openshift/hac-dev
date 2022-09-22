@@ -14,7 +14,7 @@ const PipelineRunEventsTab: React.FC<PipelineRunEventsTabProps> = () => {
         Monitor your events for this pipelinerun
       </Title>
       <EmptyStateBody>
-        No pipelinerun events found yet.
+        No pipeline run events found yet.
         <br />
         To get started, create a pipelinerun or connect to a pipelinerun environment.
       </EmptyStateBody>

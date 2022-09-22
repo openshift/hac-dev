@@ -54,12 +54,12 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
     () => [
       {
         id: 'add-component-header-action',
-        label: 'Add Component',
+        label: 'Add component',
         cta: { href: `/app-studio/import?application=${applicationName}` },
       },
       {
         id: 'delete-application-header-action',
-        label: 'Delete Application',
+        label: 'Delete application',
         cta: () =>
           showModal<{ submitClicked: boolean }>(applicationDeleteModal(application)).closed.then(
             ({ submitClicked }) => {

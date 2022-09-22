@@ -88,7 +88,7 @@ describe('IntegrationTestView', () => {
     await waitFor(() => expect(createIntegrationTestMock).toHaveBeenCalledTimes(1));
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith(
-        '/app-studio/applications?name=test-app&activeTab=integrationtests',
+        '/app-studio/applications/test-app?activeTab=integrationtests',
       ),
     );
   });

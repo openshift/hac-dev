@@ -31,7 +31,7 @@ const TaskRunListView: React.FC<Props> = ({ pipelineName, namespace }) => {
   if (!taskRuns || taskRuns.length === 0) {
     return (
       <EmptyState data-test="taskrun-empty-state">
-        <EmptyStateBody>No TaskRuns found</EmptyStateBody>
+        <EmptyStateBody>No task runs found</EmptyStateBody>
       </EmptyState>
     );
   }
