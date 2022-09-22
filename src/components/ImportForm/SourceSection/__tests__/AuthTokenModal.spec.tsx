@@ -39,7 +39,7 @@ describe('AuthTokenModal', () => {
         expect.anything(),
         expect.objectContaining({
           method: 'POST',
-          headers: { Authorization: 'Bearer token-123' },
+          headers: { Authorization: 'Bearer token-123', 'Content-Type': 'application/json' },
           // eslint-disable-next-line camelcase
           body: JSON.stringify({ username: 'test', access_token: '1234' }),
         }),

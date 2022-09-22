@@ -28,10 +28,9 @@ describe('Create Component from Private Git Source', () => {
       // Enter git repo URL
       addComponent.setSource(privateRepo);
       addComponent.waitUnableToAccess();
-      cy.wait(60000);
       addComponent.loginToGitubByToken();
       // Check if the source is validated
-      addComponent.waitRepoValidated(180000);
+      addComponent.waitRepoValidated(120000);
       addComponent.clickNext();
     });
 

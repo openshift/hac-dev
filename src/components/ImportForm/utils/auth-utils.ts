@@ -179,6 +179,7 @@ export const useSpiAPI = () => {
           method: 'POST',
           credentials: 'include',
           headers: {
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
