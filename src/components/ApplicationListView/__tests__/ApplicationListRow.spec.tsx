@@ -72,15 +72,9 @@ const watchResourceMock = useK8sWatchResource as jest.Mock;
 describe('Application List Row', () => {
   it('renders application list row', () => {
     watchResourceMock.mockReturnValue([components, true]);
-    const { getByText, container } = render(
-      <ApplicationListRow columns={null} obj={application} />,
-    );
-    const expectedDate = dateTime.dateTimeFormatter.format(
-      new Date(application.metadata.creationTimestamp),
-    );
+    const { getByText } = render(<ApplicationListRow columns={null} obj={application} />);
     expect(getByText(application.metadata.name)).toBeInTheDocument();
     expect(getByText('2 Components')).toBeInTheDocument();
-    expect(container).toHaveTextContent(expectedDate.toString());
   });
 
   it('renders 0 components in the component column if the application has none available', () => {
@@ -89,9 +83,19 @@ describe('Application List Row', () => {
     expect(getByText('0 Components')).toBeInTheDocument();
   });
 
-  it('renders skeleton in the component column if the components are not loaded', () => {
+  it('renders skeleton in the component & last deploy columns if the components are not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
     const { getByText } = render(<ApplicationListRow columns={null} obj={application} />);
     expect(getByText('Loading component count')).toBeInTheDocument();
+    expect(getByText('Loading last deploy time')).toBeInTheDocument();
+  });
+
+  it('shows latest component deploy time in last deploy column', () => {
+    watchResourceMock.mockReturnValue([components, true]);
+    const { container } = render(<ApplicationListRow columns={null} obj={application} />);
+    const expectedDate = dateTime.dateTimeFormatter.format(
+      new Date(components[0].metadata.creationTimestamp),
+    );
+    expect(container).toHaveTextContent(expectedDate.toString());
   });
 });

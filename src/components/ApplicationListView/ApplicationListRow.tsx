@@ -11,7 +11,7 @@ import { useApplicationActions } from './application-actions';
 import { applicationTableColumnClasses } from './ApplicationListHeader';
 
 const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj }) => {
-  const [allComponents, loaded] = useK8sWatchResource<ComponentKind[]>({
+  const [allComponents, componentsLoaded] = useK8sWatchResource<ComponentKind[]>({
     groupVersionKind: ComponentGroupVersionKind,
     namespace: obj.metadata.namespace,
     isList: true,
@@ -19,6 +19,11 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
   const actions = useApplicationActions(obj);
 
   const components = allComponents?.filter((c) => c.spec.application === obj.metadata.name) ?? [];
+
+  const lastDeployTime =
+    components?.sort((c1, c2) =>
+      c2.metadata.creationTimestamp.localeCompare(c1.metadata.creationTimestamp),
+    )[0]?.metadata.creationTimestamp ?? '-';
 
   return (
     <>
@@ -28,7 +33,7 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
         </Link>
       </TableData>
       <TableData className={applicationTableColumnClasses.components}>
-        {loaded ? (
+        {componentsLoaded ? (
           pluralize(components.length, 'Component')
         ) : (
           <Skeleton width="50%" screenreaderText="Loading component count" />
@@ -36,7 +41,11 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
       </TableData>
       <TableData className={applicationTableColumnClasses.environments}>-</TableData>
       <TableData className={applicationTableColumnClasses.lastDeploy}>
-        <Timestamp timestamp={obj.metadata.creationTimestamp} />
+        {componentsLoaded ? (
+          <Timestamp timestamp={lastDeployTime} />
+        ) : (
+          <Skeleton width="50%" screenreaderText="Loading last deploy time" />
+        )}
       </TableData>
       <TableData className={applicationTableColumnClasses.kebab}>
         <ActionMenu actions={actions} />
