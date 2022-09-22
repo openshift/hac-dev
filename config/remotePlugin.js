@@ -37,16 +37,6 @@ const hacbs = {
       },
     },
     {
-      type: 'core.page/route',
-      properties: {
-        path: '/hacbs',
-        exact: true,
-        component: {
-          $codeRef: 'HACBSFlag.EnableHACBSFlagRoute',
-        },
-      },
-    },
-    {
       type: 'console.page/route',
       properties: {
         path: '/app-studio/import',
