@@ -9,6 +9,12 @@ export const componentsTabPO = {
     addComponent: '[data-test="add-component-button"]'
 }
 
+export const integrationTestsTabPO = {
+    clickTab: '[data-test="details__tabItem integrationtests"]',
+    inputFilter: '[data-test="name-input-filter"]',
+    
+}
+
 export const actionsDropdown = {
     dropdown: '[data-test="details__actions"]',
     itemAddComponent: '[data-test="add-component"]',

@@ -31,6 +31,14 @@ export class HACBSApplications {
         this.getComponentListItem(componentName).should('exist');
     }
 
+    static createdIntegrationTestsExists(name: string, containerImage: string, pipelineName: string) {
+        this.goToComponentsTab();
+
+        Common.verifyPageTitle(applicationName);
+        Common.waitForLoad();
+        this.getComponentListItem(componentName).should('exist');
+    }
+
     static getComponentListItem(application: string) {
         return cy.contains(applicationDetailPagePO.item, application, { timeout: 60000 });
     }
@@ -40,6 +48,10 @@ export class HACBSApplications {
     }
 
     static goToComponentsTab() {
+        cy.get(componentsTabPO.clickTab).click();
+    }
+
+    static goToIntegrationTestsTab() {
         cy.get(componentsTabPO.clickTab).click();
     }
 }
