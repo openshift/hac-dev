@@ -17,6 +17,7 @@ export type SPIAccessTokenBindingKind = K8sResourceCommon & {
   status?: {
     phase: SPIAccessTokenBindingPhase;
     oAuthUrl?: string;
+    uploadUrl?: string;
     linkedAccessTokenName?: string;
     syncedObjectRef?: {
       name: string;

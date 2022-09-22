@@ -29,7 +29,7 @@ const AuthOptions: React.FC = () => {
   } = useChrome();
   const showModal = useModalLauncher();
 
-  const [{ oAuthUrl, accessTokenName }, loaded] = useAccessTokenBinding(source);
+  const [{ oAuthUrl, tokenUploadUrl }, loaded] = useAccessTokenBinding(source);
 
   const startAuthorization = React.useCallback(async () => {
     if (oAuthUrl) {
@@ -68,7 +68,7 @@ const AuthOptions: React.FC = () => {
             </Button>
             <Button
               variant={ButtonVariant.link}
-              onClick={() => showModal(createAuthTokenModal({ accessTokenName }))}
+              onClick={() => showModal(createAuthTokenModal({ tokenUploadUrl }))}
               isDisabled={!loaded}
             >
               Use a token instead
