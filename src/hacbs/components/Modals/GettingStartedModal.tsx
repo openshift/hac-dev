@@ -156,8 +156,8 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
             key: 1,
             jsx: (
               <>
-                Before attempting to release, you can add your own integration test pipelines for
-                automatic release eligibility evaluation.
+                Before attempting to release, you can add your own integration tests for automatic
+                release eligibility evaluation.
               </>
             ),
           },

@@ -27,13 +27,13 @@ describe('IntegrationTestsListView', () => {
   it('should render the skeleton table if integration tests data is not loaded', () => {
     useK8sWatchResourceMock.mockReturnValue([[], false]);
     const wrapper = render(<IntegrationTestsListView applicationName="test-app" />);
-    expect(wrapper.findByText('No integration test pipelines found yet.')).toBeTruthy();
+    expect(wrapper.findByText('No integration tests found yet.')).toBeTruthy();
   });
 
   it('should render the empty state if there are no integration tests', () => {
     useK8sWatchResourceMock.mockReturnValue([[], true, undefined]);
     const wrapper = render(<IntegrationTestsListView applicationName="test-app" />);
-    expect(wrapper.findByText('No integration test pipelines found yet.')).toBeTruthy();
+    expect(wrapper.findByText('No integration tests found yet.')).toBeTruthy();
   });
 
   it('should render a table when there are integration tests', () => {
