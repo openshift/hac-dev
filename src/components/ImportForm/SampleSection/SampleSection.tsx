@@ -15,6 +15,7 @@ import { getIconProps } from '../../../shared/components/catalog/utils/catalog-u
 import { skeletonTileSelector } from '../../../shared/components/catalog/utils/skeleton-catalog';
 import { CatalogItem } from '../../../shared/components/catalog/utils/types';
 import { StatusBox } from '../../../shared/components/status-box/StatusBox';
+import { sanitizeName } from '../../../utils/create-utils';
 import { useComponentDetection } from '../utils/cdq-utils';
 import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues, ImportStrategy } from '../utils/types';
@@ -52,7 +53,9 @@ const SampleSection = ({ onStrategyChange }) => {
             ...component,
             componentStub: {
               ...component.componentStub,
-              componentName: `${application}-${component.componentStub.componentName}-sample`,
+              componentName: `${sanitizeName(application)}-${
+                component.componentStub.componentName
+              }-sample`,
             },
           }),
         );

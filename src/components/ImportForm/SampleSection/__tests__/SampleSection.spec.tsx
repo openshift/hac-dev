@@ -128,4 +128,58 @@ describe('SampleSection', () => {
       expect(setFieldValue).toHaveBeenLastCalledWith('isValidated', false);
     });
   });
+
+  it('prefixes application to sample name', async () => {
+    const setFieldValue = jest.fn();
+    useFormikContextMock.mockReturnValue({
+      values: { source: 'https://github.com/repo', application: 'MyApp' },
+      setFieldValue,
+      setStatus: jest.fn(),
+    });
+    useComponentDetectionMock.mockReturnValue([
+      [{ componentStub: { componentName: 'node' } }],
+      true,
+      null,
+    ]);
+    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
+
+    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+
+    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
+
+    expect(setFieldValue).toHaveBeenCalledWith('components', [
+      {
+        componentStub: expect.objectContaining({
+          componentName: 'myapp-node-sample',
+        }),
+      },
+    ]);
+  });
+
+  it('sanitizes app prefix for sample name', async () => {
+    const setFieldValue = jest.fn();
+    useFormikContextMock.mockReturnValue({
+      values: { source: 'https://github.com/repo', application: 'My Application' },
+      setFieldValue,
+      setStatus: jest.fn(),
+    });
+    useComponentDetectionMock.mockReturnValue([
+      [{ componentStub: { componentName: 'node' } }],
+      true,
+      null,
+    ]);
+    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
+
+    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+
+    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
+
+    expect(setFieldValue).toHaveBeenCalledWith('components', [
+      {
+        componentStub: expect.objectContaining({
+          componentName: 'my-application-node-sample',
+        }),
+      },
+    ]);
+  });
 });
