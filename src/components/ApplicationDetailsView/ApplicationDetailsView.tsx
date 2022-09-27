@@ -115,7 +115,7 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
         breadcrumbs={[
           { path: '/app-studio/applications', name: 'Applications' },
           {
-            path: `/app-studio/applications/:${application?.metadata?.name}`,
+            path: `/app-studio/applications/${application?.metadata?.name}`,
             name: application?.spec?.displayName,
           },
         ]}
