@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  annotations:
+    build.appstudio.redhat.com/pull_request_number: "3"
+    build.appstudio.redhat.com/target_branch: '[main,master]'
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
+    pipelinesascode.tekton.dev/on-event: '[pull_request]'
+    pipelinesascode.tekton.dev/on-target-branch: '[main,master]'
+  creationTimestamp: null
+  labels:
+    appstudio.openshift.io/application: my-application
+    appstudio.openshift.io/component: java-quarkus-try
+    build.appstudio.openshift.io/component: java-quarkus-try
+    pipelines.appstudio.openshift.io/type: build
+  name: java-quarkus-try-on-pull-request
+  namespace: rhn-support-djodha
+spec:
+  params:
+  - name: git-url
+    value: https://github.com/dheerajodha/devfile-sample-code-with-quarkus-try.git
+  - name: output-image
+    value: quay.io/redhat-appstudio/user-workload:automated-test-on-pr
+  - name: dockerfile
+    value: https://raw.githubusercontent.com/dheerajodha/devfile-sample-code-with-quarkus-try/main/src/main/docker/Dockerfile.jvm.staged
+  pipelineRef:
+    bundle: quay.io/redhat-appstudio/build-templates-bundle:13f5d9c921b3f727684a00084037f673a0dc4273
+    name: docker-build
+  workspaces:
+  - name: workspace
+    persistentVolumeClaim:
+      claimName: appstudio
+    subPath: java-quarkus-try-on-pull-request
+  - name: registry-auth
+    secret:
+      secretName: redhat-appstudio-registry-pull-secret
+status: {}

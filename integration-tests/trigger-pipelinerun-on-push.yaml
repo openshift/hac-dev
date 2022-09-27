@@ -1,0 +1,36 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  annotations:
+    build.appstudio.redhat.com/target_branch: '[main,master]'
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
+    pipelinesascode.tekton.dev/on-event: '[push]'
+    pipelinesascode.tekton.dev/on-target-branch: '[main,master]'
+  creationTimestamp: null
+  labels:
+    appstudio.openshift.io/application: my-application
+    appstudio.openshift.io/component: go
+    build.appstudio.openshift.io/component: go
+    pipelines.appstudio.openshift.io/type: build
+  name: go-on-push
+  namespace: rhn-support-djodha
+spec:
+  params:
+  - name: git-url
+    value: https://github.com/dheerajodha/devfile-sample-go-basic.git
+  - name: output-image
+    value: quay.io/redhat-appstudio/user-workload:automated-test-on-push
+  - name: dockerfile
+    value: https://raw.githubusercontent.com/dheerajodha/devfile-sample-go-basic/main/docker/Dockerfile
+  pipelineRef:
+    bundle: quay.io/redhat-appstudio/build-templates-bundle:13f5d9c921b3f727684a00084037f673a0dc4273
+    name: docker-build
+  workspaces:
+  - name: workspace
+    persistentVolumeClaim:
+      claimName: appstudio
+    subPath: go-on-push
+  - name: registry-auth
+    secret:
+      secretName: redhat-appstudio-registry-pull-secret
+status: {}
