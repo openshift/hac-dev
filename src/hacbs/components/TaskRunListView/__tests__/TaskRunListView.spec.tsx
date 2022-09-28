@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { render } from '@testing-library/react';
-import { testTaskRun } from '../__data__/mock-TaskRun-data';
+import { render, configure, screen } from '@testing-library/react';
+import { testTaskRuns } from '../__data__/mock-TaskRun-data';
 import TaskRunListView from '../TaskRunListView';
 
 jest.mock('react-i18next', () => ({
@@ -11,6 +11,8 @@ jest.mock('react-i18next', () => ({
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
+
+configure({ testIdAttribute: 'data-test' });
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 
@@ -28,8 +30,17 @@ describe('TaskRunListView', () => {
   });
 
   it('should render table', () => {
-    useK8sWatchResourceMock.mockReturnValue([[testTaskRun], true, undefined]);
+    useK8sWatchResourceMock.mockReturnValue([testTaskRuns, true, undefined]);
     const wrapper = render(<TaskRunListView pipelineName="test-pipeline" namespace="test-ns" />);
+    const table = wrapper.container.getElementsByTagName('table');
+    expect(table).toHaveLength(1);
+  });
+
+  it('should render filter toolbar', () => {
+    useK8sWatchResourceMock.mockReturnValue([testTaskRuns, true, undefined]);
+    const wrapper = render(<TaskRunListView pipelineName="test-pipeline" namespace="test-ns" />);
+    screen.getByTestId('taskrun-list-toolbar');
     expect(wrapper.container.getElementsByTagName('table')).toHaveLength(1);
+    expect(wrapper.container.getElementsByTagName('tr')).toHaveLength(1);
   });
 });

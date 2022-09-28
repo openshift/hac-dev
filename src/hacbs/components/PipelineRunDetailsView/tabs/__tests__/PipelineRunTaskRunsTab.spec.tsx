@@ -2,7 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { ByRoleOptions, configure, render, screen } from '@testing-library/react';
-import { testTaskRun } from '../../../TaskRunListView/__data__/mock-TaskRun-data';
+import { testTaskRuns } from '../../../TaskRunListView/__data__/mock-TaskRun-data';
 import { testPipelineRun } from '../../../topology/__data__/pipeline-test-data';
 import PipelineRunTaskRunsTab from '../PipelineRunTaskRunsTab';
 
@@ -27,7 +27,7 @@ describe('PipelineRunTaskRunsTab', () => {
   });
 
   it('should render TaskRun table', () => {
-    mockUseK8sWatchResource.mockReturnValue([[testTaskRun], true]);
+    mockUseK8sWatchResource.mockReturnValue([[testTaskRuns[0]], true]);
     render(<PipelineRunTaskRunsTab pipelineRun={testPipelineRun} />);
     screen.queryByRole('grid', { label: 'TaskRun List' } as ByRoleOptions);
   });
