@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { CatalogTile } from '@patternfly/react-catalog-view-extension';
 import {
+  Backdrop,
   Badge,
+  Bullseye,
   Button,
   ButtonVariant,
   FormGroup,
   Gallery,
   GalleryItem,
   PageSection,
+  Spinner,
 } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
-import { HelpTooltipIcon } from '../../../shared';
+import { HelpTooltipIcon, useResizeObserver } from '../../../shared';
 import { getIconProps } from '../../../shared/components/catalog/utils/catalog-utils';
 import { skeletonTileSelector } from '../../../shared/components/catalog/utils/skeleton-catalog';
 import { CatalogItem } from '../../../shared/components/catalog/utils/types';
@@ -93,6 +96,26 @@ const SampleSection = ({ onStrategyChange }) => {
     onStrategyChange(ImportStrategy.GIT);
   }, [onStrategyChange, setFieldValue]);
 
+  const [dimensions, setDimensions] = React.useState({});
+
+  const elementRef = React.useRef<HTMLDivElement>();
+  useResizeObserver(
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useCallback(() => {
+      if (elementRef.current) {
+        const { height, width } = elementRef.current.getBoundingClientRect();
+        setDimensions({
+          position: 'absolute',
+          height,
+          width,
+          top: elementRef.current.offsetTop,
+          left: elementRef.current.offsetLeft,
+        });
+      }
+    }, []),
+    elementRef.current,
+  );
+
   return (
     <>
       <PageSection variant="light" isFilled>
@@ -110,16 +133,19 @@ const SampleSection = ({ onStrategyChange }) => {
               </Button>
             </>
           }
-          helperText={
-            (detectingComponents && 'Detecting sample component values...') ||
-            (detectedComponents && 'Detected component values.')
-          }
           helperTextInvalid={detectedComponentsError}
           isHelperTextBeforeField
           isRequired
         />
       </PageSection>
       <PageSection padding={{ default: 'noPadding' }} isFilled>
+        {detectingComponents && (
+          <Backdrop style={dimensions}>
+            <Bullseye>
+              <Spinner size="xl" />
+            </Bullseye>
+          </Backdrop>
+        )}
         <StatusBox
           skeleton={skeletonTileSelector}
           data={samples}
@@ -127,28 +153,30 @@ const SampleSection = ({ onStrategyChange }) => {
           loadError={loadError}
           label="Catalog items"
         >
-          <Gallery className="hac-catalog" hasGutter>
-            {samples.map((sample) => (
-              <GalleryItem key={sample.uid}>
-                <CatalogTile
-                  className="hac-catalog__tile"
-                  id={sample.uid}
-                  title={sample.name}
-                  vendor={`Provided by ${sample.provider}`}
-                  description={sample.description}
-                  featured={sample.name === selected?.name}
-                  data-test={`${sample.type}-${sample.name}`}
-                  badges={sample.tags?.map((tag) => (
-                    <Badge key={tag} isRead>
-                      {tag}
-                    </Badge>
-                  ))}
-                  {...getIconProps(sample)}
-                  onClick={() => handleSelect(sample)}
-                />
-              </GalleryItem>
-            ))}
-          </Gallery>
+          <div ref={elementRef}>
+            <Gallery className="hac-catalog" hasGutter>
+              {samples.map((sample) => (
+                <GalleryItem key={sample.uid}>
+                  <CatalogTile
+                    className="hac-catalog__tile"
+                    id={sample.uid}
+                    title={sample.name}
+                    vendor={`Provided by ${sample.provider}`}
+                    description={sample.description}
+                    featured={sample.name === selected?.name}
+                    data-test={`${sample.type}-${sample.name}`}
+                    badges={sample.tags?.map((tag) => (
+                      <Badge key={tag} isRead>
+                        {tag}
+                      </Badge>
+                    ))}
+                    {...getIconProps(sample)}
+                    onClick={() => handleSelect(sample)}
+                  />
+                </GalleryItem>
+              ))}
+            </Gallery>
+          </div>
         </StatusBox>
       </PageSection>
     </>

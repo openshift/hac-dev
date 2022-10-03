@@ -26,6 +26,10 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
+jest.mock('../../../../shared/hooks/useResizeObserver', () => ({
+  useResizeObserver: jest.fn(),
+}));
+
 const onStrategyChangeMock = jest.fn();
 
 const useFormikContextMock = useFormikContext as jest.Mock;
@@ -181,5 +185,24 @@ describe('SampleSection', () => {
         }),
       },
     ]);
+  });
+
+  it('should show loading indicator while detecting components', async () => {
+    const setFieldValue = jest.fn();
+    useFormikContextMock.mockReturnValue({
+      values: { source: 'https://github.com/repo', application: 'test-app' },
+      setFieldValue,
+      setStatus: jest.fn(),
+    });
+    useComponentDetectionMock.mockReturnValue([null, false, null]);
+    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
+
+    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+
+    await waitFor(() => expect(screen.queryByRole('progressbar')).not.toBeInTheDocument());
+
+    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
+
+    await waitFor(() => screen.getByRole('progressbar'));
   });
 });
