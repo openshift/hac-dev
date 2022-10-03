@@ -28,15 +28,15 @@ const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = 
       {!isInPage && (
         <>
           <TextContent data-test="integration-test-section-header">
-            <Text component={TextVariants.h1}>Add integration test pipeline</Text>
+            <Text component={TextVariants.h1}>Add integration test</Text>
             <Text component={TextVariants.p}>
-              Add an integration test pipeline to test all your components.
+              Add an integration test to test all your components.
               <br />
               By default, previous GitHub credentials will be used to validate your URL. If it
               fails, you fails, you must revalidate with a different repo.
             </Text>
             <ExternalLink href="#">
-              Learn more about setting up an integration test pipeline <ExternalLinkAltIcon />
+              Learn more about setting up an integration test <ExternalLinkAltIcon />
             </ExternalLink>
           </TextContent>
         </>
@@ -64,7 +64,7 @@ const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = 
           aria-label="Display name"
           label="Display name"
           name="integrationTest.name"
-          placeholder="Enter the integration test pipeline name"
+          placeholder="Enter the integration test name"
           data-test="display-name-input"
           required
         />
