@@ -11,12 +11,12 @@ global.fetch = jest.fn().mockImplementationOnce(() => Promise.resolve());
 
 describe('AuthTokenModal', () => {
   it('should be disabled when username or token is not entered', () => {
-    render(<AuthTokenModal accessTokenName="test-token" />);
+    render(<AuthTokenModal uploadUrl="example.com" />);
     expect(screen.getByText('Connect')).toBeDisabled();
   });
 
   it('should be enabled when values are entered', async () => {
-    render(<AuthTokenModal accessTokenName="test-token" />);
+    render(<AuthTokenModal uploadUrl="example.com" />);
     await act(async () => {
       fireEvent.change(screen.getByTestId('auth-username'), { target: { value: 'test' } });
       fireEvent.change(screen.getByTestId('auth-token'), { target: { value: '1234' } });
@@ -25,7 +25,7 @@ describe('AuthTokenModal', () => {
   });
 
   it('should send token when submitted', async () => {
-    render(<AuthTokenModal accessTokenName="test-token" onClose={jest.fn()} />);
+    render(<AuthTokenModal uploadUrl="example.com" onClose={jest.fn()} />);
     await act(async () => {
       fireEvent.change(screen.getByTestId('auth-username'), { target: { value: 'test' } });
       fireEvent.change(screen.getByTestId('auth-token'), { target: { value: '1234' } });
@@ -36,7 +36,7 @@ describe('AuthTokenModal', () => {
     });
     await waitFor(() =>
       expect(fetch).toHaveBeenCalledWith(
-        expect.anything(),
+        'example.com',
         expect.objectContaining({
           method: 'POST',
           headers: { Authorization: 'Bearer token-123' },

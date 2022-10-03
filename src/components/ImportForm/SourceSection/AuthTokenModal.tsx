@@ -20,23 +20,23 @@ import { ComponentProps, createModalLauncher } from '../../modal/createModalLaun
 import { useSpiAPI } from '../utils/auth-utils';
 
 type AuthTokenModalProps = ComponentProps & {
-  accessTokenName: string;
+  uploadUrl: string;
 };
 
-export const AuthTokenModal: React.FC<AuthTokenModalProps> = ({ onClose, accessTokenName }) => {
+export const AuthTokenModal: React.FC<AuthTokenModalProps> = ({ onClose, uploadUrl }) => {
   const [error, setError] = React.useState();
   const { uploadToken } = useSpiAPI();
 
   const submitToken = React.useCallback(
     async (values: FormikValues) => {
       try {
-        await uploadToken(accessTokenName, values.username, values.token);
+        await uploadToken(uploadUrl, values.username, values.token);
         onClose();
       } catch (e) {
         setError(e);
       }
     },
-    [accessTokenName, onClose, uploadToken],
+    [uploadUrl, onClose, uploadToken],
   );
 
   return (

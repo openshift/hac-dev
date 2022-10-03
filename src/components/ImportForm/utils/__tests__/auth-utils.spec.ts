@@ -28,7 +28,7 @@ describe('Auth Utils: useAccessTokenBinding', () => {
   it('should return loaded false if source is not present but loaded is true', () => {
     useK8sWatchMock.mockReturnValue([{}, true, null]);
     const { result } = renderHook(() => useAccessTokenBinding(undefined));
-    expect(result.current[0]).toStrictEqual({ oAuthUrl: undefined, accessTokenName: undefined });
+    expect(result.current[0]).toStrictEqual({ oAuthUrl: undefined, uploadUrl: undefined });
     expect(result.current[1]).toBe(false);
   });
 
@@ -39,7 +39,7 @@ describe('Auth Utils: useAccessTokenBinding', () => {
     );
     const { result, waitForNextUpdate } = renderHook(() => useAccessTokenBinding('test-source'));
     await act(async () => await waitForNextUpdate());
-    expect(result.current[0]).toStrictEqual({ oAuthUrl: undefined, accessTokenName: undefined });
+    expect(result.current[0]).toStrictEqual({ oAuthUrl: undefined, uploadUrl: undefined });
     expect(result.current[1]).toBe(false);
   });
 
@@ -50,7 +50,7 @@ describe('Auth Utils: useAccessTokenBinding', () => {
     );
     const { result, waitForNextUpdate } = renderHook(() => useAccessTokenBinding('test-source'));
     await act(async () => await waitForNextUpdate());
-    expect(result.current[0]).toStrictEqual({ oAuthUrl: undefined, accessTokenName: undefined });
+    expect(result.current[0]).toStrictEqual({ oAuthUrl: undefined, uploadUrl: undefined });
     expect(result.current[1]).toBe(true);
   });
 
@@ -60,7 +60,7 @@ describe('Auth Utils: useAccessTokenBinding', () => {
         status: {
           oAuthUrl: 'https://test-app.auth.svc.cluster.local/oauth/token',
           phase: '',
-          linkedAccessTokenName: 'test-token',
+          uploadUrl: 'https://example.com',
           syncedObjectRef: {
             name: 'secret',
           },
@@ -76,7 +76,7 @@ describe('Auth Utils: useAccessTokenBinding', () => {
     await act(async () => await waitForNextUpdate());
     expect(result.current[0]).toStrictEqual({
       oAuthUrl: 'https://test-app.auth.svc.cluster.local/oauth/token',
-      accessTokenName: 'test-token',
+      uploadUrl: 'https://example.com',
     });
     expect(result.current[1]).toBe(true);
   });
