@@ -31,6 +31,7 @@ describe('Create Component from Quay Image', () => {
     });
 
     it('Create Application', () => {
+      Common.waitForLoad();
       componentPage.createApplication();
       applicationDetailPage.createdComponentExists(componentName, applicationName);
     });

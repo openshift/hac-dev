@@ -65,5 +65,9 @@ export const reviewValidationSchema = yup.object({
       }),
     }),
   ),
+  runtime: yup.string().when('detectionFailed', {
+    is: true,
+    then: yup.string().required('Runtime not detected'),
+  }),
   isDetected: yup.boolean().isTrue().required('Required'),
 });
