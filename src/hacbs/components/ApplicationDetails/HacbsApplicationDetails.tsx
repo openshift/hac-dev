@@ -154,7 +154,7 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
           {
             key: 'environments',
             label: 'Environments',
-            component: <EnvironmentsTab />,
+            component: <EnvironmentsTab applicationName={applicationName} />,
           },
         ]}
       />

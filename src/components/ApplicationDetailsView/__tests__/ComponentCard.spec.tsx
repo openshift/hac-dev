@@ -30,7 +30,7 @@ describe('ComponentCard', () => {
   it('should render Build Succeeded when card is expanded', () => {
     render(<ComponentCard applicationName="test-1" isExpanded isSelected onSelect={() => {}} />);
     screen.getByText('Build Succeeded');
-    screen.getByText('Last Build');
+    screen.getByText('Last Build:');
   });
 
   it('should render build status in header when card is not expanded', () => {
