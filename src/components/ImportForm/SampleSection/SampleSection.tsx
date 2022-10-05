@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { CatalogTile } from '@patternfly/react-catalog-view-extension';
 import {
+  Alert,
   Backdrop,
   Badge,
   Bullseye,
@@ -12,6 +13,7 @@ import {
   PageSection,
   Spinner,
 } from '@patternfly/react-core';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import { useFormikContext } from 'formik';
 import { HelpTooltipIcon, useResizeObserver } from '../../../shared';
 import { getIconProps } from '../../../shared/components/catalog/utils/catalog-utils';
@@ -139,6 +141,11 @@ const SampleSection = ({ onStrategyChange }) => {
         />
       </PageSection>
       <PageSection padding={{ default: 'noPadding' }} isFilled>
+        {selected && detectedComponentsError ? (
+          <Alert variant="danger" isInline title={`Unable to load ${selected.name}`}>
+            {detectedComponentsError?.message || detectedComponentsError}
+          </Alert>
+        ) : null}
         {detectingComponents && (
           <Backdrop style={dimensions}>
             <Bullseye>
@@ -172,6 +179,32 @@ const SampleSection = ({ onStrategyChange }) => {
                     ))}
                     {...getIconProps(sample)}
                     onClick={() => handleSelect(sample)}
+                    footer={
+                      <Button
+                        variant="link"
+                        isInline
+                        iconPosition="right"
+                        icon={
+                          <ExternalLinkAltIcon
+                            style={{ marginLeft: 'var(--pf-global--spacer--xs)' }}
+                          />
+                        }
+                        onClick={(e) => e.stopPropagation()}
+                        component={(props) => (
+                          <a
+                            {...props}
+                            href={
+                              (sample.attributes.git as { remotes: { [key: string]: string } })
+                                .remotes.origin
+                            }
+                            target={'_blank'}
+                            rel="noreferrer"
+                          />
+                        )}
+                      >
+                        Git repository
+                      </Button>
+                    }
                   />
                 </GalleryItem>
               ))}
