@@ -205,4 +205,21 @@ describe('SampleSection', () => {
 
     await waitFor(() => screen.getByRole('progressbar'));
   });
+
+  it('should show alert if component detection fails', async () => {
+    const setFieldValue = jest.fn();
+    useFormikContextMock.mockReturnValue({
+      values: { source: 'https://github.com/repo', application: 'test-app' },
+      setFieldValue,
+      setStatus: jest.fn(),
+    });
+    useComponentDetectionMock.mockReturnValue([null, false, { message: 'abcd' }]);
+    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
+
+    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+
+    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
+
+    await waitFor(() => screen.getByText('Unable to load Basic Node.js'));
+  });
 });
