@@ -115,8 +115,8 @@ export const ApplicationEnvironmentCards: React.FC<ApplicationEnvironmentCardsPr
               <ApplicationEnvironmentCard
                 environment={env}
                 isExpanded={cardsExpanded}
-                isSelected={env.spec.displayName === selectedEnvironment}
-                onSelect={() => onSelect && onSelect(env.spec.displayName)}
+                isSelected={env.metadata.name === selectedEnvironment}
+                onSelect={() => onSelect && onSelect(env.metadata.name)}
               />
             </React.Fragment>
           ))

@@ -171,7 +171,7 @@ describe('ApplicationEnvironmentDetailsView', () => {
         applicationName="test-application"
       />,
     );
-    screen.getAllByText(`production Deployment Details`);
+    screen.getAllByText(`${mockEnvironment.spec.displayName} Deployment Details`);
   });
 
   it('should render a list view of components by default', async () => {

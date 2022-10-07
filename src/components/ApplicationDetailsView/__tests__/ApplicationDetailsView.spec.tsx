@@ -115,7 +115,7 @@ describe('ApplicationDetailsView', () => {
     view1.unmount();
 
     const view2 = render(<ApplicationDetailsView applicationName="application-to-test" />);
-    view2.getByText(`${mockEnvironment.metadata.name} Deployment Details`);
+    view2.getByText(`${mockEnvironment.spec.displayName} Deployment Details`);
     const componentDetails = view2.queryByText('Component Details');
     expect(componentDetails).toBeFalsy();
 

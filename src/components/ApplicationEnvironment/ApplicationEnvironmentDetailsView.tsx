@@ -154,7 +154,7 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
           justifyContent={{ default: 'justifyContentSpaceBetween' }}
         >
           <Title headingLevel="h1" className="pf-u-mt-sm">
-            {environment.metadata.name} Deployment Details
+            {environment.spec.displayName} Deployment Details
           </Title>
           <Flex justifyContent={{ default: 'justifyContentFlexEnd' }}>
             {gitOpsDeploymentLoaded ? (
