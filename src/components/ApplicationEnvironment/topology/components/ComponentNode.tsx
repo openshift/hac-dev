@@ -102,6 +102,7 @@ const ComponentNode: React.FC<ComponentNodeProps> = ({ element, contextMenuOpen,
     );
   }, [element, name, routes]);
 
+  const scaleNode = (hover || contextMenuOpen) && detailsLevel !== ScaleDetailsLevel.high;
   return (
     <Layer id={hover || contextMenuOpen ? TOP_LAYER : DEFAULT_LAYER}>
       <g
@@ -111,7 +112,7 @@ const ComponentNode: React.FC<ComponentNodeProps> = ({ element, contextMenuOpen,
       >
         <DefaultNode
           element={element}
-          scaleNode={(hover || contextMenuOpen) && detailsLevel !== ScaleDetailsLevel.high}
+          scaleNode={scaleNode}
           contextMenuOpen={contextMenuOpen}
           showStatusBackground={!showDetails}
           attachments={
@@ -123,7 +124,7 @@ const ComponentNode: React.FC<ComponentNodeProps> = ({ element, contextMenuOpen,
           {...rest}
         >
           <g data-test-id="base-node-handler">
-            {icon && showDetails && (
+            {icon && (showDetails || scaleNode) && (
               <>
                 <circle
                   fill="var(--pf-global--palette--white)"

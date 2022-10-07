@@ -3,9 +3,26 @@
   flex-direction: column;
   padding: 0;
 
-  &__contents {
+  &__section {
     display: flex;
     flex-direction: column;
+    padding-top: 0;
+
+    .pf-topology-visualization-surface {
+      background-color: var(--pf-global--Color--light-300);
+    }
+  }
+  &__panel {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding-top: 0;
+    .pf-c-tab-content {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      overflow-y: auto;
+    }
   }
   &__toolbar {
     border-top: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
@@ -22,7 +39,7 @@
   }
   &__header-info {
     background-color: var(--pf-c-page__main-section--m-light--BackgroundColor);
-    padding: 0 var(--pf-c-page__main-section--PaddingRight) var(--pf-global--spacer--sm) var(--pf-c-page__main-section--PaddingLeft);
+    padding: 0 var(--pf-global--spacer--md) 0 var(--pf-global--spacer--md);
     &-item {
       border-left: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
       padding-left: var(--pf-global--spacer--md);
@@ -34,6 +51,15 @@
   }
   &__health-status {
     text-transform: lowercase;
+  }
+  &__topology-view {
+    .pf-topology-control-bar {
+      top: var(--pf-global--spacer--md);
+      bottom: initial;
+    }
+  }
+  &__list-view {
+    border-top: 0;
   }
 }
 
