@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
+import { pipelineRunFilterReducer } from '../../../shared';
+import { StatusIconWithText } from '../../../shared/components/pipeline-run-logs/StatusIcon';
 import { useNamespace } from '../../../utils/namespace-context-utils';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../models';
@@ -24,6 +26,11 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
     name: pipelineRunName,
     namespace,
   });
+
+  const plrStatus = React.useMemo(
+    () => loaded && pipelineRun && pipelineRunFilterReducer(pipelineRun),
+    [loaded, pipelineRun],
+  );
 
   if (!loaded) {
     return (
@@ -53,7 +60,12 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
               name: pipelineRunName,
             },
           ]}
-          title={pipelineRunName}
+          title={
+            <>
+              <span className="pf-u-mr-sm">{pipelineRunName}</span>
+              <StatusIconWithText status={plrStatus} />
+            </>
+          }
           actions={[
             {
               key: 'rerun',

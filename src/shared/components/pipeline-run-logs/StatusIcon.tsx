@@ -60,11 +60,9 @@ export const ColoredStatusIcon: React.FC<StatusIconProps> = ({ status, ...others
   );
 };
 
-export const StatusIconWithText: React.FC<StatusIconProps & { text?: string }> = ({
-  status,
-  text,
-  ...others
-}) => {
+export const StatusIconWithText: React.FC<
+  StatusIconProps & { text?: string; dataTestAttribute?: string }
+> = ({ status, text, dataTestAttribute, ...others }) => {
   return (
     <Badge isRead>
       <span
@@ -76,7 +74,7 @@ export const StatusIconWithText: React.FC<StatusIconProps & { text?: string }> =
       >
         <StatusIcon status={status} {...others} />
       </span>{' '}
-      {text ?? status}
+      <span data-test={dataTestAttribute}>{text ?? status}</span>
     </Badge>
   );
 };
