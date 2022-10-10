@@ -222,4 +222,55 @@ describe('SampleSection', () => {
 
     await waitFor(() => screen.getByText('Unable to load Basic Node.js'));
   });
+
+  it('should show empty state for filtered samples', async () => {
+    const setFieldValue = jest.fn();
+    useFormikContextMock.mockReturnValue({
+      values: { source: 'https://github.com/repo', application: 'test-app' },
+      setFieldValue,
+      setStatus: jest.fn(),
+    });
+    useComponentDetectionMock.mockReturnValue([null, false, { message: 'abcd' }]);
+    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
+
+    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+
+    await waitFor(() =>
+      fireEvent.input(screen.getByPlaceholderText('Filter by keyword...'), {
+        target: { value: 'asdf' },
+      }),
+    );
+
+    await waitFor(() => screen.getByText('No results found'));
+
+    await waitFor(() => fireEvent.click(screen.getByText('Clear all filters')));
+
+    await waitFor(() => screen.getByText('Basic Node.js'));
+    await waitFor(() => screen.getByText('Basic Quarkus'));
+  });
+
+  it('should filter sample items based on input value', async () => {
+    const setFieldValue = jest.fn();
+    useFormikContextMock.mockReturnValue({
+      values: { source: 'https://github.com/repo', application: 'test-app' },
+      setFieldValue,
+      setStatus: jest.fn(),
+    });
+    useComponentDetectionMock.mockReturnValue([null, false, { message: 'abcd' }]);
+    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
+
+    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+
+    await waitFor(() => screen.getByText('Basic Node.js'));
+    await waitFor(() => screen.getByText('Basic Quarkus'));
+
+    await waitFor(() =>
+      fireEvent.input(screen.getByPlaceholderText('Filter by keyword...'), {
+        target: { value: 'node' },
+      }),
+    );
+
+    await waitFor(() => screen.getByText('Basic Node.js'));
+    await waitFor(() => expect(screen.queryByText('Basic Quarkus')).not.toBeInTheDocument());
+  });
 });

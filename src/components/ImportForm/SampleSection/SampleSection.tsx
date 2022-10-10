@@ -7,13 +7,30 @@ import {
   Bullseye,
   Button,
   ButtonVariant,
-  FormGroup,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
+  EmptyStateSecondaryActions,
+  EmptyStateVariant,
   Gallery,
   GalleryItem,
+  HelperText,
+  HelperTextItem,
   PageSection,
+  pluralize,
+  SearchInput,
   Spinner,
+  Text,
+  TextContent,
+  TextVariants,
+  Title,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+  ToolbarItemVariant,
 } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
+import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useFormikContext } from 'formik';
 import { HelpTooltipIcon, useResizeObserver } from '../../../shared';
 import { getIconProps } from '../../../shared/components/catalog/utils/catalog-utils';
@@ -29,6 +46,23 @@ import { useDevfileSamples } from '../utils/useDevfileSamples';
 import './SampleSection.scss';
 import '../../../shared/style.scss';
 
+const SamplesEmptyState = ({ onClear }) => (
+  <EmptyState variant={EmptyStateVariant.full}>
+    <EmptyStateIcon icon={SearchIcon} />
+    <Title headingLevel="h2" size="lg">
+      No results found
+    </Title>
+    <EmptyStateBody>
+      No results match the filter criteria. Remove filters or clear all filters to show results.
+    </EmptyStateBody>
+    <EmptyStateSecondaryActions>
+      <Button variant="link" onClick={onClear} data-test="catalog-clear-filters">
+        Clear all filters
+      </Button>
+    </EmptyStateSecondaryActions>
+  </EmptyState>
+);
+
 const SampleSection = ({ onStrategyChange }) => {
   const {
     values: { source, application },
@@ -36,7 +70,16 @@ const SampleSection = ({ onStrategyChange }) => {
   } = useFormikContext<ImportFormValues>();
   const [selected, setSelected] = React.useState<CatalogItem>();
 
+  const [filter, setFilter] = React.useState('');
   const [samples, loaded, loadError] = useDevfileSamples();
+
+  const filteredSamples = React.useMemo(
+    () =>
+      loaded
+        ? samples.filter((item) => item.name.toLowerCase().includes(filter.toLowerCase()))
+        : [],
+    [filter, samples, loaded],
+  );
 
   const [detectedComponents, detectedComponentsLoaded, detectedComponentsError] =
     useComponentDetection(source, application);
@@ -121,24 +164,22 @@ const SampleSection = ({ onStrategyChange }) => {
   return (
     <>
       <PageSection variant="light" isFilled>
-        <FormGroup
-          fieldId="sample-selector"
-          label="Select a sample"
-          labelIcon={
+        <TextContent>
+          <Text component={TextVariants.h2}>
+            Select a sample{' '}
             <HelpTooltipIcon content="Get started using applications by choosing a code sample." />
-          }
-          labelInfo={
-            <>
-              Could not find what you need?{' '}
-              <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
-                Import your code.
-              </Button>
-            </>
-          }
-          helperTextInvalid={detectedComponentsError}
-          isHelperTextBeforeField
-          isRequired
-        />
+          </Text>
+          <HelperText>
+            <HelperTextItem>
+              <>
+                Could not find what you need?{' '}
+                <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
+                  Import your code.
+                </Button>
+              </>
+            </HelperTextItem>
+          </HelperText>
+        </TextContent>
       </PageSection>
       <PageSection padding={{ default: 'noPadding' }} isFilled>
         {selected && detectedComponentsError ? (
@@ -160,56 +201,79 @@ const SampleSection = ({ onStrategyChange }) => {
           loadError={loadError}
           label="Catalog items"
         >
-          <div ref={elementRef}>
-            <Gallery className="hac-catalog" hasGutter>
-              {samples.map((sample) => (
-                <GalleryItem key={sample.uid}>
-                  <CatalogTile
-                    className="hac-catalog__tile"
-                    id={sample.uid}
-                    title={sample.name}
-                    vendor={`Provided by ${sample.provider}`}
-                    description={sample.description}
-                    featured={sample.name === selected?.name}
-                    data-test={`${sample.type}-${sample.name}`}
-                    badges={sample.tags?.map((tag) => (
-                      <Badge key={tag} isRead>
-                        {tag}
-                      </Badge>
-                    ))}
-                    {...getIconProps(sample)}
-                    onClick={() => handleSelect(sample)}
-                    footer={
-                      <Button
-                        variant="link"
-                        isInline
-                        iconPosition="right"
-                        icon={
-                          <ExternalLinkAltIcon
-                            style={{ marginLeft: 'var(--pf-global--spacer--xs)' }}
-                          />
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        component={(props) => (
-                          <a
-                            {...props}
-                            href={
-                              (sample.attributes.git as { remotes: { [key: string]: string } })
-                                .remotes.origin
-                            }
-                            target={'_blank'}
-                            rel="noreferrer"
-                          />
-                        )}
-                      >
-                        Git repository
-                      </Button>
-                    }
-                  />
-                </GalleryItem>
-              ))}
-            </Gallery>
-          </div>
+          <Toolbar usePageInsets>
+            <ToolbarContent>
+              <ToolbarItem variant={ToolbarItemVariant['search-filter']}>
+                <SearchInput
+                  data-test="search-catalog"
+                  value={filter}
+                  onChange={setFilter}
+                  placeholder="Filter by keyword..."
+                />
+              </ToolbarItem>
+              <ToolbarItem alignment={{ default: 'alignRight' }}>
+                <TextContent>
+                  <Text component={TextVariants.h5}>
+                    {pluralize(filteredSamples.length, 'item', 'items')}
+                  </Text>
+                </TextContent>
+              </ToolbarItem>
+            </ToolbarContent>
+          </Toolbar>
+          {filteredSamples.length > 0 ? (
+            <div ref={elementRef}>
+              <Gallery className="hac-catalog" hasGutter>
+                {filteredSamples.map((sample) => (
+                  <GalleryItem key={sample.uid}>
+                    <CatalogTile
+                      className="hac-catalog__tile"
+                      id={sample.uid}
+                      title={sample.name}
+                      vendor={`Provided by ${sample.provider}`}
+                      description={sample.description}
+                      featured={sample.name === selected?.name}
+                      data-test={`${sample.type}-${sample.name}`}
+                      badges={sample.tags?.map((tag) => (
+                        <Badge key={tag} isRead>
+                          {tag}
+                        </Badge>
+                      ))}
+                      {...getIconProps(sample)}
+                      onClick={() => handleSelect(sample)}
+                      footer={
+                        <Button
+                          variant="link"
+                          isInline
+                          iconPosition="right"
+                          icon={
+                            <ExternalLinkAltIcon
+                              style={{ marginLeft: 'var(--pf-global--spacer--xs)' }}
+                            />
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                          component={(props) => (
+                            <a
+                              {...props}
+                              href={
+                                (sample.attributes.git as { remotes: { [key: string]: string } })
+                                  .remotes.origin
+                              }
+                              target={'_blank'}
+                              rel="noreferrer"
+                            />
+                          )}
+                        >
+                          Git repository
+                        </Button>
+                      }
+                    />
+                  </GalleryItem>
+                ))}
+              </Gallery>
+            </div>
+          ) : (
+            <SamplesEmptyState onClear={() => setFilter('')} />
+          )}
         </StatusBox>
       </PageSection>
     </>
