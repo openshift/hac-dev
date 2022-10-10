@@ -7,6 +7,8 @@ import {
   Bullseye,
   Button,
   ButtonVariant,
+  Card,
+  CardBody,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
@@ -190,7 +192,16 @@ const SampleSection = ({ onStrategyChange }) => {
         {detectingComponents && (
           <Backdrop style={dimensions}>
             <Bullseye>
-              <Spinner size="xl" />
+              <Card isRounded isCompact>
+                <CardBody>
+                  <Bullseye style={{ marginBottom: 'var(--pf-global--spacer--md)' }}>
+                    <Spinner size="lg" />
+                  </Bullseye>
+                  <HelperText>
+                    <HelperTextItem variant="indeterminate">Detecting values...</HelperTextItem>
+                  </HelperText>
+                </CardBody>
+              </Card>
             </Bullseye>
           </Backdrop>
         )}
