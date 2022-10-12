@@ -9,6 +9,7 @@ import {
   Flex,
   FlexItem,
   Label,
+  Skeleton,
   Spinner,
   Text,
   TextVariants,
@@ -17,7 +18,7 @@ import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { useLatestPipelineRunsForApplication } from '../../hooks/usePipelineRunsForApplication';
 import { pipelineRunFilterReducer, runStatus } from '../../shared';
 import { PipelineRunKind } from '../../shared/components/pipeline-run-logs/types';
-import { localizeTimeStamp } from '../../utils/day-utils';
+import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { getBuildStatusIcon, getGitOpsDeploymentStrategy } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 
@@ -98,19 +99,15 @@ export const ComponentCard: React.FC<ComponentCardProps> = ({
           )}
         </CardBody>
         <CardFooter>
-          <Flex>
-            <FlexItem>
-              <Text component={TextVariants.small}>Last Build</Text>
-            </FlexItem>
-            <FlexItem align={{ default: 'alignRight' }}>
-              <Text
-                component={TextVariants.small}
-                style={{ color: 'var(--pf-global--Color--200)' }}
-              >
-                {timeStamp ? localizeTimeStamp(timeStamp) : 'unknown'}
-              </Text>
-            </FlexItem>
-          </Flex>
+          <small>Last Build:</small>
+          {'  '}
+          <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
+            {loaded ? (
+              <Timestamp timestamp={timeStamp} simple />
+            ) : (
+              <Skeleton width="50%" screenreaderText="Loading last build time" />
+            )}
+          </Text>
         </CardFooter>
       </CardExpandableContent>
     </Card>

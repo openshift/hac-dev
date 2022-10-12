@@ -193,6 +193,7 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
                 </FlexItem>
               </Flex>
               <ApplicationEnvironmentCards
+                applicationName={applicationName}
                 onSelect={(environmentName) => setSelectedEnvironment(environmentName)}
                 cardsExpanded={cardsExpanded}
                 selectedEnvironment={selectedEnvironment}
