@@ -63,7 +63,7 @@ export const ComponentDetails: React.FC<ComponentDetailsProps> = ({ application 
   return (
     <PageSection isFilled style={{ paddingTop: 0 }}>
       <Panel style={{ height: '100%' }}>
-        <Title headingLevel="h1" style={{ padding: 'var(--pf-global--spacer--md)' }}>
+        <Title headingLevel="h1" className="pf-u-px-md pf-u-pt-sm pf-u-pb-0">
           Component Details
         </Title>
         <Tabs activeKey={0}>

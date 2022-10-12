@@ -109,7 +109,7 @@ class MockResizeObserver {
 
 window.ResizeObserver = MockResizeObserver;
 
-const params = {};
+let params = {};
 
 const mockUseSearchParam = (name: string) => {
   const setter = (value) => {
@@ -122,6 +122,10 @@ const mockUseSearchParam = (name: string) => {
 };
 
 describe('ApplicationEnvironmentDetailsView', () => {
+  beforeEach(() => {
+    params = {};
+  });
+
   it('should render spinner if data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
     useSearchParamMock.mockImplementation(mockUseSearchParam);
@@ -167,7 +171,7 @@ describe('ApplicationEnvironmentDetailsView', () => {
         applicationName="test-application"
       />,
     );
-    screen.getAllByText(`${mockEnvironment.spec.displayName} environment`);
+    screen.getAllByText(`${mockEnvironment.spec.displayName} Deployment Details`);
   });
 
   it('should render a list view of components by default', async () => {

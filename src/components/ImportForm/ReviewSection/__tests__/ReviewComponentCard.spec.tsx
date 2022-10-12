@@ -1,8 +1,19 @@
 import * as React from 'react';
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { formikRenderer } from '../../../../utils/test-utils';
+import { useComponentDetection } from '../../utils/cdq-utils';
+import { useDevfileSamples } from '../../utils/useDevfileSamples';
 import { ReviewComponentCard } from '../ReviewComponentCard';
 import '@testing-library/jest-dom';
+
+jest.mock('../../utils/cdq-utils', () => ({ useComponentDetection: jest.fn() }));
+
+jest.mock('../../utils/useDevfileSamples', () => ({
+  useDevfileSamples: jest.fn(() => []),
+}));
+
+const useComponentDetectionMock = useComponentDetection as jest.Mock;
+const useDevfileSamplesMock = useDevfileSamples as jest.Mock;
 
 const containerImageComponent = {
   componentStub: {
@@ -33,8 +44,14 @@ const gitRepoComponent = {
 
 describe('ReviewComponentCard', () => {
   it('should render git url if component has git repo', () => {
+    useComponentDetectionMock.mockReturnValue([]);
     formikRenderer(
-      <ReviewComponentCard detectedComponent={gitRepoComponent} detectedComponentIndex={0} />,
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+      />,
+      { isDetected: true, git: {} },
     );
 
     expect(
@@ -45,13 +62,56 @@ describe('ReviewComponentCard', () => {
   });
 
   it('should render container image if component has container image', () => {
+    useComponentDetectionMock.mockReturnValue([]);
     formikRenderer(
       <ReviewComponentCard
         detectedComponent={containerImageComponent}
         detectedComponentIndex={0}
+        showRuntimeSelector
       />,
+      { isDetected: true, git: {} },
     );
 
     expect(screen.getByText('quay.io/sbudhwar/demo:latest')).toBeInTheDocument();
+  });
+
+  it('should show expandable config when components are detected', async () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+      />,
+      { isDetected: true, git: {} },
+    );
+    await act(async () => screen.getByRole('button', { expanded: false }).click());
+
+    expect(screen.getByText('Deploy configuration')).toBeInTheDocument();
+  });
+
+  it('should hide expandable config when components are not detected', async () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+      />,
+      { isDetected: false, git: {} },
+    );
+    await act(async () => screen.getByRole('button', { expanded: false }).click());
+
+    expect(screen.queryByText('Deploy configuration')).not.toBeInTheDocument();
+  });
+
+  it('should not show runtime selector when not specified', async () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    useDevfileSamplesMock.mockReturnValue([[], true]);
+    formikRenderer(
+      <ReviewComponentCard detectedComponent={gitRepoComponent} detectedComponentIndex={0} />,
+      { isDetected: true, git: {} },
+    );
+    expect(screen.queryByRole('button', { name: 'Select a runtime' })).not.toBeInTheDocument();
   });
 });

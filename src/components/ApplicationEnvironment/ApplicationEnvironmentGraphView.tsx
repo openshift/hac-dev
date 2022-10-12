@@ -133,6 +133,7 @@ const ApplicationEnvironmentGraphView: React.FC<ApplicationEnvironmentGraphViewP
   return (
     <VisualizationProvider controller={visualization}>
       <TopologyView
+        className="application-environment-details__topology-view"
         controlBar={
           <TopologyControlBar
             controlButtons={createTopologyControlButtons({

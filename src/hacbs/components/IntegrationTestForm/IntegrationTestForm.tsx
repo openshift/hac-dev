@@ -20,7 +20,7 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
   const { dirty, handleSubmit, handleReset, isSubmitting, status, errors } = useFormikContext();
   const footer = (
     <FormFooter
-      submitLabel="Add integration test pipeline"
+      submitLabel="Add integration test"
       handleCancel={handleReset}
       handleSubmit={handleSubmit}
       isSubmitting={isSubmitting}
@@ -38,19 +38,19 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
           path: `/app-studio/applications/${applicationName}?activeTab=integrationtests`,
           name: 'Integration tests',
         },
-        { path: '#', name: 'Integration test pipeline' },
+        { path: '#', name: 'Integration test' },
       ]}
-      title="Add integration test pipeline"
+      title="Add integration test"
       description={
         <>
-          Add an integration test pipeline to test all your components.
+          Add an integration test to test all your components.
           <br />
           By default, previous GitHub credentials will be used to validate your URL. If it fails,
           you must revalidate with a different repo.
           <br />
           <br />
           <ExternalLink href="#">
-            Learn more about setting up an integration test pipeline <ExternalLinkAltIcon />
+            Learn more about setting up an integration test <ExternalLinkAltIcon />
           </ExternalLink>
         </>
       }

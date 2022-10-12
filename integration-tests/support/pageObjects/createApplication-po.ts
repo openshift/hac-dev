@@ -41,6 +41,7 @@ export const ComponentsPagePO = {
   addEnvVar: '[data-test="add-button"]',
   loading: '[data-test="loading-indicator"]',
   saveButton: '[data-test="submit-button"]',
+  editNameInput: '[data-test="editable-label-input"]',
 };
 
 export const applicationDetailPagePO = {

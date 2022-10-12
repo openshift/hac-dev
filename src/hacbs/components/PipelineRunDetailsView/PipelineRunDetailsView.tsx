@@ -52,11 +52,11 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
               name: applicationName,
             },
             {
-              path: `/app-studio/applications/:${pipelineRunName}?activeTab=pipelineRuns`,
+              path: `/app-studio/applications/${applicationName}?activeTab=pipelineRuns`,
               name: 'Pipeline runs',
             },
             {
-              path: `/app-studio/applications/:${pipelineRunName}`,
+              path: `/app-studio/applications/${pipelineRunName}`,
               name: pipelineRunName,
             },
           ]}

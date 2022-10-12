@@ -63,7 +63,7 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
         breadcrumbs={[
           { path: '/app-studio/applications', name: 'Applications' },
           {
-            path: `/app-studio/applications/:${applicationName}`,
+            path: `/app-studio/applications/${applicationName}`,
             name: appDisplayName,
           },
         ]}
