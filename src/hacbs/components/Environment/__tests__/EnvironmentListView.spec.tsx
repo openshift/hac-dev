@@ -2,6 +2,13 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, configure, cleanup, fireEvent } from '@testing-library/react';
+import {
+  mockComponents,
+  mockGitOpsDeployments,
+} from '../../../../components/ApplicationEnvironment/__data__/mock-data';
+import { WatchK8sResource } from '../../../../dynamic-plugin-sdk';
+import { ComponentGroupVersionKind, EnvironmentGroupVersionKind } from '../../../../models';
+import { GitOpsDeploymentGroupVersionKind } from '../../../../models/gitops-deployment';
 import { EnvironmentKind } from '../../../../types';
 import { mockLocation } from '../../../../utils/test-utils';
 import EnvironmentListView from '../EnvironmentListView';
@@ -160,5 +167,46 @@ describe('EnvironmentListView', () => {
     const clearFilterButton = screen.getByRole('button', { name: 'Clear all filters' });
     fireEvent.click(clearFilterButton);
     expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+  });
+
+  it('should filter cards by status', async () => {
+    watchResourceMock.mockImplementation((params: WatchK8sResource) => {
+      if (params.groupVersionKind === EnvironmentGroupVersionKind) {
+        return [testEnvironments, true];
+      }
+      if (params.groupVersionKind === GitOpsDeploymentGroupVersionKind) {
+        return [mockGitOpsDeployments, true];
+      }
+      if (params.groupVersionKind === ComponentGroupVersionKind) {
+        return [mockComponents, true];
+      }
+    });
+    render(<EnvironmentListView applicationName="application-to-test" />);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+
+    // interact with filters
+    const filterMenuButton = screen.getByRole('button', { name: /filter/i });
+    fireEvent.click(filterMenuButton);
+
+    const degradedFilter = screen.getByLabelText(/Degraded/i, {
+      selector: 'input',
+    }) as HTMLInputElement;
+    fireEvent.click(degradedFilter);
+    await expect(degradedFilter.checked).toBe(true);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+
+    const healthyFilter = screen.getByLabelText(/Healthy/i, {
+      selector: 'input',
+    }) as HTMLInputElement;
+    fireEvent.click(healthyFilter);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+
+    fireEvent.click(degradedFilter);
+    expect(screen.queryAllByTestId('environment-card')).toHaveLength(0);
+
+    // clear the filter
+    const clearFilterButton = screen.getAllByRole('button', { name: 'Clear filters' })[1];
+    fireEvent.click(clearFilterButton);
+    await expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
   });
 });
