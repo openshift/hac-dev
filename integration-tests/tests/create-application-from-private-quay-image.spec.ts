@@ -1,34 +1,35 @@
+// <reference types="cypress" />
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
+import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
-describe('Create Component from Private Git Source', () => {
+describe('Create Component from Private Quay Image', () => {
   const addComponent = new AddComponentPage();
   const componentPage = new ComponentPage();
   const applicationDetailPage = new ApplicationDetailPage();
   const applicationName = Common.generateAppName();
-  const privateRepo = 'https://github.com/hac-test/private-repo-check';
-  const componentName = 'python';
-  const username = 'hac-test';
-  const token = Cypress.env("GH_TOKEN");
+  const quayImage = 'quay.io/hacdev/quarkus-private';
+  const componentName = 'quarkus-private';
+  const username = 'hacdev+hac_dev_bot';
+  const token = Cypress.env('QUAY_TOKEN');
 
-  before(function () {
+  before(() => {
     Applications.createApplication(applicationName);
   });
 
-  after(function () {
+  after(() => {
     Common.openApplicationURL(applicationName);
     Applications.deleteApplication(applicationName);
   });
 
-  describe('Creating Component', () => {
+  describe('Creating a Quay Component', () => {
     it('Validate Repo', () => {
-      addComponent.setSource(privateRepo);
-      addComponent.waitUnableToAccess();
+      addComponent.setSource(quayImage);
       addComponent.loginByToken(username, token);
-      addComponent.waitRepoValidated(180000);
+      addComponent.waitRepoValidated();
       addComponent.clickNext();
     });
 

@@ -38,10 +38,10 @@ export class AddComponentPage extends AbstractWizardPage {
     cy.get(addComponentPagePO.next).trigger('click');
   }
 
-  loginToGitubByToken(username: string, password: string){
+  loginByToken(username: string, token: string){
     cy.contains('button', addComponentPagePO.useTokenButton, {timeout : 120000}).click();
     cy.get(addComponentPagePO.username).type(username);
-    cy.get(addComponentPagePO.token).type(password, { log: false });
+    cy.get(addComponentPagePO.token).type(token, { log: false });
     cy.get(addComponentPagePO.authenticateButton).click();
   }
 }
