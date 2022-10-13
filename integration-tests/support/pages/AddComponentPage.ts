@@ -1,11 +1,15 @@
 import { Common } from '../../utils/Common';
 import { pageTitles } from '../constants/PageTitle';
 import { addComponentPagePO } from '../pageObjects/createApplication-po';
+import { githubLoginPagePO } from '../pageObjects/github-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class AddComponentPage extends AbstractWizardPage {
-  waitRepoValidated() {
-    cy.contains('div', 'Validated', { timeout: 60000 });
+  waitUnableToAccess(timeoutDuration: number = 30000) {
+    cy.contains('div', addComponentPagePO.notValidatedMessage, { timeout: timeoutDuration });
+  }
+  waitRepoValidated(timeoutDuration: number = 60000) {
+    cy.contains('div', 'Validated', { timeout: timeoutDuration });
   }
 
   openSamplesPage() {
@@ -32,5 +36,12 @@ export class AddComponentPage extends AbstractWizardPage {
 
   clickNext() {
     cy.get(addComponentPagePO.next).trigger('click');
+  }
+
+  loginToGitubByToken(username: string, password: string){
+    cy.contains('button', addComponentPagePO.useTokenButton, {timeout : 120000}).click();
+    cy.get(addComponentPagePO.username).type(username);
+    cy.get(addComponentPagePO.token).type(password, { log: false });
+    cy.get(addComponentPagePO.authenticateButton).click();
   }
 }

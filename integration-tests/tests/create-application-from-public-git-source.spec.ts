@@ -26,8 +26,6 @@ describe('Create Component from Public Git Source', () => {
   after(() => {
     //Open components page
     Common.openApplicationURL(applicationName);
-    applicationDetailPage.deleteComponent(componentName);
-    applicationDetailPage.createdComponentNotExists(componentName);
     Applications.deleteApplication(applicationName);
   });
 
