@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import ActionMenu from '../../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { RowFunctionArgs, TableData } from '../../../shared/components/table';
@@ -21,15 +20,7 @@ const IntegrationTestListRow: React.FC<RowFunctionArgs<IntegrationTestScenarioKi
         {obj.metadata.name}
       </TableData>
       <TableData className={integrationListTableColumnClasses.containerImage}>
-        <ExternalLink
-          href={containerImageUrl}
-          text={
-            <span>
-              {containerImageUrl} <ExternalLinkAltIcon />
-            </span>
-          }
-          stopPropagation
-        />
+        <ExternalLink href={containerImageUrl} text={containerImageUrl} stopPropagation />
       </TableData>
       <TableData className={integrationListTableColumnClasses.mandatory}>
         {obj.spec.optional ? 'Optional' : 'Mandatory'}
