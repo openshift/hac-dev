@@ -4,7 +4,7 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, configure, fireEvent, act, waitFor } from '@testing-library/react';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { mockApplication } from '../../../../components/ApplicationDetailsView/__data__/mock-data';
-import { HACBS_APPLICATION_MODAL_KEY } from '../ApplicationModal';
+import { HACBS_APPLICATION_MODAL_HIDE_KEY } from '../ApplicationModal';
 import HacbsApplicationDetails from '../HacbsApplicationDetails';
 
 jest.mock('react-router-dom', () => ({
@@ -29,7 +29,7 @@ const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('HacbsApplicationDetails', () => {
   beforeEach(() => {
-    localStorage.removeItem(HACBS_APPLICATION_MODAL_KEY);
+    localStorage.removeItem(HACBS_APPLICATION_MODAL_HIDE_KEY);
   });
   it('should render spinner if application data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
@@ -65,7 +65,7 @@ describe('HacbsApplicationDetails', () => {
     });
 
     waitFor(() => {
-      expect(localStorage[HACBS_APPLICATION_MODAL_KEY]).toBe('true');
+      expect(localStorage[HACBS_APPLICATION_MODAL_HIDE_KEY]).toBe('true');
       expect(screen.getByTestId('application-modal-content')).not.toBeVisible();
     });
   });
