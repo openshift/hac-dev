@@ -5,7 +5,7 @@ import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
 import { AddIntegrationTestPage } from '../support/pages/hacbs/AddIntegrationTestPage';
 import { CreateBuildPage } from '../support/pages/hacbs/CreateBuildPage';
-import { DetailsTab } from '../support/pages/hacbs/tabs/PipelinerunsTabPage';
+import { PipelinerunsTabPage, DetailsTab } from '../support/pages/hacbs/tabs/PipelinerunsTabPage';
 import { Applications } from './Applications';
 import { Common } from './Common';
 
@@ -38,9 +38,9 @@ export class HACBSApplications {
             this.goToPipelinerunsTab();
 
             // Check if pipelineruns name is visible in list view
-            cy.contains(pipelinerun);
+            PipelinerunsTabPage.doesPipelinerunExistsInListView(pipelinerun);
 
-            cy.contains('a', pipelinerun).click();
+            PipelinerunsTabPage.clickOnPipelinerunFromListView(pipelinerun);
             // Assert the 'Status' with string "Succeeded"
             DetailsTab.checkStatusSucceeded();
 
