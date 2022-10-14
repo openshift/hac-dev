@@ -9,19 +9,19 @@ metadata:
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: my-application
-    appstudio.openshift.io/component: go
-    build.appstudio.openshift.io/component: go
+    appstudio.openshift.io/component: java-quarkus
+    build.appstudio.openshift.io/component: java-quarkus
     pipelines.appstudio.openshift.io/type: build
-  name: go-on-push
-  namespace: rhn-support-djodha
+  name: java-quarkus-on-push
+  namespace: jkopriva-appstudio
 spec:
   params:
   - name: git-url
-    value: https://github.com/dheerajodha/devfile-sample-go-basic.git
+    value: https://github.com/dheerajodha/devfile-sample-code-with-quarkus.git
   - name: output-image
-    value: quay.io/redhat-appstudio/user-workload:automated-test-on-push
+    value: quay.io/redhat-appstudio/user-workload:automated-test-on-push-1665589434994
   - name: dockerfile
-    value: https://raw.githubusercontent.com/dheerajodha/devfile-sample-go-basic/main/docker/Dockerfile
+    value: https://raw.githubusercontent.com/dheerajodha/devfile-sample-code-with-quarkus/main/src/main/docker/Dockerfile.jvm.staged
   pipelineRef:
     bundle: quay.io/redhat-appstudio/build-templates-bundle:13f5d9c921b3f727684a00084037f673a0dc4273
     name: docker-build
@@ -29,7 +29,7 @@ spec:
   - name: workspace
     persistentVolumeClaim:
       claimName: appstudio
-    subPath: go-on-push
+    subPath: java-quarkus-on-push
   - name: registry-auth
     secret:
       secretName: redhat-appstudio-registry-pull-secret

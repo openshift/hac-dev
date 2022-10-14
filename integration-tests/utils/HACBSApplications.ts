@@ -1,9 +1,11 @@
 import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
-import { overviewTabPO, componentsTabPO } from '../support/pageObjects/hacbs-po';
+import { NavItem } from '../support/constants/PageTitle';
+import { overviewTabPO, componentsTabPO, integrationTestsTabPO, pipelinerunsTabPO } from '../support/pageObjects/hacbs-po';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
 import { AddIntegrationTestPage } from '../support/pages/hacbs/AddIntegrationTestPage';
 import { CreateBuildPage } from '../support/pages/hacbs/CreateBuildPage';
+import { DetailsTab } from '../support/pages/hacbs/tabs/PipelinerunsTabPage';
 import { Applications } from './Applications';
 import { Common } from './Common';
 
@@ -16,10 +18,10 @@ export class HACBSApplications {
         Applications.createApplication(name);
     }
 
-    static createComponent(publicGitRepo: string, componentName: string) {
+    static createComponent(publicGitRepo: string, componentName: string, triggerPipelinerun: boolean = false) {
         addComponentStep(publicGitRepo);
         reviewComponentsStep(componentName);
-        createBuildStep();
+        createBuildStep(triggerPipelinerun);
         addIntegrationTestStep();
     }
 
@@ -31,12 +33,23 @@ export class HACBSApplications {
         this.getComponentListItem(componentName).should('exist');
     }
 
-    static createdIntegrationTestsExists(name: string, containerImage: string, pipelineName: string) {
-        this.goToComponentsTab();
+    static createdPipelinerunsSucceeded(pipelinerunsNames: Array<string>, componentName: string, applicationName: string) {
+        for (const pipelinerun of pipelinerunsNames) {
+            this.goToPipelinerunsTab();
 
-        Common.verifyPageTitle(applicationName);
-        Common.waitForLoad();
-        this.getComponentListItem(componentName).should('exist');
+            // Check if pipelineruns name is visible in list view
+            cy.contains(pipelinerun);
+
+            cy.contains('a', pipelinerun).click();
+            // Assert the 'Status' with string "Succeeded"
+            DetailsTab.checkStatusSucceeded();
+
+            Common.navigateTo(NavItem.applications);
+            cy.contains(applicationName).click();
+        }
+
+        this.goToComponentsTab();
+        cy.get(componentsTabPO.componentListItem.replace('{0}', componentName), { timeout: 720000 }).contains(/.*Build Succeeded.*/);
     }
 
     static getComponentListItem(application: string) {
@@ -51,8 +64,12 @@ export class HACBSApplications {
         cy.get(componentsTabPO.clickTab).click();
     }
 
+    static goToPipelinerunsTab() {
+        cy.get(pipelinerunsTabPO.clickTab).click();
+    }
+
     static goToIntegrationTestsTab() {
-        cy.get(componentsTabPO.clickTab).click();
+        cy.get(integrationTestsTabPO.clickTab).click();
     }
 }
 
@@ -79,15 +96,28 @@ function reviewComponentsStep(componentName: string) {
 
     // Switch back to orginal name
     componentPage.editComponentName(componentName);
-    cy.contains('div', componentName).should('be.visible');;
+    cy.contains('div', componentName).should('be.visible');
 
     //Create Application
     componentPage.createApplication();
 }
 
 
-function createBuildStep() {
-    new CreateBuildPage().clickNext();
+function createBuildStep(triggerPipelinerun: boolean) {
+    const createBuildPage = new CreateBuildPage();
+
+    if (triggerPipelinerun) {
+        const outputImageNameSuffix = `${new Date().getTime()}`;
+
+        cy.exec('chmod u+x ./trigger-pipelineruns-script.sh');
+        cy.exec('./trigger-pipelineruns-script.sh ' + outputImageNameSuffix).then((result) => {
+            cy.log(result.stderr);
+        });
+
+        createBuildPage.confirmSuccessfulPRMerge();
+    }
+
+    createBuildPage.clickNext();
 }
 
 

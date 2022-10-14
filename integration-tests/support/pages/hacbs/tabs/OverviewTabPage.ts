@@ -1,4 +1,4 @@
-import { overviewTabPO } from '../../pageObjects/hacbs-po';
+import { overviewTabPO } from '../../../pageObjects/hacbs-po';
 
 export class OverviewTabPage {
     goToComponentsTab() {

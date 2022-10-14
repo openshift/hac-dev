@@ -1,9 +1,9 @@
 import { Applications } from "../../utils/Applications";
 import { Common } from "../../utils/Common";
-import { ComponentsTabPage } from "../../support/pages/hacbs/ComponentsTabPage";
+import { ComponentsTabPage } from "../../support/pages/hacbs/tabs/ComponentsTabPage";
 import { actionsDropdown } from "../../support/pageObjects/hacbs-po";
 import { HACBSApplications } from "../../utils/HACBSApplications";
-import { OverviewTabPage } from "../../support/pages/hacbs/OverviewTabPage";
+import { OverviewTabPage } from "../../support/pages/hacbs/tabs/OverviewTabPage";
 
 describe('Create Components using the HACBS UI', () => {
     const LOCAL_STORAGE_KEY_GS_MODAL = 'hacbs/getting-started-modal';
@@ -48,7 +48,7 @@ describe('Create Components using the HACBS UI', () => {
     });
 
     describe('Add a new component using the "Overview" tab', () => {
-        it("Use HACBS 'Components' tabs to start adding a new compoent", () => {
+        it("Use HACBS 'Components' tabs to start adding a new component", () => {
             HACBSApplications.goToOverviewTab();
             overviewTabPage.addComponent();
         });
@@ -60,7 +60,7 @@ describe('Create Components using the HACBS UI', () => {
     });
 
     describe('Add a new component using the "Components" tab', () => {
-        it("Use HACBS 'Components' tabs to start adding a new compoent", () => {
+        it("Use HACBS 'Components' tabs to start adding a new component", () => {
             HACBSApplications.goToComponentsTab();
             componentsTabPage.clickAddComponent();
         });

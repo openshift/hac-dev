@@ -1,4 +1,4 @@
-import { componentsTabPO } from '../../pageObjects/hacbs-po';
+import { componentsTabPO } from '../../../pageObjects/hacbs-po';
 
 export class ComponentsTabPage {
     clickAddComponent() {

@@ -42,7 +42,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
         </DescriptionListGroup>
         <DescriptionListGroup>
           <DescriptionListTerm>Status</DescriptionListTerm>
-          <DescriptionListDescription>
+          <DescriptionListDescription data-test="pipelinerun-details status">
             {pipelineRun.status?.conditions[0].status === 'False' ? 'Failed' : 'Succeeded'}
           </DescriptionListDescription>
         </DescriptionListGroup>

@@ -6,7 +6,25 @@ export const overviewTabPO = {
 
 export const componentsTabPO = {
     clickTab: '[data-test="details__tabItem components"]',
-    addComponent: '[data-test="add-component-button"]'
+    addComponent: '[data-test="add-component-button"]',
+    componentListItem: '[data-test="{0}-component-list-item"]'
+}
+
+export const pipelinerunsTabPO = {
+    clickTab: '[data-test="details__tabItem pipelineruns"]',
+
+    clickDetailsTab: '[data-test="details__tabItem detail"]',
+    statusPO: '[data-test="pipelinerun-details status"]',
+
+    clickYAMLTab: '[data-test="details__tabItem yaml"]',
+
+    clickTaskRunsTab: '[data-test="details__tabItem yaml"]',
+
+    clickLogsTab: '[data-test="details__tabItem logs"]',
+
+    clickEventsTab: '[data-test="details__tabItem events"]',
+
+    clickEnterpriseContractTab: '[data-test="details__tabItem enterprisecontract"]',
 }
 
 export const integrationTestsTabPO = {
@@ -26,6 +44,9 @@ export const actionsDropdown = {
 
 export const createBuildStepPO = {
     mergePRButton: '[data-testid="merge-button"]',
+    statusMergeBuildPR: '[data-test="status-pending"]',
+    statusPRMerged: '[data-test="status-success"]',
+    mergedCountHelperText: '[data-test="helper-text"]',
     next: 'button[type=submit]',
 }
 

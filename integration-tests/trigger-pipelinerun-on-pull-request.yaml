@@ -10,19 +10,19 @@ metadata:
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: my-application
-    appstudio.openshift.io/component: java-quarkus-try
-    build.appstudio.openshift.io/component: java-quarkus-try
+    appstudio.openshift.io/component: java-quarkus
+    build.appstudio.openshift.io/component: java-quarkus
     pipelines.appstudio.openshift.io/type: build
-  name: java-quarkus-try-on-pull-request
-  namespace: rhn-support-djodha
+  name: java-quarkus-on-pull-request
+  namespace: jkopriva-appstudio
 spec:
   params:
   - name: git-url
-    value: https://github.com/dheerajodha/devfile-sample-code-with-quarkus-try.git
+    value: https://github.com/dheerajodha/devfile-sample-code-with-quarkus.git
   - name: output-image
-    value: quay.io/redhat-appstudio/user-workload:automated-test-on-pr
+    value: quay.io/redhat-appstudio/user-workload:automated-test-on-pr-1665589434994
   - name: dockerfile
-    value: https://raw.githubusercontent.com/dheerajodha/devfile-sample-code-with-quarkus-try/main/src/main/docker/Dockerfile.jvm.staged
+    value: https://raw.githubusercontent.com/dheerajodha/devfile-sample-code-with-quarkus/main/src/main/docker/Dockerfile.jvm.staged
   pipelineRef:
     bundle: quay.io/redhat-appstudio/build-templates-bundle:13f5d9c921b3f727684a00084037f673a0dc4273
     name: docker-build
@@ -30,7 +30,7 @@ spec:
   - name: workspace
     persistentVolumeClaim:
       claimName: appstudio
-    subPath: java-quarkus-try-on-pull-request
+    subPath: java-quarkus-on-pull-request
   - name: registry-auth
     secret:
       secretName: redhat-appstudio-registry-pull-secret

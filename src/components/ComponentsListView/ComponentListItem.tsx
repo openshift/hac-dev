@@ -66,7 +66,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
 
   return (
     <DataListItem aria-label={name} isExpanded={expanded} data-testid="component-list-item">
-      <DataListItemRow>
+      <DataListItemRow data-test={`${name}-component-list-item`}>
         <DataListToggle
           id={name}
           data-testId={`${name}-toggle`}

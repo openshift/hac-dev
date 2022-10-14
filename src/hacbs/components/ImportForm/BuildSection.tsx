@@ -99,7 +99,7 @@ const BuildSection: React.FunctionComponent = () => {
           {pipelineRunsLoaded ? (
             <FlexItem>
               <HelperText>
-                <HelperTextItem variant={allMerged ? 'success' : 'error'}>
+                <HelperTextItem variant={allMerged ? 'success' : 'error'} data-test="helper-text">
                   {`${mergedComponents.length} of ${components.length} merged`}
                 </HelperTextItem>
               </HelperText>
@@ -134,9 +134,13 @@ const BuildSection: React.FunctionComponent = () => {
               <Td>
                 {pipelineRunsLoaded ? (
                   mergedComponents.includes(component) ? (
-                    <Label color="green">PR merged</Label>
+                    <Label color="green" data-test="status-success">
+                      PR merged
+                    </Label>
                   ) : (
-                    <Label color="orange">Merge build PR</Label>
+                    <Label color="orange" data-test="status-pending">
+                      Merge build PR
+                    </Label>
                   )
                 ) : (
                   <Skeleton width="80px" />
