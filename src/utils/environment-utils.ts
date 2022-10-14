@@ -33,8 +33,10 @@ const findIndexForEnv = (env: EnvironmentKind, currentEnvs: EnvironmentKind[]): 
   return finalIndex;
 };
 
-const isPositionedEnvironment = (env: EnvironmentKind, allEnvs: EnvironmentKind[]): boolean =>
-  !!allEnvs.find((e) => env.spec.parentEnvironment === e.metadata.name);
+export const isPositionedEnvironment = (
+  env: EnvironmentKind,
+  allEnvs: EnvironmentKind[],
+): boolean => !!allEnvs.find((e) => env.spec.parentEnvironment === e.metadata.name);
 
 const insertEnvironment = (env: EnvironmentKind, currentEnvs: EnvironmentKind[]): void => {
   const index = findIndexForEnv(env, currentEnvs);

@@ -8,7 +8,7 @@ import { mockPipelineRuns } from '../../ApplicationDetailsView/__data__/mock-pip
 import BuildStatusColumn from '../BuildStatusColumn';
 import { ComponentListItem } from '../ComponentListItem';
 
-configure({ testIdAttribute: 'data-testId' });
+configure({ testIdAttribute: 'data-testid' });
 
 jest.mock('../../../hooks/usePipelineRunsForApplication', () => ({
   useLatestPipelineRunForComponent: jest.fn(),

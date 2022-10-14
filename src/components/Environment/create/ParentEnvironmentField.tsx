@@ -1,19 +1,24 @@
 import * as React from 'react';
 import { useFormikContext } from 'formik';
-import { useEnvironments } from '../../../hooks/useEnvironments';
+import { useSortedEnvironments } from '../../../hooks/useEnvironments';
 import { DropdownField } from '../../../shared';
 import { CreateEnvironmentFormValues } from './CreateEnvironmentForm';
 
 export const ParentEnvironmentField: React.FC = () => {
-  const [environments, loaded] = useEnvironments();
+  const [environments, loaded] = useSortedEnvironments();
   const { values, setFieldValue } = useFormikContext<CreateEnvironmentFormValues>();
 
   const dropdownItems = React.useMemo(() => {
     if (loaded) {
-      return environments?.map((env) => ({
-        key: env.metadata.name,
-        value: env.spec.displayName,
-      }));
+      const envNames = environments?.map((env) => env.spec.displayName);
+      return environments?.map((env, index) => {
+        const envOrder = [...envNames.slice(0, index + 1), '[new]', ...envNames.slice(index + 1)];
+        const envOrderValue = `#${index + 2} ${envOrder.join(' \u2192 ')}`;
+        return {
+          key: env.metadata.name,
+          value: envOrderValue,
+        };
+      });
     }
     return [];
   }, [environments, loaded]);
@@ -30,13 +35,13 @@ export const ParentEnvironmentField: React.FC = () => {
 
   return dropdownItems?.length > 0 ? (
     <DropdownField
-      label="Parent Environment"
+      label="Order in continuous delivery"
       name="parentEnvironment"
-      placeholder="Select environment..."
+      placeholder="Select order"
       items={dropdownItems}
       value={value}
       onChange={handleChange}
-      helpText="Set the default continuous delivery order for your application"
+      helpText="The order of this environment in the continuous delivery of your application"
       required
     />
   ) : null;

@@ -1,4 +1,4 @@
-import { NavItem } from '../support/constants/PageTitle';
+import { NavItem, pageTitles } from '../support/constants/PageTitle';
 import { actions } from '../support/pageObjects/global-po';
 import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
 import { Common } from './Common';
@@ -20,7 +20,9 @@ export class Applications {
   static createApplication(name: string) {
     const createApplicationPage = new CreateApplicationPage();
     createApplicationPage.clickCreateApplication();
+    cy.testA11y(`${pageTitles.createApp} page`);
     createApplicationPage.setApplicationName(name);
     createApplicationPage.clickNext();
+    cy.testA11y(`Select source form`);
   }
 }

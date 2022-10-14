@@ -2,8 +2,18 @@ import * as React from 'react';
 import { CatalogItem } from '@openshift/dynamic-plugin-sdk';
 import { getDevfileSamples } from '../../../utils/devfile-utils';
 
-export const useDevfileSamples = (): [CatalogItem[], boolean, string] => {
-  const [samples, setSamples] = React.useState<CatalogItem[]>([]);
+type SampleAttrs = {
+  projectType: string;
+  language: string;
+  git: {
+    remotes: {
+      [remote: string]: string;
+    };
+  };
+};
+
+export const useDevfileSamples = (): [CatalogItem<SampleAttrs>[], boolean, string] => {
+  const [samples, setSamples] = React.useState<CatalogItem<SampleAttrs>[]>([]);
   const [loaded, setLoaded] = React.useState<boolean>(false);
   const [loadError, setLoadError] = React.useState<string>();
 

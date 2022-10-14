@@ -1,0 +1,13 @@
+.enterprise-contract-view {
+  &__package-titles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    @media (min-width: 769px) {
+      grid-template-columns: 400px 1fr;
+    }
+  }
+  &__package-list {
+    display: flex;
+    flex-direction: column;
+  }
+}

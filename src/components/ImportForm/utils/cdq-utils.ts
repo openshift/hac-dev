@@ -74,6 +74,15 @@ export const useComponentDetection = (
     return undefined;
   }, [source, cdqName, loaded, cdq]);
 
+  const detectionCompleted = React.useMemo(() => {
+    if (cdqName && loaded && cdq) {
+      return cdq?.status?.conditions?.some(
+        (condition) => condition.type === 'Completed' && condition.reason === 'OK',
+      );
+    }
+    return false;
+  }, [cdqName, loaded, cdq]);
+
   const error = React.useMemo(() => {
     if (createError) {
       return createError;
@@ -95,7 +104,7 @@ export const useComponentDetection = (
     }
   }, [cdq, cdqName, createError, detectedComponents, loadError, loaded]);
 
-  return [detectedComponents, cdq && loaded, error];
+  return [detectedComponents, detectionCompleted, error];
 };
 
 export const mapDetectedComponents = (detectedComponents: DetectedComponents) => {

@@ -18,7 +18,6 @@ const CreateEnvironment: React.FC = () => {
   const initialValues: CreateEnvironmentFormValues = {
     name: '',
     deploymentStrategy: 'Automatic',
-    type: '',
     location: 'Development Sandbox',
   };
 
@@ -29,7 +28,7 @@ const CreateEnvironment: React.FC = () => {
         kind: EnvironmentModel.kind,
         metadata: { name: values.name.toLowerCase().trim().split(' ').join('-'), namespace },
         spec: {
-          type: EnvironmentFormDropdownType[values.type],
+          type: EnvironmentFormDropdownType['NON POC'],
           displayName: values.name,
           deploymentStrategy: EnvironmentDeploymentStrategy[values.deploymentStrategy],
           parentEnvironment: values.parentEnvironment,

@@ -41,10 +41,10 @@ const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ h
   <EmptyState data-test="integration-tests__empty">
     <EmptyStateIcon icon={CodeBranchIcon} />
     <Title headingLevel="h4" size="lg">
-      Add an integration test pipeline to test all your components after you commit code
+      Add an integration test to test all your components after you commit code
     </Title>
     <EmptyStateBody>
-      No integration test pipelines found yet.
+      No integration tests found yet.
       <br />
       To get started, create an environment or connect to a release environment.
       <ExternalLink
@@ -55,7 +55,7 @@ const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ h
             spaceItems={{ default: 'spaceItemsXs' }}
             justifyContent={{ default: 'justifyContentCenter' }}
           >
-            <FlexItem>Learn more about setting up an integration test pipeline</FlexItem>
+            <FlexItem>Learn more about setting up an integration test</FlexItem>
             <FlexItem>
               <ExternalLinkAltIcon />
             </FlexItem>
@@ -145,14 +145,14 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
 
   return (
     <>
-      <Title headingLevel="h4" className="pf-u-mt-lg pf-u-mb-sm">
-        Integration test pipelines
+      <Title headingLevel="h3" className="pf-u-mt-lg pf-u-mb-sm">
+        Integration tests
       </Title>
       <Flex spaceItems={{ default: 'spaceItemsXs' }}>
         <FlexItem>
           <TextContent>
-            <Text component={TextVariants.small}>
-              Add an integration test pipeline to test all your components after you commit code.
+            <Text component={TextVariants.p}>
+              Add an integration test to test all your components after you commit code.
             </Text>
           </TextContent>
         </FlexItem>
@@ -165,7 +165,7 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
                 justifyContent={{ default: 'justifyContentCenter' }}
               >
                 <FlexItem className="pf-u-font-size-sm">
-                  Learn more about setting up an integration test pipeline
+                  Learn more about setting up an integration test
                 </FlexItem>
                 <FlexItem>
                   <ExternalLinkAltIcon />

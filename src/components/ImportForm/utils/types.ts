@@ -43,4 +43,6 @@ export type ImportFormValues = {
   namespace: string;
   secret?: string;
   source: string;
+  isDetected?: boolean;
+  runtime?: string;
 };

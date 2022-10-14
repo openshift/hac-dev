@@ -6,6 +6,11 @@ export const addComponentPagePO = {
   gitReference: '[data-test="git-reference"]',
   contextDir: '[data-test="context-dir"]',
   next: 'button[type=submit]',
+  username: '[data-testid="auth-username"]',
+  token: '[data-testid="auth-token"]',
+  authenticateButton: '[data-testid="authenticate-token"]',
+  notValidatedMessage: 'Unable to access repository',
+  useTokenButton: 'Use a token instead',
 };
 
 export const componentSamplesPagePO = {
@@ -41,6 +46,7 @@ export const ComponentsPagePO = {
   addEnvVar: '[data-test="add-button"]',
   loading: '[data-test="loading-indicator"]',
   saveButton: '[data-test="submit-button"]',
+  editNameInput: '[data-test="editable-label-input"]',
 };
 
 export const applicationDetailPagePO = {

@@ -3,28 +3,39 @@ import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
+  Button,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
+  Divider,
   EmptyStateVariant,
+  Flex,
+  FlexItem,
   PageSection,
   Spinner,
   Title,
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import { AngleDoubleRightIcon } from '@patternfly/react-icons/dist/js/icons';
 import { global_palette_red_100 as redColor } from '@patternfly/react-tokens/dist/js/global_palette_red_100';
+import { useSearchParam } from '../../hooks/useSearchParam';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { ApplicationGroupVersionKind } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { ApplicationKind } from '../../types';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import { ApplicationEnvironmentDetailsView } from '../ApplicationEnvironment/ApplicationEnvironmentDetailsView';
 import { ComponentDetails } from '../ComponentsListView/ComponentDetails';
 import { ApplicationEnvironmentCards } from '../Environment/ApplicationEnvironmentCards';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
 import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
+import { OutlinedHelpPopperIcon } from '../OutlinedHelpTooltipIcon';
 import PageLayout from '../PageLayout/PageLayout';
+import { ComponentCard } from './ComponentCard';
+
+import './ApplicationDetailsView.scss';
 
 const GETTING_STARTED_CARD_KEY = 'application-details-getting-started';
 
@@ -38,6 +49,11 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
   const namespace = useNamespace();
   const showModal = useModalLauncher();
   const navigate = useNavigate();
+  const [selectedEnvironment, setSelectedEnvironment, clearEnvironment] = useSearchParam(
+    'environment',
+    '',
+  );
+  const [cardsExpanded, setCardExpanded] = React.useState<boolean>(true);
 
   const resource = React.useMemo(() => {
     return {
@@ -54,12 +70,12 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
     () => [
       {
         id: 'add-component-header-action',
-        label: 'Add Component',
+        label: 'Add component',
         cta: { href: `/app-studio/import?application=${applicationName}` },
       },
       {
         id: 'delete-application-header-action',
-        label: 'Delete Application',
+        label: 'Delete application',
         cta: () =>
           showModal<{ submitClicked: boolean }>(applicationDeleteModal(application)).closed.then(
             ({ submitClicked }) => {
@@ -70,10 +86,6 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
     ],
     [application, applicationName, navigate, showModal],
   );
-
-  const navigateToEnvironment = (environmentName: string) => {
-    navigate(`/app-studio/applications/${applicationName}/environments/${environmentName}`);
-  };
 
   const loading = (
     <Bullseye>
@@ -115,7 +127,7 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
         breadcrumbs={[
           { path: '/app-studio/applications', name: 'Applications' },
           {
-            path: `/app-studio/applications/:${application?.metadata?.name}`,
+            path: `/app-studio/applications/${application?.metadata?.name}`,
             name: application?.spec?.displayName,
           },
         ]}
@@ -128,10 +140,75 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
         }
         actions={actions}
       >
-        <PageSection>
-          <ApplicationEnvironmentCards onSelect={navigateToEnvironment} />
+        <PageSection className="application-details pf-u-pt-sm pf-u-pb-0 pf-u-mb-sm">
+          <Button
+            className="application-details__collapse"
+            data-test="app-details-card-collapse"
+            onClick={() => setCardExpanded((e) => !e)}
+            variant="link"
+            isInline
+            style={{ textDecoration: 'none' }}
+          >
+            {cardsExpanded ? 'Collapse' : 'Expand'}
+          </Button>
+          <Flex
+            className="application-details__card-tabs pf-u-pb-xs"
+            spaceItems={{ default: 'spaceItemsLg' }}
+            alignItems={{ default: 'alignItemsCenter' }}
+            flexWrap={{ default: 'nowrap' }}
+          >
+            <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsMd' }}>
+              <FlexItem>
+                <b>Application components:</b>
+                {'  '}
+                <OutlinedHelpPopperIcon
+                  heading="Application components"
+                  content="Manage and add components from the components detail view. Note: Components from code repositories are rebuilt to capture the latest code changes. These updates will deploy to your development environment based on your deployment strategy."
+                />
+              </FlexItem>
+              <FlexItem>
+                <ComponentCard
+                  applicationName={applicationName}
+                  isSelected={!selectedEnvironment}
+                  isExpanded={cardsExpanded}
+                  onSelect={() => clearEnvironment()}
+                />
+              </FlexItem>
+            </Flex>
+            <div className="application-details__env-indicator">
+              <div className="application-details__env-indicator-icon">
+                <AngleDoubleRightIcon />
+              </div>
+            </div>
+            <Divider isVertical />
+            <Flex direction={{ default: 'column' }} grow={{ default: 'grow' }}>
+              <Flex>
+                <FlexItem>
+                  <b>Environments:</b>
+                  {'  '}
+                  <OutlinedHelpPopperIcon
+                    heading="Application environments"
+                    content="View components and their settings as deployed to environments. Component updates can be promoted between environments. Additional environments can be added via the workspace."
+                  />
+                </FlexItem>
+              </Flex>
+              <ApplicationEnvironmentCards
+                applicationName={applicationName}
+                onSelect={(environmentName) => setSelectedEnvironment(environmentName)}
+                cardsExpanded={cardsExpanded}
+                selectedEnvironment={selectedEnvironment}
+              />
+            </Flex>
+          </Flex>
         </PageSection>
-        <ComponentDetails application={application} />
+        {selectedEnvironment ? (
+          <ApplicationEnvironmentDetailsView
+            applicationName={applicationName}
+            environmentName={selectedEnvironment}
+          />
+        ) : (
+          <ComponentDetails application={application} />
+        )}
       </PageLayout>
     </React.Fragment>
   );

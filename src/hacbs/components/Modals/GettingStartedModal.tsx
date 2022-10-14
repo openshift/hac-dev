@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Button,
   Modal,
@@ -7,9 +8,13 @@ import {
   Text,
   TextVariants,
   Alert,
+  AlertActionLink,
 } from '@patternfly/react-core';
 import classnames from 'classnames';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
+import { useNamespace } from '../../../utils/namespace-context-utils';
+import { EnterpriseContractPolicyGroupVersionKind } from '../../models';
+import { EnterpriseContractPolicyKind } from '../../types/enterpriseContractPolicy';
 import ecUrl from './imgs/Enterprise-contract.svg';
 import itUrl from './imgs/Integration-test.svg';
 
@@ -49,6 +54,16 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
   const isVisited = localStorage.getItem(LOCAL_STORAGE_KEY) === 'true';
   const [isDismissed, setIsDismissed] = React.useState<boolean>(isVisited);
   const [currentLevel, setCurrentLevel] = React.useState<number>(0);
+  const namespace = useNamespace();
+
+  const [enterpriseContractPolicy, policyLoaded] = useK8sWatchResource<
+    EnterpriseContractPolicyKind[]
+  >({
+    groupVersionKind: EnterpriseContractPolicyGroupVersionKind,
+    namespace,
+    isList: true,
+    limit: 1,
+  });
 
   const levels: Level[] = [
     {
@@ -108,20 +123,20 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
           },
         ],
       },
-      preFooter: (
-        <>
+      preFooter:
+        policyLoaded && enterpriseContractPolicy[0]?.spec.sources[0]?.git?.repository ? (
           <Alert
             variant="success"
             isInline
             title="This workspace validates releases with an enterprise contract"
             data-test="onboarding-modal-level1alert"
-          >
-            <p className="pf-u-mt-md">
-              <ExternalLink href="#" text="View my org's enterprise contracts" />
-            </p>
-          </Alert>
-        </>
-      ),
+            actionLinks={
+              <AlertActionLink href={enterpriseContractPolicy[0]?.spec.sources[0].git.repository}>
+                {"View my org's enterprise contracts"}
+              </AlertActionLink>
+            }
+          />
+        ) : undefined,
       footerButton: { title: 'Next', cta: () => setCurrentLevel(2) },
     },
     {
@@ -141,8 +156,8 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
             key: 1,
             jsx: (
               <>
-                Before attempting to release, you can add your own integration test pipelines for
-                automatic release eligibility evaluation.
+                Before attempting to release, you can add your own integration tests for automatic
+                release eligibility evaluation.
               </>
             ),
           },

@@ -1,8 +1,6 @@
-// <reference types="cypress" />
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
-import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
@@ -33,6 +31,7 @@ describe('Create Component from Quay Image', () => {
     });
 
     it('Create Application', () => {
+      Common.waitForLoad();
       componentPage.createApplication();
       applicationDetailPage.createdComponentExists(componentName, applicationName);
     });

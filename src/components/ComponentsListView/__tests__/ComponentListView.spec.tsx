@@ -74,7 +74,7 @@ describe('ComponentListViewPage', () => {
     useK8sWatchResourceMock.mockReturnValue([[], true]);
     applicationRoutesMock.mockReturnValue([[], true]);
     render(<ComponentListView applicationName="test-app" components={componentCRMocks} />);
-    const button = screen.getByText('Add Component');
+    const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
     expect(button.closest('a').href).toBe(
       'http://localhost/app-studio/import?application=test-app',

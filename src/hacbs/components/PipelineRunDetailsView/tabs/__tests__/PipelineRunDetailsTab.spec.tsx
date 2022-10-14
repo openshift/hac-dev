@@ -34,12 +34,12 @@ beforeEach(() => {
 describe('PipelineRunDetailsTab', () => {
   it('should not render the pipelinerun details tab', () => {
     render(<PipelineRunDetailsTab pipelineRun={null} />);
-    expect(screen.queryByText('Pipelinerun details')).not.toBeInTheDocument();
+    expect(screen.queryByText('Pipeline run details')).not.toBeInTheDocument();
   });
 
   it('should render the pipelinerun details tab', () => {
     render(<PipelineRunDetailsTab pipelineRun={sampleBuildPipelines[0]} />);
-    screen.getByText('Pipelinerun details');
+    screen.getByText('Pipeline run details');
   });
 
   it('should not render the pipelinerun visualization if the status field is missing', () => {

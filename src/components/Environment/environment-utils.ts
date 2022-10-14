@@ -18,7 +18,6 @@ export enum EnvironmentType {
 export const environmentFormSchema = yup.object({
   name: yup.string().trim().min(1).required('Required'),
   deploymentStrategy: yup.string().required('Required'),
-  type: yup.string().required('Required'),
   parentEnvironment: yup.string(),
   location: yup.string(),
 });

@@ -79,12 +79,12 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
 
   return (
     <>
-      <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg">
-        Pipelineruns
+      <Title headingLevel="h3" className="pf-c-title pf-u-mt-lg pf-u-mb-lg">
+        Pipeline runs
       </Title>
       <Table
         data={pipelineRuns}
-        aria-label="Pipelinerun List"
+        aria-label="Pipeline run List"
         Header={PipelineRunListHeader}
         Row={PipelineRunListRow}
         loaded={loaded}

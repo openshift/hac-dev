@@ -49,6 +49,7 @@ export type ToolbarGroupsProps = {
 };
 
 type Props = {
+  description?: React.ReactNode;
   preFilter?: (environment: EnvironmentKind) => boolean;
   filter?: (environment: EnvironmentKind) => boolean;
   renderToolbarGroups?: (environments: EnvironmentKind[]) => React.ReactNode;
@@ -58,6 +59,7 @@ type Props = {
 };
 
 const EnvironmentListView: React.FC<Props> = ({
+  description = null,
   preFilter,
   renderToolbarGroups,
   filter,
@@ -112,7 +114,7 @@ const EnvironmentListView: React.FC<Props> = ({
       clearAllFilters={onClearAllFilters}
       clearFiltersButtonText="Clear filters"
     >
-      <ToolbarContent>
+      <ToolbarContent className="pf-u-pl-0">
         {environments.length > 0 ? (
           <>
             {renderToolbarGroups ? renderToolbarGroups(environments) : null}
@@ -146,7 +148,7 @@ const EnvironmentListView: React.FC<Props> = ({
               <EmptyStateBody>To get started, create an environment.</EmptyStateBody>
             </>
           )}
-          {createEnvironmentButton}
+          <div className="pf-u-mt-xl">{createEnvironmentButton}</div>
         </EmptyState>
       ) : filteredEnvironments.length === 0 ? (
         <>
@@ -160,6 +162,7 @@ const EnvironmentListView: React.FC<Props> = ({
         </>
       ) : (
         <>
+          {description}
           {createEnvironment}
           <Grid hasGutter>
             {filteredEnvironments.map((env) => (

@@ -26,8 +26,6 @@ describe('Create Component from Public Git Source', () => {
   after(() => {
     //Open components page
     Common.openApplicationURL(applicationName);
-    applicationDetailPage.deleteComponent(componentName);
-    applicationDetailPage.createdComponentNotExists(componentName);
     Applications.deleteApplication(applicationName);
   });
 
@@ -40,6 +38,7 @@ describe('Create Component from Public Git Source', () => {
     });
 
     it('Setup Git Options', () => {
+      Common.waitForLoad();
       addComponent.clickGitOptions();
 
       //Next block commented out because of bug:

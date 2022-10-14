@@ -67,7 +67,7 @@ describe('PipelineRunDetailsView', () => {
   it('should render application if components data is loaded', () => {
     watchResourceMock.mockReturnValueOnce([mockApplication, true]).mockReturnValue([[], true]);
     render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
-    expect(screen.queryByText('Pipelinerun details')).toBeInTheDocument();
+    expect(screen.queryByText('Pipeline run details')).toBeInTheDocument();
     expect(screen.queryByText('Status')).toBeInTheDocument();
     expect(screen.queryByText('Message')).toBeInTheDocument();
     expect(screen.queryByText('Namespace')).toBeInTheDocument();

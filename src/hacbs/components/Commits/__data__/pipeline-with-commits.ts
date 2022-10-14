@@ -920,3 +920,75 @@ export const mockCommits: Commit[] = [
     pipelineRuns: [...pipelineWithCommits.slice(0, 1)],
   },
 ];
+
+export const mockPLRs: PipelineRunKind[] = [
+  {
+    kind: 'PipelineRun',
+    apiVersion: 'tekton.dev/v1beta1',
+    metadata: {
+      creationTimestamp: '2022-08-04T16:23:43Z',
+      finalizers: Array['chains.tekton.dev/pipelinerun'],
+      name: 'basic-node-js-first',
+      namespace: 'test',
+      ownerReferences: [
+        {
+          apiVersion: 'appstudio.redhat.com/v1alpha1',
+          kind: 'Component',
+          name: 'basic-node-js',
+          uid: '6b79df0c-1bee-40c0-81ee-7c4d1c9a422f',
+        },
+      ],
+      resourceVersion: '497868251',
+      uid: '9c1f121c-1eb6-490f-b2d9-befbfc658df1',
+    },
+    spec: {
+      key: 'key1',
+    },
+  },
+  {
+    kind: 'PipelineRun',
+    apiVersion: 'tekton.dev/v1beta1',
+    metadata: {
+      creationTimestamp: '2022-08-04T16:23:43Z',
+      finalizers: Array['chains.tekton.dev/pipelinerun'],
+      name: 'basic-node-js-second',
+      namespace: 'test',
+      ownerReferences: [
+        {
+          apiVersion: 'appstudio.redhat.com/v1alpha1',
+          kind: 'Component',
+          name: 'basic-node-js',
+          uid: '6b79df0c-1bee-40c0-81ee-7c4d1c9a422f',
+        },
+      ],
+      resourceVersion: '497868252',
+      uid: '9c1f121c-1eb6-490f-b2d9-befbfc658dfb',
+    },
+    spec: {
+      key: 'key2',
+    },
+  },
+  {
+    kind: 'PipelineRun',
+    apiVersion: 'tekton.dev/v1beta1',
+    metadata: {
+      creationTimestamp: '2022-08-04T16:23:43Z',
+      finalizers: Array['chains.tekton.dev/pipelinerun'],
+      name: 'basic-node-js-third',
+      namespace: 'test',
+      ownerReferences: [
+        {
+          apiVersion: 'appstudio.redhat.com/v1alpha1',
+          kind: 'Component',
+          name: 'basic-node-js',
+          uid: '6b79df0c-1bee-40c0-81ee-7c4d1c9a422f',
+        },
+      ],
+      resourceVersion: '497868253',
+      uid: '9c1f121c-1eb6-490f-b2d9-befbfc658dfc',
+    },
+    spec: {
+      key: 'key3',
+    },
+  },
+];

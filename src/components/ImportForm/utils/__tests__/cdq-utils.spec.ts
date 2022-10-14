@@ -2,6 +2,7 @@ import { useK8sWatchResource, k8sDeleteResource } from '@openshift/dynamic-plugi
 import { renderHook } from '@testing-library/react-hooks';
 import { createComponentDetectionQuery } from '../../../../utils/create-utils';
 import { useComponentDetection } from '../cdq-utils';
+import { mockCDQ, mockDetectedComponent } from './../__data__/mock-cdq';
 
 import '@testing-library/jest-dom';
 
@@ -108,5 +109,33 @@ describe('CDQ Utils: useComponentDetection', () => {
     await waitForNextUpdate();
     unmount();
     waitFor(() => expect(k8sDeleteResource).toHaveBeenCalled());
+  });
+
+  it('should return detection loaded when CDQ status changes to complete', async () => {
+    useK8sWatchMock.mockReturnValueOnce([{}, true, null]).mockReturnValue([mockCDQ, true, null]);
+    createCDQMock.mockResolvedValue({
+      metadata: { name: 'test-cdq' },
+      spec: {
+        git: { url: 'https://github.com/nodeshift-starters/devfile-sample.git' },
+      },
+    });
+
+    const { result, rerender, waitForNextUpdate } = renderHook(() =>
+      useComponentDetection(
+        'https://github.com/nodeshift-starters/devfile-sample.git',
+        'test-app',
+        undefined,
+        '/',
+        'dev',
+      ),
+    );
+
+    expect(result.current).toStrictEqual([undefined, false, undefined]);
+
+    rerender();
+
+    await waitForNextUpdate();
+
+    expect(result.current).toStrictEqual([mockDetectedComponent, true, undefined]);
   });
 });

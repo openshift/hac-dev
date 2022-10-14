@@ -56,14 +56,14 @@ describe('IntegrationTestView', () => {
     wrapper.getByLabelText('Display name');
     wrapper.getByLabelText('Container image');
     wrapper.getByLabelText('Pipeline specified in container image');
-    wrapper.getByRole('button', { name: 'Add integration test pipeline' });
+    wrapper.getByRole('button', { name: 'Add integration test' });
   });
 
   it('should enable the submit button when there are no errors', async () => {
     const wrapper = render(<IntegrationTestView applicationName="test-app" />);
     await expect(wrapper).toBeTruthy();
 
-    const submitButton = wrapper.getByRole('button', { name: 'Add integration test pipeline' });
+    const submitButton = wrapper.getByRole('button', { name: 'Add integration test' });
     expect(submitButton).toBeDisabled();
     fillIntegrationTestForm(wrapper);
     expect(submitButton).toBeEnabled();
@@ -80,7 +80,7 @@ describe('IntegrationTestView', () => {
 
     fillIntegrationTestForm(wrapper);
 
-    const submitButton = wrapper.getByRole('button', { name: 'Add integration test pipeline' });
+    const submitButton = wrapper.getByRole('button', { name: 'Add integration test' });
     expect(submitButton).toBeTruthy();
     expect(submitButton).toBeEnabled();
 
@@ -88,7 +88,7 @@ describe('IntegrationTestView', () => {
     await waitFor(() => expect(createIntegrationTestMock).toHaveBeenCalledTimes(1));
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith(
-        '/app-studio/applications?name=test-app&activeTab=integrationtests',
+        '/app-studio/applications/test-app?activeTab=integrationtests',
       ),
     );
   });

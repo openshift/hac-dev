@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { pipelineRunFilterReducer } from '../../../shared';
+import { StatusIconWithText } from '../../../shared/components/pipeline-run-logs/StatusIcon';
 import { RowFunctionArgs, TableData } from '../../../shared/components/table';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
@@ -14,6 +16,9 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
   const capitalize = (label: string) => {
     return label.charAt(0).toUpperCase() + label.slice(1);
   };
+
+  const status = pipelineRunFilterReducer(obj);
+
   return (
     <>
       <TableData className={pipelineRunTableColumnClasses.name}>
@@ -33,7 +38,7 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
         )}
       </TableData>
       <TableData className={pipelineRunTableColumnClasses.status}>
-        {obj.status?.conditions[0].status === 'False' ? 'Failed' : 'Succeeded'}
+        <StatusIconWithText status={status} />
       </TableData>
       <TableData className={pipelineRunTableColumnClasses.type}>
         {capitalize(obj.metadata.labels[PipelineRunLabel.PIPELINE_TYPE])}
@@ -53,6 +58,16 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
               isDisabled={true}
             >
               Rerun
+            </DropdownItem>,
+            <DropdownItem
+              key="cancel"
+              component="button"
+              onClick={() => {
+                setKebabOpen(false);
+              }}
+              isDisabled={true}
+            >
+              Cancel
             </DropdownItem>,
             <DropdownItem
               key="stopAction"

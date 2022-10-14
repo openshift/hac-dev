@@ -6,6 +6,8 @@ import {
   DescriptionListDescription,
   Title,
 } from '@patternfly/react-core';
+import { pipelineRunFilterReducer } from '../../../../shared/';
+import { StatusIconWithText } from '../../../../shared/components/pipeline-run-logs/StatusIcon';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { PipelineRunKind } from '../../../types';
 import { calculateDuration } from '../../../utils/pipeline-utils';
@@ -26,8 +28,8 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
   );
   return (
     <>
-      <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg">
-        Pipelinerun details
+      <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
+        Pipeline run details
       </Title>
       <PipelineRunVisualization pipelineRun={pipelineRun} />
       <DescriptionList
@@ -42,8 +44,8 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
         </DescriptionListGroup>
         <DescriptionListGroup>
           <DescriptionListTerm>Status</DescriptionListTerm>
-          <DescriptionListDescription data-test="pipelinerun-details status">
-            {pipelineRun.status?.conditions[0].status === 'False' ? 'Failed' : 'Succeeded'}
+          <DescriptionListDescription>
+            <StatusIconWithText status={pipelineRunFilterReducer(pipelineRun)} />
           </DescriptionListDescription>
         </DescriptionListGroup>
         <DescriptionListGroup>

@@ -14,7 +14,7 @@ import { FormikProps } from 'formik';
 import { isEmpty } from 'lodash-es';
 import { DropdownField, FormFooter, InputField } from '../../../shared';
 import PageLayout from '../../PageLayout/PageLayout';
-import { EnvironmentDeploymentStrategy, EnvironmentFormDropdownType } from '../environment-utils';
+import { EnvironmentDeploymentStrategy } from '../environment-utils';
 import { ParentEnvironmentField } from './ParentEnvironmentField';
 import './CreateEnvironmentForm.scss';
 
@@ -23,7 +23,6 @@ export type CreateEnvironmentFormValues = {
   deploymentStrategy: string;
   parentEnvironment?: string;
   location: string;
-  type: string;
 };
 
 type CreateEnvironmentFormProps = FormikProps<CreateEnvironmentFormValues>;
@@ -45,10 +44,6 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
     [],
   );
 
-  const typeDropdownItems = React.useMemo(
-    () => Object.entries(EnvironmentFormDropdownType).map(([key]) => ({ key, value: key })),
-    [],
-  );
   const footer = (
     <FormFooter
       submitLabel="Create environment"
@@ -65,7 +60,7 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
         <Form onSubmit={handleSubmit} className="hacDev-create-environment-form">
           <FormSection title="Define environment">
             <Text component={TextVariants.small}>
-              This environment will be available only within thi workspace.
+              This environment will only be available within this workspace.
             </Text>
             <InputField
               aria-label="Environment Name"
@@ -77,15 +72,7 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
               label="Deployment strategy"
               name="deploymentStrategy"
               items={dropdownItems}
-              helpText="Set whether application component updates will need to be manually or automatically promoted to this environment, and if changes will be manually or automatically deployed."
-            />
-            <DropdownField
-              label="Type"
-              name="type"
-              items={typeDropdownItems}
-              placeholder="Select type..."
-              required
-              validateOnChange
+              helpText="Whether your application is manually or automatically deployed or promoted to this environment."
             />
             <ParentEnvironmentField />
           </FormSection>

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  Button,
   Card,
   CardBody,
   CardExpandableContent,
@@ -10,20 +9,32 @@ import {
   Flex,
   FlexItem,
   Label,
+  Skeleton,
   Spinner,
   Text,
   TextVariants,
 } from '@patternfly/react-core';
+import ArrowRightIcon from '@patternfly/react-icons/dist/js/icons/arrow-right-icon';
 import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-icon';
 import { global_palette_green_400 as greenColor } from '@patternfly/react-tokens/dist/js/global_palette_green_400';
+import { useApplicationHealthStatus } from '../../hooks/useApplicationHealthStatus';
 import { useSortedEnvironments } from '../../hooks/useEnvironments';
+import { useLastApplicationDeployTime } from '../../hooks/useLastApplicationDeployTime';
+import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { EnvironmentKind } from '../../types';
-import { getEnvironmentDeploymentStrategyLabel } from '../../utils/environment-utils';
-import { OutlinedHelpPopperIcon } from '../OutlinedHelpTooltipIcon';
+import {
+  getEnvironmentDeploymentStrategyLabel,
+  isPositionedEnvironment,
+} from '../../utils/environment-utils';
+import { useNamespace } from '../../utils/namespace-context-utils';
+
+import './ApplicationEnviromentCards.scss';
 
 type ApplicationEnvironmentCardProps = {
   environment: EnvironmentKind;
+  applicationName: string;
   isExpanded: boolean;
+  isSelected: boolean;
   onSelect?: () => void;
 };
 
@@ -37,13 +48,34 @@ const ApplicationEnvironmentCardsEmptyState: React.FC = () => (
 
 const ApplicationEnvironmentCard: React.FC<ApplicationEnvironmentCardProps> = ({
   environment,
+  applicationName,
   isExpanded,
+  isSelected,
   onSelect,
 }) => {
   const strategy = getEnvironmentDeploymentStrategyLabel(environment);
+  const namespace = useNamespace();
+  const [healthStatus, healthStatusIcon, healthStatusLoaded] = useApplicationHealthStatus(
+    namespace,
+    applicationName,
+  );
+  const [lastDeployTime, deployTimeLoaded] = useLastApplicationDeployTime(
+    namespace,
+    applicationName,
+  );
+
   return (
-    <Card isCompact isExpanded={isExpanded} isSelectable={!!onSelect} onClick={onSelect}>
-      <CardHeader>
+    <Card
+      className="application-environment-cards__card"
+      data-test={`env-card-${environment.metadata.name}`}
+      isSelectable
+      isSelectableRaised
+      isCompact
+      isSelected={isSelected}
+      isExpanded={isExpanded}
+      onClick={onSelect}
+    >
+      <CardHeader className="pf-u-pt-sm">
         <Flex>
           <CardTitle>{environment.spec.displayName}</CardTitle>
           <FlexItem align={{ default: 'alignRight' }}>
@@ -53,19 +85,29 @@ const ApplicationEnvironmentCard: React.FC<ApplicationEnvironmentCardProps> = ({
                 <CheckCircleIcon color={greenColor.value} /> Healthy
               </span>
             ) : (
-              <Label>{strategy}</Label>
+              <Label isCompact>{strategy}</Label>
             )}
           </FlexItem>
         </Flex>
       </CardHeader>
       <CardExpandableContent>
         <CardBody>
-          <CheckCircleIcon color={greenColor.value} /> Healthy
+          {healthStatusLoaded ? (
+            <>
+              {healthStatusIcon} Application {healthStatus}
+            </>
+          ) : (
+            <Skeleton width="50%" screenreaderText="Loading application health" />
+          )}
         </CardBody>
         <CardFooter>
           <small>Last Deployment:</small> {'  '}
           <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
-            Nov 11, 2021 11:47 AM
+            {deployTimeLoaded ? (
+              <Timestamp timestamp={lastDeployTime} simple />
+            ) : (
+              <Skeleton width="50%" screenreaderText="Loading last deployment time" />
+            )}
           </Text>
         </CardFooter>
       </CardExpandableContent>
@@ -74,58 +116,46 @@ const ApplicationEnvironmentCard: React.FC<ApplicationEnvironmentCardProps> = ({
 };
 
 type ApplicationEnvironmentCardsProps = {
-  onSelect?: (selectedId: string) => void;
+  applicationName: string;
+  onSelect?: (environmentId: string) => void;
+  selectedEnvironment?: string;
+  cardsExpanded: boolean;
 };
 
 export const ApplicationEnvironmentCards: React.FC<ApplicationEnvironmentCardsProps> = ({
+  applicationName,
+  selectedEnvironment,
   onSelect,
+  cardsExpanded,
 }) => {
-  const [cardsExpanded, setCardExpanded] = React.useState<boolean>(true);
   const [environments, loaded] = useSortedEnvironments();
 
   return (
-    <Flex direction={{ default: 'column' }} grow={{ default: 'grow' }}>
-      <Flex>
-        <FlexItem>
-          <b>Environments:</b>
-          {'  '}
-          <OutlinedHelpPopperIcon
-            heading="Application environments"
-            content="View components and their settings as deployed to environments. Component updates can be promoted between environments. Additional environments can be added via the workspace."
-          />
-        </FlexItem>
-        {loaded && environments.length ? (
-          <FlexItem align={{ default: 'alignRight' }}>
-            <Button
-              onClick={() => setCardExpanded((e) => !e)}
-              variant="link"
-              isInline
-              style={{ textDecoration: 'none' }}
-            >
-              {cardsExpanded ? 'Collapse' : 'Expand'}
-            </Button>
-          </FlexItem>
-        ) : null}
-      </Flex>
-      <Flex alignItems={{ default: 'alignItemsCenter' }}>
-        {loaded ? (
-          environments?.length ? (
-            environments.map((env) => (
-              <FlexItem key={env.metadata.uid}>
-                <ApplicationEnvironmentCard
-                  environment={env}
-                  isExpanded={cardsExpanded}
-                  onSelect={() => onSelect && onSelect(env.metadata.name)}
-                />
-              </FlexItem>
-            ))
-          ) : (
-            <ApplicationEnvironmentCardsEmptyState />
-          )
+    <Flex alignItems={{ default: 'alignItemsCenter' }} flexWrap={{ default: 'nowrap' }}>
+      {loaded ? (
+        environments?.length ? (
+          environments.map((env, index) => (
+            <React.Fragment key={env.metadata.uid}>
+              {isPositionedEnvironment(env, environments.slice(0, index)) ? (
+                <div className="application-environment-cards__env-arrow">
+                  <ArrowRightIcon />
+                </div>
+              ) : null}
+              <ApplicationEnvironmentCard
+                environment={env}
+                applicationName={applicationName}
+                isExpanded={cardsExpanded}
+                isSelected={env.metadata.name === selectedEnvironment}
+                onSelect={() => onSelect && onSelect(env.metadata.name)}
+              />
+            </React.Fragment>
+          ))
         ) : (
-          <Spinner isSVG size="md" />
-        )}
-      </Flex>
+          <ApplicationEnvironmentCardsEmptyState />
+        )
+      ) : (
+        <Spinner isSVG size="md" />
+      )}
     </Flex>
   );
 };

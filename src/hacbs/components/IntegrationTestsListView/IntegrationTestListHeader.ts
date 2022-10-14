@@ -17,7 +17,7 @@ export const IntegrationTestListHeader = () => {
       props: { className: integrationListTableColumnClasses.containerImage },
     },
     {
-      title: 'Mandatory for release',
+      title: 'Optional for release',
       props: { className: integrationListTableColumnClasses.mandatory },
     },
     {

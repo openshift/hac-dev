@@ -25,28 +25,46 @@ const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = 
 
   return (
     <>
-      {!isInPage ? (
+      {!isInPage && (
         <>
           <TextContent data-test="integration-test-section-header">
-            <Text component={TextVariants.h1}>Add integration test pipeline</Text>
+            <Text component={TextVariants.h1}>Add integration test</Text>
             <Text component={TextVariants.p}>
-              Add an integration test pipeline to test all your components.
+              Add an integration test to test all your components.
               <br />
               By default, previous GitHub credentials will be used to validate your URL. If it
               fails, you fails, you must revalidate with a different repo.
             </Text>
             <ExternalLink href="#">
-              Learn more about setting up an integration test pipeline <ExternalLinkAltIcon />
+              Learn more about setting up an integration test <ExternalLinkAltIcon />
             </ExternalLink>
           </TextContent>
         </>
-      ) : null}
+      )}
       <FormSection>
+        {infoAlert && (
+          <Alert
+            variant="info"
+            isInline
+            title="This pipeline will appear twice on your application workflow"
+            actionClose={
+              <AlertActionCloseButton
+                data-test="hacbs-close-info"
+                onClose={() => setInfoAlert(false)}
+              />
+            }
+          >
+            After adding your pipeline, it will run on your component and then again on the entire
+            app. You can see this on your application workflow.
+            <br />
+            {/* <a href="#">Learn more</a> */}
+          </Alert>
+        )}
         <InputField
           aria-label="Display name"
           label="Display name"
           name="integrationTest.name"
-          placeholder="Enter the integration test pipeline name"
+          placeholder="Enter the integration test name"
           data-test="display-name-input"
           required
         />
@@ -73,24 +91,6 @@ const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = 
           helpText="Passing this test is optional, and it cannot prevent the application from being deployed or released."
           data-test="optional-release-checkbox"
         />
-        {infoAlert && (
-          <Alert
-            variant="info"
-            isInline
-            title="This pipeline will appear twice on your application workflow"
-            actionClose={
-              <AlertActionCloseButton
-                data-test="hacbs-close-info"
-                onClose={() => setInfoAlert(false)}
-              />
-            }
-          >
-            After adding your pipeline, it will run on your component and then again on the entire
-            app. You can see this on your application workflow.
-            <br />
-            {/* <a href="#">Learn more</a> */}
-          </Alert>
-        )}
       </FormSection>
     </>
   );

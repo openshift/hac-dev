@@ -17,9 +17,6 @@ import {
 import { initiateAccessTokenBinding } from '../../../utils/create-utils';
 import { useNamespace } from '../../../utils/namespace-context-utils';
 
-const SPI_API_URL =
-  'https://spi-oauth-route-spi-system.apps.appstudio-stage.x99m.p1.openshiftapps.com';
-
 /**
  * Create a new SPIAccessCheck when source changes,
  * and return true if the source is accessible.
@@ -99,7 +96,7 @@ export const useAccessCheck = (
  */
 export const useAccessTokenBinding = (
   source?: string,
-): [{ oAuthUrl: string; accessTokenName: string }, boolean] => {
+): [{ oAuthUrl: string; uploadUrl: string }, boolean] => {
   const namespace = useNamespace();
   const { setFieldValue } = useFormikContext();
   const [name, setName] = React.useState<string>();
@@ -155,7 +152,7 @@ export const useAccessTokenBinding = (
   return [
     {
       oAuthUrl: binding?.status?.oAuthUrl,
-      accessTokenName: binding?.status?.linkedAccessTokenName,
+      uploadUrl: binding?.status?.uploadUrl,
     },
     !!(name && loaded),
   ];
@@ -170,16 +167,15 @@ export const useAccessTokenBinding = (
  * @returns object of utils
  */
 export const useSpiAPI = () => {
-  const namespace = useNamespace();
   const {
     auth: { getToken },
   } = useChrome();
 
   return React.useMemo(
     () => ({
-      uploadToken: async (accessTokenName: string, username: string, accessToken: string) => {
+      uploadToken: async (uploadUrl: string, username: string, accessToken: string) => {
         const token = await getToken();
-        return fetch(`${SPI_API_URL}/token/${namespace}/${accessTokenName}`, {
+        return fetch(uploadUrl, {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -193,6 +189,6 @@ export const useSpiAPI = () => {
         });
       },
     }),
-    [getToken, namespace],
+    [getToken],
   );
 };

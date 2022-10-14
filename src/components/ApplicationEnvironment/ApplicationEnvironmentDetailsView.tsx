@@ -20,6 +20,9 @@ import {
   Panel,
   Spinner,
   StackItem,
+  Tab,
+  Tabs,
+  TabTitleText,
   TextInput,
   Title,
   ToggleGroup,
@@ -36,17 +39,11 @@ import { css } from '@patternfly/react-styles';
 import viewStyles from '@patternfly/react-styles/css/components/Topology/topology-view';
 import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { useSearchParam } from '../../hooks/useSearchParam';
-import {
-  ApplicationGroupVersionKind,
-  ComponentGroupVersionKind,
-  EnvironmentGroupVersionKind,
-} from '../../models';
-import { ApplicationKind, ComponentKind, EnvironmentKind } from '../../types';
+import { ComponentGroupVersionKind, EnvironmentGroupVersionKind } from '../../models';
+import { ComponentKind, EnvironmentKind } from '../../types';
 import { getEnvironmentDeploymentStrategyLabel } from '../../utils/environment-utils';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
-import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
-import PageLayout from '../PageLayout/PageLayout';
 import ApplicationEnvironmentGraphView from './ApplicationEnvironmentGraphView';
 import ApplicationEnvironmentListView from './ApplicationEnvironmentListView';
 import ApplicationEnvironmentSidePanel from './ApplicationEnvironmentSidePanel';
@@ -73,7 +70,7 @@ const ApplicationEnvironmentDetailsEmptyState: React.FC<{ environmentName: strin
         <Link {...props} to={`/app-studio/import?environment=${environmentName}`} />
       )}
     >
-      Deploy Components
+      Deploy components
     </Button>
   </EmptyState>
 );
@@ -86,17 +83,12 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
   const [viewType, setViewType] = useSearchParam('view', 'list');
   const [nameFilter, setNameFilter] = React.useState<string>('');
   const [selectedId, setSelectedId] = useSearchParam('selected', null);
-  const [application, applicationLoaded, applicationError] = useK8sWatchResource<ApplicationKind>({
-    groupVersionKind: ApplicationGroupVersionKind,
-    name: applicationName,
-    namespace,
-  });
+
   const [environment, environmentLoaded, environmentError] = useK8sWatchResource<EnvironmentKind>({
     groupVersionKind: EnvironmentGroupVersionKind,
     namespace,
     name: environmentName,
   });
-
   const [components, componentsLoaded] = useK8sWatchResource<ComponentKind[]>({
     groupVersionKind: ComponentGroupVersionKind,
     namespace,
@@ -150,163 +142,147 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
     </Bullseye>
   );
 
-  if (
-    applicationError ||
-    !applicationLoaded ||
-    environmentError ||
-    !environmentLoaded ||
-    !componentsLoaded
-  ) {
+  if (environmentError || !environmentLoaded || !componentsLoaded) {
     return loading;
   }
 
   return (
-    <PageLayout
-      breadcrumbs={[
-        { path: `/app-studio/applications`, name: 'Applications' },
-        {
-          path: `/app-studio/applications/${application?.metadata.name}`,
-          name: application?.spec?.displayName,
-        },
-        {
-          path: `/app-studio/application/${application?.metadata.name}/environments/${environment.metadata.name}`,
-          name: environment.metadata.name,
-        },
-      ]}
-      title={`${environment.spec.displayName} environment`}
-      description={
-        <>
-          Use the application environment view to access the specifics of the components deployed to
-          the environment. <HelpTopicLink topicId="app-view">Learn more</HelpTopicLink>
-        </>
-      }
-    >
-      <PageSection isFilled className="application-environment-details" style={{ paddingTop: 0 }}>
+    <PageSection isFilled className="application-environment-details__section">
+      <Panel className="application-environment-details__panel">
         <Flex
           className="application-environment-details__header-info"
-          justifyContent={{ default: 'justifyContentFlexEnd' }}
+          justifyContent={{ default: 'justifyContentSpaceBetween' }}
         >
-          {gitOpsDeploymentLoaded ? (
-            gitOpsDeployment ? (
-              <>
-                <FlexItem className="application-environment-details__header-info-item">
-                  {gitOpsDeploymentHealthStatusIcon} Application{' '}
-                  <span className="application-environment-details__health-status">
-                    {gitOpsDeploymentHealthStatus}
-                  </span>
-                </FlexItem>
-                <FlexItem className="application-environment-details__header-info-item">
-                  Deployment strategy:{' '}
-                  <Label>{getEnvironmentDeploymentStrategyLabel(environment)}</Label>
-                </FlexItem>
-                <FlexItem className="application-environment-details__header-info-item">
-                  Last deployment: Nov 29, 2021 2:11 PM
-                </FlexItem>
-              </>
-            ) : null
-          ) : (
-            <FlexItem className="application-environment-details__header-info-item">
-              <Spinner isSVG size="md" />
-            </FlexItem>
-          )}
+          <Title headingLevel="h1" className="pf-u-mt-sm">
+            {environment.spec.displayName} Deployment Details
+          </Title>
+          <Flex justifyContent={{ default: 'justifyContentFlexEnd' }}>
+            {gitOpsDeploymentLoaded ? (
+              gitOpsDeployment ? (
+                <>
+                  <FlexItem className="application-environment-details__header-info-item">
+                    {gitOpsDeploymentHealthStatusIcon} Application{' '}
+                    <span className="application-environment-details__health-status">
+                      {gitOpsDeploymentHealthStatus}
+                    </span>
+                  </FlexItem>
+                  <FlexItem className="application-environment-details__header-info-item">
+                    Deployment strategy:{' '}
+                    <Label isCompact>{getEnvironmentDeploymentStrategyLabel(environment)}</Label>
+                  </FlexItem>
+                  <FlexItem className="application-environment-details__header-info-item">
+                    Last deployment: Nov 29, 2021 2:11 PM
+                  </FlexItem>
+                </>
+              ) : null
+            ) : (
+              <FlexItem className="application-environment-details__header-info-item">
+                <Spinner isSVG size="md" />
+              </FlexItem>
+            )}
+          </Flex>
         </Flex>
-        <Panel className="application-environment-details__contents" style={{ height: '100%' }}>
-          {components.length === 0 ? (
-            <ApplicationEnvironmentDetailsEmptyState environmentName={environment.metadata.name} />
-          ) : (
-            <>
-              <Toolbar
-                data-testid="application-environment-details-toolbar"
-                className="application-environment-details__toolbar"
-                clearAllFilters={onClearFilters}
-              >
-                <ToolbarContent>
-                  <ToolbarGroup alignment={{ default: 'alignLeft' }}>
-                    <ToolbarItem>
-                      <InputGroup>
-                        <Button variant="control">
-                          <FilterIcon /> Name
-                        </Button>
-                        <TextInput
-                          name="nameInput"
-                          data-testid="name-input-filter"
-                          type="search"
-                          aria-label="name filter"
-                          placeholder="Filter by name..."
-                          onChange={(name) => onNameInput(name)}
-                        />
-                      </InputGroup>
-                    </ToolbarItem>
-                  </ToolbarGroup>
-                  <ToolbarGroup alignment={{ default: 'alignRight' }}>
-                    <ToolbarItem>
-                      <ToggleGroup aria-label="select view type">
-                        <Tooltip position="left" content="List view">
-                          <ToggleGroupItem
-                            icon={<ListIcon />}
-                            aria-label="list view"
-                            buttonId="application-environment-list-toggle"
-                            isSelected={!showGraphView}
-                            onChange={() => setViewType('list')}
-                            data-testid="list-view-toggle"
+        <Tabs activeKey={0}>
+          <Tab eventKey={0} title={<TabTitleText>Deployed components</TabTitleText>}>
+            {components.length === 0 ? (
+              <ApplicationEnvironmentDetailsEmptyState
+                environmentName={environment.metadata.name}
+              />
+            ) : (
+              <>
+                <Toolbar
+                  data-testid="application-environment-details-toolbar"
+                  className="application-environment-details__toolbar"
+                  clearAllFilters={onClearFilters}
+                >
+                  <ToolbarContent>
+                    <ToolbarGroup alignment={{ default: 'alignLeft' }}>
+                      <ToolbarItem>
+                        <InputGroup>
+                          <Button variant="control">
+                            <FilterIcon /> Name
+                          </Button>
+                          <TextInput
+                            name="nameInput"
+                            data-testid="name-input-filter"
+                            type="search"
+                            aria-label="name filter"
+                            placeholder="Filter by name..."
+                            onChange={(name) => onNameInput(name)}
                           />
-                        </Tooltip>
-                        <Tooltip position="left" content="Graph view">
-                          <ToggleGroupItem
-                            icon={<TopologyIcon />}
-                            aria-label="graph view"
-                            buttonId="application-environment-graph-toggle"
-                            isSelected={showGraphView}
-                            onChange={() => setViewType('graph')}
-                            data-testid="graph-view-toggle"
-                          />
-                        </Tooltip>
-                      </ToggleGroup>
-                    </ToolbarItem>
-                  </ToolbarGroup>
-                </ToolbarContent>
-              </Toolbar>
-              <StackItem isFilled className={css(viewStyles.topologyContainer)}>
-                <Drawer isExpanded={!!selectedComponent} isInline>
-                  <DrawerContent
-                    panelContent={
-                      <DrawerPanelContent isResizable id="topology-resize-panel">
-                        {selectedComponent && (
-                          <ApplicationEnvironmentSidePanel
-                            component={selectedComponent}
-                            onClose={() => setSelectedId(null)}
-                          />
-                        )}
-                      </DrawerPanelContent>
-                    }
-                  >
-                    <DrawerContentBody>
-                      {componentsLoaded ? (
-                        showGraphView ? (
-                          <ApplicationEnvironmentGraphView
-                            components={filteredComponents}
-                            selectedId={selectedId}
-                            onSelect={onSelect}
-                          />
+                        </InputGroup>
+                      </ToolbarItem>
+                    </ToolbarGroup>
+                    <ToolbarGroup alignment={{ default: 'alignRight' }}>
+                      <ToolbarItem>
+                        <ToggleGroup aria-label="select view type">
+                          <Tooltip position="left" content="List view">
+                            <ToggleGroupItem
+                              icon={<ListIcon />}
+                              aria-label="list view"
+                              buttonId="application-environment-list-toggle"
+                              isSelected={!showGraphView}
+                              onChange={() => setViewType('list')}
+                              data-testid="list-view-toggle"
+                            />
+                          </Tooltip>
+                          <Tooltip position="left" content="Graph view">
+                            <ToggleGroupItem
+                              icon={<TopologyIcon />}
+                              aria-label="graph view"
+                              buttonId="application-environment-graph-toggle"
+                              isSelected={showGraphView}
+                              onChange={() => setViewType('graph')}
+                              data-testid="graph-view-toggle"
+                            />
+                          </Tooltip>
+                        </ToggleGroup>
+                      </ToolbarItem>
+                    </ToolbarGroup>
+                  </ToolbarContent>
+                </Toolbar>
+                <StackItem isFilled className={css(viewStyles.topologyContainer)}>
+                  <Drawer isExpanded={!!selectedComponent} isInline>
+                    <DrawerContent
+                      panelContent={
+                        <DrawerPanelContent isResizable id="topology-resize-panel">
+                          {selectedComponent && (
+                            <ApplicationEnvironmentSidePanel
+                              component={selectedComponent}
+                              onClose={() => setSelectedId(null)}
+                            />
+                          )}
+                        </DrawerPanelContent>
+                      }
+                    >
+                      <DrawerContentBody>
+                        {componentsLoaded ? (
+                          showGraphView ? (
+                            <ApplicationEnvironmentGraphView
+                              components={filteredComponents}
+                              selectedId={selectedId}
+                              onSelect={onSelect}
+                            />
+                          ) : (
+                            <ApplicationEnvironmentListView
+                              components={filteredComponents}
+                              selectedId={selectedId}
+                              onSelect={onSelect}
+                              applicationName={applicationName}
+                            />
+                          )
                         ) : (
-                          <ApplicationEnvironmentListView
-                            components={filteredComponents}
-                            selectedId={selectedId}
-                            onSelect={onSelect}
-                            applicationName={applicationName}
-                          />
-                        )
-                      ) : (
-                        loading
-                      )}
-                    </DrawerContentBody>
-                  </DrawerContent>
-                </Drawer>
-              </StackItem>
-            </>
-          )}
-        </Panel>
-      </PageSection>
-    </PageLayout>
+                          loading
+                        )}
+                      </DrawerContentBody>
+                    </DrawerContent>
+                  </Drawer>
+                </StackItem>
+              </>
+            )}
+          </Tab>
+        </Tabs>
+      </Panel>
+    </PageSection>
   );
 };

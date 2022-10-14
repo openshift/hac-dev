@@ -63,11 +63,11 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
     );
     return (
       <>
-        <Title headingLevel="h4" className="pf-u-mt-lg pf-u-mb-sm">
+        <Title headingLevel="h3" className="pf-u-mt-lg pf-u-mb-sm">
           Components
         </Title>
         <TextContent>
-          <Text component={TextVariants.small}>
+          <Text component={TextVariants.p}>
             Components are the things that construct the app, they are usually mapped to a repo.{' '}
             <ExternalLink
               href="#"

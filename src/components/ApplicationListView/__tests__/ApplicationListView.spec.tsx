@@ -1,9 +1,14 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen } from '@testing-library/react';
 import { ApplicationKind } from '../../../types';
 import ApplicationListView from '../ApplicationListView';
+
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
+}));
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
@@ -81,25 +86,38 @@ const applications: ApplicationKind[] = [
 ];
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
+const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 describe('Application List', () => {
   it('should render spinner if application data is not loaded', () => {
+    useFeatureFlagMock.mockReturnValue([false]);
     watchResourceMock.mockReturnValue([[], false]);
     render(<ApplicationListView />);
     screen.getByRole('progressbar');
   });
 
   it('should render empty state if no application is present', () => {
+    useFeatureFlagMock.mockReturnValue([false]);
     watchResourceMock.mockReturnValue([[], true]);
     render(<ApplicationListView />);
     screen.getByText('No applications');
     screen.getByText('To get started, create an application.');
+    screen.getByText('Create and manage your applications');
     const button = screen.getByText('Create application');
     expect(button).toBeInTheDocument();
     expect(button.closest('a').href).toBe('http://localhost/app-studio/import');
   });
 
+  it('should render empty state with no card for hacbs', () => {
+    useFeatureFlagMock.mockReturnValue([true]);
+    watchResourceMock.mockReturnValue([[], true]);
+    render(<ApplicationListView />);
+    screen.getByText('No applications');
+    expect(screen.queryByText('Create and manage your applications.')).toBeNull();
+  });
+
   it('should render application list when application(s) is(are) present', () => {
+    useFeatureFlagMock.mockReturnValue([false]);
     watchResourceMock.mockReturnValue([applications, true]);
     render(<ApplicationListView />);
     screen.getByText('Create application');

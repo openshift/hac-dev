@@ -6,7 +6,7 @@ import CreateEnvironment from '../CreateEnvironment';
 import '@testing-library/jest-dom';
 
 jest.mock('../../../../hooks/useEnvironments', () => ({
-  useEnvironments: () => [
+  useSortedEnvironments: () => [
     {
       apiVersion: 'appstudio.redhat.com/v1alpha1',
       kind: 'Environment',
@@ -36,10 +36,6 @@ const mockK8sCreate = k8sCreateResource as jest.Mock;
 describe('CreateEnvironment', () => {
   const fillEnvironmentForm = () => {
     fireEvent.input(screen.getByLabelText('Environment Name'), { target: { value: 'Env 1' } });
-    const typeDropdownToggle = screen.getByText('Select type...');
-    fireEvent.click(typeDropdownToggle);
-    const typeDropdownOption = screen.getByText('POC');
-    fireEvent.click(typeDropdownOption);
   };
 
   it('should render Create environment form', () => {
@@ -84,7 +80,7 @@ describe('CreateEnvironment', () => {
             deploymentStrategy: 'AppStudioAutomated',
             displayName: 'Env 1',
             parentEnvironment: undefined,
-            type: 'poc',
+            type: 'non-poc',
           },
         },
       }),
