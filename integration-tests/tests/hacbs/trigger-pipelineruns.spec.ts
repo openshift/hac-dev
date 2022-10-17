@@ -1,7 +1,7 @@
 import { Applications } from "../../utils/Applications";
 import { HACBSApplications } from "../../utils/HACBSApplications";
 
-describe('Create Components using the HACBS UI', () => {
+describe('Trigger Pipelineruns using the HACBS UI', () => {
     const LOCAL_STORAGE_KEY_GS_MODAL = 'hacbs/getting-started-modal';
     const LOCAL_STORAGE_KEY_QUICKSTART = 'hacbs/showApplicationQuickstart';
     const applicationName = "my-application";
@@ -32,7 +32,7 @@ describe('Create Components using the HACBS UI', () => {
             Applications.createApplication(applicationName);
         })
 
-        it('Add a component to Application', () => {
+        it('Trigger pipelineruns using the static yaml files', () => {
             HACBSApplications.createComponent(publicRepo, componentName, true);
             HACBSApplications.createdPipelinerunsSucceeded(pipelinerunsNames, componentName, applicationName);
             HACBSApplications.createdComponentExists(componentName, applicationName);
