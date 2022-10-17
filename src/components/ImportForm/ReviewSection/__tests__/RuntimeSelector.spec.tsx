@@ -6,10 +6,20 @@ import '@testing-library/jest-dom';
 import { useDevfileSamples } from '../../utils/useDevfileSamples';
 import { RuntimeSelector } from '../RuntimeSelector';
 
+const setFieldValueMock = jest.fn();
+
 jest.mock('../../utils/cdq-utils', () => ({ useComponentDetection: jest.fn() }));
 
 jest.mock('../../utils/useDevfileSamples', () => ({
   useDevfileSamples: jest.fn(),
+}));
+
+jest.mock('formik', () => ({
+  ...(jest as any).requireActual('formik'),
+  useFormikContext: jest.fn(() => ({
+    ...(jest as any).requireActual('formik').useFormikContext(),
+    setFieldValue: setFieldValueMock,
+  })),
 }));
 
 const useComponentDetectionMock = useComponentDetection as jest.Mock;
@@ -53,7 +63,7 @@ describe('RuntimeSelector', () => {
     expect(screen.getByText('Basic Nodejs')).toBeVisible();
   });
 
-  it('should fetch cdq on select', async () => {
+  it('should run cdq & set proper validation state on select', async () => {
     useDevfileSamplesMock.mockReturnValue([
       [
         {
@@ -95,5 +105,7 @@ describe('RuntimeSelector', () => {
       undefined,
       undefined,
     );
+    expect(setFieldValueMock).toHaveBeenCalledWith('detectionFailed', false);
+    expect(setFieldValueMock).toHaveBeenCalledWith('isDetected', true);
   });
 });
