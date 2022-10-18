@@ -38,7 +38,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
         {
           op: 'replace',
           path: `/spec/status`,
-          value: 'pipelineRunCancelled',
+          value: 'PipelineRunCancelled',
         },
       ],
     });
