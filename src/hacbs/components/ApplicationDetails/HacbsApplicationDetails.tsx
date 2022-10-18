@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
@@ -8,6 +8,7 @@ import { applicationDeleteModal } from '../../../components/modal/resource-modal
 import { ApplicationGroupVersionKind } from '../../../models';
 import { ApplicationKind } from '../../../types';
 import { useNamespace } from '../../../utils/namespace-context-utils';
+import ApplicationModal, { HACBS_APPLICATION_MODAL_HIDE_KEY } from './ApplicationModal';
 import { applicationQuickstartContent } from './ApplicationQuickstartContent';
 import DetailsPage from './DetailsPage';
 import ApplicationOverviewTab from './tabs/ApplicationOverviewTab';
@@ -22,6 +23,15 @@ type HacbsApplicationDetailsProps = {
 };
 
 const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicationName }) => {
+  const [showApplicationModal, setShowApplicationModal] = React.useState<boolean>(
+    window.localStorage.getItem(HACBS_APPLICATION_MODAL_HIDE_KEY) !== 'true',
+  );
+
+  const onModalClose = () => {
+    setShowApplicationModal(false);
+    localStorage.setItem(HACBS_APPLICATION_MODAL_HIDE_KEY, 'true');
+  };
+
   const namespace = useNamespace();
   const navigate = useNavigate();
   const { quickStarts } = useChrome();
@@ -33,19 +43,6 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
     namespace,
   });
   const appDisplayName = application?.spec?.displayName || '';
-
-  useEffect(() => {
-    const hacbsShowAppQs = localStorage.getItem('hacbs/showApplicationQuickstart');
-    if (hacbsShowAppQs === null) {
-      localStorage.setItem('hacbs/showApplicationQuickstart', 'false');
-      // TODO Need to revisit once we have ability to add new quickstarts to an existing chrome store
-      // See https://issues.redhat.com/browse/RHCLOUD-20677
-      quickStarts.set('hac-dev', [applicationQuickstartContent]);
-      quickStarts.toggle('hacbs-getting-started-app');
-    }
-    // dependencies not needed since we only want to run once when component mounts
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const loading = (
     <Bullseye>
@@ -59,6 +56,7 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
 
   return (
     <React.Fragment>
+      <ApplicationModal showApplicationModal={showApplicationModal} onClose={onModalClose} />
       <DetailsPage
         breadcrumbs={[
           { path: '/app-studio/applications', name: 'Applications' },
