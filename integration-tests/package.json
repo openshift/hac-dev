@@ -5,16 +5,22 @@
   "private": true,
   "scripts": {
     "clean-reports": "rm -rf cypress/",
-    "cy:run": "npm run clean-reports && ../node_modules/.bin/cypress run",
-    "cy:open": "../node_modules/.bin/cypress open"
+    "cy:run": "npm-run-all clean-reports cy:run:*",
+    "cy:run:default": "cypress run",
+    "cy:run:experimental": "cypress run -e configFile=experimental",
+    "cy:open": "cypress open",
+    "cy:open:experimental": "cypress open -e configFile=experimental"
   },
   "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
     "@types/node": "^17.0.13",
     "axe-core": "^4.4.2",
     "cypress": "^9.6.0",
     "cypress-axe": "^0.14.0",
     "cypress-multi-reporters": "^1.6.0",
     "cypress-terminal-report": "^3.5.2",
-    "mocha-junit-reporter": "^2.0.2"
+    "fs-extra": "^10.1.0",
+    "mocha-junit-reporter": "^2.0.2",
+    "npm-run-all": "^4.1.5"
   }
 }
