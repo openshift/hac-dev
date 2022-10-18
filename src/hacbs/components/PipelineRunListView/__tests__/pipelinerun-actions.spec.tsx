@@ -212,7 +212,7 @@ describe('test pipelinerun stop command', () => {
       expect(patchResourceMock).toHaveBeenCalledWith(
         expect.objectContaining({
           queryOptions: { name: '1-nodejs-2bwzn', ns: 'karthik-jk' },
-          patches: [{ op: 'replace', path: '/spec/status', value: 'StoppedRunFinally' }],
+          patches: [{ op: 'replace', path: '/spec/status', value: 'pipelineRunCancelled' }],
         }),
       );
     });

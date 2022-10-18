@@ -16,7 +16,7 @@ export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] =>
         {
           op: 'replace',
           path: `/spec/status`,
-          value: 'StoppedRunFinally',
+          value: 'pipelineRunCancelled',
         },
       ],
     });
