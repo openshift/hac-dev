@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { useK8sWatchResource, k8sPatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { pipelineRunFilterReducer } from '../../../shared';
 import { StatusIconWithText } from '../../../shared/components/pipeline-run-logs/StatusIcon';
 import { useNamespace } from '../../../utils/namespace-context-utils';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { PipelineRunGroupVersionKind } from '../../models';
+import { PipelineRunGroupVersionKind, PipelineRunModel } from '../../models/pipelineruns';
 import { PipelineRunKind } from '../../types';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import PipelineRunDetailsTab from './tabs/PipelineRunDetailsTab';
@@ -27,6 +27,22 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
     namespace,
   });
 
+  const pipelineRunStop = () => {
+    k8sPatchResource({
+      model: PipelineRunModel,
+      queryOptions: {
+        name: pipelineRun.metadata.name,
+        ns: pipelineRun.metadata.namespace,
+      },
+      patches: [
+        {
+          op: 'replace',
+          path: `/spec/status`,
+          value: 'PipelineRunCancelled',
+        },
+      ],
+    });
+  };
   const plrStatus = React.useMemo(
     () => loaded && pipelineRun && pipelineRunFilterReducer(pipelineRun),
     [loaded, pipelineRun],
@@ -67,23 +83,23 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
             </>
           }
           actions={[
-            {
-              key: 'rerun',
-              label: 'Rerun',
-              href: '',
-              isDisabled: true,
-            },
-            {
-              key: 'cancel',
-              label: 'Cancel',
-              href: '',
-              isDisabled: true,
-            },
+            // {
+            //   key: 'rerun',
+            //   label: 'Rerun',
+            //   href: '',
+            //   isDisabled: true,
+            // },
+            // {
+            //   key: 'cancel',
+            //   label: 'Cancel',
+            //   href: '',
+            //   isDisabled: true,
+            // },
             {
               key: 'stop',
               label: 'Stop',
-              href: '',
-              isDisabled: true,
+              isDisabled: !(pipelineRunFilterReducer(pipelineRun) === 'Running'),
+              onClick: () => pipelineRunStop(),
             },
           ]}
           tabs={[
