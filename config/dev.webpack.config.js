@@ -28,34 +28,24 @@ const webpackProxy = {
   }),
   customProxy: [
     {
-      context: (path) => path.includes('/api/k8s/registration'),
-      target:
-        'https://registration-service-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com',
-      secure: false,
-      changeOrigin: true,
-      autoRewrite: true,
-      ws: true,
-      pathRewrite: { '^/api/k8s/registration': '' },
-    },
-    {
       context: (path) => path.includes('/api/k8s'),
-      target:
-        'https://api-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com:443',
+      target: 'http://localhost:3000', // TODO: Switch to Akamai proxy when it becomes available
       secure: false,
       changeOrigin: true,
       autoRewrite: true,
       ws: true,
       pathRewrite: { '^/api/k8s': '' },
+      withCredentials: true,
     },
     {
       context: (path) => path.includes('/wss/k8s'),
-      target:
-        'wss://api-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com:443',
+      target: 'ws://localhost:3000', // TODO: Switch to Akamai proxy when it becomes available
       secure: false,
       changeOrigin: true,
       autoRewrite: true,
       ws: true,
       pathRewrite: { '^/wss/k8s': '' },
+      withCredentials: true,
     },
   ],
   client: {

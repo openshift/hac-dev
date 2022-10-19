@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { k8sListResourceItems } from '@openshift/dynamic-plugin-sdk-utils';
-import { ProjectModel } from '../models';
+//import { k8sListResourceItems } from '@openshift/dynamic-plugin-sdk-utils';
+//import { ProjectModel } from '../models';
 
 type NamespaceContextData = { namespace: string; namespaceLoaded: boolean };
 
@@ -19,27 +19,31 @@ export const useActiveNamespace = (): NamespaceContextData => {
 
   React.useEffect(() => {
     const fetchProjects = async () => {
-      const projects: any = await k8sListResourceItems({
-        model: ProjectModel,
-      });
-      // Lock in the namespace
-      let ns = null;
-      if (Array.isArray(projects)) {
-        const namespaces = projects.map((dataResource) => dataResource.metadata.name);
-        ns = namespaces[0];
-      } else if (projects?.metadata?.namespace) {
-        ns = projects.metadata.namespace;
-      }
+      setActiveNamespace('default');
+      // eslint-disable-next-line no-console
+      console.warn('KCP Change: Set the namespace to "default"');
 
-      if (ns) {
-        setActiveNamespace(ns);
-      } else {
-        setActiveNamespace('default');
-        // eslint-disable-next-line no-console
-        console.warn(
-          'Could not find namespace; you are likely not able to do much as we are targeting "default"',
-        );
-      }
+      // const projects: any = await k8sListResourceItems({
+      //   model: ProjectModel,
+      // });
+      // // Lock in the namespace
+      // let ns = null;
+      // if (Array.isArray(projects)) {
+      //   const namespaces = projects.map((dataResource) => dataResource.metadata.name);
+      //   ns = namespaces[0];
+      // } else if (projects?.metadata?.namespace) {
+      //   ns = projects.metadata.namespace;
+      // }
+
+      // if (ns) {
+      //   setActiveNamespace(ns);
+      // } else {
+      //   setActiveNamespace('default');
+      //   // eslint-disable-next-line no-console
+      //   console.warn(
+      //     'Could not find namespace; you are likely not able to do much as we are targeting "default"',
+      //   );
+      // }
       setLoaded(true);
     };
 
