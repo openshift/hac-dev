@@ -7,8 +7,6 @@
 export COMPONENT="hac-dev"
 export IMAGE="quay.io/cloudservices/hac-dev-frontend"
 export APP_ROOT=$(pwd)
-# Because IMAGE_TAG from bonfire is going to prepend "pr-" we override it.
-export TAG=$(git rev-parse --short=7 HEAD)
 export WORKSPACE=${WORKSPACE:-$APP_ROOT} # if running in jenkins, use the build's workspace
 export NODE_BUILD_VERSION=14
 IMAGE="quay.io/cloudservices/hac-dev-frontend"
@@ -49,7 +47,7 @@ bonfire deploy \
         --source=appsre \
         --clowd-env ${ENV_NAME} \
         --set-template-ref ${COMPONENT}=${GIT_COMMIT} \
-        --set-image-tag ${IMAGE}=${TAG} \
+        --set-image-tag ${IMAGE}=${IMAGE_TAG} \
         --namespace ${NAMESPACE}
 
 # Call the keycloak API and add a user
