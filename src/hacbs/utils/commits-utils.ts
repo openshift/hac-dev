@@ -1,5 +1,14 @@
-import { PipelineRunLabel } from '../consts/pipelinerun';
+import { runStatus } from '../../shared';
+import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { PipelineRunKind, Commit } from '../types';
+
+export const statuses = [
+  runStatus.Running,
+  runStatus.Cancelled,
+  runStatus.Failed,
+  runStatus.Pending,
+  runStatus.Succeeded,
+];
 
 export const createCommitObjectFromPLR = (plr: PipelineRunKind): Commit => {
   if (!plr || !plr?.metadata.labels?.[PipelineRunLabel.COMMIT_LABEL]) {
@@ -77,3 +86,38 @@ export const getCommitsFromPLRs = (plrList: PipelineRunKind[], limit?: number): 
 export const getCommitDisplayName = (commit: Commit): string => commit.sha.slice(0, 7);
 
 export const getCommitShortName = (commitName: string): string => commitName.slice(0, 7);
+
+export const showPLRType = (plr: PipelineRunKind): string => {
+  if (!plr) {
+    return null;
+  }
+  const runType = plr?.metadata.labels[PipelineRunLabel.COMMIT_TYPE_LABEL];
+  if (!runType) {
+    return null;
+  }
+  if (runType === PipelineRunType.BUILD) {
+    return 'Build';
+  }
+  if (runType === PipelineRunType.TEST) {
+    return 'Integration test';
+  }
+  if (runType === PipelineRunType.RELEASE) {
+    return 'Release';
+  }
+};
+
+export const showPLRMessage = (plr: PipelineRunKind): string => {
+  const runType = plr?.metadata.labels[PipelineRunLabel.COMMIT_TYPE_LABEL];
+  if (!runType) {
+    return null;
+  }
+  if (runType === PipelineRunType.BUILD) {
+    return 'Build deploying';
+  }
+  if (runType === PipelineRunType.TEST) {
+    return 'Testing';
+  }
+  if (runType === PipelineRunType.RELEASE) {
+    return 'Releasing';
+  }
+};

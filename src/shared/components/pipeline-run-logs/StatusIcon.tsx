@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Badge } from '@patternfly/react-core';
+import { Label } from '@patternfly/react-core';
 import {
   AngleDoubleRightIcon,
   BanIcon,
@@ -64,17 +64,18 @@ export const StatusIconWithText: React.FC<
   StatusIconProps & { text?: string; dataTestAttribute?: string }
 > = ({ status, text, dataTestAttribute, ...others }) => {
   return (
-    <Badge isRead>
+    <Label>
       <span
+        className="pf-u-mr-xs"
         style={{
           color: status
-            ? getRunStatusColor(status).pftoken.value
+            ? getRunStatusColor(status).labelColor
             : getRunStatusColor(runStatus.Cancelled).pftoken.value,
         }}
       >
         <StatusIcon status={status} {...others} />
       </span>{' '}
       <span data-test={dataTestAttribute}>{text ?? status}</span>
-    </Badge>
+    </Label>
   );
 };

@@ -20,11 +20,147 @@ export const sampleBuildPipelines: PipelineRunKind[] = [
         'pipelines.openshift.io/strategy': 'docker',
         'tekton.dev/pipeline': 'docker-build',
         'pipelines.openshift.io/used-by': 'build-cloud',
+        'pipelinesascode.tekton.dev/sha': '010101010110',
         'build.appstudio.openshift.io/build': 'true',
         'build.appstudio.openshift.io/application': 'frontend-app',
         'build.appstudio.openshift.io/type': 'build',
         'pipelines.appstudio.openshift.io/type': 'build',
         'build.appstudio.openshift.io/version': '0.1',
+      },
+      annotations: {
+        'build.appstudio.openshift.io/component': '1-nodejs',
+        'pipelines.openshift.io/runtime': 'generic',
+      },
+    },
+    spec: {
+      params: [
+        {
+          name: 'git-url',
+          value: 'https://github.com/karthikjeeyar/demo-app',
+        },
+        {
+          name: 'output-image',
+          value: '',
+        },
+        {
+          name: 'dockerfile',
+          value: 'Dockerfile',
+        },
+        {
+          name: 'path-context',
+          value: '.',
+        },
+      ],
+      pipelineRef: {
+        bundle:
+          'quay.io/redhat-appstudio/build-templates-bundle:19cf17aa63a1c65eee897af8430dbb9c1682d77a',
+        name: 'docker-build',
+      },
+      serviceAccountName: 'pipeline',
+      timeout: '1h0m0s',
+      workspaces: [
+        {
+          name: 'workspace',
+          persistentVolumeClaim: {
+            claimName: 'appstudio',
+          },
+          subPath: '1-nodejs/initialbuild-2022-Feb-13_12-39-17',
+        },
+        {
+          name: 'registry-auth',
+          secret: {
+            secretName: 'redhat-appstudio-registry-pull-secret',
+          },
+        },
+      ],
+    },
+    status: {
+      pipelineSpec: {
+        tasks: [],
+      },
+      conditions: [
+        {
+          message: 'failed to create task run pod "1-nodejs-2bwzn-show-summary',
+          status: 'False',
+          type: 'Succeeded',
+        },
+      ],
+      taskRuns: {
+        '1-nodejs-2bwzn-show-summary': {
+          pipelineTaskName: 'show-summary',
+          status: {
+            completionTime: '2022-08-23T19:08:18Z',
+            conditions: [
+              {
+                lastTransitionTime: '2022-08-23T19:08:18Z',
+                message:
+                  'failed to create task run pod "1-nodejs-2bwzn-show-summary": Pod "1-nodejs-2bwzn-show-summary-pod" is invalid: spec.activeDeadlineSeconds: Invalid value: 0: must be between 1 and 2147483647, inclusive. Maybe missing or invalid Task mfrances/summary',
+                reason: 'CouldntGetTask',
+                status: 'False',
+                type: 'Succeeded',
+              },
+            ],
+            podName: '',
+            startTime: '2022-08-23T19:08:18Z',
+            taskSpec: {
+              description: 'App Studio Summary Pipeline Task.',
+              params: [
+                {
+                  description: 'pipeline-run to annotate',
+                  name: 'pipeline-run-name',
+                  type: 'string',
+                },
+                {
+                  description: 'Git URL',
+                  name: 'git-url',
+                  type: 'string',
+                },
+                {
+                  description: 'Image URL',
+                  name: 'image-url',
+                  type: 'string',
+                },
+              ],
+              steps: [
+                {
+                  image:
+                    'registry.redhat.io/openshift4/ose-cli@sha256:e6b307c51374607294d1756b871d3c702251c396efdd44d4ef8db68e239339d3',
+                  name: 'appstudio-summary',
+                  resources: {},
+                  script: [
+                    '#!/usr/bin/env bash\necho\necho "App Studio Build Summary:"\necho\necho "Build repository: $(params.git-url)"\necho "Generated Image is in : $(params.image-url)"\necho\noc annotate pipelinerun $(params.pipeline-run-name) build.appstudio.openshift.io/repo=$(params.git-url)\noc annotate pipelinerun $(params.pipeline-run-name) build.appstudio.openshift.io/image=$(params.image-url)\n\necho "Output is in the following annotations:"\n\necho "Build Repo is in \'build.appstudio.openshift.io/repo\' "\necho \'oc get pr $(params.pipeline-run-name) -o jsonpath="{.metadata.annotations.build\\.appstudio\\.openshift\\.io/repo}"\'\n\necho "Build Image is in \'build.appstudio.openshift.io/image\' "\necho \'oc get pr $(params.pipeline-run-name) -o jsonpath="{.metadata.annotations.build\\.appstudio\\.openshift\\.io/image}"\'\n\necho End Summary\n',
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
+  {
+    apiVersion: 'tekton.dev/v1beta1',
+    kind: 'PipelineRun',
+    metadata: {
+      name: '1-nodejs-2bwzn',
+      uid: '94c9a362-f5a5-4e67-b642-c61c6d1134dc',
+      namespace: 'karthik-jk',
+      labels: {
+        'build.appstudio.openshift.io/component': '1-nodejs',
+        'pipelines.openshift.io/runtime': 'generic',
+        'pipelines.openshift.io/strategy': 'docker',
+        'tekton.dev/pipeline': 'docker-build',
+        'pipelines.openshift.io/used-by': 'build-cloud',
+        'build.appstudio.openshift.io/build': 'true',
+        'build.appstudio.openshift.io/application': 'frontend-app',
+        'build.appstudio.openshift.io/type': 'build',
+        'pipelines.appstudio.openshift.io/type': 'build',
+        'build.appstudio.openshift.io/version': '0.1',
+        'pipelinesascode.tekton.dev/sha': '010101010110',
+      },
+      annotations: {
+        'build.appstudio.openshift.io/component': '1-nodejs',
+        'pipelines.openshift.io/runtime': 'generic',
       },
     },
     spec: {
