@@ -3,6 +3,7 @@ import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
+import { Tokens } from '../utils/Tokens';
 
 describe('Create Component from Private Git Source', () => {
   const addComponent = new AddComponentPage();
@@ -21,6 +22,7 @@ describe('Create Component from Private Git Source', () => {
   after(function () {
     Common.openApplicationURL(applicationName);
     Applications.deleteApplication(applicationName);
+    Tokens.removeBindingsAndTokens();
   });
 
   describe('Creating Component', () => {
