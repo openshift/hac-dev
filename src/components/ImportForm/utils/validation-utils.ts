@@ -21,6 +21,7 @@ const createSourceValidationSchema = (containerImageSupport: boolean) =>
   yup.object({
     source: yup
       .string()
+      .trim()
       .max(2000, 'Please enter a URL that is less than 2000 characters.')
       .matches(
         containerImageSupport ? combineRegExps(gitUrlRegex, containerImageRegex) : gitUrlRegex,
