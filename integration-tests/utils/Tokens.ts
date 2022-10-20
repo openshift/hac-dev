@@ -1,3 +1,5 @@
+import { Common } from "./Common";
+
 export class Tokens {
 
     static removeBindingsAndTokens(){
@@ -14,7 +16,7 @@ export class Tokens {
 function removeAllResources(token: string, namespace: string, resourceType : string) {
     const getResources = {
         method: 'GET',
-        url: `https://env-ephemeral-alqcwz-yjsfmfej.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com/api/k8s/apis/appstudio.redhat.com/v1beta1/namespaces/${namespace}/${resourceType}s`,
+        url: `${Common.getOrigin()}/api/k8s/apis/appstudio.redhat.com/v1beta1/namespaces/${namespace}/${resourceType}s`,
         headers: {
             authorization: `Bearer ${token}`,
             accept: 'application/json',
@@ -26,7 +28,7 @@ function removeAllResources(token: string, namespace: string, resourceType : str
             let resourceName = item.metadata.name;
             const removeResources = {
                 method: 'DELETE',
-                url: `https://env-ephemeral-alqcwz-yjsfmfej.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com/api/k8s/apis/appstudio.redhat.com/v1beta1/namespaces/${namespace}/${resourceType}s/${resourceName}`,
+                url: `${Common.getOrigin()}/api/k8s/apis/appstudio.redhat.com/v1beta1/namespaces/${namespace}/${resourceType}s/${resourceName}`,
                 headers: {
                     authorization: `Bearer ${token}`,
                     accept: 'application/json',
