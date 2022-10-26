@@ -49,7 +49,7 @@ export class HACBSApplications {
         }
 
         this.goToComponentsTab();
-        cy.get(componentsTabPO.componentListItem.replace('{0}', componentName), { timeout: 720000 }).contains(/.*Build Succeeded.*/);
+        cy.get(componentsTabPO.componentListItem.replace('{0}', componentName), { timeout: 100000 }).contains(/.*Build Succeeded.*/);
     }
 
     static getComponentListItem(application: string) {
