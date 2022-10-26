@@ -1,14 +1,19 @@
 import * as React from 'react';
 import { Button, PageSection, PageSectionVariants, Text } from '@patternfly/react-core';
-import { Commit } from '../../../types';
+import { Commit, PipelineRunKind } from '../../../types';
 import { getCommitDisplayName } from '../../../utils/commits-utils';
 
 type ApplicationOverviewTabProps = {
   commit: Commit;
   onLearnMore: () => void;
+  selectedPipelineRun: PipelineRunKind;
 };
 
-const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ commit, onLearnMore }) => (
+const CommitOverviewTab: React.FC<ApplicationOverviewTabProps> = ({
+  commit,
+  onLearnMore,
+  selectedPipelineRun,
+}) => (
   <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light} isFilled>
     <Text className="pf-u-mt-lg pf-u-mb-lg">
       Events progression triggered by the commit.
@@ -22,7 +27,8 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ commit,
       </Button>
     </Text>
     <>Overview of {getCommitDisplayName(commit)}</>
+    {selectedPipelineRun && <div>selected:{selectedPipelineRun.metadata.name}</div>}
   </PageSection>
 );
 
-export default ApplicationOverviewTab;
+export default CommitOverviewTab;

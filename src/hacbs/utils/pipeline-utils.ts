@@ -17,15 +17,15 @@ export const getDuration = (seconds: number, long?: boolean): string => {
     min %= 60;
   }
   if (hr > 0) {
-    duration += long ? `${hr} hour` : `${hr} h`;
+    duration += long ? (hr === 1 ? `${hr} hour` : `${hr} hours`) : `${hr} h`;
     duration += ' ';
   }
   if (min > 0) {
-    duration += long ? `${min} minute` : `${min} m`;
+    duration += long ? (min === 1 ? `${min} minute` : `${min} minutes`) : `${min} m`;
     duration += ' ';
   }
   if (sec > 0) {
-    duration += long ? `${sec} second` : `${sec} s`;
+    duration += long ? (sec === 1 ? `${sec} second` : `${sec} seconds`) : `${sec} s`;
   }
 
   return duration.trim();

@@ -80,6 +80,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       setDetecting(false);
       // To avoid formik validating on old values due to a formik bug - https://github.com/jaredpalmer/formik/issues/2083
       setTimeout(() => setFieldValue('isDetected', true));
+      setTimeout(() => setFieldValue('detectionFailed', false));
       const componentValues = transformComponentValues(detectedComponents)[0];
       const component = patchSourceUrl(componentValues.componentStub, source);
       setFieldValue(`${fieldPrefix}.componentStub`, component);

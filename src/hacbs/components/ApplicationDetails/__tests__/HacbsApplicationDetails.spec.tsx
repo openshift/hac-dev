@@ -1,10 +1,10 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { render, screen, configure } from '@testing-library/react';
+import { render, screen, configure, fireEvent, act, waitFor } from '@testing-library/react';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { mockApplication } from '../../../../components/ApplicationDetailsView/__data__/mock-data';
-import { applicationQuickstartContent } from '../ApplicationQuickstartContent';
+import { HACBS_APPLICATION_MODAL_HIDE_KEY } from '../ApplicationModal';
 import HacbsApplicationDetails from '../HacbsApplicationDetails';
 
 jest.mock('react-router-dom', () => ({
@@ -28,6 +28,9 @@ configure({ testIdAttribute: 'data-test' });
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('HacbsApplicationDetails', () => {
+  beforeEach(() => {
+    localStorage.removeItem(HACBS_APPLICATION_MODAL_HIDE_KEY);
+  });
   it('should render spinner if application data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
     const set = jest.fn();
@@ -51,40 +54,19 @@ describe('HacbsApplicationDetails', () => {
     expect(screen.queryByTestId('details__title').innerHTML).toBe('Test Application');
   });
 
-  it('should only display quick start on first run', () => {
-    const gsApp = 'hacbs-getting-started-app';
-    const chromeStore = 'hac-dev';
-
-    localStorage.removeItem('hacbs/showApplicationQuickstart');
-    let showQuickStart = localStorage.getItem('hacbs/showApplicationQuickstart');
-    expect(showQuickStart).toBeNull();
+  it('should display overview modal on first run', async () => {
     watchResourceMock.mockReturnValueOnce([mockApplication, true]);
-    const set = jest.fn();
-    const toggle = jest.fn();
-    useChromeMock.mockReturnValue({
-      quickStarts: { set, toggle },
+    render(<HacbsApplicationDetails applicationName="test" />);
+    expect(screen.getByTestId('application-modal-content')).toBeVisible();
+
+    act(() => {
+      const dismissButton = screen.getByTestId('application-modal-dismiss-btn');
+      fireEvent.click(dismissButton);
     });
 
-    render(<HacbsApplicationDetails applicationName="test" />);
-    showQuickStart = localStorage.getItem('hacbs/showApplicationQuickstart');
-    // localStorage key doesn't exist, quickstart set/toggle should be called
-    expect(showQuickStart).toEqual('false');
-    expect(set).toHaveBeenCalledWith(chromeStore, [applicationQuickstartContent]);
-    expect(toggle).toHaveBeenCalledWith(gsApp);
-    set.mockClear();
-    toggle.mockClear();
-
-    render(<HacbsApplicationDetails applicationName="test" />);
-    // localStorage key exists, quickstart set/toggle should not be called
-    expect(set).not.toHaveBeenCalled();
-    expect(toggle).not.toHaveBeenCalled();
-    set.mockClear();
-    toggle.mockClear();
-
-    localStorage.removeItem('hacbs/showApplicationQuickstart');
-    render(<HacbsApplicationDetails applicationName="test" />);
-    // localStorage key removed, quickstart set/toggle should be called
-    expect(set).toHaveBeenCalledWith(chromeStore, [applicationQuickstartContent]);
-    expect(toggle).toHaveBeenCalledWith(gsApp);
+    waitFor(() => {
+      expect(localStorage[HACBS_APPLICATION_MODAL_HIDE_KEY]).toBe('true');
+      expect(screen.getByTestId('application-modal-content')).not.toBeVisible();
+    });
   });
 });

@@ -10,6 +10,7 @@ import {
   Bullseye,
   Spinner,
 } from '@patternfly/react-core';
+import ApplicationModal from '../../../ApplicationModal';
 import { WorkflowGraph } from '../visualization';
 import { useAppWorkflowData } from '../visualization/hooks/useAppWorkflowData';
 import { getTopologyNodesEdges } from '../visualization/utils/visualization-utils';
@@ -21,6 +22,16 @@ type AppWorkflowSectionProps = {
 };
 
 const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName }) => {
+  const [showApplicationModal, setShowApplicationModal] = React.useState<boolean>(false);
+
+  const openModal = () => {
+    setShowApplicationModal(true);
+  };
+
+  const closeModal = () => {
+    setShowApplicationModal(false);
+  };
+
   const [workflowNodes, loaded] = useAppWorkflowData(applicationName);
   if (!loaded) {
     return (
@@ -32,28 +43,39 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
   const { nodes, edges } = getTopologyNodesEdges(workflowNodes);
 
   return (
-    <Grid hasGutter className="hacbs-app-workflow">
-      <GridItem>
-        <TextContent>
-          <Text component={TextVariants.h3}>Appplication workflow</Text>
-          <Text component={TextVariants.p}>Manage your CI/CD workflow</Text>
-        </TextContent>
-      </GridItem>
-      <GridItem>
-        <WorkflowGraph nodes={nodes} edges={edges} />
-      </GridItem>
-      <GridItem>
-        <Button
-          variant="secondary"
-          component={(props) => (
-            <Link {...props} to={`/app-studio/import?application=${applicationName}`} />
-          )}
-          data-test="add-component"
-        >
-          Add component
-        </Button>
-      </GridItem>
-    </Grid>
+    <React.Fragment>
+      <ApplicationModal showApplicationModal={showApplicationModal} onClose={closeModal} />
+      <Grid hasGutter className="hacbs-app-workflow">
+        <GridItem>
+          <TextContent>
+            <Text component={TextVariants.h3}>Appplication pipeline configuration.</Text>
+            <Text component={TextVariants.p}>
+              This is a visualization of your application pipeline, from source code, through tests
+              to deployments.
+              <Button className="pf-u-ml-xs pf-u-pl-xs" variant="link" onClick={openModal}>
+                learn more
+              </Button>
+            </Text>
+            <Text component={TextVariants.h3}>Appplication workflow</Text>
+            <Text component={TextVariants.p}>Manage your CI/CD workflow</Text>
+          </TextContent>
+        </GridItem>
+        <GridItem>
+          <WorkflowGraph nodes={nodes} edges={edges} />
+        </GridItem>
+        <GridItem>
+          <Button
+            variant="secondary"
+            component={(props) => (
+              <Link {...props} to={`/app-studio/import?application=${applicationName}`} />
+            )}
+            data-test="add-component"
+          >
+            Add component
+          </Button>
+        </GridItem>
+      </Grid>
+    </React.Fragment>
   );
 };
 
