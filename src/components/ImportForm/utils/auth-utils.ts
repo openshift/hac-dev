@@ -51,7 +51,7 @@ export const useAccessCheck = (
             namespace,
           },
           spec: {
-            repoUrl: source,
+            repoUrl: source.trim(),
           },
         },
       }).then((res) => {

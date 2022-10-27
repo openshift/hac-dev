@@ -62,4 +62,8 @@ export class Common {
         .should('contain', 'Done running the script');
     }
   }
+
+  static getOrigin(){
+    return new URL(Cypress.env('HAC_BASE_URL')).origin;
+  }
 }

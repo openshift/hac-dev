@@ -71,7 +71,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
 
   const handleSourceChange = React.useCallback(() => {
     const searchTerm = source;
-    const isGitUrlValid = gitUrlRegex.test(searchTerm);
+    const isGitUrlValid = gitUrlRegex.test(searchTerm?.trim());
     const isContainerImageValid = !gitOnly && containerImageRegex.test(searchTerm);
     setShowAuthOptions(false);
     setShowGitOptions(false);
