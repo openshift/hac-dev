@@ -4,6 +4,7 @@ import { HACBSApplications } from "../../utils/HACBSApplications";
 describe('Trigger Pipelineruns using the HACBS UI', () => {
     const LOCAL_STORAGE_KEY_GS_MODAL = 'hacbs/getting-started-modal';
     const LOCAL_STORAGE_KEY_QUICKSTART = 'hacbs/showApplicationQuickstart';
+    const LOCAL_STORAGE_KEY_APPLICATION_MODAL = 'hacbs/showApplicationModal';
     const applicationName = "my-application";
     const publicRepo = "https://github.com/dheerajodha/devfile-sample-code-with-quarkus";
     const componentName = 'java-quarkus';
@@ -13,6 +14,7 @@ describe('Trigger Pipelineruns using the HACBS UI', () => {
         // Enable HACBS
         localStorage.setItem('hacbs', 'true');
         localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
+        localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
         // Need to reload the page after enabling HACBS via localStorage
         cy.reload();
     });
@@ -20,6 +22,7 @@ describe('Trigger Pipelineruns using the HACBS UI', () => {
     beforeEach(function () {
         localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
         localStorage.setItem(LOCAL_STORAGE_KEY_QUICKSTART, 'true');
+        localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
     });
 
     after(function () {
