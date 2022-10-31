@@ -39,8 +39,9 @@ const webpackProxy = {
     },
     {
       context: (path) => path.includes('/api/k8s'),
-      target:
-        'https://api-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com:443',
+      target: process.env.KCP_SERVER
+        ? process.env.KCP_SERVER
+        : 'https://api-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com:443',
       secure: false,
       changeOrigin: true,
       autoRewrite: true,
@@ -49,8 +50,9 @@ const webpackProxy = {
     },
     {
       context: (path) => path.includes('/wss/k8s'),
-      target:
-        'wss://api-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com:443',
+      target: process.env.KCP_SERVER
+        ? process.env.KCP_SERVER.replace('https://', 'wss://')
+        : 'wss://api-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com:443',
       secure: false,
       changeOrigin: true,
       autoRewrite: true,

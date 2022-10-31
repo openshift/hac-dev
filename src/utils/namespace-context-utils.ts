@@ -19,9 +19,16 @@ export const useActiveNamespace = (): NamespaceContextData => {
 
   React.useEffect(() => {
     const fetchProjects = async () => {
-      const projects: any = await k8sListResourceItems({
-        model: ProjectModel,
-      });
+      let projects;
+      try {
+        projects = await k8sListResourceItems({
+          model: ProjectModel,
+        });
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching projects', e);
+      }
+
       // Lock in the namespace
       let ns = null;
       if (Array.isArray(projects)) {
@@ -43,12 +50,7 @@ export const useActiveNamespace = (): NamespaceContextData => {
       setLoaded(true);
     };
 
-    try {
-      fetchProjects();
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-    }
+    fetchProjects();
   }, []);
 
   return { namespace: activeNamespace, namespaceLoaded: loaded };
