@@ -109,7 +109,6 @@ function createBuildStep(triggerPipelinerun: boolean) {
     if (triggerPipelinerun) {
         const outputImageNameSuffix = `${new Date().getTime()}`;
 
-        cy.exec('chmod u+x ./trigger-pipelineruns-script.sh');
         cy.exec('./trigger-pipelineruns-script.sh ' + outputImageNameSuffix).then((result) => {
             cy.log(result.stderr);
         });
