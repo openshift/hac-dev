@@ -27,6 +27,18 @@ module.exports = (on, config) => {
       // eslint-disable-next-line no-console
       console.table(data);
       return null;
+    },
+    readFileIfExists(filename: string) {
+      if (fs.existsSync(filename)) {
+        return fs.readFileSync(filename, 'utf8');
+      }
+      return null
+    },
+    deleteFile(filename: string) {
+      if (fs.existsSync(filename)) {
+        fs.unlinkSync(filename);
+      }
+      return null;
     }
   });
 
