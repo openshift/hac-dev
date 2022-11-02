@@ -15,7 +15,12 @@ const WorkflowEdge: React.FunctionComponent<WorkflowEdgeProps> = ({ element, cla
   const startPoint = element.getStartPoint();
   const endPoint = element.getEndPoint();
   const sourceNode = element.getSource();
+  const targetNode = element.getTarget();
   const groupClassName = css(styles.topologyEdge, className);
+
+  if (sourceNode.getData().hidden || targetNode.getData().hidden) {
+    return null;
+  }
 
   return (
     <g data-test="workflow-edge" className={groupClassName} fillOpacity={0}>

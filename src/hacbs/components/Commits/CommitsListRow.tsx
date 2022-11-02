@@ -37,10 +37,10 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
       <TableData className={commitsTableColumnClasses.component}>
         {obj.components.length > 0
           ? obj.components.map((component, index) => (
-              <>
+              <React.Fragment key={component}>
                 {component.trim()}
                 {index !== obj.components.length - 1 && ' , '}
-              </>
+              </React.Fragment>
             ))
           : '-'}
       </TableData>

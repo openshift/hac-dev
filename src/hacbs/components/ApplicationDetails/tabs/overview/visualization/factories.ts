@@ -1,5 +1,6 @@
 import {
   ComponentFactory,
+  DefaultTaskGroup,
   GraphComponent,
   ModelKind,
   SpacerNode,
@@ -18,6 +19,8 @@ export const componentFactory: ComponentFactory = (kind: ModelKind, type: string
       switch (type) {
         case NodeType.WORKFLOW_NODE:
           return WorkflowNode;
+        case NodeType.WORKFLOW_GROUP:
+          return DefaultTaskGroup;
         case NodeType.SPACER_NODE:
           return SpacerNode;
         default:

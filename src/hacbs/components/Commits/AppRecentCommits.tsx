@@ -8,7 +8,10 @@ import {
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateSecondaryActions,
+  PageSection,
+  PageSectionVariants,
   Spinner,
+  Text,
   Title,
 } from '@patternfly/react-core';
 import { OutlinedFileImageIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-file-image-icon';
@@ -42,9 +45,17 @@ const AppRecentCommits = ({ applicationName }) => {
 
   if (!loaded) {
     return (
-      <Bullseye>
-        <Spinner />
-      </Bullseye>
+      <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light} isFilled>
+        <Title size="lg" headingLevel="h3" className="pf-c-title pf-u-mt-lg pf-u-mb-sm">
+          Recent commits
+        </Title>
+        <Text className="pf-u-mb-lg">
+          Monitor your commits and their pipeline progression across all components
+        </Text>
+        <Bullseye>
+          <Spinner />
+        </Bullseye>
+      </PageSection>
     );
   }
 

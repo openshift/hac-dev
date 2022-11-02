@@ -1,0 +1,58 @@
+.hacbs-workload-node__tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pf-global--spacer--md);
+  text-align: left;
+  padding: var(--pf-global--spacer--md);
+
+  &-title {
+    font-size: var(--pf-global--icon--FontSize--md);
+  }
+
+  &-status {
+    &-area {
+      display: grid;
+      grid-template-columns: auto auto;
+      column-gap: var(--pf-global--spacer--md);
+      row-gap: var(--pf-global--spacer--sm);
+    }
+
+    &-icon {
+      &.pf-m-danger {
+        color: var(--pf-global--danger-color--100);
+      }
+
+      &.pf-m-success {
+        color: var(--pf-global--success-color--100);
+      }
+
+      &.pf-m-warning {
+        color: var(--pf-global--warning-color--100);
+      }
+
+      &.pf-m-skipped {
+        color: var(--pf-global--secondary-color--100);
+      }
+
+      &.pf-m-in-progress {
+        color: var(--pf-global--info-color--100);
+      }
+
+      &.pf-m-pending {
+        color: var(--pf-global--BorderColor--100);
+      }
+
+      &.pf-m-running {
+        color: var(--pf-global--BorderColor--100);
+      }
+
+      &.pf-m-idle {
+        color: var(--pf-global--BorderColor--100);
+      }
+    }
+  }
+  &-links {
+    display: flex;
+    gap: var(--pf-global--spacer--md);
+  }
+}

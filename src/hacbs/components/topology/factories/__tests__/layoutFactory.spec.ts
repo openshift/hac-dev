@@ -20,6 +20,7 @@ describe('layoutFactory', () => {
 
   test('should return layout for valid layouts options', () => {
     expect(layoutFactory(PipelineLayout.PIPELINERUN_VISUALIZATION, graph)).toBeDefined();
+    expect(layoutFactory(PipelineLayout.EXPANDED_WORKFLOW_VISUALIZATION, graph)).toBeDefined();
     expect(layoutFactory(PipelineLayout.WORKFLOW_VISUALIZATION, graph)).toBeDefined();
   });
 });

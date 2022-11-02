@@ -3,6 +3,9 @@
   background: var(--pf-global--BackgroundColor--200);
   border-radius: 20px;
   font-size: var(--pf-global--FontSize--xs);
-  max-width: 100%;
+  width: 100%;
   overflow: auto;
+  .pf-topology-pipelines__pill-status {
+    font-size: var(--pf-global--FontSize--md);
+  }
 }

@@ -33,6 +33,7 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
 }) => {
   const [controller, setController] = React.useState<Controller>(null);
   const [maxSize, setMaxSize] = React.useState<Size>(null);
+  const layoutRef = React.useRef<string>();
 
   const onLayoutUpdate = React.useCallback(
     (nodes: Node[]) => {
@@ -54,14 +55,14 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
         nodeBounds.map((bounds) => bounds.y).reduce((y1, y2) => Math.max(y1, y2), 0),
       );
 
-      const verticalMargin = 20;
-      const horizontalMargin = 20;
+      const verticalMargin = 35;
+      const horizontalMargin = 35;
 
       const finallyTaskHeight = maxObject.y + maxHeight + DROP_SHADOW_SPACING + verticalMargin * 2;
       const regularTaskHeight = maxY + 50 + DROP_SHADOW_SPACING + verticalMargin * 2;
 
       setMaxSize({
-        height: Math.max(finallyTaskHeight, regularTaskHeight),
+        height: Math.max(finallyTaskHeight, regularTaskHeight) + 15,
         width: maxX + maxWidth + DROP_SHADOW_SPACING + horizontalMargin * 2,
       });
     },
@@ -79,7 +80,8 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
       });
       setController(visualization);
     } else {
-      controller.fromModel(model);
+      controller.fromModel(model, model.graph.layout === layoutRef.current);
+      layoutRef.current = model.graph.layout;
       controller.getGraph().layout();
     }
   }, [controller, model, onLayoutUpdate, layoutFactory, componentFactory]);

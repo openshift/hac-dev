@@ -3,13 +3,13 @@ import { Button, PageSection, PageSectionVariants, Text } from '@patternfly/reac
 import { Commit, PipelineRunKind } from '../../../types';
 import { getCommitDisplayName } from '../../../utils/commits-utils';
 
-type ApplicationOverviewTabProps = {
+type CommitOverviewTabProps = {
   commit: Commit;
   onLearnMore: () => void;
   selectedPipelineRun: PipelineRunKind;
 };
 
-const CommitOverviewTab: React.FC<ApplicationOverviewTabProps> = ({
+const CommitOverviewTab: React.FC<CommitOverviewTabProps> = ({
   commit,
   onLearnMore,
   selectedPipelineRun,
