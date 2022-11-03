@@ -8,6 +8,7 @@ const hacbs = {
     HACBSImport: resolve(__dirname, '../src/hacbs/pages/ImportPage'),
     HACBSIntegrationTest: resolve(__dirname, '../src/hacbs/pages/IntegrationTestPage'),
     CommitsPage: resolve(__dirname, '../src/hacbs/pages/CommitsPage'),
+    IntegrationTestDetails: resolve(__dirname, '../src/hacbs/pages/IntegrationTestDetailsPage'),
   },
   extensions: [
     {
@@ -108,6 +109,32 @@ const hacbs = {
         exact: true,
         component: {
           $codeRef: 'CommitsPage',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/:appName/test/:testName',
+        exact: true,
+        component: {
+          $codeRef: 'IntegrationTestDetails',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/:appName/test/:testName',
+        exact: true,
+        component: {
+          $codeRef: 'IntegrationTestDetails',
         },
       },
       flags: {

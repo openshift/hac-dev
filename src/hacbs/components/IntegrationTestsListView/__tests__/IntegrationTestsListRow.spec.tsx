@@ -3,6 +3,10 @@ import { render } from '@testing-library/react';
 import { MockIntegrationTests } from '../__data__/mock-integration-tests';
 import IntegrationTestListRow from '../IntegrationTestListRow';
 
+jest.mock('react-router-dom', () => ({
+  Link: (props) => <>{props.children}</>,
+}));
+
 describe('IntegrationTestListRow', () => {
   it('should render integration test info', () => {
     const integrationTest = MockIntegrationTests[0];
