@@ -1,8 +1,13 @@
+import { IntegrationTestLabels } from '../../ImportForm/types';
+
 export const MockIntegrationTests = [
   {
     apiVersion: 'appstudio.redhat.com/v1alpha1',
     kind: 'IntegrationTestScenario',
     metadata: {
+      labels: {
+        [IntegrationTestLabels.OPTIONAL]: 'true',
+      },
       annotations: {
         'app.kubernetes.io/display-name': 'Test 1',
       },
