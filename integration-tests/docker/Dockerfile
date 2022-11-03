@@ -7,4 +7,6 @@ ENV OC_DOWNLOAD_URL="https://downloads-openshift-console.apps.hac-devsandbox.5un
 RUN microdnf install --assumeyes which && \
     curl -L -o /tmp/oc.tar ${OC_DOWNLOAD_URL} && \
     tar -xf /tmp/oc.tar -C /usr/bin
-    
+
+RUN groupadd -r hacdev && useradd -r -g hacdev hacdev
+USER hacdev:hacdev

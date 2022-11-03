@@ -65,9 +65,12 @@ mkdir -p $WORKSPACE/artifacts
 
 set +e
 
-docker run -u 0 -v $WORKSPACE/artifacts:/e2e/cypress:Z -v $PWD/integration-tests:/e2e:Z -w /e2e -e CYPRESS_PR_CHECK=true -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/app-studio -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` -e CYPRESS_GH_TOKEN=${CYPRESS_GH_TOKEN} -e CYPRESS_QUAY_TOKEN=${CYPRESS_QUAY_TOKEN} quay.io/hacdev/hac-tests:latest bash -c "startcypress run"
+docker run -v $WORKSPACE/artifacts:/e2e/cypress:Z -v $PWD/integration-tests:/e2e:Z -w /e2e -e CYPRESS_PR_CHECK=true -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/app-studio -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` -e CYPRESS_GH_TOKEN=${CYPRESS_GH_TOKEN} -e CYPRESS_QUAY_TOKEN=${CYPRESS_QUAY_TOKEN} quay.io/hacdev/hac-tests:latest bash -c "startcypress run"
 TEST_RUN=$?
+
+# This needs to stay there to grant Jenkins rights to clean the workspace 
 docker run -u 0 -v $WORKSPACE/artifacts:/e2e/cypress:Z -v $PWD/integration-tests:/e2e:Z -w /e2e quay.io/hacdev/hac-tests:latest bash -c "chmod -v -R a+rwx,-t /e2e/cypress"
+
 bonfire namespace release ${NAMESPACE}
 
 # teardown_docker
