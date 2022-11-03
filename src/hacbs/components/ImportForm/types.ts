@@ -8,6 +8,14 @@ export type IntegrationTestFormValues = {
   optional: boolean;
 };
 
+export enum IntegrationTestAnnotations {
+  DISPLAY_NAME = 'app.kubernetes.io/display-name',
+}
+
+export enum IntegrationTestLabels {
+  OPTIONAL = 'test.appstudio.openshift.io/optional',
+}
+
 export type FormValues = ImportFormValues & {
   applicationData?: K8sResourceCommon;
   integrationTest: IntegrationTestFormValues;
