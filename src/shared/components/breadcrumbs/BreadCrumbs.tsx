@@ -5,9 +5,10 @@ import { Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
 type BreadCrumbsProps = {
   breadcrumbs: { name: string; path: string }[];
   className?: string;
+  breadcrumbItems?: React.ReactNode;
 };
 
-const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ breadcrumbs, className }) => (
+const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ breadcrumbs, className, breadcrumbItems }) => (
   <Breadcrumb className={className}>
     {breadcrumbs.map((crumb, i, { length }) => {
       const isLast = i === length - 1;
@@ -28,6 +29,7 @@ const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ breadcrumbs, className }) => 
         </BreadcrumbItem>
       );
     })}
+    {breadcrumbItems}
   </Breadcrumb>
 );
 
