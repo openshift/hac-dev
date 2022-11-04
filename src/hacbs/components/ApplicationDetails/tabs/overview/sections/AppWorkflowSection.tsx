@@ -48,7 +48,7 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
       <Grid hasGutter className="hacbs-app-workflow">
         <GridItem>
           <TextContent>
-            <Text component={TextVariants.h3}>Appplication pipeline configuration.</Text>
+            <Text component={TextVariants.h3}>Application pipeline configuration.</Text>
             <Text component={TextVariants.p}>
               This is a visualization of your application pipeline, from source code, through tests
               to deployments.
@@ -56,8 +56,6 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
                 learn more
               </Button>
             </Text>
-            <Text component={TextVariants.h3}>Appplication workflow</Text>
-            <Text component={TextVariants.p}>Manage your CI/CD workflow</Text>
           </TextContent>
         </GridItem>
         <GridItem>
