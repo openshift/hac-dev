@@ -15,4 +15,22 @@ describe('IntegrationTestListRow', () => {
     expect(cells[1].innerHTML.includes(integrationTest.spec.bundle)).toBeTruthy();
     expect(cells[3].innerHTML).toBe(integrationTest.spec.pipeline);
   });
+
+  it('should read the optional field from label', () => {
+    const optionalIntegrationTest = MockIntegrationTests[0];
+    const wrapper = render(<IntegrationTestListRow obj={optionalIntegrationTest} columns={[]} />, {
+      container: document.createElement('tr'),
+    });
+    const cells = wrapper.container.getElementsByTagName('td');
+    expect(cells[2].innerHTML).toBe('Optional');
+  });
+
+  it('should show mandatory value if the optional labels are not set', () => {
+    const mandatoryIntegrationTest = MockIntegrationTests[1];
+    const wrapper = render(<IntegrationTestListRow obj={mandatoryIntegrationTest} columns={[]} />, {
+      container: document.createElement('tr'),
+    });
+    const cells = wrapper.container.getElementsByTagName('td');
+    expect(cells[2].innerHTML).toBe('Mandatory');
+  });
 });
