@@ -13,7 +13,7 @@ import ExternalLink from '../../../../shared/components/links/ExternalLink';
 import { Timestamp } from '../../../../shared/components/timestamp/Timestamp';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { IntegrationTestLabels } from '../../ImportForm/types';
-import GetMetadataList from '../../PipelineRunDetailsView/GetMetadataList';
+import MetadataList from '../../PipelineRunDetailsView/MetadataList';
 
 interface IntegrationTestOverviewTabProps {
   integrationTest: IntegrationTestScenarioKind;
@@ -54,13 +54,13 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
               <DescriptionListGroup>
                 <DescriptionListTerm>Labels</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <GetMetadataList metadata={integrationTest.metadata?.labels} />
+                  <MetadataList metadata={integrationTest.metadata?.labels} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>Annotations</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <GetMetadataList metadata={integrationTest.metadata?.annotations} />
+                  <MetadataList metadata={integrationTest.metadata?.annotations} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
@@ -68,10 +68,6 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
                 <DescriptionListDescription>
                   <Timestamp timestamp={integrationTest.metadata.creationTimestamp ?? '-'} />
                 </DescriptionListDescription>
-              </DescriptionListGroup>
-              <DescriptionListGroup>
-                <DescriptionListTerm>Owner</DescriptionListTerm>
-                <DescriptionListDescription>-</DescriptionListDescription>
               </DescriptionListGroup>
             </DescriptionList>
           </FlexItem>

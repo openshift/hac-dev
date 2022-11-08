@@ -3,7 +3,6 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner, Title } from '@patternfly/react-core';
 import { Table } from '../../../../shared';
 import { useNamespace } from '../../../../utils/namespace-context-utils';
-import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../../models';
 import { PipelineRunKind } from '../../../types';
 import { IntegrationTestLabels } from '../../ImportForm/types';
@@ -24,7 +23,7 @@ const IntegrationTestPipelineRunTab: React.FC<IntegrationTestPipelineRunTabProps
     isList: true,
     selector: {
       matchLabels: {
-        [PipelineRunLabel.APPLICATION]: applicationName,
+        [IntegrationTestLabels.APPLICATION]: applicationName,
         [IntegrationTestLabels.SCENARIO]: testName,
       },
     },

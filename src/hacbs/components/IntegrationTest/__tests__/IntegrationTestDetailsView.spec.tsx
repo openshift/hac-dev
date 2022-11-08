@@ -9,10 +9,6 @@ import { IntegrationTestScenarioGroupVersionKind } from '../../../models';
 import { MockIntegrationTests } from '../../IntegrationTestsListView/__data__/mock-integration-tests';
 import IntegrationTestDetailsView from '../IntegrationTestDetailsView';
 
-jest.mock('react-i18next', () => ({
-  useTranslation: jest.fn(() => ({ t: (x) => x })),
-}));
-
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));

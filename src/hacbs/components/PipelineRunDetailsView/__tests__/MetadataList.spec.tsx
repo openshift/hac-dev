@@ -1,23 +1,23 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
-import GetMetadataList from '../GetMetadataList';
+import MetadataList from '../MetadataList';
 
 describe('GetMetadataList', () => {
   it('should render "-" for empty metadata', () => {
-    render(<GetMetadataList metadata={null} />);
+    render(<MetadataList metadata={null} />);
     screen.getByText('-');
   });
 
   it('should render only one ListItem', () => {
-    render(<GetMetadataList metadata={{ [PipelineRunLabel.APPLICATION]: 'app' }} />);
+    render(<MetadataList metadata={{ [PipelineRunLabel.APPLICATION]: 'app' }} />);
     expect(screen.getAllByRole('listitem').length).toBe(1);
     expect(screen.getByText('appstudio.openshift.io/application=app'));
   });
 
   it('should render three items in List', () => {
     render(
-      <GetMetadataList
+      <MetadataList
         metadata={{
           [PipelineRunLabel.APPLICATION]: 'app',
           [PipelineRunLabel.PIPELINE_TYPE]: 'test',

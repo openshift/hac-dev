@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
@@ -17,7 +18,7 @@ import { useNamespace } from '../../../utils/namespace-context-utils';
 import { IntegrationTestScenarioGroupVersionKind } from '../../models';
 import { IntegrationTestScenarioKind } from '../../types/coreBuildService';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
-import { integrationTestDeleteModal } from '../IntegrationTestsListView/useIntegrationTestActions';
+import { integrationTestDeleteModalAndNavigate } from '../IntegrationTestsListView/useIntegrationTestActions';
 import IntegrationTestOverviewTab from './tabs/IntegrationTestOverviewTab';
 import IntegrationTestPipelineRunTab from './tabs/IntegrationTestPipelineRunTab';
 
@@ -32,6 +33,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
 }) => {
   const namespace = useNamespace();
   const showModal = useModalLauncher();
+  const navigate = useNavigate();
 
   const [integrationTest, loaded, loadErr] = useK8sWatchResource<IntegrationTestScenarioKind>({
     groupVersionKind: IntegrationTestScenarioGroupVersionKind,
@@ -70,7 +72,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
           },
           {
             path: `/app-studio/applications/${applicationName}?activeTab=integrationtests`,
-            name: 'integration-test',
+            name: 'Integration tests',
           },
           {
             path: `/app-studio/applications/${applicationName}/test/${testName}`,
@@ -89,9 +91,17 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
             onClick: () => {},
           },
           {
-            onClick: () => showModal(integrationTestDeleteModal(integrationTest)),
+            onClick: () =>
+              showModal<{ submitClicked: boolean }>(
+                integrationTestDeleteModalAndNavigate(integrationTest),
+              ).closed.then(({ submitClicked }) => {
+                if (submitClicked)
+                  navigate(
+                    `/app-studio/applications/${applicationName}?activeTab=integrationtests`,
+                  );
+              }),
             key: `delete-${integrationTest.metadata.name.toLowerCase()}`,
-            label: 'Remove',
+            label: 'Delete',
           },
         ]}
         tabs={[

@@ -19,7 +19,7 @@ import { Timestamp } from '../../../../shared/components/timestamp/Timestamp';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { PipelineRunKind } from '../../../types';
 import { calculateDuration } from '../../../utils/pipeline-utils';
-import GetMetadataList from '../GetMetadataList';
+import MetadataList from '../MetadataList';
 import PipelineRunVisualization from '../PipelineRunVisualization';
 import RelatedPipelineRuns from '../RelatedPipelineRuns';
 
@@ -64,13 +64,13 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
               <DescriptionListGroup>
                 <DescriptionListTerm>Labels</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <GetMetadataList metadata={pipelineRun.metadata?.labels} />
+                  <MetadataList metadata={pipelineRun.metadata?.labels} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>Annotations</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <GetMetadataList metadata={pipelineRun.metadata?.annotations} />
+                  <MetadataList metadata={pipelineRun.metadata?.annotations} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>

@@ -33,8 +33,24 @@ describe('DeleteResourceModal', () => {
     const obj = { apiVersion: 'v1', kind: 'Application', metadata: { name: 'test' } };
     const onClose = jest.fn();
     render(<DeleteResourceModal obj={obj} model={ApplicationModel} onClose={onClose} />);
+    expect(screen.queryAllByRole('textbox')).toHaveLength(1);
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test' } });
     expect(screen.getByText('Delete')).toBeEnabled();
+  });
+
+  it('should hide textbox when isEntryNotRequired is set to true', () => {
+    const obj = { apiVersion: 'v1', kind: 'Application', metadata: { name: 'test' } };
+    const onClose = jest.fn();
+    k8sDeleteMock.mockResolvedValue({});
+    render(
+      <DeleteResourceModal
+        obj={obj}
+        model={ApplicationModel}
+        onClose={onClose}
+        isEntryNotRequired
+      />,
+    );
+    expect(screen.queryAllByRole('textbox')).toHaveLength(0);
   });
 
   it('should delete resource & close modal when submitted', async () => {

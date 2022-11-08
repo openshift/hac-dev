@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Flex, FlexItem, Label, LabelGroup } from '@patternfly/react-core';
 
-interface GetMetadataListProps {
+interface MetadataListProps {
   metadata: Record<string, string>;
 }
 
-const GetMetadataList: React.FC<GetMetadataListProps> = ({ metadata }) => {
+const MetadataList: React.FC<MetadataListProps> = ({ metadata }) => {
   if (!metadata) return <>-</>;
   const labelArray = Object.entries(metadata);
 
@@ -24,4 +24,4 @@ const GetMetadataList: React.FC<GetMetadataListProps> = ({ metadata }) => {
   );
 };
 
-export default GetMetadataList;
+export default MetadataList;
