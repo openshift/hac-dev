@@ -74,6 +74,7 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
       const visualization = new Visualization();
       visualization.registerLayoutFactory(layoutFactory);
       visualization.registerComponentFactory(componentFactory);
+      visualization.setRenderConstraint(false);
       visualization.fromModel(model);
       visualization.addEventListener(GRAPH_LAYOUT_END_EVENT, () => {
         onLayoutUpdate(visualization.getGraph().getNodes());

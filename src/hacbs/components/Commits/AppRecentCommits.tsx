@@ -60,30 +60,35 @@ const AppRecentCommits = ({ applicationName }) => {
   }
 
   return !commits || commits.length === 0 ? (
-    <EmptyState>
-      <EmptyStateIcon icon={OutlinedFileImageIcon} />
-      <Title headingLevel="h4" size="lg">
-        Monitor your commits and their pipeline progression across all components
+    <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light} isFilled>
+      <Title size="lg" headingLevel="h3" className="pf-c-title pf-u-mt-lg pf-u-mb-sm">
+        Recent commits
       </Title>
-      <EmptyStateBody>
-        No commits found yet. <br />
-        To get started, create components and merge their pull request for build pipeline.
-      </EmptyStateBody>
-      <EmptyStateSecondaryActions>
-        <Button
-          component={(props) => (
-            <Link
-              {...props}
-              to={`/app-studio/applications/${applicationName}?activeTab=components&hacbs=true`}
-            />
-          )}
-          variant="secondary"
-          data-test="go-to-components-tab"
-        >
-          Go to components tab
-        </Button>
-      </EmptyStateSecondaryActions>
-    </EmptyState>
+      <EmptyState>
+        <EmptyStateIcon icon={OutlinedFileImageIcon} />
+        <Title headingLevel="h4" size="lg">
+          Monitor your commits and their pipeline progression across all components
+        </Title>
+        <EmptyStateBody>
+          No commits found yet. <br />
+          To get started, create components and merge their pull request for build pipeline.
+        </EmptyStateBody>
+        <EmptyStateSecondaryActions>
+          <Button
+            component={(props) => (
+              <Link
+                {...props}
+                to={`/app-studio/applications/${applicationName}?activeTab=components&hacbs=true`}
+              />
+            )}
+            variant="secondary"
+            data-test="go-to-components-tab"
+          >
+            Go to components tab
+          </Button>
+        </EmptyStateSecondaryActions>
+      </EmptyState>
+    </PageSection>
   ) : (
     <CommitsListView commits={commits} applicationName={applicationName} recentOnly />
   );

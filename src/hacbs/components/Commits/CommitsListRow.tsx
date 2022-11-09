@@ -35,14 +35,7 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
         )}
       </TableData>
       <TableData className={commitsTableColumnClasses.component}>
-        {obj.components.length > 0
-          ? obj.components.map((component, index) => (
-              <React.Fragment key={component}>
-                {component.trim()}
-                {index !== obj.components.length - 1 && ' , '}
-              </React.Fragment>
-            ))
-          : '-'}
+        {obj.components.length > 0 ? obj.components.map((c) => c.trim()).join(', ') : '-'}
       </TableData>
       <TableData className={commitsTableColumnClasses.byUser}>{obj.user ?? '-'}</TableData>
       <TableData className={commitsTableColumnClasses.committedAt}>

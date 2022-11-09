@@ -32,6 +32,7 @@ const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
   );
   const { isDisabled, workflowType, status, children, hidden } = element.getData();
 
+  const childNodes = children?.filter((n) => !n.data.isDisabled) || [];
   React.useEffect(() => {
     let canceled = false;
     if (tipHover || hover) {
@@ -59,7 +60,7 @@ const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
       showClose={false}
       bodyContent={
         <div onMouseEnter={() => setTipHover(true)} onMouseLeave={() => setTipHover(false)}>
-          <WorkflowNodeTipContent element={element} setActiveTab={setActiveTab} />
+          <WorkflowNodeTipContent element={element} />
         </div>
       }
       appendTo={() => document.querySelector('#hacDev-modal-container')}
@@ -72,7 +73,7 @@ const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
           showStatusState
           statusIconSize={18}
           hover={isDisabled ? false : undefined}
-          badge={children?.length ? `${children?.length}` : undefined}
+          badge={childNodes.length ? `${childNodes.length}` : undefined}
           className={css('hacbs-workload-node', { 'm-disabled': isDisabled })}
           taskIcon={getWorkflowNodeIcon(workflowType)}
           paddingY={6}

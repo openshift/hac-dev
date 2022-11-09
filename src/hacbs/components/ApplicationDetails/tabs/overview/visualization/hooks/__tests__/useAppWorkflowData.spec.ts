@@ -1,14 +1,15 @@
 import '@testing-library/jest-dom';
 import { renderHook } from '@testing-library/react-hooks';
-import { useApplicationHealthStatus } from '../../../../../../../../hooks';
-import { GitOpsDeploymentHealthStatus } from '../../../../../../../../types/gitops-deployment';
 import { useNamespace } from '../../../../../../../../utils/namespace-context-utils';
 import {
+  useApplicationSnapshotsEB,
   useBuildPipelines,
   useComponents,
   useEnvironments,
   useIntegrationTestScenarios,
   useReleasePlans,
+  useReleases,
+  useTestPipelines,
 } from '../../../../../../../hooks';
 import { WorkflowNodeType } from '../../types';
 import {
@@ -26,39 +27,38 @@ jest.mock('../../../../../../../../utils/namespace-context-utils', () => ({
   useNamespace: jest.fn(() => 'test-ns'),
 }));
 
-jest.mock('../../../../../../../../hooks/', () => ({
-  useApplicationHealthStatus: jest.fn(() => [[], true]),
-}));
-
 jest.mock('../../../../../../../hooks/', () => ({
   useComponents: jest.fn(() => [[], true]),
   useIntegrationTestScenarios: jest.fn(() => [[], true]),
   useBuildPipelines: jest.fn(() => [[], true]),
   useEnvironments: jest.fn(() => [[], true]),
+  useReleases: jest.fn(() => [[], true]),
   useReleasePlans: jest.fn(() => [[], true]),
+  useTestPipelines: jest.fn(() => [[], true]),
+  useApplicationSnapshotsEB: jest.fn(() => [[], true]),
 }));
 
 const useActiveNamespaceMock = useNamespace as jest.Mock;
-const useApplicationHealthStatusMock = useApplicationHealthStatus as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
 const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
 const useBuildPipelinesMock = useBuildPipelines as jest.Mock;
 const useEnvironmentsMock = useEnvironments as jest.Mock;
+const useReleasesMock = useReleases as jest.Mock;
 const useReleasePlansMock = useReleasePlans as jest.Mock;
+const useTestPipelinesMock = useTestPipelines as jest.Mock;
+const useApplicationSnapshotsEBMock = useApplicationSnapshotsEB as jest.Mock;
 
 describe('useAppWorkflowData hook', () => {
   beforeEach(() => {
     useActiveNamespaceMock.mockReturnValue('test-ns');
-    useApplicationHealthStatusMock.mockReturnValue([
-      GitOpsDeploymentHealthStatus.Degraded,
-      null,
-      true,
-    ]);
     useComponentsMock.mockReturnValue([[], true]);
     useIntegrationTestScenariosMock.mockReturnValue([[], true]);
     useBuildPipelinesMock.mockReturnValue([[], true]);
     useEnvironmentsMock.mockReturnValue([[], true]);
     useReleasePlansMock.mockReturnValue([[], true]);
+    useReleasesMock.mockReturnValue([[], true]);
+    useTestPipelinesMock.mockReturnValue([[], true]);
+    useApplicationSnapshotsEBMock.mockReturnValue([[], true]);
 
     const createElement = document.createElement.bind(document);
     document.createElement = (tagName) => {

@@ -1,7 +1,15 @@
 import * as React from 'react';
-import { Button, ButtonVariant } from '@patternfly/react-core';
+import { Link, useLocation } from 'react-router-dom';
 import { css } from '@patternfly/react-styles';
-import { getRunStatusModifier, Node, NodeModel, StatusIcon } from '@patternfly/react-topology';
+import pipelineStyles from '@patternfly/react-styles/css/components/Topology/topology-pipelines';
+import {
+  getRunStatusModifier,
+  Node,
+  NodeModel,
+  StatusIcon,
+  RunStatus,
+  PipelineNodeModel,
+} from '@patternfly/react-topology';
 import { WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import { getLinkForElement, statusToRunStatus, TYPE_DESCRIPTIONS } from '../utils/node-utils';
 
@@ -9,24 +17,22 @@ import './WorkflowNodeTipContent.scss';
 
 type WorkflowNodeTipContentProps = {
   element: Node<NodeModel, WorkflowNodeModelData>;
-  setActiveTab: (tabData: { tab: string; filter?: { name: string; value: string } }) => void;
 };
 
-const linkButton = (
-  key: string,
-  label: string,
-  onClick: React.MouseEventHandler<HTMLButtonElement>,
-) => (
-  <Button key={key} data-testid={key} isInline variant={ButtonVariant.link} onClick={onClick}>
-    {label}
-  </Button>
-);
-
-const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({
-  element,
-  setActiveTab,
-}) => {
+const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({ element }) => {
   const { label, workflowType, children } = element.getData();
+  const { pathname } = useLocation();
+
+  const { elementRef, pipelinesRef } = React.useMemo(() => {
+    const linkData = getLinkForElement(element);
+    const queryParams = `?activeTab=${linkData.tab}${
+      linkData.filter ? `&${linkData.filter.name}=${linkData.filter.value}` : ''
+    }`;
+    return {
+      elementRef: `${pathname}${queryParams}`,
+      pipelinesRef: `${pathname}?activeTab=pipelineruns`,
+    };
+  }, [element, pathname]);
 
   const links = React.useMemo(() => {
     switch (workflowType) {
@@ -34,28 +40,55 @@ const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({
       case WorkflowNodeType.STATIC_ENVIRONMENT:
       case WorkflowNodeType.MANAGED_ENVIRONMENT:
         return [
-          linkButton('element-link', 'View in tab', () => setActiveTab(getLinkForElement(element))),
+          <Link key="element-link" data-testid="element-link" to={elementRef}>
+            View in tab
+          </Link>,
         ];
       case WorkflowNodeType.BUILD:
       case WorkflowNodeType.RELEASE:
         return [
-          linkButton('pipeline-runs-link', 'View pipeline runs', () =>
-            setActiveTab({ tab: 'pipelineruns' }),
-          ),
+          <Link key="pipeline-runs-link" data-testid="pipeline-runs-link" to={pipelinesRef}>
+            View pipeline runs
+          </Link>,
         ];
       case WorkflowNodeType.TESTS:
       case WorkflowNodeType.COMPONENT_TEST:
       case WorkflowNodeType.APPLICATION_TEST:
         return [
-          linkButton('element-link', 'View in tab', () => setActiveTab(getLinkForElement(element))),
-          linkButton('pipeline-runs-link', 'View pipeline runs', () =>
-            setActiveTab({ tab: 'pipelineruns' }),
-          ),
+          <Link key="element-link" data-testid="element-link" to={elementRef}>
+            View in tab
+          </Link>,
+          <Link key="pipeline-runs-link" data-testid="pipeline-runs-link" to={pipelinesRef}>
+            View pipeline runs
+          </Link>,
         ];
       default:
         return null;
     }
-  }, [element, setActiveTab, workflowType]);
+  }, [elementRef, pipelinesRef, workflowType]);
+
+  const runStatusItem = (child: PipelineNodeModel) => {
+    const { status } = child.data;
+    if (!status) {
+      return null;
+    }
+    const runStatus = statusToRunStatus(status);
+    return (
+      <>
+        <span
+          className={css(
+            pipelineStyles.topologyPipelinesStatusIcon,
+            (runStatus === RunStatus.Running || runStatus === RunStatus.InProgress) &&
+              pipelineStyles.modifiers.spin,
+            getRunStatusModifier(runStatus),
+          )}
+        >
+          <StatusIcon status={runStatus} />
+        </span>{' '}
+        {child.data.status}
+      </>
+    );
+  };
 
   return (
     <div className="hacbs-workload-node__tooltip">
@@ -70,21 +103,7 @@ const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({
             .map((child) => (
               <React.Fragment key={child.id}>
                 <span data-testid="child-row">{child.label}</span>
-                <span>
-                  {child.data.status ? (
-                    <>
-                      <span
-                        className={css(
-                          'hacbs-workload-node__tooltip-status-icon',
-                          getRunStatusModifier(statusToRunStatus(child.data.status)),
-                        )}
-                      >
-                        <StatusIcon status={statusToRunStatus(child.data.status)} />
-                      </span>{' '}
-                      {child.data.status}
-                    </>
-                  ) : null}
-                </span>
+                <span>{runStatusItem(child)}</span>
               </React.Fragment>
             ))}
         </div>

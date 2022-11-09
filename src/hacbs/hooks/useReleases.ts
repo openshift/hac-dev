@@ -1,9 +1,9 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { ReleaseGroupVersionKind } from '../models';
-import { ReleasePlanKind } from '../types/coreBuildService';
+import { ReleaseKind } from '../types/coreBuildService';
 
-export const useReleasePlans = (namespace: string): [ReleasePlanKind[], boolean, unknown] =>
-  useK8sWatchResource<ReleasePlanKind[]>({
+export const useReleases = (namespace: string): [ReleaseKind[], boolean, unknown] =>
+  useK8sWatchResource<ReleaseKind[]>({
     groupVersionKind: ReleaseGroupVersionKind,
     namespace,
     isList: true,

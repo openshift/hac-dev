@@ -18,7 +18,7 @@ const WorkflowEdge: React.FunctionComponent<WorkflowEdgeProps> = ({ element, cla
   const targetNode = element.getTarget();
   const groupClassName = css(styles.topologyEdge, className);
 
-  if (sourceNode.getData().hidden || targetNode.getData().hidden) {
+  if (sourceNode.getData()?.hidden || targetNode.getData()?.hidden) {
     return null;
   }
 

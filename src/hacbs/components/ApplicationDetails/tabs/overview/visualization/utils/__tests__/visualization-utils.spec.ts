@@ -17,9 +17,9 @@ sampleWorkflowDag.addEdge('task3', 'task4');
 
 describe('getLastEnvironments', () => {
   test('should return default environment for invalid values', () => {
-    expect(getLastEnvironments([])).toEqual(['static-env']);
-    expect(getLastEnvironments(null)).toEqual(['static-env']);
-    expect(getLastEnvironments(undefined)).toEqual(['static-env']);
+    expect(getLastEnvironments([])).toEqual(['no-static-environments']);
+    expect(getLastEnvironments(null)).toEqual(['no-static-environments']);
+    expect(getLastEnvironments(undefined)).toEqual(['no-static-environments']);
   });
 
   test('should return the last environments in the list', () => {

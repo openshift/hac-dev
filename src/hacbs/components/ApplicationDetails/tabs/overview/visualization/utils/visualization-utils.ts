@@ -37,9 +37,18 @@ export const getLabelWidth = (label: string): number =>
 export const getNodeWidth = (label: string, status?: string, children?: string[]): number =>
   getLabelWidth(label) + (status ? STATUS_WIDTH : 0) + (children?.length ? BADGE_WIDTH : 0);
 
+export const getLatestResource = (resources = []) =>
+  resources
+    ?.sort?.(
+      (a, b) =>
+        new Date(b.metadata.creationTimestamp).getTime() -
+        new Date(a.metadata.creationTimestamp).getTime(),
+    )
+    .shift();
+
 export const getLastEnvironments = (environments: EnvironmentKind[]): string[] => {
   if (!environments || environments?.length === 0) {
-    return ['static-env'];
+    return ['no-static-environments'];
   }
 
   const environmentDag = new DAG();
@@ -64,4 +73,11 @@ export const getLastEnvironments = (environments: EnvironmentKind[]): string[] =
   return environments
     .filter((e) => lastEnvironmentNames.includes(e.metadata.name))
     .map((e) => e.metadata.uid);
+};
+
+export const updateParallelNodeWidths = (nodes: PipelineMixedNodeModel[]) => {
+  if (nodes?.length > 1) {
+    const maxWidth = nodes.reduce((max, node) => Math.max(max, node.width), 0);
+    nodes.forEach((n) => (n.width = maxWidth));
+  }
 };
