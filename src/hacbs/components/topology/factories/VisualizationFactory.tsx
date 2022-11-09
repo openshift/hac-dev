@@ -18,6 +18,8 @@ type VisualizationFactoryProps = {
   layoutFactory: LayoutFactory;
   componentFactory: ComponentFactory;
   controlBar?: (controller: Controller) => React.ReactNode;
+  fullHeight?: boolean;
+  fitToScreen?: boolean;
 };
 
 type Size = {
@@ -30,6 +32,8 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
   layoutFactory,
   componentFactory,
   controlBar,
+  fullHeight = false,
+  fitToScreen = false,
 }) => {
   const [controller, setController] = React.useState<Controller>(null);
   const [maxSize, setMaxSize] = React.useState<Size>(null);
@@ -80,18 +84,26 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
       controller.fromModel(model, model.graph.layout === layoutRef.current);
       layoutRef.current = model.graph.layout;
       controller.getGraph().layout();
+      if (fitToScreen) {
+        controller.getGraph().fit(90);
+      }
     }
-  }, [controller, model, onLayoutUpdate, layoutFactory, componentFactory]);
+  }, [controller, model, onLayoutUpdate, layoutFactory, componentFactory, fitToScreen]);
 
   if (!controller) return null;
-  return (
-    <div style={{ height: maxSize?.height, width: maxSize?.width }}>
-      <VisualizationProvider controller={controller}>
-        <TopologyView controlBar={controlBar ? controlBar(controller) : undefined}>
-          <VisualizationSurface />
-        </TopologyView>
-      </VisualizationProvider>
-    </div>
+
+  const visualization = (
+    <VisualizationProvider controller={controller}>
+      <TopologyView controlBar={controlBar ? controlBar(controller) : undefined}>
+        <VisualizationSurface />
+      </TopologyView>
+    </VisualizationProvider>
+  );
+
+  return fullHeight ? (
+    visualization
+  ) : (
+    <div style={{ height: maxSize?.height, width: maxSize?.width }}>{visualization}</div>
   );
 };
 

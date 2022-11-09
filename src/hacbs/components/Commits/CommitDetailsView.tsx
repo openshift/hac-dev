@@ -33,6 +33,8 @@ import { SortedPLRList } from './CommitSidePanelHeader';
 import CommitsOverviewTab from './tabs/CommitsOverviewTab';
 import CommitsPipelineRunTab from './tabs/CommitsPipelineRunTab';
 
+import './CommitDetailsView.scss';
+
 type CommitDetailsViewProps = {
   applicationName: string;
   commitName: string;
@@ -173,7 +175,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
             )
           }
         >
-          <DrawerContentBody>
+          <DrawerContentBody className="hacbs-commit-details__content">
             <CommitsGettingStartedModal
               shown={showGettingStarted}
               onHide={() => setGettingStartedShown(false)}
