@@ -11,6 +11,16 @@ export const integrationTestDeleteModal = (integrationTestObj: IntegrationTestSc
     displayName: integrationTestObj.metadata.name,
   });
 
+export const integrationTestDeleteModalAndNavigate = (
+  integrationTestObj: IntegrationTestScenarioKind,
+) =>
+  createDeleteModalLauncher(integrationTestObj.kind)({
+    obj: integrationTestObj,
+    model: IntegrationTestScenarioModel,
+    displayName: integrationTestObj.metadata.name,
+    isEntryNotRequired: true,
+  });
+
 export const useIntegrationTestActions = (
   integrationTest: IntegrationTestScenarioKind,
 ): Action[] => {

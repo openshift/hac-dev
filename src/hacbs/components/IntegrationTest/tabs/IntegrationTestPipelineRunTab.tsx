@@ -1,17 +1,20 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner, Title } from '@patternfly/react-core';
-import { Table } from '../../../shared';
-import { useNamespace } from '../../../utils/namespace-context-utils';
-import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { PipelineRunGroupVersionKind } from '../../models';
-import { PipelineRunKind } from '../../types';
-import PipelineRunEmptyState from '../PipelineRunDetailsView/PipelineRunEmptyState';
-import { PipelineRunListHeader } from './PipelineRunListHeader';
-import PipelineRunListRow from './PipelineRunListRow';
+import { Table } from '../../../../shared';
+import { useNamespace } from '../../../../utils/namespace-context-utils';
+import { PipelineRunGroupVersionKind } from '../../../models';
+import { PipelineRunKind } from '../../../types';
+import { IntegrationTestLabels } from '../../ImportForm/types';
+import PipelineRunEmptyState from '../../PipelineRunDetailsView/PipelineRunEmptyState';
+import { PipelineRunListHeader } from '../../PipelineRunListView/PipelineRunListHeader';
+import PipelineRunListRow from '../../PipelineRunListView/PipelineRunListRow';
 
-type PipelineRunsListViewProps = { applicationName: string };
-const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ applicationName }) => {
+type IntegrationTestPipelineRunTabProps = { applicationName: string; testName: string };
+const IntegrationTestPipelineRunTab: React.FC<IntegrationTestPipelineRunTabProps> = ({
+  applicationName,
+  testName,
+}) => {
   const namespace = useNamespace();
 
   const [pipelineRuns, loaded] = useK8sWatchResource<PipelineRunKind[]>({
@@ -20,7 +23,8 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
     isList: true,
     selector: {
       matchLabels: {
-        [PipelineRunLabel.APPLICATION]: applicationName,
+        [IntegrationTestLabels.APPLICATION]: applicationName,
+        [IntegrationTestLabels.SCENARIO]: testName,
       },
     },
   });
@@ -61,4 +65,4 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
   );
 };
 
-export default PipelineRunsListView;
+export default IntegrationTestPipelineRunTab;
