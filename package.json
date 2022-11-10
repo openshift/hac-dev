@@ -20,6 +20,7 @@
     "start:federated": "BETA=true fec static --config config/dev.webpack.config.js",
     "start:prod": "ENVIRONMENT=prod npm run start",
     "start:prod:beta": "ENVIRONMENT=prod npm run start:beta",
+    "start:prod:beta:kcp": "KCP_SERVER=`oc whoami --show-server`  npm run start:prod:beta",
     "test": "jest",
     "verify": "npm-run-all build lint coverage",
     "prepare": "husky install"
