@@ -17,8 +17,15 @@ export class DetailsTab {
     }
 
     static checkStatusSucceeded() {
-        cy.get(pipelinerunsTabPO.statusPO).should('not.have.text', 'Failed');
-        cy.get(pipelinerunsTabPO.statusPO, { timeout: 720000 }).should('have.text', 'Succeeded');
+        cy.get(pipelinerunsTabPO.statusPO).then(body => {
+            if (body.find("span:contains('Failure')").length > 0) {
+                LogsTab.goToLogsTab();
+                LogsTab.downloadAllTaskLogs();
+                return;
+            } else {
+                cy.get(pipelinerunsTabPO.statusPO, { timeout: 720000 }).should('have.text', 'Succeeded');
+            }
+        })
     }
 }
 
@@ -37,6 +44,10 @@ export class TaskRunsTab {
 export class LogsTab {
     static goToLogsTab() {
         cy.get(pipelinerunsTabPO.clickLogsTab).click();
+    }
+
+    static downloadAllTaskLogs() {
+        cy.contains('button', pipelinerunsTabPO.downloadAllTaskLogsButton).click();
     }
 }
 

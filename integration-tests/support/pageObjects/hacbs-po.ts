@@ -21,6 +21,7 @@ export const pipelinerunsTabPO = {
     clickTaskRunsTab: '[data-test="details__tabItem yaml"]',
 
     clickLogsTab: '[data-test="details__tabItem logs"]',
+    downloadAllTaskLogsButton: 'Download all task logs',
 
     clickEventsTab: '[data-test="details__tabItem events"]',
 
