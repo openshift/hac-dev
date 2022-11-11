@@ -110,7 +110,7 @@ function createBuildStep(triggerPipelinerun: boolean) {
         const outputImageNameSuffix = `${new Date().getTime()}`;
 
         cy.getCookie('cs_jwt').then(cookie => {
-            cy.exec('oc login --server=https://api-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com --token=' + cookie.value).then((result) => {
+            cy.exec('oc login --server=https://api-toolchain-host-operator.apps.hac-devsandbox.5unc.p1.openshiftapps.com/ --token=' + cookie.value).then((result) => {
                 cy.log(result.stderr);
             });
         })
