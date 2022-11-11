@@ -17,6 +17,7 @@ export class DetailsTab {
     }
 
     static checkStatusSucceeded() {
+        cy.get(pipelinerunsTabPO.statusPO).should('not.have.text', 'Failed');
         cy.get(pipelinerunsTabPO.statusPO, { timeout: 720000 }).should('have.text', 'Succeeded');
     }
 }
