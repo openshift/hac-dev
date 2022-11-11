@@ -13,13 +13,13 @@ metadata:
     build.appstudio.openshift.io/component: java-quarkus
     pipelines.appstudio.openshift.io/type: build
   name: java-quarkus-on-push
-  namespace: jkopriva-appstudio
+  namespace: dheerajodha
 spec:
   params:
   - name: git-url
     value: https://github.com/dheerajodha/devfile-sample-code-with-quarkus.git
   - name: output-image
-    value: quay.io/redhat-appstudio/user-workload:automated-test-on-push-1665589434994
+    value: quay.io/redhat-appstudio/user-workload:automated-test-on-push-1668164472476
   - name: dockerfile
     value: https://raw.githubusercontent.com/dheerajodha/devfile-sample-code-with-quarkus/main/src/main/docker/Dockerfile.jvm.staged
   pipelineRef:

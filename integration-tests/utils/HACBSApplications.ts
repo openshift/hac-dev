@@ -10,6 +10,14 @@ import { Applications } from './Applications';
 import { Common } from './Common';
 
 export class HACBSApplications {
+    static performOCLogin() {
+        cy.getCookie('cs_jwt').then(cookie => {
+            cy.exec('oc login --server=https://api-toolchain-host-operator.apps.appstudio-stage.x99m.p1.openshiftapps.com --token=' + cookie.value).then((result) => {
+                cy.log(result.stderr);
+            });
+        })
+    }
+
     static deleteApplication(applicationName: string) {
         Applications.deleteApplication(applicationName);
     }
@@ -108,6 +116,8 @@ function createBuildStep(triggerPipelinerun: boolean) {
 
     if (triggerPipelinerun) {
         const outputImageNameSuffix = `${new Date().getTime()}`;
+
+        this.performOCLogin();
 
         cy.exec('./trigger-pipelineruns-script.sh ' + outputImageNameSuffix).then((result) => {
             cy.log(result.stderr);
