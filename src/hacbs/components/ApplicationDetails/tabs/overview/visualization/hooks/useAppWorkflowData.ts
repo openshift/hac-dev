@@ -13,8 +13,8 @@ import { useAppApplictionTestNodes } from './useAppApplictionTestNodes';
 import { useAppBuildNodes } from './useAppBuildNodes';
 import { useAppComponentsNodes } from './useAppComponentsNodes';
 import { useAppIntegrationTestNodes } from './useAppIntegrationTestNodes';
-import { useAppManagedEnvironmentNodes } from './useAppManagedEnvironmentNodes';
 import { useAppReleaseNodes } from './useAppReleaseNodes';
+import { useAppReleasePlanNodes } from './useAppReleasePlanNodes';
 import { useAppStaticEnvironmentNodes } from './useAppStaticEnvironmentNodes';
 
 export const useAppWorkflowData = (
@@ -102,7 +102,7 @@ export const useAppWorkflowData = (
   );
 
   const [managedEnvironmentNodes, managedEnvironmentGroup, managedEnvironmentsLoaded] =
-    useAppManagedEnvironmentNodes(namespace, applicationName, releaseTasks, expanded);
+    useAppReleasePlanNodes(namespace, applicationName, releaseTasks, expanded);
   const allResourcesLoaded: boolean =
     componentsLoaded &&
     buildsLoaded &&

@@ -63,7 +63,7 @@ export const useAppIntegrationTestNodes = (
       : [
           emptyPipelineNode(
             'no-component-tests',
-            'Component tests',
+            'No component tests set',
             WorkflowNodeType.COMPONENT_TEST,
             previousTasks,
           ),

@@ -53,7 +53,7 @@ export const useAppApplictionTestNodes = (
       : [
           emptyPipelineNode(
             'no-application-tests',
-            'Application tests',
+            'No application tests set',
             WorkflowNodeType.APPLICATION_TEST,
             previousTasks,
           ),

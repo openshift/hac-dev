@@ -77,7 +77,7 @@ export const useAppStaticEnvironmentNodes = (
       : [
           emptyPipelineNode(
             'no-static-environments',
-            'Static environments',
+            'No static environments set',
             WorkflowNodeType.STATIC_ENVIRONMENT,
             previousTasks,
           ),

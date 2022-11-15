@@ -32,12 +32,6 @@ const RUN_STATUS_SEVERITIES = [
   runStatus.Failed,
 ];
 
-const BUILD_PIPELINE_STATUSES: string[] = [
-  runStatus.Succeeded,
-  runStatus['In Progress'],
-  runStatus.Running,
-];
-
 const COMPONENT_DESC =
   'A component is an image built from code in a source repository. Applications are sets of components that run together on environments.';
 const BUILD_DESC = `Every component requires a build in order to deploy it to an environment. Whenever you create a new component, we send a pull request to merge our build pipeline to your component's source code`;
@@ -85,7 +79,7 @@ export const statusToRunStatus = (status: string): RunStatus => {
 export const getLinkForElement = (
   element: Node<PipelineNodeModel, WorkflowNodeModelData>,
 ): { tab: string; filter?: { name: string; value: string } } => {
-  const { workflowType, label, isDisabled, resources, groupNode, status } = element.getData();
+  const { workflowType, label, isDisabled, groupNode, status } = element.getData();
 
   switch (workflowType) {
     case WorkflowNodeType.COMPONENT:
@@ -94,18 +88,18 @@ export const getLinkForElement = (
         filter: !groupNode && !isDisabled ? { name: 'name', value: label } : undefined,
       };
     case WorkflowNodeType.BUILD:
-      if (BUILD_PIPELINE_STATUSES.includes(status)) {
+      if (status === 'PR needs merge') {
         return {
-          tab: 'pipelineruns',
-          // TODO: filter by build once the PLR tab supports filtering
+          tab: 'components',
+          filter:
+            !groupNode && !isDisabled && label
+              ? { name: 'name', value: label.replace('Build for ', '') }
+              : undefined,
         };
       }
       return {
-        tab: 'components',
-        filter:
-          !groupNode && !isDisabled
-            ? { name: 'name', value: resources?.[0]?.metadata.labels?.[BUILD_COMPONENT_LABEL] }
-            : undefined,
+        tab: 'pipelineruns',
+        // TODO: filter by build once the PLR tab supports filtering
       };
     case WorkflowNodeType.TESTS:
     case WorkflowNodeType.COMPONENT_TEST:
@@ -186,10 +180,10 @@ export const emptyPipelineNode = (
   runAfterTasks: string[] = [],
 ): WorkflowNodeModel<WorkflowNodeModelData> => ({
   id,
-  label: `No ${label.toLowerCase()} set`,
+  label,
   type: NodeType.WORKFLOW_NODE,
   height: DEFAULT_NODE_HEIGHT,
-  width: getNodeWidth(`No ${label.toLowerCase()} set`),
+  width: getNodeWidth(label),
   runAfterTasks,
   data: {
     label,
@@ -250,16 +244,16 @@ export const getBuildNodeForComponent = (
   }
   return {
     id: `${component.metadata.uid}-missing`,
-    label: '',
+    label: `Build for ${component.metadata.name}`,
     type: NodeType.WORKFLOW_NODE,
-    height: 0,
+    height: DEFAULT_NODE_HEIGHT,
     width: 0,
     runAfterTasks: [component.metadata.uid],
     data: {
-      label: '',
-      isDisabled: true,
+      label: `Build for ${component.metadata.name}`,
+      isDisabled: false,
+      status: 'PR needs merge',
       workflowType: WorkflowNodeType.BUILD,
-      hidden: true,
     },
   };
 };

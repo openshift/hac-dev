@@ -118,7 +118,7 @@ describe('WorkflowNode', () => {
     let linkData = getLinkForElement(mockElement);
     expect(linkData.tab).toBe('components');
     expect(linkData.filter).toBeUndefined();
-    expect(screen.getAllByTestId('child-row')).toHaveLength(3);
+    expect(screen.getAllByTestId('child-row')).toHaveLength(mockComponentsData.length);
     tipContent.unmount();
 
     mockElement = visualization.getNodeById('builds');
@@ -128,7 +128,7 @@ describe('WorkflowNode', () => {
       screen.getByText(TYPE_DESCRIPTIONS[mockElement.getData().workflowType]),
     ).toBeInTheDocument();
     expect(screen.getByTestId('pipeline-runs-link')).toBeVisible();
-    expect(screen.getAllByTestId('child-row')).toHaveLength(1);
+    expect(screen.getAllByTestId('child-row')).toHaveLength(mockComponentsData.length);
     tipContent.unmount();
 
     mockElement = visualization.getNodeById('tests');

@@ -38,7 +38,7 @@ export const useAppComponentsNodes = (
       : [
           emptyPipelineNode(
             'no-components',
-            'Components',
+            'No components set',
             WorkflowNodeType.COMPONENT,
             previousTasks,
           ),

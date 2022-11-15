@@ -49,7 +49,7 @@ export const useAppBuildNodes = (
     const nodes =
       components.length && latestBuilds.length
         ? components.map((component) => getBuildNodeForComponent(component, latestBuilds))
-        : [emptyPipelineNode('no-builds', 'Builds', WorkflowNodeType.BUILD, previousTasks)];
+        : [emptyPipelineNode('no-builds', 'No builds yet', WorkflowNodeType.BUILD, previousTasks)];
     updateParallelNodeWidths(nodes);
     return nodes;
   }, [previousTasks, components, latestBuilds]);

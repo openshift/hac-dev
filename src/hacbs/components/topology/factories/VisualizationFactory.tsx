@@ -37,33 +37,29 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
 
   const onLayoutUpdate = React.useCallback(
     (nodes: Node[]) => {
-      const nodeBounds = nodes.map((node) => node.getBounds());
-
-      const maxWidth = Math.floor(
-        nodeBounds.map((bounds) => bounds.width).reduce((w1, w2) => Math.max(w1, w2), 0),
-      );
       const maxX = Math.floor(
-        nodeBounds.map((bounds) => bounds.x).reduce((x1, x2) => Math.max(x1, x2), 0),
+        nodes
+          .map((node) => {
+            const bounds = node.getBounds();
+            return bounds.x + bounds.width;
+          })
+          .reduce((x1, x2) => Math.max(x1, x2), 0),
       );
-      const maxHeight = Math.floor(
-        nodeBounds.map((bounds) => bounds.height).reduce((h1, h2) => Math.max(h1, h2), 0),
-      );
-
-      const maxObject = nodeBounds.find((nb) => nb.height === maxHeight);
-
       const maxY = Math.floor(
-        nodeBounds.map((bounds) => bounds.y).reduce((y1, y2) => Math.max(y1, y2), 0),
+        nodes
+          .map((node) => {
+            const bounds = node.getBounds();
+            return bounds.y + bounds.height + (node.isGroup() ? 25 : 0);
+          })
+          .reduce((y1, y2) => Math.max(y1, y2), 0),
       );
 
       const verticalMargin = 35;
       const horizontalMargin = 35;
 
-      const finallyTaskHeight = maxObject.y + maxHeight + DROP_SHADOW_SPACING + verticalMargin * 2;
-      const regularTaskHeight = maxY + 50 + DROP_SHADOW_SPACING + verticalMargin * 2;
-
       setMaxSize({
-        height: Math.max(finallyTaskHeight, regularTaskHeight) + 15,
-        width: maxX + maxWidth + DROP_SHADOW_SPACING + horizontalMargin * 2,
+        height: maxY + verticalMargin * 2,
+        width: maxX + DROP_SHADOW_SPACING + horizontalMargin * 2,
       });
     },
     [setMaxSize],

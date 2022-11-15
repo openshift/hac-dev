@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { pipelineRunStatus } from '../../../../../../../shared';
-import { useReleases } from '../../../../../../hooks';
-import { ReleaseKind } from '../../../../../../types/coreBuildService';
+import { useReleasePlans, useReleases } from '../../../../../../hooks';
+import { ReleaseKind, ReleasePlanKind } from '../../../../../../types/coreBuildService';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import {
   emptyPipelineNode,
@@ -10,6 +10,28 @@ import {
   worstWorkflowStatus,
 } from '../utils/node-utils';
 import { updateParallelNodeWidths } from '../utils/visualization-utils';
+
+const getPlaceholderReleaseNodes = (
+  releases: ReleaseKind[],
+  releasePlans: ReleasePlanKind[],
+  previousTasks: string[],
+): WorkflowNodeModel<WorkflowNodeModelData>[] => {
+  const placeholdersNeeded = releasePlans.filter(
+    (releasePlan) =>
+      !releases.find((release) => release.spec.releasePlan === releasePlan.metadata.name),
+  );
+  if (placeholdersNeeded.length === 0) {
+    return [];
+  }
+  return placeholdersNeeded.map((releasePlan) =>
+    emptyPipelineNode(
+      `no-release-${releasePlan.metadata.name}`,
+      'No release yet',
+      WorkflowNodeType.RELEASE,
+      previousTasks,
+    ),
+  );
+};
 
 export const useAppReleaseNodes = (
   namespace: string,
@@ -23,82 +45,91 @@ export const useAppReleaseNodes = (
   loaded: boolean,
 ] => {
   const [releases, releasesLoaded] = useReleases(namespace);
+  const [releasePlans, releasePlansLoaded] = useReleasePlans(namespace);
+  const allLoaded = releasesLoaded && releasePlansLoaded;
 
   const groupedReleases = React.useMemo(() => {
-    if (!releasesLoaded) {
+    if (!allLoaded) {
       return [];
     }
     const groups: { [key: string]: ReleaseKind[] } = {};
     releases.forEach((release) => {
-      if (!groups[release.spec.releasePlan]) {
-        groups[release.spec.releasePlan] = [];
+      const groupId = `release-for-${release.spec.releasePlan}`;
+      if (!groups[groupId]) {
+        groups[groupId] = [];
       }
-      groups[release.spec.releasePlan].push(release);
+      groups[groupId].push(release);
     });
     return groups;
-  }, [releases, releasesLoaded]);
+  }, [releases, allLoaded]);
 
   const releaseNodes = React.useMemo(() => {
-    if (!releasesLoaded) {
+    if (!allLoaded) {
       return [];
     }
-    const nodes = Object.keys(groupedReleases).length
-      ? Object.keys(groupedReleases).map((key) => {
-          if (groupedReleases[key].length === 1) {
-            return resourceToPipelineNode(
-              groupedReleases[key][0],
+    let nodes: WorkflowNodeModel<WorkflowNodeModelData>[];
+    if (Object.keys(groupedReleases).length) {
+      nodes = Object.keys(groupedReleases).map((key) => {
+        if (groupedReleases[key].length === 1) {
+          return resourceToPipelineNode(
+            groupedReleases[key][0],
+            WorkflowNodeType.RELEASE,
+            previousTasks,
+            pipelineRunStatus(groupedReleases[key][0]),
+          );
+        }
+        const groupedNodes = groupedReleases[key]
+          .sort((a, b) => (a.status.startTime > b.status.startTime ? -1 : 1))
+          .map((release) =>
+            resourceToPipelineNode(
+              release,
               WorkflowNodeType.RELEASE,
               previousTasks,
-              pipelineRunStatus(groupedReleases[key][0]),
-            );
-          }
-          const groupedNodes = groupedReleases[key]
-            .sort((a, b) => (a.status.startTime > b.status.startTime ? -1 : 1))
-            .map((release) =>
-              resourceToPipelineNode(
-                release,
-                WorkflowNodeType.RELEASE,
-                previousTasks,
-                pipelineRunStatus(release),
-              ),
-            );
-          const latestRelease = groupedReleases[key].reduce(
-            (latest: ReleaseKind, release: ReleaseKind) => {
-              if (!latest || release.status.startTime > latest.status.startTime) {
-                return release;
-              }
-              return latest;
-            },
-            null,
+              pipelineRunStatus(release),
+            ),
           );
+        const latestRelease = groupedReleases[key].reduce(
+          (latest: ReleaseKind, release: ReleaseKind) => {
+            if (!latest || release.status.startTime > latest.status.startTime) {
+              return release;
+            }
+            return latest;
+          },
+          null,
+        );
 
-          return groupToPipelineNode(
-            key,
-            key,
-            WorkflowNodeType.RELEASE,
-            previousTasks,
-            false,
-            undefined,
-            groupedNodes,
-            groupedReleases[key],
-            pipelineRunStatus(latestRelease),
-          );
-        })
-      : [
-          emptyPipelineNode(
-            'no-release-plans',
-            'Release plans',
-            WorkflowNodeType.RELEASE,
-            previousTasks,
-          ),
-        ];
+        return groupToPipelineNode(
+          latestRelease.metadata.uid,
+          key,
+          WorkflowNodeType.RELEASE,
+          previousTasks,
+          false,
+          undefined,
+          groupedNodes,
+          groupedReleases[key],
+          pipelineRunStatus(latestRelease),
+        );
+      });
+      nodes.push(...getPlaceholderReleaseNodes(releases, releasePlans, previousTasks));
+    } else if (releasePlans?.length) {
+      nodes = getPlaceholderReleaseNodes(releases, releasePlans, previousTasks);
+    } else {
+      nodes = [
+        emptyPipelineNode(
+          'no-releases',
+          'No releases yet',
+          WorkflowNodeType.RELEASE,
+          previousTasks,
+        ),
+      ];
+    }
     updateParallelNodeWidths(nodes);
     return nodes;
-  }, [groupedReleases, previousTasks, releasesLoaded]);
+  }, [allLoaded, groupedReleases, releasePlans, releases, previousTasks]);
 
   const releaseGroup = React.useMemo(
     () =>
-      releasesLoaded
+      allLoaded
         ? groupToPipelineNode(
             'release-plans',
             'Releases',
@@ -111,7 +142,7 @@ export const useAppReleaseNodes = (
             worstWorkflowStatus(releaseNodes),
           )
         : undefined,
-    [releasesLoaded, expanded, previousTasks, releaseNodes, releases],
+    [allLoaded, expanded, previousTasks, releaseNodes, releases],
   );
 
   const releaseTasks = React.useMemo(
@@ -120,5 +151,5 @@ export const useAppReleaseNodes = (
     [releaseGroup?.id, releaseNodes, expanded],
   );
 
-  return [releaseNodes, releaseGroup, releaseTasks, releasesLoaded];
+  return [releaseNodes, releaseGroup, releaseTasks, allLoaded];
 };
