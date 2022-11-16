@@ -16,6 +16,7 @@ import {
   sampleBuildPipelines,
   sampleComponents,
   sampleEnvironments,
+  sampleIntegrationTestScenarios,
 } from '../__data__/workflow-data';
 import { useAppWorkflowData } from '../useAppWorkflowData';
 
@@ -167,5 +168,22 @@ describe('useAppWorkflowData hook', () => {
     const [model] = result.current;
 
     expect(model.nodes.filter((n) => n.group)).toHaveLength(6);
+  });
+
+  it('should display empty integration test group node', () => {
+    const { result } = renderHook(() => useAppWorkflowData('test', true));
+    const [model] = result.current;
+    const testGroup = model.nodes.find((n) => n.id === 'tests');
+    expect(testGroup).not.toBeNull();
+    expect(testGroup.label).toBe('No tests set');
+  });
+
+  it('should display non-empty integration test group node', () => {
+    useIntegrationTestScenariosMock.mockReturnValue([sampleIntegrationTestScenarios, true]);
+    const { result } = renderHook(() => useAppWorkflowData('test', true));
+    const [model] = result.current;
+    const testGroup = model.nodes.find((n) => n.id === 'tests');
+    expect(testGroup).not.toBeNull();
+    expect(testGroup.label).toBe('Tests');
   });
 });
