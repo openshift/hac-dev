@@ -132,7 +132,7 @@ export const useAppReleaseNodes = (
       allLoaded
         ? groupToPipelineNode(
             'release-plans',
-            'Releases',
+            releases?.length ? 'Releases' : 'No releases set',
             WorkflowNodeType.RELEASE,
             previousTasks,
             expanded,

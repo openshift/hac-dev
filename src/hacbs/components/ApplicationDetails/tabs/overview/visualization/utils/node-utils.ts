@@ -15,7 +15,7 @@ import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../t
 import { getNodeWidth } from './visualization-utils';
 
 const UNKNOWN_STATUS = 'unknown';
-const NEEDS_MERGE_STATUS = 'PR needs merge';
+export const NEEDS_MERGE_STATUS = 'PR needs merge';
 
 const RUN_STATUS_SEVERITIES = [
   UNKNOWN_STATUS,
@@ -64,7 +64,7 @@ export const statusToRunStatus = (status: string): RunStatus => {
     case GitOpsDeploymentHealthStatus.Progressing:
     case runStatus['In Progress']:
       return RunStatus.Running;
-    case 'PR needs merge':
+    case NEEDS_MERGE_STATUS:
       return RunStatus.Cancelled; // to show a warning
     case RunStatus.Pending:
     case GitOpsDeploymentHealthStatus.Suspended:
@@ -88,7 +88,7 @@ export const getLinkForElement = (
         filter: !groupNode && !isDisabled ? { name: 'name', value: label } : undefined,
       };
     case WorkflowNodeType.BUILD:
-      if (status === 'PR needs merge') {
+      if (status === NEEDS_MERGE_STATUS) {
         return {
           tab: 'components',
           filter:
@@ -206,7 +206,7 @@ export const groupToPipelineNode = (
   const isDisabled = !resources?.length;
   return {
     id,
-    label: isDisabled && !group ? `No ${label.toLowerCase()} set` : label,
+    label,
     height: DEFAULT_NODE_HEIGHT,
     type: group ? NodeType.WORKFLOW_GROUP : NodeType.WORKFLOW_NODE,
     width: getNodeWidth(label, status, group ? undefined : children),
@@ -230,15 +230,15 @@ export const getBuildNodeForComponent = (
   component: ComponentKind,
   latestBuilds: PipelineRunKind[],
 ): WorkflowNodeModel<WorkflowNodeModelData> => {
-  const latestbuild = latestBuilds.find(
+  const latestBuild = latestBuilds.find(
     (build) => component.metadata.name === build.metadata.labels?.[BUILD_COMPONENT_LABEL],
   );
-  if (latestbuild) {
+  if (latestBuild) {
     return resourceToPipelineNode(
-      latestbuild,
+      latestBuild,
       WorkflowNodeType.BUILD,
       [component.metadata.uid],
-      pipelineRunStatus(latestbuild),
+      pipelineRunStatus(latestBuild),
       `Build for ${component.metadata.name}`,
     );
   }
@@ -252,7 +252,7 @@ export const getBuildNodeForComponent = (
     data: {
       label: `Build for ${component.metadata.name}`,
       isDisabled: false,
-      status: 'PR needs merge',
+      status: NEEDS_MERGE_STATUS,
       workflowType: WorkflowNodeType.BUILD,
     },
   };

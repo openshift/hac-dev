@@ -52,7 +52,7 @@ export const useAppComponentsNodes = (
       allResourcesLoaded
         ? groupToPipelineNode(
             'components',
-            'Components',
+            components?.length ? 'Components' : 'No components set',
             WorkflowNodeType.COMPONENT,
             previousTasks,
             expanded,

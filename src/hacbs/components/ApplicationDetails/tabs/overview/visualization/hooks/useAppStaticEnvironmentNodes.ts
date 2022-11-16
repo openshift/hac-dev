@@ -91,7 +91,7 @@ export const useAppStaticEnvironmentNodes = (
       allLoaded && previousTasks?.length
         ? groupToPipelineNode(
             'static-environments',
-            'Static environments',
+            staticEnvironments?.length ? 'Static environments' : 'No static environments set',
             WorkflowNodeType.STATIC_ENVIRONMENT,
             previousTasks,
             expanded,

@@ -61,7 +61,7 @@ export const useAppReleasePlanNodes = (
       allLoaded
         ? groupToPipelineNode(
             'managed-environments',
-            'Managed environments',
+            releasePlans?.length ? 'Managed environments' : 'No managed environments yet',
             WorkflowNodeType.MANAGED_ENVIRONMENT,
             previousTasks,
             expanded,

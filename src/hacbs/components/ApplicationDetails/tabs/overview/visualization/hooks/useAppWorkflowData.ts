@@ -57,7 +57,9 @@ export const useAppWorkflowData = (
       integrationTestsLoaded && applicationTestsLoaded
         ? groupToPipelineNode(
             'tests',
-            'Tests',
+            !componentIntegrationTestNodes?.length && !applicationIntegrationTestNodes.length
+              ? 'Tests'
+              : 'No tests set',
             WorkflowNodeType.TESTS,
             buildTasks,
             expanded,

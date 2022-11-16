@@ -7,6 +7,7 @@ import {
   emptyPipelineNode,
   getBuildNodeForComponent,
   groupToPipelineNode,
+  NEEDS_MERGE_STATUS,
   worstWorkflowStatus,
 } from '../utils/node-utils';
 import { updateParallelNodeWidths } from '../utils/visualization-utils';
@@ -59,17 +60,19 @@ export const useAppBuildNodes = (
       allResourcesLoaded
         ? groupToPipelineNode(
             'builds',
-            'Builds',
+            latestBuilds?.length ? 'Builds' : 'No builds yet',
             WorkflowNodeType.BUILD,
             previousTasks,
             expanded,
             expanded ? buildNodes?.map((c) => c.id) : undefined,
             buildNodes,
             latestBuilds,
-            worstWorkflowStatus(buildNodes),
+            components.length && buildNodes?.[0].id === 'no-builds'
+              ? NEEDS_MERGE_STATUS
+              : worstWorkflowStatus(buildNodes),
           )
         : undefined,
-    [allResourcesLoaded, buildNodes, previousTasks, latestBuilds, expanded],
+    [allResourcesLoaded, previousTasks, expanded, buildNodes, latestBuilds, components.length],
   );
 
   const buildTasks = React.useMemo(
