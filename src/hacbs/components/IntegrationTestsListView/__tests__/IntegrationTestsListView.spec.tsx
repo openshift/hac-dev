@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, fireEvent, waitFor, render } from '@testing-library/react';
+import { useSearchParam } from '../../../../hooks/useSearchParam';
 import { MockIntegrationTests } from '../__data__/mock-integration-tests';
 import IntegrationTestsListView from '../IntegrationTestsListView';
 
@@ -9,6 +10,10 @@ const navigateMock = jest.fn();
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
   useNavigate: () => navigateMock,
+}));
+
+jest.mock('../../../../hooks/useSearchParam', () => ({
+  useSearchParam: jest.fn(),
 }));
 
 jest.mock('react-i18next', () => ({
@@ -20,10 +25,27 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 }));
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
+const useSearchParamMock = useSearchParam as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
+const params: any = {};
+
+const mockUseSearchParam = (name: string) => {
+  const setter = (value) => {
+    params[name] = value;
+  };
+  const unset = () => {
+    params[name] = '';
+  };
+  return [params[name], setter, unset];
+};
+
 describe('IntegrationTestsListView', () => {
+  beforeEach(() => {
+    useSearchParamMock.mockImplementation(mockUseSearchParam);
+  });
+
   it('should render the skeleton table if integration tests data is not loaded', () => {
     useK8sWatchResourceMock.mockReturnValue([[], false]);
     const wrapper = render(<IntegrationTestsListView applicationName="test-app" />);
