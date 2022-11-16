@@ -18,7 +18,7 @@ export class DetailsTab {
 
     static checkStatusSucceeded() {
         cy.get(pipelinerunsTabPO.statusPO).then(body => {
-            if (body.find("span:contains('Failure')").length > 0) {
+            if (body.find("span:contains('Failed')").length > 0) {
                 LogsTab.goToLogsTab();
                 LogsTab.downloadAllTaskLogs();
                 return;
