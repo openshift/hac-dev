@@ -15,6 +15,7 @@ export enum PipelineRunLabel {
   COMMIT_PROVIDER_LABEL = 'pipelinesascode.tekton.dev/git-provider',
   COMMIT_SHA_TITLE_ANNOTATION = 'pipelinesascode.tekton.dev/sha-title',
   COMMIT_TYPE_LABEL = 'pipelines.appstudio.openshift.io/type',
+  REPOSITORY_NAME = 'pipelinesascode.tekton.dev/url-repository',
 
   TEST_SERVICE_APPLICATION = 'test.appstudio.openshift.io/application', // TODO: should be removed once the backend removes the prefix - https://issues.redhat.com/browse/HACBS-1331.
   TEST_SERVICE_COMPONENT = 'test.appstudio.openshift.io/component', // TODO: should be removed once the backend removes the prefix - https://issues.redhat.com/browse/HACBS-1331.

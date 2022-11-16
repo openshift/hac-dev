@@ -9,9 +9,9 @@ import {
 import { useCommitWorkflowData } from '../../../ApplicationDetails/tabs/overview/visualization/hooks/useCommitWorkflowData';
 import { getTopologyNodesEdges } from '../../../ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
 import { layoutFactory, PipelineLayout, VisualizationFactory } from '../../../topology/factories';
-//
-import './CommitVisualization.scss';
 import { commitComponentFactory } from './CommitComponentFactory';
+
+import './CommitVisualization.scss';
 
 const CommitVisualization = ({ commit }) => {
   const [workflowNodes, loaded] = useCommitWorkflowData(commit);
@@ -31,7 +31,7 @@ const CommitVisualization = ({ commit }) => {
     return null;
   }
   return (
-    <div className="hacbs-commit-graph" data-test="hacbs-pipelinerun-graph">
+    <div className="hacbs-commit-graph" data-testid="hacbs-commit-graph">
       <VisualizationFactory
         componentFactory={commitComponentFactory}
         layoutFactory={layoutFactory}

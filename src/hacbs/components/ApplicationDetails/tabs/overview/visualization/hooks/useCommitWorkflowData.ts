@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { RunStatus } from '@patternfly/react-topology';
 import { pipelineRunStatus } from '../../../../../../../shared';
 import { ComponentKind } from '../../../../../../../types';
@@ -23,14 +24,16 @@ import {
 } from '../../../../../../types/coreBuildService';
 import { CommitComponentResource, Workflow, WorkflowNode, WorkflowNodeType } from '../types';
 import {
-  getLastEnvironments,
+  appendPrefixToResources,
+  getLastEnvironmentsNames,
   getLatestResource,
+  removePrefixFromResourceName,
   workflowToNodes,
 } from '../utils/visualization-utils';
 
 export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], loaded: boolean] => {
   const namespace = useNamespace();
-  const applicationName = commit.application;
+  const applicationName = commit?.application || '';
   const [components, componentsLoaded] = useComponents(namespace, applicationName);
   const [integrationTests, integrationTestsLoaded] = useIntegrationTestScenarios(
     namespace,
@@ -65,110 +68,132 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
     releasesLoaded &&
     releasePlansLoaded;
 
-  if (!allResourcesLoaded) {
+  const commitComponents = React.useMemo(
+    () =>
+      buildPipelines
+        .map((bp) => bp.metadata.labels[PipelineRunLabel.COMMIT_COMPONENT_LABEL])
+        .filter((n) => n),
+    [buildPipelines],
+  );
+
+  const commitWorkflowData: { [key: string]: any } = React.useMemo(
+    () =>
+      components.reduce((acc, component: ComponentKind) => {
+        const {
+          metadata: { name: compName },
+        } = component;
+
+        if (!commitComponents.includes(compName) || !allResourcesLoaded) {
+          return acc;
+        }
+
+        const latestBuildPipeline: PipelineRunKind = getLatestResource(
+          buildPipelines.filter(
+            (bp: PipelineRunKind) => bp.metadata?.labels[PipelineRunLabel.COMPONENT] === compName,
+          ),
+        );
+
+        const buildPipelinestatus: RunStatus = pipelineRunStatus(latestBuildPipeline) as RunStatus;
+
+        const integrationTestPipelines: PipelineRunKind[] = testPipelines.filter(
+          (tp) => tp.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMPONENT] === compName,
+        );
+
+        const latestTestPipeline: PipelineRunKind =
+          buildPipelinestatus !== RunStatus.Running
+            ? getLatestResource(integrationTestPipelines)
+            : undefined;
+
+        const latestApplicationSnapshot: string =
+          latestTestPipeline?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_SNAPSHOT];
+
+        const compApplicationSnapshots: SnapshotEnvironmentBinding[] =
+          applicationSnapshotsEB.filter((as) => as.spec.snapshot === latestApplicationSnapshot);
+
+        const latestRelease: ReleaseKind = getLatestResource(
+          releases.filter((r) => r.spec.applicationSnapshot === latestApplicationSnapshot),
+        );
+
+        const integrationTestStatus: (test: IntegrationTestScenarioKind) => RunStatus = (
+          its: IntegrationTestScenarioKind,
+        ): RunStatus => {
+          const matchedTest = getLatestResource(
+            integrationTestPipelines.filter((tp) => {
+              tp.metadata.labels?.[PipelineRunLabel.TEST_SERVICE_SCENARIO] ===
+                removePrefixFromResourceName(its.metadata.name);
+            }),
+          );
+          return matchedTest ? (pipelineRunStatus(matchedTest) as RunStatus) : RunStatus.Pending;
+        };
+
+        const environmentStatus: (env: EnvironmentKind) => RunStatus = (
+          environment: EnvironmentKind,
+        ): RunStatus => {
+          return compApplicationSnapshots.find(
+            (as) => as.spec.environment === removePrefixFromResourceName(environment.metadata.name),
+          )
+            ? RunStatus.Succeeded
+            : RunStatus.Pending;
+        };
+
+        const releasePlanStatus: (rp: ReleasePlanKind) => RunStatus =
+          releasePlans.length === 0
+            ? undefined
+            : (rp) => {
+                const matchedRelease = getLatestResource(
+                  releases.filter(
+                    (r) => r.spec.releasePlan === removePrefixFromResourceName(rp.metadata.name),
+                  ),
+                );
+                return matchedRelease
+                  ? (pipelineRunStatus(matchedRelease) as RunStatus)
+                  : RunStatus.Pending;
+              };
+
+        const releaseStatus: RunStatus =
+          releases.length === 0
+            ? undefined
+            : latestRelease && latestRelease?.status
+            ? (pipelineRunStatus(latestRelease) as RunStatus)
+            : RunStatus.Succeeded;
+
+        acc[compName] = {
+          component,
+          releaseStatus,
+          releasePlanStatus,
+          environmentStatus,
+          buildPipelinestatus,
+          integrationTestStatus,
+          compIntegrationTestScenarios: appendPrefixToResources(integrationTests, compName),
+          compReleases: appendPrefixToResources(releases, compName),
+          compReleasePlans: appendPrefixToResources(releasePlans, compName),
+          compEnvironments: appendPrefixToResources(
+            environments,
+            compName,
+            'spec.parentEnvironment',
+          ),
+        };
+        return acc;
+      }, {}),
+    [
+      applicationSnapshotsEB,
+      buildPipelines,
+      commitComponents,
+      components,
+      environments,
+      integrationTests,
+      releasePlans,
+      releases,
+      testPipelines,
+      allResourcesLoaded,
+    ],
+  );
+
+  if (!allResourcesLoaded || Object.keys(commitWorkflowData).length === 0) {
     return [[], allResourcesLoaded];
   }
 
-  const commitComponents = buildPipelines.map(
-    (bp) => bp.metadata.labels[PipelineRunLabel.COMMIT_COMPONENT_LABEL],
-  );
-
-  const commitWorkflowData: { [key: string]: any } = components.reduce(
-    (acc, component: ComponentKind) => {
-      const {
-        metadata: { name: compName },
-      } = component;
-
-      if (!commitComponents.includes(compName)) {
-        return acc;
-      }
-      const latestBuildPipeline: PipelineRunKind = getLatestResource(
-        buildPipelines.filter(
-          (bp: PipelineRunKind) => bp.metadata?.labels[PipelineRunLabel.COMPONENT] === compName,
-        ),
-      );
-
-      const buildPipelinestatus: RunStatus = pipelineRunStatus(latestBuildPipeline) as RunStatus;
-
-      const integrationTestPipelines: PipelineRunKind[] = testPipelines.filter(
-        (tp) => tp.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMPONENT] === compName,
-      );
-
-      const latestTestPipeline: PipelineRunKind =
-        buildPipelinestatus !== RunStatus.Running
-          ? getLatestResource(integrationTestPipelines)
-          : undefined;
-
-      const latestApplicationSnapshot: string =
-        latestTestPipeline?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_SNAPSHOT];
-
-      const compApplicationSnapshots: SnapshotEnvironmentBinding[] = applicationSnapshotsEB.filter(
-        (as) => as.spec.snapshot === latestApplicationSnapshot,
-      );
-
-      const latestRelease: ReleaseKind = getLatestResource(
-        releases.filter((r) => r.spec.applicationSnapshot === latestApplicationSnapshot),
-      );
-
-      const integrationTestStatus: (test: IntegrationTestScenarioKind) => RunStatus = (
-        its: IntegrationTestScenarioKind,
-      ): RunStatus => {
-        const matchedTest = getLatestResource(
-          integrationTestPipelines.filter(
-            (tp) =>
-              tp.metadata.labels?.[PipelineRunLabel.TEST_SERVICE_SCENARIO] === its.metadata.name,
-          ),
-        );
-        return matchedTest ? (pipelineRunStatus(matchedTest) as RunStatus) : RunStatus.Pending;
-      };
-
-      const environmentStatus: (env: EnvironmentKind) => RunStatus = (
-        environment: EnvironmentKind,
-      ): RunStatus => {
-        return compApplicationSnapshots.find(
-          (as) => as.spec.environment === environment.metadata.name,
-        )
-          ? RunStatus.Succeeded
-          : RunStatus.Pending;
-      };
-
-      const releasePlanStatus: (rp: ReleasePlanKind) => RunStatus =
-        releasePlans.length === 0
-          ? undefined
-          : (rp) => {
-              const matchedRelease = getLatestResource(
-                releases.filter((r) => r.spec.releasePlan === rp.metadata.name),
-              );
-              return matchedRelease
-                ? (pipelineRunStatus(matchedRelease) as RunStatus)
-                : RunStatus.Pending;
-            };
-
-      const releaseStatus: RunStatus =
-        releases.length === 0
-          ? undefined
-          : latestRelease && latestRelease?.status
-          ? (pipelineRunStatus(latestRelease) as RunStatus)
-          : RunStatus.Succeeded;
-
-      acc[compName] = {
-        component,
-        releaseStatus,
-        releasePlanStatus,
-        environmentStatus,
-        buildPipelinestatus,
-        integrationTestStatus,
-        compIntegrationTestScenarios: integrationTests,
-        compReleases: releases,
-        compReleasePlans: releasePlans,
-        compEnvironments: environments,
-      };
-      return acc;
-    },
-    {},
-  );
-
-  const getNodeIds = (resources): string[] => resources?.map((r) => r?.metadata?.uid);
+  const getNodeNames = (resources): string[] => resources?.map((r) => r?.metadata?.name);
   const isResourcesAvailable = (resources): boolean => resources?.length > 0;
 
   const getCommitWorkflow = (commitComponentsResources: {
@@ -214,7 +239,7 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
 
         const applicationIntegrationTests = compIntegrationTestScenarios?.filter((test) => {
           const contexts = test?.spec?.contexts;
-          return (!contexts || contexts?.some((c) => c.name === 'application')) ?? false;
+          return !contexts || contexts?.some((c) => c.name === 'application');
         });
 
         workflow = {
@@ -223,7 +248,7 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
             id: `${name}-build`,
             isAbstractNode: true,
             data: {
-              label: `Build-${name}`,
+              label: `build-${name}`,
               workflowType: WorkflowNodeType.PIPELINE,
               status: buildPipelinestatus,
               isDisabled: buildPipelines.length === 0,
@@ -236,7 +261,7 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
             [`${name}-componentTests`]: {
               id: `${name}-component-integration-test`,
               data: {
-                label: `component integration test`,
+                label: 'component integration test',
                 workflowType: WorkflowNodeType.PIPELINE,
                 status: integrationTestStatus,
                 isDisabled: componentIntegrationTests.length === 0,
@@ -249,7 +274,7 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
           [`${name}-applicationTests`]: {
             id: `${name}-application-integration-test`,
             data: {
-              label: `app integration test`,
+              label: 'app integration test',
               workflowType: WorkflowNodeType.PIPELINE,
               status: integrationTestStatus,
               isDisabled: applicationIntegrationTests.length === 0,
@@ -257,13 +282,13 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
             },
             runBefore: [],
             runAfter: isResourcesAvailable(componentIntegrationTests)
-              ? getNodeIds(componentIntegrationTests)
+              ? getNodeNames(componentIntegrationTests)
               : [`${name}-build`],
           },
           [`${name}-staticEnv`]: {
             id: `${name}-static-env`,
             data: {
-              label: `${name}-environment`,
+              label: 'static environments',
               workflowType: WorkflowNodeType.STATIC_ENVIRONMENT,
               status: environmentStatus,
               isDisabled: compEnvironments.length === 0,
@@ -272,14 +297,14 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
             runBefore: [],
             runAfterResourceKey: 'spec.parentEnvironment',
             runAfter: isResourcesAvailable(applicationIntegrationTests)
-              ? getNodeIds(applicationIntegrationTests)
+              ? getNodeNames(applicationIntegrationTests)
               : [`${name}-application-integration-test`],
           },
           [`${name}-release`]: {
             id: `${name}-release`,
             isAbstractNode: true,
             data: {
-              label: `release`,
+              label: 'release',
               workflowType: WorkflowNodeType.PIPELINE,
               status: releaseStatus,
               isDisabled: compReleases.length === 0,
@@ -287,13 +312,13 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
             },
             runBefore: [],
             runAfter: isResourcesAvailable(compEnvironments)
-              ? getLastEnvironments(compEnvironments)
+              ? getLastEnvironmentsNames(compEnvironments)
               : [`${name}-static-env`],
           },
           [`${name}-releasePlan`]: {
             id: `${name}-release-plans`,
             data: {
-              label: `managed environment`,
+              label: 'managed environments',
               workflowType: WorkflowNodeType.MANAGED_ENVIRONMENT,
               status: releasePlanStatus,
               isDisabled: compReleasePlans.length === 0,

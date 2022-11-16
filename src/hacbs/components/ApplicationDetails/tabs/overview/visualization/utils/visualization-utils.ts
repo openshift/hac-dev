@@ -1,5 +1,7 @@
 import { getEdgesFromNodes, getSpacerNodes } from '@patternfly/react-topology';
+import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
+import update from 'lodash/update';
 import { EnvironmentKind } from '../../../../../../../types';
 import { DEFAULT_NODE_HEIGHT } from '../../../../../topology/const';
 import { DAG } from '../../../../../topology/dag';
@@ -122,10 +124,31 @@ export const getLatestResource = (resources = []) =>
     .slice(0, 1)
     .shift();
 
+export const addPrefixFromResourceName = (prefix: string, resourceName: string) =>
+  `${prefix}#${resourceName}`;
+
+export const removePrefixFromResourceName = (name: string) =>
+  name.includes('#') ? name.split('#').pop() : name;
+
+export const appendPrefixToResources = (
+  resources: WorkflowResources,
+  nameToAppend: string,
+  additionalPath?: string,
+): WorkflowResources =>
+  resources.map((e) => {
+    let obj = update(cloneDeep(e), 'metadata.name', (name) =>
+      addPrefixFromResourceName(nameToAppend, name),
+    );
+    if (additionalPath && get(obj, additionalPath, false)) {
+      obj = update(obj, additionalPath, (name) => addPrefixFromResourceName(nameToAppend, name));
+    }
+    return obj;
+  });
+
 export const workflowToNodes = (workflow: Workflow): WorkflowNode[] => {
   const workflowDag = new DAG();
 
-  Object.keys(workflow).map((key) => {
+  Object.keys(workflow).map((key: string) => {
     const { id, data, runBefore, runAfter, isAbstractNode, runAfterResourceKey } = workflow[key];
     const resources: WorkflowResources = data.resources || [];
     const isParallelNode = !isAbstractNode && resources.length > 1;
@@ -145,38 +168,32 @@ export const workflowToNodes = (workflow: Workflow): WorkflowNode[] => {
 
       workflowDag.addEdges(id, wData, runBefore, runAfter);
     } else {
+      const validResources = resources.map((r) => removePrefixFromResourceName(r.metadata.name));
+
       const rootResources = !runAfterResourceKey
         ? resources
-        : (resources as []).filter((r) => {
-            return !get(r, runAfterResourceKey);
+        : (resources as any[]).filter((r: WorkflowResource) => {
+            const foundResource = get(r, runAfterResourceKey);
+            return !validResources.includes(foundResource) || !foundResource;
           });
 
       const rootResourceNames = rootResources.map((pr) => pr.metadata.name);
-      const maxResourceName = getMaxName(rootResources) ?? '';
+      const maxResourceName = removePrefixFromResourceName(getMaxName(rootResources) ?? '');
 
       const maxWidth = getLabelWidth(maxResourceName);
-      const validResources = resources.map((r) => r.metadata.name);
       resources.forEach((resource: WorkflowResource) => {
         const {
-          metadata: { name, uid },
+          metadata: { name },
         } = resource;
-        const label = name;
+        const label = removePrefixFromResourceName(name);
         const resourceRunAfter = runAfterResourceKey
           ? get(resource, runAfterResourceKey, runAfter)
           : runAfter;
         let validRunAfters = runAfter;
 
-        if (Array.isArray(resourceRunAfter)) {
-          resourceRunAfter?.forEach((resName) => {
-            if (validResources.includes(resName)) {
-              validRunAfters.push(resName);
-            }
-          });
-        } else {
-          validRunAfters = validResources.includes(resourceRunAfter)
-            ? [resourceRunAfter]
-            : runAfter;
-        }
+        validRunAfters = validResources.includes(removePrefixFromResourceName(resourceRunAfter))
+          ? [resourceRunAfter]
+          : runAfter;
 
         const width =
           rootResourceNames.includes(label) || rootResourceNames.length > 1
@@ -191,7 +208,7 @@ export const workflowToNodes = (workflow: Workflow): WorkflowNode[] => {
         const workflowData = {
           ...data,
           status,
-          id: uid,
+          id,
           label,
           isDisabled: false,
           width,
@@ -199,14 +216,17 @@ export const workflowToNodes = (workflow: Workflow): WorkflowNode[] => {
           resources: [resource],
         };
 
-        workflowDag.addEdges(uid, workflowData, runBefore, validRunAfters);
+        workflowDag.addEdges(name, workflowData, runBefore, validRunAfters);
       });
     }
   });
   return dagtoNodes(workflowDag);
 };
 
-export const getLastEnvironments = (environments: EnvironmentKind[]): string[] => {
+export const getLastEnvironments = (
+  environments: EnvironmentKind[],
+  callback: (EnvironmentKind) => string = (e: EnvironmentKind) => e.metadata.uid,
+): string[] => {
   if (!environments || environments?.length === 0) {
     return ['no-static-environments'];
   }
@@ -230,10 +250,11 @@ export const getLastEnvironments = (environments: EnvironmentKind[]): string[] =
       lastEnvironmentNames.push(n.name);
     }
   });
-  return environments
-    .filter((e) => lastEnvironmentNames.includes(e.metadata.name))
-    .map((e) => e.metadata.uid);
+  return environments.filter((e) => lastEnvironmentNames.includes(e.metadata.name)).map(callback);
 };
+
+export const getLastEnvironmentsNames = (environments: EnvironmentKind[]): string[] =>
+  getLastEnvironments(environments, (e: EnvironmentKind) => e?.metadata?.name);
 
 export const updateParallelNodeWidths = (nodes: PipelineMixedNodeModel[]) => {
   if (nodes?.length > 1) {

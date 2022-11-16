@@ -142,7 +142,7 @@ export type PipelineRunStatus = {
 
 export type PipelineRunKind = K8sResourceCommon & {
   spec: {
-    pipelineRef?: { name: string };
+    pipelineRef?: { name: string; bundle?: string };
     pipelineSpec?: PipelineSpec;
     params?: PipelineRunParam[];
     workspaces?: PipelineRunWorkspace[];

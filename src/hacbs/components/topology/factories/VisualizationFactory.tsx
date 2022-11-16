@@ -19,7 +19,6 @@ type VisualizationFactoryProps = {
   componentFactory: ComponentFactory;
   controlBar?: (controller: Controller) => React.ReactNode;
   fullHeight?: boolean;
-  fitToScreen?: boolean;
 };
 
 type Size = {
@@ -33,7 +32,6 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
   componentFactory,
   controlBar,
   fullHeight = false,
-  fitToScreen = false,
 }) => {
   const [controller, setController] = React.useState<Controller>(null);
   const [maxSize, setMaxSize] = React.useState<Size>(null);
@@ -84,11 +82,8 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
       controller.fromModel(model, model.graph.layout === layoutRef.current);
       layoutRef.current = model.graph.layout;
       controller.getGraph().layout();
-      if (fitToScreen) {
-        controller.getGraph().fit(90);
-      }
     }
-  }, [controller, model, onLayoutUpdate, layoutFactory, componentFactory, fitToScreen]);
+  }, [controller, model, onLayoutUpdate, layoutFactory, componentFactory]);
 
   if (!controller) return null;
 
@@ -103,7 +98,12 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
   return fullHeight ? (
     visualization
   ) : (
-    <div style={{ height: maxSize?.height, width: maxSize?.width }}>{visualization}</div>
+    <div
+      data-testid="visualization-wrapper"
+      style={{ height: maxSize?.height, width: maxSize?.width }}
+    >
+      {visualization}
+    </div>
   );
 };
 
