@@ -17,13 +17,14 @@ export class DetailsTab {
     }
 
     static checkStatusSucceeded() {
-        cy.get(pipelinerunsTabPO.statusPO).then(body => {
-            if (body.find("span:contains('Failed')").length > 0) {
+        cy.get(pipelinerunsTabPO.statusPO).invoke('text').then(text => {
+            if (text.includes('Running')) {
+                cy.get(pipelinerunsTabPO.statusPO, { timeout: 720000 }).should('not.have.text', 'Running');
+            }
+
+            if (text.includes('Failed')) {
                 LogsTab.goToLogsTab();
                 LogsTab.downloadAllTaskLogs();
-                return;
-            } else {
-                cy.get(pipelinerunsTabPO.statusPO, { timeout: 720000 }).should('have.text', 'Succeeded');
             }
         })
     }
