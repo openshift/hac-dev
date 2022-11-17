@@ -57,9 +57,7 @@ export const mockComponents: ComponentKind[] = [
     },
     spec: {
       application: 'test-application',
-      build: {
-        containerImage: '',
-      },
+      containerImage: 'quay.io/redhat-appstudio/user-workload:sbudhwar-1-basic-node-js',
       componentName: 'basic-node-js',
       replicas: 1,
       resources: {
@@ -103,9 +101,7 @@ export const mockComponents: ComponentKind[] = [
     },
     spec: {
       application: 'test-application',
-      build: {
-        containerImage: '',
-      },
+      containerImage: 'quay.io/redhat-appstudio/user-workload:rorai-nodejs',
       componentName: 'nodejs',
       replicas: 1,
       resources: {
