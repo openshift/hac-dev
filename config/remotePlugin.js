@@ -162,6 +162,7 @@ module.exports = {
       NamespaceContext: resolve(__dirname, '../src/utils/namespace-context-utils'),
       SignupView: resolve(__dirname, '../src/components/Signup/SignupView'),
       FlagUtils: resolve(__dirname, '../src/utils/flag-utils'),
+      HelpTopicContext: resolve(__dirname, '../src/components/HelpTopics/EnableHelpTopicContext'),
     },
   },
   extensions: [
@@ -462,14 +463,25 @@ module.exports = {
         },
       },
     },
+    {
+      type: 'core.context-provider',
+      properties: {
+        provider: {
+          $codeRef: 'HelpTopicContext.EnableHelpTopicContextProvider',
+        },
+        useValueHook: {
+          $codeRef: 'HelpTopicContext.useEnableHelpTopicContextValues',
+        },
+      },
+    },
   ],
   sharedModules: {
     'react-router-dom': { singleton: true },
     'react-redux': { singleton: true, import: false },
     '@openshift/dynamic-plugin-sdk-utils': { singleton: true, import: false },
     '@scalprum/react-core': { singleton: true, import: false },
-    '@patternfly/quickstarts': { singleton: true, eager: true },
     '@unleash/proxy-client-react': { singleton: true },
+    '@patternfly/quickstarts': { singleton: true, requiredVersion: '*' },
     '@openshift/dynamic-plugin-sdk': { singleton: true, import: false },
   },
 };

@@ -17,7 +17,8 @@ import { useOnMount } from '../../../hooks/useOnMount';
 import { getFieldId, InputField } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
 import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../../types';
-import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
+import { HELP_TOPICS } from '../../HelpTopics';
+import { HelpTopicLink } from '../../HelpTopics/HelpTopicLink';
 import { useAccessCheck, useAccessTokenBinding } from '../utils/auth-utils';
 import { ImportFormValues, ImportStrategy } from '../utils/types';
 import { gitUrlRegex, containerImageRegex } from '../utils/validation-utils';
@@ -154,7 +155,10 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
         <Text component="h2">Add components to your application</Text>
         <HelperText>
           <HelperTextItem>
-            {description} <HelpTopicLink topicId="add-component">Learn more</HelpTopicLink>
+            {description}{' '}
+            <HelpTopicLink topicId={HELP_TOPICS.sourceSection.addComponent}>
+              Learn more
+            </HelpTopicLink>
           </HelperTextItem>
         </HelperText>
       </TextContent>

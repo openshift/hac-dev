@@ -15,7 +15,7 @@ import PageLayout from '../../components/PageLayout/PageLayout';
 import { useQuickstartCloseOnUnmount } from '../../hooks/useQuickstartCloseOnUnmount';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
-import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
+import { HelpTopicLink, HELP_TOPICS } from '../HelpTopics';
 
 import './WorkspaceSettings.scss';
 
@@ -88,7 +88,7 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = ({
     <>
       <Text component="p" className="pf-u-mt-lg">
         Manage the continuous delivery process for your applications with environments.{' '}
-        <HelpTopicLink topicId="settings">Learn more</HelpTopicLink>
+        <HelpTopicLink topicId={HELP_TOPICS.workspaceSettings.settings}>Learn more</HelpTopicLink>
       </Text>
       {environmentsView}
     </>

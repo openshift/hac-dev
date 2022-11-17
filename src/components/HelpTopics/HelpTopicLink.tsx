@@ -1,20 +1,21 @@
 import * as React from 'react';
 import { Button, ButtonVariant } from '@patternfly/react-core';
-import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
+import { useEnableHelpTopicContext } from './EnableHelpTopicContext';
+import { useChromeHelpTopicsApi } from './help-topics';
 
 type HelpTopicLinkProps = {
   topicId: string;
 };
 
 export const HelpTopicLink: React.FC<HelpTopicLinkProps> = ({ topicId, children }) => {
-  const {
-    helpTopics: { setActiveTopic, enableTopics, disableTopics },
-  } = useChrome();
+  const { setActiveTopic } = useChromeHelpTopicsApi();
+  const { addTopicName, deleteTopicName } = useEnableHelpTopicContext();
 
   React.useEffect(() => {
-    enableTopics(topicId);
-
-    return () => disableTopics(topicId);
+    addTopicName(topicId);
+    return () => {
+      deleteTopicName(topicId);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

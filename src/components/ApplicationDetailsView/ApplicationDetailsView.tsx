@@ -28,7 +28,8 @@ import { ApplicationEnvironmentDetailsView } from '../ApplicationEnvironment/App
 import { ComponentDetails } from '../ComponentsListView/ComponentDetails';
 import { ApplicationEnvironmentCards } from '../Environment/ApplicationEnvironmentCards';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
-import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
+import { HELP_TOPICS } from '../HelpTopics';
+import { HelpTopicLink } from '../HelpTopics/HelpTopicLink';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
 import { OutlinedHelpPopperIcon } from '../OutlinedHelpTooltipIcon';
@@ -55,7 +56,6 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
     '',
   );
   const [cardsExpanded, setCardExpanded] = React.useState<boolean>(true);
-
   const resource = React.useMemo(() => {
     return {
       groupVersionKind: ApplicationGroupVersionKind,
@@ -137,7 +137,7 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
         description={
           <>
             Use this application view to access logs and promote your components.{' '}
-            <HelpTopicLink topicId="app-view">Learn more</HelpTopicLink>
+            <HelpTopicLink topicId={HELP_TOPICS.applicationView.appView}>Learn more</HelpTopicLink>
           </>
         }
         actions={actions}

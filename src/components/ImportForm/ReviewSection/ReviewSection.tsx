@@ -12,7 +12,8 @@ import {
   HelperTextItem,
 } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
-import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
+import { HELP_TOPICS } from '../../HelpTopics';
+import { HelpTopicLink } from '../../HelpTopics/HelpTopicLink';
 import { useComponentDetection } from '../utils/cdq-utils';
 import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues } from '../utils/types';
@@ -118,7 +119,9 @@ const ReviewSection: React.FunctionComponent = () => {
         <HelperText>
           <HelperTextItem>
             Review and define deployment settings and options.{' '}
-            <HelpTopicLink topicId="create-app-config">Learn more</HelpTopicLink>
+            <HelpTopicLink topicId={HELP_TOPICS.reviewSection.createAppConfig}>
+              Learn more
+            </HelpTopicLink>
           </HelperTextItem>
         </HelperText>
       </TextContent>
