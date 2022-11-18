@@ -165,6 +165,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
               setActiveTab(k);
               onTabSelect && onTabSelect(k);
             }}
+            unmountOnExit
             activeKey={activeTab}
           >
             {tabComponents}

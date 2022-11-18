@@ -25,6 +25,7 @@ import { Flex, FlexItem } from '@patternfly/react-core/dist/js/layouts';
 import { CodeBranchIcon } from '@patternfly/react-icons/dist/esm/icons/code-branch-icon';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import { FilterIcon, SearchIcon } from '@patternfly/react-icons/dist/js/icons';
+import { useSearchParam } from '../../../hooks/useSearchParam';
 import { Table } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { useNamespace } from '../../../utils/namespace-context-utils';
@@ -103,7 +104,7 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
     namespace,
     isList: true,
   });
-  const [nameFilter, setNameFilter] = React.useState<string>('');
+  const [nameFilter, setNameFilter] = useSearchParam('name', '');
 
   const applicationIntegrationTests = React.useMemo(
     () =>

@@ -9,19 +9,22 @@ import './WorkflowGraph.scss';
 type WorkflowGraphProps = {
   nodes: PipelineMixedNodeModel[];
   edges: PipelineEdgeModel[];
+  expanded: boolean;
 };
 
-const WorkflowGraph: React.FC<WorkflowGraphProps> = ({ nodes, edges }) => {
+const WorkflowGraph: React.FC<WorkflowGraphProps> = ({ nodes, edges, expanded }) => {
   return (
     <div className="hacbs-workflow-graph" data-test="workflow-graph">
       <WorkflowVisualizationSurface
         model={{
           graph: {
-            x: 15,
-            y: 0,
+            x: expanded ? 30 : 15,
+            y: expanded ? 30 : 15,
             id: 'application-overview-graph',
             type: ModelKind.graph,
-            layout: PipelineLayout.WORKFLOW_VISUALIZATION,
+            layout: expanded
+              ? PipelineLayout.EXPANDED_WORKFLOW_VISUALIZATION
+              : PipelineLayout.WORKFLOW_VISUALIZATION,
           },
           nodes,
           edges,

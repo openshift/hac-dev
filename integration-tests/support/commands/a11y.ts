@@ -1,15 +1,6 @@
 import 'cypress-axe';
 import { Result } from 'axe-core';
 
-declare global {
-  namespace Cypress {
-    interface Chainable<Subject> {
-      logA11yViolations(violations: Result[], target: string): Chainable<Element>;
-      testA11y(target: string, selector?: string): Chainable<Element>;
-    }
-  }
-}
-
 export const a11yTestResults: a11yTestResultsType = {
   numberViolations: 0,
   numberChecks: 0,

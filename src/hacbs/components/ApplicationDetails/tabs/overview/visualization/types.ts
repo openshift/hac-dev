@@ -1,56 +1,27 @@
+import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { EdgeModel, PipelineNodeModel } from '@patternfly/react-topology';
-import { ComponentKind } from '../../../../../../types';
-import { PipelineRunKind } from '../../../../../types';
-import {
-  EnvironmentKind,
-  IntegrationTestScenarioKind,
-  ReleasePlanKind,
-} from '../../../../../types/coreBuildService';
 import { NodeType } from './const';
 
 export enum WorkflowNodeType {
-  SOURCE = 'Source Code',
-  PIPELINE = 'Pipeline',
-  ENVIRONMENT = 'Environment',
+  COMPONENT,
+  BUILD,
+  TESTS,
+  COMPONENT_TEST,
+  APPLICATION_TEST,
+  STATIC_ENVIRONMENT,
+  RELEASE,
+  MANAGED_ENVIRONMENT,
 }
 
-export type WorkflowResources =
-  | ComponentKind[]
-  | IntegrationTestScenarioKind[]
-  | PipelineRunKind[]
-  | EnvironmentKind[]
-  | ReleasePlanKind[];
-
-export type Workflow = {
-  [key: string]: {
-    id: string;
-    isAbstractNode?: boolean;
-    data: {
-      label: string;
-      workflowType: WorkflowNodeType;
-      isDisabled: boolean;
-      resources: WorkflowResources;
-    };
-    runBefore: string[];
-    runAfter: string[];
-    runAfterResourceKey?: string;
-  };
-};
-
 export type WorkflowNodeModelData = {
-  id: string;
+  label: string;
   workflowType: WorkflowNodeType;
-  runAfterTasks: string[];
-  label?: string;
-  selected?: boolean;
   isDisabled?: boolean;
-  isParallelNode?: boolean;
-  width?: number;
-};
-
-export type WorkflowNode = {
-  id: string;
-  data: WorkflowNodeModelData;
+  groupNode?: boolean;
+  status?: string;
+  resources?: K8sResourceCommon[];
+  hidden?: boolean;
+  children?: PipelineNodeModel[];
 };
 
 // Graph Models
@@ -61,15 +32,3 @@ export type WorkflowNodeModel<D extends WorkflowNodeModelData> = PipelineNodeMod
 export type PipelineMixedNodeModel = WorkflowNodeModel<WorkflowNodeModelData> | PipelineNodeModel;
 
 export type PipelineEdgeModel = EdgeModel;
-
-// Node Creators
-export type NodeCreator<D extends WorkflowNodeModelData> = (
-  name: string,
-  data: D,
-) => WorkflowNodeModel<D>;
-
-export type NodeCreatorSetup = (
-  type: NodeType,
-  width?: number,
-  height?: number,
-) => NodeCreator<WorkflowNodeModelData>;

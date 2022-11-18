@@ -18,6 +18,7 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
+import { useSearchParam } from '../../../hooks/useSearchParam';
 import { Table } from '../../../shared';
 import { Commit } from '../../types';
 import CommitsListHeader from './CommitsListHeader';
@@ -35,7 +36,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
   applicationName,
 }) => {
   const navigate = useNavigate();
-  const [nameFilter, setNameFilter] = React.useState<string>('');
+  const [nameFilter, setNameFilter] = useSearchParam('name', '');
 
   const filteredCommits = React.useMemo(
     () =>

@@ -33,6 +33,7 @@ import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
 import { OutlinedHelpPopperIcon } from '../OutlinedHelpTooltipIcon';
 import PageLayout from '../PageLayout/PageLayout';
+import { ApplicationSwitcher } from './ApplicationSwitcher';
 import { ComponentCard } from './ComponentCard';
 
 import './ApplicationDetailsView.scss';
@@ -131,6 +132,7 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
             name: application?.spec?.displayName,
           },
         ]}
+        breadcrumbItems={<ApplicationSwitcher selectedApplication={application?.metadata?.name} />}
         title={application?.spec?.displayName}
         description={
           <>

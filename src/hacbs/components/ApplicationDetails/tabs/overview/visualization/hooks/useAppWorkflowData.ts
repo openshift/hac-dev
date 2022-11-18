@@ -1,129 +1,157 @@
-import { useNamespace } from '../../../../../../../utils/namespace-context-utils';
+import * as React from 'react';
 import {
-  useComponents,
-  useEnvironments,
-  useIntegrationTestScenarios,
-  useReleasePlans,
-  useBuildPipelines,
-} from '../../../../../../hooks';
-import { Workflow, WorkflowNode, WorkflowNodeType } from '../types';
-import { getLastEnvironments, workflowToNodes } from '../utils/visualization-utils';
+  getEdgesFromNodes,
+  getSpacerNodes,
+  Model,
+  PipelineNodeModel,
+} from '@patternfly/react-topology';
+import { useNamespace } from '../../../../../../../utils/namespace-context-utils';
+import { NodeType } from '../const';
+import { WorkflowNodeType } from '../types';
+import { groupToPipelineNode, worstWorkflowStatus } from '../utils/node-utils';
+import { useAppApplictionTestNodes } from './useAppApplictionTestNodes';
+import { useAppBuildNodes } from './useAppBuildNodes';
+import { useAppComponentsNodes } from './useAppComponentsNodes';
+import { useAppIntegrationTestNodes } from './useAppIntegrationTestNodes';
+import { useAppReleaseNodes } from './useAppReleaseNodes';
+import { useAppReleasePlanNodes } from './useAppReleasePlanNodes';
+import { useAppStaticEnvironmentNodes } from './useAppStaticEnvironmentNodes';
 
 export const useAppWorkflowData = (
   applicationName: string,
-): [nodes: WorkflowNode[], loaded: boolean] => {
+  expanded: boolean,
+): [model: Model, loaded: boolean] => {
   const namespace = useNamespace();
-
-  const [components, componentsLoaded] = useComponents(namespace, applicationName);
-  const [integrationTestScenario, integrationTestsLoaded] = useIntegrationTestScenarios(
+  const [componentNodes, componentGroup, componentTasks, componentsLoaded] = useAppComponentsNodes(
     namespace,
     applicationName,
+    [],
+    expanded,
   );
-  const [environments, environmentsLoaded] = useEnvironments(namespace);
-  const [releasePlans, releasePlansLoaded] = useReleasePlans(namespace);
-  const [buildPipelines] = useBuildPipelines(namespace, applicationName);
-  let componentIntegrationTests = [];
-  let applicationIntegrationTests = [];
+  const [buildNodes, buildGroup, buildTasks, buildsLoaded] = useAppBuildNodes(
+    namespace,
+    applicationName,
+    componentTasks,
+    expanded,
+  );
+  const [
+    componentIntegrationTestNodes,
+    componentIntegrationTestTasks,
+    componentIntegrationTests,
+    integrationTestsLoaded,
+  ] = useAppIntegrationTestNodes(namespace, applicationName, buildTasks, expanded);
 
+  const [
+    applicationIntegrationTestNodes,
+    applicationIntegrationTestTasks,
+    applicationIntegrationTests,
+    applicationTestsLoaded,
+  ] = useAppApplictionTestNodes(
+    namespace,
+    applicationName,
+    componentIntegrationTestTasks,
+    expanded,
+  );
+  const testsGroup = React.useMemo(
+    () =>
+      integrationTestsLoaded && applicationTestsLoaded
+        ? groupToPipelineNode(
+            'tests',
+            !applicationIntegrationTests?.length && !applicationIntegrationTests.length
+              ? 'No tests set'
+              : 'Tests',
+            WorkflowNodeType.TESTS,
+            buildTasks,
+            expanded,
+            expanded
+              ? [...componentIntegrationTestTasks, ...applicationIntegrationTestTasks]
+              : undefined,
+            [...componentIntegrationTestNodes, ...applicationIntegrationTestNodes],
+            [...componentIntegrationTests, ...applicationIntegrationTests],
+            worstWorkflowStatus([
+              ...componentIntegrationTestNodes,
+              ...applicationIntegrationTestNodes,
+            ]),
+          )
+        : undefined,
+    [
+      integrationTestsLoaded,
+      applicationTestsLoaded,
+      applicationIntegrationTestTasks,
+      applicationIntegrationTests,
+      applicationIntegrationTestNodes,
+      buildTasks,
+      componentIntegrationTestTasks,
+      componentIntegrationTests,
+      componentIntegrationTestNodes,
+      expanded,
+    ],
+  );
+
+  const [staticEnvironmentNodes, staticEnvironmentGroup, lastStaticEnv, staticEnvironmentsLoaded] =
+    useAppStaticEnvironmentNodes(
+      namespace,
+      applicationName,
+      expanded ? applicationIntegrationTestTasks : [testsGroup?.id ?? ''],
+      expanded,
+    );
+
+  const [releaseNodes, releaseGroup, releaseTasks, releasesLoaded] = useAppReleaseNodes(
+    namespace,
+    applicationName,
+    expanded ? lastStaticEnv : [staticEnvironmentGroup?.id ?? ''],
+    expanded,
+  );
+
+  const [managedEnvironmentNodes, managedEnvironmentGroup, managedEnvironmentsLoaded] =
+    useAppReleasePlanNodes(namespace, applicationName, releaseTasks, expanded);
   const allResourcesLoaded: boolean =
-    componentsLoaded && integrationTestsLoaded && environmentsLoaded && releasePlansLoaded;
+    componentsLoaded &&
+    buildsLoaded &&
+    integrationTestsLoaded &&
+    applicationTestsLoaded &&
+    staticEnvironmentsLoaded &&
+    releasesLoaded &&
+    managedEnvironmentsLoaded;
 
   if (!allResourcesLoaded) {
-    return [[], allResourcesLoaded];
+    return [{ nodes: [], edges: [] }, allResourcesLoaded];
   }
 
-  componentIntegrationTests = integrationTestScenario?.filter((test) => {
-    const contexts = test?.spec?.contexts;
-    return contexts?.some((c) => c.name === 'component') ?? false;
-  });
+  if (expanded) {
+    const resourceNodes: PipelineNodeModel[] = [
+      ...(componentNodes?.length ? componentNodes : [componentGroup]),
+      ...(buildNodes?.length ? buildNodes : [buildGroup]),
+      ...componentIntegrationTestNodes,
+      ...applicationIntegrationTestNodes,
+      ...(staticEnvironmentNodes?.length ? staticEnvironmentNodes : [staticEnvironmentGroup]),
+      ...(releaseNodes?.length ? releaseNodes : [releaseGroup]),
+      ...(managedEnvironmentNodes?.length ? managedEnvironmentNodes : [managedEnvironmentGroup]),
+    ];
+    const spacerNodes = getSpacerNodes(resourceNodes, NodeType.SPACER_NODE);
+    const nodes = [
+      ...resourceNodes,
+      ...spacerNodes,
+      componentGroup,
+      buildGroup,
+      testsGroup,
+      staticEnvironmentGroup,
+      releaseGroup,
+      managedEnvironmentGroup,
+    ];
+    const edges = getEdgesFromNodes(nodes, NodeType.SPACER_NODE);
 
-  applicationIntegrationTests = integrationTestScenario?.filter((test) => {
-    const contexts = test?.spec?.contexts;
-    return contexts?.some((c) => c.name === 'application') ?? false;
-  });
+    return [{ nodes, edges }, true];
+  }
+  const nodes = [
+    componentGroup,
+    buildGroup,
+    testsGroup,
+    staticEnvironmentGroup,
+    releaseGroup,
+    managedEnvironmentGroup,
+  ];
+  const edges = getEdgesFromNodes(nodes, NodeType.SPACER_NODE);
 
-  const getNodeNames = (resources): string[] => resources?.map((r) => r?.metadata?.name);
-  const isResourcesAvailable = (resources): boolean => resources?.length > 0;
-
-  const workflowObject: Workflow = {
-    components: {
-      id: 'components',
-      isAbstractNode: true,
-      data: {
-        label: 'Components',
-        workflowType: WorkflowNodeType.SOURCE,
-        isDisabled: components.length === 0,
-        resources: components,
-      },
-      runBefore: [],
-      runAfter: [],
-    },
-    builds: {
-      id: 'build',
-      isAbstractNode: true,
-      data: {
-        label: 'Builds',
-        workflowType: WorkflowNodeType.PIPELINE,
-        isDisabled: buildPipelines.length === 0,
-        resources: buildPipelines,
-      },
-      runBefore: [],
-      runAfter: ['components'],
-    },
-    componentTests: {
-      id: 'component-integration-test',
-      data: {
-        label: 'component integration test',
-        workflowType: WorkflowNodeType.PIPELINE,
-        isDisabled: componentIntegrationTests.length === 0,
-        resources: componentIntegrationTests,
-      },
-      runBefore: [],
-      runAfter: ['build'],
-    },
-    applicationTests: {
-      id: 'application-integration-test',
-      data: {
-        label: 'app integration test',
-        workflowType: WorkflowNodeType.PIPELINE,
-        isDisabled: applicationIntegrationTests.length === 0,
-        resources: applicationIntegrationTests,
-      },
-      runBefore: [],
-      runAfter: isResourcesAvailable(componentIntegrationTests)
-        ? getNodeNames(componentIntegrationTests)
-        : ['component-integration-test'],
-    },
-    staticEnv: {
-      id: 'static-env',
-      data: {
-        label: 'environment',
-        workflowType: WorkflowNodeType.ENVIRONMENT,
-        isDisabled: environments.length === 0,
-        resources: environments,
-      },
-      runBefore: [],
-      runAfterResourceKey: 'spec.parentEnvironment',
-      runAfter: isResourcesAvailable(applicationIntegrationTests)
-        ? getNodeNames(applicationIntegrationTests)
-        : ['application-integration-test'],
-    },
-    releasePlan: {
-      id: 'release-links',
-      data: {
-        label: 'managed environment',
-        workflowType: WorkflowNodeType.ENVIRONMENT,
-        isDisabled: releasePlans.length === 0,
-        resources: releasePlans,
-      },
-      runBefore: [],
-      runAfter: isResourcesAvailable(environments)
-        ? getLastEnvironments(environments)
-        : ['static-env'],
-    },
-  };
-
-  const nodes: WorkflowNode[] = workflowToNodes(workflowObject);
-
-  return [nodes, allResourcesLoaded];
+  return [{ nodes, edges }, true];
 };

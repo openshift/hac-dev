@@ -1,3 +1,12 @@
+import * as path from 'path';
+import * as fs from 'fs-extra';
+
+function getConfigurationByFile(file: string) {
+  const pathToConfigFile = path.resolve('config', `${file}.json`)
+
+  return fs.readJsonSync(pathToConfigFile)
+}
+
 module.exports = (on, config) => {
   const logOptions = {
     outputRoot: `${config.projectRoot}/cypress`,
@@ -18,26 +27,38 @@ module.exports = (on, config) => {
       // eslint-disable-next-line no-console
       console.table(data);
       return null;
+    },
+    readFileIfExists(filename: string) {
+      if (fs.existsSync(filename)) {
+        return fs.readFileSync(filename, 'utf8');
+      }
+      return null
+    },
+    deleteFile(filename: string) {
+      if (fs.existsSync(filename)) {
+        fs.unlinkSync(filename);
+      }
+      return null;
     }
   });
 
-  if (!Object.prototype.hasOwnProperty.call(config.env, 'HAC_BASE_URL')) {
-    config.env.HAC_BASE_URL = 'https://prod.foo.redhat.com:1337/beta/hac/app-studio';
+  const file = config.env.configFile || 'default';
+  const newConfig = getConfigurationByFile(file);
+  newConfig.env = config.env;
+
+  const defaultValues: { [key: string]: string } = {
+    HAC_BASE_URL: 'https://prod.foo.redhat.com:1337/beta/hac/app-studio',
+    USERNAME: '',
+    PASSWORD: '',
+    KUBECONFIG: '~/.kube/appstudio-config',
+    CLEAN_NAMESPACE: 'false',
+    PR_CHECK: 'false'
   }
-  if (!Object.prototype.hasOwnProperty.call(config.env, 'USERNAME')) {
-    config.env.USERNAME = '';
+
+  for (const key in defaultValues) {
+    if (!config.env[key]) {
+      config.env[key] = defaultValues[key];
+    }
   }
-  if (!Object.prototype.hasOwnProperty.call(config.env, 'PASSWORD')) {
-    config.env.PASSWORD = '';
-  }
-  if (!Object.prototype.hasOwnProperty.call(config.env, 'KUBECONFIG')) {
-    config.env.KUBECONFIG = '~/.kube/appstudio-config';
-  }
-  if (!Object.prototype.hasOwnProperty.call(config.env, 'CLEAN_NAMESPACE')) {
-    config.env.CLEAN_NAMESPACE = 'false';
-  }
-  if (!Object.prototype.hasOwnProperty.call(config.env, 'PR_CHECK')) {
-    config.env.PR_CHECK = 'false';
-  }
-  return config;
+  return newConfig;
 };

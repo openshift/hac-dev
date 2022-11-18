@@ -10,8 +10,6 @@ import {
   DescriptionListDescription,
   Flex,
   FlexItem,
-  Label,
-  LabelGroup,
   Title,
 } from '@patternfly/react-core';
 import { pipelineRunFilterReducer } from '../../../../shared';
@@ -21,6 +19,7 @@ import { Timestamp } from '../../../../shared/components/timestamp/Timestamp';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { PipelineRunKind } from '../../../types';
 import { calculateDuration } from '../../../utils/pipeline-utils';
+import MetadataList from '../MetadataList';
 import PipelineRunVisualization from '../PipelineRunVisualization';
 import RelatedPipelineRuns from '../RelatedPipelineRuns';
 
@@ -34,24 +33,6 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
       ? pipelineRun.status?.completionTime
       : '',
   );
-
-  const getMetadataList = (prop: Record<string, string>) => {
-    const labelArray = Object.entries(prop);
-
-    return (
-      <Flex>
-        <LabelGroup>
-          {labelArray.map((label, index) => (
-            <FlexItem key={index}>
-              <Label color="blue" isTruncated={label.toString().length > 100}>
-                {label.toString().replace(',', '=')}{' '}
-              </Label>
-            </FlexItem>
-          ))}
-        </LabelGroup>
-      </Flex>
-    );
-  };
 
   return (
     <>
@@ -83,13 +64,13 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
               <DescriptionListGroup>
                 <DescriptionListTerm>Labels</DescriptionListTerm>
                 <DescriptionListDescription>
-                  {getMetadataList(pipelineRun.metadata?.labels)}
+                  <MetadataList metadata={pipelineRun.metadata?.labels} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>Annotations</DescriptionListTerm>
                 <DescriptionListDescription>
-                  {getMetadataList(pipelineRun.metadata?.annotations)}
+                  <MetadataList metadata={pipelineRun.metadata?.annotations} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>

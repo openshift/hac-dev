@@ -1,0 +1,6 @@
+{
+  "testFiles": "*private-git-form.spec.ts",
+  "trashAssetsBeforeRuns": false,
+  "experimentalSessionAndOrigin": true,
+  "extends": "../cypress.json"
+}
