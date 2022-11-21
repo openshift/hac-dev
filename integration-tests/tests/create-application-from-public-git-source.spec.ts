@@ -60,10 +60,10 @@ describe('Create Component from Public Git Source', () => {
       componentPage.setReplicas(replicaCount);
     });
 
-    it.skip('Check Route settings', () => {
+    // it.skip('Check Route settings', () => {
       // Currently not working, waiting for fix.
       // https://coreos.slack.com/archives/C02GG6FUXCH/p1652432446123619
-    });
+    // });
 
     it('Add Environment Variable', () => {
       componentPage.addEnvVar('secondEnvVar', '3000');
