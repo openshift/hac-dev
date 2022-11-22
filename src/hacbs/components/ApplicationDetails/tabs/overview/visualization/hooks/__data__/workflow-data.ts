@@ -3,6 +3,7 @@ import { ComponentKind } from '../../../../../../../../types';
 import {
   EnvironmentKind,
   IntegrationTestScenarioKind,
+  ReleaseKind,
   ReleasePlanKind,
 } from '../../../../../../../types/coreBuildService';
 
@@ -15,7 +16,7 @@ export const sampleBuildPipelines: PipelineRunKind[] = [
       uid: '94c9a362-f5a5-4e67-b642-c61c6d1134dc',
       namespace: 'karthik-jk',
       labels: {
-        'build.appstudio.openshift.io/component': '1-nodejs',
+        'appstudio.openshift.io/component': '1-nodejs',
         'pipelines.openshift.io/runtime': 'generic',
         'pipelines.openshift.io/strategy': 'docker',
         'tekton.dev/pipeline': 'docker-build',
@@ -28,8 +29,23 @@ export const sampleBuildPipelines: PipelineRunKind[] = [
         'build.appstudio.openshift.io/version': '0.1',
       },
       annotations: {
-        'build.appstudio.openshift.io/component': '1-nodejs',
-        'pipelines.openshift.io/runtime': 'generic',
+        'pipelinesascode.tekton.dev/on-target-branch': '[main,master]',
+        'pipelinesascode.tekton.dev/repo-url': 'https://github.com/karthikjeeyar/test-nodeapp',
+        'pipelinesascode.tekton.dev/sha-title': 'Appstudio update test-nodeapp',
+        'pipelinesascode.tekton.dev/git-auth-secret': 'pac-gitauth-tfts',
+        'appstudio.redhat.com/updateComponentOnSuccess': 'false',
+        'build.appstudio.openshift.io/repo': 'https://github.com/karthikjeeyar/test-nodeapp',
+        'build.appstudio.redhat.com/target_branch': 'main',
+        'pipelinesascode.tekton.dev/max-keep-runs': '3',
+        'build.appstudio.redhat.com/pull_request_number': '9',
+        'pipelinesascode.tekton.dev/pull-request': '9',
+        'pipelinesascode.tekton.dev/sha-url':
+          'https://github.com/karthikjeeyar/test-nodeapp/commit/d187a69d325469f38fd354a02a2705d95cc6abbe',
+        'pipelinesascode.tekton.dev/on-event': '[pull_request]',
+        'pipelinesascode.tekton.dev/installation-id': '29976162',
+        'build.appstudio.redhat.com/commit_sha': 'd187a69d325469f38fd354a02a2705d95cc6abbe',
+        'build.appstudio.openshift.io/image':
+          'quay.io/karthik_jk/test-nodeapp:on-pr-d187a69d325469f38fd354a02a2705d95cc6abbe',
       },
     },
     spec: {
@@ -208,6 +224,364 @@ export const sampleBuildPipelines: PipelineRunKind[] = [
   },
 ];
 
+export const sampleTestPipelines: PipelineRunKind[] = [
+  {
+    apiVersion: 'tekton.dev/v1beta1',
+    kind: 'PipelineRun',
+    metadata: {
+      annotations: {
+        'pipelinesascode.tekton.dev/git-auth-secret': 'pac-gitauth-wfqw',
+        'pipelinesascode.tekton.dev/installation-id': '29976162',
+        'pipelinesascode.tekton.dev/max-keep-runs': '3',
+        'pipelinesascode.tekton.dev/on-event': '[pull_request]',
+        'pipelinesascode.tekton.dev/on-target-branch': '[main,master]',
+        'pipelinesascode.tekton.dev/pull-request': '4',
+        'pipelinesascode.tekton.dev/repo-url': 'https://github.com/karthikjeeyar/nodeapp',
+        'pipelinesascode.tekton.dev/sha-title': 'Appstudio update nodeapp',
+        'pipelinesascode.tekton.dev/sha-url':
+          'https://github.com/karthikjeeyar/nodeapp/commit/863b1c27b22cdf9bf906c47de9d1ded3762f4dcf',
+        'results.tekton.dev/record':
+          'karthik-jk/results/4debc5e2-4a44-4bcd-bc71-e29d002b832a/records/4debc5e2-4a44-4bcd-bc71-e29d002b832a',
+        'results.tekton.dev/result': 'karthik-jk/results/4debc5e2-4a44-4bcd-bc71-e29d002b832a',
+      },
+      creationTimestamp: '2022-11-19T11:41:05Z',
+      finalizers: ['pipelinesascode.tekton.dev', 'chains.tekton.dev/pipelinerun'],
+      generateName: 'test-application-5v6l9-',
+      generation: 1,
+      labels: {
+        'pipelines.appstudio.openshift.io/type': 'test',
+        'pipelinesascode.tekton.dev/branch': 'main',
+        'pipelinesascode.tekton.dev/event-type': 'pull_request',
+        'pipelinesascode.tekton.dev/git-provider': 'github',
+        'pipelinesascode.tekton.dev/original-prname': '1-nodejs-on-pull-request',
+        'pipelinesascode.tekton.dev/repository': '1-nodejs',
+        'pipelinesascode.tekton.dev/sender': 'karthikjeeyar',
+        'pipelinesascode.tekton.dev/sha': '863b1c27b22cdf9bf906c47de9d1ded3762f4dcf',
+        'pipelinesascode.tekton.dev/state': 'started',
+        'pipelinesascode.tekton.dev/url-org': 'karthikjeeyar',
+        'pipelinesascode.tekton.dev/url-repository': '1-nodejs',
+        'tekton.dev/pipeline': 'component-pipeline-pass',
+        'test.appstudio.openshift.io/application': 'test-application',
+        'test.appstudio.openshift.io/component': '1-nodejs',
+        'test.appstudio.openshift.io/scenario': 'component-integration-test',
+        'test.appstudio.openshift.io/snapshot': 'test-snapshot-5v6l9',
+      },
+      name: 'test-application-5v6l9-4cpnx',
+      namespace: 'karthik-jk',
+      ownerReferences: [
+        {
+          apiVersion: 'appstudio.redhat.com/v1alpha1',
+          blockOwnerDeletion: true,
+          controller: true,
+          kind: 'Snapshot',
+          name: 'test-application-5v6l9',
+          uid: '75fb18ee-13c1-451e-8008-208c1d23e72a',
+        },
+      ],
+      resourceVersion: '418933',
+      uid: '4debc5e2-4a44-4bcd-bc71-e29d002b832a',
+    },
+    spec: {
+      params: [
+        {
+          name: 'SNAPSHOT',
+          value:
+            '{"application":"test-application","components":[{"name":"1-nodejs","containerImage":"quay.io/karthik_jk/nodeapp@sha256:5815b5943ba9d7d711fc089b8021516376ed746dd7dd03150b4a1faee221f7da"}],"artifacts":{}}',
+        },
+      ],
+      pipelineRef: {
+        bundle: 'quay.io/kpavic/test-bundle:component-pipeline-pass',
+        name: 'component-pipeline-pass',
+      },
+      serviceAccountName: 'pipeline',
+      timeout: '1h0m0s',
+    },
+    status: {
+      completionTime: '2022-11-19T11:41:15Z',
+      conditions: [
+        {
+          lastTransitionTime: '2022-11-19T11:41:15Z',
+          message: 'Tasks Completed: 3 (Failed: 0, Cancelled 0), Skipped: 0',
+          reason: 'Succeeded',
+          status: 'True',
+          type: 'Succeeded',
+        },
+      ],
+      pipelineSpec: {
+        tasks: [
+          {
+            name: 'task-success',
+            params: [
+              {
+                name: 'RESULT',
+                value: 'SUCCESS',
+              },
+            ],
+            taskRef: {
+              bundle: 'quay.io/kpavic/test-bundle:test-output',
+              kind: 'Task',
+              name: 'test-output',
+            },
+          },
+          {
+            name: 'task-success-2',
+            params: [
+              {
+                name: 'RESULT',
+                value: 'SUCCESS',
+              },
+            ],
+            taskRef: {
+              bundle: 'quay.io/kpavic/test-bundle:test-output',
+              kind: 'Task',
+              name: 'test-output',
+            },
+          },
+          {
+            name: 'task-skipped',
+            params: [
+              {
+                name: 'RESULT',
+                value: 'SKIPPED',
+              },
+            ],
+            taskRef: {
+              bundle: 'quay.io/kpavic/test-bundle:test-output',
+              kind: 'Task',
+              name: 'test-output',
+            },
+          },
+        ],
+      },
+      startTime: '2022-11-19T11:41:05Z',
+      taskRuns: {
+        'test-application-5v6l9-4cpnx-task-skipped': {
+          pipelineTaskName: 'task-skipped',
+          status: {
+            completionTime: '2022-11-19T11:41:15Z',
+            conditions: [
+              {
+                lastTransitionTime: '2022-11-19T11:41:15Z',
+                message: 'All Steps have completed executing',
+                reason: 'Succeeded',
+                status: 'True',
+                type: 'Succeeded',
+              },
+            ],
+            podName: 'test-application-5v6l9-4cpnx-task-skipped-pod',
+            startTime: '2022-11-19T11:41:06Z',
+            steps: [
+              {
+                container: 'step-unnamed-0',
+                imageID:
+                  'quay.io/redhat-appstudio/hacbs-test@sha256:581f9e27c748f9900e32a152293b6dffbaa3e390775f3c36c3860c6ed6c87b73',
+                name: 'unnamed-0',
+                terminated: {
+                  containerID:
+                    'cri-o://5e65589a2a2321a4cc9195ac3a49eec40d91a18c247c209aaac5774232096c24',
+                  exitCode: 0,
+                  finishedAt: '2022-11-19T11:41:14Z',
+                  message:
+                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1668858074\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                  reason: 'Completed',
+                  startedAt: '2022-11-19T11:41:14Z',
+                },
+              },
+            ],
+            taskResults: [
+              {
+                name: 'HACBS_TEST_OUTPUT',
+                value:
+                  '{"result":"SKIPPED","timestamp":"1668858074","failures":[],"successes":0}\n',
+              },
+            ],
+            taskSpec: {
+              params: [
+                {
+                  default: 'SUCCESS',
+                  description: 'Test result to be generated',
+                  name: 'RESULT',
+                  type: 'string',
+                },
+              ],
+              results: [
+                {
+                  description: 'Test output',
+                  name: 'HACBS_TEST_OUTPUT',
+                },
+              ],
+              steps: [
+                {
+                  image: 'quay.io/redhat-appstudio/hacbs-test:stable',
+                  name: '',
+                  resources: {},
+                },
+              ],
+            },
+          },
+        },
+        'test-application-5v6l9-4cpnx-task-success': {
+          pipelineTaskName: 'task-success',
+          status: {
+            completionTime: '2022-11-19T11:41:13Z',
+            conditions: [
+              {
+                lastTransitionTime: '2022-11-19T11:41:13Z',
+                message: 'All Steps have completed executing',
+                reason: 'Succeeded',
+                status: 'True',
+                type: 'Succeeded',
+              },
+            ],
+            podName: 'test-application-5v6l9-4cpnx-task-success-pod',
+            startTime: '2022-11-19T11:41:05Z',
+            steps: [
+              {
+                container: 'step-unnamed-0',
+                imageID:
+                  'quay.io/redhat-appstudio/hacbs-test@sha256:581f9e27c748f9900e32a152293b6dffbaa3e390775f3c36c3860c6ed6c87b73',
+                name: 'unnamed-0',
+                terminated: {
+                  containerID:
+                    'cri-o://4b8241c833a2800f04e2c64a249683960804d7fdd0ebd9b6bc97193efb38ee96',
+                  exitCode: 0,
+                  finishedAt: '2022-11-19T11:41:12Z',
+                  message:
+                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668858072\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                  reason: 'Completed',
+                  startedAt: '2022-11-19T11:41:12Z',
+                },
+              },
+            ],
+            taskResults: [
+              {
+                name: 'HACBS_TEST_OUTPUT',
+                value:
+                  '{"result":"SUCCESS","timestamp":"1668858072","failures":[],"successes":0}\n',
+              },
+            ],
+            taskSpec: {
+              params: [
+                {
+                  default: 'SUCCESS',
+                  description: 'Test result to be generated',
+                  name: 'RESULT',
+                  type: 'string',
+                },
+              ],
+              results: [
+                {
+                  description: 'Test output',
+                  name: 'HACBS_TEST_OUTPUT',
+                },
+              ],
+              steps: [
+                {
+                  image: 'quay.io/redhat-appstudio/hacbs-test:stable',
+                  name: '',
+                  resources: {},
+                },
+              ],
+            },
+          },
+        },
+        'test-application-5v6l9-4cpnx-task-success-2': {
+          pipelineTaskName: 'task-success-2',
+          status: {
+            completionTime: '2022-11-19T11:41:13Z',
+            conditions: [
+              {
+                lastTransitionTime: '2022-11-19T11:41:13Z',
+                message: 'All Steps have completed executing',
+                reason: 'Succeeded',
+                status: 'True',
+                type: 'Succeeded',
+              },
+            ],
+            podName: 'test-application-5v6l9-4cpnx-task-success-2-pod',
+            startTime: '2022-11-19T11:41:05Z',
+            steps: [
+              {
+                container: 'step-unnamed-0',
+                imageID:
+                  'quay.io/redhat-appstudio/hacbs-test@sha256:581f9e27c748f9900e32a152293b6dffbaa3e390775f3c36c3860c6ed6c87b73',
+                name: 'unnamed-0',
+                terminated: {
+                  containerID:
+                    'cri-o://5e3197c9eb61a6e1d5f0fc92e193872768fcc6b0d1f27ffe18d566cdfc9458fb',
+                  exitCode: 0,
+                  finishedAt: '2022-11-19T11:41:12Z',
+                  message:
+                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668858072\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                  reason: 'Completed',
+                  startedAt: '2022-11-19T11:41:12Z',
+                },
+              },
+            ],
+            taskResults: [
+              {
+                name: 'HACBS_TEST_OUTPUT',
+                value:
+                  '{"result":"SUCCESS","timestamp":"1668858072","failures":[],"successes":0}\n',
+              },
+            ],
+            taskSpec: {
+              params: [
+                {
+                  default: 'SUCCESS',
+                  description: 'Test result to be generated',
+                  name: 'RESULT',
+                  type: 'string',
+                },
+              ],
+              results: [
+                {
+                  description: 'Test output',
+                  name: 'HACBS_TEST_OUTPUT',
+                },
+              ],
+              steps: [
+                {
+                  image: 'quay.io/redhat-appstudio/hacbs-test:stable',
+                  name: '',
+                  resources: {},
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
+];
+
+export const sampleSnapshotsEnvironmentBindings = [
+  {
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    kind: 'SnapshotEnvironmentBinding',
+    metadata: {
+      labels: {
+        'test.appstudio.openshift.io/component': '1-nodejs',
+        'test.appstudio.openshift.io/type': 'component',
+      },
+      name: 'snapshot-environment-binding',
+      namespace: 'test-ns',
+      resourceVersion: '418386',
+      uid: '75fb18ee-13c1-451e-8008-208c1d23e72a',
+    },
+    spec: {
+      application: 'test-application;',
+      components: [
+        {
+          name: '1-nodejs',
+        },
+      ],
+      environment: 'test-environment',
+      snapshot: 'test-snapshot-5v6l9',
+    },
+  },
+];
+
 export const sampleComponents: ComponentKind[] = [
   {
     apiVersion: 'appstudio.redhat.com/v1alpha1',
@@ -295,7 +669,7 @@ export const sampleEnvironments: EnvironmentKind[] = [
     kind: 'Environment',
     metadata: {
       name: 'staging-environment',
-      uid: '210d9440-2ebf-49c7-a6df-1fa5d21cb111',
+      uid: '210d9440-2ebf-49c7-a6df-1fa5d21cb112',
     },
     spec: {
       configuration: {
@@ -318,7 +692,7 @@ export const sampleEnvironments: EnvironmentKind[] = [
     kind: 'Environment',
     metadata: {
       name: 'production-environment',
-      uid: '210d9440-2ebf-49c7-a6df-1fa5d21cb111',
+      uid: '210d9440-2ebf-49c7-a6df-1fa5d21cb113',
     },
     spec: {
       configuration: {
@@ -428,11 +802,32 @@ export const sampleIntegrationTestScenarios: IntegrationTestScenarioKind[] = [
   },
 ];
 
+export const sampleReleases: ReleaseKind[] = [
+  {
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    kind: 'Release',
+    metadata: {
+      creationTimestamp: '2022-11-19T11:52:29Z',
+      finalizers: ['appstudio.redhat.com/release-finalizer'],
+      generation: 1,
+      name: 'test-application-ttxrr-testing-release',
+      namespace: 'karthik-jk',
+      resourceVersion: '432640',
+      uid: '18bad4ae-432d-4e88-a5ed-202f2aeb8b9d',
+    },
+    spec: {
+      releasePlan: 'sre-production',
+      applicationSnapshot: 'test-application-5v6l9',
+    },
+    status: {},
+  },
+];
 export const sampleReleasePlans: ReleasePlanKind[] = [
   {
     apiVersion: 'appstudio.redhat.com/v1alpha1',
     kind: 'ReleasePlan',
     metadata: {
+      uid: 'df7988a5-0ff4-4f65-b794-8874af3d3095',
       name: 'm5-release-link-managed',
       namespace: 'managed',
     },

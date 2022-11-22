@@ -6,6 +6,7 @@ import { WorkflowNodeType } from '../types';
 
 export const getWorkflowNodeIcon = (type: WorkflowNodeType): React.ReactNode => {
   switch (type) {
+    case WorkflowNodeType.COMMIT:
     case WorkflowNodeType.COMPONENT:
       return <GithubIcon />;
     case WorkflowNodeType.STATIC_ENVIRONMENT:
@@ -16,6 +17,7 @@ export const getWorkflowNodeIcon = (type: WorkflowNodeType): React.ReactNode => 
     case WorkflowNodeType.COMPONENT_TEST:
     case WorkflowNodeType.APPLICATION_TEST:
     case WorkflowNodeType.RELEASE:
+    case WorkflowNodeType.PIPELINE:
     default:
       return <img src={PipelineIcon} />;
   }

@@ -6,6 +6,7 @@ import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 export const useBuildPipelines = (
   namespace: string,
   applicationName: string,
+  commit?: string,
 ): [PipelineRunKind[], boolean, unknown] =>
   useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
@@ -14,6 +15,7 @@ export const useBuildPipelines = (
       matchLabels: {
         [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
         [PipelineRunLabel.APPLICATION]: applicationName,
+        ...(commit && { [PipelineRunLabel.COMMIT_LABEL]: commit }),
       },
     },
     isList: true,

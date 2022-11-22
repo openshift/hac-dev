@@ -439,6 +439,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
+      name: 'nodejs-sample',
       annotations: {
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',
@@ -498,6 +499,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
+      name: 'nodejs-sample-4',
       annotations: {
         'build.appstudio.openshift.io/image':
           'quay.io/redhat-appstudio/user-workload:test-nodejs-sample',

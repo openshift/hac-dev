@@ -45,6 +45,7 @@ export type EnvironmentSpec = {
 
 export type Configuration = {
   env: Env[];
+  replicas?: number;
 };
 
 export type Env = {
@@ -91,4 +92,18 @@ export type ReleasePlanSpec = {
 export type ReleaseTarget = {
   workspace?: string;
   namespace: string;
+};
+
+export type component = {
+  name: string;
+  configuration: Configuration;
+};
+
+export type SnapshotEnvironmentBinding = K8sResourceCommon & {
+  spec: {
+    application: string;
+    components: component[];
+    environment: string;
+    snapshot: string;
+  };
 };
