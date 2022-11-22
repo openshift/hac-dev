@@ -21,7 +21,6 @@ import {
   ToolbarGroup,
   ToolbarItem,
 } from '@patternfly/react-core';
-import { Flex, FlexItem } from '@patternfly/react-core/dist/js/layouts';
 import { CodeBranchIcon } from '@patternfly/react-icons/dist/esm/icons/code-branch-icon';
 import { FilterIcon, SearchIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useSearchParam } from '../../../hooks/useSearchParam';
@@ -132,15 +131,11 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
       <Title headingLevel="h3" className="pf-u-mt-lg pf-u-mb-sm">
         Integration tests
       </Title>
-      <Flex spaceItems={{ default: 'spaceItemsXs' }}>
-        <FlexItem>
-          <TextContent>
-            <Text component={TextVariants.p}>
-              Add an integration test to test all your components after you commit code.
-            </Text>
-          </TextContent>
-        </FlexItem>
-      </Flex>
+      <TextContent>
+        <Text component={TextVariants.p}>
+          Add an integration test to test all your components after you commit code.
+        </Text>
+      </TextContent>
       <>
         <Toolbar data-testid="component-list-toolbar" clearAllFilters={onClearFilters}>
           <ToolbarContent>
