@@ -1,11 +1,9 @@
 import React from 'react';
 import { Form, FormSection, PageSection, PageSectionVariants } from '@patternfly/react-core';
-import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useFormikContext } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import PageLayout from '../../../components/PageLayout/PageLayout';
 import { FormFooter } from '../../../shared';
-import ExternalLink from '../../../shared/components/links/ExternalLink';
 import IntegrationTestSection from './IntegrationTestSection';
 
 import '../../../shared/style.scss';
@@ -48,10 +46,6 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
           By default, previous GitHub credentials will be used to validate your URL. If it fails,
           you must revalidate with a different repo.
           <br />
-          <br />
-          <ExternalLink href="#">
-            Learn more about setting up an integration test <ExternalLinkAltIcon />
-          </ExternalLink>
         </>
       }
       footer={footer}
