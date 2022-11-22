@@ -46,15 +46,17 @@ export const ApplicationEnvironmentListItem: React.FC<ApplicationEnvironmentList
                 <FlexItem>
                   <b>{name}</b>
                 </FlexItem>
-                <FlexItem>
-                  <Tooltip content="Route">
-                    <ExternalLink
-                      href={componentRouteWebURL}
-                      text={<ExternalLinkAltIcon />}
-                      stopPropagation
-                    />
-                  </Tooltip>
-                </FlexItem>
+                {componentRouteWebURL ? (
+                  <FlexItem>
+                    <Tooltip content="Route">
+                      <ExternalLink
+                        href={componentRouteWebURL}
+                        text={<ExternalLinkAltIcon />}
+                        stopPropagation
+                      />
+                    </Tooltip>
+                  </FlexItem>
+                ) : null}
               </Flex>
             </DataListCell>,
             <DataListCell key="revision" width={2}>

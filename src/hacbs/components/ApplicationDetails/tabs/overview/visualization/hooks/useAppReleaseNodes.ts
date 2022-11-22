@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { pipelineRunStatus } from '../../../../../../../shared';
-import { useReleasePlans, useReleases } from '../../../../../../hooks';
+import { useReleasePlans } from '../../../../../../hooks/useReleasePlans';
+import { useReleases } from '../../../../../../hooks/useReleases';
 import { ReleaseKind, ReleasePlanKind } from '../../../../../../types/coreBuildService';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import {

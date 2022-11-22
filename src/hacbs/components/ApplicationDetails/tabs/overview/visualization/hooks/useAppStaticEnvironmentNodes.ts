@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { pipelineRunStatus } from '../../../../../../../shared';
 import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
-import {
-  useSnapshotsEnvironmentBindings,
-  useEnvironments,
-  useTestPipelines,
-} from '../../../../../../hooks';
+import { useEnvironments } from '../../../../../../hooks/useEnvironments';
+import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnapshotsEnvironmentBindings';
+import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
 import { EnvironmentType, getEnvironmentType } from '../../../../../Environment/utils';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import {
@@ -32,7 +30,7 @@ export const useAppStaticEnvironmentNodes = (
   loaded: boolean,
 ] => {
   const [environments, environmentsLoaded] = useEnvironments(namespace);
-  const [applicationSnapshotsEBs, snapshotsLoaded] = useSnapshotsEnvironmentBindings(
+  const [snapshotsEnvironmentBindings, snapshotsLoaded] = useSnapshotsEnvironmentBindings(
     namespace,
     applicationName,
   );
@@ -55,7 +53,7 @@ export const useAppStaticEnvironmentNodes = (
             (e) => e.metadata.name === staticEnvironment.spec.parentEnvironment,
           );
           const snapshot = getLatestResource(
-            applicationSnapshotsEBs.filter(
+            snapshotsEnvironmentBindings.filter(
               (as) => as.spec.environment === staticEnvironment.metadata.name,
             ),
           );
@@ -84,7 +82,7 @@ export const useAppStaticEnvironmentNodes = (
         ];
     updateParallelNodeWidths(nodes);
     return nodes;
-  }, [allLoaded, staticEnvironments, previousTasks, applicationSnapshotsEBs, testPipelines]);
+  }, [allLoaded, staticEnvironments, previousTasks, snapshotsEnvironmentBindings, testPipelines]);
 
   const staticEnvironmentGroup = React.useMemo(
     () =>

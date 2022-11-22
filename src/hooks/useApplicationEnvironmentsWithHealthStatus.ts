@@ -1,9 +1,12 @@
 import * as React from 'react';
+import { PipelineRunLabel } from '../hacbs/consts/pipelinerun';
+import { useSnapshotsEnvironmentBindings } from '../hacbs/hooks/useSnapshotsEnvironmentBindings';
+import { useTestPipelines } from '../hacbs/hooks/useTestPipelines';
+import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../shared';
 import { EnvironmentKind } from '../types';
 import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
 import { useNamespace } from '../utils/namespace-context-utils';
 import { useSortedEnvironments } from './useEnvironments';
-import { useGitOpsDeploymentCR } from './useGitOpsDeploymentCR';
 
 export type EnvironmentKindWithHealthStatus = EnvironmentKind & {
   healthStatus: GitOpsDeploymentHealthStatus;
@@ -14,24 +17,45 @@ export const useApplicationEnvironmentsWithHealthStatus = (
 ): [EnvironmentKindWithHealthStatus[], boolean] => {
   const namespace = useNamespace();
   const [environments, environmentsLoaded] = useSortedEnvironments();
-
-  // TODO: Change from gitOpsDeployment to environment based query
-  const [gitOpsDeployment, gitOpsDeploymentLoaded] = useGitOpsDeploymentCR(
-    applicationName,
+  const [snapshotsEnvironmentBindings, snapshotsLoaded] = useSnapshotsEnvironmentBindings(
     namespace,
+    applicationName,
   );
+  const [testPipelines, testPipelinesLoaded] = useTestPipelines(namespace, applicationName);
 
-  const gitOpsDeploymentHealthStatus = gitOpsDeploymentLoaded
-    ? gitOpsDeployment?.status?.health?.status
-    : null;
+  const allLoaded = environmentsLoaded && snapshotsLoaded && testPipelinesLoaded;
 
-  const envsWithStatus: EnvironmentKindWithHealthStatus[] = React.useMemo(
-    () =>
-      environmentsLoaded
-        ? environments.map((env) => ({ ...env, healthStatus: gitOpsDeploymentHealthStatus }))
-        : [],
-    [environments, environmentsLoaded, gitOpsDeploymentHealthStatus],
-  );
+  const envsWithStatus: EnvironmentKindWithHealthStatus[] = React.useMemo(() => {
+    if (!allLoaded) {
+      return [];
+    }
 
-  return [envsWithStatus, gitOpsDeploymentLoaded];
+    return environments.map((environment) => {
+      const snapshotsEnvironmentBinding = snapshotsEnvironmentBindings
+        .filter((as) => as.spec.environment === environment.metadata.name)
+        .sort?.(
+          (a, b) =>
+            new Date(b.metadata.creationTimestamp).getTime() -
+            new Date(a.metadata.creationTimestamp).getTime(),
+        )
+        .shift();
+      const testPipeline = snapshotsEnvironmentBinding
+        ? testPipelines.find(
+            (pipeline) =>
+              pipeline?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_SNAPSHOT] ===
+              snapshotsEnvironmentBinding.spec.snapshot,
+          )
+        : undefined;
+
+      return {
+        ...environment,
+        healthStatus: testPipeline
+          ? pipelineRunStatusToGitOpsStatus(pipelineRunStatus(testPipeline))
+          : GitOpsDeploymentHealthStatus.Missing,
+        lastDeploy: testPipeline?.status.completionTime,
+      };
+    });
+  }, [allLoaded, snapshotsEnvironmentBindings, environments, testPipelines]);
+
+  return [envsWithStatus, allLoaded];
 };

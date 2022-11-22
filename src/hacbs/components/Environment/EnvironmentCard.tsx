@@ -11,43 +11,25 @@ import {
   TextContent,
   TextVariants,
   Label,
-  Skeleton,
 } from '@patternfly/react-core';
 import { useEnvironmentActions } from '../../../components/Environment/environment-actions';
-import { useApplicationHealthStatus } from '../../../hooks/useApplicationHealthStatus';
-import { useLastApplicationDeployTime } from '../../../hooks/useLastApplicationDeployTime';
 import ActionMenu from '../../../shared/components/action-menu/ActionMenu';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { EnvironmentKind } from '../../../types';
 import { getEnvironmentDeploymentStrategyLabel } from '../../../utils/environment-utils';
-import { useNamespace } from '../../../utils/namespace-context-utils';
+import { getGitOpsDeploymentHealthStatusIcon } from '../../../utils/gitops-utils';
+import { EnvironmentKindWithHealthStatus } from '../../hooks/useApplicationEnvironmentsWithHealthStatus';
 import { EnvironmentType, getEnvironmentType, getEnvironmentTypeLabel } from './utils';
 
-const ApplicationStatus: React.FC<{
-  environment: EnvironmentKind;
-  applicationName: string;
-}> = ({ applicationName }) => {
-  const namespace = useNamespace();
-  const [healthStatus, healthStatusIcon, healthStatusLoaded] = useApplicationHealthStatus(
-    namespace,
-    applicationName,
-  );
-  const [lastDeployTime, deployTimeLoaded] = useLastApplicationDeployTime(
-    namespace,
-    applicationName,
-  );
-
+const ApplicationEnvironmentStatus: React.FC<{
+  environment: EnvironmentKindWithHealthStatus;
+}> = ({ environment }) => {
   return (
     <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsMd' }}>
       <FlexItem>
         <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
-          {healthStatusLoaded ? (
-            <>
-              {healthStatusIcon} Application {healthStatus}
-            </>
-          ) : (
-            <Skeleton width="50%" screenreaderText="Loading application health" />
-          )}
+          {getGitOpsDeploymentHealthStatusIcon(environment.healthStatus)} Application{' '}
+          {environment.healthStatus}
         </Text>
       </FlexItem>
       <FlexItem>
@@ -56,11 +38,7 @@ const ApplicationStatus: React.FC<{
             <b>Last Deploy:</b>
           </Text>
           <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
-            {deployTimeLoaded ? (
-              <Timestamp timestamp={lastDeployTime} simple />
-            ) : (
-              <Skeleton width="50%" screenreaderText="Loading last deploy time" />
-            )}
+            <Timestamp timestamp={environment.lastDeploy} simple />
           </Text>
         </Flex>
       </FlexItem>
@@ -116,7 +94,9 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment, applicat
           </FlexItem>
           {applicationName ? (
             <FlexItem>
-              <ApplicationStatus environment={environment} applicationName={applicationName} />
+              <ApplicationEnvironmentStatus
+                environment={environment as EnvironmentKindWithHealthStatus}
+              />
             </FlexItem>
           ) : null}
         </Flex>

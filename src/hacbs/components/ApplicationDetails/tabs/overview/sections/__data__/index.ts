@@ -5,4 +5,4 @@ export * from './WorkflowIntegrationTestData';
 export * from './WorkflowReleasesData';
 export * from './WorkflowReleasePlansData';
 export * from './WorkflowTestPipelinesData';
-export * from './WorkflowApplicationSnaphotEBsData';
+export * from './WorkflowSnapshotsEnvironmentBindingsData';
