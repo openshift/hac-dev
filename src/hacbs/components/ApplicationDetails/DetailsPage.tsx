@@ -87,9 +87,14 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
     () =>
       actions?.map((action) => {
         const { type, key, label, ...props } = action;
-        return type === 'separator' ? (
-          <DropdownSeparator key={key} />
-        ) : (
+        if (type === 'separator') return <DropdownSeparator key={key} />;
+        if (type === 'section-label')
+          return (
+            <DropdownItem key={key} data-test={key} {...props} isDisabled>
+              <span className="pf-u-color-400 pf-u-font-size-sm">{label}</span>
+            </DropdownItem>
+          );
+        return (
           <DropdownItem key={key} data-test={key} {...props}>
             {label}
           </DropdownItem>
