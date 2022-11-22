@@ -55,6 +55,9 @@ const useSearchParamMock = useSearchParam as jest.Mock;
 
 const getMockedResources = (params: WatchK8sResource) => {
   if (params.groupVersionKind === ApplicationGroupVersionKind) {
+    if (params.isList) {
+      return [[], true];
+    }
     return [mockApplication, true];
   }
   if (params.groupVersionKind === EnvironmentGroupVersionKind) {

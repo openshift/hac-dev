@@ -31,10 +31,10 @@ export const ApplicationEnvironmentListItem: React.FC<ApplicationEnvironmentList
   const { name, uid } = component.metadata;
   const actions = useComponentActions(component, name);
   const componentRouteWebURL = routes?.length > 0 && getComponentRouteWebURL(routes, name);
-  const containerImage = component.status?.containerImage;
+  const containerImage = component.spec?.containerImage;
 
-  const imageNameParts = containerImage.split('/');
-  const imageName = imageNameParts[imageNameParts.length - 1];
+  const imageNameParts = containerImage?.split('/');
+  const imageName = imageNameParts?.[imageNameParts.length - 1];
 
   return (
     <DataListItem id={uid} aria-label={name} data-testid="application-environment-list-item">

@@ -6,11 +6,12 @@ import {
   IntegrationTestScenarioModel,
 } from '../../models/hacbs';
 import { IntegrationTestScenarioKind } from '../../types/coreBuildService';
-import { FormValues, IntegrationTestFormValues } from './types';
-
-export enum IntegrationTestAnnotations {
-  DISPLAY_NAME = 'app.kubernetes.io/display-name',
-}
+import {
+  FormValues,
+  IntegrationTestAnnotations,
+  IntegrationTestFormValues,
+  IntegrationTestLabels,
+} from './types';
 
 // /**
 //  * Create integrationTestScenario CR
@@ -36,6 +37,7 @@ export const createIntegrationTest = (
     metadata: {
       name,
       namespace,
+      ...(optional && { labels: { [IntegrationTestLabels.OPTIONAL]: optional.toString() } }),
       annotations: {
         [IntegrationTestAnnotations.DISPLAY_NAME]: displayName,
       },
@@ -44,7 +46,6 @@ export const createIntegrationTest = (
       application,
       bundle,
       pipeline,
-      optional,
       contexts: [
         {
           description: 'Application testing',

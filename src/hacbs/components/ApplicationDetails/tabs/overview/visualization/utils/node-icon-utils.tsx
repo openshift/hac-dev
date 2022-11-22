@@ -1,17 +1,22 @@
 import * as React from 'react';
-import { ArrowAltCircleDownIcon } from '@patternfly/react-icons/dist/js/icons/arrow-alt-circle-down-icon';
-import { CodeBranchIcon } from '@patternfly/react-icons/dist/js/icons/code-branch-icon';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
+import { ServerIcon } from '@patternfly/react-icons/dist/js/icons/server-icon';
+import PipelineIcon from '../../../../../../imgs/pipelineIcon.svg';
 import { WorkflowNodeType } from '../types';
 
 export const getWorkflowNodeIcon = (type: WorkflowNodeType): React.ReactNode => {
   switch (type) {
-    case WorkflowNodeType.SOURCE:
+    case WorkflowNodeType.COMPONENT:
       return <GithubIcon />;
-    case WorkflowNodeType.ENVIRONMENT:
-      return <ArrowAltCircleDownIcon />;
-    case WorkflowNodeType.PIPELINE:
+    case WorkflowNodeType.STATIC_ENVIRONMENT:
+    case WorkflowNodeType.MANAGED_ENVIRONMENT:
+      return <ServerIcon />;
+    case WorkflowNodeType.BUILD:
+    case WorkflowNodeType.TESTS:
+    case WorkflowNodeType.COMPONENT_TEST:
+    case WorkflowNodeType.APPLICATION_TEST:
+    case WorkflowNodeType.RELEASE:
     default:
-      return <CodeBranchIcon />;
+      return <img src={PipelineIcon} />;
   }
 };

@@ -1,4 +1,5 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
+import { Condition } from './pipelineRun';
 
 export type IntegrationTestScenarioKind = K8sResourceCommon & {
   spec: IntegrationTestScenarioSpec;
@@ -49,6 +50,31 @@ export type Configuration = {
 export type Env = {
   name: string;
   value: string;
+};
+
+export type SnapshotEnvironmentBindingKind = K8sResourceCommon & {
+  spec: ReleaseSpec;
+  status: ReleaseStatus;
+};
+
+export type ReleaseKind = K8sResourceCommon & {
+  spec: ReleaseSpec;
+  status: ReleaseStatus;
+};
+
+export type ReleaseSpec = {
+  applicationSnapshot: string;
+  releasePlan: string;
+};
+
+export type ReleaseStatus = {
+  startTime?: string;
+  completionTime?: string;
+  conditions?: Condition[];
+  snapshotEnvironmentBinding?: string;
+  releasePipelineRun?: string;
+  releaseStrategy?: string;
+  target?: string;
 };
 
 export type ReleasePlanKind = K8sResourceCommon & {

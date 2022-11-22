@@ -17,3 +17,17 @@ You can also use more variables - see the table below:
 | `PASSWORD` | Password for testing (SSO) | '' | PASSWORD=adminPassword |
 | `KUBECONFIG` | Kubeconfig for cleaning namespace | '/home/user/.kube/appstudio-config' | KUBECONFIG=/home/user/kube/config |
 | `CLEAN_NAMESPACE` | Clean namespace | 'false' | CLEAN_NAMESPACE = 'true' |
+
+## Docker image used for tests
+To do a changes in Docker image that we're using, update the Dockerfile in `/docker` folder. Once changes are done, build your new image from that folder:
+
+```
+docker build -t quay.io/hacdev/hac-tests .
+```
+
+To be sure that you're building without some cashed garbage, you can run the build with `---no-cache` flag.
+
+Once your image is ready, push it using the bot account:
+```
+docker push quay.io/hacdev/hac-tests:latest
+```

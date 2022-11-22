@@ -1,22 +1,12 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import {
-  Bullseye,
-  Button,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStateSecondaryActions,
-  Spinner,
-  Title,
-} from '@patternfly/react-core';
-import { OutlinedFileImageIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-file-image-icon';
+import { Bullseye, Spinner, Title } from '@patternfly/react-core';
 import { Table } from '../../../shared';
 import { useNamespace } from '../../../utils/namespace-context-utils';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../models';
 import { PipelineRunKind } from '../../types';
+import PipelineRunEmptyState from '../PipelineRunDetailsView/PipelineRunEmptyState';
 import { PipelineRunListHeader } from './PipelineRunListHeader';
 import PipelineRunListRow from './PipelineRunListRow';
 
@@ -44,32 +34,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
   }
 
   if (!pipelineRuns || pipelineRuns.length === 0) {
-    return (
-      <EmptyState>
-        <EmptyStateIcon icon={OutlinedFileImageIcon} />
-        <Title headingLevel="h4" size="lg">
-          Manage your components via pipelines. Monitor CI/CD activity.
-        </Title>
-        <EmptyStateBody>
-          No pipeline run triggered yet.
-          <br />
-          To get started, create components and merge their pull request for build pipeline.
-        </EmptyStateBody>
-        <EmptyStateSecondaryActions>
-          <Button
-            component={(props) => (
-              <Link
-                {...props}
-                to={`/app-studio/applications/${applicationName}?activeTab=components`}
-              />
-            )}
-            variant="secondary"
-          >
-            Go to components tab
-          </Button>
-        </EmptyStateSecondaryActions>
-      </EmptyState>
-    );
+    return <PipelineRunEmptyState applicationName={applicationName} />;
   }
 
   pipelineRuns?.sort(

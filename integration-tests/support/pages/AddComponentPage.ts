@@ -1,7 +1,6 @@
 import { Common } from '../../utils/Common';
 import { pageTitles } from '../constants/PageTitle';
 import { addComponentPagePO } from '../pageObjects/createApplication-po';
-import { githubLoginPagePO } from '../pageObjects/github-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class AddComponentPage extends AbstractWizardPage {
@@ -42,6 +41,7 @@ export class AddComponentPage extends AbstractWizardPage {
     cy.contains('button', addComponentPagePO.useTokenButton, {timeout : 120000}).click();
     cy.get(addComponentPagePO.username).type(username);
     cy.get(addComponentPagePO.token).type(token, { log: false });
+    cy.wait(2000);
     cy.get(addComponentPagePO.authenticateButton).click();
   }
 }

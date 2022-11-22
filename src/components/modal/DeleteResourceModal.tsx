@@ -27,6 +27,7 @@ type DeleteResourceModalProps = ComponentProps & {
   obj: K8sResourceCommon;
   model: K8sModelCommon;
   displayName?: string;
+  isEntryNotRequired?: boolean;
   description?: React.ReactNode;
 };
 
@@ -35,6 +36,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
   model,
   onClose,
   displayName,
+  isEntryNotRequired = false,
   description,
 }) => {
   const [error, setError] = React.useState();
@@ -94,16 +96,18 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
                   </Text>
                 </TextContent>
               </StackItem>
-              <StackItem>
-                <InputField
-                  name="resourceName"
-                  label={`Enter ${obj.kind} name to confirm deletion`}
-                  helpTextInvalid="Invalid input"
-                  helpText={helpText}
-                  validated={validatedState}
-                  required
-                />
-              </StackItem>
+              {!isEntryNotRequired && (
+                <StackItem>
+                  <InputField
+                    name="resourceName"
+                    label={`Enter ${obj.kind} name to confirm deletion`}
+                    helpTextInvalid="Invalid input"
+                    helpText={helpText}
+                    validated={validatedState}
+                    required
+                  />
+                </StackItem>
+              )}
               <StackItem>
                 {error && (
                   <Alert isInline variant={AlertVariant.danger} title="An error occurred">
@@ -118,7 +122,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
                     e.preventDefault();
                     handleSubmit();
                   }}
-                  isDisabled={!isValid || isSubmitting}
+                  isDisabled={!isEntryNotRequired && (!isValid || isSubmitting)}
                   data-testid="delete-resource"
                 >
                   Delete

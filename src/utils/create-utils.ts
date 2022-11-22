@@ -85,11 +85,6 @@ export const createComponent = (
   const { componentName, containerImage, source, replicas, resources, env, targetPort } = component;
 
   const name = component.componentName.split(/ |\./).join('-').toLowerCase();
-  // const uniqueName = uniqueId(name);
-
-  // FIXME - context is not supported by the HAS API correctly yet.
-  // Remove after https://issues.redhat.com/browse/DEVHAS-115 is fixed.
-  delete source?.git?.context;
 
   const newComponent = {
     apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,

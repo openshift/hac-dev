@@ -10,9 +10,11 @@ HAC Developer Experience will deliver the UI for App Studio.
 
 1. ```npm install```
 
-2. ```npm run start:prod:beta```
+2. For devsandbox - ```npm run start:prod:beta```
+   
+3. For KCP - ```npm run start:prod:beta:kcp```
 
-3. Open the URL listed in the terminal output.
+4. Open the URL listed in the terminal output.
 
 
 ### Update `/etc/hosts`
