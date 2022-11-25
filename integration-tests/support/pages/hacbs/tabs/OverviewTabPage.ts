@@ -1,4 +1,5 @@
-import { overviewTabPO } from '../../pageObjects/hacbs-po';
+import { Common } from "../../../../utils/Common";
+import { overviewTabPO } from "../../../pageObjects/hacbs-po";
 
 export class OverviewTabPage {
     goToComponentsTab() {
@@ -6,6 +7,7 @@ export class OverviewTabPage {
     }
 
     addComponent() {
+        Common.waitForLoad();
         cy.get(overviewTabPO.addComponent).click();
     }
 }

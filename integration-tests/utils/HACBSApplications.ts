@@ -1,11 +1,14 @@
 import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
-import { overviewTabPO, componentsTabPO } from '../support/pageObjects/hacbs-po';
+import { overviewTabPO, componentsTabPO, integrationTestsTabPO, actionsDropdown, addIntegrationTestStepPO } from '../support/pageObjects/hacbs-po';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
 import { AddIntegrationTestPage } from '../support/pages/hacbs/AddIntegrationTestPage';
+import { ComponentsTabPage } from '../support/pages/hacbs/tabs/ComponentsTabPage';
 import { CreateBuildPage } from '../support/pages/hacbs/CreateBuildPage';
 import { Applications } from './Applications';
 import { Common } from './Common';
+import { OverviewTabPage } from '../support/pages/hacbs/tabs/OverviewTabPage';
+import { IntegrationTestsTabPage } from '../support/pages/hacbs/tabs/IntegrationTestsTabPage';
 
 export class HACBSApplications {
     static deleteApplication(applicationName: string) {
@@ -16,11 +19,11 @@ export class HACBSApplications {
         Applications.createApplication(name);
     }
 
-    static createComponent(publicGitRepo: string, componentName: string) {
+    static createComponent(publicGitRepo: string, componentName: string, integrationTestName: string, optionalForRelease: boolean = false) {
         addComponentStep(publicGitRepo);
         reviewComponentsStep(componentName);
         createBuildStep();
-        addIntegrationTestStep();
+        addIntegrationTestStep(integrationTestName, optionalForRelease);
     }
 
     static createdComponentExists(componentName: string, applicationName: string) {
@@ -35,12 +38,24 @@ export class HACBSApplications {
         return cy.contains(applicationDetailPagePO.item, application, { timeout: 60000 });
     }
 
+    static clickActionsDropdown(dropdownItem: string) {
+        cy.get(actionsDropdown.dropdown).click();
+        cy.contains(dropdownItem).click();
+    }
+
     static goToOverviewTab() {
         cy.get(overviewTabPO.clickTab).click();
+        return new OverviewTabPage();
     }
 
     static goToComponentsTab() {
         cy.get(componentsTabPO.clickTab).click();
+        return new ComponentsTabPage();
+    }
+
+    static goToIntegrationTestsTab() {
+        cy.get(integrationTestsTabPO.clickTab).click();
+        return new IntegrationTestsTabPage();
     }
 }
 
@@ -79,9 +94,8 @@ function createBuildStep() {
 }
 
 
-function addIntegrationTestStep() {
+export function addIntegrationTestStep(displayName: string, optionalForRelease: boolean = false) {
     const addIntegrationTestPage = new AddIntegrationTestPage();
-    const displayName = Common.generateAppName('My-name');
     const containerImage = 'quay.io/kpavic/test-bundle:pipeline'
     const pipelineName = 'demo-pipeline'
 
@@ -89,5 +103,11 @@ function addIntegrationTestStep() {
     addIntegrationTestPage.enterContainerImage(containerImage);
     addIntegrationTestPage.enterPipelineName(pipelineName);
 
-    addIntegrationTestPage.clickNext();
+    if (optionalForRelease) {
+        addIntegrationTestPage.markOptionalForRelease();
+    }
+
+    cy.get('body').then(body => {
+        (body.find('button[type="submit"]').length > 0)? addIntegrationTestPage.clickNext() : addIntegrationTestPage.clickAdd();
+    });
 }
