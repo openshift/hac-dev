@@ -2,7 +2,7 @@ import * as React from 'react';
 import { pipelineRunStatus } from '../../../../../../../shared';
 import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
 import {
-  useApplicationSnapshotsEB,
+  useSnapshotsEnvironmentBindings,
   useEnvironments,
   useTestPipelines,
 } from '../../../../../../hooks';
@@ -32,7 +32,7 @@ export const useAppStaticEnvironmentNodes = (
   loaded: boolean,
 ] => {
   const [environments, environmentsLoaded] = useEnvironments(namespace);
-  const [applicationSnapshotsEBs, snapshotsLoaded] = useApplicationSnapshotsEB(
+  const [applicationSnapshotsEBs, snapshotsLoaded] = useSnapshotsEnvironmentBindings(
     namespace,
     applicationName,
   );
@@ -54,16 +54,16 @@ export const useAppStaticEnvironmentNodes = (
           const prevEnv = staticEnvironments.find(
             (e) => e.metadata.name === staticEnvironment.spec.parentEnvironment,
           );
-          const applicationSnapshot = getLatestResource(
+          const snapshot = getLatestResource(
             applicationSnapshotsEBs.filter(
               (as) => as.spec.environment === staticEnvironment.metadata.name,
             ),
           );
-          const testPipeline = applicationSnapshot
+          const testPipeline = snapshot
             ? testPipelines.find(
                 (pipeline) =>
                   pipeline?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_SNAPSHOT] ===
-                  applicationSnapshot.spec.snapshot,
+                  snapshot.spec.snapshot,
               )
             : undefined;
 

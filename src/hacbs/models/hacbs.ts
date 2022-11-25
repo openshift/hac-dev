@@ -45,14 +45,14 @@ export const EnvironmentGroupVersionKind: K8sGroupVersionKind = {
   kind: 'Environment',
 };
 
-export const ApplicationSnapshotGroupVersionKind: K8sGroupVersionKind = {
+export const SnapshotGroupVersionKind: K8sGroupVersionKind = {
   group: 'appstudio.redhat.com',
   version: 'v1alpha1',
-  kind: 'ApplicationSnapshot',
+  kind: 'Snapshot',
 };
 
-export const ApplicationSnapshotEnvironmentBindingGroupVersionKind: K8sGroupVersionKind = {
+export const SnapshotEnvironmentBindingGroupVersionKind: K8sGroupVersionKind = {
   group: 'appstudio.redhat.com',
   version: 'v1alpha1',
-  kind: 'ApplicationSnapshotEnvironmentBinding',
+  kind: 'SnapshotEnvironmentBinding',
 };

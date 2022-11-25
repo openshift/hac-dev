@@ -6,7 +6,7 @@ import { useSearchParam } from '../../../../../../../hooks/useSearchParam';
 import { useNamespace } from '../../../../../../../utils/namespace-context-utils';
 import { mockLocation } from '../../../../../../../utils/test-utils';
 import {
-  useApplicationSnapshotsEB,
+  useSnapshotsEnvironmentBindings,
   useBuildPipelines,
   useComponents,
   useEnvironments,
@@ -77,7 +77,7 @@ jest.mock('../../../../../../hooks/', () => ({
   useReleases: jest.fn(() => [[], true]),
   useReleasePlans: jest.fn(() => [[], true]),
   useTestPipelines: jest.fn(() => [[], true]),
-  useApplicationSnapshotsEB: jest.fn(() => [[], true]),
+  useSnapshotsEnvironmentBindings: jest.fn(() => [[], true]),
 }));
 
 const useSearchParamsMock = useSearchParams as jest.Mock;
@@ -90,7 +90,7 @@ const useEnvironmentsMock = useEnvironments as jest.Mock;
 const useReleasesMock = useReleases as jest.Mock;
 const useReleasePlansMock = useReleasePlans as jest.Mock;
 const useTestPipelinesMock = useTestPipelines as jest.Mock;
-const useApplicationSnapshotsEBMock = useApplicationSnapshotsEB as jest.Mock;
+const useApplicationSnapshotsEBMock = useSnapshotsEnvironmentBindings as jest.Mock;
 
 configure({ testIdAttribute: 'data-id' });
 

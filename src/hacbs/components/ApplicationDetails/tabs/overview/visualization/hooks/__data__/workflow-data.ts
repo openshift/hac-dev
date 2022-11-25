@@ -817,7 +817,7 @@ export const sampleReleases: ReleaseKind[] = [
     },
     spec: {
       releasePlan: 'sre-production',
-      applicationSnapshot: 'test-application-5v6l9',
+      snapshot: 'test-application-5v6l9',
     },
     status: {},
   },

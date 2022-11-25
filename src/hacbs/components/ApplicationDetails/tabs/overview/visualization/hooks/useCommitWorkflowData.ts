@@ -12,7 +12,7 @@ import {
   useBuildPipelines,
   useReleases,
   useTestPipelines,
-  useApplicationSnapshotsEB,
+  useSnapshotsEnvironmentBindings,
 } from '../../../../../../hooks';
 import { Commit, PipelineRunKind } from '../../../../../../types';
 import {
@@ -53,7 +53,7 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
     commit.sha,
   );
 
-  const [applicationSnapshotsEB, applicationSnapshotsLoaded] = useApplicationSnapshotsEB(
+  const [snapshotsEB, snapshotsLoaded] = useSnapshotsEnvironmentBindings(
     namespace,
     applicationName,
   );
@@ -64,7 +64,7 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
     buildPipelinesLoaded &&
     testPipelinesLoaded &&
     environmentsLoaded &&
-    applicationSnapshotsLoaded &&
+    snapshotsLoaded &&
     releasesLoaded &&
     releasePlansLoaded;
 
@@ -104,14 +104,15 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
             ? getLatestResource(integrationTestPipelines)
             : undefined;
 
-        const latestApplicationSnapshot: string =
+        const latestSnapshot: string =
           latestTestPipeline?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_SNAPSHOT];
 
-        const compApplicationSnapshots: SnapshotEnvironmentBinding[] =
-          applicationSnapshotsEB.filter((as) => as.spec.snapshot === latestApplicationSnapshot);
+        const compSnapshots: SnapshotEnvironmentBinding[] = snapshotsEB.filter(
+          (as) => as.spec.snapshot === latestSnapshot,
+        );
 
         const latestRelease: ReleaseKind = getLatestResource(
-          releases.filter((r) => r.spec.applicationSnapshot === latestApplicationSnapshot),
+          releases.filter((r) => r.spec.snapshot === latestSnapshot),
         );
 
         const integrationTestStatus: (test: IntegrationTestScenarioKind) => RunStatus = (
@@ -129,7 +130,7 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
         const environmentStatus: (env: EnvironmentKind) => RunStatus = (
           environment: EnvironmentKind,
         ): RunStatus => {
-          return compApplicationSnapshots.find(
+          return compSnapshots.find(
             (as) => as.spec.environment === removePrefixFromResourceName(environment.metadata.name),
           )
             ? RunStatus.Succeeded
@@ -176,7 +177,7 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
         return acc;
       }, {}),
     [
-      applicationSnapshotsEB,
+      snapshotsEB,
       buildPipelines,
       commitComponents,
       components,

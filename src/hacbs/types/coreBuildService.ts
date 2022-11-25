@@ -64,7 +64,7 @@ export type ReleaseKind = K8sResourceCommon & {
 };
 
 export type ReleaseSpec = {
-  applicationSnapshot: string;
+  snapshot: string;
   releasePlan: string;
 };
 
