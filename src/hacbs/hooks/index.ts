@@ -4,5 +4,5 @@ export * from './useEnvironments';
 export * from './useReleases';
 export * from './useReleasePlans';
 export * from './useTestPipelines';
-export * from './useApplicationSnapshotsEB';
+export * from './useSnapshotsEnvironmentBindings';
 export * from './useIntegrationTestScenarios';
