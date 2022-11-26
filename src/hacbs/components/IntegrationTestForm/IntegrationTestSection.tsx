@@ -1,20 +1,10 @@
 import * as React from 'react';
-import {
-  Alert,
-  AlertActionCloseButton,
-  FormSection,
-  Text,
-  TextContent,
-  TextVariants,
-} from '@patternfly/react-core';
-import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/js/icons';
+import { FormSection, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
 import { CheckboxField, HelpTooltipIcon, InputField } from '../../../shared';
-import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { FormValues } from '../ImportForm/types';
 
 const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = ({ isInPage }) => {
-  const [infoAlert, setInfoAlert] = React.useState<boolean>(true);
   const { setTouched } = useFormikContext<FormValues>();
 
   // TODO: Remove when it is fixed in formik-pf
@@ -35,31 +25,10 @@ const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = 
               By default, previous GitHub credentials will be used to validate your URL. If it
               fails, you fails, you must revalidate with a different repo.
             </Text>
-            <ExternalLink href="#">
-              Learn more about setting up an integration test <ExternalLinkAltIcon />
-            </ExternalLink>
           </TextContent>
         </>
       )}
       <FormSection>
-        {infoAlert && (
-          <Alert
-            variant="info"
-            isInline
-            title="This pipeline will appear twice on your application workflow"
-            actionClose={
-              <AlertActionCloseButton
-                data-test="hacbs-close-info"
-                onClose={() => setInfoAlert(false)}
-              />
-            }
-          >
-            After adding your pipeline, it will run on your component and then again on the entire
-            app. You can see this on your application workflow.
-            <br />
-            {/* <a href="#">Learn more</a> */}
-          </Alert>
-        )}
         <InputField
           aria-label="Display name"
           label="Display name"
