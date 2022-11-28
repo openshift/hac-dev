@@ -8,5 +8,6 @@ RUN microdnf install --assumeyes which && \
     curl -L -o /tmp/oc.tar ${OC_DOWNLOAD_URL} && \
     tar -xf /tmp/oc.tar -C /usr/bin
 
-RUN groupadd -r hacdev && useradd -r -g hacdev hacdev
-USER hacdev:hacdev
+RUN chmod 777 /home/cypress && \
+    mkdir -p /home/cypress/.config/Cypress/cy/production && \
+    chmod 777 /home/cypress/.config/Cypress/cy/production
