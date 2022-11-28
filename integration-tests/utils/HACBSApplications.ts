@@ -8,7 +8,6 @@ import { CreateBuildPage } from '../support/pages/hacbs/CreateBuildPage';
 import { Applications } from './Applications';
 import { Common } from './Common';
 import { OverviewTabPage } from '../support/pages/hacbs/tabs/OverviewTabPage';
-import { IntegrationTestsTabPage } from '../support/pages/hacbs/tabs/IntegrationTestsTabPage';
 
 export class HACBSApplications {
     static deleteApplication(applicationName: string) {
