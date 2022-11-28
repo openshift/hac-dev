@@ -55,7 +55,6 @@ export class HACBSApplications {
 
     static goToIntegrationTestsTab() {
         cy.get(integrationTestsTabPO.clickTab).click();
-        return new IntegrationTestsTabPage();
     }
 }
 
