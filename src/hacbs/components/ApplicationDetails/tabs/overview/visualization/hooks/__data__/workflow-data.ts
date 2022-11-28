@@ -1,5 +1,5 @@
-import { PipelineRunKind } from '../../../../../../../../shared/components/pipeline-run-logs/types';
 import { ComponentKind } from '../../../../../../../../types';
+import { PipelineRunKind } from '../../../../../../../types';
 import {
   EnvironmentKind,
   IntegrationTestScenarioKind,

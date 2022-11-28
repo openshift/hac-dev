@@ -1,5 +1,5 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
-import { TektonResultsRun, TektonTaskSpec } from './coreTekton';
+import { TaskResult, TektonResultsRun, TektonTaskSpec } from './coreTekton';
 import { PipelineKind, PipelineSpec, WhenExpression } from './pipeline';
 
 export type PLRTaskRunStep = {
@@ -13,7 +13,7 @@ export type PLRTaskRunStep = {
     startedAt: string;
   };
   terminated?: {
-    containerID: string;
+    containerID?: string;
     exitCode: number;
     finishedAt: string;
     reason: string;
@@ -32,7 +32,7 @@ export type PLRTaskRunData = {
     startTime: string;
     steps?: PLRTaskRunStep[];
     taskSpec?: TektonTaskSpec;
-    taskResults?: { name: string; value: string }[];
+    taskResults?: TaskResult[];
   };
 };
 
@@ -135,6 +135,7 @@ export type PipelineRunStatus = {
   pipelineSpec: PipelineSpec;
   skippedTasks?: {
     name: string;
+    reason?: string;
     whenExpressions?: WhenExpression[];
   }[];
   pipelineResults?: TektonResultsRun[];
@@ -150,7 +151,7 @@ export type PipelineRunKind = K8sResourceCommon & {
     serviceAccountName?: string;
     timeout?: string;
     // Only used in a single case - cancelling a pipeline; should not be copied between PLRs
-    status?: 'PipelineRunCancelled' | 'PipelineRunPending';
+    status?: 'CancelledRunFinally' | 'StoppedRunFinally' | 'PipelineRunPending';
   };
   status?: PipelineRunStatus;
 };

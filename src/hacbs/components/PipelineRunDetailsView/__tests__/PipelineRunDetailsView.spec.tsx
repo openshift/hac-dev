@@ -1,12 +1,15 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { DataState, testPipelineRuns } from '../../../__data__/pipelinerun-data';
 import { PipelineRunDetailsView } from '../PipelineRunDetailsView';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
+
+jest.mock('../../PipelineRunDetailsView/PipelineRunVisualization', () => () => <div />);
 
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
@@ -122,5 +125,68 @@ describe('PipelineRunDetailsView', () => {
     expect(screen.queryByText('Message')).toBeInTheDocument();
     expect(screen.queryByText('Namespace')).toBeInTheDocument();
     expect(screen.queryByText('Message')).toBeInTheDocument();
+  });
+
+  it('should render Stop and Cancel button under the Actions dropdown', () => {
+    watchResourceMock
+      .mockReturnValueOnce([testPipelineRuns[DataState.SUCCEEDED], true])
+      .mockReturnValue([[], true]);
+
+    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+
+    const actionsDropdown = screen.queryByRole('button', { name: 'Actions' });
+    expect(actionsDropdown).toBeInTheDocument();
+    fireEvent.click(actionsDropdown);
+
+    expect(screen.queryByText('Stop')).toBeInTheDocument();
+    expect(screen.queryByText('Cancel')).toBeInTheDocument();
+  });
+
+  it('should enable Stop and Cancel button if the pipeline is running', () => {
+    watchResourceMock
+      .mockReturnValueOnce([testPipelineRuns[DataState.RUNNING], true])
+      .mockReturnValue([[], true]);
+    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+
+    fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
+
+    expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'false');
+    expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'false');
+  });
+
+  it('should disable Stop and Cancel button if the pipelinerun is succeeded', () => {
+    watchResourceMock
+      .mockReturnValueOnce([testPipelineRuns[DataState.SUCCEEDED], true])
+      .mockReturnValue([[], true]);
+
+    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
+
+    expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.queryByText('Cancel')).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should disable Stop and Cancel button if the pipelinerun is in cancelled state', () => {
+    watchResourceMock
+      .mockReturnValueOnce([testPipelineRuns[DataState.PIPELINE_RUN_CANCELLED], true])
+      .mockReturnValue([[], true]);
+
+    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
+
+    expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.queryByText('Cancel')).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should disable Stop and Cancel button if the pipelinerun is in stopped state', () => {
+    watchResourceMock
+      .mockReturnValueOnce([testPipelineRuns[DataState.PIPELINE_RUN_STOPPED], true])
+      .mockReturnValue([[], true]);
+
+    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
+
+    expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.queryByText('Cancel')).toHaveAttribute('aria-disabled', 'true');
   });
 });

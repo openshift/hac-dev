@@ -61,7 +61,8 @@ export const resourcePathFromModel = (model: K8sModelCommon, name?: string, name
 };
 
 export enum SucceedConditionReason {
-  PipelineRunCancelled = 'PipelineRunCancelled',
+  PipelineRunStopped = 'StoppedRunFinally',
+  PipelineRunCancelled = 'CancelledRunFinally',
   TaskRunCancelled = 'TaskRunCancelled',
   Cancelled = 'Cancelled',
   PipelineRunStopping = 'PipelineRunStopping',
@@ -123,6 +124,7 @@ export const pipelineRunStatus = (pipelineRun): string => {
 
   if (succeedCondition.reason && succeedCondition.reason !== status) {
     switch (succeedCondition.reason) {
+      case SucceedConditionReason.PipelineRunStopped:
       case SucceedConditionReason.PipelineRunCancelled:
       case SucceedConditionReason.TaskRunCancelled:
       case SucceedConditionReason.Cancelled:
