@@ -126,9 +126,11 @@ describe('Create Components using the HACBS UI', () => {
             cy.get(integrationTestNames[4]).should('not.exist');
         });
 
-        it("Delete an Integration Test from the list view", () => {
-            integrationTestsTabPage.deleteIntegrationTest(integrationTestNames[3]);
-            cy.get(integrationTestNames[3]).should('not.exist');
+        it("Delete all the remaining Integration Tests from the list view", () => {
+            for (let i = 0; i < 4; i++) {
+                integrationTestsTabPage.deleteIntegrationTest(integrationTestNames[i]);
+                cy.get(integrationTestNames[i]).should('not.exist');
+            }
         });
     });
 });
