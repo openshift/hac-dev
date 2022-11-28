@@ -26,7 +26,7 @@ export class IntegrationTestsTabPage {
 
     checkMetadata(listOfMetadata: string[]) {
         for (let metadata of listOfMetadata) {
-            cy.contains(metadata);
+            cy.get('div').should('contain', metadata);
         }
     }
 }

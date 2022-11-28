@@ -89,7 +89,7 @@ describe('Create Components using the HACBS UI', () => {
         it("Click on 'Integration tests' tab and check the List View", () => {
             HACBSApplications.goToIntegrationTestsTab();
 
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < integrationTestNames.length-1; i++) {
                 integrationTestsTabPage.checkRowValues(integrationTestNames[i], containerImage, 'Mandatory', pipelineName);
             }
         });
@@ -108,7 +108,7 @@ describe('Create Components using the HACBS UI', () => {
 
             integrationTestsTabPage.filterByName('my-test');
             // Only the first 4 Integration tests with prefix "my-test" should be visible
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < integrationTestNames.length-1; i++) {
                 integrationTestsTabPage.checkRowValues(integrationTestNames[i], containerImage, 'Mandatory', pipelineName);
             }
 
@@ -127,7 +127,7 @@ describe('Create Components using the HACBS UI', () => {
         });
 
         it("Delete all the remaining Integration Tests from the list view", () => {
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < integrationTestNames.length-1; i++) {
                 integrationTestsTabPage.deleteIntegrationTest(integrationTestNames[i]);
                 cy.get(integrationTestNames[i]).should('not.exist');
             }
