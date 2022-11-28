@@ -53,7 +53,7 @@ describe('Create Components using the HACBS UI', () => {
     });
 
     describe('Add a new component using the "Overview" tab', () => {
-        it("Use HACBS 'Components' tabs to start adding a new compoent", () => {
+        it("Use HACBS 'Components' tabs to start adding a new component", () => {
             HACBSApplications.goToOverviewTab().addComponent();
         });
 
@@ -64,7 +64,7 @@ describe('Create Components using the HACBS UI', () => {
     });
 
     describe('Add a new component using the "Components" tab', () => {
-        it("Use HACBS 'Components' tabs to start adding a new compoent", () => {
+        it("Use HACBS 'Components' tabs to start adding a new component", () => {
             HACBSApplications.goToComponentsTab().clickAddComponent();
         });
 
@@ -79,7 +79,7 @@ describe('Create Components using the HACBS UI', () => {
             HACBSApplications.clickActionsDropdown('Add component');
         });
 
-        it('Add a component to Applicmeation', () => {
+        it('Add a component to Application', () => {
             HACBSApplications.createComponent(publicRepos[2], componentNames[3], integrationTestNames[3]);
             HACBSApplications.createdComponentExists(componentNames[3], applicationName);
         });
