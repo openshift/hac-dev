@@ -3,9 +3,9 @@ import { integrationTestsTabPO } from "../../../pageObjects/hacbs-po";
 
 export class IntegrationTestsTabPage {
     checkRowValues(integrationTestName: string, containerImage: string, releaseStatus: string, pipelineName: string) {
-        cy.contains('[data-id="{0}"]'.replace('{0}', integrationTestName), containerImage).should('exist');
-        cy.contains('[data-id="{0}"]'.replace('{0}', integrationTestName), releaseStatus).should('exist');
-        cy.contains('[data-id="{0}"]'.replace('{0}', integrationTestName), pipelineName).should('exist');
+        cy.contains(`[data-id="${integrationTestName}"]`, containerImage).should('exist');
+        cy.contains(`[data-id="${integrationTestName}"]`, releaseStatus).should('exist');
+        cy.contains(`[data-id="${integrationTestName}"]`, pipelineName).should('exist');
     }
 
     filterByName(inputString: string) {
