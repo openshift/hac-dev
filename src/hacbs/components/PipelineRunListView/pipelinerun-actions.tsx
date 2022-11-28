@@ -1,32 +1,23 @@
-import { k8sPatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { pipelineRunFilterReducer } from '../../../shared/';
 import { Action } from '../../../shared/components/action-menu/types';
-import { PipelineRunModel } from '../../models/pipelineruns';
 import { PipelineRunKind } from '../../types';
+import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
 
 export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] => {
-  const pipelineRunStop = () => {
-    k8sPatchResource({
-      model: PipelineRunModel,
-      queryOptions: {
-        name: pipelineRun.metadata.name,
-        ns: pipelineRun.metadata.namespace,
-      },
-      patches: [
-        {
-          op: 'replace',
-          path: `/spec/status`,
-          value: 'PipelineRunCancelled',
-        },
-      ],
-    });
-  };
-
   return [
     {
-      cta: () => pipelineRunStop(),
+      cta: () => pipelineRunStop(pipelineRun),
       id: 'pipelinerun-stop',
       label: 'Stop',
+      tooltip: 'Let the running tasks complete, then execute finally tasks',
+      disabled: !(pipelineRunFilterReducer(pipelineRun) === 'Running'),
+    },
+
+    {
+      cta: () => pipelineRunCancel(pipelineRun),
+      id: 'pipelinerun-cancel',
+      label: 'Cancel',
+      tooltip: 'Interrupt any executing non finally tasks, then execute finally tasks',
       disabled: !(pipelineRunFilterReducer(pipelineRun) === 'Running'),
     },
   ];

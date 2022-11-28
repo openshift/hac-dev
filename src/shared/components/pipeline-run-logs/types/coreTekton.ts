@@ -15,11 +15,13 @@ export type TektonTaskSteps = {
   image?: string;
   resources?: {}[] | {};
   env?: { name: string; value: string }[];
-  script?: string[];
+  script?: string | string[];
 };
 
 export type TaskResult = {
   name: string;
+  type?: string;
+  value?: string;
   description?: string;
 };
 
