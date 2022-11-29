@@ -2,8 +2,6 @@
 
 currentNamespace=$(oc project | cut -d '"' -f2)
 
-oc create secret generic appstudio-token-0556
-
 sed -i "s/namespace:.*/namespace: $currentNamespace/g" trigger-pipelinerun-on-pull-request.yaml
 sed -i "s/namespace:.*/namespace: $currentNamespace/g" trigger-pipelinerun-on-push.yaml
 
