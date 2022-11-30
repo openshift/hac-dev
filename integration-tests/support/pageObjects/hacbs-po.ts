@@ -9,6 +9,11 @@ export const componentsTabPO = {
     addComponent: '[data-test="add-component-button"]'
 }
 
+export const integrationTestsTabPO = {
+    clickTab: '[data-test="details__tabItem integrationtests"]',
+    filterInputField: '[data-test="name-input-filter"]',
+}
+
 export const actionsDropdown = {
     dropdown: '[data-test="details__actions"]',
     itemAddComponent: '[data-test="add-component"]',
@@ -23,10 +28,11 @@ export const createBuildStepPO = {
     next: 'button[type=submit]',
 }
 
-export const addIntegrationStepPO = {
+export const addIntegrationTestStepPO = {
     displayNameInput: '[data-test="display-name-input"]',
     containerImageInput: '[data-test="container-image-input"]',
     pipelineNameInput: '[data-test="pipeline-name-input"]',
     optionalreleaseCheckbox: '[data-test="optional-release-checkbox"]',
     next: 'button[type=submit]',
+    add: '[data-test="submit-button"]'
 }
