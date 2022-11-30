@@ -10,15 +10,17 @@ import '../../../shared/style.scss';
 
 type IntegrationTestFormProps = {
   applicationName: string;
+  edit?: boolean;
 };
 
 const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = ({
   applicationName,
+  edit,
 }) => {
   const { dirty, handleSubmit, handleReset, isSubmitting, status, errors } = useFormikContext();
   const footer = (
     <FormFooter
-      submitLabel="Add integration test"
+      submitLabel={edit ? 'Save changes' : 'Add integration test'}
       handleCancel={handleReset}
       handleSubmit={handleSubmit}
       isSubmitting={isSubmitting}
@@ -26,6 +28,8 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
       errorMessage={status?.submitError}
     />
   );
+
+  const title = edit ? 'Edit integration test' : 'Add integration test';
 
   return (
     <PageLayout
@@ -36,24 +40,16 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
           path: `/app-studio/applications/${applicationName}?activeTab=integrationtests`,
           name: 'Integration tests',
         },
-        { path: '#', name: 'Integration test' },
+        { path: '#', name: title },
       ]}
-      title="Add integration test"
-      description={
-        <>
-          Add an integration test to test all your components.
-          <br />
-          By default, previous GitHub credentials will be used to validate your URL. If it fails,
-          you must revalidate with a different repo.
-          <br />
-        </>
-      }
+      title={title}
+      description="Test all your components after you commit code by adding an integration test. Integration tests run in parallel using temporary environments. Only validated versions of applications will be deployed."
       footer={footer}
     >
       <PageSection isFilled variant={PageSectionVariants.light}>
         <Form onSubmit={handleSubmit}>
           <FormSection>
-            <IntegrationTestSection isInPage />
+            <IntegrationTestSection isInPage edit={edit} />
           </FormSection>
         </Form>
       </PageSection>

@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { FormSection, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
-import { CheckboxField, HelpTooltipIcon, InputField } from '../../../shared';
+import { CheckboxField, InputField } from '../../../shared';
 import { FormValues } from '../ImportForm/types';
 
-const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = ({ isInPage }) => {
+type Props = { isInPage?: boolean; edit?: boolean };
+
+const IntegrationTestSection: React.FC<Props> = ({ isInPage, edit }) => {
   const { setTouched } = useFormikContext<FormValues>();
 
   // TODO: Remove when it is fixed in formik-pf
@@ -20,36 +22,37 @@ const IntegrationTestSection: React.FunctionComponent<{ isInPage?: boolean }> = 
           <TextContent data-test="integration-test-section-header">
             <Text component={TextVariants.h1}>Add integration test</Text>
             <Text component={TextVariants.p}>
-              Add an integration test to test all your components.
-              <br />
-              By default, previous GitHub credentials will be used to validate your URL. If it
-              fails, you fails, you must revalidate with a different repo.
+              Test all your components after you commit code by adding an integration test.
+              Integration tests run in parallel using temporary environments. Only validated
+              versions of applications will be deployed.
             </Text>
           </TextContent>
         </>
       )}
       <FormSection>
         <InputField
-          aria-label="Display name"
-          label="Display name"
+          label="Integration test name"
           name="integrationTest.name"
-          placeholder="Enter the integration test name"
+          helpText={
+            edit
+              ? ''
+              : 'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).'
+          }
           data-test="display-name-input"
+          isReadOnly={edit}
           required
         />
         <InputField
           required
-          aria-label="Container image"
-          label="Container image"
-          labelIcon={<HelpTooltipIcon content={'Provide your image bundle'} />}
+          label="Image bundle"
+          helpText="Enter the path to the container image. It should contain a tekton pipeline that executes your test."
           name="integrationTest.bundle"
           data-test="container-image-input"
         />
         <InputField
-          aria-label="Pipeline specified in container image"
-          label="Pipeline specified in container image"
+          label="Pipeline to run"
           name="integrationTest.pipeline"
-          helpText="Specify the pipeline name as it appears in the image bundle."
+          helpText="The name of the pipeline to run should match the one in the bundle."
           data-test="pipeline-name-input"
           required
         />

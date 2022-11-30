@@ -41,11 +41,13 @@ window.ResizeObserver = MockResizeObserver;
 
 describe('IntegrationTestView', () => {
   const fillIntegrationTestForm = (wrapper: RenderResult) => {
-    fireEvent.input(wrapper.getByLabelText('Display name'), { target: { value: 'new test name' } });
-    fireEvent.input(wrapper.getByLabelText('Container image'), {
+    fireEvent.input(wrapper.getByLabelText(/Integration test name/), {
+      target: { value: 'new-test-name' },
+    });
+    fireEvent.input(wrapper.getByLabelText(/Image bundle/), {
       target: { value: 'quay.io/kpavic/test-bundle:pipeline' },
     });
-    fireEvent.input(wrapper.getByLabelText('Pipeline specified in container image'), {
+    fireEvent.input(wrapper.getByLabelText(/Pipeline to run/), {
       target: { value: 'new-test-pipeline' },
     });
   };
@@ -53,9 +55,9 @@ describe('IntegrationTestView', () => {
     const wrapper = render(<IntegrationTestView applicationName="test-app" />);
     await expect(wrapper).toBeTruthy();
 
-    wrapper.getByLabelText('Display name');
-    wrapper.getByLabelText('Container image');
-    wrapper.getByLabelText('Pipeline specified in container image');
+    wrapper.getByLabelText(/Integration test name/);
+    wrapper.getByLabelText(/Image bundle/);
+    wrapper.getByLabelText(/Pipeline to run/);
     wrapper.getByRole('button', { name: 'Add integration test' });
   });
 
