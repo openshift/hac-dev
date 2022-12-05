@@ -1,4 +1,7 @@
 import { EnvironmentKind } from '../../../types';
+import { EnvironmentDeploymentStrategy } from '../../../utils/environment-utils';
+import { EnvironmentGroupVersionKind } from '../../models';
+import { ReleasePlanKind } from '../../types/coreBuildService';
 
 export enum EnvironmentType {
   static = 'static',
@@ -23,3 +26,18 @@ export const getEnvironmentTypeLabel = (type: EnvironmentType) => {
       return 'Static';
   }
 };
+
+export const createEnvironmentKindFromReleasePlan = (
+  releasePlan: ReleasePlanKind,
+): EnvironmentKind => ({
+  apiGroup: releasePlan.apiGroup,
+  apiVersion: EnvironmentGroupVersionKind.version,
+  kind: EnvironmentGroupVersionKind.kind,
+  metadata: releasePlan.metadata,
+  spec: {
+    displayName: releasePlan.spec.displayName,
+    tags: [EnvironmentType.managed],
+    type: 'non-poc',
+    deploymentStrategy: EnvironmentDeploymentStrategy.Manual,
+  },
+});

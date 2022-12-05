@@ -1,9 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Level, LevelItem } from '@patternfly/react-core';
-import { ApplicationGroupVersionKind } from '../../models';
-import { ApplicationKind } from '../../types';
+import { useApplications } from '../../hacbs/hooks/useApplications';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import { ContextMenuItem, ContextSwitcher } from '../ContextSwitcher';
 
@@ -12,11 +10,7 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
 }) => {
   const navigate = useNavigate();
   const namespace = useNamespace();
-  const [applications] = useK8sWatchResource<ApplicationKind[]>({
-    groupVersionKind: ApplicationGroupVersionKind,
-    namespace,
-    isList: true,
-  });
+  const [applications] = useApplications(namespace);
 
   const menuItems = React.useMemo(
     () =>

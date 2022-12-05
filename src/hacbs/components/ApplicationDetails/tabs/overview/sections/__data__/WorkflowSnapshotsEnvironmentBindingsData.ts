@@ -1,4 +1,4 @@
-export const mockApplicationSnapshotEBs = [
+export const mockSnapshotsEnvironmentBindings = [
   {
     apiVersion: 'appstudio.redhat.com/v1alpha1',
     kind: 'SnapshotEnvironmentBinding',

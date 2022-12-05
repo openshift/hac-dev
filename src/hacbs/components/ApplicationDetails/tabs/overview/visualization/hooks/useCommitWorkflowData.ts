@@ -4,16 +4,14 @@ import { pipelineRunStatus } from '../../../../../../../shared';
 import { ComponentKind } from '../../../../../../../types';
 import { useNamespace } from '../../../../../../../utils/namespace-context-utils';
 import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
-import {
-  useComponents,
-  useEnvironments,
-  useIntegrationTestScenarios,
-  useReleasePlans,
-  useBuildPipelines,
-  useReleases,
-  useTestPipelines,
-  useSnapshotsEnvironmentBindings,
-} from '../../../../../../hooks';
+import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
+import { useComponents } from '../../../../../../hooks/useComponents';
+import { useEnvironments } from '../../../../../../hooks/useEnvironments';
+import { useIntegrationTestScenarios } from '../../../../../../hooks/useIntegrationTestScenarios';
+import { useReleasePlans } from '../../../../../../hooks/useReleasePlans';
+import { useReleases } from '../../../../../../hooks/useReleases';
+import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnapshotsEnvironmentBindings';
+import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
 import { Commit, PipelineRunKind } from '../../../../../../types';
 import {
   EnvironmentKind,

@@ -2,7 +2,9 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, configure } from '@testing-library/react';
+import { useApplications } from '../../../hacbs/hooks/useApplications';
 import { EnvironmentKind } from '../../../types';
+import { mockApplication } from '../../ApplicationEnvironment/__data__/mock-data';
 import EnvironmentCard from '../EnvironmentCard';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -15,6 +17,10 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
+}));
+
+jest.mock('../../../hacbs/hooks/useApplications', () => ({
+  useApplications: jest.fn(),
 }));
 
 const environment: EnvironmentKind = {
@@ -39,12 +45,15 @@ configure({ testIdAttribute: 'data-test' });
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
+const useApplicationsMock = useApplications as jest.Mock;
+
 describe('EnvironmentCard', () => {
   it('should render correct CardBody sections', () => {
     watchResourceMock.mockReturnValue([[], true]);
+    useApplicationsMock.mockReturnValue([[mockApplication], true]);
     render(<EnvironmentCard environment={environment} />);
     screen.getByText(environment.spec.displayName);
-    screen.getByText('Applications: 4');
+    screen.getByText('Applications: 1');
   });
 
   it('should render correct Deployment strategy CardBody sections', () => {
