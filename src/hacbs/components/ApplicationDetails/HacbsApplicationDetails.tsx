@@ -61,9 +61,9 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
       <ApplicationModal showApplicationModal={showApplicationModal} onClose={onModalClose} />
       <DetailsPage
         breadcrumbs={[
-          { path: '/app-studio/applications', name: 'Applications' },
+          { path: '/stonesoup/applications', name: 'Applications' },
           {
-            path: `/app-studio/applications/${applicationName}`,
+            path: `/stonesoup/applications/${applicationName}`,
             name: appDisplayName,
           },
         ]}
@@ -73,7 +73,7 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
             key: 'promote-app',
             label: 'Promote application',
             component: (
-              <Link to={`/app-studio/import?application=${applicationName}`}>
+              <Link to={`/stonesoup/import?application=${applicationName}`}>
                 Promote Application
               </Link>
             ),
@@ -92,14 +92,14 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
             key: 'add-component',
             label: 'Add components',
             component: (
-              <Link to={`/app-studio/import?application=${applicationName}`}>Add component</Link>
+              <Link to={`/stonesoup/import?application=${applicationName}`}>Add component</Link>
             ),
           },
           {
             key: 'add-integration-test',
             label: 'Add integration tests',
             component: (
-              <Link to={`/app-studio/applications/${applicationName}/integration-test`}>
+              <Link to={`/stonesoup/applications/${applicationName}/integration-test`}>
                 Add integration test
               </Link>
             ),
@@ -109,7 +109,7 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
             key: 'create-environment',
             label: 'Create environment',
             component: (
-              <Link to="/app-studio/workspace-settings/environment/create">Create environment</Link>
+              <Link to="/stonesoup/workspace-settings/environment/create">Create environment</Link>
             ),
           },
           {
@@ -119,7 +119,7 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
               showModal<{ submitClicked: boolean }>(
                 applicationDeleteModal(application),
               ).closed.then(({ submitClicked }) => {
-                if (submitClicked) navigate('/app-studio');
+                if (submitClicked) navigate('/stonesoup');
               }),
           },
           {
@@ -161,7 +161,7 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
               showModal<{ submitClicked: boolean }>(
                 applicationDeleteModal(application),
               ).closed.then(({ submitClicked }) => {
-                if (submitClicked) navigate('/app-studio');
+                if (submitClicked) navigate('/stonesoup');
               }),
           },
         ]}

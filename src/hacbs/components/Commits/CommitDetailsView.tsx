@@ -182,17 +182,17 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
             />
             <DetailsPage
               breadcrumbs={[
-                { path: '/app-studio/applications', name: 'Applications' },
+                { path: '/stonesoup/applications', name: 'Applications' },
                 {
-                  path: `/app-studio/applications/${applicationName}`,
+                  path: `/stonesoup/applications/${applicationName}`,
                   name: applicationName,
                 },
                 {
-                  path: `/app-studio/applications/${applicationName}?activeTab=commits`,
+                  path: `/stonesoup/applications/${applicationName}?activeTab=commits`,
                   name: 'commits',
                 },
                 {
-                  path: `/app-studio/applications/${applicationName}/commit/${commitName}`,
+                  path: `/stonesoup/applications/${applicationName}/commit/${commitName}`,
                   name: commitDisplayName,
                 },
               ]}

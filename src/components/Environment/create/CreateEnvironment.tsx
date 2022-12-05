@@ -36,7 +36,7 @@ const CreateEnvironment: React.FC = () => {
       };
       k8sCreateResource({ model: EnvironmentModel, resource })
         .then(() => {
-          navigate(`/app-studio/workspace-settings`);
+          navigate(`/stonesoup/workspace-settings`);
         })
         .catch((error) => {
           // eslint-disable-next-line no-console

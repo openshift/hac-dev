@@ -47,7 +47,7 @@ describe('ComponentDetails', () => {
     const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
     expect(button.closest('a').href).toBe(
-      'http://localhost/app-studio/import?application=test-application',
+      'http://localhost/stonesoup/import?application=test-application',
     );
   });
 

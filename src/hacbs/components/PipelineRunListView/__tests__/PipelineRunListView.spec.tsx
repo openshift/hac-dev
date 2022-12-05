@@ -110,7 +110,7 @@ describe('Pipeline run List', () => {
     const button = screen.getByText('Go to components tab');
     expect(button).toBeInTheDocument();
     expect(button.closest('a').href).toContain(
-      `/app-studio/applications/${appName}?activeTab=components`,
+      `/stonesoup/applications/${appName}?activeTab=components`,
     );
   });
 

@@ -14,7 +14,7 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
   return (
     <>
       <TableData className={commitsTableColumnClasses.name}>
-        <Link to={`/app-studio/${obj.application}/commit/${obj.sha}`}>{`${obj.sha.slice(
+        <Link to={`/stonesoup/${obj.application}/commit/${obj.sha}`}>{`${obj.sha.slice(
           0,
           7,
         )} `}</Link>

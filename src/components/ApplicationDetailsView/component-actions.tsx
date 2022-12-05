@@ -7,7 +7,7 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
   const showModal = useModalLauncher();
   return [
     {
-      cta: { href: `/app-studio/component-settings?componentName=${name}` },
+      cta: { href: `/stonesoup/component-settings?componentName=${name}` },
       id: 'component-settings',
       label: 'Component settings',
     },

@@ -107,7 +107,7 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
   );
 
   const handleAddTest = React.useCallback(() => {
-    navigate(`/app-studio/applications/${applicationName}/integration-test`);
+    navigate(`/stonesoup/applications/${applicationName}/integration-test`);
   }, [navigate, applicationName]);
 
   const loading = (

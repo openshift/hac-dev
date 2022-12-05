@@ -53,7 +53,7 @@ const ComponentsTab: React.FC<ComponentTabProps> = ({ applicationName, namespace
       <Button
         variant="primary"
         component={(props) => (
-          <Link {...props} to={`/app-studio/import?application=${applicationName}`} />
+          <Link {...props} to={`/stonesoup/import?application=${applicationName}`} />
         )}
       >
         Add component

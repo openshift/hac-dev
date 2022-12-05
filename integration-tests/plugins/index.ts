@@ -49,7 +49,7 @@ module.exports = (on, config) => {
   const newConfig: any = merge(config, configFile);
 
   const defaultValues: { [key: string]: string } = {
-    HAC_BASE_URL: 'https://prod.foo.redhat.com:1337/beta/hac/app-studio',
+    HAC_BASE_URL: 'https://prod.foo.redhat.com:1337/beta/hac/stonesoup',
     USERNAME: '',
     PASSWORD: '',
     KUBECONFIG: '~/.kube/appstudio-config',

@@ -71,7 +71,7 @@ COMMON_SETUP="-u $ID \
     -w /e2e \
     -e CYPRESS_CACHE_FOLDER=/e2e/.cache \
     -e CYPRESS_PR_CHECK=true \
-    -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/app-studio \
+    -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/stonesoup \
     -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` \
     -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d`"
 TEST_IMAGE="quay.io/hacdev/hac-tests:latest"

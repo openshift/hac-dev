@@ -81,7 +81,7 @@ const ApplicationListView: React.FC = () => {
               <EmptyStateBody>To get started, create an application.</EmptyStateBody>
               <Button
                 variant="primary"
-                component={(props) => <Link {...props} to="/app-studio/import" />}
+                component={(props) => <Link {...props} to="/stonesoup/import" />}
               >
                 Create application
               </Button>
@@ -93,7 +93,7 @@ const ApplicationListView: React.FC = () => {
                   <ToolbarItem>
                     <Button
                       variant="primary"
-                      component={(props) => <Link {...props} to="/app-studio/import" />}
+                      component={(props) => <Link {...props} to="/stonesoup/import" />}
                     >
                       Create application
                     </Button>

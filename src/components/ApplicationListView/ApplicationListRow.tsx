@@ -28,7 +28,7 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
   return (
     <>
       <TableData className={applicationTableColumnClasses.name}>
-        <Link to={`/app-studio/applications/${obj.metadata.name}`} title={obj.spec.displayName}>
+        <Link to={`/stonesoup/applications/${obj.metadata.name}`} title={obj.spec.displayName}>
           {obj.spec.displayName}
         </Link>
       </TableData>

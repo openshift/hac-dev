@@ -21,7 +21,7 @@ const webpackProxy = {
   deployment: process.env.BETA ? 'beta/api/plugins' : 'api/plugins',
   useProxy: true,
   env,
-  appUrl: process.env.BETA ? '/beta/hac/app-studio' : '/hac/app-studio',
+  appUrl: process.env.BETA ? '/beta/hac/stonesoup' : '/hac/stonesoup',
   standalone: Boolean(process.env.STANDALONE),
   ...(process.env.INSIGHTS_CHROME && {
     localChrome: process.env.INSIGHTS_CHROME,

@@ -31,7 +31,7 @@ const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicati
           component={(props) => (
             <Link
               {...props}
-              to={`/app-studio/applications/${applicationName}?activeTab=components`}
+              to={`/stonesoup/applications/${applicationName}?activeTab=components`}
             />
           )}
           variant="secondary"

@@ -72,7 +72,7 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
       {
         id: 'add-component-header-action',
         label: 'Add component',
-        cta: { href: `/app-studio/import?application=${applicationName}` },
+        cta: { href: `/stonesoup/import?application=${applicationName}` },
       },
       {
         id: 'delete-application-header-action',
@@ -80,7 +80,7 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
         cta: () =>
           showModal<{ submitClicked: boolean }>(applicationDeleteModal(application)).closed.then(
             ({ submitClicked }) => {
-              if (submitClicked) navigate('/app-studio');
+              if (submitClicked) navigate('/stonesoup');
             },
           ),
       },
@@ -126,9 +126,9 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
       </GettingStartedCard>
       <PageLayout
         breadcrumbs={[
-          { path: '/app-studio/applications', name: 'Applications' },
+          { path: '/stonesoup/applications', name: 'Applications' },
           {
-            path: `/app-studio/applications/${application?.metadata?.name}`,
+            path: `/stonesoup/applications/${application?.metadata?.name}`,
             name: application?.spec?.displayName,
           },
         ]}

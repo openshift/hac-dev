@@ -10,7 +10,7 @@ describe('PipelineRunEmptyState', () => {
   it('should render correct Link to Application Name', () => {
     render(<PipelineRunEmptyState applicationName="test" />);
     expect(screen.getByRole('link').getAttribute('href')).toBe(
-      '/app-studio/applications/test?activeTab=components',
+      '/stonesoup/applications/test?activeTab=components',
     );
     screen.getByText('Go to components tab');
   });

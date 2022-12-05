@@ -78,7 +78,7 @@ const AppRecentCommits = ({ applicationName }) => {
             component={(props) => (
               <Link
                 {...props}
-                to={`/app-studio/applications/${applicationName}?activeTab=components&hacbs=true`}
+                to={`/stonesoup/applications/${applicationName}?activeTab=components&hacbs=true`}
               />
             )}
             variant="secondary"

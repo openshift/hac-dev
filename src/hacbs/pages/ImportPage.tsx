@@ -20,7 +20,7 @@ const ImportPage: React.FunctionComponent = () => {
       </Helmet>
       <PageLayout
         breadcrumbs={[
-          { path: '/app-studio/applications', name: 'Applications' },
+          { path: '/stonesoup/applications', name: 'Applications' },
           { path: '#', name: 'Import' },
         ]}
         title={title}

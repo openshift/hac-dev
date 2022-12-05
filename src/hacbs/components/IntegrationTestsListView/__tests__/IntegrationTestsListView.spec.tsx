@@ -72,7 +72,7 @@ describe('IntegrationTestsListView', () => {
 
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith(
-        '/app-studio/applications/test-app/integration-test',
+        '/stonesoup/applications/test-app/integration-test',
       ),
     );
   });

@@ -91,7 +91,7 @@ describe('IntegrationTestView', () => {
     await waitFor(() => expect(createIntegrationTestMock).toHaveBeenCalledTimes(1));
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith(
-        '/app-studio/applications/test-app?activeTab=integrationtests',
+        '/stonesoup/applications/test-app?activeTab=integrationtests',
       ),
     );
   });
