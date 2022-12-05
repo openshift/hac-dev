@@ -6,9 +6,9 @@ export const applicationQuickstartContent = {
   },
   spec: {
     version: 1.0,
-    displayName: `Getting started with an app`,
+    displayName: `Getting started with an application`,
     durationMinutes: 15,
-    description: `Getting started with an app.`,
+    description: `Getting started with an application.`,
     introduction: `You created an app and added a component to it. Good job!
 
 To get started using your app, follow the steps in this quick start guide.`,
