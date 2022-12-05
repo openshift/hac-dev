@@ -1,4 +1,0 @@
-{
-  "ignoreTestFiles": "*private-git-form.spec.ts",
-  "extends": "../cypress.json"
-}

@@ -77,19 +77,25 @@ COMMON_SETUP="-u $ID \
 TEST_IMAGE="quay.io/hacdev/hac-tests:latest"
 
 set +e
+TEST_RUN=0
 
 docker run ${COMMON_SETUP} \
     -e CYPRESS_GH_TOKEN=${CYPRESS_GH_TOKEN} \
     -e CYPRESS_QUAY_TOKEN=${CYPRESS_QUAY_TOKEN} \
+    -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
     ${TEST_IMAGE} \
-    bash -c "startcypress run"
-TEST_RUN=$?
+    bash -c "startcypress run" || TEST_RUN=1
 
 docker run ${COMMON_SETUP} \
     -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \
+    -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
     ${TEST_IMAGE} \
-    bash -c "startcypress run -e configFile=experimental"
-TEST_RUN=$(($TEST_RUN || $?))
+    bash -c "startcypress run -e configFile=hac-dev-experimental" || TEST_RUN=2
+
+docker run ${COMMON_SETUP} \
+    -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HACBS} \
+    ${TEST_IMAGE} \
+    bash -c "startcypress run -e configFile=hacbs" || TEST_RUN=3
 
 bonfire namespace release ${NAMESPACE}
 

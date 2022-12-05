@@ -1,5 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
+import * as merge from 'deepmerge';
+const registerReportPortalPlugin = require('@reportportal/agent-js-cypress/lib/plugin');
 
 function getConfigurationByFile(file: string) {
   const pathToConfigFile = path.resolve('config', `${file}.json`)
@@ -42,9 +44,9 @@ module.exports = (on, config) => {
     }
   });
 
-  const file = config.env.configFile || 'default';
-  const newConfig = getConfigurationByFile(file);
-  newConfig.env = config.env;
+  const file = config.env.configFile || 'hac-dev-default';
+  const configFile = getConfigurationByFile(file);
+  const newConfig: any = merge(config, configFile);
 
   const defaultValues: { [key: string]: string } = {
     HAC_BASE_URL: 'https://prod.foo.redhat.com:1337/beta/hac/app-studio',
@@ -56,9 +58,14 @@ module.exports = (on, config) => {
   }
 
   for (const key in defaultValues) {
-    if (!config.env[key]) {
-      config.env[key] = defaultValues[key];
+    if (!newConfig.env[key]) {
+      newConfig.env[key] = defaultValues[key];
     }
+  }
+
+  if (newConfig.env.PR_CHECK && newConfig.reporterOptions.reportportalAgentJsCypressReporterOptions) {
+    newConfig.reporterOptions.reportportalAgentJsCypressReporterOptions.token = config.env.RP_TOKEN;
+    registerReportPortalPlugin(on, newConfig);
   }
   return newConfig;
 };

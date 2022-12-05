@@ -1,0 +1,18 @@
+{
+  "testFiles": "*private-git-form.spec.ts",
+  "trashAssetsBeforeRuns": false,
+  "experimentalSessionAndOrigin": true,
+  "extends": "../cypress.json",
+  "reporterOptions": {
+    "reporterEnabled": "spec, mocha-junit-reporter, @reportportal/agent-js-cypress",
+    "reportportalAgentJsCypressReporterOptions": {
+      "endpoint": "https://reportportal-hac-dev-qe.apps.ocp-c1.prod.psi.redhat.com/api/v1",
+      "token": "xxx",
+      "launch": "hac-dev-pr-check-experimental",
+      "project": "hac-dev",
+      "description": "HAC dev e2e tests with experimental cypress options enabled",
+      "debug": true,
+      "autoMerge": true
+    }
+  }
+}
