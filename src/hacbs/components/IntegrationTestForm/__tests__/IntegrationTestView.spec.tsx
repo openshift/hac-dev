@@ -2,6 +2,7 @@ import * as React from 'react';
 import { configure, fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { createIntegrationTest } from '../../ImportForm/create-utils';
+import { MockIntegrationTests } from '../../IntegrationTestsListView/__data__/mock-integration-tests';
 import IntegrationTestView from '../IntegrationTestView';
 
 const navigateMock = jest.fn();
@@ -93,5 +94,32 @@ describe('IntegrationTestView', () => {
         '/app-studio/applications/test-app?activeTab=integrationtests',
       ),
     );
+  });
+
+  it('should init values from provided integration test', async () => {
+    const integrationTest = MockIntegrationTests[0];
+    const wrapper = render(
+      <IntegrationTestView applicationName="test-app" integrationTest={integrationTest} />,
+    );
+
+    expect((await wrapper.getByLabelText(/Integration test name/)).getAttribute('value')).toBe(
+      integrationTest.metadata.name,
+    );
+    expect((await wrapper.getByLabelText(/Image bundle/)).getAttribute('value')).toBe(
+      integrationTest.spec.bundle,
+    );
+    expect((await wrapper.getByLabelText(/Pipeline to run/)).getAttribute('value')).toBe(
+      integrationTest.spec.pipeline,
+    );
+  });
+
+  it('should be in edit mode', async () => {
+    const integrationTest = MockIntegrationTests[0];
+    const wrapper = render(
+      <IntegrationTestView applicationName="test-app" integrationTest={integrationTest} />,
+    );
+
+    expect(((await wrapper.getByText(/Save changes/)) as HTMLButtonElement).disabled).toBe(true);
+    (await wrapper.getByLabelText(/Integration test name/)).setAttribute('value', 'new value');
   });
 });
