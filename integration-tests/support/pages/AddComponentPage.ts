@@ -34,11 +34,11 @@ export class AddComponentPage extends AbstractWizardPage {
   }
 
   clickNext() {
-    cy.get(addComponentPagePO.next).trigger('click');
+    cy.get(addComponentPagePO.next).click({ force: true });
   }
 
-  loginByToken(username: string, token: string){
-    cy.contains('button', addComponentPagePO.useTokenButton, {timeout : 120000}).click();
+  loginByToken(username: string, token: string) {
+    cy.contains('button', addComponentPagePO.useTokenButton, { timeout: 120000 }).click();
     cy.get(addComponentPagePO.username).type(username);
     cy.get(addComponentPagePO.token).type(token, { log: false });
     cy.wait(2000);

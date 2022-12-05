@@ -23,6 +23,7 @@ export class Applications {
     cy.testA11y(`${pageTitles.createApp} page`);
     createApplicationPage.setApplicationName(name);
     createApplicationPage.clickNext();
+    createApplicationPage.clickNext();
     cy.testA11y(`Select source form`);
   }
 }
