@@ -6,12 +6,15 @@
   "scripts": {
     "clean-reports": "rm -rf cypress/",
     "cy:run": "npm-run-all clean-reports cy:run:*",
-    "cy:run:default": "cypress run",
-    "cy:run:experimental": "cypress run -e configFile=experimental",
-    "cy:open": "cypress open",
-    "cy:open:experimental": "cypress open -e configFile=experimental"
+    "cy:run:hac-dev": "cypress run",
+    "cy:run:hac-dev-experimental": "cypress run -e configFile=hac-dev-experimental",
+    "cy:run:hacbs": "cypress run -e configFile=hacbs",
+    "cy:open:hac-dev": "cypress open",
+    "cy:open:hac-dev-experimental": "cypress open -e configFile=hac-dev-experimental",
+    "cy:open:hacbs": "cypress open -e configFile=hacbs"
   },
   "devDependencies": {
+    "@reportportal/agent-js-cypress": "^5.1.0",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^17.0.13",
     "axe-core": "^4.4.2",
@@ -19,6 +22,7 @@
     "cypress-axe": "^0.14.0",
     "cypress-multi-reporters": "^1.6.0",
     "cypress-terminal-report": "^3.5.2",
+    "deepmerge": "^4.2.2",
     "fs-extra": "^10.1.0",
     "mocha-junit-reporter": "^2.0.2",
     "npm-run-all": "^4.1.5"

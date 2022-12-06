@@ -5,18 +5,16 @@ import { act, configure, fireEvent, render, screen } from '@testing-library/reac
 import { useSearchParam } from '../../../../../../../hooks/useSearchParam';
 import { useNamespace } from '../../../../../../../utils/namespace-context-utils';
 import { mockLocation } from '../../../../../../../utils/test-utils';
+import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
+import { useComponents } from '../../../../../../hooks/useComponents';
+import { useEnvironments } from '../../../../../../hooks/useEnvironments';
+import { useIntegrationTestScenarios } from '../../../../../../hooks/useIntegrationTestScenarios';
+import { useReleasePlans } from '../../../../../../hooks/useReleasePlans';
+import { useReleases } from '../../../../../../hooks/useReleases';
+import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnapshotsEnvironmentBindings';
+import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
 import {
-  useApplicationSnapshotsEB,
-  useBuildPipelines,
-  useComponents,
-  useEnvironments,
-  useIntegrationTestScenarios,
-  useReleasePlans,
-  useReleases,
-  useTestPipelines,
-} from '../../../../../../hooks';
-import {
-  mockApplicationSnapshotEBs,
+  mockSnapshotsEnvironmentBindings,
   mockBuildPipelinesData,
   mockComponentsData,
   mockEnvironmentsData,
@@ -69,15 +67,29 @@ const mockUseSearchParam = (name: string) => {
   return [params[name], setter, unset];
 };
 
-jest.mock('../../../../../../hooks/', () => ({
-  useComponents: jest.fn(() => [[], true]),
-  useIntegrationTestScenarios: jest.fn(() => [[], true]),
-  useBuildPipelines: jest.fn(() => [[], true]),
-  useEnvironments: jest.fn(() => [[], true]),
-  useReleases: jest.fn(() => [[], true]),
-  useReleasePlans: jest.fn(() => [[], true]),
-  useTestPipelines: jest.fn(() => [[], true]),
-  useApplicationSnapshotsEB: jest.fn(() => [[], true]),
+jest.mock('../../../../../../hooks/useComponents', () => ({
+  useComponents: jest.fn(),
+}));
+jest.mock('../../../../../../hooks/useIntegrationTestScenarios', () => ({
+  useIntegrationTestScenarios: jest.fn(),
+}));
+jest.mock('../../../../../../hooks/useBuildPipelines', () => ({
+  useBuildPipelines: jest.fn(),
+}));
+jest.mock('../../../../../../hooks/useEnvironments', () => ({
+  useEnvironments: jest.fn(),
+}));
+jest.mock('../../../../../../hooks/useReleases', () => ({
+  useReleases: jest.fn(),
+}));
+jest.mock('../../../../../../hooks/useReleasePlans', () => ({
+  useReleasePlans: jest.fn(),
+}));
+jest.mock('../../../../../../hooks/useTestPipelines', () => ({
+  useTestPipelines: jest.fn(),
+}));
+jest.mock('../../../../../../hooks/useSnapshotsEnvironmentBindings', () => ({
+  useSnapshotsEnvironmentBindings: jest.fn(),
 }));
 
 const useSearchParamsMock = useSearchParams as jest.Mock;
@@ -90,7 +102,7 @@ const useEnvironmentsMock = useEnvironments as jest.Mock;
 const useReleasesMock = useReleases as jest.Mock;
 const useReleasePlansMock = useReleasePlans as jest.Mock;
 const useTestPipelinesMock = useTestPipelines as jest.Mock;
-const useApplicationSnapshotsEBMock = useApplicationSnapshotsEB as jest.Mock;
+const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
 
 configure({ testIdAttribute: 'data-id' });
 
@@ -107,7 +119,7 @@ describe('useAppWorkflowData hook', () => {
     useReleasePlansMock.mockReturnValue([mockReleasePlansData, true]);
     useReleasesMock.mockReturnValue([mockReleasesData, true]);
     useTestPipelinesMock.mockReturnValue([mockTestPipelinesData, true]);
-    useApplicationSnapshotsEBMock.mockReturnValue([mockApplicationSnapshotEBs, true]);
+    useSnapshotsEnvironmentBindingsMock.mockReturnValue([mockSnapshotsEnvironmentBindings, true]);
 
     useSearchParamMock.mockImplementation(mockUseSearchParam);
 

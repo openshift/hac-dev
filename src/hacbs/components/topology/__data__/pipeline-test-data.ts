@@ -1,7 +1,4 @@
-import {
-  PipelineKind,
-  PipelineRunKind,
-} from '../../../../shared/components/pipeline-run-logs/types';
+import { PipelineKind, PipelineRunKind } from '../../../types';
 
 export const testPipeline: PipelineKind = {
   apiVersion: 'tekton.dev/v1beta1',

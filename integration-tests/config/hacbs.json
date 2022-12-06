@@ -1,0 +1,17 @@
+{
+  "testFiles": "**/hacbs/*.spec.ts",
+  "trashAssetsBeforeRuns": false,
+  "extends": "../cypress.json",
+  "reporterOptions": {
+    "reporterEnabled": "spec, mocha-junit-reporter, @reportportal/agent-js-cypress",
+    "reportportalAgentJsCypressReporterOptions": {
+      "endpoint": "https://reportportal-hacbs-qe.apps.ocp-c1.prod.psi.redhat.com/api/v1",
+      "token": "xxx",
+      "launch": "UI_TESTS",
+      "project": "ui_cypress",
+      "description": "Test results of HACBS UI Tests",
+      "debug": true,
+      "autoMerge": true
+    }
+  }
+}

@@ -2,10 +2,12 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { useModalLauncher } from '../../../components/modal/ModalProvider';
 import { applicationDeleteModal } from '../../../components/modal/resource-modals';
 import { ApplicationGroupVersionKind } from '../../../models';
+import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../../types';
 import { useNamespace } from '../../../utils/namespace-context-utils';
 import ApplicationModal, { HACBS_APPLICATION_MODAL_HIDE_KEY } from './ApplicationModal';
@@ -68,15 +70,34 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
         title={appDisplayName}
         actions={[
           {
+            key: 'promote-app',
+            label: 'Promote application',
+            component: (
+              <Link to={`/app-studio/import?application=${applicationName}`}>
+                Promote Application
+              </Link>
+            ),
+          },
+          {
+            type: 'section-label',
+            key: 'add',
+            label: 'Add',
+          },
+          {
+            type: 'separator',
+            key: 'separator',
+            label: '',
+          },
+          {
             key: 'add-component',
-            label: 'Add component',
+            label: 'Add components',
             component: (
               <Link to={`/app-studio/import?application=${applicationName}`}>Add component</Link>
             ),
           },
           {
             key: 'add-integration-test',
-            label: 'Add integration test',
+            label: 'Add integration tests',
             component: (
               <Link to={`/app-studio/applications/${applicationName}/integration-test`}>
                 Add integration test
@@ -102,23 +123,46 @@ const HacbsApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ appli
               }),
           },
           {
+            type: 'section-label',
+            key: 'help',
+            label: 'Help',
+          },
+          {
             type: 'separator',
             key: 'separator',
             label: '',
           },
           {
             key: 'application-quickstart',
-            label: 'Getting started with an app',
+            label: 'Getting started with an application',
             onClick: () => {
               quickStarts.set('hac-dev', [applicationQuickstartContent]);
               quickStarts.toggle('hacbs-getting-started-app');
             },
           },
           {
-            key: 'learning-resources',
-            label: 'Learning resources',
-            href: '',
-            isDisabled: true,
+            key: 'explore-documentation',
+            label: (
+              <ExternalLink href="https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation">
+                Explore Documentation <ExternalLinkAltIcon />
+              </ExternalLink>
+            ),
+          },
+
+          {
+            type: 'separator',
+            key: 'separator',
+            label: '',
+          },
+          {
+            key: 'delete-application',
+            label: 'Delete application',
+            onClick: () =>
+              showModal<{ submitClicked: boolean }>(
+                applicationDeleteModal(application),
+              ).closed.then(({ submitClicked }) => {
+                if (submitClicked) navigate('/app-studio');
+              }),
           },
         ]}
         tabs={[

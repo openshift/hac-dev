@@ -37,12 +37,12 @@ import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import { FilterIcon, ListIcon, TopologyIcon } from '@patternfly/react-icons/dist/js/icons';
 import { css } from '@patternfly/react-styles';
 import viewStyles from '@patternfly/react-styles/css/components/Topology/topology-view';
-import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { ComponentGroupVersionKind, EnvironmentGroupVersionKind } from '../../models';
+import { Timestamp } from '../../shared/components/timestamp/Timestamp';
+import { useApplicationEnvironmentStatus } from '../../shared/hooks/useApplicationEnvironmentStatus';
 import { ComponentKind, EnvironmentKind } from '../../types';
 import { getEnvironmentDeploymentStrategyLabel } from '../../utils/environment-utils';
-import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import ApplicationEnvironmentGraphView from './ApplicationEnvironmentGraphView';
 import ApplicationEnvironmentListView from './ApplicationEnvironmentListView';
@@ -94,16 +94,8 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
     namespace,
     isList: true,
   });
-  const [gitOpsDeployment, gitOpsDeploymentLoaded] = useGitOpsDeploymentCR(
-    applicationName,
-    namespace,
-  );
-  const gitOpsDeploymentHealthStatus = gitOpsDeploymentLoaded
-    ? gitOpsDeployment?.status?.health?.status
-    : null;
-  const gitOpsDeploymentHealthStatusIcon = getGitOpsDeploymentHealthStatusIcon(
-    gitOpsDeploymentHealthStatus,
-  );
+  const [healthStatus, healthStatusIcon, lastDeploy, statusLoaded] =
+    useApplicationEnvironmentStatus(applicationName, environment?.metadata?.name);
 
   const filteredComponents = React.useMemo(() => {
     if (!componentsLoaded || !components?.length) {
@@ -157,24 +149,24 @@ export const ApplicationEnvironmentDetailsView: React.FC<ApplicationEnvironmentD
             {environment.spec.displayName} Deployment Details
           </Title>
           <Flex justifyContent={{ default: 'justifyContentFlexEnd' }}>
-            {gitOpsDeploymentLoaded ? (
-              gitOpsDeployment ? (
-                <>
+            {statusLoaded ? (
+              <>
+                <FlexItem className="application-environment-details__header-info-item">
+                  {healthStatusIcon} Application{' '}
+                  <span className="application-environment-details__health-status">
+                    {healthStatus}
+                  </span>
+                </FlexItem>
+                <FlexItem className="application-environment-details__header-info-item">
+                  Deployment strategy:{' '}
+                  <Label isCompact>{getEnvironmentDeploymentStrategyLabel(environment)}</Label>
+                </FlexItem>
+                {lastDeploy ? (
                   <FlexItem className="application-environment-details__header-info-item">
-                    {gitOpsDeploymentHealthStatusIcon} Application{' '}
-                    <span className="application-environment-details__health-status">
-                      {gitOpsDeploymentHealthStatus}
-                    </span>
+                    <Timestamp timestamp={lastDeploy} simple />
                   </FlexItem>
-                  <FlexItem className="application-environment-details__header-info-item">
-                    Deployment strategy:{' '}
-                    <Label isCompact>{getEnvironmentDeploymentStrategyLabel(environment)}</Label>
-                  </FlexItem>
-                  <FlexItem className="application-environment-details__header-info-item">
-                    Last deployment: Nov 29, 2021 2:11 PM
-                  </FlexItem>
-                </>
-              ) : null
+                ) : null}
+              </>
             ) : (
               <FlexItem className="application-environment-details__header-info-item">
                 <Spinner isSVG size="md" />

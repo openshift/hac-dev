@@ -1,8 +1,9 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, configure } from '@testing-library/react';
+import { useApplications } from '../../../hacbs/hooks/useApplications';
 import { EnvironmentKind } from '../../../types';
+import { mockApplication } from '../../ApplicationEnvironment/__data__/mock-data';
 import EnvironmentListView from '../EnvironmentListView';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -23,6 +24,11 @@ jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
     helpTopics: { setActiveTopic: jest.fn(), enableTopics: jest.fn(), disableTopics: jest.fn() },
   }),
 }));
+
+jest.mock('../../../hacbs/hooks/useApplications', () => ({
+  useApplications: jest.fn(),
+}));
+const useApplicationsMock = useApplications as jest.Mock;
 
 const environments: EnvironmentKind[] = [
   {
@@ -55,18 +61,18 @@ const environments: EnvironmentKind[] = [
 
 configure({ testIdAttribute: 'data-test' });
 
-const watchResourceMock = useK8sWatchResource as jest.Mock;
-
 describe('EnvironmentListView', () => {
+  beforeEach(() => {
+    useApplicationsMock.mockReturnValue([[mockApplication], true]);
+  });
+
   it('should render spinner while environment data is not loaded', () => {
-    watchResourceMock.mockReturnValue([[], false]);
-    render(<EnvironmentListView />);
+    render(<EnvironmentListView environments={[]} environmentsLoaded={false} />);
     screen.getByRole('progressbar');
   });
 
   it('should render empty state if no environment is present', () => {
-    watchResourceMock.mockReturnValue([[], true]);
-    render(<EnvironmentListView />);
+    render(<EnvironmentListView environments={[]} environmentsLoaded={true} />);
     screen.getByText('No Environments');
     screen.getByText('To get started, create an environment.');
     const button = screen.getByText('Create environment');
@@ -74,8 +80,7 @@ describe('EnvironmentListView', () => {
   });
 
   it('should render application list when environment(s) is(are) present', () => {
-    watchResourceMock.mockReturnValue([environments, true]);
-    render(<EnvironmentListView />);
+    render(<EnvironmentListView environments={environments} environmentsLoaded={true} />);
     screen.getByText('Create environment');
     expect(screen.getAllByTestId('environment-card').length).toBe(2);
   });

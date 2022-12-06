@@ -64,7 +64,7 @@ export const mockReleasesData = [
             },
             'f:spec': {
               '.': {},
-              'f:applicationSnapshot': {},
+              'f:snapshot': {},
               'f:releasePlan': {},
             },
           },
@@ -121,7 +121,7 @@ export const mockReleasesData = [
       },
     },
     spec: {
-      applicationSnapshot: 'test-application-dgkqg',
+      snapshot: 'test-application-dgkqg',
       releasePlan: 'sre-production',
     },
     status: {
@@ -172,7 +172,7 @@ export const mockReleasesData = [
           fieldsV1: {
             'f:spec': {
               '.': {},
-              'f:applicationSnapshot': {},
+              'f:snapshot': {},
               'f:releasePlan': {},
             },
           },
@@ -209,7 +209,7 @@ export const mockReleasesData = [
       uid: '362aacf6-2b4a-400e-bb56-f10343066e0f',
     },
     spec: {
-      applicationSnapshot: 'test-application-dgkqg',
+      snapshot: 'test-application-dgkqg',
       releasePlan: 'sre-production',
     },
     status: {

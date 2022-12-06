@@ -63,15 +63,40 @@ cd ..
 
 mkdir -p $WORKSPACE/artifacts
 
+ID="$(id -u):$(id -g)"
+COMMON_SETUP="-u $ID \
+    -v $WORKSPACE/artifacts:/e2e/cypress:Z \
+    -v $PWD/integration-tests:/e2e:Z \
+    -v /etc/passwd:/etc/passwd:ro \
+    -w /e2e \
+    -e CYPRESS_CACHE_FOLDER=/e2e/.cache \
+    -e CYPRESS_PR_CHECK=true \
+    -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/app-studio \
+    -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` \
+    -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d`"
+TEST_IMAGE="quay.io/hacdev/hac-tests:latest"
+
 set +e
+TEST_RUN=0
 
-docker run -v $WORKSPACE/artifacts:/e2e/cypress:Z -v $PWD/integration-tests:/e2e:Z -w /e2e -e CYPRESS_PR_CHECK=true -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/app-studio -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` -e CYPRESS_GH_TOKEN=${CYPRESS_GH_TOKEN} -e CYPRESS_QUAY_TOKEN=${CYPRESS_QUAY_TOKEN} quay.io/hacdev/hac-tests:latest bash -c "startcypress run"
-TEST_RUN=$?
-docker run -v $WORKSPACE/artifacts:/e2e/cypress:Z -v $PWD/integration-tests:/e2e:Z -w /e2e -e CYPRESS_PR_CHECK=true -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/app-studio -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} quay.io/hacdev/hac-tests:latest bash -c "startcypress run -e configFile=experimental"
-TEST_RUN=$(($TEST_RUN || $?))
+docker run ${COMMON_SETUP} \
+    -e CYPRESS_GH_TOKEN=${CYPRESS_GH_TOKEN} \
+    -e CYPRESS_QUAY_TOKEN=${CYPRESS_QUAY_TOKEN} \
+    -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
+    ${TEST_IMAGE} \
+    bash -c "startcypress run" || TEST_RUN=1
 
-# This needs to stay there to grant Jenkins rights to clean the workspace 
-docker run -u 0 -v $WORKSPACE/artifacts:/e2e/cypress:Z -v $PWD/integration-tests:/e2e:Z -w /e2e quay.io/hacdev/hac-tests:latest bash -c "chmod -v -R a+rwx,-t /e2e/cypress"
+docker run ${COMMON_SETUP} \
+    -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \
+    -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
+    ${TEST_IMAGE} \
+    bash -c "startcypress run -e configFile=hac-dev-experimental" || TEST_RUN=2
+
+docker run ${COMMON_SETUP} \
+    -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HACBS} \
+    ${TEST_IMAGE} \
+    bash -c "startcypress run -e configFile=hacbs" || TEST_RUN=3
+
 bonfire namespace release ${NAMESPACE}
 
 # teardown_docker

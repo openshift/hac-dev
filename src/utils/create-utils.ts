@@ -4,6 +4,7 @@ import {
   k8sUpdateResource,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import isEqual from 'lodash/isEqual';
+import isNumber from 'lodash/isNumber';
 import merge from 'lodash/merge';
 import uniqueId from 'lodash/uniqueId';
 import {
@@ -106,7 +107,7 @@ export const createComponent = (
       secret,
       containerImage,
       replicas,
-      targetPort,
+      ...(isNumber(targetPort) && { targetPort }),
       resources,
       env,
     },

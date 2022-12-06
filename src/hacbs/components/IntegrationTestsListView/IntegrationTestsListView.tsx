@@ -21,13 +21,10 @@ import {
   ToolbarGroup,
   ToolbarItem,
 } from '@patternfly/react-core';
-import { Flex, FlexItem } from '@patternfly/react-core/dist/js/layouts';
 import { CodeBranchIcon } from '@patternfly/react-icons/dist/esm/icons/code-branch-icon';
-import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import { FilterIcon, SearchIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import { Table } from '../../../shared';
-import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { useNamespace } from '../../../utils/namespace-context-utils';
 import { IntegrationTestScenarioGroupVersionKind } from '../../models';
 import { IntegrationTestScenarioKind } from '../../types/coreBuildService';
@@ -48,21 +45,6 @@ const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ h
       No integration tests found yet.
       <br />
       To get started, create an environment or connect to a release environment.
-      <ExternalLink
-        href="#"
-        text={
-          <Flex
-            className="pf-u-mt-sm"
-            spaceItems={{ default: 'spaceItemsXs' }}
-            justifyContent={{ default: 'justifyContentCenter' }}
-          >
-            <FlexItem>Learn more about setting up an integration test</FlexItem>
-            <FlexItem>
-              <ExternalLinkAltIcon />
-            </FlexItem>
-          </Flex>
-        }
-      />
     </EmptyStateBody>
     <EmptyStateSecondaryActions>
       <Button
@@ -149,33 +131,11 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
       <Title headingLevel="h3" className="pf-u-mt-lg pf-u-mb-sm">
         Integration tests
       </Title>
-      <Flex spaceItems={{ default: 'spaceItemsXs' }}>
-        <FlexItem>
-          <TextContent>
-            <Text component={TextVariants.p}>
-              Add an integration test to test all your components after you commit code.
-            </Text>
-          </TextContent>
-        </FlexItem>
-        <FlexItem>
-          <ExternalLink
-            href="#"
-            text={
-              <Flex
-                spaceItems={{ default: 'spaceItemsXs' }}
-                justifyContent={{ default: 'justifyContentCenter' }}
-              >
-                <FlexItem className="pf-u-font-size-sm">
-                  Learn more about setting up an integration test
-                </FlexItem>
-                <FlexItem>
-                  <ExternalLinkAltIcon />
-                </FlexItem>
-              </Flex>
-            }
-          />
-        </FlexItem>
-      </Flex>
+      <TextContent>
+        <Text component={TextVariants.p}>
+          Add an integration test to test all your components after you commit code.
+        </Text>
+      </TextContent>
       <>
         <Toolbar data-testid="component-list-toolbar" clearAllFilters={onClearFilters}>
           <ToolbarContent>

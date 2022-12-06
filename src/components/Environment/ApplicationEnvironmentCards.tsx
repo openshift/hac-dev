@@ -15,18 +15,14 @@ import {
   TextVariants,
 } from '@patternfly/react-core';
 import ArrowRightIcon from '@patternfly/react-icons/dist/js/icons/arrow-right-icon';
-import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-icon';
-import { global_palette_green_400 as greenColor } from '@patternfly/react-tokens/dist/js/global_palette_green_400';
-import { useApplicationHealthStatus } from '../../hooks/useApplicationHealthStatus';
 import { useSortedEnvironments } from '../../hooks/useEnvironments';
-import { useLastApplicationDeployTime } from '../../hooks/useLastApplicationDeployTime';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
+import { useApplicationEnvironmentStatus } from '../../shared/hooks/useApplicationEnvironmentStatus';
 import { EnvironmentKind } from '../../types';
 import {
   getEnvironmentDeploymentStrategyLabel,
   isPositionedEnvironment,
 } from '../../utils/environment-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
 
 import './ApplicationEnviromentCards.scss';
 
@@ -54,15 +50,8 @@ const ApplicationEnvironmentCard: React.FC<ApplicationEnvironmentCardProps> = ({
   onSelect,
 }) => {
   const strategy = getEnvironmentDeploymentStrategyLabel(environment);
-  const namespace = useNamespace();
-  const [healthStatus, healthStatusIcon, healthStatusLoaded] = useApplicationHealthStatus(
-    namespace,
-    applicationName,
-  );
-  const [lastDeployTime, deployTimeLoaded] = useLastApplicationDeployTime(
-    namespace,
-    applicationName,
-  );
+  const [healthStatus, healthStatusIcon, lastDeploy, statusLoaded] =
+    useApplicationEnvironmentStatus(applicationName, environment.metadata.name);
 
   return (
     <Card
@@ -82,7 +71,7 @@ const ApplicationEnvironmentCard: React.FC<ApplicationEnvironmentCardProps> = ({
             {!isExpanded ? (
               <span>
                 {' '}
-                <CheckCircleIcon color={greenColor.value} /> Healthy
+                {healthStatusIcon} {healthStatus}
               </span>
             ) : (
               <Label isCompact>{strategy}</Label>
@@ -92,7 +81,7 @@ const ApplicationEnvironmentCard: React.FC<ApplicationEnvironmentCardProps> = ({
       </CardHeader>
       <CardExpandableContent>
         <CardBody>
-          {healthStatusLoaded ? (
+          {statusLoaded ? (
             <>
               {healthStatusIcon} Application {healthStatus}
             </>
@@ -103,8 +92,8 @@ const ApplicationEnvironmentCard: React.FC<ApplicationEnvironmentCardProps> = ({
         <CardFooter>
           <small>Last Deployment:</small> {'  '}
           <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
-            {deployTimeLoaded ? (
-              <Timestamp timestamp={lastDeployTime} simple />
+            {statusLoaded ? (
+              <Timestamp timestamp={lastDeploy} simple />
             ) : (
               <Skeleton width="50%" screenreaderText="Loading last deployment time" />
             )}

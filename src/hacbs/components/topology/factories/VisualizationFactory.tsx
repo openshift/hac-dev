@@ -18,6 +18,7 @@ type VisualizationFactoryProps = {
   layoutFactory: LayoutFactory;
   componentFactory: ComponentFactory;
   controlBar?: (controller: Controller) => React.ReactNode;
+  fullHeight?: boolean;
 };
 
 type Size = {
@@ -30,6 +31,7 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
   layoutFactory,
   componentFactory,
   controlBar,
+  fullHeight = false,
 }) => {
   const [controller, setController] = React.useState<Controller>(null);
   const [maxSize, setMaxSize] = React.useState<Size>(null);
@@ -84,13 +86,23 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
   }, [controller, model, onLayoutUpdate, layoutFactory, componentFactory]);
 
   if (!controller) return null;
-  return (
-    <div style={{ height: maxSize?.height, width: maxSize?.width }}>
-      <VisualizationProvider controller={controller}>
-        <TopologyView controlBar={controlBar ? controlBar(controller) : undefined}>
-          <VisualizationSurface />
-        </TopologyView>
-      </VisualizationProvider>
+
+  const visualization = (
+    <VisualizationProvider controller={controller}>
+      <TopologyView controlBar={controlBar ? controlBar(controller) : undefined}>
+        <VisualizationSurface />
+      </TopologyView>
+    </VisualizationProvider>
+  );
+
+  return fullHeight ? (
+    visualization
+  ) : (
+    <div
+      data-testid="visualization-wrapper"
+      style={{ height: maxSize?.height, width: maxSize?.width }}
+    >
+      {visualization}
     </div>
   );
 };

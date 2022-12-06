@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
   Button,
@@ -18,9 +17,9 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { HACBS_FLAG } from '../../hacbs/hacbsFeatureFlag';
+import { useApplications } from '../../hacbs/hooks/useApplications';
 import emptyStateImgUrl from '../../imgs/application-list-empty.png';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
-import { ApplicationGroupVersionKind } from '../../models';
 import { Table } from '../../shared';
 import { ApplicationKind } from '../../types';
 import { useNamespace } from '../../utils/namespace-context-utils';
@@ -36,11 +35,7 @@ const EmptyStateImg = () => <img className="pf-u-w-33" src={emptyStateImgUrl} al
 const ApplicationListView: React.FC = () => {
   const [hacbs] = useFeatureFlag(HACBS_FLAG);
   const namespace = useNamespace();
-  const [applications, loaded] = useK8sWatchResource<ApplicationKind[]>({
-    groupVersionKind: ApplicationGroupVersionKind,
-    namespace,
-    isList: true,
-  });
+  const [applications, loaded] = useApplications(namespace);
   applications?.sort(
     (app1, app2) =>
       +new Date(app2.metadata.creationTimestamp) - +new Date(app1.metadata.creationTimestamp),

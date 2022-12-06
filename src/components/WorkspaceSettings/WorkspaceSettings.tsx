@@ -12,6 +12,7 @@ import {
 } from '@patternfly/react-core';
 import EnvironmentListView from '../../components/Environment/EnvironmentListView';
 import PageLayout from '../../components/PageLayout/PageLayout';
+import { useSortedEnvironments } from '../../hooks/useEnvironments';
 import { useQuickstartCloseOnUnmount } from '../../hooks/useQuickstartCloseOnUnmount';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
@@ -38,6 +39,13 @@ export const GettingStartedWithUsers = (
   </>
 );
 
+const DefaultEnvironmentsListView: React.FC = () => {
+  const [environments, environmentsLoaded] = useSortedEnvironments();
+  return (
+    <EnvironmentListView environments={environments} environmentsLoaded={environmentsLoaded} />
+  );
+};
+
 export type WorkspaceSettingsProps = {
   gettingStartedSections?: React.ReactNode[];
   environmentsView?: React.ReactNode;
@@ -52,7 +60,7 @@ const ENVIRONMENTS_TAB_KEY = 'environments';
 
 const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = ({
   gettingStartedSections = [GettingStartedWithEnvironments, GettingStartedWithUsers],
-  environmentsView = <EnvironmentListView />,
+  environmentsView = <DefaultEnvironmentsListView />,
   tabs,
 }) => {
   useQuickstartCloseOnUnmount();

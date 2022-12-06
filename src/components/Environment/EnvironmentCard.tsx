@@ -10,9 +10,11 @@ import {
   TextVariants,
   Label,
 } from '@patternfly/react-core';
+import { useApplications } from '../../hacbs/hooks/useApplications';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import { EnvironmentKind } from '../../types';
 import { getEnvironmentDeploymentStrategyLabel } from '../../utils/environment-utils';
+import { useNamespace } from '../../utils/namespace-context-utils';
 import { useEnvironmentActions } from './environment-actions';
 
 type EnvironmentCardProps = {
@@ -20,6 +22,8 @@ type EnvironmentCardProps = {
 };
 const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment }) => {
   const actions = useEnvironmentActions(environment);
+  const namespace = useNamespace();
+  const [applications, applicationsLoaded] = useApplications(namespace);
 
   return (
     <Card isFlat>
@@ -46,7 +50,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment }) => {
       <CardBody>
         <TextContent>
           <Text>
-            <b>Applications: 4</b>
+            <b>Applications: {applicationsLoaded ? applications.length : '-'}</b>
           </Text>
         </TextContent>
       </CardBody>

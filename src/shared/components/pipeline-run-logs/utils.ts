@@ -9,6 +9,7 @@ import i18next from 'i18next';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { K8sGroupVersionKind } from '../../../dynamic-plugin-sdk';
+import { GitOpsDeploymentHealthStatus } from '../../../types/gitops-deployment';
 
 export const LOG_SOURCE_RESTARTING = 'restarting';
 export const LOG_SOURCE_RUNNING = 'running';
@@ -61,7 +62,8 @@ export const resourcePathFromModel = (model: K8sModelCommon, name?: string, name
 };
 
 export enum SucceedConditionReason {
-  PipelineRunCancelled = 'PipelineRunCancelled',
+  PipelineRunStopped = 'StoppedRunFinally',
+  PipelineRunCancelled = 'CancelledRunFinally',
   TaskRunCancelled = 'TaskRunCancelled',
   Cancelled = 'Cancelled',
   PipelineRunStopping = 'PipelineRunStopping',
@@ -123,6 +125,7 @@ export const pipelineRunStatus = (pipelineRun): string => {
 
   if (succeedCondition.reason && succeedCondition.reason !== status) {
     switch (succeedCondition.reason) {
+      case SucceedConditionReason.PipelineRunStopped:
       case SucceedConditionReason.PipelineRunCancelled:
       case SucceedConditionReason.TaskRunCancelled:
       case SucceedConditionReason.Cancelled:
@@ -191,5 +194,23 @@ export const getRunStatusColor = (status: string) => {
         pftoken: pendingColor,
         labelColor: 'grey',
       };
+  }
+};
+
+export const pipelineRunStatusToGitOpsStatus = (status: string): GitOpsDeploymentHealthStatus => {
+  switch (status) {
+    case 'Succeeded':
+      return GitOpsDeploymentHealthStatus.Healthy;
+    case 'Failed':
+      return GitOpsDeploymentHealthStatus.Degraded;
+    case 'Running':
+    case 'Pending':
+      return GitOpsDeploymentHealthStatus.Progressing;
+    case 'Cancelled':
+      return GitOpsDeploymentHealthStatus.Suspended;
+    case 'Skipped':
+      return GitOpsDeploymentHealthStatus.Missing;
+    default:
+      return GitOpsDeploymentHealthStatus.Unknown;
   }
 };

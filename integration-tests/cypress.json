@@ -13,6 +13,9 @@
   "chromeWebSecurity": false,
   "reporter": "cypress-multi-reporters",
   "reporterOptions": {
-    "configFile": "reporter-config.json"
+    "reporterEnabled": "spec, mocha-junit-reporter",
+    "mochaJunitReporterReporterOptions": {
+      "mochaFile": "cypress/junit-[hash].xml"
+    }
   }
 }

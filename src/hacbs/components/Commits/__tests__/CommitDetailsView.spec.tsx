@@ -24,6 +24,8 @@ jest.mock('../../../../hooks', () => ({
   useLocalStorage: jest.fn(),
 }));
 
+jest.mock('../tabs/CommitDetails/CommitVisualization', () => () => <div />);
+
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('CommitDetailsView', () => {

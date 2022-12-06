@@ -29,7 +29,7 @@ export const useIntegrationTestActions = (
     {
       cta: () => showModal(integrationTestDeleteModal(integrationTest)),
       id: `delete-${integrationTest.metadata.name.toLowerCase()}`,
-      label: 'Remove',
+      label: 'Delete',
     },
   ];
 };

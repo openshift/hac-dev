@@ -19,11 +19,11 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
+import { PipelineRunKind } from '../../hacbs/types';
 import { useApplicationRoutes } from '../../hooks';
 import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { PipelineRunGroupVersionKind } from '../../shared';
-import { PipelineRunKind } from '../../shared/components/pipeline-run-logs/types';
 import { ComponentKind } from '../../types';
 import { BUILD_COMPONENT_LABEL } from '../../utils/const';
 import {

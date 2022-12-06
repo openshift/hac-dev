@@ -12,9 +12,9 @@ import {
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import { default as BaseComponentListView } from '../../../components/ComponentsListView/ComponentListView';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
-import { PipelineRunKind } from '../../../shared/components/pipeline-run-logs/types';
 import { ComponentKind } from '../../../types';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
+import { PipelineRunKind } from '../../types';
 import BuildStatusColumn, { getURLForComponentPRs } from './BuildStatusColumn';
 import ComponentsFilterToolbarGroups, {
   NEEDS_MERGE_FILTER_ID,

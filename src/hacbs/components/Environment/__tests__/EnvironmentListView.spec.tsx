@@ -1,16 +1,27 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, configure, cleanup, fireEvent } from '@testing-library/react';
-import {
-  mockComponents,
-  mockGitOpsDeployments,
-} from '../../../../components/ApplicationEnvironment/__data__/mock-data';
-import { WatchK8sResource } from '../../../../dynamic-plugin-sdk';
-import { ComponentGroupVersionKind, EnvironmentGroupVersionKind } from '../../../../models';
-import { GitOpsDeploymentGroupVersionKind } from '../../../../models/gitops-deployment';
-import { EnvironmentKind } from '../../../../types';
 import { mockLocation } from '../../../../utils/test-utils';
+import { useAllEnvironments } from '../../../hooks/useAllEnvironments';
+import { useBuildPipelines } from '../../../hooks/useBuildPipelines';
+import { useComponents } from '../../../hooks/useComponents';
+import { useEnvironments } from '../../../hooks/useEnvironments';
+import { useIntegrationTestScenarios } from '../../../hooks/useIntegrationTestScenarios';
+import { useReleasePlans } from '../../../hooks/useReleasePlans';
+import { useReleases } from '../../../hooks/useReleases';
+import { useSnapshotsEnvironmentBindings } from '../../../hooks/useSnapshotsEnvironmentBindings';
+import { useTestPipelines } from '../../../hooks/useTestPipelines';
+import {
+  mockSnapshotsEnvironmentBindings,
+  mockBuildPipelinesData,
+  mockComponentsData,
+  mockEnvironmentsData,
+  mockIntegrationTestScenariosData,
+  mockReleasePlansData,
+  mockReleasesData,
+  mockTestPipelinesData,
+} from '../../ApplicationDetails/tabs/overview/sections/__data__';
+import { mockAppEnvWithHealthStatus } from '../__data__/mockAppEnvWithHealthStatus';
 import EnvironmentListView from '../EnvironmentListView';
 import { EnvironmentType } from '../utils';
 
@@ -36,38 +47,67 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
-const testEnvironments: EnvironmentKind[] = Object.keys(EnvironmentType).reduce((acc, t) => {
-  for (let i = 1; i <= 2; i++) {
-    acc.push({
-      kind: 'Environment',
-      apiVersion: 'appstudio.redhat.com/v1alpha1',
-      metadata: {
-        name: `env-${t}-${i}`,
-      },
-      spec: {
-        displayName: `My Env ${t} - ${i}`,
-        deploymentStrategy: 'Manual',
-        type: 'test',
-        tags: [t],
-      },
-    });
-  }
-  return acc;
-}, [] as EnvironmentKind[]);
+jest.mock('../../../hooks/useComponents', () => ({
+  useComponents: jest.fn(),
+}));
+jest.mock('../../../hooks/useIntegrationTestScenarios', () => ({
+  useIntegrationTestScenarios: jest.fn(),
+}));
+jest.mock('../../../hooks/useBuildPipelines', () => ({
+  useBuildPipelines: jest.fn(),
+}));
+jest.mock('../../../hooks/useEnvironments', () => ({
+  useEnvironments: jest.fn(),
+}));
+jest.mock('../../../hooks/useReleases', () => ({
+  useReleases: jest.fn(),
+}));
+jest.mock('../../../hooks/useReleasePlans', () => ({
+  useReleasePlans: jest.fn(),
+}));
+jest.mock('../../../hooks/useTestPipelines', () => ({
+  useTestPipelines: jest.fn(),
+}));
+jest.mock('../../../hooks/useSnapshotsEnvironmentBindings', () => ({
+  useSnapshotsEnvironmentBindings: jest.fn(),
+}));
+jest.mock('../../../hooks/useAllEnvironments', () => ({
+  useAllEnvironments: jest.fn(),
+}));
+
+const useComponentsMock = useComponents as jest.Mock;
+const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
+const useBuildPipelinesMock = useBuildPipelines as jest.Mock;
+const useEnvironmentsMock = useEnvironments as jest.Mock;
+const useReleasesMock = useReleases as jest.Mock;
+const useReleasePlansMock = useReleasePlans as jest.Mock;
+const useTestPipelinesMock = useTestPipelines as jest.Mock;
+const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
+const useAllEnvironmentsMock = useAllEnvironments as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
-const watchResourceMock = useK8sWatchResource as jest.Mock;
-
 describe('EnvironmentListView', () => {
+  beforeEach(() => {
+    useComponentsMock.mockReturnValue([mockComponentsData, true]);
+    useIntegrationTestScenariosMock.mockReturnValue([mockIntegrationTestScenariosData, true]);
+    useBuildPipelinesMock.mockReturnValue([mockBuildPipelinesData, true]);
+    useEnvironmentsMock.mockImplementation(() => [mockEnvironmentsData, true]);
+    useReleasePlansMock.mockReturnValue([mockReleasePlansData, true]);
+    useReleasesMock.mockReturnValue([mockReleasesData, true]);
+    useTestPipelinesMock.mockReturnValue([mockTestPipelinesData, true]);
+    useSnapshotsEnvironmentBindingsMock.mockReturnValue([mockSnapshotsEnvironmentBindings, true]);
+    useAllEnvironmentsMock.mockReturnValue([mockAppEnvWithHealthStatus, true]);
+  });
+
   it('should render spinner while environment data is not loaded', () => {
-    watchResourceMock.mockReturnValue([[], false]);
+    useAllEnvironmentsMock.mockReturnValue([[], false]);
     render(<EnvironmentListView />);
     expect(screen.getByRole('progressbar')).toBeVisible();
   });
 
   it('should render empty state if no environment is present', () => {
-    watchResourceMock.mockReturnValue([[], true]);
+    useAllEnvironmentsMock.mockReturnValue([[], true]);
     render(<EnvironmentListView />);
     expect(screen.getByText(/No environments found yet./)).toBeVisible();
     expect(
@@ -78,11 +118,12 @@ describe('EnvironmentListView', () => {
     expect(screen.getByText('Create environment')).toBeVisible();
   });
 
-  it('should render application list when environment(s) is(are) present', () => {
-    watchResourceMock.mockReturnValue([testEnvironments, true]);
+  it('should render cards when environment(s) is(are) present', () => {
     render(<EnvironmentListView />);
     expect(screen.getByText('Create environment')).toBeVisible();
-    expect(screen.getAllByTestId('environment-card').length).toBe(testEnvironments.length);
+    expect(screen.getAllByTestId('environment-card').length).toBe(
+      mockAppEnvWithHealthStatus.length,
+    );
   });
 
   it('should pre-filter environments by type', () => {
@@ -92,27 +133,26 @@ describe('EnvironmentListView', () => {
 
     cleanup();
     render(<EnvironmentListView validTypes={[EnvironmentType.static]} />);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(2);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
 
     cleanup();
     render(<EnvironmentListView validTypes={[EnvironmentType.managed]} />);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(2);
+    expect(screen.queryAllByTestId('environment-card')).toHaveLength(0);
 
     cleanup();
     render(<EnvironmentListView validTypes={[EnvironmentType.ephemeral]} />);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(2);
+    expect(screen.queryAllByTestId('environment-card')).toHaveLength(0);
 
     cleanup();
     render(
       <EnvironmentListView validTypes={[EnvironmentType.static, EnvironmentType.ephemeral]} />,
     );
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
   });
 
   it('should filter cards by type', async () => {
-    watchResourceMock.mockReturnValue([testEnvironments, true]);
     render(<EnvironmentListView />);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
 
     // interact with filters
     const filterMenuButton = screen.getByRole('button', { name: /filter/i });
@@ -121,43 +161,45 @@ describe('EnvironmentListView', () => {
     const staticCb = screen.getByLabelText(/Static/i, { selector: 'input' }) as HTMLInputElement;
     fireEvent.click(staticCb);
     expect(staticCb.checked).toBe(true);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(2);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
 
     const managedCb = screen.getByLabelText(/Managed/i, { selector: 'input' }) as HTMLInputElement;
     fireEvent.click(managedCb);
     expect(managedCb.checked).toBe(true);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
 
     const ephemeralCb = screen.getByLabelText(/Ephemeral/i, {
       selector: 'input',
     }) as HTMLInputElement;
     fireEvent.click(ephemeralCb);
     expect(ephemeralCb.checked).toBe(true);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
 
     // filter only some of the envs
     fireEvent.click(staticCb);
     fireEvent.click(ephemeralCb);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(2);
+    expect(screen.queryAllByTestId('environment-card')).toHaveLength(0);
 
     // clear the filter
     const clearFilterButton = screen.getAllByRole('button', { name: 'Clear filters' })[1];
     fireEvent.click(clearFilterButton);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
   });
 
   it('should filter cards by name', () => {
     render(<EnvironmentListView />);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
 
     const textFilterInput = screen.getByRole('textbox', { name: 'name filter' });
-    fireEvent.change(textFilterInput, { target: { value: '1' } });
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    fireEvent.change(textFilterInput, { target: { value: 'd' } });
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(2);
+    fireEvent.change(textFilterInput, { target: { value: 'dev' } });
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(1);
   });
 
   it('should clear filters from empty state', () => {
     render(<EnvironmentListView />);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
 
     const textFilterInput = screen.getByRole('textbox', { name: 'name filter' });
     fireEvent.change(textFilterInput, { target: { value: 'no match' } });
@@ -166,47 +208,36 @@ describe('EnvironmentListView', () => {
 
     const clearFilterButton = screen.getByRole('button', { name: 'Clear all filters' });
     fireEvent.click(clearFilterButton);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
   });
 
   it('should filter cards by status', async () => {
-    watchResourceMock.mockImplementation((params: WatchK8sResource) => {
-      if (params.groupVersionKind === EnvironmentGroupVersionKind) {
-        return [testEnvironments, true];
-      }
-      if (params.groupVersionKind === GitOpsDeploymentGroupVersionKind) {
-        return [mockGitOpsDeployments, true];
-      }
-      if (params.groupVersionKind === ComponentGroupVersionKind) {
-        return [mockComponents, true];
-      }
-    });
     render(<EnvironmentListView applicationName="application-to-test" />);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
 
     // interact with filters
     const filterMenuButton = screen.getByRole('button', { name: /filter/i });
     fireEvent.click(filterMenuButton);
 
+    const missingFilter = screen.getByLabelText(/Missing/i, {
+      selector: 'input',
+    }) as HTMLInputElement;
+    fireEvent.click(missingFilter);
+    await expect(missingFilter.checked).toBe(true);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(2);
+
     const degradedFilter = screen.getByLabelText(/Degraded/i, {
       selector: 'input',
     }) as HTMLInputElement;
     fireEvent.click(degradedFilter);
-    await expect(degradedFilter.checked).toBe(true);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(2);
 
-    const healthyFilter = screen.getByLabelText(/Healthy/i, {
-      selector: 'input',
-    }) as HTMLInputElement;
-    fireEvent.click(healthyFilter);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
-
-    fireEvent.click(degradedFilter);
+    fireEvent.click(missingFilter);
     expect(screen.queryAllByTestId('environment-card')).toHaveLength(0);
 
     // clear the filter
     const clearFilterButton = screen.getAllByRole('button', { name: 'Clear filters' })[1];
     fireEvent.click(clearFilterButton);
-    await expect(screen.getAllByTestId('environment-card')).toHaveLength(6);
+    await expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
   });
 });

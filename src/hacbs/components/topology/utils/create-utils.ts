@@ -2,7 +2,7 @@ import { PipelineNodeModel } from '@patternfly/react-topology';
 
 export type GenericNodeData = {
   label?: string;
-  runAfterTasks: string[];
+  runAfterTasks?: string[];
   selected?: boolean;
   isDisabled?: boolean;
   width?: number;

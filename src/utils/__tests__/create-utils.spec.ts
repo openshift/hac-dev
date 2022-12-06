@@ -170,6 +170,46 @@ describe('Create Utils', () => {
     });
   });
 
+  it('Should create component with target port', async () => {
+    const mockComponentDataWithTargetPort = {
+      ...mockComponent,
+      targetPort: 8080,
+    };
+    await createComponent(mockComponentDataWithTargetPort, 'test-application', 'test-ns');
+
+    expect(k8sCreateResource).toHaveBeenCalledWith({
+      model: ComponentModel,
+      queryOptions: {
+        name: 'test-component',
+        ns: 'test-ns',
+      },
+      resource: {
+        ...mockComponentData,
+        spec: {
+          ...mockComponentData.spec,
+          targetPort: 8080,
+        },
+      },
+    });
+  });
+
+  it('Should create component without target port, if it is not passed', async () => {
+    const mockComponentDataWithoutTargetPort = {
+      ...mockComponent,
+      targetPort: undefined,
+    };
+    await createComponent(mockComponentDataWithoutTargetPort, 'test-application', 'test-ns');
+
+    expect(k8sCreateResource).toHaveBeenCalledWith({
+      model: ComponentModel,
+      queryOptions: {
+        name: 'test-component',
+        ns: 'test-ns',
+      },
+      resource: mockComponentData,
+    });
+  });
+
   it('Should call k8s create util with pipelines-as-code annotations', async () => {
     await createComponent(
       mockComponentWithDevfile,

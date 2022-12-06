@@ -1,6 +1,7 @@
 import * as React from 'react';
+import '@testing-library/jest-dom';
 import { TopologyView } from '@patternfly/react-topology';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import { pipelineRuncomponentFactory } from '../../../PipelineRunDetailsView/factories';
 import { layoutFactory } from '../layoutFactory';
 import VisualizationFactory from '../VisualizationFactory';
@@ -54,5 +55,32 @@ describe('VisualizationFactory', () => {
         {},
       );
     });
+  });
+
+  it('should contain a wrapper around the visualization', async () => {
+    const mockControlBar = () => jest.fn();
+    render(
+      <VisualizationFactory
+        model={{ graph: { id: 'g1', type: 'graph' } }}
+        layoutFactory={layoutFactory}
+        componentFactory={pipelineRuncomponentFactory}
+        controlBar={mockControlBar}
+      />,
+    );
+    screen.getByTestId('visualization-wrapper');
+  });
+
+  it('should not contain a wrapper around the visualization if fullHeight prop is set', async () => {
+    const mockControlBar = () => jest.fn();
+    render(
+      <VisualizationFactory
+        model={{ graph: { id: 'g1', type: 'graph' } }}
+        layoutFactory={layoutFactory}
+        componentFactory={pipelineRuncomponentFactory}
+        controlBar={mockControlBar}
+        fullHeight
+      />,
+    );
+    expect(screen.queryByTestId('visualization-wrapper')).not.toBeInTheDocument();
   });
 });

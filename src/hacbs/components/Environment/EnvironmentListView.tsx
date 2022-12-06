@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Title, EmptyStateBody, Text } from '@patternfly/react-core';
 import EnvironmentListViewBase from '../../../components/Environment/EnvironmentListView';
-import { useApplicationEnvironmentsWithHealthStatus } from '../../../hooks/useApplicationEnvironmentsWithHealthStatus';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import { EnvironmentKind } from '../../../types';
 import { GitOpsDeploymentHealthStatus } from '../../../types/gitops-deployment';
+import { useAllEnvironments } from '../../hooks/useAllEnvironments';
+import { useApplicationEnvironmentsWithHealthStatus } from '../../hooks/useApplicationEnvironmentsWithHealthStatus';
 import EnvironmentCard from './EnvironmentCard';
 import EnvironmentToolbarGroups from './EnvironmentToolbarGroups';
 import { EnvironmentType, getEnvironmentType } from './utils';
@@ -35,6 +36,12 @@ const HacbsApplicationEnvironmentListView: React.FC<HacbsEnvironmentListViewProp
   unsetTypesFilter,
   CardComponent,
 }) => {
+  const [allEnvironments, environmentsLoaded] =
+    useApplicationEnvironmentsWithHealthStatus(applicationName);
+  const environments = React.useMemo(
+    () => (preFilter ? allEnvironments.filter(preFilter) : allEnvironments),
+    [preFilter, allEnvironments],
+  );
   const [statusFilterParam, setStatusFilterParam, unsetStatusFilter] = useSearchParam(
     'envStatus',
     '',
@@ -52,13 +59,10 @@ const HacbsApplicationEnvironmentListView: React.FC<HacbsEnvironmentListViewProp
     [setStatusFilterParam],
   );
 
-  const [environmentsWithStatus, statusLoaded] =
-    useApplicationEnvironmentsWithHealthStatus(applicationName);
-
   const envStatusCounts = React.useMemo(() => {
     const counts: { [key: string]: number } = {};
-    if (applicationName && statusLoaded) {
-      environmentsWithStatus?.forEach((env) => {
+    if (applicationName && environmentsLoaded) {
+      allEnvironments?.forEach((env) => {
         if (!counts[env.healthStatus]) {
           counts[env.healthStatus] = 0;
         }
@@ -66,51 +70,40 @@ const HacbsApplicationEnvironmentListView: React.FC<HacbsEnvironmentListViewProp
       });
     }
     return counts;
-  }, [applicationName, environmentsWithStatus, statusLoaded]);
+  }, [applicationName, allEnvironments, environmentsLoaded]);
 
   const filter = (env: EnvironmentKind) => {
     const type = getEnvironmentType(env);
-    const envWithStatus = statusLoaded
-      ? environmentsWithStatus.find((e) => e.metadata.name === env.metadata.name)
+    const envWithStatus = allEnvironments
+      ? allEnvironments.find((e) => e.metadata.name === env.metadata.name)
       : undefined;
     return (
       (typesFilter.length ? typesFilter.includes(type) : true) &&
-      (!statusLoaded || !statusFilter.length || statusFilter.includes(envWithStatus.healthStatus))
+      (!environmentsLoaded ||
+        !statusFilter.length ||
+        statusFilter.includes(envWithStatus.healthStatus))
     );
   };
 
-  const renderToolbarGroups = React.useCallback(
-    (environments) => (
-      <EnvironmentToolbarGroups
-        environments={environments}
-        showStatusFilter
-        envStatusCounts={envStatusCounts}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-        unsetStatusFilter={unsetStatusFilter}
-        validTypes={validTypes}
-        typesFilter={typesFilter}
-        setTypesFilter={setTypesFilter}
-        unsetTypesFilter={unsetTypesFilter}
-      />
-    ),
-    [
-      envStatusCounts,
-      setStatusFilter,
-      setTypesFilter,
-      statusFilter,
-      typesFilter,
-      unsetStatusFilter,
-      unsetTypesFilter,
-      validTypes,
-    ],
-  );
-
   return (
     <EnvironmentListViewBase
+      environments={environments}
+      environmentsLoaded={environmentsLoaded}
       description={description}
-      preFilter={preFilter}
-      renderToolbarGroups={renderToolbarGroups}
+      ToolbarGroups={
+        <EnvironmentToolbarGroups
+          environments={environments}
+          showStatusFilter
+          envStatusCounts={envStatusCounts}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          unsetStatusFilter={unsetStatusFilter}
+          validTypes={validTypes}
+          typesFilter={typesFilter}
+          setTypesFilter={setTypesFilter}
+          unsetTypesFilter={unsetTypesFilter}
+        />
+      }
       filter={filter}
       CardComponent={CardComponent}
       onClearAllFilters={() => {
@@ -125,20 +118,26 @@ const HacbsApplicationEnvironmentListView: React.FC<HacbsEnvironmentListViewProp
 const HacbsEnvironmentListView: React.FC<HacbsEnvironmentListViewProps> = ({
   description,
   emptyStateContent,
-  preFilter,
   validTypes,
+  preFilter,
   typesFilter,
   setTypesFilter,
   unsetTypesFilter,
   CardComponent,
 }) => {
+  const [allEnvironments, environmentsLoaded] = useAllEnvironments();
   const filter = (env: EnvironmentKind) => {
     const type = getEnvironmentType(env);
     return typesFilter.length ? typesFilter.includes(type) : true;
   };
 
-  const renderToolbarGroups = React.useCallback(
-    (environments) => (
+  const environments = React.useMemo(
+    () => (preFilter ? allEnvironments.filter(preFilter) : allEnvironments),
+    [preFilter, allEnvironments],
+  );
+
+  const ToolbarGroups = React.useMemo(
+    () => (
       <EnvironmentToolbarGroups
         environments={environments}
         validTypes={validTypes}
@@ -147,15 +146,16 @@ const HacbsEnvironmentListView: React.FC<HacbsEnvironmentListViewProps> = ({
         unsetTypesFilter={unsetTypesFilter}
       />
     ),
-    [setTypesFilter, typesFilter, unsetTypesFilter, validTypes],
+    [environments, setTypesFilter, typesFilter, unsetTypesFilter, validTypes],
   );
 
   return (
     <EnvironmentListViewBase
+      environments={environments}
+      environmentsLoaded={environmentsLoaded}
       description={description}
       emptyStateContent={emptyStateContent}
-      preFilter={preFilter}
-      renderToolbarGroups={renderToolbarGroups}
+      ToolbarGroups={ToolbarGroups}
       filter={filter}
       CardComponent={CardComponent}
       onClearAllFilters={() => setTypesFilter([])}
@@ -188,7 +188,10 @@ const EnvironmentListView: React.FC<Props> = ({
     (value: string[]) => setTypesFilterParam(value.join(',')),
     [setTypesFilterParam],
   );
-  const preFilter = (env: EnvironmentKind) => validTypes.includes(getEnvironmentType(env));
+  const preFilter = React.useCallback(
+    (env: EnvironmentKind) => validTypes.includes(getEnvironmentType(env)),
+    [validTypes],
+  );
 
   const CardComponent: React.ComponentType<{ environment: EnvironmentKind }> = ({
     environment,
