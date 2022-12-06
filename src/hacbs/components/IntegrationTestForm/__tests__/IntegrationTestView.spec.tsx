@@ -2,6 +2,7 @@ import * as React from 'react';
 import { configure, fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { createIntegrationTest } from '../../ImportForm/create-utils';
+import { MockIntegrationTests } from '../../IntegrationTestsListView/__data__/mock-integration-tests';
 import IntegrationTestView from '../IntegrationTestView';
 
 const navigateMock = jest.fn();
@@ -41,11 +42,13 @@ window.ResizeObserver = MockResizeObserver;
 
 describe('IntegrationTestView', () => {
   const fillIntegrationTestForm = (wrapper: RenderResult) => {
-    fireEvent.input(wrapper.getByLabelText('Display name'), { target: { value: 'new test name' } });
-    fireEvent.input(wrapper.getByLabelText('Container image'), {
+    fireEvent.input(wrapper.getByLabelText(/Integration test name/), {
+      target: { value: 'new-test-name' },
+    });
+    fireEvent.input(wrapper.getByLabelText(/Image bundle/), {
       target: { value: 'quay.io/kpavic/test-bundle:pipeline' },
     });
-    fireEvent.input(wrapper.getByLabelText('Pipeline specified in container image'), {
+    fireEvent.input(wrapper.getByLabelText(/Pipeline to run/), {
       target: { value: 'new-test-pipeline' },
     });
   };
@@ -53,9 +56,9 @@ describe('IntegrationTestView', () => {
     const wrapper = render(<IntegrationTestView applicationName="test-app" />);
     await expect(wrapper).toBeTruthy();
 
-    wrapper.getByLabelText('Display name');
-    wrapper.getByLabelText('Container image');
-    wrapper.getByLabelText('Pipeline specified in container image');
+    wrapper.getByLabelText(/Integration test name/);
+    wrapper.getByLabelText(/Image bundle/);
+    wrapper.getByLabelText(/Pipeline to run/);
     wrapper.getByRole('button', { name: 'Add integration test' });
   });
 
@@ -91,5 +94,32 @@ describe('IntegrationTestView', () => {
         '/app-studio/applications/test-app?activeTab=integrationtests',
       ),
     );
+  });
+
+  it('should init values from provided integration test', async () => {
+    const integrationTest = MockIntegrationTests[0];
+    const wrapper = render(
+      <IntegrationTestView applicationName="test-app" integrationTest={integrationTest} />,
+    );
+
+    expect((await wrapper.getByLabelText(/Integration test name/)).getAttribute('value')).toBe(
+      integrationTest.metadata.name,
+    );
+    expect((await wrapper.getByLabelText(/Image bundle/)).getAttribute('value')).toBe(
+      integrationTest.spec.bundle,
+    );
+    expect((await wrapper.getByLabelText(/Pipeline to run/)).getAttribute('value')).toBe(
+      integrationTest.spec.pipeline,
+    );
+  });
+
+  it('should be in edit mode', async () => {
+    const integrationTest = MockIntegrationTests[0];
+    const wrapper = render(
+      <IntegrationTestView applicationName="test-app" integrationTest={integrationTest} />,
+    );
+
+    expect(((await wrapper.getByText(/Save changes/)) as HTMLButtonElement).disabled).toBe(true);
+    (await wrapper.getByLabelText(/Integration test name/)).setAttribute('value', 'new value');
   });
 });

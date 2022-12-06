@@ -1,7 +1,7 @@
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { IntegrationTestScenarioModel } from '../../../../models/hacbs';
 import { createIntegrationTest } from '../../create-utils';
-import { IntegrationTestAnnotations, IntegrationTestLabels } from '../../types';
+import { IntegrationTestLabels } from '../../types';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   k8sCreateResource: jest.fn(),
@@ -15,9 +15,6 @@ const integrationTestData = {
   metadata: {
     name: 'app-test',
     namespace: 'test-ns',
-    annotations: {
-      'app.kubernetes.io/display-name': 'app test',
-    },
   },
   spec: {
     application: 'Test Application',
@@ -35,7 +32,7 @@ const integrationTestData = {
 describe('Create Utils', () => {
   it('Should call k8sCreateResource with integration test data', async () => {
     await createIntegrationTest(
-      { name: 'app test', bundle: '', pipeline: '', optional: false },
+      { name: 'app-test', bundle: '', pipeline: '', optional: false },
       'Test Application',
       'test-ns',
     );
@@ -50,21 +47,10 @@ describe('Create Utils', () => {
     });
   });
 
-  it('Should contain the display name in the annotations', async () => {
-    createResourceMock.mockImplementation(({ resource }) => resource);
-    const resource = await createIntegrationTest(
-      { name: 'app test', bundle: '', pipeline: '', optional: false },
-      'Test Application',
-      'test-ns',
-    );
-    expect(resource.metadata.annotations).toBeDefined();
-    expect(resource.metadata.annotations[IntegrationTestAnnotations.DISPLAY_NAME]).toBe('app test');
-  });
-
   it('Should contain the optional test value in the labels', async () => {
     createResourceMock.mockImplementation(({ resource }) => resource);
     const resource = await createIntegrationTest(
-      { name: 'app test', bundle: '', pipeline: '', optional: true },
+      { name: 'app-test', bundle: '', pipeline: '', optional: true },
       'Test Application',
       'test-ns',
     );
@@ -75,20 +61,10 @@ describe('Create Utils', () => {
   it('Should not contain the optional label if the test is mandatory', async () => {
     createResourceMock.mockImplementation(({ resource }) => resource);
     const resource = await createIntegrationTest(
-      { name: 'app test', bundle: '', pipeline: '', optional: false },
+      { name: 'app-test', bundle: '', pipeline: '', optional: false },
       'Test Application',
       'test-ns',
     );
     expect(resource.metadata.labels).not.toBeDefined();
-  });
-
-  it('Should contain kubernetes formatted resource name', async () => {
-    createResourceMock.mockImplementation(({ resource }) => resource);
-    const resource = await createIntegrationTest(
-      { name: 'APPLICATION TESTING', bundle: '', pipeline: '', optional: false },
-      'Test Application',
-      'test-ns',
-    );
-    expect(resource.metadata.name).toBe('application-testing');
   });
 });

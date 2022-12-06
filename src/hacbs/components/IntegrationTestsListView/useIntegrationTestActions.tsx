@@ -27,6 +27,11 @@ export const useIntegrationTestActions = (
   const showModal = useModalLauncher();
   return [
     {
+      id: `edit-${integrationTest.metadata.name.toLowerCase()}`,
+      label: 'Edit',
+      cta: { href: `/app-studio/integration-test/${integrationTest.metadata.name}/edit` },
+    },
+    {
       cta: () => showModal(integrationTestDeleteModal(integrationTest)),
       id: `delete-${integrationTest.metadata.name.toLowerCase()}`,
       label: 'Delete',

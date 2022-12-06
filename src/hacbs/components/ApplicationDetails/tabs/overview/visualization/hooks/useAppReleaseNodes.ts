@@ -27,7 +27,7 @@ const getPlaceholderReleaseNodes = (
   return placeholdersNeeded.map((releasePlan) =>
     emptyPipelineNode(
       `no-release-${releasePlan.metadata.name}`,
-      'No release yet',
+      'No release set',
       WorkflowNodeType.RELEASE,
       previousTasks,
     ),
@@ -118,7 +118,7 @@ export const useAppReleaseNodes = (
       nodes = [
         emptyPipelineNode(
           'no-releases',
-          'No releases yet',
+          'No releases set',
           WorkflowNodeType.RELEASE,
           previousTasks,
         ),

@@ -2,35 +2,52 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import { useNamespace } from '../../../utils/namespace-context-utils';
-import { createIntegrationTest } from '../ImportForm/create-utils';
+import { IntegrationTestScenarioKind } from '../../types/coreBuildService';
+import { editIntegrationTest, createIntegrationTest } from '../ImportForm/create-utils';
+import { IntegrationTestLabels } from '../ImportForm/types';
 import { integrationTestValidationSchema } from '../ImportForm/utils/validation-utils';
 import IntegrationTestForm from './IntegrationTestForm';
 
 type IntegrationTestViewProps = {
   applicationName: string;
-  integrationTestName?: string;
+  integrationTest?: IntegrationTestScenarioKind;
 };
 
 const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = ({
   applicationName,
+  integrationTest,
 }) => {
   const navigate = useNavigate();
   const namespace = useNamespace();
 
   const initialValues = {
     integrationTest: {
-      name: '',
-      bundle: '',
-      pipeline: '',
-      optional: false,
+      name: integrationTest?.metadata.name ?? '',
+      bundle: integrationTest?.spec.bundle ?? '',
+      pipeline: integrationTest?.spec.pipeline ?? '',
+      optional:
+        integrationTest?.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true' ?? false,
     },
     isDetected: true,
   };
 
   const handleSubmit = (values, actions) => {
-    return createIntegrationTest(values.integrationTest, applicationName, namespace)
+    return (
+      integrationTest
+        ? editIntegrationTest(integrationTest, values.integrationTest)
+        : createIntegrationTest(values.integrationTest, applicationName, namespace)
+    )
       .then(() => {
-        navigate(`/app-studio/applications/${applicationName}?activeTab=integrationtests`);
+        if (integrationTest) {
+          if (window.history.state && window.history.state.idx > 0) {
+            // go back to the page where the edit was launched
+            navigate(-1);
+          } else {
+            navigate(`/app-studio/${applicationName}/test/${integrationTest.metadata.name}`);
+          }
+        } else {
+          navigate(`/app-studio/applications/${applicationName}?activeTab=integrationtests`);
+        }
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
@@ -47,7 +64,13 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
       initialValues={initialValues}
       validationSchema={integrationTestValidationSchema}
     >
-      {(props) => <IntegrationTestForm applicationName={applicationName} {...props} />}
+      {(props) => (
+        <IntegrationTestForm
+          {...props}
+          applicationName={applicationName}
+          edit={!!integrationTest}
+        />
+      )}
     </Formik>
   );
 };

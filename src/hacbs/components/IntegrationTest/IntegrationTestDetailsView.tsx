@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
@@ -88,7 +88,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
           {
             key: 'edit',
             label: 'Edit',
-            onClick: () => {},
+            component: <Link to={`/app-studio/integration-test/${testName}/edit`}>Edit</Link>,
           },
           {
             onClick: () =>

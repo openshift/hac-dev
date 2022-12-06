@@ -6,6 +6,7 @@ const hacbs = {
     PipelineRuns: resolve(__dirname, '../src/hacbs/pages/PipelineRunPage'),
     HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
     HACBSImport: resolve(__dirname, '../src/hacbs/pages/ImportPage'),
+    EditIntegrationTest: resolve(__dirname, '../src/hacbs/pages/EditIntegrationTestPage'),
     HACBSIntegrationTest: resolve(__dirname, '../src/hacbs/pages/IntegrationTestPage'),
     CommitsPage: resolve(__dirname, '../src/hacbs/pages/CommitsPage'),
     IntegrationTestDetails: resolve(__dirname, '../src/hacbs/pages/IntegrationTestDetailsPage'),
@@ -83,6 +84,33 @@ const hacbs = {
         exact: true,
         component: {
           $codeRef: 'HACBSIntegrationTest',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/app-studio/integration-test/:name/edit',
+        exact: true,
+        component: {
+          $codeRef: 'EditIntegrationTest',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio/integration-test/:name/edit',
+        exact: true,
+        component: {
+          $codeRef: 'EditIntegrationTest',
         },
       },
       flags: {

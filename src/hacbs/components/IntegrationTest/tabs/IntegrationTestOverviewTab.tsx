@@ -22,8 +22,7 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
   integrationTest,
 }) => {
   const optionalReleaseLabel =
-    integrationTest.metadata.labels &&
-    integrationTest.metadata.labels[IntegrationTestLabels.OPTIONAL];
+    integrationTest.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true';
 
   return (
     <>
@@ -42,25 +41,25 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
               <DescriptionListGroup>
                 <DescriptionListTerm>Name</DescriptionListTerm>
                 <DescriptionListDescription>
-                  {integrationTest.metadata?.name ?? '-'}
+                  {integrationTest.metadata.name ?? '-'}
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>Namespace</DescriptionListTerm>
                 <DescriptionListDescription>
-                  {integrationTest.metadata?.namespace ?? '-'}
+                  {integrationTest.metadata.namespace ?? '-'}
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>Labels</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <MetadataList metadata={integrationTest.metadata?.labels} />
+                  <MetadataList metadata={integrationTest.metadata.labels} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>Annotations</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <MetadataList metadata={integrationTest.metadata?.annotations} />
+                  <MetadataList metadata={integrationTest.metadata.annotations} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
