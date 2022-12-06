@@ -1,8 +1,13 @@
 import { SetFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 
 export const HACBS_FLAG = 'HACBS';
+export const IS_HACBS_DEFAULT = true;
 
 export const enableHACBSFlagFromQueryParam = (setFlag: SetFeatureFlag): void => {
+  if (IS_HACBS_DEFAULT) {
+    setFlag(HACBS_FLAG, true);
+    return;
+  }
   let enabled = false;
   const hacbsParam = new URLSearchParams(window.location.search).get('hacbs');
   if (['true', 'false'].includes(hacbsParam)) {
