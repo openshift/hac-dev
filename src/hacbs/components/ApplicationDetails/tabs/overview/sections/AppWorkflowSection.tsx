@@ -16,6 +16,7 @@ import {
 import { useSearchParam } from '../../../../../../hooks/useSearchParam';
 import ApplicationModal from '../../../ApplicationModal';
 import { WorkflowGraph } from '../visualization';
+import GraphErrorState from '../visualization/GraphErrorState';
 import { useAppWorkflowData } from '../visualization/hooks/useAppWorkflowData';
 
 import './AppWorkflowSection.scss';
@@ -36,7 +37,7 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
     setShowApplicationModal(false);
   };
 
-  const [workflowModel, loaded] = useAppWorkflowData(applicationName, expanded === 'true');
+  const [workflowModel, loaded, errors] = useAppWorkflowData(applicationName, expanded === 'true');
 
   const toggleExpanded = () => {
     setExpanded(expanded ? '' : 'true');
@@ -59,11 +60,13 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
                   </Button>
                 </Text>
               </FlexItem>
-              <FlexItem>
-                <Button variant={ButtonVariant.link} isInline onClick={toggleExpanded}>
-                  {expanded ? 'Collapse items' : 'Expand items'}
-                </Button>
-              </FlexItem>
+              {loaded && errors.length === 0 && (
+                <FlexItem>
+                  <Button variant={ButtonVariant.link} isInline onClick={toggleExpanded}>
+                    {expanded ? 'Collapse items' : 'Expand items'}
+                  </Button>
+                </FlexItem>
+              )}
             </Flex>
           </TextContent>
         </GridItem>
@@ -74,11 +77,15 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
         ) : (
           <>
             <GridItem>
-              <WorkflowGraph
-                nodes={workflowModel.nodes}
-                edges={workflowModel.edges}
-                expanded={expanded === 'true'}
-              />
+              {errors.length > 0 ? (
+                <GraphErrorState errors={errors} />
+              ) : (
+                <WorkflowGraph
+                  nodes={workflowModel.nodes}
+                  edges={workflowModel.edges}
+                  expanded={expanded === 'true'}
+                />
+              )}
             </GridItem>
             <GridItem>
               <Button

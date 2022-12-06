@@ -29,7 +29,9 @@ import {
   workflowToNodes,
 } from '../utils/visualization-utils';
 
-export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], loaded: boolean] => {
+export const useCommitWorkflowData = (
+  commit: Commit,
+): [nodes: WorkflowNode[], loaded: boolean, errros: unknown[]] => {
   const namespace = useNamespace();
   const applicationName = commit?.application || '';
   const [components, componentsLoaded] = useComponents(namespace, applicationName);
@@ -37,21 +39,21 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
     namespace,
     applicationName,
   );
-  const [environments, environmentsLoaded] = useEnvironments(namespace);
-  const [releasePlans, releasePlansLoaded] = useReleasePlans(namespace);
-  const [releases, releasesLoaded] = useReleases(namespace);
-  const [buildPipelines, buildPipelinesLoaded] = useBuildPipelines(
+  const [environments, environmentsLoaded, environmentsError] = useEnvironments(namespace);
+  const [releasePlans, releasePlansLoaded, releasePlansError] = useReleasePlans(namespace);
+  const [releases, releasesLoaded, releasesError] = useReleases(namespace);
+  const [buildPipelines, buildPipelinesLoaded, buildPipelinesError] = useBuildPipelines(
     namespace,
     applicationName,
     commit.sha,
   );
-  const [testPipelines, testPipelinesLoaded] = useTestPipelines(
+  const [testPipelines, testPipelinesLoaded, testPipelinesError] = useTestPipelines(
     namespace,
     applicationName,
     commit.sha,
   );
 
-  const [snapshotsEB, snapshotsLoaded] = useSnapshotsEnvironmentBindings(
+  const [snapshotsEB, snapshotsLoaded, snapshotsError] = useSnapshotsEnvironmentBindings(
     namespace,
     applicationName,
   );
@@ -65,6 +67,14 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
     snapshotsLoaded &&
     releasesLoaded &&
     releasePlansLoaded;
+  const allErrors = [
+    environmentsError,
+    releasePlansError,
+    releasesError,
+    buildPipelinesError,
+    testPipelinesError,
+    snapshotsError,
+  ].filter((e) => !!e);
 
   const commitComponents = React.useMemo(
     () =>
@@ -81,7 +91,7 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
           metadata: { name: compName },
         } = component;
 
-        if (!commitComponents.includes(compName) || !allResourcesLoaded) {
+        if (!commitComponents.includes(compName) || !allResourcesLoaded || allErrors.length > 0) {
           return acc;
         }
 
@@ -185,11 +195,12 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
       releases,
       testPipelines,
       allResourcesLoaded,
+      allErrors,
     ],
   );
 
-  if (!allResourcesLoaded || Object.keys(commitWorkflowData).length === 0) {
-    return [[], allResourcesLoaded];
+  if (!allResourcesLoaded || Object.keys(commitWorkflowData).length === 0 || allErrors.length > 0) {
+    return [[], allResourcesLoaded, allErrors];
   }
 
   const getNodeNames = (resources): string[] => resources?.map((r) => r?.metadata?.name);
@@ -334,5 +345,5 @@ export const useCommitWorkflowData = (commit: Commit): [nodes: WorkflowNode[], l
 
   const nodes: WorkflowNode[] = workflowToNodes(getCommitWorkflow(commitWorkflowData));
 
-  return [nodes, allResourcesLoaded];
+  return [nodes, allResourcesLoaded, allErrors];
 };

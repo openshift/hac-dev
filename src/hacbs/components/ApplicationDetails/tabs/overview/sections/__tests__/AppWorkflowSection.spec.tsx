@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { useSearchParams } from 'react-router-dom';
 import { act, configure, fireEvent, render, screen } from '@testing-library/react';
 import { useSearchParam } from '../../../../../../../hooks/useSearchParam';
+import { CustomError } from '../../../../../../../shared/utils/error/custom-error';
 import { useNamespace } from '../../../../../../../utils/namespace-context-utils';
 import { mockLocation } from '../../../../../../../utils/test-utils';
 import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
@@ -141,6 +142,17 @@ describe('useAppWorkflowData hook', () => {
   afterEach(() => {
     jest.resetAllMocks();
     (window.SVGElement as any).prototype.getBBox = undefined;
+  });
+
+  it('should render the graph error state', () => {
+    useSnapshotsEnvironmentBindingsMock.mockReturnValue([
+      mockSnapshotsEnvironmentBindings,
+      true,
+      [new CustomError('Model does not exist')],
+    ]);
+
+    render(<AppWorkflowSection applicationName="test-dev-samples" />);
+    screen.queryByText('graph-error-state');
   });
 
   it('should render the graph unexpanded by default', () => {

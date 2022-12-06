@@ -1,6 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
+import { CustomError } from '../../../../../../shared/utils/error/custom-error';
 import { createCommitObjectFromPLR } from '../../../../../utils/commits-utils';
 import { useCommitWorkflowData } from '../../../../ApplicationDetails/tabs/overview/visualization/hooks/useCommitWorkflowData';
 import { pipelineWithCommits } from '../../../__data__/pipeline-with-commits';
@@ -37,5 +38,16 @@ describe('CommitVisualization', () => {
   it('should render the pipelinerun graph', () => {
     render(<CommitVisualization commit={commit} />);
     screen.getByTestId('hacbs-commit-graph');
+  });
+
+  it('should render the pipelinerun graph', () => {
+    useCommitWorkflowDataMock.mockReturnValue([
+      [],
+      true,
+      [new CustomError('Model does not exist')],
+    ]);
+
+    render(<CommitVisualization commit={commit} />);
+    screen.getByText('Model does not exist');
   });
 });

@@ -6,6 +6,7 @@ import {
   ModelKind,
   TopologyControlBar,
 } from '@patternfly/react-topology';
+import GraphErrorState from '../../../ApplicationDetails/tabs/overview/visualization/GraphErrorState';
 import { useCommitWorkflowData } from '../../../ApplicationDetails/tabs/overview/visualization/hooks/useCommitWorkflowData';
 import { getTopologyNodesEdges } from '../../../ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
 import { layoutFactory, PipelineLayout, VisualizationFactory } from '../../../topology/factories';
@@ -14,7 +15,7 @@ import { commitComponentFactory } from './CommitComponentFactory';
 import './CommitVisualization.scss';
 
 const CommitVisualization = ({ commit }) => {
-  const [workflowNodes, loaded] = useCommitWorkflowData(commit);
+  const [workflowNodes, loaded, errors] = useCommitWorkflowData(commit);
   const { nodes, edges } = getTopologyNodesEdges(workflowNodes);
   const model = {
     graph: {
@@ -29,6 +30,9 @@ const CommitVisualization = ({ commit }) => {
   };
   if (!model || !loaded) {
     return null;
+  }
+  if (loaded && errors?.length > 0) {
+    return <GraphErrorState errors={errors} fullHeight />;
   }
   return (
     <div className="hacbs-commit-graph" data-testid="hacbs-commit-graph">

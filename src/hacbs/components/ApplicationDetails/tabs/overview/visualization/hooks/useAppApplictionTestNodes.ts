@@ -18,10 +18,18 @@ export const useAppApplictionTestNodes = (
   tasks: string[],
   resources: IntegrationTestScenarioKind[],
   loaded: boolean,
+  errors: unknown[],
 ] => {
-  const [integrationTests, testsLoaded] = useIntegrationTestScenarios(namespace, applicationName);
-  const [testPipelines, testPipelinesLoaded] = useTestPipelines(namespace, applicationName);
+  const [integrationTests, testsLoaded, testsError] = useIntegrationTestScenarios(
+    namespace,
+    applicationName,
+  );
+  const [testPipelines, testPipelinesLoaded, testPipelinesError] = useTestPipelines(
+    namespace,
+    applicationName,
+  );
   const allLoaded = testsLoaded && testPipelinesLoaded;
+  const allErrors = [testsError, testPipelinesError].filter((e) => !!e);
 
   const applicationIntegrationTests = React.useMemo(() => {
     if (!allLoaded) {
@@ -34,7 +42,7 @@ export const useAppApplictionTestNodes = (
   }, [allLoaded, integrationTests]);
 
   const applicationTestNodes = React.useMemo(() => {
-    if (!allLoaded) {
+    if (!allLoaded || allErrors.length > 0) {
       return [];
     }
     const nodes = applicationIntegrationTests?.length
@@ -61,7 +69,7 @@ export const useAppApplictionTestNodes = (
         ];
     updateParallelNodeWidths(nodes);
     return nodes;
-  }, [allLoaded, applicationIntegrationTests, previousTasks, testPipelines]);
+  }, [allLoaded, applicationIntegrationTests, previousTasks, testPipelines, allErrors]);
 
   const applicationIntegrationTestTasks = React.useMemo(
     () => (expanded ? applicationTestNodes.map((c) => c.id) : []),
@@ -73,5 +81,6 @@ export const useAppApplictionTestNodes = (
     applicationIntegrationTestTasks,
     applicationIntegrationTests,
     allLoaded,
+    allErrors,
   ];
 };

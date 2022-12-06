@@ -28,12 +28,11 @@ export const useAppStaticEnvironmentNodes = (
   group: WorkflowNodeModel<WorkflowNodeModelData>,
   tasks: string[],
   loaded: boolean,
+  errors: unknown[],
 ] => {
-  const [environments, environmentsLoaded] = useEnvironments(namespace);
-  const [snapshotsEnvironmentBindings, snapshotsLoaded] = useSnapshotsEnvironmentBindings(
-    namespace,
-    applicationName,
-  );
+  const [environments, environmentsLoaded, environmentsError] = useEnvironments(namespace);
+  const [snapshotsEnvironmentBindings, snapshotsLoaded, snapshotsError] =
+    useSnapshotsEnvironmentBindings(namespace, applicationName);
   const [testPipelines, testPipelinesLoaded] = useTestPipelines(namespace, applicationName);
   const allLoaded = environmentsLoaded && testPipelinesLoaded && snapshotsLoaded;
 
@@ -42,9 +41,10 @@ export const useAppStaticEnvironmentNodes = (
       allLoaded ? environments.filter((e) => getEnvironmentType(e) === EnvironmentType.static) : [],
     [allLoaded, environments],
   );
+  const allErrors = [environmentsError, snapshotsError].filter((e) => !!e);
 
   const staticEnvironmentNodes = React.useMemo(() => {
-    if (!allLoaded) {
+    if (!allLoaded || allErrors.length > 0) {
       return [];
     }
     const nodes = staticEnvironments.length
@@ -82,11 +82,18 @@ export const useAppStaticEnvironmentNodes = (
         ];
     updateParallelNodeWidths(nodes);
     return nodes;
-  }, [allLoaded, staticEnvironments, previousTasks, snapshotsEnvironmentBindings, testPipelines]);
+  }, [
+    allLoaded,
+    staticEnvironments,
+    previousTasks,
+    snapshotsEnvironmentBindings,
+    testPipelines,
+    allErrors,
+  ]);
 
   const staticEnvironmentGroup = React.useMemo(
     () =>
-      allLoaded && previousTasks?.length
+      allLoaded && previousTasks?.length && allErrors.length === 0
         ? groupToPipelineNode(
             'static-environments',
             staticEnvironments?.length ? 'Static environments' : 'No static environments set',
@@ -99,7 +106,7 @@ export const useAppStaticEnvironmentNodes = (
             worstWorkflowStatus(staticEnvironmentNodes),
           )
         : undefined,
-    [allLoaded, previousTasks, expanded, staticEnvironmentNodes, staticEnvironments],
+    [allLoaded, previousTasks, expanded, staticEnvironmentNodes, staticEnvironments, allErrors],
   );
 
   const lastStaticEnv = React.useMemo(
@@ -107,5 +114,5 @@ export const useAppStaticEnvironmentNodes = (
     [staticEnvironments],
   );
 
-  return [staticEnvironmentNodes, staticEnvironmentGroup, lastStaticEnv, allLoaded];
+  return [staticEnvironmentNodes, staticEnvironmentGroup, lastStaticEnv, allLoaded, allErrors];
 };
