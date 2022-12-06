@@ -1,4 +1,4 @@
-import { SetFeatureFlag } from '@openshift/dynamic-plugin-sdk';
+import { SetFeatureFlag } from '@openshift/dynamic-plugin-sdk-extensions';
 
 export const HACBS_FLAG = 'HACBS';
 
