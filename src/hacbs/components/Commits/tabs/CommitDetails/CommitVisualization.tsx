@@ -6,10 +6,10 @@ import {
   ModelKind,
   TopologyControlBar,
 } from '@patternfly/react-topology';
-import GraphErrorState from '../../../ApplicationDetails/tabs/overview/visualization/GraphErrorState';
 import { useCommitWorkflowData } from '../../../ApplicationDetails/tabs/overview/visualization/hooks/useCommitWorkflowData';
 import { getTopologyNodesEdges } from '../../../ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
 import { layoutFactory, PipelineLayout, VisualizationFactory } from '../../../topology/factories';
+import GraphErrorState from '../../../topology/factories/GraphErrorState';
 import { commitComponentFactory } from './CommitComponentFactory';
 
 import './CommitVisualization.scss';

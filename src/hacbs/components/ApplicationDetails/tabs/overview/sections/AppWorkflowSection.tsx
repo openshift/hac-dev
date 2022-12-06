@@ -14,9 +14,9 @@ import {
   ButtonVariant,
 } from '@patternfly/react-core';
 import { useSearchParam } from '../../../../../../hooks/useSearchParam';
+import GraphErrorState from '../../../../topology/factories/GraphErrorState';
 import ApplicationModal from '../../../ApplicationModal';
 import { WorkflowGraph } from '../visualization';
-import GraphErrorState from '../visualization/GraphErrorState';
 import { useAppWorkflowData } from '../visualization/hooks/useAppWorkflowData';
 
 import './AppWorkflowSection.scss';

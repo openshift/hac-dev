@@ -54,5 +54,5 @@ export const SnapshotGroupVersionKind: K8sGroupVersionKind = {
 export const SnapshotEnvironmentBindingGroupVersionKind: K8sGroupVersionKind = {
   group: 'appstudio.redhat.com',
   version: 'v1alpha1',
-  kind: 'SnapshotEnvironmentBindings',
+  kind: 'SnapshotEnvironmentBinding',
 };

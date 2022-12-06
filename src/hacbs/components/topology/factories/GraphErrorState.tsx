@@ -14,9 +14,12 @@ type GraphErrorStateProps = {
 const GraphErrorState: React.FC<GraphErrorStateProps> = ({ errors, fullHeight }) => {
   const [closedError, setClosedError] = React.useState<number[]>([]);
 
+  if (errors.length === 0) {
+    return null;
+  }
   return (
     <>
-      {errors.length > 0 && errors.length !== closedError.length && (
+      {errors.length !== closedError.length && (
         <div className="hacbs-inline-errors" data-test="graph-error-state">
           {errors.map((e: { message: string }, key) => {
             return !closedError.includes(key) ? (
@@ -25,6 +28,7 @@ const GraphErrorState: React.FC<GraphErrorStateProps> = ({ errors, fullHeight })
                 variant="danger"
                 isInline
                 title={e.message}
+                data-test="error"
                 actionClose={
                   <AlertActionCloseButton
                     onClose={() => {

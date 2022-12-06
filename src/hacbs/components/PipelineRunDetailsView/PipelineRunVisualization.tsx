@@ -1,7 +1,7 @@
 import React from 'react';
 import { CustomError } from '../../../shared/utils/error/custom-error';
-import GraphErrorState from '../ApplicationDetails/tabs/overview/visualization/GraphErrorState';
 import { layoutFactory, VisualizationFactory } from '../topology/factories';
+import GraphErrorState from '../topology/factories/GraphErrorState';
 import { pipelineRuncomponentFactory } from './factories';
 import { getPipelineRunDataModel } from './visualization/utils/pipelinerun-graph-utils';
 
