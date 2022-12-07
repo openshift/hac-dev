@@ -1,0 +1,17 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Environment
+metadata:
+  name: development
+spec:
+  type: poc
+  deploymentController: appstudio
+  deploymentStrategy: Manual
+  displayName: Development
+  tags:
+    - dev
+  clusterCredentials:
+    apiServerURL: http://example.com/development
+  configuration:
+    env:
+      - name: env
+        value: development

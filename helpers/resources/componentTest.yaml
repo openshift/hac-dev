@@ -1,0 +1,18 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: IntegrationTestScenario
+metadata:
+  name: component-integration-test-one
+spec:
+  application: test-application
+  bundle: "quay.io/kpavic/test-bundle:component-pipeline-pass"
+  contexts:
+    - description: Runs only during application testing
+      name: component
+  environment:
+    name: test-environment
+    params: []
+    type: workspace
+  params:
+    - name: test-param
+      value: test
+  pipeline: component-pipeline-pass

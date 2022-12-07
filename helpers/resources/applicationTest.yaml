@@ -1,0 +1,17 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: IntegrationTestScenario
+metadata:
+  name: application-test-one
+spec:
+  application: test-application
+  bundle: "quay.io/kpavic/test-bundle:component-pipeline-pass"
+  pipeline: component-pipeline-pass
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: IntegrationTestScenario
+metadata:
+  name: application-test-two
+spec:
+  application: test-application
+  bundle: "quay.io/kpavic/test-bundle:component-pipeline-pass"
+  pipeline: component-pipeline-pass
