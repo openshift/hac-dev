@@ -47,17 +47,17 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
       <React.Fragment>
         <DetailsPage
           breadcrumbs={[
-            { path: '/app-studio/applications', name: 'Applications' },
+            { path: '/stonesoup/applications', name: 'Applications' },
             {
-              path: `/app-studio/applications/${applicationName}`,
+              path: `/stonesoup/applications/${applicationName}`,
               name: applicationName,
             },
             {
-              path: `/app-studio/applications/${applicationName}?activeTab=pipelineruns`,
+              path: `/stonesoup/applications/${applicationName}?activeTab=pipelineruns`,
               name: 'Pipeline runs',
             },
             {
-              path: `/app-studio/applications/${pipelineRunName}`,
+              path: `/stonesoup/applications/${pipelineRunName}`,
               name: pipelineRunName,
             },
           ]}

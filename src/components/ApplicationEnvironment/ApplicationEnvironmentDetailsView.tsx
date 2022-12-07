@@ -67,7 +67,7 @@ const ApplicationEnvironmentDetailsEmptyState: React.FC<{ environmentName: strin
     <Button
       variant="primary"
       component={(props) => (
-        <Link {...props} to={`/app-studio/import?environment=${environmentName}`} />
+        <Link {...props} to={`/stonesoup/import?environment=${environmentName}`} />
       )}
     >
       Deploy components

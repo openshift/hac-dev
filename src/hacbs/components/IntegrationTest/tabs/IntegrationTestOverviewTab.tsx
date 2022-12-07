@@ -103,7 +103,7 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
               <DescriptionListGroup>
                 <DescriptionListTerm>Application</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <Link to={`/app-studio/applications/${integrationTest.spec.application}`}>
+                  <Link to={`/stonesoup/applications/${integrationTest.spec.application}`}>
                     {integrationTest.spec.application}
                   </Link>
                 </DescriptionListDescription>

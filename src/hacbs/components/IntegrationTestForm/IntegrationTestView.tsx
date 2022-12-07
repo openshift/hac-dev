@@ -43,10 +43,10 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
             // go back to the page where the edit was launched
             navigate(-1);
           } else {
-            navigate(`/app-studio/${applicationName}/test/${integrationTest.metadata.name}`);
+            navigate(`/stonesoup/${applicationName}/test/${integrationTest.metadata.name}`);
           }
         } else {
-          navigate(`/app-studio/applications/${applicationName}?activeTab=integrationtests`);
+          navigate(`/stonesoup/applications/${applicationName}?activeTab=integrationtests`);
         }
       })
       .catch((error) => {

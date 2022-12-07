@@ -15,7 +15,7 @@ const hacbs = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/pipelineruns/:plrName',
+        path: '/stonesoup/pipelineruns/:plrName',
         exact: true,
         component: {
           $codeRef: 'PipelineRuns',
@@ -28,7 +28,7 @@ const hacbs = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/pipelineruns/:plrName',
+        path: '/stonesoup/pipelineruns/:plrName',
         exact: true,
         component: {
           $codeRef: 'PipelineRuns',
@@ -41,7 +41,7 @@ const hacbs = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/import',
+        path: '/stonesoup/import',
         exact: true,
         component: {
           $codeRef: 'HACBSImport',
@@ -54,7 +54,7 @@ const hacbs = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/import',
+        path: '/stonesoup/import',
         exact: true,
         component: {
           $codeRef: 'HACBSImport',
@@ -67,7 +67,7 @@ const hacbs = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/applications/:appName/integration-test',
+        path: '/stonesoup/applications/:appName/integration-test',
         exact: true,
         component: {
           $codeRef: 'HACBSIntegrationTest',
@@ -80,7 +80,7 @@ const hacbs = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/applications/:appName/integration-test',
+        path: '/stonesoup/applications/:appName/integration-test',
         exact: true,
         component: {
           $codeRef: 'HACBSIntegrationTest',
@@ -94,7 +94,7 @@ const hacbs = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/integration-test/:name/edit',
+        path: '/stonesoup/integration-test/:name/edit',
         exact: true,
         component: {
           $codeRef: 'EditIntegrationTest',
@@ -107,7 +107,7 @@ const hacbs = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/integration-test/:name/edit',
+        path: '/stonesoup/integration-test/:name/edit',
         exact: true,
         component: {
           $codeRef: 'EditIntegrationTest',
@@ -120,7 +120,7 @@ const hacbs = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/:appName/commit/:commitName',
+        path: '/stonesoup/:appName/commit/:commitName',
         exact: true,
         component: {
           $codeRef: 'CommitsPage',
@@ -133,7 +133,7 @@ const hacbs = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/:appName/commit/:commitName',
+        path: '/stonesoup/:appName/commit/:commitName',
         exact: true,
         component: {
           $codeRef: 'CommitsPage',
@@ -146,7 +146,7 @@ const hacbs = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/:appName/test/:testName',
+        path: '/stonesoup/:appName/test/:testName',
         exact: true,
         component: {
           $codeRef: 'IntegrationTestDetails',
@@ -159,7 +159,7 @@ const hacbs = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/:appName/test/:testName',
+        path: '/stonesoup/:appName/test/:testName',
         exact: true,
         component: {
           $codeRef: 'IntegrationTestDetails',
@@ -190,17 +190,44 @@ module.exports = {
       NamespaceContext: resolve(__dirname, '../src/utils/namespace-context-utils'),
       SignupView: resolve(__dirname, '../src/components/Signup/SignupView'),
       FlagUtils: resolve(__dirname, '../src/utils/flag-utils'),
+      Redirect: resolve(__dirname, '../src/pages/RedirectPage'),
     },
   },
   extensions: [
     // HACBS
     ...hacbs.extensions,
 
-    // App Studio
+    // Redirect from app-studio for now
     {
       type: 'console.page/route',
       properties: {
         path: '/app-studio',
+        component: {
+          $codeRef: 'Redirect',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/app-studio',
+        component: {
+          $codeRef: 'Redirect',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+
+    // Stonesoup
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/stonesoup',
         exact: true,
         component: {
           $codeRef: 'Applications',
@@ -213,7 +240,7 @@ module.exports = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio',
+        path: '/stonesoup',
         exact: true,
         component: {
           $codeRef: 'Applications',
@@ -226,7 +253,7 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/applications/:appName',
+        path: '/stonesoup/applications/:appName',
         exact: true,
         component: {
           $codeRef: 'ApplicationDetails',
@@ -239,7 +266,7 @@ module.exports = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/applications/:appName',
+        path: '/stonesoup/applications/:appName',
         exact: true,
         component: {
           $codeRef: 'ApplicationDetails',
@@ -252,7 +279,7 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/applications',
+        path: '/stonesoup/applications',
         exact: true,
         component: {
           $codeRef: 'Applications',
@@ -265,7 +292,7 @@ module.exports = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/applications',
+        path: '/stonesoup/applications',
         exact: true,
         component: {
           $codeRef: 'Applications',
@@ -278,7 +305,7 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/import',
+        path: '/stonesoup/import',
         exact: true,
         component: {
           $codeRef: 'Import',
@@ -291,7 +318,7 @@ module.exports = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/import',
+        path: '/stonesoup/import',
         exact: true,
         component: {
           $codeRef: 'Import',
@@ -304,7 +331,7 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/component-settings',
+        path: '/stonesoup/component-settings',
         exact: true,
         component: {
           $codeRef: 'ComponentSettings',
@@ -317,7 +344,7 @@ module.exports = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/component-settings',
+        path: '/stonesoup/component-settings',
         exact: true,
         component: {
           $codeRef: 'ComponentSettings',
@@ -330,7 +357,7 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/workspace-settings',
+        path: '/stonesoup/workspace-settings',
         exact: true,
         component: {
           $codeRef: 'WorkspaceSettings',
@@ -343,7 +370,7 @@ module.exports = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/workspace-settings',
+        path: '/stonesoup/workspace-settings',
         exact: true,
         component: {
           $codeRef: 'WorkspaceSettings',
@@ -356,7 +383,7 @@ module.exports = {
     {
       type: 'console.navigation/href',
       properties: {
-        href: '/app-studio',
+        href: '/stonesoup',
         name: 'Applications',
       },
       flags: {
@@ -366,7 +393,7 @@ module.exports = {
     {
       type: 'core.navigation/href',
       properties: {
-        href: '/app-studio',
+        href: '/stonesoup',
         name: 'Applications',
       },
       flags: {
@@ -376,7 +403,7 @@ module.exports = {
     {
       type: 'console.navigation/href',
       properties: {
-        href: '/app-studio/workspace-settings',
+        href: '/stonesoup/workspace-settings',
         name: 'Settings',
       },
       flags: {
@@ -386,7 +413,7 @@ module.exports = {
     {
       type: 'core.navigation/href',
       properties: {
-        href: '/app-studio/workspace-settings',
+        href: '/stonesoup/workspace-settings',
         name: 'Settings',
       },
       flags: {
@@ -412,7 +439,7 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio/workspace-settings/environment/create',
+        path: '/stonesoup/workspace-settings/environment/create',
         exact: true,
         component: {
           $codeRef: 'CreateEnvironment',
@@ -425,7 +452,7 @@ module.exports = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio/workspace-settings/environment/create',
+        path: '/stonesoup/workspace-settings/environment/create',
         exact: true,
         component: {
           $codeRef: 'CreateEnvironment',
@@ -438,7 +465,7 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/app-studio',
+        path: '/stonesoup',
         component: {
           $codeRef: 'SignupView',
         },
@@ -450,7 +477,7 @@ module.exports = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/app-studio',
+        path: '/stonesoup',
         component: {
           $codeRef: 'SignupView',
         },
@@ -462,7 +489,7 @@ module.exports = {
     {
       type: 'console.navigation/href',
       properties: {
-        href: '/app-studio',
+        href: '/stonesoup',
         name: 'Signup',
       },
       flags: {
@@ -472,7 +499,7 @@ module.exports = {
     {
       type: 'core.navigation/href',
       properties: {
-        href: '/app-studio',
+        href: '/stonesoup',
         name: 'Signup',
       },
       flags: {

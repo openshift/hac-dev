@@ -21,7 +21,7 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
   const selectedItem = menuItems.find((item) => item.key === selectedApplication);
 
   const onSelect = (item: ContextMenuItem) => {
-    navigate(`/app-studio/applications/${item.key}`);
+    navigate(`/stonesoup/applications/${item.key}`);
   };
 
   return (
@@ -33,10 +33,10 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
       footer={
         <Level>
           <LevelItem>
-            <Link to="/app-studio/import">Create application</Link>
+            <Link to="/stonesoup/import">Create application</Link>
           </LevelItem>
           <LevelItem>
-            <Link to="/app-studio/applications">View applications list</Link>
+            <Link to="/stonesoup/applications">View applications list</Link>
           </LevelItem>
         </Level>
       }

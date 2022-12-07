@@ -34,9 +34,9 @@ const ComponentSettingsForm: React.FunctionComponent<FormikProps<FormikValues>> 
   return (
     <PageLayout
       breadcrumbs={[
-        { path: '/app-studio/applications', name: 'Applications' },
+        { path: '/stonesoup/applications', name: 'Applications' },
         {
-          path: `/app-studio/applications/${components[0].componentStub.application}`,
+          path: `/stonesoup/applications/${components[0].componentStub.application}`,
           name: startCase(components[0].componentStub.application),
         },
         { path: '#', name: 'Component settings' },

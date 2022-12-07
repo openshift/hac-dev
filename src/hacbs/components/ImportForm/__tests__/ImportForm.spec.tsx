@@ -54,6 +54,6 @@ describe('ImportForm', () => {
       });
     });
     wizardProps.onReset({}, {} as any);
-    expect(navigateMock).toHaveBeenCalledWith('/app-studio/applications/my-app');
+    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/applications/my-app');
   });
 });

@@ -19,7 +19,7 @@ const IntegrationTestListRow: React.FC<RowFunctionArgs<IntegrationTestScenarioKi
         className={integrationListTableColumnClasses.name}
         data-test="integration-tests__row-name"
       >
-        <Link to={`/app-studio/${obj.spec.application}/test/${obj.metadata.name}`}>
+        <Link to={`/stonesoup/${obj.spec.application}/test/${obj.metadata.name}`}>
           {obj.metadata.name}
         </Link>
       </TableData>

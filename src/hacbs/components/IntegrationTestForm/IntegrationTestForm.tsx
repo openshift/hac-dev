@@ -34,10 +34,10 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
   return (
     <PageLayout
       breadcrumbs={[
-        { path: '/app-studio/applications', name: 'Applications' },
-        { path: `/app-studio/applications/${applicationName}`, name: applicationName },
+        { path: '/stonesoup/applications', name: 'Applications' },
+        { path: `/stonesoup/applications/${applicationName}`, name: applicationName },
         {
-          path: `/app-studio/applications/${applicationName}?activeTab=integrationtests`,
+          path: `/stonesoup/applications/${applicationName}?activeTab=integrationtests`,
           name: 'Integration tests',
         },
         { path: '#', name: title },

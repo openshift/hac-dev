@@ -93,15 +93,13 @@ describe('CreateEnvironment', () => {
     fillEnvironmentForm();
     const submitButton = screen.getByRole('button', { name: 'Create environment' });
     fireEvent.click(submitButton);
-    await waitFor(() =>
-      expect(navigateMock).toHaveBeenCalledWith('/app-studio/workspace-settings'),
-    );
+    await waitFor(() => expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspace-settings'));
   });
 
   it('should call navigate on form cancel', () => {
     render(<CreateEnvironment />);
     const cancelButton = screen.getByText('Cancel');
     fireEvent.click(cancelButton);
-    expect(navigateMock).toHaveBeenCalledWith('/app-studio/workspace-settings');
+    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspace-settings');
   });
 });

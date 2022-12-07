@@ -91,7 +91,7 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
               <Button
                 variant="secondary"
                 component={(props) => (
-                  <Link {...props} to={`/app-studio/import?application=${applicationName}`} />
+                  <Link {...props} to={`/stonesoup/import?application=${applicationName}`} />
                 )}
                 data-test="add-component"
               >

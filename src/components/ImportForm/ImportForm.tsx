@@ -34,7 +34,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
     (values, formikHelpers) => {
       return createResources(values)
         .then((appName) => {
-          navigate(`/app-studio/applications/${appName}`);
+          navigate(`/stonesoup/applications/${appName}`);
         })
         .catch((error) => {
           // eslint-disable-next-line no-console

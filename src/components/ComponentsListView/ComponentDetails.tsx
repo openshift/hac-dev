@@ -36,7 +36,7 @@ const ComponentDetailsEmptyState: React.FC<{ applicationName: string }> = ({ app
     <Button
       variant="primary"
       component={(props) => (
-        <Link {...props} to={`/app-studio/import?application=${applicationName}`} />
+        <Link {...props} to={`/stonesoup/import?application=${applicationName}`} />
       )}
     >
       Add component

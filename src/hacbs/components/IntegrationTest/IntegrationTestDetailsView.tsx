@@ -65,17 +65,17 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
     return (
       <DetailsPage
         breadcrumbs={[
-          { path: '/app-studio/applications', name: 'Applications' },
+          { path: '/stonesoup/applications', name: 'Applications' },
           {
-            path: `/app-studio/applications/${applicationName}`,
+            path: `/stonesoup/applications/${applicationName}`,
             name: applicationName,
           },
           {
-            path: `/app-studio/applications/${applicationName}?activeTab=integrationtests`,
+            path: `/stonesoup/applications/${applicationName}?activeTab=integrationtests`,
             name: 'Integration tests',
           },
           {
-            path: `/app-studio/applications/${applicationName}/test/${testName}`,
+            path: `/stonesoup/applications/${applicationName}/test/${testName}`,
             name: integrationTest.metadata.name,
           },
         ]}
@@ -88,7 +88,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
           {
             key: 'edit',
             label: 'Edit',
-            component: <Link to={`/app-studio/integration-test/${testName}/edit`}>Edit</Link>,
+            component: <Link to={`/stonesoup/integration-test/${testName}/edit`}>Edit</Link>,
           },
           {
             onClick: () =>
@@ -96,9 +96,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
                 integrationTestDeleteModalAndNavigate(integrationTest),
               ).closed.then(({ submitClicked }) => {
                 if (submitClicked)
-                  navigate(
-                    `/app-studio/applications/${applicationName}?activeTab=integrationtests`,
-                  );
+                  navigate(`/stonesoup/applications/${applicationName}?activeTab=integrationtests`);
               }),
             key: `delete-${integrationTest.metadata.name.toLowerCase()}`,
             label: 'Delete',

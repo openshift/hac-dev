@@ -21,7 +21,7 @@ const ComponentSettingsPage: React.FunctionComponent = () => {
   const emptyState = (
     <PageLayout
       breadcrumbs={[
-        { path: '/app-studio/applications', name: 'Applications' },
+        { path: '/stonesoup/applications', name: 'Applications' },
         { path: '#', name: 'Component settings' },
       ]}
       title="Component settings"

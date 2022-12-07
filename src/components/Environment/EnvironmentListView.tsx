@@ -86,7 +86,7 @@ const EnvironmentListView: React.FC<Props> = ({
       <Button
         variant="secondary"
         component={(props) => (
-          <Link {...props} to="/app-studio/workspace-settings/environment/create" />
+          <Link {...props} to="/stonesoup/workspace-settings/environment/create" />
         )}
       >
         Create environment
