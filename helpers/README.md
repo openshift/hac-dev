@@ -5,7 +5,7 @@ This script helps to setup a development environment for an entire application l
 
 ### Prerequisites
 
-1. Install the appstudio-staging-ci Github app in your github 
+1. Install the [appstudio-staging-ci](https://github.com/apps/appstudio-staging-ci) Github app in your github 
 2. Copy the content from `template.env` file and create a new `.env` file and add your values.
 
 

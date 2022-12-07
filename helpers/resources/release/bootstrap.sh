@@ -7,7 +7,7 @@ source $SCRIPT_DIR/../../.env
 COSIGN_SECRET_NAME="cosign-public-key"
 DEV_WORKSPACE=${DEV_NAMESPACE:-"hacbs"}
 MANAGED_WORKSPACE=${MANAGED_NAMESPACE:-"managed-hacbs"}
-QUAY_ROBOT_ACCOUNT="karthik_jk"
+QUAY_ROBOT_ACCOUNT=${QUAY_USERNAME}
 QUAY_PASSWORD=${QUAY_PASSWORD}
 QUAY_SECRET_NAME="hacbs-release-tests-token"
 
