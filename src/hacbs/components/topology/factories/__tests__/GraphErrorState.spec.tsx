@@ -28,4 +28,13 @@ describe('GraphErrorState', () => {
     );
     expect(screen.queryAllByTestId('error')).toHaveLength(2);
   });
+
+  it('should not render same error multiple times', () => {
+    render(
+      <GraphErrorState
+        errors={[new CustomError('Model does not exist'), new CustomError('Model does not exist')]}
+      />,
+    );
+    expect(screen.queryAllByTestId('error')).toHaveLength(1);
+  });
 });
