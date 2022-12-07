@@ -20,15 +20,11 @@ import { useAppStaticEnvironmentNodes } from './useAppStaticEnvironmentNodes';
 export const useAppWorkflowData = (
   applicationName: string,
   expanded: boolean,
-): [model: Model, loaded: boolean] => {
+): [model: Model, loaded: boolean, errors: unknown[]] => {
   const namespace = useNamespace();
-  const [componentNodes, componentGroup, componentTasks, componentsLoaded] = useAppComponentsNodes(
-    namespace,
-    applicationName,
-    [],
-    expanded,
-  );
-  const [buildNodes, buildGroup, buildTasks, buildsLoaded] = useAppBuildNodes(
+  const [componentNodes, componentGroup, componentTasks, componentsLoaded, componentsErrors] =
+    useAppComponentsNodes(namespace, applicationName, [], expanded);
+  const [buildNodes, buildGroup, buildTasks, buildsLoaded, buildsErrors] = useAppBuildNodes(
     namespace,
     applicationName,
     componentTasks,
@@ -39,6 +35,7 @@ export const useAppWorkflowData = (
     componentIntegrationTestTasks,
     componentIntegrationTests,
     integrationTestsLoaded,
+    integrationTestsErrors,
   ] = useAppIntegrationTestNodes(namespace, applicationName, buildTasks, expanded);
 
   const [
@@ -46,6 +43,7 @@ export const useAppWorkflowData = (
     applicationIntegrationTestTasks,
     applicationIntegrationTests,
     applicationTestsLoaded,
+    applicationErrors,
   ] = useAppApplictionTestNodes(
     namespace,
     applicationName,
@@ -88,23 +86,33 @@ export const useAppWorkflowData = (
     ],
   );
 
-  const [staticEnvironmentNodes, staticEnvironmentGroup, lastStaticEnv, staticEnvironmentsLoaded] =
-    useAppStaticEnvironmentNodes(
-      namespace,
-      applicationName,
-      expanded ? applicationIntegrationTestTasks : [testsGroup?.id ?? ''],
-      expanded,
-    );
-
-  const [releaseNodes, releaseGroup, releaseTasks, releasesLoaded] = useAppReleaseNodes(
+  const [
+    staticEnvironmentNodes,
+    staticEnvironmentGroup,
+    lastStaticEnv,
+    staticEnvironmentsLoaded,
+    staticEnvironmentsErrors,
+  ] = useAppStaticEnvironmentNodes(
     namespace,
     applicationName,
-    expanded ? lastStaticEnv : [staticEnvironmentGroup?.id ?? ''],
+    expanded ? applicationIntegrationTestTasks : [testsGroup?.id ?? ''],
     expanded,
   );
 
-  const [managedEnvironmentNodes, managedEnvironmentGroup, managedEnvironmentsLoaded] =
-    useAppReleasePlanNodes(namespace, applicationName, releaseTasks, expanded);
+  const [releaseNodes, releaseGroup, releaseTasks, releasesLoaded, releasesError] =
+    useAppReleaseNodes(
+      namespace,
+      applicationName,
+      expanded ? lastStaticEnv : [staticEnvironmentGroup?.id ?? ''],
+      expanded,
+    );
+
+  const [
+    managedEnvironmentNodes,
+    managedEnvironmentGroup,
+    managedEnvironmentsLoaded,
+    managedEnvironmentsError,
+  ] = useAppReleasePlanNodes(namespace, applicationName, releaseTasks, expanded);
   const allResourcesLoaded: boolean =
     componentsLoaded &&
     buildsLoaded &&
@@ -114,8 +122,18 @@ export const useAppWorkflowData = (
     releasesLoaded &&
     managedEnvironmentsLoaded;
 
-  if (!allResourcesLoaded) {
-    return [{ nodes: [], edges: [] }, allResourcesLoaded];
+  const errors = [
+    ...componentsErrors,
+    ...buildsErrors,
+    ...integrationTestsErrors,
+    ...applicationErrors,
+    ...staticEnvironmentsErrors,
+    ...releasesError,
+    ...managedEnvironmentsError,
+  ];
+
+  if (!allResourcesLoaded || errors.length > 0) {
+    return [{ nodes: [], edges: [] }, allResourcesLoaded, errors];
   }
 
   if (expanded) {
@@ -141,7 +159,7 @@ export const useAppWorkflowData = (
     ];
     const edges = getEdgesFromNodes(nodes, NodeType.SPACER_NODE);
 
-    return [{ nodes, edges }, true];
+    return [{ nodes, edges }, true, errors];
   }
   const nodes = [
     componentGroup,
@@ -153,5 +171,5 @@ export const useAppWorkflowData = (
   ];
   const edges = getEdgesFromNodes(nodes, NodeType.SPACER_NODE);
 
-  return [{ nodes, edges }, true];
+  return [{ nodes, edges }, true, errors];
 };

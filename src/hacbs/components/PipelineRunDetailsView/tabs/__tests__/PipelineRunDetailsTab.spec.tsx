@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, render, screen } from '@testing-library/react';
+import { CustomError } from '../../../../../shared/utils/error/custom-error';
 import { sampleBuildPipelines } from '../../../ApplicationDetails/tabs/overview/visualization/hooks/__data__/workflow-data';
 import { testPipelineRun } from '../../../topology/__data__/pipeline-test-data';
 import PipelineRunDetailsTab from '../PipelineRunDetailsTab';
@@ -38,7 +39,7 @@ beforeEach(() => {
 describe('PipelineRunDetailsTab', () => {
   it('should render the pipelinerun details tab', () => {
     watchResourceMock.mockReturnValue([[], true]);
-    render(<PipelineRunDetailsTab pipelineRun={sampleBuildPipelines[0]} />, {
+    render(<PipelineRunDetailsTab pipelineRun={sampleBuildPipelines[0]} error={null} />, {
       wrapper: BrowserRouter,
     });
     screen.getByText('Pipeline run details');
@@ -46,7 +47,7 @@ describe('PipelineRunDetailsTab', () => {
 
   it('should not render the pipelinerun visualization if the status field is missing', () => {
     watchResourceMock.mockReturnValue([[], true]);
-    render(<PipelineRunDetailsTab pipelineRun={sampleBuildPipelines[1]} />, {
+    render(<PipelineRunDetailsTab pipelineRun={sampleBuildPipelines[1]} error={null} />, {
       wrapper: BrowserRouter,
     });
     expect(screen.queryByTestId('hacbs-pipelinerun-graph')).not.toBeInTheDocument();
@@ -54,9 +55,23 @@ describe('PipelineRunDetailsTab', () => {
 
   it('should render the pipelinerun visualization', () => {
     watchResourceMock.mockReturnValue([[], true]);
-    render(<PipelineRunDetailsTab pipelineRun={testPipelineRun} />, {
+    render(<PipelineRunDetailsTab pipelineRun={testPipelineRun} error={null} />, {
       wrapper: BrowserRouter,
     });
     screen.getByTestId('hacbs-pipelinerun-graph');
+  });
+
+  it('should render the graph error state', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    render(
+      <PipelineRunDetailsTab
+        pipelineRun={testPipelineRun}
+        error={new CustomError('Model not found')}
+      />,
+      {
+        wrapper: BrowserRouter,
+      },
+    );
+    screen.getByTestId('graph-error-state');
   });
 });

@@ -30,20 +30,28 @@ export const useAppIntegrationTestNodes = (
   tasks: string[],
   resources: IntegrationTestScenarioKind[],
   loaded: boolean,
+  errors: unknown[],
 ] => {
-  const [integrationTests, testsLoaded] = useIntegrationTestScenarios(namespace, applicationName);
-  const [testPipelines, testPipelinesLoaded] = useTestPipelines(namespace, applicationName);
+  const [integrationTests, testsLoaded, testsError] = useIntegrationTestScenarios(
+    namespace,
+    applicationName,
+  );
+  const [testPipelines, testPipelinesLoaded, testPipelinesError] = useTestPipelines(
+    namespace,
+    applicationName,
+  );
   const allLoaded = testsLoaded && testPipelinesLoaded;
+  const allErrors = [testsError, testPipelinesError].filter((e) => !!e);
 
   const componentIntegrationTests = React.useMemo(() => {
-    if (!allLoaded) {
+    if (!allLoaded || allErrors.length > 0) {
       return [];
     }
     return integrationTests?.filter((test) => {
       const contexts = test?.spec?.contexts;
       return contexts?.some((c) => c.name === 'component') ?? false;
     });
-  }, [allLoaded, integrationTests]);
+  }, [allLoaded, integrationTests, allErrors]);
 
   const componentTestNodes = React.useMemo(() => {
     if (!allLoaded) {
@@ -78,5 +86,11 @@ export const useAppIntegrationTestNodes = (
     [componentTestNodes, expanded],
   );
 
-  return [componentTestNodes, componentIntegrationTestTasks, componentIntegrationTests, allLoaded];
+  return [
+    componentTestNodes,
+    componentIntegrationTestTasks,
+    componentIntegrationTests,
+    allLoaded,
+    allErrors,
+  ];
 };

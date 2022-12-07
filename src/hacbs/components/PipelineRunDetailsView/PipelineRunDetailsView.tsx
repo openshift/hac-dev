@@ -22,7 +22,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
 }) => {
   const namespace = useNamespace();
 
-  const [pipelineRun, loaded] = useK8sWatchResource<PipelineRunKind>({
+  const [pipelineRun, loaded, error] = useK8sWatchResource<PipelineRunKind>({
     groupVersionKind: PipelineRunGroupVersionKind,
     name: pipelineRunName,
     namespace,
@@ -41,7 +41,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
     );
   }
 
-  const applicationName = pipelineRun.metadata.labels[PipelineRunLabel.APPLICATION];
+  const applicationName = pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION];
   return (
     <>
       <React.Fragment>
@@ -87,7 +87,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
             {
               key: 'detail',
               label: 'Details',
-              component: <PipelineRunDetailsTab pipelineRun={pipelineRun} />,
+              component: <PipelineRunDetailsTab pipelineRun={pipelineRun} error={error} />,
             },
             // {
             //   key: 'yaml',

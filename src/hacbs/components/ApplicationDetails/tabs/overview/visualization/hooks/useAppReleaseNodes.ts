@@ -44,13 +44,15 @@ export const useAppReleaseNodes = (
   group: WorkflowNodeModel<WorkflowNodeModelData>,
   tasks: string[],
   loaded: boolean,
+  errors: unknown[],
 ] => {
-  const [releases, releasesLoaded] = useReleases(namespace);
-  const [releasePlans, releasePlansLoaded] = useReleasePlans(namespace);
+  const [releases, releasesLoaded, releasesError] = useReleases(namespace);
+  const [releasePlans, releasePlansLoaded, releasePlansError] = useReleasePlans(namespace);
   const allLoaded = releasesLoaded && releasePlansLoaded;
+  const allErrors = [releasesError, releasePlansError].filter((e) => !!e);
 
   const groupedReleases = React.useMemo(() => {
-    if (!allLoaded) {
+    if (!allLoaded || allErrors.length > 0) {
       return [];
     }
     const groups: { [key: string]: ReleaseKind[] } = {};
@@ -62,10 +64,10 @@ export const useAppReleaseNodes = (
       groups[groupId].push(release);
     });
     return groups;
-  }, [releases, allLoaded]);
+  }, [releases, allLoaded, allErrors]);
 
   const releaseNodes = React.useMemo(() => {
-    if (!allLoaded) {
+    if (!allLoaded || allErrors.length > 0) {
       return [];
     }
     let nodes: WorkflowNodeModel<WorkflowNodeModelData>[];
@@ -126,11 +128,11 @@ export const useAppReleaseNodes = (
     }
     updateParallelNodeWidths(nodes);
     return nodes;
-  }, [allLoaded, groupedReleases, releasePlans, releases, previousTasks]);
+  }, [allLoaded, groupedReleases, releasePlans, releases, previousTasks, allErrors]);
 
   const releaseGroup = React.useMemo(
     () =>
-      allLoaded
+      allLoaded && allErrors.length === 0
         ? groupToPipelineNode(
             'release-plans',
             releases?.length ? 'Releases' : 'No releases set',
@@ -143,7 +145,7 @@ export const useAppReleaseNodes = (
             worstWorkflowStatus(releaseNodes),
           )
         : undefined,
-    [allLoaded, expanded, previousTasks, releaseNodes, releases],
+    [allLoaded, expanded, previousTasks, releaseNodes, releases, allErrors],
   );
 
   const releaseTasks = React.useMemo(
@@ -152,5 +154,5 @@ export const useAppReleaseNodes = (
     [releaseGroup?.id, releaseNodes, expanded],
   );
 
-  return [releaseNodes, releaseGroup, releaseTasks, allLoaded];
+  return [releaseNodes, releaseGroup, releaseTasks, allLoaded, allErrors];
 };

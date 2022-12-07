@@ -20,14 +20,16 @@ export const useAppReleasePlanNodes = (
   nodes: WorkflowNodeModel<WorkflowNodeModelData>[],
   group: WorkflowNodeModel<WorkflowNodeModelData>,
   loaded: boolean,
+  errors: unknown[],
 ] => {
-  const [releasePlans, releasePlansLoaded] = useReleasePlans(namespace);
-  const [releases, releasesLoaded] = useReleases(namespace);
+  const [releasePlans, releasePlansLoaded, releasePlansError] = useReleasePlans(namespace);
+  const [releases, releasesLoaded, releasesError] = useReleases(namespace);
   const allLoaded = releasePlansLoaded && releasesLoaded;
+  const allErrors = [releasesError, releasePlansError].filter((e) => !!e);
 
   const releasePlanNodes = React.useMemo(() => {
     const nodes =
-      allLoaded && releasePlans.length
+      allLoaded && releasePlans.length && allErrors.length === 0
         ? releasePlans.map((releasePlan) => {
             const latestRelease = releases
               .filter((release) => release.spec.releasePlan === releasePlan.metadata.name)
@@ -55,11 +57,11 @@ export const useAppReleasePlanNodes = (
           ];
     updateParallelNodeWidths(nodes);
     return nodes;
-  }, [allLoaded, releasePlans, previousTasks, releases]);
+  }, [allLoaded, releasePlans, previousTasks, releases, allErrors]);
 
   const releasePlanGroup = React.useMemo(
     () =>
-      allLoaded
+      allLoaded && allErrors.length === 0
         ? groupToPipelineNode(
             'managed-environments',
             releasePlans?.length ? 'Managed environments' : 'No managed environments yet',
@@ -72,8 +74,8 @@ export const useAppReleasePlanNodes = (
             worstWorkflowStatus(releasePlanNodes),
           )
         : undefined,
-    [allLoaded, expanded, releasePlanNodes, releasePlans, previousTasks],
+    [allLoaded, expanded, releasePlanNodes, releasePlans, previousTasks, allErrors],
   );
 
-  return [releasePlanNodes, releasePlanGroup, allLoaded];
+  return [releasePlanNodes, releasePlanGroup, allLoaded, allErrors];
 };

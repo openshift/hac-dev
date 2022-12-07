@@ -1,6 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { configure, render, screen } from '@testing-library/react';
+import { CustomError } from '../../../../shared/utils/error/custom-error';
 import { testPipelineRun } from '../../topology/__data__/pipeline-test-data';
 import PipelineRunVisualization from '../PipelineRunVisualization';
 
@@ -28,12 +29,22 @@ beforeEach(() => {
 
 describe('PipelineRunVisualization', () => {
   it('should not render the pipelinerun graph', () => {
-    render(<PipelineRunVisualization pipelineRun={null} />);
+    render(<PipelineRunVisualization pipelineRun={null} error={null} />);
     expect(screen.queryByTestId('hacbs-pipelinerun-graph')).not.toBeInTheDocument();
   });
 
+  it('should surface the api error message', () => {
+    render(
+      <PipelineRunVisualization
+        pipelineRun={null}
+        error={new CustomError('Model does not exist')}
+      />,
+    );
+    expect(screen.queryByText('Model does not exist')).toBeInTheDocument();
+  });
+
   it('should render the pipelinerun graph', () => {
-    render(<PipelineRunVisualization pipelineRun={testPipelineRun} />);
+    render(<PipelineRunVisualization pipelineRun={testPipelineRun} error={null} />);
     screen.getByTestId('hacbs-pipelinerun-graph');
   });
 });

@@ -23,13 +23,18 @@ export const useAppBuildNodes = (
   group: WorkflowNodeModel<WorkflowNodeModelData>,
   tasks: string[],
   loaded: boolean,
+  errors: unknown[],
 ] => {
-  const [components, componentsLoaded] = useComponents(namespace, applicationName);
-  const [buildPipelines, buildPipelinesLoaded] = useBuildPipelines(namespace, applicationName);
+  const [components, componentsLoaded, componentsError] = useComponents(namespace, applicationName);
+  const [buildPipelines, buildPipelinesLoaded, buildPipelinesError] = useBuildPipelines(
+    namespace,
+    applicationName,
+  );
   const allResourcesLoaded: boolean = componentsLoaded && buildPipelinesLoaded;
+  const allErrors: unknown[] = [componentsError, buildPipelinesError].filter((e) => !!e);
 
   const latestBuilds = React.useMemo(() => {
-    if (!allResourcesLoaded) {
+    if (!allResourcesLoaded || allErrors.length > 0) {
       return [];
     }
     return components.reduce((acc, component) => {
@@ -45,7 +50,7 @@ export const useAppBuildNodes = (
       }
       return acc;
     }, [] as PipelineRunKind[]);
-  }, [allResourcesLoaded, buildPipelines, components]);
+  }, [allResourcesLoaded, buildPipelines, components, allErrors]);
 
   const buildNodes: WorkflowNodeModel<WorkflowNodeModelData>[] = React.useMemo(() => {
     const nodes =
@@ -81,5 +86,5 @@ export const useAppBuildNodes = (
     [buildGroup?.id, buildNodes, expanded],
   );
 
-  return [buildNodes, buildGroup, buildTasks, allResourcesLoaded];
+  return [buildNodes, buildGroup, buildTasks, allResourcesLoaded, allErrors];
 };
