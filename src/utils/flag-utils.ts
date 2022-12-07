@@ -1,4 +1,4 @@
-import { SetFeatureFlag } from '@openshift/dynamic-plugin-sdk';
+import { SetFeatureFlag } from '@openshift/dynamic-plugin-sdk-extensions';
 import { commonFetch } from '@openshift/dynamic-plugin-sdk-utils';
 
 export const SIGNUP_FLAG = 'SIGNUP';
