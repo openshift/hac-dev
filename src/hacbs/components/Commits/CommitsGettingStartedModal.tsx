@@ -33,11 +33,7 @@ const CommitsGettingStartedModal: React.FC<CommitsGettingStartedModalProps> = ({
   );
   const footer = (
     <div className="pf-u-display-flex pf-u-justify-content-center pf-u-flex-fill">
-      <Button
-        data-testid="hacbs-getting-started-modal-dismiss"
-        aria-label="get started"
-        onClick={onHide}
-      >
+      <Button data-testid="getting-started-modal-dismiss" aria-label="get started" onClick={onHide}>
         Got it, thanks
       </Button>
     </div>
@@ -52,7 +48,7 @@ const CommitsGettingStartedModal: React.FC<CommitsGettingStartedModalProps> = ({
       footer={footer}
       isOpen={shown}
       showClose={false}
-      data-testid="hacbs-getting-started-modal"
+      data-testid="getting-started-modal"
     >
       <div className="pf-u-text-align-center">{body}</div>
     </Modal>

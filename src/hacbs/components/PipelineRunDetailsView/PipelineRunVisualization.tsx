@@ -17,7 +17,7 @@ const PipelineRunVisualization = ({ pipelineRun, error }) => {
     return <GraphErrorState errors={errors} />;
   }
   return (
-    <div className="pipelinerun-graph" data-test="hacbs-pipelinerun-graph">
+    <div className="pipelinerun-graph" data-test="pipelinerun-graph">
       <VisualizationFactory
         componentFactory={pipelineRuncomponentFactory}
         layoutFactory={layoutFactory}

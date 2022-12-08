@@ -22,7 +22,7 @@ const CommitOverviewTab: React.FC<CommitsOverviewTabProps> = ({ commit, onLearnM
       <Text className="pf-u-mt-lg pf-u-mb-lg">
         Events progression triggered by the commit.
         <Button
-          data-testid="hacbs-commit-overview-learn-more"
+          data-testid="commit-overview-learn-more"
           variant="link"
           className="pf-u-pl-sm"
           onClick={onLearnMore}

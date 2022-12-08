@@ -37,13 +37,13 @@ describe('HacBSGettingStartedModal', () => {
 
   it('should not show a modal when localstorage key is set to true', () => {
     render(<GettingStartedModal />);
-    expect(screen.queryByTestId('hacbs-getting-started-modal--content')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('getting-started-modal--content')).not.toBeInTheDocument();
   });
 
   it('should show a modal when localstorage key is set to false', () => {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
     render(<GettingStartedModal />);
-    expect(screen.queryByTestId('hacbs-getting-started-modal')).toBeInTheDocument();
+    expect(screen.queryByTestId('getting-started-modal')).toBeInTheDocument();
   });
 
   it('should render second screen when user clicks Next', () => {

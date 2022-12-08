@@ -242,7 +242,7 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
       footer={footer}
       isOpen={!isDismissed}
       showClose={false}
-      data-test="hacbs-getting-started-modal"
+      data-test="getting-started-modal"
     >
       <div className="pf-u-text-align-center">{content}</div>
     </Modal>

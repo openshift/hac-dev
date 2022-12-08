@@ -30,7 +30,7 @@ beforeEach(() => {
 describe('PipelineRunVisualization', () => {
   it('should not render the pipelinerun graph', () => {
     render(<PipelineRunVisualization pipelineRun={null} error={null} />);
-    expect(screen.queryByTestId('hacbs-pipelinerun-graph')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('pipelinerun-graph')).not.toBeInTheDocument();
   });
 
   it('should surface the api error message', () => {
@@ -45,6 +45,6 @@ describe('PipelineRunVisualization', () => {
 
   it('should render the pipelinerun graph', () => {
     render(<PipelineRunVisualization pipelineRun={testPipelineRun} error={null} />);
-    screen.getByTestId('hacbs-pipelinerun-graph');
+    screen.getByTestId('pipelinerun-graph');
   });
 });
