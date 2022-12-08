@@ -32,7 +32,7 @@ const GraphErrorState: React.FC<GraphErrorStateProps> = ({ errors, fullHeight })
   return (
     <>
       {uniqueErrors.length !== closedError.length && (
-        <div className="hacbs-inline-errors" data-test="graph-error-state">
+        <div className="graph-error-state__inline-errors" data-test="graph-error-state">
           {uniqueErrors.map((errMessage: string, key: number) => {
             return !closedError.includes(key) ? (
               <Alert
@@ -54,7 +54,7 @@ const GraphErrorState: React.FC<GraphErrorStateProps> = ({ errors, fullHeight })
         </div>
       )}
 
-      <Bullseye className={cx('hacbs-graph-error-state', { 'full-height': fullHeight })}>
+      <Bullseye className={cx('graph-error-state', { 'm-full-height': fullHeight })}>
         <OutlinedEyeSlashIcon color={grayColor.value} size="md" />
       </Bullseye>
     </>

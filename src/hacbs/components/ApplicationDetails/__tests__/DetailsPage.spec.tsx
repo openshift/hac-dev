@@ -26,7 +26,7 @@ describe('DetailsPage', () => {
 
   it('should not render the tabs if invalid values are passed', () => {
     render(<DetailsPage title="Details" tabs={null} />);
-    expect(screen.queryByTestId('details__tabs')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('app-details__tabs')).not.toBeInTheDocument();
   });
 
   it('should render the tabs', () => {
@@ -36,7 +36,7 @@ describe('DetailsPage', () => {
         tabs={[{ key: 'tab1', label: 'Tab 1', component: <div>Tab1 content</div> }]}
       />,
     );
-    expect(getByTestId('details__tabs')).toBeInTheDocument();
+    expect(getByTestId('app-details__tabs')).toBeInTheDocument();
   });
 
   it('should render the tabs', async () => {

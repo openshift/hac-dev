@@ -14,7 +14,7 @@ type CommitsOverviewTabProps = {
 const CommitOverviewTab: React.FC<CommitsOverviewTabProps> = ({ commit, onLearnMore }) => (
   <>
     <PageSection
-      className="hacbs-commit-overview"
+      className="commit-overview"
       padding={{ default: 'noPadding' }}
       variant={PageSectionVariants.light}
       isFilled

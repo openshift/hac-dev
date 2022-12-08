@@ -19,7 +19,7 @@ const CommitWorkflowNode: React.FC<CommitWorkflowNodeProps> = ({ element }) => {
     <TaskNode
       truncateLength={element.getData().label?.length}
       element={element}
-      className={css('hacbs-workload-node', { 'm-disabled': isDisabled })}
+      className={css('workload-node', { 'm-disabled': isDisabled })}
       taskIcon={getWorkflowNodeIcon(workflowType)}
       taskIconTooltip={getTooltipText(workflowType)}
       status={statusToRunStatus(status)}

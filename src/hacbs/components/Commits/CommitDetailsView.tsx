@@ -175,7 +175,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
             )
           }
         >
-          <DrawerContentBody className="hacbs-commit-details__content">
+          <DrawerContentBody className="commit-details__content">
             <CommitsGettingStartedModal
               shown={showGettingStarted}
               onHide={() => setGettingStartedShown(false)}

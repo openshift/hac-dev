@@ -110,7 +110,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
         key={key}
         eventKey={key}
         title={<TabTitleText>{label}</TabTitleText>}
-        className={cx('hacbs-details__tabs__tabItem', { isFilled })}
+        className={cx('app-details__tabs__tabItem', { isFilled })}
         {...rest}
       >
         {component}
@@ -163,9 +163,9 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
         </Flex>
       </PageSection>
       {tabs?.length && (
-        <PageSection className="hacbs-details__tabs" isFilled variant={PageSectionVariants.light}>
+        <PageSection className="app-details__tabs" isFilled variant={PageSectionVariants.light}>
           <Tabs
-            data-test="details__tabs"
+            data-test="app-details__tabs"
             onSelect={(e, k: string) => {
               setActiveTab(k);
               onTabSelect && onTabSelect(k);
