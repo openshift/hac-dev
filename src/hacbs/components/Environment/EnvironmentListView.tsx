@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Title, EmptyStateBody, Text } from '@patternfly/react-core';
 import EnvironmentListViewBase from '../../../components/Environment/EnvironmentListView';
+import { useAllApplicationEnvironmentsWithHealthStatus } from '../../../hooks/useAllApplicationEnvironmentsWithHealthStatus';
+import { useAllEnvironments } from '../../../hooks/useAllEnvironments';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import { EnvironmentKind } from '../../../types';
 import { GitOpsDeploymentHealthStatus } from '../../../types/gitops-deployment';
-import { useAllEnvironments } from '../../hooks/useAllEnvironments';
-import { useApplicationEnvironmentsWithHealthStatus } from '../../hooks/useApplicationEnvironmentsWithHealthStatus';
 import EnvironmentCard from './EnvironmentCard';
 import EnvironmentToolbarGroups from './EnvironmentToolbarGroups';
 import { EnvironmentType, getEnvironmentType } from './utils';
@@ -37,7 +37,7 @@ const HacbsApplicationEnvironmentListView: React.FC<HacbsEnvironmentListViewProp
   CardComponent,
 }) => {
   const [allEnvironments, environmentsLoaded] =
-    useApplicationEnvironmentsWithHealthStatus(applicationName);
+    useAllApplicationEnvironmentsWithHealthStatus(applicationName);
   const environments = React.useMemo(
     () => (preFilter ? allEnvironments.filter(preFilter) : allEnvironments),
     [preFilter, allEnvironments],

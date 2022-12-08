@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { EnvironmentKind } from '../../types';
-import { useNamespace } from '../../utils/namespace-context-utils';
-import { createEnvironmentKindFromReleasePlan } from '../components/Environment/utils';
+import { createEnvironmentKindFromReleasePlan } from '../hacbs/components/Environment/utils';
+import { EnvironmentKind } from '../types';
+import { useNamespace } from '../utils/namespace-context-utils';
 import { useEnvironments } from './useEnvironments';
 import { useReleasePlans } from './useReleasePlans';
 
 export const useAllEnvironments = (): [EnvironmentKind[], boolean] => {
   const namespace = useNamespace();
-  const [environments, environmentsLoaded] = useEnvironments(namespace);
+  const [environments, environmentsLoaded] = useEnvironments();
   const [releasePlans, releasePlansLoaded] = useReleasePlans(namespace);
 
   const allLoaded = environmentsLoaded && releasePlansLoaded;

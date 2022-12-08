@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, configure } from '@testing-library/react';
-import { useApplications } from '../../../hacbs/hooks/useApplications';
+import { useApplications } from '../../../hooks/useApplications';
 import { EnvironmentKind } from '../../../types';
 import { mockApplication } from '../../ApplicationEnvironment/__data__/mock-data';
 import EnvironmentListView from '../EnvironmentListView';
@@ -25,7 +25,7 @@ jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
   }),
 }));
 
-jest.mock('../../../hacbs/hooks/useApplications', () => ({
+jest.mock('../../../hooks/useApplications', () => ({
   useApplications: jest.fn(),
 }));
 const useApplicationsMock = useApplications as jest.Mock;

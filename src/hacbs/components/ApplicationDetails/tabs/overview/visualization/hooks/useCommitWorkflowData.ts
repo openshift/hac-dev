@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { RunStatus } from '@patternfly/react-topology';
+import { useBuildPipelines } from '../../../../../../../hooks/useBuildPipelines';
+import { useComponents } from '../../../../../../../hooks/useComponents';
+import { useEnvironments } from '../../../../../../../hooks/useEnvironments';
+import { useIntegrationTestScenarios } from '../../../../../../../hooks/useIntegrationTestScenarios';
+import { useReleasePlans } from '../../../../../../../hooks/useReleasePlans';
+import { useReleases } from '../../../../../../../hooks/useReleases';
+import { useSnapshotsEnvironmentBindings } from '../../../../../../../hooks/useSnapshotsEnvironmentBindings';
+import { useTestPipelines } from '../../../../../../../hooks/useTestPipelines';
 import { pipelineRunStatus } from '../../../../../../../shared';
 import { ComponentKind } from '../../../../../../../types';
 import { useNamespace } from '../../../../../../../utils/namespace-context-utils';
 import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
-import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
-import { useComponents } from '../../../../../../hooks/useComponents';
-import { useEnvironments } from '../../../../../../hooks/useEnvironments';
-import { useIntegrationTestScenarios } from '../../../../../../hooks/useIntegrationTestScenarios';
-import { useReleasePlans } from '../../../../../../hooks/useReleasePlans';
-import { useReleases } from '../../../../../../hooks/useReleases';
-import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
 import { Commit, PipelineRunKind } from '../../../../../../types';
 import {
   EnvironmentKind,
@@ -39,7 +39,7 @@ export const useCommitWorkflowData = (
     namespace,
     applicationName,
   );
-  const [environments, environmentsLoaded, environmentsError] = useEnvironments(namespace);
+  const [environments, environmentsLoaded, environmentsError] = useEnvironments();
   const [releasePlans, releasePlansLoaded, releasePlansError] = useReleasePlans(namespace);
   const [releases, releasesLoaded, releasesError] = useReleases(namespace);
   const [buildPipelines, buildPipelinesLoaded, buildPipelinesError] = useBuildPipelines(

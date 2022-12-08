@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Level, LevelItem } from '@patternfly/react-core';
-import { useApplications } from '../../hacbs/hooks/useApplications';
+import { useApplications } from '../../hooks/useApplications';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import { ContextMenuItem, ContextSwitcher } from '../ContextSwitcher';
 

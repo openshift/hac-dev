@@ -2,7 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, configure } from '@testing-library/react';
-import { useApplications } from '../../../hacbs/hooks/useApplications';
+import { useApplications } from '../../../hooks/useApplications';
 import { EnvironmentKind } from '../../../types';
 import { mockApplication } from '../../ApplicationEnvironment/__data__/mock-data';
 import EnvironmentCard from '../EnvironmentCard';
@@ -19,7 +19,7 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
-jest.mock('../../../hacbs/hooks/useApplications', () => ({
+jest.mock('../../../hooks/useApplications', () => ({
   useApplications: jest.fn(),
 }));
 

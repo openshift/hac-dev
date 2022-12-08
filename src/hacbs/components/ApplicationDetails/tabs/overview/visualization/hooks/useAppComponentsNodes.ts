@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
-import { useComponents } from '../../../../../../hooks/useComponents';
+import { useBuildPipelines } from '../../../../../../../hooks/useBuildPipelines';
+import { useComponents } from '../../../../../../../hooks/useComponents';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import {
   emptyPipelineNode,

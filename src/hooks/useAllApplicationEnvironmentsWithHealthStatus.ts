@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../../shared';
-import { EnvironmentKind } from '../../types';
-import { GitOpsDeploymentHealthStatus } from '../../types/gitops-deployment';
-import { useNamespace } from '../../utils/namespace-context-utils';
-import { getLatestResource } from '../components/ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
-import { EnvironmentType } from '../components/Environment/utils';
-import { PipelineRunLabel } from '../consts/pipelinerun';
+import { getLatestResource } from '../hacbs/components/ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
+import { EnvironmentType } from '../hacbs/components/Environment/utils';
+import { PipelineRunLabel } from '../hacbs/consts/pipelinerun';
+import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../shared';
+import { EnvironmentKind } from '../types';
+import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
+import { useNamespace } from '../utils/namespace-context-utils';
 import { useAllEnvironments } from './useAllEnvironments';
 import { useReleases } from './useReleases';
 import { useSnapshotsEnvironmentBindings } from './useSnapshotsEnvironmentBindings';
@@ -16,7 +16,7 @@ export type EnvironmentKindWithHealthStatus = EnvironmentKind & {
   lastDeploy: string;
 };
 
-export const useApplicationEnvironmentsWithHealthStatus = (
+export const useAllApplicationEnvironmentsWithHealthStatus = (
   applicationName: string,
 ): [EnvironmentKindWithHealthStatus[], boolean] => {
   const namespace = useNamespace();
