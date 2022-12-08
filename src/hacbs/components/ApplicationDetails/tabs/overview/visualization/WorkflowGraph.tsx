@@ -14,7 +14,7 @@ type WorkflowGraphProps = {
 
 const WorkflowGraph: React.FC<WorkflowGraphProps> = ({ nodes, edges, expanded }) => {
   return (
-    <div className="hacbs-workflow-graph" data-test="workflow-graph">
+    <div className="workflow-graph" data-test="workflow-graph">
       <WorkflowVisualizationSurface
         model={{
           graph: {

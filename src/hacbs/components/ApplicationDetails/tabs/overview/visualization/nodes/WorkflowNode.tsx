@@ -56,7 +56,7 @@ const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
   return (
     <Popover
       isVisible={tipVisible}
-      className="hacbs-workload-node__popover"
+      className="workload-node__popover"
       showClose={false}
       bodyContent={
         <div onMouseEnter={() => setTipHover(true)} onMouseLeave={() => setTipHover(false)}>
@@ -74,7 +74,7 @@ const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
           statusIconSize={18}
           hover={isDisabled ? false : undefined}
           badge={childNodes.length ? `${childNodes.length}` : undefined}
-          className={css('hacbs-workload-node', { 'm-disabled': isDisabled })}
+          className={css('workload-node', { 'm-disabled': isDisabled })}
           taskIcon={getWorkflowNodeIcon(workflowType)}
           paddingY={6}
           onSelect={() => setActiveTab(getLinkForElement(element))}

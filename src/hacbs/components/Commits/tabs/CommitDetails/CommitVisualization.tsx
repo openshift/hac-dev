@@ -35,7 +35,7 @@ const CommitVisualization = ({ commit }) => {
     return <GraphErrorState errors={errors} fullHeight />;
   }
   return (
-    <div className="hacbs-commit-graph" data-testid="hacbs-commit-graph">
+    <div className="commit-graph" data-testid="hacbs-commit-graph">
       <VisualizationFactory
         componentFactory={commitComponentFactory}
         layoutFactory={layoutFactory}

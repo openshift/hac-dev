@@ -91,13 +91,11 @@ const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({ element
   };
 
   return (
-    <div className="hacbs-workload-node__tooltip">
-      <div className="hacbs-workload-node__tooltip-title">{label}</div>
-      <div className="hacbs-workload-node__tooltip-description">
-        {TYPE_DESCRIPTIONS[workflowType]}
-      </div>
+    <div className="workload-node__tooltip">
+      <div className="workload-node__tooltip-title">{label}</div>
+      <div className="workload-node__tooltip-description">{TYPE_DESCRIPTIONS[workflowType]}</div>
       {children?.length ? (
-        <div className="hacbs-workload-node__tooltip-status-area">
+        <div className="workload-node__tooltip-status-area">
           {children
             .filter((c) => !c.data.hidden && !c.data.isDisabled)
             .map((child) => (
@@ -109,7 +107,7 @@ const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({ element
         </div>
       ) : null}
       {links ? (
-        <div data-id="tip-links" className="hacbs-workload-node__tooltip-links">
+        <div data-id="tip-links" className="workload-node__tooltip-links">
           {links}
         </div>
       ) : null}

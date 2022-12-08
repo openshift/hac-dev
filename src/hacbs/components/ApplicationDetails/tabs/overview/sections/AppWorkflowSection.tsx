@@ -46,7 +46,7 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
   return (
     <React.Fragment>
       <ApplicationModal showApplicationModal={showApplicationModal} onClose={closeModal} />
-      <Grid hasGutter className="hacbs-app-workflow">
+      <Grid hasGutter className="app-workflow">
         <GridItem>
           <TextContent>
             <Text component={TextVariants.h3}>Lifecycle</Text>
