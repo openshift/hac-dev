@@ -50,7 +50,7 @@ describe('PipelineRunDetailsTab', () => {
     render(<PipelineRunDetailsTab pipelineRun={sampleBuildPipelines[1]} error={null} />, {
       wrapper: BrowserRouter,
     });
-    expect(screen.queryByTestId('hacbs-pipelinerun-graph')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('pipelinerun-graph')).not.toBeInTheDocument();
   });
 
   it('should render the pipelinerun visualization', () => {
@@ -58,7 +58,7 @@ describe('PipelineRunDetailsTab', () => {
     render(<PipelineRunDetailsTab pipelineRun={testPipelineRun} error={null} />, {
       wrapper: BrowserRouter,
     });
-    screen.getByTestId('hacbs-pipelinerun-graph');
+    screen.getByTestId('pipelinerun-graph');
   });
 
   it('should render the graph error state', () => {

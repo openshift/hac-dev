@@ -61,19 +61,19 @@ describe('CommitDetailsView', () => {
 
   it('should show the getting started modal when not dismissed', () => {
     render(<CommitDetailsView applicationName="test-application" commitName="commit123" />);
-    expect(screen.getByTestId('hacbs-getting-started-modal')).toBeVisible();
+    expect(screen.getByTestId('getting-started-modal')).toBeVisible();
   });
 
   it('should hide the getting started modal when dismissed', () => {
     localStorage[COMMITS_GS_LOCAL_STORAGE_KEY] = 'true';
     render(<CommitDetailsView applicationName="test-application" commitName="commit123" />);
-    expect(screen.queryByTestId('hacbs-getting-started-modal')).toBeNull();
+    expect(screen.queryByTestId('getting-started-modal')).toBeNull();
   });
 
   it('should update local storage when getting started is dismissed', () => {
     render(<CommitDetailsView applicationName="test-application" commitName="commit123" />);
     expect(localStorage[COMMITS_GS_LOCAL_STORAGE_KEY]).toBe(undefined);
-    const dismissButton = screen.getByTestId('hacbs-getting-started-modal-dismiss');
+    const dismissButton = screen.getByTestId('getting-started-modal-dismiss');
     fireEvent.click(dismissButton);
     expect(localStorage[COMMITS_GS_LOCAL_STORAGE_KEY]).toBe('true');
   });
@@ -83,12 +83,12 @@ describe('CommitDetailsView', () => {
     await act(() => {
       render(<CommitDetailsView applicationName="test-application" commitName="commit123" />);
     });
-    expect(screen.queryByTestId('hacbs-getting-started-modal')).toBeNull();
-    const learnMoreButton = screen.getByTestId('hacbs-commit-overview-learn-more');
+    expect(screen.queryByTestId('getting-started-modal')).toBeNull();
+    const learnMoreButton = screen.getByTestId('commit-overview-learn-more');
     fireEvent.click(learnMoreButton);
 
     await waitFor(() => {
-      expect(screen.getByTestId('hacbs-getting-started-modal')).toBeVisible();
+      expect(screen.getByTestId('getting-started-modal')).toBeVisible();
     });
   });
 });

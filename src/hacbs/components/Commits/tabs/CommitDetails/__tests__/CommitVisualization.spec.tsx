@@ -32,12 +32,12 @@ describe('CommitVisualization', () => {
   it('should not render the pipelinerun graph', () => {
     useCommitWorkflowDataMock.mockReturnValue([[], false]);
     render(<CommitVisualization commit={null} />);
-    expect(screen.queryByTestId('hacbs-commit-graph')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('commit-graph')).not.toBeInTheDocument();
   });
 
   it('should render the pipelinerun graph', () => {
     render(<CommitVisualization commit={commit} />);
-    screen.getByTestId('hacbs-commit-graph');
+    screen.getByTestId('commit-graph');
   });
 
   it('should render the pipelinerun graph', () => {
