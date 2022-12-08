@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { useEnvironments } from '../../../../../../../hooks/useEnvironments';
+import { useSnapshotsEnvironmentBindings } from '../../../../../../../hooks/useSnapshotsEnvironmentBindings';
+import { useTestPipelines } from '../../../../../../../hooks/useTestPipelines';
 import { pipelineRunStatus } from '../../../../../../../shared';
 import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
-import { useEnvironments } from '../../../../../../hooks/useEnvironments';
-import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
 import { EnvironmentType, getEnvironmentType } from '../../../../../Environment/utils';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import {
@@ -30,7 +30,7 @@ export const useAppStaticEnvironmentNodes = (
   loaded: boolean,
   errors: unknown[],
 ] => {
-  const [environments, environmentsLoaded, environmentsError] = useEnvironments(namespace);
+  const [environments, environmentsLoaded, environmentsError] = useEnvironments();
   const [snapshotsEnvironmentBindings, snapshotsLoaded, snapshotsError] =
     useSnapshotsEnvironmentBindings(namespace, applicationName);
   const [testPipelines, testPipelinesLoaded] = useTestPipelines(namespace, applicationName);

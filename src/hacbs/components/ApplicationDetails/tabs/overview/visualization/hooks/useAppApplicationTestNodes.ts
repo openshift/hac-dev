@@ -1,14 +1,14 @@
 import * as React from 'react';
+import { useIntegrationTestScenarios } from '../../../../../../../hooks/useIntegrationTestScenarios';
+import { useTestPipelines } from '../../../../../../../hooks/useTestPipelines';
 import { pipelineRunStatus } from '../../../../../../../shared';
 import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
-import { useIntegrationTestScenarios } from '../../../../../../hooks/useIntegrationTestScenarios';
-import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
 import { IntegrationTestScenarioKind } from '../../../../../../types/coreBuildService';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import { emptyPipelineNode, resourceToPipelineNode } from '../utils/node-utils';
 import { updateParallelNodeWidths } from '../utils/visualization-utils';
 
-export const useAppApplictionTestNodes = (
+export const useAppApplicationTestNodes = (
   namespace: string,
   applicationName: string,
   previousTasks: string[],

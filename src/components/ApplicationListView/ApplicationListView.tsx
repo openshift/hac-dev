@@ -17,7 +17,7 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { HACBS_FLAG } from '../../hacbs/hacbsFeatureFlag';
-import { useApplications } from '../../hacbs/hooks/useApplications';
+import { useApplications } from '../../hooks/useApplications';
 import emptyStateImgUrl from '../../imgs/application-list-empty.png';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { Table } from '../../shared';

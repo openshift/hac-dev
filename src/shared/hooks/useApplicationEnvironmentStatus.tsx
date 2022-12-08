@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { getLatestResource } from '../../hacbs/components/ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
 import { PipelineRunLabel } from '../../hacbs/consts/pipelinerun';
-import { useSnapshotsEnvironmentBindings } from '../../hacbs/hooks/useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from '../../hacbs/hooks/useTestPipelines';
+import { useSnapshotsEnvironmentBindings } from '../../hooks/useSnapshotsEnvironmentBindings';
+import { useTestPipelines } from '../../hooks/useTestPipelines';
 import { GitOpsDeploymentHealthStatus } from '../../types/gitops-deployment';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { PipelineRunLabel } from '../../../../../../../hacbs/consts/pipelinerun';
+import { useBuildPipelines } from '../../../../../../../hooks/useBuildPipelines';
+import { useComponents } from '../../../../../../../hooks/useComponents';
 import { PipelineRunKind } from '../../../../../../../shared/components/pipeline-run-logs/types';
-import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
-import { useComponents } from '../../../../../../hooks/useComponents';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import {
   emptyPipelineNode,

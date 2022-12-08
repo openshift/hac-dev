@@ -9,7 +9,7 @@ import { useNamespace } from '../../../../../../../utils/namespace-context-utils
 import { NodeType } from '../const';
 import { WorkflowNodeType } from '../types';
 import { groupToPipelineNode, worstWorkflowStatus } from '../utils/node-utils';
-import { useAppApplictionTestNodes } from './useAppApplictionTestNodes';
+import { useAppApplicationTestNodes } from './useAppApplicationTestNodes';
 import { useAppBuildNodes } from './useAppBuildNodes';
 import { useAppComponentsNodes } from './useAppComponentsNodes';
 import { useAppIntegrationTestNodes } from './useAppIntegrationTestNodes';
@@ -44,7 +44,7 @@ export const useAppWorkflowData = (
     applicationIntegrationTests,
     applicationTestsLoaded,
     applicationErrors,
-  ] = useAppApplictionTestNodes(
+  ] = useAppApplicationTestNodes(
     namespace,
     applicationName,
     componentIntegrationTestTasks,

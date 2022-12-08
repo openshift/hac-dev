@@ -13,12 +13,12 @@ import {
   Label,
 } from '@patternfly/react-core';
 import { useEnvironmentActions } from '../../../components/Environment/environment-actions';
+import { EnvironmentKindWithHealthStatus } from '../../../hooks/useAllApplicationEnvironmentsWithHealthStatus';
 import ActionMenu from '../../../shared/components/action-menu/ActionMenu';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { EnvironmentKind } from '../../../types';
 import { getEnvironmentDeploymentStrategyLabel } from '../../../utils/environment-utils';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../../utils/gitops-utils';
-import { EnvironmentKindWithHealthStatus } from '../../hooks/useApplicationEnvironmentsWithHealthStatus';
 import { EnvironmentType, getEnvironmentType, getEnvironmentTypeLabel } from './utils';
 
 const ApplicationEnvironmentStatus: React.FC<{

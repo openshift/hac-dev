@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { PipelineRunLabel } from '../hacbs/consts/pipelinerun';
-import { useSnapshotsEnvironmentBindings } from '../hacbs/hooks/useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from '../hacbs/hooks/useTestPipelines';
 import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../shared';
 import { EnvironmentKind } from '../types';
 import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
 import { useNamespace } from '../utils/namespace-context-utils';
 import { useSortedEnvironments } from './useEnvironments';
+import { useSnapshotsEnvironmentBindings } from './useSnapshotsEnvironmentBindings';
+import { useTestPipelines } from './useTestPipelines';
 
 export type EnvironmentKindWithHealthStatus = EnvironmentKind & {
   healthStatus: GitOpsDeploymentHealthStatus;

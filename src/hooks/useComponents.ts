@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { ComponentGroupVersionKind } from '../../models';
-import { ComponentKind } from '../../types';
+import { ComponentGroupVersionKind } from '../models';
+import { ComponentKind } from '../types';
 
 export const useComponents = (
   namespace: string,

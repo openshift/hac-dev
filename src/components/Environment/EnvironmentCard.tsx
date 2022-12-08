@@ -10,7 +10,7 @@ import {
   TextVariants,
   Label,
 } from '@patternfly/react-core';
-import { useApplications } from '../../hacbs/hooks/useApplications';
+import { useApplications } from '../../hooks/useApplications';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import { EnvironmentKind } from '../../types';
 import { getEnvironmentDeploymentStrategyLabel } from '../../utils/environment-utils';

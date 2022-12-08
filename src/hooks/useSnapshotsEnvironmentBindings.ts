@@ -1,7 +1,7 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { PipelineRunLabel } from '../consts/pipelinerun';
-import { SnapshotEnvironmentBindingGroupVersionKind } from '../models';
-import { SnapshotEnvironmentBinding } from '../types/coreBuildService';
+import { PipelineRunLabel } from '../hacbs/consts/pipelinerun';
+import { SnapshotEnvironmentBindingGroupVersionKind } from '../hacbs/models';
+import { SnapshotEnvironmentBinding } from '../hacbs/types/coreBuildService';
 
 export const useSnapshotsEnvironmentBindings = (
   namespace: string,

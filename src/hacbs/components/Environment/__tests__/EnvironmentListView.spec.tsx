@@ -1,16 +1,16 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, configure, cleanup, fireEvent } from '@testing-library/react';
+import { useAllEnvironments } from '../../../../hooks/useAllEnvironments';
+import { useBuildPipelines } from '../../../../hooks/useBuildPipelines';
+import { useComponents } from '../../../../hooks/useComponents';
+import { useEnvironments } from '../../../../hooks/useEnvironments';
+import { useIntegrationTestScenarios } from '../../../../hooks/useIntegrationTestScenarios';
+import { useReleasePlans } from '../../../../hooks/useReleasePlans';
+import { useReleases } from '../../../../hooks/useReleases';
+import { useSnapshotsEnvironmentBindings } from '../../../../hooks/useSnapshotsEnvironmentBindings';
+import { useTestPipelines } from '../../../../hooks/useTestPipelines';
 import { mockLocation } from '../../../../utils/test-utils';
-import { useAllEnvironments } from '../../../hooks/useAllEnvironments';
-import { useBuildPipelines } from '../../../hooks/useBuildPipelines';
-import { useComponents } from '../../../hooks/useComponents';
-import { useEnvironments } from '../../../hooks/useEnvironments';
-import { useIntegrationTestScenarios } from '../../../hooks/useIntegrationTestScenarios';
-import { useReleasePlans } from '../../../hooks/useReleasePlans';
-import { useReleases } from '../../../hooks/useReleases';
-import { useSnapshotsEnvironmentBindings } from '../../../hooks/useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from '../../../hooks/useTestPipelines';
 import {
   mockSnapshotsEnvironmentBindings,
   mockBuildPipelinesData,
@@ -47,31 +47,31 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
-jest.mock('../../../hooks/useComponents', () => ({
+jest.mock('../../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
 }));
-jest.mock('../../../hooks/useIntegrationTestScenarios', () => ({
+jest.mock('../../../../hooks/useIntegrationTestScenarios', () => ({
   useIntegrationTestScenarios: jest.fn(),
 }));
-jest.mock('../../../hooks/useBuildPipelines', () => ({
+jest.mock('../../../../hooks/useBuildPipelines', () => ({
   useBuildPipelines: jest.fn(),
 }));
-jest.mock('../../../hooks/useEnvironments', () => ({
+jest.mock('../../../../hooks/useEnvironments', () => ({
   useEnvironments: jest.fn(),
 }));
-jest.mock('../../../hooks/useReleases', () => ({
+jest.mock('../../../../hooks/useReleases', () => ({
   useReleases: jest.fn(),
 }));
-jest.mock('../../../hooks/useReleasePlans', () => ({
+jest.mock('../../../../hooks/useReleasePlans', () => ({
   useReleasePlans: jest.fn(),
 }));
-jest.mock('../../../hooks/useTestPipelines', () => ({
+jest.mock('../../../../hooks/useTestPipelines', () => ({
   useTestPipelines: jest.fn(),
 }));
-jest.mock('../../../hooks/useSnapshotsEnvironmentBindings', () => ({
+jest.mock('../../../../hooks/useSnapshotsEnvironmentBindings', () => ({
   useSnapshotsEnvironmentBindings: jest.fn(),
 }));
-jest.mock('../../../hooks/useAllEnvironments', () => ({
+jest.mock('../../../../hooks/useAllEnvironments', () => ({
   useAllEnvironments: jest.fn(),
 }));
 
