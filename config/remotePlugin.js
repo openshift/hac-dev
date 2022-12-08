@@ -1,186 +1,18 @@
 const { resolve } = require('path');
 const packageInfo = require('../package.json');
 
-const hacbs = {
-  exposedModules: {
-    PipelineRuns: resolve(__dirname, '../src/hacbs/pages/PipelineRunPage'),
-    HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
-    HACBSImport: resolve(__dirname, '../src/hacbs/pages/ImportPage'),
-    EditIntegrationTest: resolve(__dirname, '../src/hacbs/pages/EditIntegrationTestPage'),
-    HACBSIntegrationTest: resolve(__dirname, '../src/hacbs/pages/IntegrationTestPage'),
-    CommitsPage: resolve(__dirname, '../src/hacbs/pages/CommitsPage'),
-    IntegrationTestDetails: resolve(__dirname, '../src/hacbs/pages/IntegrationTestDetailsPage'),
-  },
-  extensions: [
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/pipelineruns/:plrName',
-        exact: true,
-        component: {
-          $codeRef: 'PipelineRuns',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/pipelineruns/:plrName',
-        exact: true,
-        component: {
-          $codeRef: 'PipelineRuns',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/import',
-        exact: true,
-        component: {
-          $codeRef: 'HACBSImport',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/import',
-        exact: true,
-        component: {
-          $codeRef: 'HACBSImport',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/applications/:appName/integration-test',
-        exact: true,
-        component: {
-          $codeRef: 'HACBSIntegrationTest',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/applications/:appName/integration-test',
-        exact: true,
-        component: {
-          $codeRef: 'HACBSIntegrationTest',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/integration-test/:name/edit',
-        exact: true,
-        component: {
-          $codeRef: 'EditIntegrationTest',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/integration-test/:name/edit',
-        exact: true,
-        component: {
-          $codeRef: 'EditIntegrationTest',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/:appName/commit/:commitName',
-        exact: true,
-        component: {
-          $codeRef: 'CommitsPage',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/:appName/commit/:commitName',
-        exact: true,
-        component: {
-          $codeRef: 'CommitsPage',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/:appName/test/:testName',
-        exact: true,
-        component: {
-          $codeRef: 'IntegrationTestDetails',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/:appName/test/:testName',
-        exact: true,
-        component: {
-          $codeRef: 'IntegrationTestDetails',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-  ],
-};
-
 module.exports = {
   pluginMetadata: {
     name: packageInfo.name,
     version: packageInfo.version,
     exposedModules: {
-      // HACBS
-      ...hacbs.exposedModules,
-
-      // App Studio
+      PipelineRuns: resolve(__dirname, '../src/hacbs/pages/PipelineRunPage'),
+      HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
+      HACBSImport: resolve(__dirname, '../src/hacbs/pages/ImportPage'),
+      EditIntegrationTest: resolve(__dirname, '../src/hacbs/pages/EditIntegrationTestPage'),
+      HACBSIntegrationTest: resolve(__dirname, '../src/hacbs/pages/IntegrationTestPage'),
+      CommitsPage: resolve(__dirname, '../src/hacbs/pages/CommitsPage'),
+      IntegrationTestDetails: resolve(__dirname, '../src/hacbs/pages/IntegrationTestDetailsPage'),
       Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
       ApplicationDetails: resolve(__dirname, '../src/pages/ApplicationDetailsPage'),
       Import: resolve(__dirname, '../src/pages/ImportPage'),
@@ -194,9 +26,6 @@ module.exports = {
     },
   },
   extensions: [
-    // HACBS
-    ...hacbs.extensions,
-
     // Redirect from app-studio for now
     {
       type: 'console.page/route',
@@ -218,6 +47,163 @@ module.exports = {
     },
 
     // Stonesoup
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/stonesoup/pipelineruns/:plrName',
+        exact: true,
+        component: {
+          $codeRef: 'PipelineRuns',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/stonesoup/pipelineruns/:plrName',
+        exact: true,
+        component: {
+          $codeRef: 'PipelineRuns',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/stonesoup/import',
+        exact: true,
+        component: {
+          $codeRef: 'HACBSImport',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/stonesoup/import',
+        exact: true,
+        component: {
+          $codeRef: 'HACBSImport',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/stonesoup/applications/:appName/integration-test',
+        exact: true,
+        component: {
+          $codeRef: 'HACBSIntegrationTest',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/stonesoup/applications/:appName/integration-test',
+        exact: true,
+        component: {
+          $codeRef: 'HACBSIntegrationTest',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/stonesoup/integration-test/:name/edit',
+        exact: true,
+        component: {
+          $codeRef: 'EditIntegrationTest',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/stonesoup/integration-test/:name/edit',
+        exact: true,
+        component: {
+          $codeRef: 'EditIntegrationTest',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/stonesoup/:appName/commit/:commitName',
+        exact: true,
+        component: {
+          $codeRef: 'CommitsPage',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/stonesoup/:appName/commit/:commitName',
+        exact: true,
+        component: {
+          $codeRef: 'CommitsPage',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/stonesoup/:appName/test/:testName',
+        exact: true,
+        component: {
+          $codeRef: 'IntegrationTestDetails',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/stonesoup/:appName/test/:testName',
+        exact: true,
+        component: {
+          $codeRef: 'IntegrationTestDetails',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
     {
       type: 'console.page/route',
       properties: {
