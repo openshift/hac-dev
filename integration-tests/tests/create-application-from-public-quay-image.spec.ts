@@ -15,6 +15,8 @@ describe('Create Component from Public Quay Image', () => {
   const componentName = 'code-quarkus-app';
 
   before(() => {
+    // Disable HACBS
+    localStorage.setItem('hacbs', 'false');
     Applications.createApplication(applicationName);
   });
 

@@ -13,9 +13,11 @@ describe('Create Component from Private Git Source', () => {
   const privateRepo = 'https://github.com/hac-test/private-repo-check';
   const componentName = 'python';
   const username = 'hac-test';
-  const token = Cypress.env("GH_TOKEN");
+  const token = Cypress.env('GH_TOKEN');
 
   before(function () {
+    // Disable HACBS
+    localStorage.setItem('hacbs', 'false');
     Applications.createApplication(applicationName);
   });
 

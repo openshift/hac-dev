@@ -17,6 +17,8 @@ describe('Create Component from Private Quay Image', () => {
   const token = Cypress.env('QUAY_TOKEN');
 
   before(() => {
+    // Disable HACBS
+    localStorage.setItem('hacbs', 'false');
     Applications.createApplication(applicationName);
   });
 

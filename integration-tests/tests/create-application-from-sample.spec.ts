@@ -12,6 +12,11 @@ describe('Create Application from Sample', () => {
   const addComponent = new AddComponentPage();
   const componentSamplesPage = new ComponentSamplesPage();
 
+  before(() => {
+    // Disable HACBS
+    localStorage.setItem('hacbs', 'false');
+  });
+
   it('NodeJS app can be created', () => {
     //set application name
     Applications.createApplication(applicationName);
