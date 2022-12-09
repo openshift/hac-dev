@@ -1,10 +1,9 @@
-import { Applications } from '../../utils/Applications';
-import { Common } from '../../utils/Common';
-import { addIntegrationTestStep, HACBSApplications } from '../../utils/HACBSApplications';
-import { actions } from '../../support/pageObjects/global-po';
-import { IntegrationTestsTabPage } from '../../support/pages/hacbs/tabs/IntegrationTestsTabPage';
+import { actions } from '../support/pageObjects/global-po';
+import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
+import { addIntegrationTestStep, Applications } from '../utils/Applications';
+import { Common } from '../utils/Common';
 
-describe('Create Components using the HACBS UI', () => {
+describe('Create Components using the UI', () => {
   const LOCAL_STORAGE_KEY_GS_MODAL = 'hacbs/getting-started-modal';
   const LOCAL_STORAGE_KEY_QUICKSTART = 'hacbs/showApplicationQuickstart';
   const LOCAL_STORAGE_KEY_APPLICATION_MODAL = 'hacbs/showApplicationModal';
@@ -55,47 +54,47 @@ describe('Create Components using the HACBS UI', () => {
     });
 
     it('Add a component to Application', () => {
-      HACBSApplications.createComponent(publicRepos[0], componentNames[0], integrationTestNames[0]);
-      HACBSApplications.createdComponentExists(componentNames[0], applicationName);
+      Applications.createComponent(publicRepos[0], componentNames[0], integrationTestNames[0]);
+      Applications.createdComponentExists(componentNames[0], applicationName);
     });
   });
 
   describe('Add a new component using the "Overview" tab', () => {
-    it("Use HACBS 'Components' tabs to start adding a new component", () => {
-      HACBSApplications.goToOverviewTab().addComponent();
+    it("Use 'Components' tabs to start adding a new component", () => {
+      Applications.goToOverviewTab().addComponent();
     });
 
     it('Add a component to Application', () => {
-      HACBSApplications.createComponent(publicRepos[1], componentNames[1], integrationTestNames[1]);
-      HACBSApplications.createdComponentExists(componentNames[1], applicationName);
+      Applications.createComponent(publicRepos[1], componentNames[1], integrationTestNames[1]);
+      Applications.createdComponentExists(componentNames[1], applicationName);
     });
   });
 
   describe('Add a new component using the "Components" tab', () => {
     it("Use HACBS 'Components' tabs to start adding a new component", () => {
-      HACBSApplications.goToComponentsTab().clickAddComponent();
+      Applications.goToComponentsTab().clickAddComponent();
     });
 
     it('Add a component to Application', () => {
-      HACBSApplications.createComponent(publicRepos[1], componentNames[2], integrationTestNames[2]);
-      HACBSApplications.createdComponentExists(componentNames[2], applicationName);
+      Applications.createComponent(publicRepos[1], componentNames[2], integrationTestNames[2]);
+      Applications.createdComponentExists(componentNames[2], applicationName);
     });
   });
 
   describe('Add a new component using the "Actions" dropdown', () => {
     it("Click 'Actions' dropdown to add a component", () => {
-      HACBSApplications.clickActionsDropdown('Add component');
+      Applications.clickActionsDropdown('Add component');
     });
 
     it('Add a component to Application', () => {
-      HACBSApplications.createComponent(publicRepos[2], componentNames[3], integrationTestNames[3]);
-      HACBSApplications.createdComponentExists(componentNames[3], applicationName);
+      Applications.createComponent(publicRepos[2], componentNames[3], integrationTestNames[3]);
+      Applications.createdComponentExists(componentNames[3], applicationName);
     });
   });
 
   describe('Explore Integration Tests Tab', () => {
     it("Click on 'Integration tests' tab and check the List View", () => {
-      HACBSApplications.goToIntegrationTestsTab();
+      Applications.goToIntegrationTestsTab();
 
       for (let i = 0; i < integrationTestNames.length - 1; i++) {
         integrationTestsTabPage.checkRowValues(
@@ -108,7 +107,7 @@ describe('Create Components using the HACBS UI', () => {
     });
 
     it("Add a new Integration Test using 'Actions' dropdown, and mark it as Optional for release", () => {
-      HACBSApplications.clickActionsDropdown('Add integration test');
+      Applications.clickActionsDropdown('Add integration test');
       addIntegrationTestStep(integrationTestNames[4], true);
 
       integrationTestsTabPage.checkRowValues(
@@ -149,7 +148,7 @@ describe('Create Components using the HACBS UI', () => {
       cy.contains(integrationTestNames[4]).click();
       integrationTestsTabPage.checkMetadata(integrationTestMetadata);
 
-      HACBSApplications.clickActionsDropdown('Delete');
+      Applications.clickActionsDropdown('Delete');
       cy.get(actions.deleteModalButton).click();
       cy.get(integrationTestNames[4]).should('not.exist');
     });

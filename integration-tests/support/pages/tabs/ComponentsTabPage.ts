@@ -1,5 +1,5 @@
-import { Common } from '../../../../utils/Common';
-import { componentsTabPO } from '../../../pageObjects/hacbs-po';
+import { Common } from '../../../utils/Common';
+import { componentsTabPO } from '../../pageObjects/pages-po';
 
 export class ComponentsTabPage {
     clickAddComponent() {

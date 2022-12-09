@@ -1,4 +1,4 @@
-import { createBuildStepPO } from '../../pageObjects/hacbs-po';
+import { createBuildStepPO } from '../pageObjects/pages-po';
 
 export class CreateBuildPage {
     clickNext() {

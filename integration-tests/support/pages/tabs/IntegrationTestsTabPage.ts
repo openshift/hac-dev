@@ -1,5 +1,5 @@
-import { actions } from "../../../pageObjects/global-po";
-import { integrationTestsTabPO } from "../../../pageObjects/hacbs-po";
+import { actions } from "../../pageObjects/global-po";
+import { integrationTestsTabPO } from "../../pageObjects/pages-po";
 
 export class IntegrationTestsTabPage {
     checkRowValues(integrationTestName: string, containerImage: string, releaseStatus: string, pipelineName: string) {

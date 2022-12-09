@@ -8,10 +8,8 @@
     "cy:run": "npm-run-all clean-reports cy:run:*",
     "cy:run:hac-dev": "cypress run",
     "cy:run:hac-dev-experimental": "cypress run -e configFile=hac-dev-experimental",
-    "cy:run:hacbs": "cypress run -e configFile=hacbs",
     "cy:open:hac-dev": "cypress open",
-    "cy:open:hac-dev-experimental": "cypress open -e configFile=hac-dev-experimental",
-    "cy:open:hacbs": "cypress open -e configFile=hacbs"
+    "cy:open:hac-dev-experimental": "cypress open -e configFile=hac-dev-experimental"
   },
   "devDependencies": {
     "@reportportal/agent-js-cypress": "^5.1.0",
