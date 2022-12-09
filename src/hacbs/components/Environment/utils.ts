@@ -1,7 +1,7 @@
+import { EnvironmentGroupVersionKind } from '../../../models';
 import { EnvironmentKind } from '../../../types';
+import { ReleasePlanKind } from '../../../types/coreBuildService';
 import { EnvironmentDeploymentStrategy } from '../../../utils/environment-utils';
-import { EnvironmentGroupVersionKind } from '../../models';
-import { ReleasePlanKind } from '../../types/coreBuildService';
 
 export enum EnvironmentType {
   static = 'static',

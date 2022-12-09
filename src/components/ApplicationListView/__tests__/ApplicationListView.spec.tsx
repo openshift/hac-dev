@@ -108,7 +108,7 @@ describe('Application List', () => {
     expect(button.closest('a').href).toBe('http://localhost/stonesoup/import');
   });
 
-  it('should render empty state with no card for hacbs', () => {
+  it('should render empty state with no card', () => {
     useFeatureFlagMock.mockReturnValue([true]);
     watchResourceMock.mockReturnValue([[], true]);
     render(<ApplicationListView />);

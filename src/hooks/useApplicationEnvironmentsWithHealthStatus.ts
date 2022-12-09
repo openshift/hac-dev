@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PipelineRunLabel } from '../hacbs/consts/pipelinerun';
+import { PipelineRunLabel } from '../consts/pipelinerun';
 import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../shared';
 import { EnvironmentKind } from '../types';
 import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';

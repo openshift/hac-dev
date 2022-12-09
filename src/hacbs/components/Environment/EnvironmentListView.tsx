@@ -10,7 +10,7 @@ import EnvironmentCard from './EnvironmentCard';
 import EnvironmentToolbarGroups from './EnvironmentToolbarGroups';
 import { EnvironmentType, getEnvironmentType } from './utils';
 
-type HacbsEnvironmentListViewProps = {
+type EnvironmentListViewProps = {
   applicationName?: string;
   validTypes?: EnvironmentType[];
   description?: React.ReactNode;
@@ -25,7 +25,7 @@ type HacbsEnvironmentListViewProps = {
 
 const DEFAULT_VALID_TYPES = Object.keys(EnvironmentType).map((t) => EnvironmentType[t]);
 
-const HacbsApplicationEnvironmentListView: React.FC<HacbsEnvironmentListViewProps> = ({
+const ApplicationEnvironmentListView: React.FC<EnvironmentListViewProps> = ({
   applicationName,
   description,
   emptyStateContent,
@@ -115,7 +115,7 @@ const HacbsApplicationEnvironmentListView: React.FC<HacbsEnvironmentListViewProp
   );
 };
 
-const HacbsEnvironmentListView: React.FC<HacbsEnvironmentListViewProps> = ({
+const AllEnvironmentsListView: React.FC<EnvironmentListViewProps> = ({
   description,
   emptyStateContent,
   validTypes,
@@ -225,7 +225,7 @@ const EnvironmentListView: React.FC<Props> = ({
 
   if (applicationName) {
     return (
-      <HacbsApplicationEnvironmentListView
+      <ApplicationEnvironmentListView
         applicationName={applicationName}
         description={description}
         preFilter={preFilter}
@@ -239,7 +239,7 @@ const EnvironmentListView: React.FC<Props> = ({
     );
   }
   return (
-    <HacbsEnvironmentListView
+    <AllEnvironmentsListView
       description={description}
       preFilter={preFilter}
       validTypes={validTypes}

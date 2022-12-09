@@ -1,6 +1,6 @@
+import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
 import { runStatus } from '../../shared';
-import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
-import { PipelineRunKind, Commit } from '../types';
+import { PipelineRunKind, Commit } from '../../types';
 
 export const statuses = [
   runStatus.Running,

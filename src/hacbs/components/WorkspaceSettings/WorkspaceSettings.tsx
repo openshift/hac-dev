@@ -1,11 +1,11 @@
 import React from 'react';
+import EnterpriseContractView from '../../../components/EnterpriseContractView/EnterpriseContractView';
 import {
   default as BaseWorkspaceSettings,
   GettingStartedWithEnvironments,
   GettingStartedWithUsers,
 } from '../../../components/WorkspaceSettings/WorkspaceSettings';
-import EnterpriseContractView from '../EnterpriseContractView/EnterpriseContractView';
-import HacbsEnvironmentListView from '../Environment/EnvironmentListView';
+import EnvironmentListView from '../Environment/EnvironmentListView';
 import { EnvironmentType } from '../Environment/utils';
 
 const WorkspaceSettings: React.FC = () => {
@@ -22,7 +22,7 @@ const WorkspaceSettings: React.FC = () => {
         </>,
       ]}
       environmentsView={
-        <HacbsEnvironmentListView validTypes={[EnvironmentType.static, EnvironmentType.managed]} />
+        <EnvironmentListView validTypes={[EnvironmentType.static, EnvironmentType.managed]} />
       }
       tabs={[
         {

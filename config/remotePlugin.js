@@ -6,13 +6,12 @@ module.exports = {
     name: packageInfo.name,
     version: packageInfo.version,
     exposedModules: {
-      PipelineRuns: resolve(__dirname, '../src/hacbs/pages/PipelineRunPage'),
+      PipelineRuns: resolve(__dirname, '../src/pages/PipelineRunPage'),
       HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
-      HACBSImport: resolve(__dirname, '../src/hacbs/pages/ImportPage'),
-      EditIntegrationTest: resolve(__dirname, '../src/hacbs/pages/EditIntegrationTestPage'),
-      HACBSIntegrationTest: resolve(__dirname, '../src/hacbs/pages/IntegrationTestPage'),
-      CommitsPage: resolve(__dirname, '../src/hacbs/pages/CommitsPage'),
-      IntegrationTestDetails: resolve(__dirname, '../src/hacbs/pages/IntegrationTestDetailsPage'),
+      EditIntegrationTest: resolve(__dirname, '../src/pages/EditIntegrationTestPage'),
+      IntegrationTest: resolve(__dirname, '../src/pages/IntegrationTestPage'),
+      CommitsPage: resolve(__dirname, '../src/pages/CommitsPage'),
+      IntegrationTestDetails: resolve(__dirname, '../src/pages/IntegrationTestDetailsPage'),
       Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
       ApplicationDetails: resolve(__dirname, '../src/pages/ApplicationDetailsPage'),
       Import: resolve(__dirname, '../src/pages/ImportPage'),
@@ -76,36 +75,10 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/stonesoup/import',
-        exact: true,
-        component: {
-          $codeRef: 'HACBSImport',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/import',
-        exact: true,
-        component: {
-          $codeRef: 'HACBSImport',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
         path: '/stonesoup/applications/:appName/integration-test',
         exact: true,
         component: {
-          $codeRef: 'HACBSIntegrationTest',
+          $codeRef: 'IntegrationTest',
         },
       },
       flags: {
@@ -118,7 +91,7 @@ module.exports = {
         path: '/stonesoup/applications/:appName/integration-test',
         exact: true,
         component: {
-          $codeRef: 'HACBSIntegrationTest',
+          $codeRef: 'IntegrationTest',
         },
       },
       flags: {

@@ -1,5 +1,5 @@
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { IntegrationTestScenarioModel } from '../../../../models/hacbs';
+import { IntegrationTestScenarioModel } from '../../../../../models';
 import { createIntegrationTest } from '../../create-utils';
 import { IntegrationTestLabels } from '../../types';
 

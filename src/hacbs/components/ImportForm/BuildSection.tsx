@@ -16,11 +16,11 @@ import {
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/js/icons';
 import { TableComposable, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { useFormikContext } from 'formik';
+import { PipelineRunLabel, PipelineRunType } from '../../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { PipelineKind } from '../../../shared/components/pipeline-run-logs/types';
 import { useNamespace } from '../../../utils/namespace-context-utils';
-import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
 import { FormValues } from './types';
 
 const BuildSection: React.FunctionComponent = () => {
