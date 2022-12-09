@@ -14,12 +14,6 @@ QUAY_SECRET_NAME="hacbs-release-tests-token"
 tempDir=$(mktemp -d /tmp/m7.XXX)
 trap 'rm -rf "$tempDir"' EXIT
 
-AUTH_FILE="${XDG_RUNTIME_DIR}/containers/auth.json"
-if [ ! -f $AUTH_FILE ]; then
-  AUTH_FILE=~/.docker/config.json
-fi
-
-
 create_resources() {
   oc kustomize "$SCRIPT_DIR/dev-workspace"  | sed 's|<dev-namespace>| '${DEV_WORKSPACE}'|' | sed 's|<managed-namespace>|'${MANAGED_WORKSPACE}'|' | oc apply -f -
 
@@ -28,7 +22,7 @@ create_resources() {
 }
 
 create_quay_secret() {
-  podman login --username "$QUAY_ROBOT_ACCOUNT" --password "$QUAY_PASSWORD" --authfile "$AUTH_FILE" quay.io
+  podman login --username "$QUAY_ROBOT_ACCOUNT" --password "$QUAY_PASSWORD"  quay.io
   kubectl create secret generic "$QUAY_SECRET_NAME" -n "$MANAGED_WORKSPACE" \
       --from-file=.dockerconfigjson="$AUTH_FILE" --type=kubernetes.io/dockerconfigjson
 }

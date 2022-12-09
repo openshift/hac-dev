@@ -22,7 +22,7 @@ fi
 if ! grep -q quay.io $AUTH_FILE; then
  
   echo "Logging into quay.io"
-  podman login --username "$QUAY_USERNAME" --password "$QUAY_PASSWORD" --authfile $AUTH_FILE quay.io
+  podman login --username "$QUAY_USERNAME" --password "$QUAY_PASSWORD"  quay.io
 
 fi
 
@@ -63,7 +63,7 @@ create_component() {
   NAME=$(echo $GIT_URL | grep -o '[^/]*$')
   IMAGE=quay.io/$QUAY_USERNAME/$NAME
   oc delete --ignore-not-found component $NAME
-  yq e "(.metadata.name=\"1-$NAME\") | (.spec.componentName=\"cli-$NAME\") | (.spec.source.git.url=\"$GIT_URL\") | (.spec.containerImage=\"$IMAGE\") | (.metadata.annotations.pipelinesascode=\"${PIPELINESASCODE:-"1"}\")" $SCRIPTDIR/resources/component.yaml | oc apply -f-
+  yq e "(.metadata.name=\"$NAME\") | (.spec.componentName=\"$NAME\") | (.spec.source.git.url=\"$GIT_URL\") | (.spec.containerImage=\"$IMAGE\") | (.metadata.annotations.pipelinesascode=\"${PIPELINESASCODE:-"1"}\")" $SCRIPTDIR/resources/component.yaml | oc apply -f-
 }
 
 create_component_test() {
