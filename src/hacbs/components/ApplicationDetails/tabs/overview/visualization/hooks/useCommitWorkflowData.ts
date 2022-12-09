@@ -78,9 +78,7 @@ export const useCommitWorkflowData = (
 
   const commitComponents = React.useMemo(
     () =>
-      buildPipelines
-        .map((bp) => bp.metadata.labels[PipelineRunLabel.COMMIT_COMPONENT_LABEL])
-        .filter((n) => n),
+      buildPipelines.map((bp) => bp.metadata.labels[PipelineRunLabel.COMPONENT]).filter((n) => n),
     [buildPipelines],
   );
 

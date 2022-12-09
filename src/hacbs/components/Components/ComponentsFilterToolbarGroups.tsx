@@ -8,7 +8,7 @@ import {
   FAILED_STATUS_FILTER_ID,
   SUCCESS_STATUS_FILTER_ID,
 } from '../../../components/ComponentsListView/ComponentsFilterToolbarGroups';
-import { BUILD_COMPONENT_LABEL } from '../../../utils/const';
+import { PipelineRunLabel } from '../../../hacbs/consts/pipelinerun';
 
 export const NEEDS_MERGE_FILTER_ID = 'needs-merge';
 
@@ -28,7 +28,8 @@ const ComponentsFilterToolbarGroups: React.FC<ComponentsFilterToolbarProps> = ({
   const getMergedStatusFilterIdForComponent = React.useCallback(
     (component) => {
       const unMerged = !pipelineRuns?.find(
-        ({ metadata: { labels } }) => labels?.[BUILD_COMPONENT_LABEL] === component.metadata.name,
+        ({ metadata: { labels } }) =>
+          labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name,
       );
       if (unMerged) {
         return NEEDS_MERGE_FILTER_ID;

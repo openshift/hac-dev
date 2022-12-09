@@ -9,10 +9,10 @@ import {
   ToolbarGroup,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
+import { PipelineRunLabel } from '../../hacbs/consts/pipelinerun';
 import { PipelineRunKind } from '../../hacbs/types';
 import { pipelineRunFilterReducer, runStatus } from '../../shared';
 import { ComponentKind } from '../../types';
-import { BUILD_COMPONENT_LABEL } from '../../utils/const';
 
 export const FAILED_STATUS_FILTER_ID = 'failed';
 export const SUCCESS_STATUS_FILTER_ID = 'success';
@@ -35,7 +35,7 @@ export const RunStatusFilters = [
 
 export const getStatusFilterIdForComponent = (component, pipelineRuns: PipelineRunKind[]) => {
   const latestPipelineRun = pipelineRuns
-    .filter((pr) => pr.metadata.labels?.[BUILD_COMPONENT_LABEL] === component.metadata.name)
+    .filter((pr) => pr.metadata.labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name)
     .sort(
       (a, b) =>
         new Date(b.metadata.creationTimestamp).getTime() -

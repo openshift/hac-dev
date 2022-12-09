@@ -21,7 +21,7 @@ export const createCommitObjectFromPLR = (plr: PipelineRunKind): Commit => {
   const shaTitle = plr.metadata.annotations?.[PipelineRunLabel.COMMIT_SHA_TITLE_ANNOTATION];
   const creationTime = plr.metadata.creationTimestamp;
   const application = plr.metadata.labels[PipelineRunLabel.APPLICATION];
-  const component = plr.metadata.labels[PipelineRunLabel.COMMIT_COMPONENT_LABEL] ?? '';
+  const component = plr.metadata.labels[PipelineRunLabel.COMPONENT] ?? '';
   const repoURL = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_URL_LABEL];
   const repoOrg = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_ORG_LABEL];
   const gitProvider = plr.metadata.labels[PipelineRunLabel.COMMIT_PROVIDER_LABEL];

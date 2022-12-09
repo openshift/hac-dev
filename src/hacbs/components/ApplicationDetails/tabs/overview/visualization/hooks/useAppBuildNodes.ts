@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { PipelineRunLabel } from '../../../../../../../hacbs/consts/pipelinerun';
 import { PipelineRunKind } from '../../../../../../../shared/components/pipeline-run-logs/types';
-import { BUILD_COMPONENT_LABEL } from '../../../../../../../utils/const';
 import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../../../hooks/useComponents';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
@@ -39,7 +39,7 @@ export const useAppBuildNodes = (
     }
     return components.reduce((acc, component) => {
       const latestBuild = buildPipelines
-        .filter((p) => p.metadata.labels?.[BUILD_COMPONENT_LABEL] === component.metadata.name)
+        .filter((p) => p.metadata.labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name)
         ?.sort?.(
           (a, b) =>
             new Date(b.metadata.creationTimestamp).getTime() -

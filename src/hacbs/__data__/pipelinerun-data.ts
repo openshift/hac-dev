@@ -130,7 +130,6 @@ const sampleLabels = {
   'app.kubernetes.io/version': '0.10.2',
   'appstudio.openshift.io/application': 'test-application',
   'appstudio.openshift.io/component': 'devfile-sample-node',
-  'build.appstudio.openshift.io/component': 'devfile-sample-node',
   'pipelines.appstudio.openshift.io/type': 'build',
   'pipelines.openshift.io/runtime': 'generic',
   'pipelines.openshift.io/strategy': 'docker',

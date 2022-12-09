@@ -32,7 +32,7 @@ const mockApplication = {
     resourceVersion: '933786813',
     uid: 'f5dff823-52c5-43ee-a7de-a05915357689',
     labels: {
-      'build.appstudio.openshift.io/component': 'java-springboot-sample',
+      'appstudio.openshift.io/component': 'java-springboot-sample',
     },
   },
   spec: {

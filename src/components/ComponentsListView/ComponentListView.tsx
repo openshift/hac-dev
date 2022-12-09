@@ -19,13 +19,13 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
+import { PipelineRunLabel } from '../../hacbs/consts/pipelinerun';
 import { PipelineRunKind } from '../../hacbs/types';
 import { useApplicationRoutes } from '../../hooks';
 import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { PipelineRunGroupVersionKind } from '../../shared';
 import { ComponentKind } from '../../types';
-import { BUILD_COMPONENT_LABEL } from '../../utils/const';
 import {
   getGitOpsDeploymentHealthStatusIcon,
   getGitOpsDeploymentStrategy,
@@ -112,7 +112,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({
     selector: {
       matchExpressions: [
         {
-          key: BUILD_COMPONENT_LABEL,
+          key: PipelineRunLabel.COMPONENT,
           operator: 'In',
           values: components?.map((c) => c.metadata.name),
         },

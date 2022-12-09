@@ -1,5 +1,6 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { Node, PipelineNodeModel, RunStatus } from '@patternfly/react-topology';
+import { PipelineRunLabel } from '../../../../../../../hacbs/consts/pipelinerun';
 import {
   pipelineRunFilterReducer,
   pipelineRunStatus,
@@ -8,7 +9,6 @@ import {
 import { PipelineRunKind } from '../../../../../../../shared/components/pipeline-run-logs/types';
 import { ComponentKind } from '../../../../../../../types';
 import { GitOpsDeploymentHealthStatus } from '../../../../../../../types/gitops-deployment';
-import { BUILD_COMPONENT_LABEL } from '../../../../../../../utils/const';
 import { DEFAULT_NODE_HEIGHT } from '../../../../../topology/const';
 import { NodeType } from '../const';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
@@ -134,7 +134,7 @@ export const getLinkForElement = (
 
 export const getRunStatusComponent = (component, pipelineRuns: PipelineRunKind[]) => {
   const latestPipelineRun = pipelineRuns
-    .filter((pr) => pr.metadata.labels?.[BUILD_COMPONENT_LABEL] === component.metadata.name)
+    .filter((pr) => pr.metadata.labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name)
     .sort(
       (a, b) =>
         new Date(b.metadata.creationTimestamp).getTime() -
@@ -231,7 +231,7 @@ export const getBuildNodeForComponent = (
   latestBuilds: PipelineRunKind[],
 ): WorkflowNodeModel<WorkflowNodeModelData> => {
   const latestBuild = latestBuilds.find(
-    (build) => component.metadata.name === build.metadata.labels?.[BUILD_COMPONENT_LABEL],
+    (build) => component.metadata.name === build.metadata.labels?.[PipelineRunLabel.COMPONENT],
   );
   if (latestBuild) {
     return resourceToPipelineNode(
