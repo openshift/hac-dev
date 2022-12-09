@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Text } from '@patternfly/react-core';
-import { showPLRMessage, showPLRType } from '../../hacbs/utils/commits-utils';
 import { pipelineRunFilterReducer } from '../../shared';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../types';
+import { showPLRMessage, showPLRType } from '../../utils/commits-utils';
 
 export interface CommitSidePanelBodyProps {
   selectedPipelineRun?: PipelineRunKind;

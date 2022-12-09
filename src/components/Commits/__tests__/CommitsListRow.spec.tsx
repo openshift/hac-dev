@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { getCommitsFromPLRs } from '../../../hacbs/utils/commits-utils';
 import * as dateTime from '../../../shared/components/timestamp/datetime';
+import { getCommitsFromPLRs } from '../../../utils/commits-utils';
 import { pipelineWithCommits } from '../__data__/pipeline-with-commits';
 import CommitsListRow from '../CommitsListRow';
 

@@ -16,9 +16,9 @@ import {
 } from '@patternfly/react-core';
 import { OutlinedFileImageIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-file-image-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { getCommitsFromPLRs } from '../../hacbs/utils/commits-utils';
 import { PipelineRunGroupVersionKind } from '../../models';
 import { PipelineRunKind } from '../../types';
+import { getCommitsFromPLRs } from '../../utils/commits-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import CommitsListView from './CommitsListView';
 

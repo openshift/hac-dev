@@ -1,6 +1,6 @@
 import { k8sPatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { PipelineRunModel } from '../../models';
-import { PipelineRunKind } from '../../shared/components/pipeline-run-logs/types';
+import { PipelineRunModel } from '../models';
+import { PipelineRunKind } from '../shared/components/pipeline-run-logs/types';
 
 export const pipelineRunStop = (pipelineRun: PipelineRunKind) => {
   k8sPatchResource({

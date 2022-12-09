@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { calculateDuration } from '../../hacbs/utils/pipeline-utils';
 import { pipelineRunFilterReducer } from '../../shared';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import { StatusIconWithText } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../types';
+import { calculateDuration } from '../../utils/pipeline-utils';
 import { usePipelinerunActions } from './pipelinerun-actions';
 import { pipelineRunTableColumnClasses } from './PipelineRunListHeader';
 

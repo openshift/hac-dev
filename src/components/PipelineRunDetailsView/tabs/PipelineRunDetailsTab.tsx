@@ -13,12 +13,12 @@ import {
   Title,
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
-import { calculateDuration } from '../../../hacbs/utils/pipeline-utils';
 import { pipelineRunFilterReducer } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { StatusIconWithText } from '../../../shared/components/pipeline-run-logs/StatusIcon';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../../types';
+import { calculateDuration } from '../../../utils/pipeline-utils';
 import MetadataList from '../MetadataList';
 import PipelineRunVisualization from '../PipelineRunVisualization';
 import RelatedPipelineRuns from '../RelatedPipelineRuns';

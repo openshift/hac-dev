@@ -2,7 +2,7 @@ import {
   pipelineWithoutCommits,
   pipelineWithCommits,
   mockCommits,
-} from '../../../components/Commits/__data__/pipeline-with-commits';
+} from '../../components/Commits/__data__/pipeline-with-commits';
 import {
   createCommitObjectFromPLR,
   getCommitDisplayName,
