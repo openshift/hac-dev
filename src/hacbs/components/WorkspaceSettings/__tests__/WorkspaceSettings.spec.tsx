@@ -4,8 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, fireEvent, screen } from '@testing-library/react';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
+import { MockEnterpriseContractPolicies } from '../../../../components/EnterpriseContractView/__data__/mockEnterpriseContractPolicies';
 import { mockLocation, routerRenderer } from '../../../../utils/test-utils';
-import { MockEnterpriseContractPolicies } from '../../EnterpriseContractView/__data__/mockEnterpriseContractPolicies';
 import WorkspaceSettings from '../WorkspaceSettings';
 
 mockLocation();
@@ -57,7 +57,7 @@ describe('WorkspaceSettings', () => {
       },
     ]);
   });
-  it('should render hacbs workspace settings', () => {
+  it('should render workspace settings', () => {
     routerRenderer(<WorkspaceSettings />);
     expect(screen.getByText('Enterprise Contract')).toBeInTheDocument();
   });

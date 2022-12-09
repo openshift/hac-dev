@@ -1,7 +1,7 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { PipelineRunLabel, PipelineRunType } from '../hacbs/consts/pipelinerun';
-import { PipelineRunKind } from '../hacbs/types';
+import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../shared';
+import { PipelineRunKind } from '../types';
 
 export const useBuildPipelines = (
   namespace: string,

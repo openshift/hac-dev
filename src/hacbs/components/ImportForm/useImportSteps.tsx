@@ -10,8 +10,8 @@ import {
   gitSourceValidationSchema,
   applicationValidationSchema,
 } from '../../../components/ImportForm/utils/validation-utils';
+import IntegrationTestSection from '../../../components/IntegrationTest/IntegrationTestForm/IntegrationTestSection';
 import { ApplicationKind } from '../../../types';
-import IntegrationTestSection from '../IntegrationTestForm/IntegrationTestSection';
 import BuildSection from './BuildSection';
 import { createAppIntegrationTest } from './create-utils';
 import { FormValues } from './types';

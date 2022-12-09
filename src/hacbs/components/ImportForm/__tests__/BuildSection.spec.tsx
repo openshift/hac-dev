@@ -1,7 +1,7 @@
 import React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render } from '@testing-library/react';
-import { PipelineRunLabel } from '../../../consts/pipelinerun';
+import { PipelineRunLabel } from '../../../../consts/pipelinerun';
 import BuildSection from '../BuildSection';
 
 jest.mock('../../../../components/NamespacedPage/NamespacedPage', () => ({

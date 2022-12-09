@@ -2,9 +2,9 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
+import ApplicationDetails from '../components/ApplicationDetails/ApplicationDetails';
 import ApplicationDetailsView from '../components/ApplicationDetailsView/ApplicationDetailsView';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
-import HacbsApplicationDetails from '../hacbs/components/ApplicationDetails/HacbsApplicationDetails';
 import { HACBS_FLAG } from '../hacbs/hacbsFeatureFlag';
 
 const ApplicationDetailsPage = () => {
@@ -17,7 +17,7 @@ const ApplicationDetailsPage = () => {
         <title>Application Details Page</title>
       </Helmet>
       {hacbs ? (
-        <HacbsApplicationDetails applicationName={appName} />
+        <ApplicationDetails applicationName={appName} />
       ) : (
         <ApplicationDetailsView applicationName={appName} />
       )}

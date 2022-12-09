@@ -9,10 +9,9 @@ import {
   ToolbarGroup,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
-import { PipelineRunLabel } from '../../hacbs/consts/pipelinerun';
-import { PipelineRunKind } from '../../hacbs/types';
+import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { pipelineRunFilterReducer, runStatus } from '../../shared';
-import { ComponentKind } from '../../types';
+import { ComponentKind, PipelineRunKind } from '../../types';
 
 export const FAILED_STATUS_FILTER_ID = 'failed';
 export const SUCCESS_STATUS_FILTER_ID = 'success';

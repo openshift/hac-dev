@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { PipelineRunLabel } from '../consts/pipelinerun';
 import { WatchK8sResource } from '../dynamic-plugin-sdk';
-import { PipelineRunLabel } from '../hacbs/consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../shared';
 import { PipelineRunKind } from '../shared/components/pipeline-run-logs/types';
 

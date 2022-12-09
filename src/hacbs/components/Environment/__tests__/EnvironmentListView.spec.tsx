@@ -1,6 +1,16 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, configure, cleanup, fireEvent } from '@testing-library/react';
+import {
+  mockSnapshotsEnvironmentBindings,
+  mockBuildPipelinesData,
+  mockComponentsData,
+  mockEnvironmentsData,
+  mockIntegrationTestScenariosData,
+  mockReleasePlansData,
+  mockReleasesData,
+  mockTestPipelinesData,
+} from '../../../../components/ApplicationDetails/tabs/overview/sections/__data__';
 import { useAllEnvironments } from '../../../../hooks/useAllEnvironments';
 import { useBuildPipelines } from '../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../hooks/useComponents';
@@ -11,16 +21,6 @@ import { useReleases } from '../../../../hooks/useReleases';
 import { useSnapshotsEnvironmentBindings } from '../../../../hooks/useSnapshotsEnvironmentBindings';
 import { useTestPipelines } from '../../../../hooks/useTestPipelines';
 import { mockLocation } from '../../../../utils/test-utils';
-import {
-  mockSnapshotsEnvironmentBindings,
-  mockBuildPipelinesData,
-  mockComponentsData,
-  mockEnvironmentsData,
-  mockIntegrationTestScenariosData,
-  mockReleasePlansData,
-  mockReleasesData,
-  mockTestPipelinesData,
-} from '../../ApplicationDetails/tabs/overview/sections/__data__';
 import { mockAppEnvWithHealthStatus } from '../__data__/mockAppEnvWithHealthStatus';
 import EnvironmentListView from '../EnvironmentListView';
 import { EnvironmentType } from '../utils';

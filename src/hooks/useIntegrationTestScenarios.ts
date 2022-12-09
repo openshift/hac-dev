@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { IntegrationTestScenarioGroupVersionKind } from '../hacbs/models';
-import { IntegrationTestScenarioKind } from '../hacbs/types/coreBuildService';
+import { IntegrationTestScenarioGroupVersionKind } from '../models';
+import { IntegrationTestScenarioKind } from '../types/coreBuildService';
 
 export const useIntegrationTestScenarios = (
   namespace: string,
