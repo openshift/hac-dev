@@ -1,8 +1,8 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { createCommitObjectFromPLR } from '../../../../../hacbs/utils/commits-utils';
 import { CustomError } from '../../../../../shared/utils/error/custom-error';
+import { createCommitObjectFromPLR } from '../../../../../utils/commits-utils';
 import { useCommitWorkflowData } from '../../../../ApplicationDetails/tabs/overview/visualization/hooks/useCommitWorkflowData';
 import { pipelineWithCommits } from '../../../__data__/pipeline-with-commits';
 import CommitVisualization from '../CommitVisualization';

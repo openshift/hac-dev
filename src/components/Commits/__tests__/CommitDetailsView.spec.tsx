@@ -2,7 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { getCommitShortName } from '../../../hacbs/utils/commits-utils';
+import { getCommitShortName } from '../../../utils/commits-utils';
 import { pipelineWithCommits } from '../__data__/pipeline-with-commits';
 import CommitDetailsView, { COMMITS_GS_LOCAL_STORAGE_KEY } from '../CommitDetailsView';
 

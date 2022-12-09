@@ -1,7 +1,7 @@
-import { pipelineRunCancel, pipelineRunStop } from '../../hacbs/utils/pipeline-actions';
 import { pipelineRunFilterReducer } from '../../shared';
 import { Action } from '../../shared/components/action-menu/types';
 import { PipelineRunKind } from '../../types';
+import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
 
 export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] => {
   return [

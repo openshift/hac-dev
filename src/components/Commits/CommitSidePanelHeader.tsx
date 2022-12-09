@@ -10,9 +10,9 @@ import {
 } from '@patternfly/react-core';
 import AngleDownIcon from '@patternfly/react-icons/dist/js/icons/angle-down-icon';
 import AngleUpIcon from '@patternfly/react-icons/dist/js/icons/angle-up-icon';
-import { statuses } from '../../hacbs/utils/commits-utils';
 import { runStatus } from '../../shared';
 import { PipelineRunKind } from '../../types';
+import { statuses } from '../../utils/commits-utils';
 
 export interface SortedPLRList {
   [runStatus.Running]?: PipelineRunKind[];

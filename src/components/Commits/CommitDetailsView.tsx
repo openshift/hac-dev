@@ -18,17 +18,13 @@ import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/esm/icons/ex
 import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import {
-  createCommitObjectFromPLR,
-  getCommitShortName,
-  statuses,
-} from '../../hacbs/utils/commits-utils';
 import { PipelineRunGroupVersionKind } from '../../models';
 import { pipelineRunFilterReducer } from '../../shared';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { StatusIconWithText } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../types';
+import { createCommitObjectFromPLR, getCommitShortName, statuses } from '../../utils/commits-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import CommitsGettingStartedModal from './CommitsGettingStartedModal';
