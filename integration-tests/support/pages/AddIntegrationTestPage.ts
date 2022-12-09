@@ -1,4 +1,4 @@
-import { addIntegrationTestStepPO } from '../../pageObjects/hacbs-po';
+import { addIntegrationTestStepPO } from '../pageObjects/pages-po';
 
 export class AddIntegrationTestPage {
     enterDisplayName(displayName: string) {

@@ -2,6 +2,19 @@ import { NavItem, pageTitles } from '../support/constants/PageTitle';
 import { actions } from '../support/pageObjects/global-po';
 import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
 import { Common } from './Common';
+import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
+import {
+  actionsDropdown,
+  componentsTabPO,
+  integrationTestsTabPO,
+  overviewTabPO
+} from '../support/pageObjects/pages-po';
+import { OverviewTabPage } from '../support/pages/tabs/OverviewTabPage';
+import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
+import { AddComponentPage } from '../support/pages/AddComponentPage';
+import { ComponentPage } from '../support/pages/ComponentsPage';
+import { CreateBuildPage } from '../support/pages/CreateBuildPage';
+import { AddIntegrationTestPage } from '../support/pages/AddIntegrationTestPage';
 
 export class Applications {
   static deleteApplication(applicationName: string) {
@@ -25,4 +38,95 @@ export class Applications {
     createApplicationPage.clickNext();
     cy.testA11y(`Select source form`);
   }
+
+  static createComponent(publicGitRepo: string, componentName: string, integrationTestName: string, optionalForRelease: boolean = false) {
+    addComponentStep(publicGitRepo);
+    reviewComponentsStep(componentName);
+    createBuildStep();
+    addIntegrationTestStep(integrationTestName, optionalForRelease);
+  }
+
+  static createdComponentExists(componentName: string, applicationName: string) {
+    this.goToComponentsTab();
+
+    Common.verifyPageTitle(applicationName);
+    Common.waitForLoad();
+    this.getComponentListItem(componentName).should('exist');
+  }
+
+  static getComponentListItem(application: string) {
+    return cy.contains(applicationDetailPagePO.item, application, { timeout: 60000 });
+  }
+
+  static clickActionsDropdown(dropdownItem: string) {
+    cy.get(actionsDropdown.dropdown).click();
+    cy.contains(dropdownItem).click();
+  }
+
+  static goToOverviewTab() {
+    cy.get(overviewTabPO.clickTab).click();
+    return new OverviewTabPage();
+  }
+
+  static goToComponentsTab() {
+    cy.get(componentsTabPO.clickTab).click();
+    return new ComponentsTabPage();
+  }
+
+  static goToIntegrationTestsTab() {
+    cy.get(integrationTestsTabPO.clickTab).click();
+  }
+}
+
+function addComponentStep(publicGitRepo: string) {
+  const addComponent = new AddComponentPage();
+
+  // Enter git repo URL
+  addComponent.setSource(publicGitRepo);
+  // Check if the source is validated
+  addComponent.waitRepoValidated();
+  // Setup Git Options
+  addComponent.clickGitOptions();
+
+  addComponent.clickNext();
+}
+
+
+function reviewComponentsStep(componentName: string) {
+  const componentPage = new ComponentPage();
+
+  // Edit component name
+  componentPage.editComponentName(componentName + "-temp");
+  cy.contains('div', componentName + "-temp").should('be.visible');
+
+  // Switch back to orginal name
+  componentPage.editComponentName(componentName);
+  cy.contains('div', componentName).should('be.visible');;
+
+  //Create Application
+  componentPage.createApplication();
+}
+
+
+function createBuildStep() {
+  new CreateBuildPage().clickNext();
+}
+
+
+export function addIntegrationTestStep(displayName: string, optionalForRelease: boolean = false) {
+  const addIntegrationTestPage = new AddIntegrationTestPage();
+  const containerImage = 'quay.io/kpavic/test-bundle:pipeline'
+  const pipelineName = 'demo-pipeline'
+
+  addIntegrationTestPage.enterDisplayName(displayName);
+  addIntegrationTestPage.enterContainerImage(containerImage);
+  addIntegrationTestPage.enterPipelineName(pipelineName);
+
+  if (optionalForRelease) {
+    addIntegrationTestPage.markOptionalForRelease();
+  }
+
+  cy.get('body').then(body => {
+    (body.find('button[type="submit"]').length > 0)? addIntegrationTestPage.clickNext() : addIntegrationTestPage.clickAdd();
+  });
 }

@@ -1,5 +1,5 @@
-import { Common } from "../../../../utils/Common";
-import { overviewTabPO } from "../../../pageObjects/hacbs-po";
+import { Common } from "../../../utils/Common";
+import { overviewTabPO } from "../../pageObjects/pages-po";
 
 export class OverviewTabPage {
     goToComponentsTab() {
