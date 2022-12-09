@@ -1,0 +1,10 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: ReleasePlanAdmission
+metadata:
+  name: sre-production
+  namespace: <managed-namespace>
+spec:
+  application: test-application
+  environment: sre-production
+  origin: karthik-jk
+  releaseStrategy: m7-strategy

@@ -1,0 +1,9 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Environment
+metadata:
+  name: sre-production
+  namespace: <managed-namespace>
+spec:
+  deploymentStrategy: Manual
+  displayName: demo production
+  type: POC

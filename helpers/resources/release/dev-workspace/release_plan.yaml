@@ -1,0 +1,11 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: ReleasePlan
+metadata:
+  labels:
+    release.appstudio.openshift.io/auto-release: "true"
+  name: sre-production
+  namespace: <dev-namespace>
+spec:
+  application: test-application
+  displayName: SRE Production
+  target: <managed-namespace>

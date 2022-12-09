@@ -1,0 +1,8 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Release
+metadata:
+  name: test-application-ttxrr-testing-release
+  namespace: <dev-namespace>
+spec:
+  applicationSnapshot: test-application-5v6l9
+  releasePlan: sre-production
