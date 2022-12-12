@@ -17,6 +17,8 @@ describe('Create Component from Public Quay Image', () => {
   before(() => {
     // Disable HACBS
     localStorage.setItem('hacbs', 'false');
+    // Need to reload the page after enabling HACBS via localStorage
+    cy.reload();
     Applications.createApplication(applicationName);
   });
 

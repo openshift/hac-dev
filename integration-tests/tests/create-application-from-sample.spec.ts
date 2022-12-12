@@ -15,6 +15,8 @@ describe('Create Application from Sample', () => {
   before(() => {
     // Disable HACBS
     localStorage.setItem('hacbs', 'false');
+    // Need to reload the page after enabling HACBS via localStorage
+    cy.reload();
   });
 
   it('NodeJS app can be created', () => {

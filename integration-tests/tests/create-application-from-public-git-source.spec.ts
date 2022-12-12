@@ -21,6 +21,8 @@ describe('Create Component from Public Git Source', () => {
   before(() => {
     // Disable HACBS
     localStorage.setItem('hacbs', 'false');
+    // Need to reload the page after enabling HACBS via localStorage
+    cy.reload();
     //set application name
     Applications.createApplication(applicationName);
   });
