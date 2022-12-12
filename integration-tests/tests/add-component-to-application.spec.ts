@@ -4,9 +4,8 @@ import { addIntegrationTestStep, Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
 describe('Create Components using the UI', () => {
-  const LOCAL_STORAGE_KEY_GS_MODAL = 'hacbs/getting-started-modal';
-  const LOCAL_STORAGE_KEY_QUICKSTART = 'hacbs/showApplicationQuickstart';
-  const LOCAL_STORAGE_KEY_APPLICATION_MODAL = 'hacbs/showApplicationModal';
+  const LOCAL_STORAGE_KEY_GS_MODAL = 'getting-started-modal';
+  const LOCAL_STORAGE_KEY_APPLICATION_MODAL = 'showApplicationModal';
   const applicationName = Common.generateAppName();
   const integrationTestsTabPage = new IntegrationTestsTabPage();
   const containerImage = 'https://quay.io/kpavic/test-bundle:pipeline';
@@ -39,7 +38,6 @@ describe('Create Components using the UI', () => {
 
   beforeEach(function () {
     localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
-    localStorage.setItem(LOCAL_STORAGE_KEY_QUICKSTART, 'true');
     localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
   });
 

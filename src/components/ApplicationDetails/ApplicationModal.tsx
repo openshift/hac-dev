@@ -3,7 +3,7 @@ import { TextVariants, Text, Button, Modal, TextContent } from '@patternfly/reac
 import imageUrl from '../../imgs/application-overview.svg';
 import { getModalContainer } from '../Modals/modal-utils';
 
-export const HACBS_APPLICATION_MODAL_HIDE_KEY = 'hacbs/showApplicationModal';
+export const HACBS_APPLICATION_MODAL_HIDE_KEY = 'showApplicationModal';
 
 interface ApplicationModalProps {
   showApplicationModal: boolean;
