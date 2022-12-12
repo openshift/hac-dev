@@ -63,9 +63,14 @@ module.exports = (on, config) => {
     }
   }
 
-  if (newConfig.env.PR_CHECK && newConfig.reporterOptions.reportportalAgentJsCypressReporterOptions) {
+  if (newConfig.env.PR_CHECK === true && newConfig.reporterOptions.reportportalAgentJsCypressReporterOptions) {
     newConfig.reporterOptions.reportportalAgentJsCypressReporterOptions.token = config.env.RP_TOKEN;
     registerReportPortalPlugin(on, newConfig);
+  } else {
+    const reporters = (newConfig.reporterOptions.reporterEnabled as string).split(',').filter((value) => {
+      return !value.includes('@reportportal/agent-js-cypress');
+    });
+    newConfig.reporterOptions.reporterEnabled = reporters.join(',');
   }
   return newConfig;
 };
