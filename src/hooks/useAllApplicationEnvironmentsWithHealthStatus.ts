@@ -56,7 +56,7 @@ export const useAllApplicationEnvironmentsWithHealthStatus = (
       const testPipeline = snapshotsEnvironmentBinding
         ? testPipelines.find(
             (pipeline) =>
-              pipeline?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_SNAPSHOT] ===
+              pipeline?.metadata?.labels[PipelineRunLabel.SNAPSHOT] ===
               snapshotsEnvironmentBinding.spec.snapshot,
           )
         : undefined;

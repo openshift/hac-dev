@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner, Title } from '@patternfly/react-core';
+import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { IntegrationTestLabels } from '../../../hacbs/components/ImportForm/types';
 import { PipelineRunGroupVersionKind } from '../../../models';
 import { Table } from '../../../shared';
@@ -23,7 +24,7 @@ const IntegrationTestPipelineRunTab: React.FC<IntegrationTestPipelineRunTabProps
     isList: true,
     selector: {
       matchLabels: {
-        [IntegrationTestLabels.APPLICATION]: applicationName,
+        [PipelineRunLabel.APPLICATION]: applicationName,
         [IntegrationTestLabels.SCENARIO]: testName,
       },
     },

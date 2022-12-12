@@ -101,7 +101,7 @@ export const useCommitWorkflowData = (
         const buildPipelinestatus: RunStatus = pipelineRunStatus(latestBuildPipeline) as RunStatus;
 
         const integrationTestPipelines: PipelineRunKind[] = testPipelines.filter(
-          (tp) => tp.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMPONENT] === compName,
+          (tp) => tp.metadata?.labels[PipelineRunLabel.COMPONENT] === compName,
         );
 
         const latestTestPipeline: PipelineRunKind =
@@ -110,7 +110,7 @@ export const useCommitWorkflowData = (
             : undefined;
 
         const latestSnapshot: string =
-          latestTestPipeline?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_SNAPSHOT];
+          latestTestPipeline?.metadata?.labels[PipelineRunLabel.SNAPSHOT];
 
         const compSnapshots: SnapshotEnvironmentBinding[] = snapshotsEB.filter(
           (as) => as.spec.snapshot === latestSnapshot,
@@ -124,10 +124,11 @@ export const useCommitWorkflowData = (
           its: IntegrationTestScenarioKind,
         ): RunStatus => {
           const matchedTest = getLatestResource(
-            integrationTestPipelines.filter((tp) => {
-              tp.metadata.labels?.[PipelineRunLabel.TEST_SERVICE_SCENARIO] ===
-                removePrefixFromResourceName(its.metadata.name);
-            }),
+            integrationTestPipelines.filter(
+              (tp) =>
+                tp.metadata.labels?.[PipelineRunLabel.TEST_SERVICE_SCENARIO] ===
+                removePrefixFromResourceName(its.metadata.name),
+            ),
           );
           return matchedTest ? (pipelineRunStatus(matchedTest) as RunStatus) : RunStatus.Pending;
         };

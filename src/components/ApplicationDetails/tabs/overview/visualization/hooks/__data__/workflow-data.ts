@@ -259,8 +259,8 @@ export const sampleTestPipelines: PipelineRunKind[] = [
         'pipelinesascode.tekton.dev/url-org': 'karthikjeeyar',
         'pipelinesascode.tekton.dev/url-repository': '1-nodejs',
         'tekton.dev/pipeline': 'component-pipeline-pass',
-        'test.appstudio.openshift.io/application': 'test-application',
-        'test.appstudio.openshift.io/component': '1-nodejs',
+        'appstudio.openshift.io/application': 'test-application',
+        'appstudio.openshift.io/component': '1-nodejs',
         'test.appstudio.openshift.io/scenario': 'component-integration-test',
         'test.appstudio.openshift.io/snapshot': 'test-snapshot-5v6l9',
       },
@@ -559,7 +559,7 @@ export const sampleSnapshotsEnvironmentBindings = [
     kind: 'SnapshotEnvironmentBinding',
     metadata: {
       labels: {
-        'test.appstudio.openshift.io/component': '1-nodejs',
+        'appstudio.openshift.io/component': '1-nodejs',
         'test.appstudio.openshift.io/type': 'component',
       },
       name: 'snapshot-environment-binding',

@@ -13,7 +13,7 @@ const matchPipelineRunToTest = (
   pipeline: PipelineRunKind,
   test: IntegrationTestScenarioKind,
 ): boolean => {
-  const pipelineRunComponent = pipeline.metadata.labels[PipelineRunLabel.TEST_SERVICE_COMPONENT];
+  const pipelineRunComponent = pipeline.metadata.labels[PipelineRunLabel.COMPONENT];
   if (!pipelineRunComponent || !test.spec.contexts?.length) {
     return false;
   }

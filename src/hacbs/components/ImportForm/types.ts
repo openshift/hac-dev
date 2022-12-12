@@ -14,7 +14,6 @@ export enum IntegrationTestAnnotations {
 
 export enum IntegrationTestLabels {
   OPTIONAL = 'test.appstudio.openshift.io/optional',
-  APPLICATION = 'test.appstudio.openshift.io/application',
   SCENARIO = 'test.appstudio.openshift.io/scenario',
 }
 
