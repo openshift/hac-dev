@@ -40,7 +40,7 @@ type CommitDetailsViewProps = {
   commitName: string;
 };
 
-export const COMMITS_GS_LOCAL_STORAGE_KEY = 'hacbs/commits-getting-started-modal';
+export const COMMITS_GS_LOCAL_STORAGE_KEY = 'commits-getting-started-modal';
 
 const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, applicationName }) => {
   const namespace = useNamespace();

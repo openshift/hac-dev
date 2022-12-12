@@ -44,7 +44,7 @@ type Level = {
   footerButton: { title: string; cta: any };
 };
 
-export const LOCAL_STORAGE_KEY = 'hacbs/getting-started-modal';
+export const LOCAL_STORAGE_KEY = 'getting-started-modal';
 
 export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
   imgClassName,
