@@ -206,9 +206,6 @@ module.exports = {
           $codeRef: 'Redirect',
         },
       },
-      flags: {
-        required: ['SIGNUP'],
-      },
     },
     {
       type: 'core.page/route',
@@ -217,9 +214,6 @@ module.exports = {
         component: {
           $codeRef: 'Redirect',
         },
-      },
-      flags: {
-        required: ['SIGNUP'],
       },
     },
 
