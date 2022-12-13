@@ -65,7 +65,6 @@ export const mockBuildPipelinesData = [
                 'f:pipelinesascode.tekton.dev/sender': {},
                 'f:pipelinesascode.tekton.dev/state': {},
                 'f:appstudio.openshift.io/component': {},
-                'f:build.appstudio.openshift.io/component': {},
                 'f:app.kubernetes.io/version': {},
                 'f:pipelinesascode.tekton.dev/branch': {},
               },
@@ -208,7 +207,6 @@ export const mockBuildPipelinesData = [
       finalizers: ['chains.tekton.dev/pipelinerun', 'pipelinesascode.tekton.dev'],
       labels: {
         'pipelinesascode.tekton.dev/state': 'started',
-        'build.appstudio.openshift.io/component': 'test-go',
         'appstudio.openshift.io/component': 'test-go',
         'pipelines.openshift.io/runtime': 'generic',
         'pipelinesascode.tekton.dev/sender': 'test-user-1',
@@ -920,7 +918,6 @@ export const mockBuildPipelinesData = [
                 'f:pipelinesascode.tekton.dev/sender': {},
                 'f:pipelinesascode.tekton.dev/state': {},
                 'f:appstudio.openshift.io/component': {},
-                'f:build.appstudio.openshift.io/component': {},
                 'f:app.kubernetes.io/version': {},
                 'f:pipelinesascode.tekton.dev/branch': {},
               },
@@ -1078,7 +1075,6 @@ export const mockBuildPipelinesData = [
       finalizers: ['chains.tekton.dev/pipelinerun', 'pipelinesascode.tekton.dev'],
       labels: {
         'pipelinesascode.tekton.dev/state': 'started',
-        'build.appstudio.openshift.io/component': 'test-go',
         'appstudio.openshift.io/component': 'test-go',
         'pipelines.openshift.io/runtime': 'generic',
         'pipelinesascode.tekton.dev/sender': 'test-user-1',

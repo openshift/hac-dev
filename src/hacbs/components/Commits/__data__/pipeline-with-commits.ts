@@ -23,7 +23,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       creationTimestamp: '2022-07-19T11:35:46Z',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'build.appstudio.openshift.io/type': 'build',
         'build.appstudio.openshift.io/version': '0.1',
@@ -76,7 +76,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generateName: 'nodejs-sample-',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/type': 'release',
         'build.appstudio.openshift.io/version': '0.1',
         'pipelines.appstudio.openshift.io/type': 'release',
@@ -128,7 +128,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generateName: 'nodejs-sample-',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/type': 'build',
         'build.appstudio.openshift.io/version': '0.1',
         'pipelines.appstudio.openshift.io/type': 'build',
@@ -229,7 +229,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generateName: 'nodejs-sample-',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/type': 'test',
         'build.appstudio.openshift.io/version': '0.1',
         'pipelines.appstudio.openshift.io/type': 'test',
@@ -292,9 +292,8 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generateName: 'nodejs-sample-',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
-        'build.appstudio.openshift.io/component': 'nodejs-sample',
         'build.appstudio.openshift.io/type': 'build',
         'build.appstudio.openshift.io/version': '0.1',
         'pipelines.appstudio.openshift.io/type': 'build',
@@ -353,7 +352,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'results.tekton.dev/result': 'test/results/358168a2-e2f1-4fc6-90a5-90ad80079e17',
         'build.appstudio.redhat.com/commit_sha': 'commit14rt',
         'build.appstudio.redhat.com/target_branch': 'branch_b',
-        'build.appstudio.openshift.io/component': 'sample-component',
+        'appstudio.openshift.io/component': 'sample-component',
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
       },
@@ -361,7 +360,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generateName: 'nodejs-sample-',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'appstudio.openshift.io/component': 'sample-component',
         'pipelinesascode.tekton.dev/sender': 'abhinandan13jan',
@@ -453,7 +452,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generateName: 'nodejs-sample-',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'appstudio.openshift.io/component': 'sample-component',
         'pipelinesascode.tekton.dev/sender': 'abhi',
@@ -482,7 +481,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       name: 'nodejs-sample-3',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'appstudio.openshift.io/component': 'sample-component',
         'pipelinesascode.tekton.dev/sender': 'abhinandan13jan',
@@ -512,7 +511,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generateName: 'nodejs-sample-',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'appstudio.openshift.io/component': 'sample-component',
         'pipelinesascode.tekton.dev/sender': 'abhinandan13jan',
@@ -542,7 +541,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       name: 'nodejs-sample-4',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'appstudio.openshift.io/component': 'sample-component',
         'pipelinesascode.tekton.dev/sender': 'abhi',
@@ -573,7 +572,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generation: 1,
       labels: {
         'appstudio.openshift.io/component': 'go-3,sample-component',
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'pipelinesascode.tekton.dev/sender': 'abhi',
         'pipelinesascode.tekton.dev/sha': 'commit-ment',
@@ -603,7 +602,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generation: 1,
       labels: {
         'appstudio.openshift.io/component': 'go-3',
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'pipelinesascode.tekton.dev/sender': 'abhi',
         'pipelinesascode.tekton.dev/sha': 'commitson',
@@ -633,7 +632,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generation: 1,
       labels: {
         'appstudio.openshift.io/component': 'sample-component',
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'pipelinesascode.tekton.dev/sender': 'abhi',
         'pipelinesascode.tekton.dev/sha': 'commit_try1',
@@ -662,7 +661,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generation: 1,
       labels: {
         'appstudio.openshift.io/component': 'go-3',
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'pipelinesascode.tekton.dev/sender': 'abhi',
         'pipelinesascode.tekton.dev/sha': 'ertxyz',
@@ -692,7 +691,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generation: 1,
       labels: {
         'appstudio.openshift.io/component': 'go-3',
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'pipelinesascode.tekton.dev/sender': 'abhi',
         'pipelinesascode.tekton.dev/sha': 'commit_try1',
@@ -721,7 +720,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generation: 1,
       labels: {
         'appstudio.openshift.io/component': 'go-3',
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'pipelinesascode.tekton.dev/sender': 'abhi',
         'pipelinesascode.tekton.dev/sha': 'commitabc',
@@ -750,7 +749,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generation: 1,
       labels: {
         'appstudio.openshift.io/component': 'go-3',
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'pipelinesascode.tekton.dev/sender': 'abhi',
         'pipelinesascode.tekton.dev/sha': 'ertxyz',
@@ -774,7 +773,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       name: 'nodejs-sample-1',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/component': 'sample-component',
+        'appstudio.openshift.io/component': 'sample-component',
         'build.appstudio.redhat.com/user': 'abhi',
       },
     },
@@ -793,7 +792,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       name: 'nodejs-sample-2',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/component': 'sample-component',
+        'appstudio.openshift.io/component': 'sample-component',
         'build.appstudio.redhat.com/user': 'abhi',
       },
     },
@@ -817,7 +816,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       generation: 1,
       labels: {
         'appstudio.openshift.io/component': 'sample-component',
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
         'pipelinesascode.tekton.dev/sender': 'abhinandan13jan',
         'pipelinesascode.tekton.dev/sha': 'commitabc',
@@ -860,7 +859,7 @@ export const pipelineWithoutCommits: PipelineRunKind[] = [
       name: 'sample-6',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/component': 'go-2nd',
+        'appstudio.openshift.io/component': 'go-2nd',
         'build.appstudio.redhat.com/user': 'abhi',
       },
     },
@@ -895,7 +894,7 @@ export const pipelineWithoutCommits: PipelineRunKind[] = [
       name: 'nodejs-sample-2',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/component': 'sample-component',
+        'appstudio.openshift.io/component': 'sample-component',
         'build.appstudio.redhat.com/user': 'abhi',
       },
     },

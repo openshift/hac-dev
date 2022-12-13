@@ -16,7 +16,6 @@ import { default as BaseBuildStatusColumn } from '../../../components/Components
 import { BuildStatusComponentProps } from '../../../components/ComponentsListView/ComponentListView';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { ComponentKind } from '../../../types';
-import { BUILD_COMPONENT_LABEL } from '../../../utils/const';
 import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../models';
 import { PipelineRunKind } from '../../types';
@@ -43,7 +42,7 @@ const BuildStatusColumn: React.FC<BuildStatusComponentProps> = ({ component, all
     selector: {
       matchLabels: {
         [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
-        [BUILD_COMPONENT_LABEL]: component.metadata.name,
+        [PipelineRunLabel.COMPONENT]: component.metadata.name,
       },
     },
     limit: 1,

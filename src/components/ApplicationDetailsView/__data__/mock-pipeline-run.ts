@@ -18,9 +18,9 @@ export const mockPipelineRuns = [
       generateName: 'python-sample-',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
-        'build.appstudio.openshift.io/component': 'python-sample',
+        'appstudio.openshift.io/component': 'python-sample',
         'build.appstudio.openshift.io/type': 'build',
         'build.appstudio.openshift.io/version': '0.1',
         'pipelines.appstudio.openshift.io/type': 'build',
@@ -513,9 +513,9 @@ export const mockPipelineRuns = [
       generateName: 'go-sample-',
       generation: 1,
       labels: {
-        'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+        'appstudio.openshift.io/application': 'purple-mermaid-app',
         'build.appstudio.openshift.io/build': 'true',
-        'build.appstudio.openshift.io/component': 'go-sample',
+        'appstudio.openshift.io/component': 'go-sample',
         'build.appstudio.openshift.io/type': 'build',
         'build.appstudio.openshift.io/version': '0.1',
         'pipelines.appstudio.openshift.io/type': 'build',

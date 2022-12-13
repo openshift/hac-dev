@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { PipelineRunLabel } from '../hacbs/consts/pipelinerun';
 import { ComponentGroupVersionKind } from '../models';
 import { PipelineRunGroupVersionKind } from '../shared';
 import { PipelineRunKind } from '../shared/components/pipeline-run-logs/types';
 import { ComponentKind } from '../types';
-import { BUILD_APPLICATION_LABEL, BUILD_COMPONENT_LABEL } from '../utils/const';
 import { useNamespace } from '../utils/namespace-context-utils';
 
 export const useLatestPipelineRunForComponent = (
@@ -17,7 +17,7 @@ export const useLatestPipelineRunForComponent = (
     isList: true,
     selector: {
       matchLabels: {
-        [BUILD_COMPONENT_LABEL]: component.metadata.name,
+        [PipelineRunLabel.COMPONENT]: component.metadata.name,
       },
     },
   });
@@ -62,8 +62,8 @@ export const usePipelineRunsForApplication = (
         const prs = pipelineRuns
           ?.filter?.(
             (plr) =>
-              plr.metadata.labels[BUILD_COMPONENT_LABEL] === currComponent.metadata.name &&
-              plr.metadata.labels[BUILD_APPLICATION_LABEL] === currComponent.spec.application,
+              plr.metadata.labels[PipelineRunLabel.COMPONENT] === currComponent.metadata.name &&
+              plr.metadata.labels[PipelineRunLabel.APPLICATION] === currComponent.spec.application,
           )
           ?.sort?.(
             (a, b) =>

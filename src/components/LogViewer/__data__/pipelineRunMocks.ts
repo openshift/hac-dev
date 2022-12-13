@@ -13,9 +13,9 @@ export const pipelineRunMock = {
     generateName: 'basic-node-js-',
     generation: 1,
     labels: {
-      'build.appstudio.openshift.io/application': 'purple-mermaid-app',
+      'appstudio.openshift.io/application': 'purple-mermaid-app',
       'build.appstudio.openshift.io/build': 'true',
-      'build.appstudio.openshift.io/component': 'basic-node-js',
+      'appstudio.openshift.io/component': 'basic-node-js',
       'build.appstudio.openshift.io/type': 'build',
       'build.appstudio.openshift.io/version': '0.1',
       'pipelines.appstudio.openshift.io/type': 'build',
@@ -33,9 +33,9 @@ export const pipelineRunMock = {
             'f:generateName': {},
             'f:labels': {
               '.': {},
-              'f:build.appstudio.openshift.io/application': {},
+              'f:appstudio.openshift.io/application': {},
               'f:build.appstudio.openshift.io/build': {},
-              'f:build.appstudio.openshift.io/component': {},
+              'f:appstudio.openshift.io/component': {},
               'f:build.appstudio.openshift.io/type': {},
               'f:build.appstudio.openshift.io/version': {},
               'f:pipelines.appstudio.openshift.io/type': {},

@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { WatchK8sResource } from '../dynamic-plugin-sdk';
+import { PipelineRunLabel } from '../hacbs/consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../shared';
 import { PipelineRunKind } from '../shared/components/pipeline-run-logs/types';
-
-const BUILD_COMPONENT_LABEL = 'build.appstudio.openshift.io/component';
-const BUILD_APPLICATION_LABEL = 'build.appstudio.openshift.io/application';
 
 export const useComponentPipelineRun = (
   name: string,
@@ -14,8 +12,8 @@ export const useComponentPipelineRun = (
 ): { pipelineRun: PipelineRunKind; loaded: boolean } => {
   const watchResource: WatchK8sResource = React.useMemo(() => {
     const matchLabels = {
-      [BUILD_COMPONENT_LABEL]: name,
-      [BUILD_APPLICATION_LABEL]: application,
+      [PipelineRunLabel.COMPONENT]: name,
+      [PipelineRunLabel.APPLICATION]: application,
     };
 
     return {
