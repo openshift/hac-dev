@@ -14,11 +14,15 @@ describe('Create Component from Private Git Using Login Form', () => {
   const privateRepo = 'https://github.com/hac-test/private-repo-check';
   const componentName = 'python';
 
-  const user = 'hac-test'
+  const user = 'hac-test';
   const pass = Cypress.env('GH_PASSWORD');
   const deviceId = '2e478c118996feb7e058965e62fef9fe';
 
   before(() => {
+    // Disable HACBS
+    localStorage.setItem('hacbs', 'false');
+    // Need to reload the page after enabling HACBS via localStorage
+    cy.reload();
     Applications.createApplication(applicationName);
   });
 
@@ -31,10 +35,13 @@ describe('Create Component from Private Git Using Login Form', () => {
   describe('Creating Component From Private Github Repo', () => {
     it('Works After Signing in to Github', () => {
       // open any pop ups in the current window, since cypress can only work in a single tab/window
-      cy.window().then(win => {
-        cy.stub(win, 'open').callThrough().withArgs(Cypress.sinon.match.string, '_blank').callsFake((...args) => {
-          win.open(args[0], '_self');
-        });
+      cy.window().then((win) => {
+        cy.stub(win, 'open')
+          .callThrough()
+          .withArgs(Cypress.sinon.match.string, '_blank')
+          .callsFake((...args) => {
+            win.open(args[0], '_self');
+          });
       });
 
       // Enter git repo URL
@@ -42,17 +49,27 @@ describe('Create Component from Private Git Using Login Form', () => {
       addComponent.waitUnableToAccess();
 
       // redirect to github for login, then go back to hac
-      cy.url().then(url => {
+      cy.url().then((url) => {
         cy.contains('button', 'Sign in').click();
-        cy.origin('https://www.github.com', { args: { user, pass, deviceId } }, ({ user, pass, deviceId }) => {
-          // bypass the device validation
-          cy.get('#login_field').type(user);
-          cy.get('#password').type(pass, { log: false });
-          cy.clearCookie('_device_id');
-          cy.setCookie('_device_id', deviceId, { domain: 'github.com', path: '/', sameSite: 'no_restriction', httpOnly: true, secure: true });
-          cy.getCookie('_device_id').should('have.property', 'value', deviceId);
-          cy.get('[value="Sign in"]').click();
-        });
+        cy.origin(
+          'https://www.github.com',
+          { args: { user, pass, deviceId } },
+          ({ user, pass, deviceId }) => {
+            // bypass the device validation
+            cy.get('#login_field').type(user);
+            cy.get('#password').type(pass, { log: false });
+            cy.clearCookie('_device_id');
+            cy.setCookie('_device_id', deviceId, {
+              domain: 'github.com',
+              path: '/',
+              sameSite: 'no_restriction',
+              httpOnly: true,
+              secure: true,
+            });
+            cy.getCookie('_device_id').should('have.property', 'value', deviceId);
+            cy.get('[value="Sign in"]').click();
+          },
+        );
         cy.contains('Login successful').should('be.visible');
         cy.visit(url);
       });
