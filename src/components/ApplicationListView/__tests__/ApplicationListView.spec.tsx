@@ -123,6 +123,6 @@ describe('Application List', () => {
     screen.getByText('Create application');
     screen.getByText('Name');
     screen.getByText('Components');
-    screen.getByText('Environments');
+    screen.getByText('Last deploy');
   });
 });
