@@ -1,11 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageSection, PageSectionTypes, PageSectionVariants } from '@patternfly/react-core';
+import { FormikHelpers } from 'formik';
 import { FormikWizard } from 'formik-pf';
-import { ApplicationKind } from '../../../types';
+import { createResources } from '../../../components/ImportForm/utils/submit-utils';
+import { useImportSteps } from '../../../components/ImportForm/utils/useImportSteps';
 import { useNamespace } from '../../../utils/namespace-context-utils';
 import { FormValues } from './types';
-import { useImportSteps } from './useImportSteps';
 
 type ImportFormProps = {
   applicationName?: string;
@@ -14,16 +15,6 @@ type ImportFormProps = {
 const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName }) => {
   const navigate = useNavigate();
   const namespace = useNamespace();
-
-  const [applicationData, setApplicationData] = React.useState<ApplicationKind>();
-  const [componentsCreated, setComponentsCreated] = React.useState(false);
-
-  // use a refs because formik doesn't update the `onReset` function
-  const applicationDataRef = React.useRef(applicationData);
-  applicationDataRef.current = applicationData;
-
-  const goToApplicationRef = React.useRef(false);
-  goToApplicationRef.current = !!applicationData || componentsCreated;
 
   const initialValues: FormValues = {
     application: applicationName || 'My Application',
@@ -44,30 +35,27 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
     },
   };
 
-  const steps = useImportSteps(applicationName, {
-    onApplicationCreated: setApplicationData,
-    onComponentsCreated: () => setComponentsCreated(true),
-  });
+  const steps = useImportSteps(applicationName);
 
   const handleSubmit = React.useCallback(
-    ({ application, inAppContext }: FormValues) => {
-      const appName = inAppContext ? application : applicationDataRef.current?.metadata?.name;
-      navigate(`/stonesoup/applications/${appName}`);
+    (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
+      return createResources(values)
+        .then((appName) => {
+          navigate(`/stonesoup/applications/${appName}`);
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.warn('Error while submitting import form:', error);
+          formikHelpers.setSubmitting(false);
+          formikHelpers.setStatus({ submitError: error.message });
+        });
     },
     [navigate],
   );
 
-  const handleReset = React.useCallback(
-    (values: FormValues) => {
-      const { inAppContext } = values;
-      if (inAppContext || goToApplicationRef.current) {
-        handleSubmit(values);
-      } else {
-        navigate(-1);
-      }
-    },
-    [navigate, handleSubmit],
-  );
+  const handleReset = React.useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
 
   return (
     <PageSection isFilled type={PageSectionTypes.wizard} variant={PageSectionVariants.light}>
@@ -76,7 +64,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
         onReset={handleReset}
         initialValues={initialValues}
         steps={steps}
-        cancelButtonText={goToApplicationRef.current ? 'Go to application' : 'Cancel'}
+        cancelButtonText={'Cancel'}
       />
     </PageSection>
   );
