@@ -19,6 +19,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
     application: applicationName || 'My Application',
     inAppContext: applicationName ? true : false,
     components: [],
+    pipelinesascode: false,
     git: {
       context: '',
       ref: '',

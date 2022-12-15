@@ -35,7 +35,7 @@ export const createComponents = async (
 };
 
 export const createResources = async (formValues: ImportFormValues) => {
-  const { application, inAppContext, components, secret, namespace } = formValues;
+  const { application, inAppContext, components, secret, namespace, pipelinesascode } = formValues;
   const shouldCreateApplication = !inAppContext;
   let applicationName = application;
 
@@ -51,7 +51,7 @@ export const createResources = async (formValues: ImportFormValues) => {
     applicationName = applicationData.metadata.name;
   }
 
-  await createComponents(components, applicationName, namespace, secret);
+  await createComponents(components, applicationName, namespace, secret, false, pipelinesascode);
 
   return applicationName;
 };
