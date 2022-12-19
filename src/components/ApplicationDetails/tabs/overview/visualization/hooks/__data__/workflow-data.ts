@@ -262,7 +262,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
         'appstudio.openshift.io/application': 'test-application',
         'appstudio.openshift.io/component': '1-nodejs',
         'test.appstudio.openshift.io/scenario': 'component-integration-test',
-        'test.appstudio.openshift.io/snapshot': 'test-snapshot-5v6l9',
+        'appstudio.openshift.io/snapshot': 'test-snapshot-5v6l9',
       },
       name: 'test-application-5v6l9-4cpnx',
       namespace: 'karthik-jk',

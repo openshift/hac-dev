@@ -38,7 +38,7 @@ export const mockTestPipelinesData = [
       finalizers: ['pipelinesascode.tekton.dev', 'chains.tekton.dev/pipelinerun'],
       labels: {
         'pipelinesascode.tekton.dev/state': 'started',
-        'test.appstudio.openshift.io/snapshot': 'test-application-dgkqg',
+        'appstudio.openshift.io/snapshot': 'test-application-dgkqg',
         'pipelinesascode.tekton.dev/sender': 'karthikjeeyar',
         'test.appstudio.openshift.io/scenario': 'application-test-one',
         'appstudio.openshift.io/application': 'test-application',
@@ -372,7 +372,7 @@ export const mockTestPipelinesData = [
       finalizers: ['pipelinesascode.tekton.dev', 'chains.tekton.dev/pipelinerun'],
       labels: {
         'pipelinesascode.tekton.dev/state': 'started',
-        'test.appstudio.openshift.io/snapshot': 'test-application-dgkqg',
+        'appstudio.openshift.io/snapshot': 'test-application-dgkqg',
         'pipelinesascode.tekton.dev/sender': 'karthikjeeyar',
         'test.appstudio.openshift.io/scenario': 'application-test-two',
         'appstudio.openshift.io/application': 'test-application',
