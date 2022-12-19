@@ -63,8 +63,7 @@ export const useAppStaticEnvironmentNodes = (
           const testPipeline = snapshot
             ? testPipelines.find(
                 (pipeline) =>
-                  pipeline?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_SNAPSHOT] ===
-                  snapshot.spec.snapshot,
+                  pipeline?.metadata?.labels[PipelineRunLabel.SNAPSHOT] === snapshot.spec.snapshot,
               )
             : undefined;
 

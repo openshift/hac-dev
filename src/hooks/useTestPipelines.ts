@@ -14,8 +14,8 @@ export const useTestPipelines = (
     selector: {
       matchLabels: {
         [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.TEST,
-        [PipelineRunLabel.TEST_SERVICE_APPLICATION]: applicationName,
-        ...(commit && { [PipelineRunLabel.COMMIT_LABEL]: commit }),
+        [PipelineRunLabel.APPLICATION]: applicationName,
+        ...(commit && { [PipelineRunLabel.TEST_SERVICE_COMMIT]: commit }),
       },
     },
     isList: true,

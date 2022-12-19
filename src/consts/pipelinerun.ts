@@ -15,10 +15,9 @@ export enum PipelineRunLabel {
   COMMIT_SHA_TITLE_ANNOTATION = 'pipelinesascode.tekton.dev/sha-title',
   COMMIT_TYPE_LABEL = 'pipelines.appstudio.openshift.io/type',
   REPOSITORY_NAME = 'pipelinesascode.tekton.dev/url-repository',
+  SNAPSHOT = 'appstudio.openshift.io/snapshot',
 
-  TEST_SERVICE_APPLICATION = 'test.appstudio.openshift.io/application', // TODO: should be removed once the backend removes the prefix - https://issues.redhat.com/browse/HACBS-1331.
-  TEST_SERVICE_COMPONENT = 'test.appstudio.openshift.io/component', // TODO: should be removed once the backend removes the prefix - https://issues.redhat.com/browse/HACBS-1331.
-  TEST_SERVICE_SNAPSHOT = 'test.appstudio.openshift.io/snapshot',
+  TEST_SERVICE_COMMIT = 'pac.test.appstudio.openshift.io/sha',
   TEST_SERVICE_SCENARIO = 'test.appstudio.openshift.io/scenario',
   ASEB_APPLICATION = 'appstudio.application',
 }
