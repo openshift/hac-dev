@@ -133,7 +133,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
     <PageGroup data-test="details">
       <PageSection type="breadcrumb">
         {breadcrumbs && <BreadCrumbs data-test="details__breadcrumbs" breadcrumbs={breadcrumbs} />}
-        <Flex>
+        <Flex style={{ paddingTop: 'var(--pf-global--spacer--lg)' }}>
           <FlexItem>
             <TextContent>
               {renderTitle()}

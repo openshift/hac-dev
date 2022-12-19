@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { Bullseye, Spinner } from '@patternfly/react-core';
+import { Bullseye, Flex, FlexItem, Spinner, Text, Tooltip } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
+import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { ApplicationGroupVersionKind } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
+import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
@@ -39,6 +41,17 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
   const { quickStarts } = useChrome();
   const showModal = useModalLauncher();
 
+  const [gitOpsDeployment, gitOpsDeploymentLoaded] = useGitOpsDeploymentCR(
+    applicationName,
+    namespace,
+  );
+  const gitOpsDeploymentHealthStatus = gitOpsDeploymentLoaded
+    ? gitOpsDeployment?.status?.health?.status
+    : null;
+  const gitOpsDeploymentHealthStatusIcon = getGitOpsDeploymentHealthStatusIcon(
+    gitOpsDeploymentHealthStatus,
+  );
+
   const [application, applicationsLoaded] = useK8sWatchResource<ApplicationKind>({
     groupVersionKind: ApplicationGroupVersionKind,
     name: applicationName,
@@ -67,7 +80,18 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             name: appDisplayName,
           },
         ]}
-        title={appDisplayName}
+        title={
+          <Flex>
+            <FlexItem>
+              <Text component="h1">{appDisplayName} </Text>
+            </FlexItem>
+            <FlexItem>
+              <Tooltip content={`Application ${gitOpsDeploymentHealthStatus}`}>
+                {gitOpsDeploymentHealthStatusIcon}
+              </Tooltip>
+            </FlexItem>
+          </Flex>
+        }
         actions={[
           {
             key: 'promote-app',
