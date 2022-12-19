@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
@@ -7,7 +8,7 @@ import { pipelineRunFilterReducer } from '../../shared';
 import { StatusIconWithText } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { PipelineRunKind } from '../../types';
 import { useNamespace } from '../../utils/namespace-context-utils';
-import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
+import { pipelineRunCancel, pipelineRunreRun, pipelineRunStop } from '../../utils/pipeline-actions';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import PipelineRunDetailsTab from './tabs/PipelineRunDetailsTab';
 import PipelineRunLogsTab from './tabs/PipelineRunLogsTab';
@@ -20,6 +21,7 @@ type PipelineRunDetailsViewProps = {
 export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
   pipelineRunName,
 }) => {
+  const navigate = useNavigate();
   const namespace = useNamespace();
 
   const [pipelineRun, loaded, error] = useK8sWatchResource<PipelineRunKind>({
@@ -68,6 +70,14 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
             </>
           }
           actions={[
+            {
+              key: 'rerun',
+              label: 'Rerun',
+              onClick: () =>
+                pipelineRunreRun(pipelineRun).then((data) => {
+                  navigate(`/stonesoup/pipelineruns/${data.metadata.name}`);
+                }),
+            },
             {
               key: 'stop',
               label: 'Stop',

@@ -1,3 +1,5 @@
+import { TaskRunStatus } from '../../../../types';
+
 export type ResourceTarget = 'inputs' | 'outputs';
 
 export type TektonParam = {
@@ -33,6 +35,7 @@ export type TektonTaskSpec = {
   resources?: TektonResourceGroup<TektonResource>;
   results?: TaskResult[];
   workspaces?: TektonWorkspace[];
+  status?: TaskRunStatus;
 };
 
 export type TektonResourceGroup<ResourceType> = {

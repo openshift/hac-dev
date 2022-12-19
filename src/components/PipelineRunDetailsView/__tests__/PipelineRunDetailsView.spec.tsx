@@ -1,23 +1,27 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { useNavigate } from 'react-router-dom';
+import { useK8sWatchResource, k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { DataState, testPipelineRuns } from '../../../__data__/pipelinerun-data';
 import { PipelineRunDetailsView } from '../PipelineRunDetailsView';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  k8sCreateResource: jest.fn(),
 }));
 
 jest.mock('../../PipelineRunDetailsView/PipelineRunVisualization', () => () => <div />);
 
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
-  useNavigate: () => {},
+  useNavigate: jest.fn(),
   useSearchParams: () => React.useState(() => new URLSearchParams()),
 }));
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
+const useNavigateMock = useNavigate as jest.Mock;
+const mockK8sCreate = k8sCreateResource as jest.Mock;
 
 const pipelineRunName = 'java-springboot-sample-b4trz';
 const mockApplication = {
@@ -125,7 +129,7 @@ describe('PipelineRunDetailsView', () => {
     expect(screen.queryByText('Namespace')).toBeInTheDocument();
   });
 
-  it('should render Stop and Cancel button under the Actions dropdown', () => {
+  it('should render Rerun, Stop and Cancel button under the Actions dropdown', () => {
     watchResourceMock
       .mockReturnValueOnce([testPipelineRuns[DataState.SUCCEEDED], true])
       .mockReturnValue([[], true]);
@@ -136,6 +140,7 @@ describe('PipelineRunDetailsView', () => {
     expect(actionsDropdown).toBeInTheDocument();
     fireEvent.click(actionsDropdown);
 
+    expect(screen.queryByText('Rerun')).toBeInTheDocument();
     expect(screen.queryByText('Stop')).toBeInTheDocument();
     expect(screen.queryByText('Cancel')).toBeInTheDocument();
   });
@@ -186,5 +191,28 @@ describe('PipelineRunDetailsView', () => {
 
     expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'true');
     expect(screen.queryByText('Cancel')).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should rerun and navigate to new pipelinerun page', async () => {
+    const navigateMock = jest.fn();
+    useNavigateMock.mockImplementation(() => navigateMock);
+    let newPlrName: string;
+    mockK8sCreate.mockImplementation((data) => {
+      newPlrName = data.resource.metadata.name;
+      return Promise.resolve(data.resource);
+    });
+    watchResourceMock
+      .mockReturnValueOnce([testPipelineRuns[DataState.RUNNING], true])
+      .mockReturnValue([[], true]);
+
+    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
+
+    expect(screen.queryByText('Rerun')).toHaveAttribute('aria-disabled', 'false');
+
+    fireEvent.click(screen.queryByRole('menuitem', { name: 'Rerun' }));
+    await waitFor(() => {
+      expect(navigateMock).toHaveBeenCalledWith(`/stonesoup/pipelineruns/${newPlrName}`);
+    });
   });
 });
