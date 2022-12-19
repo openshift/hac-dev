@@ -87,7 +87,7 @@ describe('Create Components using the UI', () => {
   describe('Explore Integration Tests Tab', () => {
     it("Click 'Actions' dropdown to add a integration test", () => {
       Applications.clickActionsDropdown('Add integration test');
-      Applications.createIntegrationTest(integrationTestNames[0]);
+      addIntegrationTestStep(integrationTestNames[0]);
     });
 
     it("Click on 'Integration tests' tab and check the List View", () => {

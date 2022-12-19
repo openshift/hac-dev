@@ -44,9 +44,6 @@ export class Applications {
     reviewComponentsStep(componentName);
   }
 
-  static createIntegrationTest(integrationTestName: string, optionalForRelease: boolean = false) {
-    addIntegrationTestStep(integrationTestName, optionalForRelease);
-  }
 
   static createdComponentExists(componentName: string, applicationName: string) {
     this.goToComponentsTab();
