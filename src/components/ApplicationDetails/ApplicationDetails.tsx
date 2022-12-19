@@ -10,6 +10,7 @@ import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import { ApplicationSwitcher } from '../ApplicationDetailsView/ApplicationSwitcher';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
 import ApplicationModal, { HACBS_APPLICATION_MODAL_HIDE_KEY } from './ApplicationModal';
@@ -94,6 +95,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             </FlexItem>
           </Flex>
         }
+        breadcrumbItems={<ApplicationSwitcher selectedApplication={application.metadata.name} />}
         actions={[
           {
             key: 'promote-app',

@@ -24,7 +24,7 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
     navigate(`/stonesoup/applications/${item.key}`);
   };
 
-  return (
+  return menuItems.length > 1 ? (
     <ContextSwitcher
       resourceType="application"
       menuItems={menuItems}
@@ -41,5 +41,5 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
         </Level>
       }
     />
-  );
+  ) : null;
 };
