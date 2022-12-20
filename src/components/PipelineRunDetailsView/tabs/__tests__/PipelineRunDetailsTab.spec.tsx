@@ -61,6 +61,40 @@ describe('PipelineRunDetailsTab', () => {
     screen.getByTestId('pipelinerun-graph');
   });
 
+  it('should not render the error fields for the succeeded pipelinerun', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+
+    render(<PipelineRunDetailsTab pipelineRun={testPipelineRun} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    expect(screen.queryByText('Message')).not.toBeInTheDocument();
+    expect(screen.queryByText('Log snippet')).not.toBeInTheDocument();
+  });
+
+  it('should render the error fields for the failed pipelinerun', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    const failedPipelineRun = {
+      ...testPipelineRun,
+      status: {
+        ...testPipelineRun.status,
+        conditions: [
+          {
+            lastTransitionTime: '2022-12-20T11:58:45Z',
+            message: 'PipelineRun "node-on-pull-request-g5twk" failed to finish within "1m0s"',
+            reason: 'PipelineRunTimeout',
+            status: 'False',
+            type: 'Succeeded',
+          },
+        ],
+      },
+    };
+    render(<PipelineRunDetailsTab pipelineRun={failedPipelineRun} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    screen.getByText('Message');
+    screen.getByText('Log snippet');
+  });
+
   it('should render the graph error state', () => {
     watchResourceMock.mockReturnValue([[], true]);
     render(

@@ -122,9 +122,7 @@ describe('PipelineRunDetailsView', () => {
     render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     expect(screen.queryByText('Pipeline run details')).toBeInTheDocument();
     expect(screen.queryByText('Status')).toBeInTheDocument();
-    expect(screen.queryByText('Message')).toBeInTheDocument();
     expect(screen.queryByText('Namespace')).toBeInTheDocument();
-    expect(screen.queryByText('Message')).toBeInTheDocument();
   });
 
   it('should render Stop and Cancel button under the Actions dropdown', () => {

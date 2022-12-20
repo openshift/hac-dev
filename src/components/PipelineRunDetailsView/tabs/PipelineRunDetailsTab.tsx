@@ -15,6 +15,8 @@ import {
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { pipelineRunFilterReducer } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
+import { ErrorDetailsWithStaticLog } from '../../../shared/components/pipeline-run-logs/logs/log-snippet-types';
+import { getPLRLogSnippet } from '../../../shared/components/pipeline-run-logs/logs/pipelineRunLogSnippet';
 import { StatusIconWithText } from '../../../shared/components/pipeline-run-logs/StatusIcon';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../../types';
@@ -28,6 +30,7 @@ type PipelineRunDetailsTabProps = {
   error: unknown;
 };
 const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineRun, error }) => {
+  const pipelineRunFailed = (getPLRLogSnippet(pipelineRun) || {}) as ErrorDetailsWithStaticLog;
   const duration = calculateDuration(
     typeof pipelineRun.status?.startTime === 'string' ? pipelineRun.status?.startTime : '',
     typeof pipelineRun.status?.completionTime === 'string'
@@ -103,35 +106,38 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
                     <StatusIconWithText status={pipelineRunFilterReducer(pipelineRun)} />
                   </DescriptionListDescription>
                 </DescriptionListGroup>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>Message</DescriptionListTerm>
-                  <DescriptionListDescription>
-                    {pipelineRun.status?.conditions[0]?.message ?? '-'}
-                  </DescriptionListDescription>
-                </DescriptionListGroup>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>Log snippet</DescriptionListTerm>
-                  <DescriptionListDescription>
-                    <CodeBlock>
-                      <CodeBlockCode id="code-content">
-                        {pipelineRun.status?.taskRuns[`${pipelineRun.metadata?.name}-show-summary`]
-                          ?.status?.taskSpec?.steps[0].script ?? '-'}
-                      </CodeBlockCode>
-                    </CodeBlock>
-                    <Button
-                      variant="link"
-                      isInline
-                      component={(props) => (
-                        <Link
-                          {...props}
-                          to={`/stonesoup/pipelineruns/${pipelineRun.metadata?.name}?activeTab=logs`}
-                        />
-                      )}
-                    >
-                      See logs
-                    </Button>
-                  </DescriptionListDescription>
-                </DescriptionListGroup>
+                {Object.keys(pipelineRunFailed).length > 0 && (
+                  <>
+                    <DescriptionListGroup>
+                      <DescriptionListTerm>Message</DescriptionListTerm>
+                      <DescriptionListDescription>
+                        {pipelineRunFailed.title ?? '-'}
+                      </DescriptionListDescription>
+                    </DescriptionListGroup>
+                    <DescriptionListGroup>
+                      <DescriptionListTerm>Log snippet</DescriptionListTerm>
+                      <DescriptionListDescription>
+                        <CodeBlock>
+                          <CodeBlockCode id="code-content">
+                            {pipelineRunFailed.staticMessage ?? '-'}
+                          </CodeBlockCode>
+                        </CodeBlock>
+                        <Button
+                          variant="link"
+                          isInline
+                          component={(props) => (
+                            <Link
+                              {...props}
+                              to={`/stonesoup/pipelineruns/${pipelineRun.metadata?.name}?activeTab=logs`}
+                            />
+                          )}
+                        >
+                          See logs
+                        </Button>
+                      </DescriptionListDescription>
+                    </DescriptionListGroup>
+                  </>
+                )}
                 <DescriptionListGroup>
                   <DescriptionListTerm>Pipeline</DescriptionListTerm>
                   <DescriptionListDescription>
