@@ -477,7 +477,7 @@ module.exports = {
     '@openshift/dynamic-plugin-sdk-extensions': { singleton: true, import: false },
     '@openshift/dynamic-plugin-sdk-utils': { singleton: true, import: false },
     '@scalprum/react-core': { singleton: true, import: false },
-    '@patternfly/quickstarts': { singleton: true, eager: true },
+    '@patternfly/quickstarts': { singleton: true },
     '@unleash/proxy-client-react': { singleton: true },
     '@openshift/dynamic-plugin-sdk': { singleton: true, import: false },
   },
