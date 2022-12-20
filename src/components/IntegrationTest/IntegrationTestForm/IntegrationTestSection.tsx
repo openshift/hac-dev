@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { FormSection, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
-import { FormValues } from '../../../hacbs/components/ImportForm/types';
 import { CheckboxField, InputField } from '../../../shared';
+import { FormValues } from './types';
 
 type Props = { isInPage?: boolean; edit?: boolean };
 

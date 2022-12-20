@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner, Title } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
-import { IntegrationTestLabels } from '../../../hacbs/components/ImportForm/types';
 import { PipelineRunGroupVersionKind } from '../../../models';
 import { Table } from '../../../shared';
 import { PipelineRunKind } from '../../../types';
@@ -10,6 +9,7 @@ import { useNamespace } from '../../../utils/namespace-context-utils';
 import PipelineRunEmptyState from '../../PipelineRunDetailsView/PipelineRunEmptyState';
 import { PipelineRunListHeader } from '../../PipelineRunListView/PipelineRunListHeader';
 import PipelineRunListRow from '../../PipelineRunListView/PipelineRunListRow';
+import { IntegrationTestLabels } from '../IntegrationTestForm/types';
 
 type IntegrationTestPipelineRunTabProps = { applicationName: string; testName: string };
 const IntegrationTestPipelineRunTab: React.FC<IntegrationTestPipelineRunTabProps> = ({

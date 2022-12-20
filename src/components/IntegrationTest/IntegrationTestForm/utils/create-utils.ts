@@ -3,9 +3,9 @@ import { FormikHelpers } from 'formik';
 import {
   IntegrationTestScenarioGroupVersionKind,
   IntegrationTestScenarioModel,
-} from '../../../models';
-import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
-import { FormValues, IntegrationTestFormValues, IntegrationTestLabels } from './types';
+} from '../../../../models';
+import { IntegrationTestScenarioKind } from '../../../../types/coreBuildService';
+import { FormValues, IntegrationTestFormValues, IntegrationTestLabels } from '../types';
 
 export const editIntegrationTest = (
   integrationTest: IntegrationTestScenarioKind,

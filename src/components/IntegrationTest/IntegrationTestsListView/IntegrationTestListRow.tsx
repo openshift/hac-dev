@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { IntegrationTestLabels } from '../../../hacbs/components/ImportForm/types';
 import ActionMenu from '../../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { RowFunctionArgs, TableData } from '../../../shared/components/table';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
+import { IntegrationTestLabels } from '../IntegrationTestForm/types';
 import { integrationListTableColumnClasses } from './IntegrationTestListHeader';
 import { useIntegrationTestActions } from './useIntegrationTestActions';
 
