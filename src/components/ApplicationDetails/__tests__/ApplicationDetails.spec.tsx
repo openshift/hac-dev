@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, configure, fireEvent, act, waitFor } from '@testing-library/react';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
+import { useGitOpsDeploymentCR } from '../../../hooks/useGitOpsDeploymentCR';
 import { mockApplication } from '../../ApplicationDetailsView/__data__/mock-data';
 import ApplicationDetails from '../ApplicationDetails';
 import { HACBS_APPLICATION_MODAL_HIDE_KEY } from '../ApplicationModal';
@@ -20,16 +21,21 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
   useChrome: jest.fn(),
 }));
+jest.mock('../../../hooks/useGitOpsDeploymentCR', () => ({
+  useGitOpsDeploymentCR: jest.fn(),
+}));
 
 const useChromeMock = useChrome as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
+const mockGitOpsDiploymentCR = useGitOpsDeploymentCR as jest.Mock;
 
 describe('ApplicationDetails', () => {
   beforeEach(() => {
     localStorage.removeItem(HACBS_APPLICATION_MODAL_HIDE_KEY);
+    mockGitOpsDiploymentCR.mockReturnValue([[], false]);
   });
   it('should render spinner if application data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);

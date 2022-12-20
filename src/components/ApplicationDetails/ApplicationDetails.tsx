@@ -83,7 +83,9 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
         title={
           <Flex>
             <FlexItem>
-              <Text component="h1">{appDisplayName} </Text>
+              <Text component="h1" data-test="details__title">
+                {appDisplayName}
+              </Text>
             </FlexItem>
             <FlexItem>
               <Tooltip content={`Application ${gitOpsDeploymentHealthStatus}`}>
