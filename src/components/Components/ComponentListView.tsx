@@ -14,7 +14,7 @@ import { PipelineRunLabel } from '../../consts/pipelinerun';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind, PipelineRunKind } from '../../types';
 import { default as BaseComponentListView } from '../ComponentsListView/ComponentListView';
-import BuildStatusColumn, { getURLForComponentPRs } from './BuildStatusColumn';
+import BuildStatusColumn, { getURLForComponentPRs, hasPACAnnotation } from './BuildStatusColumn';
 import ComponentsFilterToolbarGroups, {
   NEEDS_MERGE_FILTER_ID,
 } from './ComponentsFilterToolbarGroups';
@@ -54,11 +54,13 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
   );
 
   const renderTitle = (pipelineRuns: PipelineRunKind[]) => {
-    const allMerged = components.every((component) =>
-      pipelineRuns.find(
-        ({ metadata: { labels } }) =>
-          labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name,
-      ),
+    const allMerged = components.every(
+      (component) =>
+        !hasPACAnnotation(component) ||
+        pipelineRuns.find(
+          ({ metadata: { labels } }) =>
+            labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name,
+        ),
     );
     return (
       <>

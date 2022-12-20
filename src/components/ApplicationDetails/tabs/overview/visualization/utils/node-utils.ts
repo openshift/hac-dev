@@ -5,6 +5,7 @@ import { pipelineRunFilterReducer, pipelineRunStatus, runStatus } from '../../..
 import { PipelineRunKind } from '../../../../../../shared/components/pipeline-run-logs/types';
 import { ComponentKind } from '../../../../../../types';
 import { GitOpsDeploymentHealthStatus } from '../../../../../../types/gitops-deployment';
+import { hasPACAnnotation } from '../../../../../Components/BuildStatusColumn';
 import { DEFAULT_NODE_HEIGHT } from '../../../../../topology/const';
 import { NodeType } from '../const';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
@@ -128,7 +129,10 @@ export const getLinkForElement = (
   }
 };
 
-export const getRunStatusComponent = (component, pipelineRuns: PipelineRunKind[]) => {
+export const getRunStatusComponent = (
+  component: ComponentKind,
+  pipelineRuns: PipelineRunKind[],
+) => {
   const latestPipelineRun = pipelineRuns
     .filter((pr) => pr.metadata.labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name)
     .sort(
@@ -136,7 +140,12 @@ export const getRunStatusComponent = (component, pipelineRuns: PipelineRunKind[]
         new Date(b.metadata.creationTimestamp).getTime() -
         new Date(a.metadata.creationTimestamp).getTime(),
     )?.[0];
-  return latestPipelineRun ? pipelineRunFilterReducer(latestPipelineRun) : NEEDS_MERGE_STATUS;
+  if (latestPipelineRun) {
+    return pipelineRunFilterReducer(latestPipelineRun);
+  } else if (hasPACAnnotation(component)) {
+    return NEEDS_MERGE_STATUS;
+  }
+  return UNKNOWN_STATUS;
 };
 
 export const worstWorkflowStatus = (workFlows: PipelineNodeModel[]) =>
