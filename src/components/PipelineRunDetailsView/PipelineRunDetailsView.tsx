@@ -8,7 +8,7 @@ import { pipelineRunFilterReducer } from '../../shared';
 import { StatusIconWithText } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { PipelineRunKind } from '../../types';
 import { useNamespace } from '../../utils/namespace-context-utils';
-import { pipelineRunCancel, pipelineRunreRun, pipelineRunStop } from '../../utils/pipeline-actions';
+import { pipelineRunCancel, pipelineRunRerun, pipelineRunStop } from '../../utils/pipeline-actions';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import PipelineRunDetailsTab from './tabs/PipelineRunDetailsTab';
 import PipelineRunLogsTab from './tabs/PipelineRunLogsTab';
@@ -74,7 +74,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
               key: 'rerun',
               label: 'Rerun',
               onClick: () =>
-                pipelineRunreRun(pipelineRun).then((data) => {
+                pipelineRunRerun(pipelineRun).then((data) => {
                   navigate(`/stonesoup/pipelineruns/${data.metadata.name}`);
                 }),
             },

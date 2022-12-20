@@ -83,7 +83,7 @@ describe('getPipelineRunData', () => {
   it('should set generateName field when the option is passed', () => {
     const runData = getPipelineRunData(samplePipelineRun, { generateName: true });
     expect(runData.metadata.name).not.toBeDefined();
-    expect(runData.metadata.generateName).toBe(`${samplePipelineRun.metadata.name}-`);
+    expect(runData.metadata.generateName).toBe(`${samplePipelineRun.metadata.generateName}`);
   });
 
   it('should set metadata.name field when the generateName option is not passed', () => {

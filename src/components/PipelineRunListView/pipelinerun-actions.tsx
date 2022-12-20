@@ -1,12 +1,12 @@
 import { pipelineRunFilterReducer } from '../../shared';
 import { Action } from '../../shared/components/action-menu/types';
 import { PipelineRunKind } from '../../types';
-import { pipelineRunCancel, pipelineRunreRun, pipelineRunStop } from '../../utils/pipeline-actions';
+import { pipelineRunCancel, pipelineRunRerun, pipelineRunStop } from '../../utils/pipeline-actions';
 
 export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] => {
   return [
     {
-      cta: () => pipelineRunreRun(pipelineRun),
+      cta: () => pipelineRunRerun(pipelineRun),
       id: 'pipelinerun-rerun',
       label: 'Rerun',
     },

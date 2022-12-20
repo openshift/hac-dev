@@ -58,8 +58,9 @@ export const getPipelineRunData = (
     return null;
   }
   const pipelineName =
-    latestRun.spec.pipelineRef?.name ??
-    (latestRun.metadata.annotations?.[preferredNameAnnotation] || latestRun.metadata.name);
+    latestRun.metadata.annotations?.[preferredNameAnnotation] ||
+    latestRun.metadata.generateName ||
+    latestRun.metadata.name;
 
   const resources = latestRun?.spec.resources;
   const workspaces = latestRun?.spec.workspaces;
@@ -68,10 +69,9 @@ export const getPipelineRunData = (
   const annotations = merge(
     {},
     latestRun?.metadata?.annotations,
-    !latestRun?.spec.pipelineRef &&
-      !latestRun?.metadata.annotations?.[preferredNameAnnotation] && {
-        [preferredNameAnnotation]: pipelineName,
-      },
+    !latestRun?.metadata.annotations?.[preferredNameAnnotation] && {
+      [preferredNameAnnotation]: latestRun?.metadata?.generateName || pipelineName,
+    },
   );
   //should not propagate this last-applied-configuration to a new pipelinerun.
   delete annotations['kubectl.kubernetes.io/last-applied-configuration'];
@@ -82,26 +82,23 @@ export const getPipelineRunData = (
     metadata: {
       ...(options?.generateName
         ? {
-            generateName: `${pipelineName}-`,
+            generateName: `${pipelineName}`,
           }
         : {
             name: `${pipelineName}-${getRandomChars()}`,
           }),
       annotations,
       namespace: latestRun.metadata.namespace,
-      labels: merge(
-        {},
-        latestRun?.metadata?.labels,
-        latestRun?.spec.pipelineRef && {
-          'tekton.dev/pipeline': pipelineName,
-        },
-      ),
+      labels: merge({}, latestRun?.metadata?.labels),
     },
     spec: {
       ...(latestRun?.spec || {}),
       ...(latestRun?.spec.pipelineRef && {
         pipelineRef: {
-          name: pipelineName,
+          name: latestRun?.spec.pipelineRef.name,
+          ...(latestRun?.spec.pipelineRef.bundle && {
+            bundle: latestRun?.spec.pipelineRef.bundle,
+          }),
         },
       }),
       resources,

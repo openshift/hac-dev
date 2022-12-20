@@ -33,6 +33,12 @@ describe('PipelineRunVisualization', () => {
     expect(screen.queryByTestId('pipelinerun-graph')).not.toBeInTheDocument();
   });
 
+  it('should not render the pipelinerun graph if the pipelinerun status is not available yet', () => {
+    const plrWithoutStatus = { ...testPipelineRun, status: undefined };
+    render(<PipelineRunVisualization pipelineRun={plrWithoutStatus} error={null} />);
+    expect(screen.queryByTestId('pipelinerun-graph')).not.toBeInTheDocument();
+  });
+
   it('should surface the api error message', () => {
     render(
       <PipelineRunVisualization

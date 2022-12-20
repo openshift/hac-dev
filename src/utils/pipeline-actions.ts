@@ -3,8 +3,8 @@ import { PipelineRunModel } from '../models';
 import { PipelineRunKind } from '../types/pipeline-run';
 import { getPipelineRunData } from './pipeline-utils';
 
-export const pipelineRunreRun = (pipelineRun: PipelineRunKind) => {
-  const pipelineRunData = getPipelineRunData(pipelineRun);
+export const pipelineRunRerun = (pipelineRun: PipelineRunKind) => {
+  const pipelineRunData = getPipelineRunData(pipelineRun, { generateName: true });
 
   return k8sCreateResource({
     model: PipelineRunModel,
