@@ -21,7 +21,7 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
   const selectedItem = menuItems.find((item) => item.key === selectedApplication);
 
   const onSelect = (item: ContextMenuItem) => {
-    navigate(`/stonesoup/applications/${item.key}`);
+    selectedItem.key !== item.key && navigate(`/stonesoup/applications/${item.key}`);
   };
 
   return menuItems.length > 1 ? (
