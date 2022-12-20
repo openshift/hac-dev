@@ -268,6 +268,8 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
       type: ModelKind.graph,
       layout: PipelineLayout.PIPELINERUN_VISUALIZATION,
       layers: DEFAULT_LAYERS,
+      y: 50,
+      x: 15,
     },
     nodes: [...nodes, ...spacerNodes, ...finallyNodes, ...finallyGroup],
     edges,
