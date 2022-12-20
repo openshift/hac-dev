@@ -11,12 +11,12 @@ import {
   applicationValidationSchema,
 } from '../../../components/ImportForm/utils/validation-utils';
 import IntegrationTestSection from '../../../components/IntegrationTest/IntegrationTestForm/IntegrationTestSection';
+import { integrationTestValidationSchema } from '../../../components/IntegrationTest/IntegrationTestForm/validation-utils';
 import { ApplicationKind } from '../../../types';
 import BuildSection from './BuildSection';
 import { createAppIntegrationTest } from './create-utils';
 import { FormValues } from './types';
 import { onApplicationSubmit, onComponentsSubmit } from './utils/submit-utils';
-import { integrationTestValidationSchema } from './utils/validation-utils';
 
 export const applicationStep = (
   onApplicationCreated?: (app: ApplicationKind) => void,

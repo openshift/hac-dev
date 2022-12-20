@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import {
   EmptyState,
   EmptyStateIcon,
@@ -12,6 +13,7 @@ import {
   HelperTextItem,
 } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
+import { HACBS_FLAG } from '../../../hacbs/hacbsFeatureFlag';
 import { CheckboxField } from '../../../shared';
 import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
 import { useComponentDetection } from '../utils/cdq-utils';
@@ -19,7 +21,6 @@ import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues } from '../utils/types';
 import { containerImageRegex } from '../utils/validation-utils';
 import { ReviewComponentCard } from './ReviewComponentCard';
-
 const ComponentLoadingState: React.FC = () => {
   return (
     <Bullseye>
@@ -34,6 +35,7 @@ const ComponentLoadingState: React.FC = () => {
 };
 
 const ReviewSection: React.FunctionComponent = () => {
+  const [hacbsFlag] = useFeatureFlag(HACBS_FLAG);
   const {
     values: { source, secret, application, git, isDetected },
     setFieldValue,
@@ -133,14 +135,15 @@ const ReviewSection: React.FunctionComponent = () => {
             showRuntimeSelector
           />
         ))}
-
-        <CheckboxField
-          name="pipelinesascode"
-          aria-label="Send pull request"
-          label="Send pull request"
-          helpText="This will create a custom pipeline in your repository."
-          data-test="send-pull-request"
-        />
+        {hacbsFlag && (
+          <CheckboxField
+            name="pipelinesascode"
+            aria-label="Send pull request"
+            label="Send pull request"
+            helpText="This will create a custom pipeline in your repository."
+            data-test="send-pull-request"
+          />
+        )}
       </FormSection>
     </>
   );

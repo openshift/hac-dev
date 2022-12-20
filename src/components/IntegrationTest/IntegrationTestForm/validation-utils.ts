@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { containerImageRegex } from '../../../../components/ImportForm/utils/validation-utils';
+import { containerImageRegex } from '../../ImportForm/utils/validation-utils';
 
 const k8sResourceNameRegex =
   /^\s*?[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*\s*?$/;

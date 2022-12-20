@@ -2,11 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import { FormikWizard } from 'formik-pf';
-import { useImportSteps } from '../../../../components/ImportForm/utils/useImportSteps';
-import { createApplication } from '../../../../utils/create-utils';
+import { createApplication } from '../../../utils/create-utils';
 import ImportForm from '../ImportForm';
+import { useImportSteps } from '../utils/useImportSteps';
 
-jest.mock('../../../../components/NamespacedPage/NamespacedPage', () => ({
+jest.mock('../../../components/NamespacedPage/NamespacedPage', () => ({
   useNamespace: jest.fn(() => 'test'),
 }));
 
@@ -18,11 +18,11 @@ jest.mock('formik-pf', () => ({
   FormikWizard: jest.fn(() => null),
 }));
 
-jest.mock('../../../../components/ImportForm/utils/useImportSteps', () => ({
+jest.mock('../utils/useImportSteps', () => ({
   useImportSteps: jest.fn(),
 }));
 
-jest.mock('../../../../utils/create-utils', () => ({
+jest.mock('../../../utils/create-utils', () => ({
   createApplication: jest.fn(),
 }));
 

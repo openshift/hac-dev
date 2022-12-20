@@ -6,10 +6,10 @@ import {
   createIntegrationTest,
 } from '../../../hacbs/components/ImportForm/create-utils';
 import { IntegrationTestLabels } from '../../../hacbs/components/ImportForm/types';
-import { integrationTestValidationSchema } from '../../../hacbs/components/ImportForm/utils/validation-utils';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { useNamespace } from '../../../utils/namespace-context-utils';
 import IntegrationTestForm from './IntegrationTestForm';
+import { integrationTestValidationSchema } from './validation-utils';
 
 type IntegrationTestViewProps = {
   applicationName: string;
