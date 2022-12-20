@@ -1,4 +1,4 @@
-import { IntegrationTestLabels } from '../../../../hacbs/components/ImportForm/types';
+import { IntegrationTestLabels } from '../../IntegrationTestForm/types';
 
 export const MockIntegrationTests = [
   {

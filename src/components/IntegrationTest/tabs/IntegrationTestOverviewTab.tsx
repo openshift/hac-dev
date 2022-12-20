@@ -9,11 +9,11 @@ import {
   FlexItem,
   Title,
 } from '@patternfly/react-core';
-import { IntegrationTestLabels } from '../../../hacbs/components/ImportForm/types';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import MetadataList from '../../PipelineRunDetailsView/MetadataList';
+import { IntegrationTestLabels } from '../IntegrationTestForm/types';
 
 interface IntegrationTestOverviewTabProps {
   integrationTest: IntegrationTestScenarioKind;

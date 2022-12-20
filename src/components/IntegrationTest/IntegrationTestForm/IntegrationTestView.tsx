@@ -1,15 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
-import {
-  editIntegrationTest,
-  createIntegrationTest,
-} from '../../../hacbs/components/ImportForm/create-utils';
-import { IntegrationTestLabels } from '../../../hacbs/components/ImportForm/types';
-import { integrationTestValidationSchema } from '../../../hacbs/components/ImportForm/utils/validation-utils';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { useNamespace } from '../../../utils/namespace-context-utils';
 import IntegrationTestForm from './IntegrationTestForm';
+import { IntegrationTestLabels } from './types';
+import { editIntegrationTest, createIntegrationTest } from './utils/create-utils';
+import { integrationTestValidationSchema } from './utils/validation-utils';
 
 type IntegrationTestViewProps = {
   applicationName: string;

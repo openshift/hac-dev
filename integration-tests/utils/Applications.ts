@@ -39,12 +39,11 @@ export class Applications {
     cy.testA11y(`Select source form`);
   }
 
-  static createComponent(publicGitRepo: string, componentName: string, integrationTestName: string, optionalForRelease: boolean = false) {
+  static createComponent(publicGitRepo: string, componentName: string) {
     addComponentStep(publicGitRepo);
     reviewComponentsStep(componentName);
-    createBuildStep();
-    addIntegrationTestStep(integrationTestName, optionalForRelease);
   }
+
 
   static createdComponentExists(componentName: string, applicationName: string) {
     this.goToComponentsTab();

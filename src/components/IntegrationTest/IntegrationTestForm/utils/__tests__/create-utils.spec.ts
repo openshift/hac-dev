@@ -1,7 +1,7 @@
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { IntegrationTestScenarioModel } from '../../../../../models';
-import { createIntegrationTest } from '../../create-utils';
 import { IntegrationTestLabels } from '../../types';
+import { createIntegrationTest } from '../create-utils';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   k8sCreateResource: jest.fn(),

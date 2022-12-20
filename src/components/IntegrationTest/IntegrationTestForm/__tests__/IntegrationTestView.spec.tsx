@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { configure, fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { createIntegrationTest } from '../../../../hacbs/components/ImportForm/create-utils';
 import { MockIntegrationTests } from '../../IntegrationTestsListView/__data__/mock-integration-tests';
 import IntegrationTestView from '../IntegrationTestView';
+import { createIntegrationTest } from '../utils/create-utils';
 
 const navigateMock = jest.fn();
 
@@ -16,7 +16,7 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
-jest.mock('../../../../hacbs/components/ImportForm/create-utils', () => ({
+jest.mock('../utils/create-utils.ts', () => ({
   createIntegrationTest: jest.fn(),
 }));
 

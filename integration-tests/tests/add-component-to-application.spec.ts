@@ -16,15 +16,9 @@ describe('Create Components using the UI', () => {
     'https://github.com/nodeshift-starters/devfile-sample.git',
   ];
   const componentNames = ['java-quarkus', 'go', 'go-component', 'nodejs'];
-  const integrationTestNames = [
-    'my-test-1',
-    'my-test-2',
-    'my-test-3',
-    'my-test-4',
-    'my-optional-test',
-  ];
+  const integrationTestNames = ['my-test-1', 'my-optional-test'];
   const integrationTestMetadata = [
-    integrationTestNames[4],
+    integrationTestNames[1],
     'quay.io/kpavic/test-bundle:pipeline',
     pipelineName,
     'test.appstudio.openshift.io/optional=true',
@@ -52,7 +46,7 @@ describe('Create Components using the UI', () => {
     });
 
     it('Add a component to Application', () => {
-      Applications.createComponent(publicRepos[0], componentNames[0], integrationTestNames[0]);
+      Applications.createComponent(publicRepos[0], componentNames[0]);
       Applications.createdComponentExists(componentNames[0], applicationName);
     });
   });
@@ -63,7 +57,7 @@ describe('Create Components using the UI', () => {
     });
 
     it('Add a component to Application', () => {
-      Applications.createComponent(publicRepos[1], componentNames[1], integrationTestNames[1]);
+      Applications.createComponent(publicRepos[1], componentNames[1]);
       Applications.createdComponentExists(componentNames[1], applicationName);
     });
   });
@@ -74,7 +68,7 @@ describe('Create Components using the UI', () => {
     });
 
     it('Add a component to Application', () => {
-      Applications.createComponent(publicRepos[1], componentNames[2], integrationTestNames[2]);
+      Applications.createComponent(publicRepos[1], componentNames[2]);
       Applications.createdComponentExists(componentNames[2], applicationName);
     });
   });
@@ -85,31 +79,33 @@ describe('Create Components using the UI', () => {
     });
 
     it('Add a component to Application', () => {
-      Applications.createComponent(publicRepos[2], componentNames[3], integrationTestNames[3]);
+      Applications.createComponent(publicRepos[2], componentNames[3]);
       Applications.createdComponentExists(componentNames[3], applicationName);
     });
   });
 
   describe('Explore Integration Tests Tab', () => {
+    it("Click 'Actions' dropdown to add a integration test", () => {
+      Applications.clickActionsDropdown('Add integration test');
+      addIntegrationTestStep(integrationTestNames[0]);
+    });
+
     it("Click on 'Integration tests' tab and check the List View", () => {
       Applications.goToIntegrationTestsTab();
-
-      for (let i = 0; i < integrationTestNames.length - 1; i++) {
-        integrationTestsTabPage.checkRowValues(
-          integrationTestNames[i],
-          containerImage,
-          'Mandatory',
-          pipelineName,
-        );
-      }
+      integrationTestsTabPage.checkRowValues(
+        integrationTestNames[0],
+        containerImage,
+        'Mandatory',
+        pipelineName,
+      );
     });
 
     it("Add a new Integration Test using 'Actions' dropdown, and mark it as Optional for release", () => {
       Applications.clickActionsDropdown('Add integration test');
-      addIntegrationTestStep(integrationTestNames[4], true);
+      addIntegrationTestStep(integrationTestNames[1], true);
 
       integrationTestsTabPage.checkRowValues(
-        integrationTestNames[4],
+        integrationTestNames[1],
         containerImage,
         'Optional',
         pipelineName,
@@ -122,7 +118,7 @@ describe('Create Components using the UI', () => {
       cy.contains('No results found');
 
       integrationTestsTabPage.filterByName('my-test');
-      // Only the first 4 Integration tests with prefix "my-test" should be visible
+      // Only the first Integration test with prefix "my-test" should be visible
       for (let i = 0; i < integrationTestNames.length - 1; i++) {
         integrationTestsTabPage.checkRowValues(
           integrationTestNames[i],
@@ -135,7 +131,7 @@ describe('Create Components using the UI', () => {
       // Only the 1 Integration test should be visible, which is Optional for release
       integrationTestsTabPage.filterByName('optional');
       integrationTestsTabPage.checkRowValues(
-        integrationTestNames[4],
+        integrationTestNames[1],
         containerImage,
         'Optional',
         pipelineName,
@@ -143,12 +139,12 @@ describe('Create Components using the UI', () => {
     });
 
     it('Explore the Integration Test Details page (with the Optional tag) and delete it', () => {
-      cy.contains(integrationTestNames[4]).click();
+      cy.contains(integrationTestNames[1]).click();
       integrationTestsTabPage.checkMetadata(integrationTestMetadata);
 
       Applications.clickActionsDropdown('Delete');
       cy.get(actions.deleteModalButton).click();
-      cy.get(integrationTestNames[4]).should('not.exist');
+      cy.get(integrationTestNames[1]).should('not.exist');
     });
 
     it('Delete all the remaining Integration Tests from the list view', () => {

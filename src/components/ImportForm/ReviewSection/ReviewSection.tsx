@@ -12,13 +12,13 @@ import {
   HelperTextItem,
 } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
+import { CheckboxField } from '../../../shared';
 import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
 import { useComponentDetection } from '../utils/cdq-utils';
 import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues } from '../utils/types';
 import { containerImageRegex } from '../utils/validation-utils';
 import { ReviewComponentCard } from './ReviewComponentCard';
-
 const ComponentLoadingState: React.FC = () => {
   return (
     <Bullseye>
@@ -132,6 +132,14 @@ const ReviewSection: React.FunctionComponent = () => {
             showRuntimeSelector
           />
         ))}
+
+        <CheckboxField
+          name="pipelinesascode"
+          aria-label="Send pull request"
+          label="Send pull request"
+          helpText="This will create a custom pipeline in your repository."
+          data-test="send-pull-request"
+        />
       </FormSection>
     </>
   );
