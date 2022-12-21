@@ -22,6 +22,8 @@ export type TektonTaskSteps = {
 
 export type TaskResult = {
   name: string;
+  type?: string;
+  value?: string;
   description?: string;
 };
 

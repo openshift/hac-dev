@@ -1,8 +1,11 @@
-import i18next from 'i18next';
+import merge from 'lodash/merge';
+import { preferredNameAnnotation } from '../consts/pipeline';
+import { PipelineRunModel } from '../models';
+import { PipelineRunKind } from '../types';
 
 export const getDuration = (seconds: number, long?: boolean): string => {
-  if (seconds === 0) {
-    return i18next.t('pipelines-plugin~less than a sec');
+  if (!seconds || seconds <= 0) {
+    return 'less than a second';
   }
   let sec = Math.round(seconds);
   let min = 0;
@@ -36,4 +39,73 @@ export const calculateDuration = (startTime: string, endTime?: string) => {
   const end = endTime ? new Date(endTime).getTime() : new Date().getTime();
   const durationInSeconds = (end - start) / 1000;
   return getDuration(durationInSeconds, true);
+};
+
+export const getRandomChars = (len = 6): string => {
+  return Math.random()
+    .toString(36)
+    .replace(/[^a-z0-9]+/g, '')
+    .slice(2, len + 2);
+};
+
+export const getPipelineRunData = (
+  latestRun: PipelineRunKind,
+  options?: { generateName: boolean },
+): PipelineRunKind => {
+  if (!latestRun) {
+    // eslint-disable-next-line no-console
+    console.error('Missing parameters, unable to create new PipelineRun');
+    return null;
+  }
+  const pipelineName =
+    latestRun.metadata.annotations?.[preferredNameAnnotation] ||
+    latestRun.metadata.generateName ||
+    latestRun.metadata.name;
+
+  const resources = latestRun?.spec.resources;
+  const workspaces = latestRun?.spec.workspaces;
+  const params = latestRun?.spec.params;
+
+  const annotations = merge(
+    {},
+    latestRun?.metadata?.annotations,
+    !latestRun?.metadata.annotations?.[preferredNameAnnotation] && {
+      [preferredNameAnnotation]: latestRun?.metadata?.generateName || pipelineName,
+    },
+  );
+  //should not propagate this last-applied-configuration to a new pipelinerun.
+  delete annotations['kubectl.kubernetes.io/last-applied-configuration'];
+
+  const newPipelineRun = {
+    apiVersion: latestRun.apiVersion,
+    kind: PipelineRunModel.kind,
+    metadata: {
+      ...(options?.generateName
+        ? {
+            generateName: `${pipelineName}`,
+          }
+        : {
+            name: `${pipelineName}-${getRandomChars()}`,
+          }),
+      annotations,
+      namespace: latestRun.metadata.namespace,
+      labels: merge({}, latestRun?.metadata?.labels),
+    },
+    spec: {
+      ...(latestRun?.spec || {}),
+      ...(latestRun?.spec.pipelineRef && {
+        pipelineRef: {
+          name: latestRun?.spec.pipelineRef.name,
+          ...(latestRun?.spec.pipelineRef.bundle && {
+            bundle: latestRun?.spec.pipelineRef.bundle,
+          }),
+        },
+      }),
+      resources,
+      ...(params && { params }),
+      workspaces,
+      status: null,
+    },
+  };
+  return newPipelineRun;
 };

@@ -8,6 +8,7 @@ import {
 } from './coreTekton';
 
 export type PipelineTaskRef = {
+  bundle?: string;
   kind?: string;
   name: string;
 };

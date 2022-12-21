@@ -1,7 +1,7 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { ObjectMetadata } from '../shared/components/types';
 import { TektonResultsRun, TektonTaskSpec } from './coreTekton';
-import { PipelineKind, PipelineSpec } from './pipeline';
+import { PipelineKind, PipelineSpec, WhenExpression } from './pipeline';
 
 export type PLRTaskRunStep = {
   container: string;
@@ -33,7 +33,7 @@ export type PLRTaskRunData = {
     startTime: string;
     steps?: PLRTaskRunStep[];
     taskSpec?: TektonTaskSpec;
-    taskResults?: { name: string; value: string }[];
+    taskResults?: { name: string; type?: string; value: string }[];
   };
 };
 
@@ -136,6 +136,8 @@ export type PipelineRunStatus = {
   pipelineSpec: PipelineSpec;
   skippedTasks?: {
     name: string;
+    reason?: string;
+    whenExpressions?: WhenExpression[];
   }[];
   pipelineResults?: TektonResultsRun[];
 };

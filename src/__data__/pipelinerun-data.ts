@@ -1,4 +1,4 @@
-import { PipelineRunKind, PipelineSpec } from '../shared/components/pipeline-run-logs/types';
+import { PipelineRunKind, PipelineSpec } from '../types';
 
 const samplePipelineSpec: PipelineSpec = {
   params: [
@@ -729,6 +729,8 @@ export const testPipelineRuns: TestPipelineRuns = {
                   'docker.io/library/alpine@sha256:8914eb54f968791faf6a8638949e480fef81e697984fba772b3976835194c6d4',
                 name: 'generate-first',
                 terminated: {
+                  containerID:
+                    'cri-o://51ed1ddfa563e5149d0281ebc9c761967bf6bbb85c5454e0b34ae04066d8091c',
                   exitCode: 1,
                   finishedAt: '2022-11-28T07:10:43Z',
                   reason: 'TaskRunCancelled',
@@ -817,6 +819,8 @@ export const testPipelineRuns: TestPipelineRuns = {
                   'docker.io/library/alpine@sha256:8914eb54f968791faf6a8638949e480fef81e697984fba772b3976835194c6d4',
                 name: 'generate-first',
                 terminated: {
+                  containerID:
+                    'cri-o://51ed1ddfa563e5149d0281ebc9c761967bf6bbb85c5454e0b34ae04066d8091c',
                   exitCode: 1,
                   finishedAt: '2022-11-28T07:10:43Z',
                   reason: 'TaskRunCancelled',

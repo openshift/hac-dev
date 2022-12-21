@@ -6,8 +6,10 @@ import {
   TektonTaskSpec,
   TektonWorkspace,
 } from './coreTekton';
+import { TaskRunStatus } from './task-run';
 
 export type PipelineTaskRef = {
+  bundle?: string;
   kind?: string;
   name: string;
 };
@@ -50,6 +52,7 @@ export type PipelineTask = {
   taskSpec?: TektonTaskSpec;
   when?: WhenExpression[];
   workspaces?: PipelineTaskWorkspace[];
+  status?: TaskRunStatus;
 };
 
 export type PipelineSpec = {

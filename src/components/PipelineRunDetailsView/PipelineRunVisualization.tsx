@@ -1,5 +1,4 @@
 import React from 'react';
-import { CustomError } from '../../shared/utils/error/custom-error';
 import { layoutFactory, VisualizationFactory } from '../topology/factories';
 import GraphErrorState from '../topology/factories/GraphErrorState';
 import { pipelineRuncomponentFactory } from './factories';
@@ -12,9 +11,11 @@ const PipelineRunVisualization = ({ pipelineRun, error }) => {
     return getPipelineRunDataModel(pipelineRun);
   }, [pipelineRun]);
 
-  if (!model || error) {
-    const errors = [error || new CustomError('Failed to load graph')];
-    return <GraphErrorState errors={errors} />;
+  if (error) {
+    return <GraphErrorState errors={[error]} />;
+  }
+  if (!model && !error) {
+    return null;
   }
   return (
     <div className="pipelinerun-graph" data-test="pipelinerun-graph">

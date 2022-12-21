@@ -572,6 +572,7 @@ export const testPipelineRun: PipelineRunKind = {
           taskResults: [
             {
               name: 'sum',
+              type: 'string',
               value: '2',
             },
           ],
@@ -641,6 +642,7 @@ export const testPipelineRun: PipelineRunKind = {
           taskResults: [
             {
               name: 'product',
+              type: 'string',
               value: '1',
             },
           ],
