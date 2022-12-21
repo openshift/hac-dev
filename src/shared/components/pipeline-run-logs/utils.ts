@@ -5,7 +5,6 @@ import { chart_color_blue_100 as pendingColor } from '@patternfly/react-tokens/d
 import { chart_color_blue_300 as runningColor } from '@patternfly/react-tokens/dist/js/chart_color_blue_300';
 import { chart_color_green_400 as successColor } from '@patternfly/react-tokens/dist/js/chart_color_green_400';
 import { global_danger_color_100 as failureColor } from '@patternfly/react-tokens/dist/js/global_danger_color_100';
-import i18next from 'i18next';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { K8sGroupVersionKind } from '../../../dynamic-plugin-sdk';
@@ -31,34 +30,6 @@ export const containerToLogSourceStatus = (container): string => {
     return LOG_SOURCE_TERMINATED;
   }
   return LOG_SOURCE_RUNNING;
-};
-
-export const resourcePathFromModel = (model: K8sModelCommon, name?: string, namespace?: string) => {
-  const { plural, namespaced, crd } = model;
-
-  let url = '/k8s/';
-
-  if (!namespaced) {
-    url += 'cluster/';
-  }
-
-  if (namespaced) {
-    url += namespace ? `ns/${namespace}/` : 'all-namespaces/';
-  }
-
-  if (crd) {
-    url += `${model.apiGroup}~${model.apiVersion}~${model.kind}`;
-  } else if (plural) {
-    url += plural;
-  }
-
-  if (name) {
-    // Some resources have a name that needs to be encoded. For instance,
-    // Users can have special characters in the name like `#`.
-    url += `/${encodeURIComponent(name)}`;
-  }
-
-  return url;
 };
 
 export enum SucceedConditionReason {
@@ -112,6 +83,7 @@ export const pipelineRunStatus = (pipelineRun): string => {
   const conditions = get(pipelineRun, ['status', 'conditions'], []);
   if (conditions.length === 0) return null;
 
+  const cancelledCondition = conditions.find((c) => c.reason === 'Cancelled');
   const succeedCondition = conditions.find((c) => c.type === 'Succeeded');
   if (!succeedCondition || !succeedCondition.status) {
     return null;
@@ -122,6 +94,16 @@ export const pipelineRunStatus = (pipelineRun): string => {
       : succeedCondition.status === 'False'
       ? 'Failed'
       : 'Running';
+
+  if (
+    [
+      SucceedConditionReason.PipelineRunStopped,
+      SucceedConditionReason.PipelineRunCancelled,
+    ].includes(pipelineRun.spec?.status) &&
+    !cancelledCondition
+  ) {
+    return 'Cancelling';
+  }
 
   if (succeedCondition.reason && succeedCondition.reason !== status) {
     switch (succeedCondition.reason) {
@@ -160,6 +142,7 @@ export enum runStatus {
   PipelineNotStarted = 'PipelineNotStarted',
   Skipped = 'Skipped',
   Cancelled = 'Cancelled',
+  Cancelling = 'Cancelling',
   Pending = 'Pending',
   Idle = 'Idle',
 }
@@ -167,30 +150,32 @@ export enum runStatus {
 export const getRunStatusColor = (status: string) => {
   switch (status) {
     case runStatus.Succeeded:
-      return { message: i18next.t('Succeeded'), pftoken: successColor, labelColor: 'green' };
+      return { message: 'Succeeded', pftoken: successColor, labelColor: 'green' };
     case runStatus.Failed:
-      return { message: i18next.t('Failed'), pftoken: failureColor, labelColor: 'red' };
+      return { message: 'Failed', pftoken: failureColor, labelColor: 'red' };
     case runStatus.FailedToStart:
       return {
-        message: i18next.t('PipelineRun failed to start'),
+        message: 'PipelineRun failed to start',
         pftoken: failureColor,
         labelColor: 'orange',
       };
     case runStatus.Running:
-      return { message: i18next.t('Running'), pftoken: runningColor, labelColor: 'blue' };
+      return { message: 'Running', pftoken: runningColor, labelColor: 'blue' };
     case runStatus['In Progress']:
-      return { message: i18next.t('Running'), pftoken: runningColor, labelColor: 'blue' };
+      return { message: 'Running', pftoken: runningColor, labelColor: 'blue' };
 
     case runStatus.Skipped:
-      return { message: i18next.t('Skipped'), pftoken: skippedColor, labelColor: 'grey' };
+      return { message: 'Skipped', pftoken: skippedColor, labelColor: 'grey' };
     case runStatus.Cancelled:
-      return { message: i18next.t('Cancelled'), pftoken: cancelledColor, labelColor: 'grey' };
+      return { message: 'Cancelled', pftoken: cancelledColor, labelColor: 'grey' };
+    case runStatus.Cancelling:
+      return { message: 'Cancelling', pftoken: cancelledColor, labelColor: 'grey' };
     case runStatus.Idle:
     case runStatus.Pending:
-      return { message: i18next.t('Pending'), pftoken: pendingColor, labelColor: 'yellow' };
+      return { message: 'Pending', pftoken: pendingColor, labelColor: 'yellow' };
     default:
       return {
-        message: i18next.t('PipelineRun not started yet'),
+        message: 'PipelineRun not started yet',
         pftoken: pendingColor,
         labelColor: 'grey',
       };
@@ -206,6 +191,7 @@ export const pipelineRunStatusToGitOpsStatus = (status: string): GitOpsDeploymen
     case 'Running':
     case 'Pending':
       return GitOpsDeploymentHealthStatus.Progressing;
+    case 'Cancelling':
     case 'Cancelled':
       return GitOpsDeploymentHealthStatus.Suspended;
     case 'Skipped':

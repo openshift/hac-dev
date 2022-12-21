@@ -35,6 +35,7 @@ export const StatusIcon: React.FC<StatusIconProps> = ({ status, disableSpin, ...
     case runStatus.Pending:
       return <HourglassHalfIcon {...props} />;
 
+    case runStatus.Cancelling:
     case runStatus.Cancelled:
       return <BanIcon {...props} />;
 
