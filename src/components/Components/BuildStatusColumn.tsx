@@ -21,11 +21,15 @@ import { BuildStatusComponentProps } from '../ComponentsListView/ComponentListVi
 
 export const PR_BOT_NAME = 'appstudio-staging-ci';
 export const GIT_URL_PREFIX = 'https://github.com/';
+export const PAC_ANNOTATION_KEY = 'pipelinesascode';
+
+export const hasPACAnnotation = (component: ComponentKind) =>
+  component.metadata.annotations?.[PAC_ANNOTATION_KEY] === '1';
 
 export const getURLForComponentPRs = (components: ComponentKind[]): string => {
   const repos = components.reduce((acc, component) => {
     const gitURL = component.spec.source?.git?.url;
-    if (gitURL && gitURL.startsWith('https://github.com/')) {
+    if (gitURL && hasPACAnnotation(component) && gitURL.startsWith('https://github.com/')) {
       acc = `${acc}+repo:${gitURL.replace(GIT_URL_PREFIX, '')}`;
     }
     return acc;
@@ -48,9 +52,10 @@ const BuildStatusColumn: React.FC<BuildStatusComponentProps> = ({ component, all
   });
 
   const merged = pipelineRunsLoaded && pipelineBuildRuns.length;
+  const hasPAC = hasPACAnnotation(component);
   const openPRsURL = getURLForComponentPRs(allComponents);
 
-  return merged ? (
+  return merged || !hasPAC ? (
     <BaseBuildStatusColumn component={component} />
   ) : (
     <DataListCell alignRight>

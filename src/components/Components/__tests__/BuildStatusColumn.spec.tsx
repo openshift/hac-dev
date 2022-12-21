@@ -45,4 +45,13 @@ describe('BuildStatusColumn', () => {
     );
     await waitFor(() => screen.getByText('Merge build PR'));
   });
+  it('should render View Build logs action item for components without PAC annotation', async () => {
+    useK8sWatchResourceMock.mockReturnValue([[], true]);
+    render(
+      <BrowserRouter>
+        <BuildStatusColumn component={componentCRMocks[0]} allComponents={componentCRMocks} />
+      </BrowserRouter>,
+    );
+    await waitFor(() => screen.getByText('View logs'));
+  });
 });
