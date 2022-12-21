@@ -11,7 +11,7 @@ const samplePipelineRun = testPipelineRuns[DataState.SUCCEEDED];
 
 describe('getDuration', () => {
   it('handles invalid values', () => {
-    [0, -1, -9999].forEach((v) => expect(getDuration(v)).toBe('less than a sec'));
+    [0, -1, -9999].forEach((v) => expect(getDuration(v)).toBe('less than a second'));
   });
 
   it('returns correct durations in short format', () => {

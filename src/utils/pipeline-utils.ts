@@ -5,7 +5,7 @@ import { PipelineRunKind } from '../types';
 
 export const getDuration = (seconds: number, long?: boolean): string => {
   if (!seconds || seconds <= 0) {
-    return 'less than a sec';
+    return 'less than a second';
   }
   let sec = Math.round(seconds);
   let min = 0;
