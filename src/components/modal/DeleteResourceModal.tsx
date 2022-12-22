@@ -39,7 +39,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
   isEntryNotRequired = false,
   description,
 }) => {
-  const [error, setError] = React.useState();
+  const [error, setError] = React.useState<String>();
   const resourceName = displayName || obj.metadata.name;
   const deleteResource = async () => {
     try {
@@ -68,6 +68,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
         values,
         isSubmitting,
         touched: { resourceName: touched },
+        setTouched,
       }) => {
         const input = values.resourceName;
         const isValid = input === resourceName;
@@ -105,6 +106,11 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
                     helpText={helpText}
                     validated={validatedState}
                     required
+                    onChange={() => {
+                      if (!touched) {
+                        setTouched({ resourceName: true });
+                      }
+                    }}
                   />
                 </StackItem>
               )}
@@ -120,9 +126,13 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
                   isLoading={isSubmitting}
                   onClick={(e) => {
                     e.preventDefault();
+                    if (!touched) {
+                      setTouched({ resourceName: true });
+                      return;
+                    }
                     handleSubmit();
                   }}
-                  isDisabled={!isEntryNotRequired && (!isValid || isSubmitting)}
+                  isDisabled={!isEntryNotRequired && ((touched && !isValid) || isSubmitting)}
                   data-testid="delete-resource"
                 >
                   Delete

@@ -14,19 +14,22 @@ const k8sDeleteMock = k8sDeleteResource as jest.Mock;
 describe('DeleteResourceModal', () => {
   afterEach(jest.clearAllMocks);
 
-  it('should be disabled when resource name is not entered', () => {
+  it('should be enabled by default', () => {
     const obj = { apiVersion: 'v1', kind: 'Application', metadata: { name: 'test' } };
     const onClose = jest.fn();
     render(<DeleteResourceModal obj={obj} model={ApplicationModel} onClose={onClose} />);
-    expect(screen.getByText('Delete')).toBeDisabled();
+    expect(screen.getByText('Delete')).toBeEnabled();
   });
 
   it('should be disabled when incorrect resource name is entered', () => {
     const obj = { apiVersion: 'v1', kind: 'Application', metadata: { name: 'test' } };
     const onClose = jest.fn();
     render(<DeleteResourceModal obj={obj} model={ApplicationModel} onClose={onClose} />);
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test123' } });
-    expect(screen.getByText('Delete')).toBeDisabled();
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: 'test123' },
+    });
+    fireEvent.blur(screen.getByRole('textbox'));
+    expect(screen.getByText('Invalid input'));
   });
 
   it('should be enabled when resource name is entered', () => {
@@ -76,7 +79,8 @@ describe('DeleteResourceModal', () => {
       />,
     );
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test' } });
-    expect(screen.getByText('Delete')).toBeDisabled();
+    fireEvent.blur(screen.getByRole('textbox'));
+    expect(screen.getByText('Invalid input'));
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'My App' } });
     expect(screen.getByText('Delete')).toBeEnabled();
   });
