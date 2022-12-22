@@ -14,13 +14,8 @@ import { runStatus } from '../../shared';
 import { PipelineRunKind } from '../../types';
 import { statuses } from '../../utils/commits-utils';
 
-export interface SortedPLRList {
-  [runStatus.Running]?: PipelineRunKind[];
-  [runStatus.Cancelled]?: PipelineRunKind[];
-  [runStatus.Failed]?: PipelineRunKind[];
-  [runStatus.Pending]?: PipelineRunKind[];
-  [runStatus.Succeeded]?: PipelineRunKind[];
-}
+export type SortedPLRList = Partial<Record<runStatus, PipelineRunKind[]>>;
+
 interface CommitSidePanelHeaderProps {
   drawerRef: React.Ref<HTMLElement>;
   currentStatus: string;
