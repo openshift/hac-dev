@@ -26,13 +26,9 @@ import GitOptions from './GitOptions';
 
 type SourceSectionProps = {
   onStrategyChange?: (strategy: ImportStrategy) => void;
-  gitOnly?: boolean;
 };
 
-export const SourceSection: React.FC<SourceSectionProps> = ({
-  onStrategyChange,
-  gitOnly = false,
-}) => {
+export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }) => {
   const [showAuthOptions, setShowAuthOptions] = React.useState<boolean>(false);
   const [showGitOptions, setShowGitOptions] = React.useState<boolean>(false);
 
@@ -52,7 +48,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
 
   const fieldId = getFieldId('source', 'input');
   const isValid = !(touched && error);
-  const label = gitOnly ? 'Git repo URL' : 'Git repo URL or container image';
+  const label = 'Git repo URL';
 
   const [{ isGit, isRepoAccessible, serviceProvider, accessibility }, accessCheckLoaded] =
     useAccessCheck(sourceUrl, authSecret);
@@ -72,7 +68,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
   const handleSourceChange = React.useCallback(() => {
     const searchTerm = source;
     const isGitUrlValid = gitUrlRegex.test(searchTerm?.trim());
-    const isContainerImageValid = !gitOnly && containerImageRegex.test(searchTerm);
+    const isContainerImageValid = containerImageRegex.test(searchTerm);
     setShowAuthOptions(false);
     setShowGitOptions(false);
     setFieldValue('secret', '');
@@ -85,7 +81,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
     setFormValidating();
     setHelpTextInvalid('');
     setSourceUrl(searchTerm);
-  }, [source, setFieldValue, setFormValidating, gitOnly]);
+  }, [source, setFieldValue, setFormValidating]);
 
   const debouncedHandleSourceChange = useDebounceCallback(handleSourceChange);
 
@@ -144,9 +140,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
     onStrategyChange(ImportStrategy.SAMPLE);
   }, [onStrategyChange, setFieldValue]);
 
-  const description = gitOnly
-    ? 'Provide a link to your GitHub repo.'
-    : 'Provide a link to your GitHub repo or Quay container image, or start with a code sample.';
+  const description = 'Provide a link to your GitHub repo or start with a code sample.';
 
   return (
     <>
