@@ -20,7 +20,7 @@ import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../..
 import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
 import { useAccessCheck, useAccessTokenBinding } from '../utils/auth-utils';
 import { ImportFormValues, ImportStrategy } from '../utils/types';
-import { gitUrlRegex, containerImageRegex } from '../utils/validation-utils';
+import { gitUrlRegex } from '../utils/validation-utils';
 import AuthOptions from './AuthOptions';
 import GitOptions from './GitOptions';
 
@@ -55,24 +55,23 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
 
   const setFormValidating = React.useCallback(() => {
     setValidated(ValidatedOptions.default);
-    setHelpText('Validating...');
+    setHelpText('Validating authentication...');
     setFieldValue('isValidated', false);
   }, [setFieldValue]);
 
   const setFormValidated = React.useCallback(() => {
     setValidated(ValidatedOptions.success);
-    setHelpText('Validated');
+    setHelpText('Validated authentication');
     setFieldValue('isValidated', true);
   }, [setFieldValue]);
 
   const handleSourceChange = React.useCallback(() => {
     const searchTerm = source;
     const isGitUrlValid = gitUrlRegex.test(searchTerm?.trim());
-    const isContainerImageValid = containerImageRegex.test(searchTerm);
     setShowAuthOptions(false);
     setShowGitOptions(false);
     setFieldValue('secret', '');
-    if (!searchTerm || (!isGitUrlValid && !isContainerImageValid)) {
+    if (!searchTerm || !isGitUrlValid) {
       setValidated(ValidatedOptions.error);
       setHelpTextInvalid('Invalid URL');
       setSourceUrl(null);
