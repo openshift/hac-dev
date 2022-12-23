@@ -96,15 +96,6 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
         }
         actions={[
           {
-            key: 'promote-app',
-            label: 'Promote application',
-            component: (
-              <Link to={`/stonesoup/import?application=${applicationName}`}>
-                Promote Application
-              </Link>
-            ),
-          },
-          {
             type: 'section-label',
             key: 'add',
             label: 'Add',
@@ -137,16 +128,6 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             component: (
               <Link to="/stonesoup/workspace-settings/environment/create">Create environment</Link>
             ),
-          },
-          {
-            key: 'delete-application',
-            label: 'Delete application',
-            onClick: () =>
-              showModal<{ submitClicked: boolean }>(
-                applicationDeleteModal(application),
-              ).closed.then(({ submitClicked }) => {
-                if (submitClicked) navigate('/stonesoup');
-              }),
           },
           {
             type: 'section-label',
