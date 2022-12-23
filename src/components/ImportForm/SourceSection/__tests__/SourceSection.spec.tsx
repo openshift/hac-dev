@@ -27,11 +27,11 @@ jest.mock('../../../../shared/hooks', () => ({
 const useAccessCheckMock = useAccessCheck as jest.Mock;
 const useBindingMock = useAccessTokenBinding as jest.Mock;
 
-const renderSourceSection = (showSamples = true, gitOnly = false) => {
+const renderSourceSection = (showSamples = true) => {
   const onClick = jest.fn();
 
   const utils = formikRenderer(
-    <SourceSection onStrategyChange={showSamples ? onClick : undefined} gitOnly={gitOnly} />,
+    <SourceSection onStrategyChange={showSamples ? onClick : undefined} />,
     { source: '' },
   );
   const user = userEvent.setup();
@@ -97,7 +97,7 @@ describe('SourceSection', () => {
     renderSourceSection();
 
     expect(screen.getByPlaceholderText('Enter your source')).toBeValid();
-    expect(screen.getByText('Validated')).toBeVisible();
+    expect(screen.getByText('Validated authentication')).toBeVisible();
   });
 
   it('should show Authorization when github repo is not accessible', async () => {
@@ -163,7 +163,7 @@ describe('SourceSection', () => {
     await user.type(input, 'https://github.com/example/repo');
 
     await waitFor(() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
-    await waitFor(() => screen.getByText('Validating...'));
+    await waitFor(() => screen.getByText('Validating authentication...'));
 
     useAccessCheckMock.mockReturnValue([
       { isRepoAccessible: true, isGit: true, serviceProvider: ServiceProviderType.GitHub },
@@ -173,7 +173,7 @@ describe('SourceSection', () => {
     await user.type(input, 's');
 
     await waitFor(() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
-    await waitFor(() => screen.getByText('Validated'));
+    await waitFor(() => screen.getByText('Validated authentication'));
     await waitFor(() => expect(screen.getByText('Git options')).toBeInTheDocument());
   });
 
@@ -197,7 +197,7 @@ describe('SourceSection', () => {
 
   it('should render git only option', () => {
     useAccessCheckMock.mockReturnValue([{}, false]);
-    renderSourceSection(false, true);
+    renderSourceSection(false);
     expect(screen.queryByText(/container/)).toBeNull();
   });
 });
