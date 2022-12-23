@@ -71,7 +71,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
       }) => {
         const input = values.resourceName;
         const isValid = input === resourceName;
-        const helpText = touched && !input ? 'Missing information' : undefined;
+        const helpText = touched && !input ? `${obj.kind} name missing` : undefined;
         const validatedState = touched
           ? !input
             ? ValidatedOptions.warning
@@ -101,7 +101,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
                   <InputField
                     name="resourceName"
                     label={`Enter ${obj.kind} name to confirm deletion`}
-                    helpTextInvalid="Invalid input"
+                    helpTextInvalid={`${obj.kind} name does not match`}
                     helpText={helpText}
                     validated={validatedState}
                     required

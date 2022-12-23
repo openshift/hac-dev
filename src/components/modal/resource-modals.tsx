@@ -8,6 +8,13 @@ export const applicationDeleteModal = (applicationObj: ApplicationKind) =>
     obj: applicationObj,
     model: ApplicationModel,
     displayName: applicationObj.spec.displayName,
+    description: (
+      <>
+        The application <strong>{applicationObj.spec.displayName}</strong> will be deleted
+        permanently with all of its components. The deleted application will be promoted manually or
+        automatically based on the deployment strategy of each environment.
+      </>
+    ),
   });
 
 export const componentDeleteModal = (component: ComponentKind) =>
@@ -17,7 +24,8 @@ export const componentDeleteModal = (component: ComponentKind) =>
     description: (
       <>
         The component <strong>{component.metadata.name}</strong> will be deleted from the components
-        view and all the environments it is currently deployed.
+        view. The updated application will be promoted manually or automatically based on the
+        deployment strategy of each environment.
       </>
     ),
   });
