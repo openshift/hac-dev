@@ -54,7 +54,10 @@ describe('Create Component from Public Git Source', () => {
     });
 
     it('Check Changing Resources', () => {
-      componentPage.expandDetails(componentName);
+      componentPage.editComponentName(componentName);
+      cy.contains('div', componentName).should('be.visible');
+
+      componentPage.expandDetails();
       componentPage.setCpuByButton(cpuCount + 1, cpuUnit);
       componentPage.setRam(ramValue, ramUnit);
     });

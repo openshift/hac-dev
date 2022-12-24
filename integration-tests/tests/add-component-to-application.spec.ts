@@ -1,3 +1,4 @@
+import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { actions } from '../support/pageObjects/global-po';
 import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
 import { addIntegrationTestStep, Applications } from '../utils/Applications';
@@ -47,7 +48,7 @@ describe('Create Components using the UI', () => {
 
     it('Add a component to Application', () => {
       Applications.createComponent(publicRepos[0], componentNames[0]);
-      Applications.createdComponentExists(componentNames[0], applicationName);
+      Applications.createdComponentExists(applicationDetailPagePO.quarkusComponentPO, applicationName);
     });
   });
 
@@ -58,7 +59,7 @@ describe('Create Components using the UI', () => {
 
     it('Add a component to Application', () => {
       Applications.createComponent(publicRepos[1], componentNames[1]);
-      Applications.createdComponentExists(componentNames[1], applicationName);
+      Applications.createdComponentExists(applicationDetailPagePO.goComponentPO, applicationName);
     });
   });
 
@@ -69,7 +70,7 @@ describe('Create Components using the UI', () => {
 
     it('Add a component to Application', () => {
       Applications.createComponent(publicRepos[1], componentNames[2]);
-      Applications.createdComponentExists(componentNames[2], applicationName);
+      Applications.createdComponentExists(applicationDetailPagePO.goComponentPO, applicationName);
     });
   });
 
@@ -80,7 +81,7 @@ describe('Create Components using the UI', () => {
 
     it('Add a component to Application', () => {
       Applications.createComponent(publicRepos[2], componentNames[3]);
-      Applications.createdComponentExists(componentNames[3], applicationName);
+      Applications.createdComponentExists(applicationDetailPagePO.nodejsComponentPO, applicationName);
     });
   });
 

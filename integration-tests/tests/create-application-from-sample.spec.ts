@@ -1,3 +1,4 @@
+import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { ComponentSamplesPage } from '../support/pages/ComponentSamplesPage';
@@ -7,6 +8,8 @@ import { Common } from '../utils/Common';
 
 describe('Create Application from Sample', () => {
   const applicationName = Common.generateAppName();
+  var nodejsComponentName;
+  var quarkusComponentName;
   const applicationDetailPage = new ApplicationDetailPage();
   const componentPage = new ComponentPage();
   const addComponent = new AddComponentPage();
@@ -30,11 +33,25 @@ describe('Create Application from Sample', () => {
     // Create sample component
     componentPage.createApplication();
 
+    nodejsComponentName = Applications.getComponentName();
+    cy.log(nodejsComponentName);
+
     //Check application
     applicationDetailPage.createdComponentExists(
-      `${applicationName}-nodejs-sample`,
-      applicationName,
+      nodejsComponentName,
+      applicationName
     );
+
+    // cy.get(applicationDetailPagePO.nodejsComponentPO).then(($ele) => {
+    //   nodejsComponentName = $ele.text();
+    //   cy.log(nodejsComponentName);
+
+    //   //Check application
+    //   applicationDetailPage.createdComponentExists(
+    //     nodejsComponentName,
+    //     applicationName,
+    //   );
+    // });
   });
 
   it('Add quarkus component', () => {
@@ -48,21 +65,36 @@ describe('Create Application from Sample', () => {
     // Create sample component
     componentPage.createApplication();
 
-    //Check if application exists
+    quarkusComponentName = Applications.getComponentName();
+    cy.log(quarkusComponentName);
+
+    //Check application
     applicationDetailPage.createdComponentExists(
-      `${applicationName}-java-quarkus-sample`,
-      applicationName,
+      quarkusComponentName,
+      applicationName
     );
+
+    // cy.get(applicationDetailPagePO.quarkusComponentPO).then(($ele) => {
+    //   quarkusComponentName = $ele.text();
+    //   cy.log(quarkusComponentName);
+
+    //   //Check if application exists
+    //   applicationDetailPage.createdComponentExists(
+    //     quarkusComponentName,
+    //     applicationName,
+    //   );
+    // });
   });
 
   it('Delete quarkus component', () => {
     //Open components page
     Common.openApplicationURL(applicationName);
     //Review component page
-    applicationDetailPage.deleteComponent(`${applicationName}-java-quarkus-sample`);
+    cy.log(quarkusComponentName);
+    applicationDetailPage.deleteComponent(quarkusComponentName);
 
     //Check if application does not exists
-    applicationDetailPage.createdComponentNotExists(`${applicationName}-java-quarkus-sample`);
+    applicationDetailPage.createdComponentNotExists(quarkusComponentName);
   });
 
   it('Delete application with existing component', () => {

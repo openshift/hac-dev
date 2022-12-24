@@ -54,12 +54,20 @@ export class Applications {
   }
 
   static getComponentListItem(application: string) {
-    return cy.contains(applicationDetailPagePO.item, application, { timeout: 60000 });
+    return cy.contains(application, { timeout: 60000 });
   }
 
   static clickActionsDropdown(dropdownItem: string) {
     cy.get(actionsDropdown.dropdown).click();
     cy.contains(dropdownItem).click();
+  }
+
+  static getComponentName(index: number = 0):string {
+    let name;
+    cy.get('[data-testid="component-list-item-name"] > b').eq(index).then(($componentName) => {
+      name = $componentName.text();
+    });
+    return name;
   }
 
   static goToOverviewTab() {

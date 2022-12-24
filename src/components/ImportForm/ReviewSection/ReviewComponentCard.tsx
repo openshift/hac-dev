@@ -65,6 +65,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
           'aria-label': name,
           'aria-labelledby': `review-${name} toggle-${name}`,
           'aria-expanded': expandedComponent,
+          'data-test': 'toggle-button',
         }}
       >
         <CardTitle>

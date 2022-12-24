@@ -6,6 +6,7 @@ export const addComponentPagePO = {
   gitReference: '[data-test="git-reference"]',
   contextDir: '[data-test="context-dir"]',
   next: 'button[type=submit]',
+  toggleButton: '[data-test="toggle-button"]',
   username: '[data-testid="auth-username"]',
   token: '[data-testid="auth-token"]',
   authenticateButton: '[data-testid="authenticate-token"]',
@@ -51,6 +52,9 @@ export const ComponentsPagePO = {
 
 export const applicationDetailPagePO = {
   item: '[data-testid="component-list-item-name"] > b',
+  nodejsComponentPO: '[data-test="devfile-sample"]',
+  goComponentPO: '[data-test="devfile-sample-go-basic"]',
+  quarkusComponentPO: '[data-test="devfile-sample-code-with-quarkus"]',
   componentBuildLog: '[data-testid="view-build-logs"]',
   componentSettings: '[data-testid="Component settings"]',
   detailsArrow: '[aria-label="Details"]',
