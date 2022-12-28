@@ -12,6 +12,7 @@ import {
   TextContent,
   ValidatedOptions,
 } from '@patternfly/react-core';
+import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
 import { useField, useFormikContext } from 'formik';
 import { useOnMount } from '../../../hooks/useOnMount';
 import { getFieldId, InputField } from '../../../shared';
@@ -154,7 +155,10 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
         <Text component="h2">Add components to your application</Text>
         <HelperText>
           <HelperTextItem>
-            {description} <HelpTopicLink topicId="add-component">Learn more</HelpTopicLink>
+            {description}{' '}
+            <HelpTopicLink topicId="add-component">
+              Learn more <OpenDrawerRightIcon />
+            </HelpTopicLink>
           </HelperTextItem>
         </HelperText>
       </TextContent>
