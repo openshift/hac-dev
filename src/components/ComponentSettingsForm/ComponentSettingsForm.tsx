@@ -39,6 +39,10 @@ const ComponentSettingsForm: React.FunctionComponent<FormikProps<FormikValues>> 
           path: `/stonesoup/applications/${components[0].componentStub.application}`,
           name: startCase(components[0].componentStub.application),
         },
+        {
+          path: `/stonesoup/applications/${components[0].componentStub.application}?activeTab=components`,
+          name: components[0].componentStub.componentName,
+        },
         { path: '#', name: 'Component settings' },
       ]}
       title="Component settings"
