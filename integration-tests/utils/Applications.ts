@@ -45,29 +45,23 @@ export class Applications {
   }
 
 
-  static createdComponentExists(componentName: string, applicationName: string) {
+  static createdComponentExists(componentName: string, applicationName: string, strictChecking: boolean = false) {
     this.goToComponentsTab();
 
     Common.verifyPageTitle(applicationName);
     Common.waitForLoad();
     this.getComponentListItem(componentName).should('exist');
+
+    (strictChecking)? cy.get(componentsTabPO.componentListItem.replace('{0}', componentName)).contains(/.*Build Succeeded.*/, { timeout: 1200000 }) : "";
   }
 
   static getComponentListItem(application: string) {
-    return cy.contains(application, { timeout: 60000 });
+    return cy.contains(applicationDetailPagePO.item, application, { timeout: 60000 });
   }
 
   static clickActionsDropdown(dropdownItem: string) {
     cy.get(actionsDropdown.dropdown).click();
     cy.contains(dropdownItem).click();
-  }
-
-  static getComponentName(index: number = 0):string {
-    let name;
-    cy.get('[data-testid="component-list-item-name"] > b').eq(index).then(($componentName) => {
-      name = $componentName.text();
-    });
-    return name;
   }
 
   static goToOverviewTab() {

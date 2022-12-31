@@ -1,4 +1,3 @@
-import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { actions } from '../support/pageObjects/global-po';
 import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
 import { addIntegrationTestStep, Applications } from '../utils/Applications';
@@ -34,6 +33,15 @@ describe('Create Components using the UI', () => {
   beforeEach(function () {
     localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
     localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
+    cy.exec("oc project | cut -d '\"' -f2").then((result) => {
+      var currentNamespace = result.stdout;
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `https://prod.foo.redhat.com:1337/api/k8s/apis/appstudio.redhat.com/v1alpha1/namespaces/${currentNamespace}/components?limit=250`,
+        }
+      ).as('componentsAPI');
+    });
   });
 
   after(function () {
@@ -48,7 +56,14 @@ describe('Create Components using the UI', () => {
 
     it('Add a component to Application', () => {
       Applications.createComponent(publicRepos[0], componentNames[0]);
-      Applications.createdComponentExists(applicationDetailPagePO.quarkusComponentPO, applicationName);
+
+      cy.wait('@componentsAPI').then((xhr) => {
+        for (let item of xhr.response.body.items) {
+          if ((item.spec.source.git.url == publicRepos[0]) && (item.spec.componentName == componentNames[0])) {
+            Applications.createdComponentExists(item.spec.componentName, applicationName);
+          }
+        }
+      });
     });
   });
 
@@ -59,7 +74,14 @@ describe('Create Components using the UI', () => {
 
     it('Add a component to Application', () => {
       Applications.createComponent(publicRepos[1], componentNames[1]);
-      Applications.createdComponentExists(applicationDetailPagePO.goComponentPO, applicationName);
+
+      cy.wait('@componentsAPI').then((xhr) => {
+        for (let item of xhr.response.body.items) {
+          if ((item.spec.source.git.url == publicRepos[1]) && (item.spec.componentName == componentNames[1])) {
+            Applications.createdComponentExists(item.spec.componentName, applicationName);
+          }
+        }
+      });
     });
   });
 
@@ -70,7 +92,14 @@ describe('Create Components using the UI', () => {
 
     it('Add a component to Application', () => {
       Applications.createComponent(publicRepos[1], componentNames[2]);
-      Applications.createdComponentExists(applicationDetailPagePO.goComponentPO, applicationName);
+
+      cy.wait('@componentsAPI').then((xhr) => {
+        for (let item of xhr.response.body.items) {
+          if ((item.spec.source.git.url == publicRepos[1]) && (item.spec.componentName == componentNames[2])) {
+            Applications.createdComponentExists(item.spec.componentName, applicationName);
+          }
+        }
+      });
     });
   });
 
@@ -81,7 +110,17 @@ describe('Create Components using the UI', () => {
 
     it('Add a component to Application', () => {
       Applications.createComponent(publicRepos[2], componentNames[3]);
-      Applications.createdComponentExists(applicationDetailPagePO.nodejsComponentPO, applicationName);
+
+      cy.wait('@componentsAPI').then((xhr) => {
+        for (let item of xhr.response.body.items) {
+          if ((item.spec.source.git.url == publicRepos[2]) && (item.spec.componentName == componentNames[3])) {
+            Applications.createdComponentExists(item.spec.componentName, applicationName, true);
+          }
+          else {
+            Applications.createdComponentExists(item.spec.componentName, applicationName, true);
+          }
+        }
+      });
     });
   });
 

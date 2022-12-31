@@ -7,6 +7,7 @@ export const overviewTabPO = {
 export const componentsTabPO = {
   clickTab: '[data-test="details__tabItem components"]',
   addComponent: '[data-test="add-component-button"]',
+  componentListItem: '[data-test="{0}-component-list-item"]',
 };
 
 export const integrationTestsTabPO = {

@@ -1,4 +1,3 @@
-import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { ComponentSamplesPage } from '../support/pages/ComponentSamplesPage';
@@ -8,18 +7,32 @@ import { Common } from '../utils/Common';
 
 describe('Create Application from Sample', () => {
   const applicationName = Common.generateAppName();
-  var nodejsComponentName;
-  var quarkusComponentName;
   const applicationDetailPage = new ApplicationDetailPage();
   const componentPage = new ComponentPage();
   const addComponent = new AddComponentPage();
   const componentSamplesPage = new ComponentSamplesPage();
+  const publicRepos = [
+    'https://github.com/nodeshift-starters/devfile-sample.git',
+    'https://github.com/devfile-samples/devfile-sample-code-with-quarkus.git'
+  ];
 
   before(() => {
     // Disable HACBS
     localStorage.setItem('hacbs', 'false');
     // Need to reload the page after enabling HACBS via localStorage
     cy.reload();
+  });
+
+  beforeEach(function () {
+    cy.exec("oc project | cut -d '\"' -f2").then((result) => {
+      var currentNamespace = result.stdout;
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `https://prod.foo.redhat.com:1337/api/k8s/apis/appstudio.redhat.com/v1alpha1/namespaces/${currentNamespace}/components?limit=250`,
+        }
+      ).as('componentsAPI');
+    });
   });
 
   it('NodeJS app can be created', () => {
@@ -33,28 +46,16 @@ describe('Create Application from Sample', () => {
     // Create sample component
     componentPage.createApplication();
 
-    nodejsComponentName = Applications.getComponentName();
-    cy.log(nodejsComponentName);
-
-    //Check application
-    applicationDetailPage.createdComponentExists(
-      nodejsComponentName,
-      applicationName
-    );
-
-    // cy.get(applicationDetailPagePO.nodejsComponentPO).then(($ele) => {
-    //   nodejsComponentName = $ele.text();
-    //   cy.log(nodejsComponentName);
-
-    //   //Check application
-    //   applicationDetailPage.createdComponentExists(
-    //     nodejsComponentName,
-    //     applicationName,
-    //   );
-    // });
+    cy.wait('@componentsAPI').then((xhr) => {
+      for (let item of xhr.response.body.items) {
+        if (item.spec.source.git.url == publicRepos[0]) {
+          applicationDetailPage.createdComponentExists(item.spec.componentName, applicationName);
+        }
+      }
+    });
   });
 
-  it('Add quarkus component', () => {
+  it('Add and then delete a quarkus component', () => {
     //Open components page
     Common.openApplicationURL(applicationName);
     //open app sample page
@@ -65,36 +66,23 @@ describe('Create Application from Sample', () => {
     // Create sample component
     componentPage.createApplication();
 
-    quarkusComponentName = Applications.getComponentName();
-    cy.log(quarkusComponentName);
+    cy.wait('@componentsAPI').then((xhr) => {
+      for (let item of xhr.response.body.items) {
+        if (item.spec.source.git.url == publicRepos[1]) {
+          var quarkusComponentName = item.spec.componentName;
 
-    //Check application
-    applicationDetailPage.createdComponentExists(
-      quarkusComponentName,
-      applicationName
-    );
+          //Check if component exists
+          applicationDetailPage.createdComponentExists(quarkusComponentName, applicationName);
 
-    // cy.get(applicationDetailPagePO.quarkusComponentPO).then(($ele) => {
-    //   quarkusComponentName = $ele.text();
-    //   cy.log(quarkusComponentName);
+          //Open components page
+          Common.openApplicationURL(applicationName);
+          applicationDetailPage.deleteComponent(quarkusComponentName);
 
-    //   //Check if application exists
-    //   applicationDetailPage.createdComponentExists(
-    //     quarkusComponentName,
-    //     applicationName,
-    //   );
-    // });
-  });
-
-  it('Delete quarkus component', () => {
-    //Open components page
-    Common.openApplicationURL(applicationName);
-    //Review component page
-    cy.log(quarkusComponentName);
-    applicationDetailPage.deleteComponent(quarkusComponentName);
-
-    //Check if application does not exists
-    applicationDetailPage.createdComponentNotExists(quarkusComponentName);
+          //Check if component does not exists
+          applicationDetailPage.createdComponentNotExists(quarkusComponentName);
+        }
+      }
+    });
   });
 
   it('Delete application with existing component', () => {
