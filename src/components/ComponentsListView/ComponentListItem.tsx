@@ -78,7 +78,6 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
             <DataListCell key="name">
               <Flex direction={{ default: 'column' }}>
                 <FlexItem data-testid="component-list-item-name">
-                  {/* data-test={component.spec.source?.git?.url.split("/", 5)[4].split(".", 2)[0]} */}
                   <b>{name}</b>
                 </FlexItem>
                 <FlexItem>

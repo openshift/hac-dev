@@ -33,15 +33,12 @@ describe('Create Components using the UI', () => {
   beforeEach(function () {
     localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
     localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
-    cy.exec("oc project | cut -d '\"' -f2").then((result) => {
-      var currentNamespace = result.stdout;
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `https://prod.foo.redhat.com:1337/api/k8s/apis/appstudio.redhat.com/v1alpha1/namespaces/${currentNamespace}/components?limit=250`,
-        }
-      ).as('componentsAPI');
-    });
+    cy.intercept(
+      {
+        method: 'GET',
+        url: /https:\/\/prod\.foo\.redhat\.com:1337\/api\/k8s\/apis\/appstudio\.redhat\.com\/v1alpha1\/namespaces\/[a-zA-Z]+\/components\?limit=250/,
+      }
+    ).as('componentsAPI');
   });
 
   after(function () {

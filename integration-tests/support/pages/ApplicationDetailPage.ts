@@ -51,7 +51,7 @@ export class ApplicationDetailPage {
   }
 
   getComponentListItem(application: string) {
-    return cy.get('[data-testid="component-list-item-name"]').contains(application);
+    return cy.contains(applicationDetailPagePO.item, application, { timeout: 60000 });
   }
 
   openAddComponentPage() {
