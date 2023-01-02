@@ -318,6 +318,7 @@ module.exports = {
       },
       flags: {
         required: ['SIGNUP'],
+        disallowed: ['MVP'],
       },
     },
     {
@@ -331,6 +332,7 @@ module.exports = {
       },
       flags: {
         required: ['SIGNUP'],
+        disallowed: ['MVP'],
       },
     },
     {
@@ -353,26 +355,28 @@ module.exports = {
         required: ['SIGNUP'],
       },
     },
-    {
-      type: 'console.navigation/href',
-      properties: {
-        href: '/stonesoup/workspace-settings',
-        name: 'Settings',
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.navigation/href',
-      properties: {
-        href: '/stonesoup/workspace-settings',
-        name: 'Settings',
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
+    // {
+    //   type: 'console.navigation/href',
+    //   properties: {
+    //     href: '/stonesoup/workspace-settings',
+    //     name: 'Settings',
+    //   },
+    //   flags: {
+    //     required: ['SIGNUP'],
+    //     disallowed: ['MVP'],
+    //   },
+    // },
+    // {
+    //   type: 'core.navigation/href',
+    //   properties: {
+    //     href: '/stonesoup/workspace-settings',
+    //     name: 'Settings',
+    //   },
+    //   flags: {
+    //     required: ['SIGNUP'],
+    //     disallowed: ['MVP'],
+    //   },
+    // },
     {
       type: 'core.flag',
       properties: {
@@ -386,6 +390,15 @@ module.exports = {
       properties: {
         handler: {
           $codeRef: 'FlagUtils.setSignupFeatureFlags',
+        },
+      },
+    },
+
+    {
+      type: 'core.flag',
+      properties: {
+        handler: {
+          $codeRef: 'FlagUtils.setMvpFeatureFlag',
         },
       },
     },
