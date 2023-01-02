@@ -27,7 +27,7 @@ describe('Create Application from Sample', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: /https:\/\/prod\.foo\.redhat\.com:1337\/api\/k8s\/apis\/appstudio\.redhat\.com\/v1alpha1\/namespaces\/[a-zA-Z]+\/components\?limit=250/,
+        url: /https:\/\/([a-zA-Z]+(\.[a-zA-Z]+)+):1337\/api\/k8s\/apis\/appstudio\.redhat\.com\/v1alpha1\/namespaces\/[A-Za-z0-9]+\/components\?limit=250/,
       }
     ).as('componentsAPI');
   });
