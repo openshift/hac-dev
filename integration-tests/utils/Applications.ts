@@ -52,7 +52,9 @@ export class Applications {
     Common.waitForLoad();
     this.getComponentListItem(componentName).should('exist');
 
-    (strictChecking)? cy.get(componentsTabPO.componentListItem.replace('{0}', componentName)).contains(/.*Build Succeeded.*/, { timeout: 1200000 }) : "";
+    if (strictChecking) {
+      cy.get(componentsTabPO.componentListItem.replace('{0}', componentName)).contains(/.*Build Succeeded.*/, { timeout: 1200000 });
+    }
   }
 
   static getComponentListItem(application: string) {

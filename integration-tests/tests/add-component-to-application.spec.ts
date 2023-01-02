@@ -111,10 +111,7 @@ describe('Create Components using the UI', () => {
       cy.wait('@componentsAPI').then((xhr) => {
         for (let item of xhr.response.body.items) {
           if ((item.spec.source.git.url == publicRepos[2]) && (item.spec.componentName == componentNames[3])) {
-            Applications.createdComponentExists(item.spec.componentName, applicationName, true);
-          }
-          else {
-            Applications.createdComponentExists(item.spec.componentName, applicationName, true);
+            Applications.createdComponentExists(item.spec.componentName, applicationName);
           }
         }
       });
