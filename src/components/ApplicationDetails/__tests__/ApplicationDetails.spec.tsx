@@ -1,5 +1,6 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, configure, fireEvent, act, waitFor } from '@testing-library/react';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
@@ -25,7 +26,12 @@ jest.mock('../../../hooks/useGitOpsDeploymentCR', () => ({
   useGitOpsDeploymentCR: jest.fn(),
 }));
 
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
+}));
+
 const useChromeMock = useChrome as jest.Mock;
+const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
@@ -35,6 +41,7 @@ const mockGitOpsDiploymentCR = useGitOpsDeploymentCR as jest.Mock;
 describe('ApplicationDetails', () => {
   beforeEach(() => {
     localStorage.removeItem(HACBS_APPLICATION_MODAL_HIDE_KEY);
+    useFeatureFlagMock.mockReturnValue([false]);
     mockGitOpsDiploymentCR.mockReturnValue([[], false]);
   });
   it('should render spinner if application data is not loaded', () => {
