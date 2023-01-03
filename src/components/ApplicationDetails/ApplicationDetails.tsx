@@ -12,6 +12,7 @@ import { ApplicationKind } from '../../types';
 import { MVP_FLAG } from '../../utils/flag-utils';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import { ActivityTab } from '../Activity/ActivityTab';
 import { ApplicationSwitcher } from '../ApplicationDetailsView/ApplicationSwitcher';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
@@ -19,11 +20,9 @@ import ApplicationModal, { HACBS_APPLICATION_MODAL_HIDE_KEY } from './Applicatio
 import { applicationQuickstartContent } from './ApplicationQuickstartContent';
 import DetailsPage from './DetailsPage';
 import ApplicationOverviewTab from './tabs/ApplicationOverviewTab';
-import CommitsTab from './tabs/CommitsTab';
 import ComponentsTab from './tabs/ComponentsTab';
 import EnvironmentsTab from './tabs/EnvironmentsTab';
 import IntegrationTestsTab from './tabs/IntegrationTestsTab';
-import PipelineRunsTab from './tabs/PipelineRunsTab';
 
 type HacbsApplicationDetailsProps = {
   applicationName: string;
@@ -189,21 +188,17 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             component: <ApplicationOverviewTab applicationName={applicationName} />,
           },
           {
+            key: 'activity',
+            label: 'Activity',
+            component: <ActivityTab applicationName={applicationName} />,
+          },
+          {
             key: 'components',
             label: 'Components',
             isFilled: true,
             component: <ComponentsTab applicationName={applicationName} namespace={namespace} />,
           },
-          {
-            key: 'commits',
-            label: 'Commits',
-            component: <CommitsTab applicationName={applicationName} />,
-          },
-          {
-            key: 'pipelineruns',
-            label: 'Pipeline runs',
-            component: <PipelineRunsTab applicationName={applicationName} />,
-          },
+
           ...(mvpFeature
             ? []
             : [
@@ -213,6 +208,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
                   component: <IntegrationTestsTab applicationName={applicationName} />,
                 },
               ]),
+
           {
             key: 'environments',
             label: 'Environments',

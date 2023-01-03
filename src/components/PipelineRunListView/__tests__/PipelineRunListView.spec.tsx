@@ -117,7 +117,6 @@ describe('Pipeline run List', () => {
   it('should render pipelineRuns list when pipelineRuns are present', () => {
     watchResourceMock.mockReturnValue([pipelineRuns, true]);
     render(<PipelineRunsListView applicationName={appName} />);
-    screen.getByText(/Pipeline runs/);
     screen.getByText('Name');
     screen.getByText('Started');
     screen.getByText('Duration');

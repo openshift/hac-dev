@@ -22,9 +22,12 @@ const commits = getCommitsFromPLRs(pipelineWithCommits);
 
 describe('CommitsListRow', () => {
   it('lists correct Commit details', () => {
-    const { getByText, container } = render(<CommitsListRow columns={null} obj={commits[0]} />);
+    const { getByText, queryByText, container } = render(
+      <CommitsListRow columns={null} obj={commits[0]} />,
+    );
     const expectedDate = dateTime.dateTimeFormatter.format(new Date(commits[0].creationTime));
-    expect(getByText('commit1')).toBeInTheDocument();
+    expect(queryByText('commit1')).not.toBeInTheDocument();
+    expect(getByText('test-title')).toBeInTheDocument();
     expect(container).toHaveTextContent(expectedDate.toString());
     expect(getByText('branch_1')).toBeInTheDocument();
     expect(getByText('sample-component')).toBeInTheDocument();

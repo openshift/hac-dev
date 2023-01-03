@@ -16,11 +16,17 @@ import {
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
+  Select,
+  SelectVariant,
+  SelectGroup,
+  SelectOption,
 } from '@patternfly/react-core';
+import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useSearchParam } from '../../hooks/useSearchParam';
-import { Table } from '../../shared';
+import { pipelineRunFilterReducer, Table } from '../../shared';
 import { Commit } from '../../types';
+import { statuses } from '../../utils/commits-utils';
 import CommitsListHeader from './CommitsListHeader';
 import CommitsListRow from './CommitsListRow';
 
@@ -37,17 +43,45 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
 }) => {
   const navigate = useNavigate();
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
+  const [statusFilterExpanded, setStatusFilterExpanded] = React.useState<boolean>(false);
+  const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
+
+  const statusFilters = React.useMemo(
+    () => (statusFiltersParam ? statusFiltersParam.split(',') : []),
+    [statusFiltersParam],
+  );
+
+  const setStatusFilters = React.useCallback(
+    (filters: string[]) => setStatusFiltersParam(filters.join(',')),
+    [setStatusFiltersParam],
+  );
+
+  const statusFilterObj = React.useMemo(() => {
+    return commits.reduce((acc, c) => {
+      const stat = pipelineRunFilterReducer(c.pipelineRuns[0]);
+      if (statuses.includes(stat)) {
+        if (acc[stat] !== undefined) {
+          acc[stat] = acc[stat] + 1;
+        } else {
+          acc[stat] = 1;
+        }
+      }
+      return acc;
+    }, {} as { [key: string]: number });
+  }, [commits]);
 
   const filteredCommits = React.useMemo(
     () =>
-      nameFilter
-        ? commits.filter(
-            (commit) =>
-              commit.sha.indexOf(nameFilter) !== -1 ||
-              commit.components.some((c) => c.indexOf(nameFilter) !== -1),
-          )
-        : commits,
-    [nameFilter, commits],
+      commits.filter(
+        (commit) =>
+          (!nameFilter ||
+            commit.sha.indexOf(nameFilter) !== -1 ||
+            commit.components.some((c) => c.indexOf(nameFilter) !== -1) ||
+            commit.shaTitle.includes(nameFilter)) &&
+          (!statusFilters.length ||
+            statusFilters.includes(pipelineRunFilterReducer(commit.pipelineRuns[0]))),
+      ),
+    [nameFilter, commits, statusFilters],
   );
 
   const onClearFilters = () => setNameFilter('');
@@ -72,15 +106,12 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
 
   return (
     <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light} isFilled>
-      <Title size="lg" headingLevel="h3" className="pf-c-title pf-u-mt-lg pf-u-mb-sm">
-        {recentOnly ? 'Recent commits' : 'Commits'}
-      </Title>
-      <Text className="pf-u-mb-lg">
-        Monitor your commits and their pipeline progression across all components.{' '}
-        <Button variant="link" className="pf-u-pl-sm">
-          Learn more
-        </Button>
-      </Text>
+      {recentOnly ? (
+        <Title size="lg" headingLevel="h3" className="pf-c-title pf-u-mt-lg pf-u-mb-sm">
+          {recentOnly ? 'Recent commits' : 'Commits'}
+        </Title>
+      ) : null}
+      <Text className="pf-u-mb-lg">Events progression triggered by the commit.</Text>
       {!recentOnly && (
         <Toolbar data-test="commit-list-toolbar" clearAllFilters={onClearFilters}>
           <ToolbarContent>
@@ -95,6 +126,41 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
                   onChange={(name) => onNameInput(name)}
                   value={nameFilter}
                 />
+              </ToolbarItem>
+              <ToolbarItem>
+                <Select
+                  placeholderText="Status"
+                  toggleIcon={<FilterIcon />}
+                  toggleAriaLabel="Status filter menu"
+                  variant={SelectVariant.checkbox}
+                  isOpen={statusFilterExpanded}
+                  onToggle={setStatusFilterExpanded}
+                  onSelect={(event, selection) => {
+                    const checked = (event.target as HTMLInputElement).checked;
+                    setStatusFilters(
+                      checked
+                        ? [...statusFilters, String(selection)]
+                        : statusFilters.filter((value) => value !== selection),
+                    );
+                  }}
+                  selections={statusFilters}
+                  isGrouped
+                >
+                  {[
+                    <SelectGroup label="Status" key="status">
+                      {Object.keys(statusFilterObj).map((filter) => (
+                        <SelectOption
+                          key={filter}
+                          value={filter}
+                          isChecked={statusFilters.includes(filter)}
+                          itemCount={statusFilterObj[filter] ?? 0}
+                        >
+                          {filter}
+                        </SelectOption>
+                      ))}
+                    </SelectGroup>,
+                  ]}
+                </Select>
               </ToolbarItem>
             </ToolbarGroup>
           </ToolbarContent>

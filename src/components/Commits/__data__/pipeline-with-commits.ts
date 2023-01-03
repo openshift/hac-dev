@@ -19,6 +19,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
           'test/results/558677f8-e01c-4d15-8729-5e838bd492aa/records/558677f8-e01c-4d15-8729-5e838bd492aa',
         'results.tekton.dev/result': 'test/results/558677f8-e01c-4d15-8729-5e838bd492aa',
         'build.appstudio.redhat.com/target_branch': 'branch_1',
+        'pipelinesascode.tekton.dev/sha-title': 'test-title',
       },
       creationTimestamp: '2022-07-19T11:35:46Z',
       generation: 1,
@@ -71,6 +72,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'results.tekton.dev/result': 'test/results/358168a2-e2f1-4fc6-90a5-90ad80079e17',
         'build.appstudio.redhat.com/commit_sha': 'commit14rt',
         'build.appstudio.redhat.com/target_branch': 'branch_b',
+        'pipelinesascode.tekton.dev/sha-title': 'test-title-2',
       },
       creationTimestamp: '2022-06-20T12:47:24Z',
       generateName: 'nodejs-sample-',
@@ -123,6 +125,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
         'build.appstudio.redhat.com/target_branch': 'branch_b',
+        'pipelinesascode.tekton.dev/sha-title': 'test-title-3',
       },
       creationTimestamp: '2022-06-20T12:47:24Z',
       generateName: 'nodejs-sample-',
@@ -224,6 +227,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'pipelinesascode.tekton.dev/sha-url':
           'https://github.com/devfile-samples/devfile-sample-java-springboot-basic',
         'build.appstudio.redhat.com/target_branch': 'branch_b',
+        'pipelinesascode.tekton.dev/sha-title': 'test-title-4',
       },
       creationTimestamp: '2022-06-20T12:47:24Z',
       generateName: 'nodejs-sample-',
@@ -942,6 +946,7 @@ export const mockCommits: Commit[] = [
     user: 'abhi',
     shaURL: 'https://github.com/abhinandan13jan/comm0123456789abcdefghijklmnopqrstuvwxyz',
     pipelineRuns: [...pipelineWithCommits.slice(0, 1)],
+    isPullRequest: false,
   },
 ];
 
