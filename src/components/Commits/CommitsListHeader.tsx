@@ -1,6 +1,6 @@
 export const commitsTableColumnClasses = {
-  name: 'pf-m-width-20',
-  branch: 'pf-m-width-15',
+  name: 'pf-m-width-25',
+  branch: 'pf-m-width-10',
   component: 'pf-m-width-15',
   byUser: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-10',
   committedAt: 'pf-m-hidden pf-m-visible-on-lg pf-m-width-20',
@@ -27,7 +27,7 @@ const CommitsListHeader = () => {
       props: { className: commitsTableColumnClasses.byUser },
     },
     {
-      title: 'Committed at',
+      title: 'Latest commit at',
       props: { className: commitsTableColumnClasses.committedAt },
     },
     {

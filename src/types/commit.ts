@@ -18,4 +18,6 @@ export type Commit = {
   pipelineRuns: PipelineRunKind[];
   application: string;
   shaTitle?: string;
+  isPullRequest: boolean;
+  pullRequestNumber?: string;
 };
