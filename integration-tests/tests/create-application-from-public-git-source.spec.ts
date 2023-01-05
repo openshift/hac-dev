@@ -107,26 +107,30 @@ describe('Create Component from Public Git Source', () => {
 
       cy.wait('@componentsAPI').then((xhr) => {
         for (let item of xhr.response.body.items) {
-          var componentName = item.spec.componentName;
-          cy.log(componentName);
-          applicationDetailPage.createdComponentExists(componentName, applicationName);
+          if (item.spec.application == applicationName) {
+            var componentName = item.spec.componentName;
+            cy.log(componentName);
+            applicationDetailPage.createdComponentExists(componentName, applicationName);
 
-          /* Check Component Build Log */
-          // TODO: implement check for build log appropriate text
-          applicationDetailPage.checkBuildLog(componentName, 'text to verify');
+            /* Check Component Build Log */
+            // TODO: implement check for build log appropriate text
+            applicationDetailPage.checkBuildLog(componentName, 'text to verify');
 
-          /* Check Resources Value */
-          applicationDetailPage.expandDetails(componentName);
-          applicationDetailPage.checkCpuAndMemory(cpuCount + 1, cpuUnit, ramValue, ramUnit);
-          applicationDetailPage.checkReplica(replicaCount);
+            /* Check Resources Value */
+            applicationDetailPage.expandDetails(componentName);
+            applicationDetailPage.checkCpuAndMemory(cpuCount + 1, cpuUnit, ramValue, ramUnit);
+            applicationDetailPage.checkReplica(replicaCount);
 
-          /* Change Resources Value */
-          applicationDetailPage.openComponentSettings(componentName);
-          componentPage.setRam(2, MemoryUnit.gigabyte);
-          componentPage.setCpuByButton(cpuCount, cpuUnit);
-          componentPage.saveChanges();
-          applicationDetailPage.expandDetails(componentName);
-          applicationDetailPage.checkCpuAndMemory(cpuCount, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
+            /* Change Resources Value */
+            applicationDetailPage.openComponentSettings(componentName);
+            componentPage.setRam(2, MemoryUnit.gigabyte);
+            componentPage.setCpuByButton(cpuCount, cpuUnit);
+            componentPage.saveChanges();
+            applicationDetailPage.expandDetails(componentName);
+            applicationDetailPage.checkCpuAndMemory(cpuCount, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
+
+            break;
+          }
         }
       });
     });

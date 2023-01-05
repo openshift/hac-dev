@@ -45,8 +45,9 @@ describe('Create Application from Sample', () => {
 
     cy.wait('@componentsAPI').then((xhr) => {
       for (let item of xhr.response.body.items) {
-        if (item.spec.source.git.url == publicRepos[0]) {
+        if (item.spec.application == applicationName && item.spec.source.git.url == publicRepos[0]) {
           applicationDetailPage.createdComponentExists(item.spec.componentName, applicationName);
+          break;
         }
       }
     });
@@ -65,7 +66,7 @@ describe('Create Application from Sample', () => {
 
     cy.wait('@componentsAPI').then((xhr) => {
       for (let item of xhr.response.body.items) {
-        if (item.spec.source.git.url == publicRepos[1]) {
+        if (item.spec.application == applicationName && item.spec.source.git.url == publicRepos[1]) {
           var quarkusComponentName = item.spec.componentName;
 
           //Check if component exists
@@ -77,6 +78,7 @@ describe('Create Application from Sample', () => {
 
           //Check if component does not exists
           applicationDetailPage.createdComponentNotExists(quarkusComponentName);
+          break;
         }
       }
     });
