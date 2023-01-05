@@ -85,7 +85,7 @@ export class ComponentPage extends AbstractWizardPage {
     cy.contains(alertTitle, message).should('exist');
   }
 
-  expandDetails() {
-    cy.get(addComponentPagePO.toggleButton).click();
+  expandDetails(componentName: string) {
+    cy.get(addComponentPagePO.toggleButton.replace('{0}', componentName)).click();
   }
 }
