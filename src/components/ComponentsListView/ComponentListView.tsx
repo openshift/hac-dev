@@ -109,13 +109,9 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({
     isList: true,
     namespace,
     selector: {
-      matchExpressions: [
-        {
-          key: PipelineRunLabel.COMPONENT,
-          operator: 'In',
-          values: components?.map((c) => c.metadata.name),
-        },
-      ],
+      matchLabels: {
+        [PipelineRunLabel.APPLICATION]: applicationName,
+      },
     },
   });
 
