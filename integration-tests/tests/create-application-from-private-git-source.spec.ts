@@ -39,6 +39,7 @@ describe('Create Component from Private Git Source', () => {
     });
 
     it('Create Application', () => {
+      componentPage.editComponentName(componentName);
       componentPage.createApplication();
       applicationDetailPage.createdComponentExists(componentName, applicationName);
     });

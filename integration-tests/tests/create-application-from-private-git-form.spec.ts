@@ -82,6 +82,7 @@ describe('Create Component from Private Git Using Login Form', () => {
       addComponent.waitRepoValidated();
       addComponent.clickNext();
 
+      componentPage.editComponentName(componentName);
       componentPage.createApplication();
       applicationDetailPage.createdComponentExists(componentName, applicationName);
     });
