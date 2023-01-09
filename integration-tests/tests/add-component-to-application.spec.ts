@@ -33,12 +33,6 @@ describe('Create Components using the UI', () => {
   beforeEach(function () {
     localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
     localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
-    cy.intercept(
-      {
-        method: 'GET',
-        url: /^.*\/namespaces\/[A-za-z0-9-]+\/components\?limit=250.*$/,
-      }
-    ).as('componentsAPI');
   });
 
   after(function () {
@@ -53,14 +47,7 @@ describe('Create Components using the UI', () => {
 
     it('Add a component to Application', () => {
       Applications.createComponent(publicRepos[0], componentNames[0]);
-
-      cy.wait('@componentsAPI').then((xhr) => {
-        for (let item of xhr.response.body.items) {
-          if ((item.spec.source.git.url == publicRepos[0]) && (item.spec.componentName == componentNames[0])) {
-            Applications.createdComponentExists(item.spec.componentName, applicationName);
-          }
-        }
-      });
+      Applications.createdComponentExists(componentNames[0], applicationName);
     });
   });
 
@@ -71,14 +58,7 @@ describe('Create Components using the UI', () => {
 
     it('Add a component to Application', () => {
       Applications.createComponent(publicRepos[1], componentNames[1]);
-
-      cy.wait('@componentsAPI').then((xhr) => {
-        for (let item of xhr.response.body.items) {
-          if ((item.spec.source.git.url == publicRepos[1]) && (item.spec.componentName == componentNames[1])) {
-            Applications.createdComponentExists(item.spec.componentName, applicationName);
-          }
-        }
-      });
+      Applications.createdComponentExists(componentNames[1], applicationName);
     });
   });
 
@@ -89,14 +69,7 @@ describe('Create Components using the UI', () => {
 
     it('Add a component to Application', () => {
       Applications.createComponent(publicRepos[1], componentNames[2]);
-
-      cy.wait('@componentsAPI').then((xhr) => {
-        for (let item of xhr.response.body.items) {
-          if ((item.spec.source.git.url == publicRepos[1]) && (item.spec.componentName == componentNames[2])) {
-            Applications.createdComponentExists(item.spec.componentName, applicationName);
-          }
-        }
-      });
+      Applications.createdComponentExists(componentNames[2], applicationName);
     });
   });
 
@@ -107,14 +80,7 @@ describe('Create Components using the UI', () => {
 
     it('Add a component to Application', () => {
       Applications.createComponent(publicRepos[2], componentNames[3]);
-
-      cy.wait('@componentsAPI').then((xhr) => {
-        for (let item of xhr.response.body.items) {
-          if ((item.spec.source.git.url == publicRepos[2]) && (item.spec.componentName == componentNames[3])) {
-            Applications.createdComponentExists(item.spec.componentName, applicationName);
-          }
-        }
-      });
+      Applications.createdComponentExists(componentNames[3], applicationName);
     });
   });
 

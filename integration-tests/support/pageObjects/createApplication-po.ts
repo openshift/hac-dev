@@ -32,6 +32,7 @@ export const createApplicationPagePO = {
 export const ComponentsPagePO = {
   create: 'button[type=submit]',
   createText: 'Create',
+  extractComponentName: '[class="editable-label-field__label"]',
   editComponentNameIcon: '[data-test="pencil-icon"]',
   checkIcon: '[data-test="check-icon"]',
   closeIcon: '[data-test="close-icon"]',
