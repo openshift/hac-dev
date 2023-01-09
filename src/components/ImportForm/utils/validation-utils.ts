@@ -6,7 +6,7 @@ export const gitUrlRegex =
 // generic regex to validate container image /^[^/]+\.[^/.]+\/([a-z0-9-_]+\/)?[^/.]+(:.+)?$/
 export const containerImageRegex = /^(https:\/\/)?quay.io\/([a-z0-9-_]+\/)?[^/.]+(:.+)?$/;
 
-export const componentNameRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
+export const resourceNameRegex = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
 
 const combineRegExps = (...regexps: RegExp[]) => {
   const regexStringsWithoutFlags = regexps.map((regex) => regex.source);
@@ -14,7 +14,10 @@ const combineRegExps = (...regexps: RegExp[]) => {
 };
 
 export const applicationValidationSchema = yup.object({
-  application: yup.string().required('Required'),
+  application: yup
+    .string()
+    .matches(resourceNameRegex, 'Name cannot contain spaces, uppercase or special characters.')
+    .required('Required'),
 });
 
 const createSourceValidationSchema = (containerImageSupport: boolean) =>
@@ -54,7 +57,7 @@ export const reviewValidationSchema = yup.object({
       componentStub: yup.object({
         componentName: yup
           .string()
-          .matches(componentNameRegex, 'Invalid component name')
+          .matches(resourceNameRegex, 'Invalid component name')
           .required('Required'),
         targetPort: yup
           .number()

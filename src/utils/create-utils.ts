@@ -35,12 +35,11 @@ export const createApplication = (
   namespace: string,
   dryRun?: boolean,
 ): Promise<ApplicationKind> => {
-  const name = sanitizeName(application);
   const requestData = {
     apiVersion: `${ApplicationModel.apiGroup}/${ApplicationModel.apiVersion}`,
     kind: ApplicationModel.kind,
     metadata: {
-      name,
+      name: application,
       namespace,
     },
     spec: {
@@ -51,7 +50,7 @@ export const createApplication = (
   return k8sCreateResource({
     model: ApplicationModel,
     queryOptions: {
-      name,
+      name: application,
       ns: namespace,
       ...(dryRun && { queryParams: { dryRun: 'All' } }),
     },
