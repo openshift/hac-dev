@@ -1,5 +1,6 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { render, screen, configure, cleanup, fireEvent } from '@testing-library/react';
 import {
   mockSnapshotsEnvironmentBindings,
@@ -47,6 +48,10 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
+}));
+
 jest.mock('../../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
 }));
@@ -75,6 +80,7 @@ jest.mock('../../../../hooks/useAllEnvironments', () => ({
   useAllEnvironments: jest.fn(),
 }));
 
+const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
 const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
 const useBuildPipelinesMock = useBuildPipelines as jest.Mock;
@@ -98,6 +104,7 @@ describe('EnvironmentListView', () => {
     useTestPipelinesMock.mockReturnValue([mockTestPipelinesData, true]);
     useSnapshotsEnvironmentBindingsMock.mockReturnValue([mockSnapshotsEnvironmentBindings, true]);
     useAllEnvironmentsMock.mockReturnValue([mockAppEnvWithHealthStatus, true]);
+    useFeatureFlagMock.mockReturnValue([false]);
   });
 
   it('should render spinner while environment data is not loaded', () => {

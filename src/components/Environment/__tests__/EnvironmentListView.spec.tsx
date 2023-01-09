@@ -1,5 +1,6 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { render, screen, configure } from '@testing-library/react';
 import { useApplications } from '../../../hooks/useApplications';
 import { EnvironmentKind } from '../../../types';
@@ -12,6 +13,10 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
+}));
+
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -29,6 +34,7 @@ jest.mock('../../../hooks/useApplications', () => ({
   useApplications: jest.fn(),
 }));
 const useApplicationsMock = useApplications as jest.Mock;
+const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 const environments: EnvironmentKind[] = [
   {
@@ -64,6 +70,7 @@ configure({ testIdAttribute: 'data-test' });
 describe('EnvironmentListView', () => {
   beforeEach(() => {
     useApplicationsMock.mockReturnValue([[mockApplication], true]);
+    useFeatureFlagMock.mockReturnValue([false]);
   });
 
   it('should render spinner while environment data is not loaded', () => {
