@@ -44,6 +44,7 @@ import { useComponentDetection } from '../utils/cdq-utils';
 import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues, ImportStrategy } from '../utils/types';
 import { useDevfileSamples } from '../utils/useDevfileSamples';
+import SamplesInfoAlert from './SampleInfoAlert';
 
 import './SampleSection.scss';
 import '../../../shared/style.scss';
@@ -182,6 +183,11 @@ const SampleSection = ({ onStrategyChange }) => {
             </HelperTextItem>
           </HelperText>
         </TextContent>
+        <SamplesInfoAlert>
+          <p>
+            Just be sure to fork the sample so that you<span>&apos;</span>re free to make changes.
+          </p>
+        </SamplesInfoAlert>
       </PageSection>
       <PageSection padding={{ default: 'noPadding' }} isFilled>
         {selected && detectedComponentsError ? (

@@ -19,6 +19,7 @@ import { getFieldId, InputField } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
 import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../../types';
 import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
+import SamplesInfoAlert from '../SampleSection/SampleInfoAlert';
 import { useAccessCheck, useAccessTokenBinding } from '../utils/auth-utils';
 import { ImportFormValues, ImportStrategy } from '../utils/types';
 import { gitUrlRegex } from '../utils/validation-utils';
@@ -155,6 +156,16 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
           </HelperTextItem>
         </HelperText>
       </TextContent>
+      {onStrategyChange && (
+        <SamplesInfoAlert>
+          <p>
+            Just be sure to fork the sample so that you<span>&apos;</span>re free to make changes.{' '}
+            <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
+              Start with a sample.
+            </Button>
+          </p>
+        </SamplesInfoAlert>
+      )}
       <FormSection>
         <FormGroup
           fieldId={fieldId}
@@ -178,7 +189,12 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
             {onStrategyChange ? (
               <GridItem span={4}>
                 No code?{' '}
-                <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
+                <Button
+                  data-testid="start-with-sample-button"
+                  variant={ButtonVariant.link}
+                  onClick={handleStrategyChange}
+                  isInline
+                >
                   Start with a sample.
                 </Button>
               </GridItem>
