@@ -10,8 +10,8 @@ import { useNamespace } from '../../utils/namespace-context-utils';
 const RelatedPipelineRuns = ({ pipelineRun }) => {
   const namespace = useNamespace();
   const sha =
-    pipelineRun.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] ||
-    pipelineRun.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];
+    pipelineRun?.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] ||
+    pipelineRun?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];
 
   const [relatedPipelineRuns, relatedPipelineRunsLoaded] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
@@ -19,7 +19,7 @@ const RelatedPipelineRuns = ({ pipelineRun }) => {
     isList: true,
     selector: {
       matchLabels: {
-        [PipelineRunLabel.COMPONENT]: pipelineRun.metadata?.labels[PipelineRunLabel.COMPONENT],
+        [PipelineRunLabel.COMPONENT]: pipelineRun?.metadata?.labels[PipelineRunLabel.COMPONENT],
       },
     },
   });
@@ -27,14 +27,15 @@ const RelatedPipelineRuns = ({ pipelineRun }) => {
   const filteredRelatedPipelineruns = React.useMemo(() => {
     return relatedPipelineRuns.filter(
       (plr: PipelineRunKind) =>
-        (plr.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] === sha ||
+        (plr?.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] === sha ||
           plr.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT] === sha) &&
-        plr.metadata.uid !== pipelineRun.metadata.uid,
+        plr?.metadata.uid !== pipelineRun?.metadata.uid,
     );
   }, [relatedPipelineRuns, sha, pipelineRun]);
 
   return relatedPipelineRunsLoaded ? (
     <Popover
+      data-testid="related-pipelines-popover"
       aria-label="Related pipelines"
       headerContent="Related pipelines"
       bodyContent={
