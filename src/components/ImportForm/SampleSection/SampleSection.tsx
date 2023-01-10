@@ -246,7 +246,6 @@ const SampleSection = ({ onStrategyChange }) => {
                       className="hac-catalog__tile"
                       id={sample.uid}
                       title={sample.name}
-                      vendor={`Provided by ${sample.provider}`}
                       description={sample.description}
                       featured={sample.name === selected?.name}
                       data-test={`${sample.type}-${sample.name}`}
