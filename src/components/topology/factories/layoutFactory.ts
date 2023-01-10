@@ -5,12 +5,13 @@ import {
   NODE_SEPARATION_HORIZONTAL,
   NODE_SEPARATION_VERTICAL,
 } from '../../ApplicationDetails/tabs/overview/visualization/const';
-import { DEFAULT_NODE_SEPERATION_HORIZONTAL } from '../const';
+import { DEFAULT_NODE_SEPERATION_HORIZONTAL, WHEN_EXPRESSION_SPACING } from '../const';
 
 export enum PipelineLayout {
   WORKFLOW_VISUALIZATION = 'workflow-visualization',
   EXPANDED_WORKFLOW_VISUALIZATION = 'expanded-workflow-visualization',
   PIPELINERUN_VISUALIZATION = 'pipelinerun-visualization',
+  PIPELINERUN_VISUALIZATION_SPACED = 'pipelinerun-visualization-with-when-expression',
   COMMIT_VISUALIZATION = 'commit-visualization',
 }
 
@@ -29,6 +30,11 @@ export const PIPELINERUN_VISUALIZATION_PROPS: dagre.GraphLabel = {
   ranksep: DEFAULT_NODE_SEPERATION_HORIZONTAL,
 };
 
+export const PIPELINERUN_VISUALIZATION_SPACED_PROPS: dagre.GraphLabel = {
+  ...DAGRE_SHARED_PROPS,
+  ranksep: DEFAULT_NODE_SEPERATION_HORIZONTAL + WHEN_EXPRESSION_SPACING,
+};
+
 export const COMMIT_VISUALIZATION_PROPS: dagre.GraphLabel = {
   ...DAGRE_SHARED_PROPS,
   ranksep: EXPANDED_NODE_SEPARATION_HORIZONTAL,
@@ -44,6 +50,8 @@ export const getLayoutData = (layout: PipelineLayout): dagre.GraphLabel => {
       return COMMIT_VISUALIZATION_PROPS;
     case PipelineLayout.PIPELINERUN_VISUALIZATION:
       return PIPELINERUN_VISUALIZATION_PROPS;
+    case PipelineLayout.PIPELINERUN_VISUALIZATION_SPACED:
+      return PIPELINERUN_VISUALIZATION_SPACED_PROPS;
     default:
       return null;
   }

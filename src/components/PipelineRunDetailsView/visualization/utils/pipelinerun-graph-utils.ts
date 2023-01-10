@@ -117,6 +117,11 @@ export const appendStatus = (
   });
 };
 
+export const taskHasWhenExpression = (task: PipelineTask): boolean => task?.when?.length > 0;
+
+export const nodesHasWhenExpression = (nodes: PipelineMixedNodeModel[]): boolean =>
+  nodes.some((n) => taskHasWhenExpression(n.data.task));
+
 export const getWhenStatus = (status: RunStatus): string => {
   switch (status) {
     case RunStatus.Succeeded:
@@ -261,17 +266,21 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
     [PipelineRunNodeType.FINALLY_NODE],
     PipelineRunNodeType.EDGE,
   );
+  const allNodes = [...nodes, ...spacerNodes, ...finallyNodes, ...finallyGroup];
+  const hasWhenExpression = nodesHasWhenExpression(allNodes);
 
   return {
     graph: {
       id: 'g1',
       type: ModelKind.graph,
-      layout: PipelineLayout.PIPELINERUN_VISUALIZATION,
+      layout: hasWhenExpression
+        ? PipelineLayout.PIPELINERUN_VISUALIZATION_SPACED
+        : PipelineLayout.PIPELINERUN_VISUALIZATION,
       layers: DEFAULT_LAYERS,
       y: 50,
       x: 15,
     },
-    nodes: [...nodes, ...spacerNodes, ...finallyNodes, ...finallyGroup],
+    nodes: allNodes,
     edges,
   };
 };
