@@ -10,7 +10,11 @@ import ApplicationDetails from '../ApplicationDetails';
 import { HACBS_APPLICATION_MODAL_HIDE_KEY } from '../ApplicationModal';
 
 jest.mock('react-router-dom', () => ({
-  Link: (props) => <a href={props.to}>{props.children}</a>,
+  Link: (props) => (
+    <a href={props.to} data-test={props.to}>
+      {props.children}
+    </a>
+  ),
   useNavigate: () => jest.fn(),
   useSearchParams: () => React.useState(() => new URLSearchParams()),
 }));
@@ -81,5 +85,12 @@ describe('ApplicationDetails', () => {
       expect(localStorage[HACBS_APPLICATION_MODAL_HIDE_KEY]).toBe('true');
       expect(screen.getByTestId('application-modal-content')).not.toBeVisible();
     });
+  });
+
+  it('should not display integration test tab if the mvp flag is set to true', async () => {
+    useFeatureFlagMock.mockReturnValue([true]);
+    watchResourceMock.mockReturnValueOnce([mockApplication, true]);
+    render(<ApplicationDetails applicationName="test" />);
+    expect(screen.queryByTestId('details__tabItem integrationtests')).not.toBeInTheDocument();
   });
 });

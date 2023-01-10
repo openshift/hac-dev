@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Flex, FlexItem, Spinner, Text, Tooltip } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
@@ -8,6 +9,7 @@ import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { ApplicationGroupVersionKind } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
+import { MVP_FLAG } from '../../utils/flag-utils';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import { ApplicationSwitcher } from '../ApplicationDetailsView/ApplicationSwitcher';
@@ -41,6 +43,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
   const navigate = useNavigate();
   const { quickStarts } = useChrome();
   const showModal = useModalLauncher();
+  const [mvpFeature] = useFeatureFlag(MVP_FLAG);
 
   const [gitOpsDeployment, gitOpsDeploymentLoaded] = useGitOpsDeploymentCR(
     applicationName,
@@ -114,16 +117,20 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
               <Link to={`/stonesoup/import?application=${applicationName}`}>Add component</Link>
             ),
           },
-          {
-            key: 'add-integration-test',
-            label: 'Add integration tests',
-            component: (
-              <Link to={`/stonesoup/applications/${applicationName}/integration-test`}>
-                Add integration test
-              </Link>
-            ),
-            isDisabled: false,
-          },
+          ...(mvpFeature
+            ? []
+            : [
+                {
+                  key: 'add-integration-test',
+                  label: 'Add integration tests',
+                  component: (
+                    <Link to={`/stonesoup/applications/${applicationName}/integration-test`}>
+                      Add integration test
+                    </Link>
+                  ),
+                  isDisabled: false,
+                },
+              ]),
           {
             key: 'create-environment',
             label: 'Create environment',
@@ -197,11 +204,15 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             label: 'Pipeline runs',
             component: <PipelineRunsTab applicationName={applicationName} />,
           },
-          {
-            key: 'integrationtests',
-            label: 'Integration tests',
-            component: <IntegrationTestsTab applicationName={applicationName} />,
-          },
+          ...(mvpFeature
+            ? []
+            : [
+                {
+                  key: 'integrationtests',
+                  label: 'Integration tests',
+                  component: <IntegrationTestsTab applicationName={applicationName} />,
+                },
+              ]),
           {
             key: 'environments',
             label: 'Environments',
