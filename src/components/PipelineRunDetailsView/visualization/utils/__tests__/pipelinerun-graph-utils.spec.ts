@@ -1,5 +1,6 @@
 import { RunStatus } from '@patternfly/react-topology';
 import omit from 'lodash/omit';
+import { DataState, testPipelineRuns } from '../../../../../__data__/pipelinerun-data';
 import { SucceedConditionReason } from '../../../../../shared';
 import { PipelineRunKind } from '../../../../../types';
 import { NodeType } from '../../../../ApplicationDetails/tabs/overview/visualization/const';
@@ -10,6 +11,8 @@ import {
   getPipelineDataModel,
   getPipelineFromPipelineRun,
   getPipelineRunDataModel,
+  nodesHasWhenExpression,
+  taskHasWhenExpression,
 } from '../pipelinerun-graph-utils';
 
 describe('pipelinerun-graph-utils: ', () => {
@@ -196,6 +199,36 @@ describe('pipelinerun-graph-utils: ', () => {
       };
       const taskList = appendStatus(getPipelineFromPipelineRun(idlePipelineRun), idlePipelineRun);
       expect(taskList.filter((t) => t.status.reason === RunStatus.Idle)).toHaveLength(1);
+    });
+  });
+
+  describe('taskHasWhenExpression', () => {
+    const conditionalPipelineRun = testPipelineRuns[DataState.SKIPPED];
+
+    it('should return false if the task does not contain when expressions', () => {
+      const taskWithoutWhenExpression = conditionalPipelineRun.status.pipelineSpec.tasks[0];
+      expect(taskHasWhenExpression(taskWithoutWhenExpression)).toBe(false);
+    });
+
+    it('should return true if the task contains when expressions', () => {
+      const taskWithWhenExpression = conditionalPipelineRun.status.pipelineSpec.tasks[1];
+      expect(taskHasWhenExpression(taskWithWhenExpression)).toBe(true);
+    });
+  });
+
+  describe('nodesHasWhenExpression', () => {
+    it('should return false if the nodes does not contain when expressions', () => {
+      const pipelineRunWithoutWhenexpression = testPipelineRuns[DataState.RUNNING];
+
+      const { nodes } = getPipelineRunDataModel(pipelineRunWithoutWhenexpression);
+      expect(nodesHasWhenExpression(nodes)).toBe(false);
+    });
+
+    it('should return true if the node contains when expressions', () => {
+      const conditionalPipelineRun = testPipelineRuns[DataState.SKIPPED];
+      const { nodes } = getPipelineRunDataModel(conditionalPipelineRun);
+
+      expect(nodesHasWhenExpression(nodes)).toBe(true);
     });
   });
 });
