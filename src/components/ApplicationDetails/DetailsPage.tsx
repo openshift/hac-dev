@@ -43,6 +43,7 @@ type DetailsPageProps = {
   footer?: React.ReactNode;
   description?: React.ReactNode;
   breadcrumbs?: { name: string; path: string }[];
+  breadcrumbItems?: React.ReactNode;
   actions?: Action[];
   tabs: DetailsPageTabProps[];
   onTabSelect?: (selectedTabKey: string) => void;
@@ -53,6 +54,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
   footer,
   description,
   breadcrumbs,
+  breadcrumbItems,
   actions = [],
   tabs = [],
   onTabSelect,
@@ -132,7 +134,13 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
   return (
     <PageGroup data-test="details">
       <PageSection type="breadcrumb">
-        {breadcrumbs && <BreadCrumbs data-test="details__breadcrumbs" breadcrumbs={breadcrumbs} />}
+        {breadcrumbs && (
+          <BreadCrumbs
+            data-test="details__breadcrumbs"
+            breadcrumbs={breadcrumbs}
+            breadcrumbItems={breadcrumbItems}
+          />
+        )}
         <Flex style={{ paddingTop: 'var(--pf-global--spacer--lg)' }}>
           <FlexItem>
             <TextContent>

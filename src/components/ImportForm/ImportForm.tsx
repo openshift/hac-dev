@@ -16,7 +16,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
   const namespace = useNamespace();
 
   const initialValues: ImportFormValues = {
-    application: applicationName || 'My Application',
+    application: applicationName || '',
     inAppContext: applicationName ? true : false,
     components: [],
     pipelinesascode: false,

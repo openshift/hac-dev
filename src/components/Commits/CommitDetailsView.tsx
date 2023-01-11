@@ -27,6 +27,7 @@ import { PipelineRunKind } from '../../types';
 import { createCommitObjectFromPLR, getCommitShortName, statuses } from '../../utils/commits-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
+import { useCommitStatus } from './commit-status';
 import CommitsGettingStartedModal from './CommitsGettingStartedModal';
 import CommitSidePanel from './CommitSidePanel';
 import { SortedPLRList } from './CommitSidePanelHeader';
@@ -99,7 +100,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
       return null;
     }
 
-    const runs = {};
+    const runs: SortedPLRList = {};
     pipelineruns.forEach((plr) => {
       // sort plr into respective status array
       const plrStatus = pipelineRunFilterReducer(plr);
@@ -117,24 +118,27 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
     // sort each status array
     statuses.forEach((status) => {
       if (runs[status] && Array.isArray(runs[status])) {
-        runs[status].sort((a, b) => parseInt(a.startTime, 10) - parseInt(b.startTime, 10));
+        runs[status].sort(
+          (a, b) => parseInt(a.status?.startTime, 10) - parseInt(b.status?.startTime, 10),
+        );
       }
     });
 
     return runs;
   }, [pipelineruns, loaded, loadErr]);
 
-  const commitStatus = React.useMemo(() => {
+  React.useEffect(() => {
     if (sortedPLRList) {
-      for (const s in sortedPLRList) {
-        if (sortedPLRList[s]?.length > 0) {
-          setSelectedPipelineRun(sortedPLRList[s][0]);
-          return s;
+      Object.values(sortedPLRList).some((s) => {
+        if (s?.length > 0) {
+          setSelectedPipelineRun(s[0]);
+          return true;
         }
-      }
+      });
     }
-    return '-';
   }, [sortedPLRList]);
+
+  const [commitStatus] = useCommitStatus(applicationName, commitName);
 
   const commitDisplayName = getCommitShortName(commitName);
 

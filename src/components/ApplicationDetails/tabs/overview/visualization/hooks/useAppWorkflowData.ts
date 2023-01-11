@@ -1,10 +1,12 @@
 import * as React from 'react';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import {
   getEdgesFromNodes,
   getSpacerNodes,
   Model,
   PipelineNodeModel,
 } from '@patternfly/react-topology';
+import { MVP_FLAG } from '../../../../../../utils/flag-utils';
 import { useNamespace } from '../../../../../../utils/namespace-context-utils';
 import { NodeType } from '../const';
 import { WorkflowNodeType } from '../types';
@@ -22,6 +24,7 @@ export const useAppWorkflowData = (
   expanded: boolean,
 ): [model: Model, loaded: boolean, errors: unknown[]] => {
   const namespace = useNamespace();
+  const [mvpFeature] = useFeatureFlag(MVP_FLAG);
   const [componentNodes, componentGroup, componentTasks, componentsLoaded, componentsErrors] =
     useAppComponentsNodes(namespace, applicationName, [], expanded);
   const [buildNodes, buildGroup, buildTasks, buildsLoaded, buildsErrors] = useAppBuildNodes(
@@ -143,8 +146,12 @@ export const useAppWorkflowData = (
       ...componentIntegrationTestNodes,
       ...applicationIntegrationTestNodes,
       ...(staticEnvironmentNodes?.length ? staticEnvironmentNodes : [staticEnvironmentGroup]),
-      ...(releaseNodes?.length ? releaseNodes : [releaseGroup]),
-      ...(managedEnvironmentNodes?.length ? managedEnvironmentNodes : [managedEnvironmentGroup]),
+      ...(mvpFeature ? [] : releaseNodes?.length ? releaseNodes : [releaseGroup]),
+      ...(mvpFeature
+        ? []
+        : managedEnvironmentNodes?.length
+        ? managedEnvironmentNodes
+        : [managedEnvironmentGroup]),
     ];
     const spacerNodes = getSpacerNodes(resourceNodes, NodeType.SPACER_NODE);
     const nodes = [
@@ -154,8 +161,8 @@ export const useAppWorkflowData = (
       buildGroup,
       testsGroup,
       staticEnvironmentGroup,
-      releaseGroup,
-      managedEnvironmentGroup,
+      ...(mvpFeature ? [] : [releaseGroup]),
+      ...(mvpFeature ? [] : [managedEnvironmentGroup]),
     ];
     const edges = getEdgesFromNodes(nodes, NodeType.SPACER_NODE);
 
@@ -166,8 +173,8 @@ export const useAppWorkflowData = (
     buildGroup,
     testsGroup,
     staticEnvironmentGroup,
-    releaseGroup,
-    managedEnvironmentGroup,
+    ...(mvpFeature ? [] : [releaseGroup]),
+    ...(mvpFeature ? [] : [managedEnvironmentGroup]),
   ];
   const edges = getEdgesFromNodes(nodes, NodeType.SPACER_NODE);
 

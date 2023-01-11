@@ -1,4 +1,4 @@
-import { PipelineRunKind, PipelineSpec } from '../shared/components/pipeline-run-logs/types';
+import { PipelineRunKind, PipelineSpec } from '../types';
 
 const samplePipelineSpec: PipelineSpec = {
   params: [
@@ -175,11 +175,21 @@ const samplePipelineRun: PipelineRunKind = {
 export enum DataState {
   RUNNING = 'Running',
   SUCCEEDED = 'Succeeded',
-  FAILED1 = 'Failed',
+  FAILED = 'Failed',
   SKIPPED = 'Skipped',
   PIPELINE_RUN_PENDING = 'PipelineRunPending',
   PIPELINE_RUN_STOPPED = 'StoppedRunFinally',
   PIPELINE_RUN_CANCELLED = 'CancelledRunFinally',
+  TASK_RUN_CANCELLED = 'TaskRunCancelled',
+  PIPELINE_RUN_CANCELLING = 'PipelineRunCancelling',
+  PIPELINE_RUN_STOPPING = 'PipelineRunStopping',
+  TASK_RUN_STOPPING = 'TaskRunStopping',
+
+  /*Custom data state to test various scnearios*/
+  STATUS_WITHOUT_CONDITIONS = 'StatusWithoutCondition',
+  STATUS_WITH_EMPTY_CONDITIONS = 'StatusWithEmptyCondition',
+  STATUS_WITHOUT_CONDITION_TYPE = 'StatusWithoutConditionType',
+  STATUS_WITH_UNKNOWN_REASON = 'StatusWithUnknownReason',
 }
 
 type TestPipelineRuns = { [key in DataState]?: PipelineRunKind };
@@ -570,7 +580,7 @@ export const testPipelineRuns: TestPipelineRuns = {
         {
           lastTransitionTime: '2021-01-13T14:34:19Z',
           message: 'Tasks Completed: 1 (Failed: 0, Cancelled 0), Skipped: 1',
-          reason: 'Completed',
+          reason: 'ConditionCheckFailed',
           status: 'True',
           type: 'Succeeded',
         },
@@ -661,7 +671,7 @@ export const testPipelineRuns: TestPipelineRuns = {
         {
           lastTransitionTime: '2019-09-12T20:38:01Z',
           message: 'All Tasks have completed executing',
-          reason: 'Succeeded',
+          reason: 'ExceededResourceQuota',
           status: 'True',
           type: 'Succeeded',
         },
@@ -729,6 +739,8 @@ export const testPipelineRuns: TestPipelineRuns = {
                   'docker.io/library/alpine@sha256:8914eb54f968791faf6a8638949e480fef81e697984fba772b3976835194c6d4',
                 name: 'generate-first',
                 terminated: {
+                  containerID:
+                    'cri-o://51ed1ddfa563e5149d0281ebc9c761967bf6bbb85c5454e0b34ae04066d8091c',
                   exitCode: 1,
                   finishedAt: '2022-11-28T07:10:43Z',
                   reason: 'TaskRunCancelled',
@@ -760,7 +772,7 @@ export const testPipelineRuns: TestPipelineRuns = {
   [DataState.PIPELINE_RUN_STOPPED]: {
     ...samplePipelineRun,
     spec: {
-      ...samplePipelineRun,
+      ...samplePipelineRun.spec,
       status: 'StoppedRunFinally',
     },
     status: {
@@ -817,6 +829,8 @@ export const testPipelineRuns: TestPipelineRuns = {
                   'docker.io/library/alpine@sha256:8914eb54f968791faf6a8638949e480fef81e697984fba772b3976835194c6d4',
                 name: 'generate-first',
                 terminated: {
+                  containerID:
+                    'cri-o://51ed1ddfa563e5149d0281ebc9c761967bf6bbb85c5454e0b34ae04066d8091c',
                   exitCode: 1,
                   finishedAt: '2022-11-28T07:10:43Z',
                   reason: 'TaskRunCancelled',
@@ -843,6 +857,83 @@ export const testPipelineRuns: TestPipelineRuns = {
           },
         },
       },
+    },
+  },
+  [DataState.FAILED]: {
+    ...samplePipelineRun,
+    status: {
+      pipelineSpec: samplePipelineSpec,
+      conditions: [
+        { status: 'True', type: 'Failure' },
+        { status: 'False', type: 'Succeeded' },
+      ],
+    },
+  },
+  [DataState.PIPELINE_RUN_CANCELLING]: {
+    ...samplePipelineRun,
+    spec: {
+      ...samplePipelineRun,
+      status: 'CancelledRunFinally',
+    },
+    status: {
+      conditions: [{ status: 'True', type: 'Succeeded' }],
+      pipelineSpec: samplePipelineSpec,
+    },
+  },
+  [DataState.STATUS_WITHOUT_CONDITIONS]: {
+    ...samplePipelineRun,
+    status: {
+      pipelineSpec: samplePipelineSpec,
+    },
+  },
+  [DataState.STATUS_WITHOUT_CONDITIONS]: {
+    ...samplePipelineRun,
+    status: {
+      conditions: [],
+      pipelineSpec: samplePipelineSpec,
+    },
+  },
+  [DataState.TASK_RUN_CANCELLED]: {
+    ...samplePipelineRun,
+    status: {
+      conditions: [
+        {
+          lastTransitionTime: '2022-11-28T07:10:43Z',
+          message: 'TaskRun "test-casevcgrn" was cancelled',
+          reason: 'TaskRunCancelled',
+          status: 'False',
+          type: 'Succeeded',
+        },
+      ],
+      pipelineSpec: samplePipelineSpec,
+    },
+  },
+  [DataState.PIPELINE_RUN_STOPPING]: {
+    ...samplePipelineRun,
+    status: {
+      pipelineSpec: samplePipelineSpec,
+      conditions: [{ type: 'Succeeded', status: 'Unknown', reason: 'PipelineRunStopping' }],
+    },
+  },
+  [DataState.TASK_RUN_STOPPING]: {
+    ...samplePipelineRun,
+    status: {
+      pipelineSpec: samplePipelineSpec,
+      conditions: [{ type: 'Succeeded', status: 'Unknown', reason: 'TaskRunStopping' }],
+    },
+  },
+  [DataState.STATUS_WITHOUT_CONDITION_TYPE]: {
+    ...samplePipelineRun,
+    status: {
+      pipelineSpec: samplePipelineSpec,
+      conditions: [{ type: undefined, status: 'Unknown', reason: 'Unknown' }],
+    },
+  },
+  [DataState.STATUS_WITH_UNKNOWN_REASON]: {
+    ...samplePipelineRun,
+    status: {
+      pipelineSpec: samplePipelineSpec,
+      conditions: [{ type: 'Succeeded', status: 'False', reason: 'Unknown' }],
     },
   },
 };

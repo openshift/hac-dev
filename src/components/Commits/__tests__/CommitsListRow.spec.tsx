@@ -14,6 +14,10 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
+jest.mock('../commit-status', () => ({
+  useCommitStatus: () => ['-', true],
+}));
+
 const commits = getCommitsFromPLRs(pipelineWithCommits);
 
 describe('CommitsListRow', () => {

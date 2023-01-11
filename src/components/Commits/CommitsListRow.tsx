@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { Skeleton } from '@patternfly/react-core';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
@@ -7,10 +8,12 @@ import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../types';
 import { useCommitActions } from './commit-actions';
+import { useCommitStatus } from './commit-status';
 import { commitsTableColumnClasses } from './CommitsListHeader';
 
 const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
   const actions = useCommitActions(obj);
+  const [status, statusLoaded] = useCommitStatus(obj.application, obj.sha);
   return (
     <>
       <TableData className={commitsTableColumnClasses.name}>
@@ -41,7 +44,9 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
       <TableData className={commitsTableColumnClasses.committedAt}>
         <Timestamp timestamp={obj.creationTime} />
       </TableData>
-      <TableData className={commitsTableColumnClasses.status}>-</TableData>
+      <TableData className={commitsTableColumnClasses.status}>
+        {statusLoaded ? status : <Skeleton width="50%" screenreaderText="Loading commit status" />}
+      </TableData>
       <TableData className={commitsTableColumnClasses.kebab}>
         <ActionMenu actions={actions} />
       </TableData>

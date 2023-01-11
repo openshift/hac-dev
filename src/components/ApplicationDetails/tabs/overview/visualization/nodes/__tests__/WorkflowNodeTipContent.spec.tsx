@@ -1,5 +1,6 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { ModelKind, Node, NodeModel, Visualization } from '@patternfly/react-topology';
 import { screen } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
@@ -63,6 +64,10 @@ jest.mock('../../../../../../../hooks/useSnapshotsEnvironmentBindings', () => ({
   useSnapshotsEnvironmentBindings: jest.fn(),
 }));
 
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
+}));
+
 const useActiveNamespaceMock = useNamespace as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
 const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
@@ -72,6 +77,7 @@ const useReleasesMock = useReleases as jest.Mock;
 const useReleasePlansMock = useReleasePlans as jest.Mock;
 const useTestPipelinesMock = useTestPipelines as jest.Mock;
 const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
+const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 describe('WorkflowNode', () => {
   beforeEach(() => {
@@ -84,6 +90,7 @@ describe('WorkflowNode', () => {
     useReleasesMock.mockReturnValue([mockReleasesData, true]);
     useTestPipelinesMock.mockReturnValue([mockTestPipelinesData, true]);
     useSnapshotsEnvironmentBindingsMock.mockReturnValue([mockSnapshotsEnvironmentBindings, true]);
+    useFeatureFlagMock.mockReturnValue([false]);
 
     const createElement = document.createElement.bind(document);
     document.createElement = (tagName) => {

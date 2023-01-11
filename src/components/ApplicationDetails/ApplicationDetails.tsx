@@ -10,6 +10,7 @@ import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import { ApplicationSwitcher } from '../ApplicationDetailsView/ApplicationSwitcher';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
 import ApplicationModal, { HACBS_APPLICATION_MODAL_HIDE_KEY } from './ApplicationModal';
@@ -94,16 +95,8 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             </FlexItem>
           </Flex>
         }
+        breadcrumbItems={<ApplicationSwitcher selectedApplication={application.metadata.name} />}
         actions={[
-          {
-            key: 'promote-app',
-            label: 'Promote application',
-            component: (
-              <Link to={`/stonesoup/import?application=${applicationName}`}>
-                Promote Application
-              </Link>
-            ),
-          },
           {
             type: 'section-label',
             key: 'add',
@@ -137,16 +130,6 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             component: (
               <Link to="/stonesoup/workspace-settings/environment/create">Create environment</Link>
             ),
-          },
-          {
-            key: 'delete-application',
-            label: 'Delete application',
-            onClick: () =>
-              showModal<{ submitClicked: boolean }>(
-                applicationDeleteModal(application),
-              ).closed.then(({ submitClicked }) => {
-                if (submitClicked) navigate('/stonesoup');
-              }),
           },
           {
             type: 'section-label',

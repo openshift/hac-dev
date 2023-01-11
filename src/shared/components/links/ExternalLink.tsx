@@ -6,6 +6,7 @@ type ExternalLinkProps = {
   additionalClassName?: string;
   dataTestID?: string;
   stopPropagation?: boolean;
+  style?: React.CSSProperties;
 };
 
 const ExternalLink: React.FC<ExternalLinkProps> = ({
@@ -15,8 +16,10 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
   additionalClassName = '',
   dataTestID,
   stopPropagation,
+  style,
 }) => (
   <a
+    style={style}
     className={additionalClassName}
     href={href}
     target="_blank"

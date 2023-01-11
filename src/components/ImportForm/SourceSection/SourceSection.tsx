@@ -12,6 +12,7 @@ import {
   TextContent,
   ValidatedOptions,
 } from '@patternfly/react-core';
+import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
 import { useField, useFormikContext } from 'formik';
 import { useOnMount } from '../../../hooks/useOnMount';
 import { getFieldId, InputField } from '../../../shared';
@@ -20,19 +21,15 @@ import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../..
 import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
 import { useAccessCheck, useAccessTokenBinding } from '../utils/auth-utils';
 import { ImportFormValues, ImportStrategy } from '../utils/types';
-import { gitUrlRegex, containerImageRegex } from '../utils/validation-utils';
+import { gitUrlRegex } from '../utils/validation-utils';
 import AuthOptions from './AuthOptions';
 import GitOptions from './GitOptions';
 
 type SourceSectionProps = {
   onStrategyChange?: (strategy: ImportStrategy) => void;
-  gitOnly?: boolean;
 };
 
-export const SourceSection: React.FC<SourceSectionProps> = ({
-  onStrategyChange,
-  gitOnly = false,
-}) => {
+export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }) => {
   const [showAuthOptions, setShowAuthOptions] = React.useState<boolean>(false);
   const [showGitOptions, setShowGitOptions] = React.useState<boolean>(false);
 
@@ -52,31 +49,30 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
 
   const fieldId = getFieldId('source', 'input');
   const isValid = !(touched && error);
-  const label = gitOnly ? 'Git repo URL' : 'Git repo URL or container image';
+  const label = 'Git repo URL';
 
   const [{ isGit, isRepoAccessible, serviceProvider, accessibility }, accessCheckLoaded] =
     useAccessCheck(sourceUrl, authSecret);
 
   const setFormValidating = React.useCallback(() => {
     setValidated(ValidatedOptions.default);
-    setHelpText('Validating...');
+    setHelpText('Validating authentication...');
     setFieldValue('isValidated', false);
   }, [setFieldValue]);
 
   const setFormValidated = React.useCallback(() => {
     setValidated(ValidatedOptions.success);
-    setHelpText('Validated');
+    setHelpText('Validated authentication');
     setFieldValue('isValidated', true);
   }, [setFieldValue]);
 
   const handleSourceChange = React.useCallback(() => {
     const searchTerm = source;
     const isGitUrlValid = gitUrlRegex.test(searchTerm?.trim());
-    const isContainerImageValid = !gitOnly && containerImageRegex.test(searchTerm);
     setShowAuthOptions(false);
     setShowGitOptions(false);
     setFieldValue('secret', '');
-    if (!searchTerm || (!isGitUrlValid && !isContainerImageValid)) {
+    if (!searchTerm || !isGitUrlValid) {
       setValidated(ValidatedOptions.error);
       setHelpTextInvalid('Invalid URL');
       setSourceUrl(null);
@@ -85,7 +81,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
     setFormValidating();
     setHelpTextInvalid('');
     setSourceUrl(searchTerm);
-  }, [source, setFieldValue, setFormValidating, gitOnly]);
+  }, [source, setFieldValue, setFormValidating]);
 
   const debouncedHandleSourceChange = useDebounceCallback(handleSourceChange);
 
@@ -144,9 +140,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
     onStrategyChange(ImportStrategy.SAMPLE);
   }, [onStrategyChange, setFieldValue]);
 
-  const description = gitOnly
-    ? 'Provide a link to your GitHub repo.'
-    : 'Provide a link to your GitHub repo or Quay container image, or start with a code sample.';
+  const description = 'Provide a link to your GitHub repo or start with a code sample.';
 
   return (
     <>
@@ -154,7 +148,10 @@ export const SourceSection: React.FC<SourceSectionProps> = ({
         <Text component="h2">Add components to your application</Text>
         <HelperText>
           <HelperTextItem>
-            {description} <HelpTopicLink topicId="add-component">Learn more</HelpTopicLink>
+            {description}{' '}
+            <HelpTopicLink topicId="add-component">
+              Learn more <OpenDrawerRightIcon />
+            </HelpTopicLink>
           </HelperTextItem>
         </HelperText>
       </TextContent>

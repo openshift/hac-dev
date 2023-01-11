@@ -552,6 +552,17 @@ export const pipelineWithCommits: PipelineRunKind[] = [
       },
     },
     spec: {},
+    status: {
+      pipelineSpec: null,
+      conditions: [
+        {
+          reason: 'Failed',
+          status: 'False',
+          type: 'Succeeded',
+        },
+      ],
+      startTime: '2022-08-20T12:47:26Z',
+    },
   },
   {
     apiVersion: 'tekton.dev/v1beta1',

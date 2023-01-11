@@ -80,6 +80,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 />
               )}
               <ExternalLink
+                style={{ fontWeight: 'normal' }}
                 href={
                   component.source?.git?.url ??
                   (component.containerImage?.includes('http')

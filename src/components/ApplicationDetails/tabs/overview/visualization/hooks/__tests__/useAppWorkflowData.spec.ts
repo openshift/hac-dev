@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { renderHook } from '@testing-library/react-hooks';
 import { useBuildPipelines } from '../../../../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../../../../hooks/useComponents';
@@ -51,6 +52,10 @@ jest.mock('../../../../../../../hooks/useSnapshotsEnvironmentBindings', () => ({
   useSnapshotsEnvironmentBindings: jest.fn(),
 }));
 
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
+}));
+
 const useActiveNamespaceMock = useNamespace as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
 const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
@@ -60,6 +65,7 @@ const useReleasesMock = useReleases as jest.Mock;
 const useReleasePlansMock = useReleasePlans as jest.Mock;
 const useTestPipelinesMock = useTestPipelines as jest.Mock;
 const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
+const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 describe('useAppWorkflowData hook', () => {
   beforeEach(() => {
@@ -72,6 +78,7 @@ describe('useAppWorkflowData hook', () => {
     useReleasesMock.mockReturnValue([[], true]);
     useTestPipelinesMock.mockReturnValue([[], true]);
     useSnapshotsEnvironmentBindingsMock.mockReturnValue([[], true]);
+    useFeatureFlagMock.mockReturnValue([false]);
 
     const createElement = document.createElement.bind(document);
     document.createElement = (tagName) => {
@@ -197,5 +204,16 @@ describe('useAppWorkflowData hook', () => {
     const testGroup = model.nodes.find((n) => n.id === 'tests');
     expect(testGroup).not.toBeNull();
     expect(testGroup.label).toBe('Tests');
+  });
+
+  it('should return workflow nodes without release and managed environments when mvp flag is true', () => {
+    useFeatureFlagMock.mockReturnValue([true]);
+
+    const { result } = renderHook(() => useAppWorkflowData('test', false));
+    const [model, loaded] = result.current;
+
+    expect(model.nodes).toHaveLength(4);
+    expect(model.edges).toHaveLength(3);
+    expect(loaded).toBe(true);
   });
 });

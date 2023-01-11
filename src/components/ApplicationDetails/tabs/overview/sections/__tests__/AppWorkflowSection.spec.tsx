@@ -1,6 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useSearchParams } from 'react-router-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { act, configure, fireEvent, render, screen } from '@testing-library/react';
 import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../../../hooks/useComponents';
@@ -92,6 +93,9 @@ jest.mock('../../../../../../hooks/useTestPipelines', () => ({
 jest.mock('../../../../../../hooks/useSnapshotsEnvironmentBindings', () => ({
   useSnapshotsEnvironmentBindings: jest.fn(),
 }));
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
+}));
 
 const useSearchParamsMock = useSearchParams as jest.Mock;
 
@@ -104,6 +108,7 @@ const useReleasesMock = useReleases as jest.Mock;
 const useReleasePlansMock = useReleasePlans as jest.Mock;
 const useTestPipelinesMock = useTestPipelines as jest.Mock;
 const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
+const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 configure({ testIdAttribute: 'data-id' });
 
@@ -121,6 +126,7 @@ describe('useAppWorkflowData hook', () => {
     useReleasesMock.mockReturnValue([mockReleasesData, true]);
     useTestPipelinesMock.mockReturnValue([mockTestPipelinesData, true]);
     useSnapshotsEnvironmentBindingsMock.mockReturnValue([mockSnapshotsEnvironmentBindings, true]);
+    useFeatureFlagMock.mockReturnValue([false]);
 
     useSearchParamMock.mockImplementation(mockUseSearchParam);
 

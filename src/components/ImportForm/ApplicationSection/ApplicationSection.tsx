@@ -10,7 +10,12 @@ const ApplicationSection: React.FunctionComponent = () => {
         <HelperText>Enter a name for your application.</HelperText>
       </TextContent>
       <FormSection>
-        <InputField name="application" label="Application name" required />
+        <InputField
+          name="application"
+          label="Application name"
+          placeholder="My Application"
+          required
+        />
       </FormSection>
     </>
   );

@@ -25,3 +25,16 @@ export const setSignupFeatureFlags = async (setFlag: SetFeatureFlag) => {
     if (error.code === 404) setFlag(SIGNUP_FLAG, false);
   }
 };
+
+export const MVP_FLAG = 'MVP';
+
+export const setMvpFeatureFlag = (setFlag: SetFeatureFlag): void => {
+  let enabled = true;
+  const param = new URLSearchParams(window.location.search).get(MVP_FLAG.toLowerCase());
+  if (['true', 'false'].includes(param)) {
+    enabled = param !== `${!enabled}`;
+  } else {
+    enabled = localStorage.getItem(MVP_FLAG.toLowerCase()) !== `${!enabled}`;
+  }
+  setFlag(MVP_FLAG, enabled);
+};
