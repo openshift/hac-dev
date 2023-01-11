@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { RunStatus } from '@patternfly/react-topology';
 import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
 import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
@@ -18,6 +19,7 @@ import {
   ReleasePlanKind,
   SnapshotEnvironmentBinding,
 } from '../../../../../../types/coreBuildService';
+import { MVP_FLAG } from '../../../../../../utils/flag-utils';
 import { useNamespace } from '../../../../../../utils/namespace-context-utils';
 import { CommitComponentResource, Workflow, WorkflowNode, WorkflowNodeType } from '../types';
 import {
@@ -32,6 +34,8 @@ export const useCommitWorkflowData = (
   commit: Commit,
 ): [nodes: WorkflowNode[], loaded: boolean, errros: unknown[]] => {
   const namespace = useNamespace();
+  const [mvpFeature] = useFeatureFlag(MVP_FLAG);
+
   const applicationName = commit?.application || '';
   const [components, componentsLoaded] = useComponents(namespace, applicationName);
   const [integrationTests, integrationTestsLoaded] = useIntegrationTestScenarios(
@@ -265,34 +269,38 @@ export const useCommitWorkflowData = (
             runBefore: [],
             runAfter: ['commit'],
           },
-          ...(componentIntegrationTests.length && {
-            [`${name}-componentTests`]: {
-              id: `${name}-component-integration-test`,
-              data: {
-                label: 'component integration test',
-                workflowType: WorkflowNodeType.PIPELINE,
-                status: integrationTestStatus,
-                isDisabled: componentIntegrationTests.length === 0,
-                resources: componentIntegrationTests,
-              },
-              runBefore: [],
-              runAfter: [`${name}-build`],
-            },
-          }),
-          [`${name}-applicationTests`]: {
-            id: `${name}-application-integration-test`,
-            data: {
-              label: 'app integration test',
-              workflowType: WorkflowNodeType.PIPELINE,
-              status: integrationTestStatus,
-              isDisabled: applicationIntegrationTests.length === 0,
-              resources: applicationIntegrationTests,
-            },
-            runBefore: [],
-            runAfter: isResourcesAvailable(componentIntegrationTests)
-              ? getNodeNames(componentIntegrationTests)
-              : [`${name}-build`],
-          },
+          ...(mvpFeature
+            ? {}
+            : {
+                ...(componentIntegrationTests.length && {
+                  [`${name}-componentTests`]: {
+                    id: `${name}-component-integration-test`,
+                    data: {
+                      label: 'component integration test',
+                      workflowType: WorkflowNodeType.PIPELINE,
+                      status: integrationTestStatus,
+                      isDisabled: componentIntegrationTests.length === 0,
+                      resources: componentIntegrationTests,
+                    },
+                    runBefore: [],
+                    runAfter: [`${name}-build`],
+                  },
+                }),
+                [`${name}-applicationTests`]: {
+                  id: `${name}-application-integration-test`,
+                  data: {
+                    label: 'app integration test',
+                    workflowType: WorkflowNodeType.PIPELINE,
+                    status: integrationTestStatus,
+                    isDisabled: applicationIntegrationTests.length === 0,
+                    resources: applicationIntegrationTests,
+                  },
+                  runBefore: [],
+                  runAfter: isResourcesAvailable(componentIntegrationTests)
+                    ? getNodeNames(componentIntegrationTests)
+                    : [`${name}-build`],
+                },
+              }),
           [`${name}-staticEnv`]: {
             id: `${name}-static-env`,
             data: {
@@ -304,37 +312,43 @@ export const useCommitWorkflowData = (
             },
             runBefore: [],
             runAfterResourceKey: 'spec.parentEnvironment',
-            runAfter: isResourcesAvailable(applicationIntegrationTests)
+            runAfter: mvpFeature
+              ? [`${name}-build`]
+              : isResourcesAvailable(applicationIntegrationTests)
               ? getNodeNames(applicationIntegrationTests)
               : [`${name}-application-integration-test`],
           },
-          [`${name}-release`]: {
-            id: `${name}-release`,
-            isAbstractNode: true,
-            data: {
-              label: 'release',
-              workflowType: WorkflowNodeType.PIPELINE,
-              status: releaseStatus,
-              isDisabled: compReleases.length === 0,
-              resources: compReleases,
-            },
-            runBefore: [],
-            runAfter: isResourcesAvailable(compEnvironments)
-              ? getLastEnvironmentsNames(compEnvironments)
-              : [`${name}-static-env`],
-          },
-          [`${name}-releasePlan`]: {
-            id: `${name}-release-plans`,
-            data: {
-              label: 'managed environments',
-              workflowType: WorkflowNodeType.MANAGED_ENVIRONMENT,
-              status: releasePlanStatus,
-              isDisabled: compReleasePlans.length === 0,
-              resources: compReleasePlans,
-            },
-            runBefore: [],
-            runAfter: [`${name}-release`],
-          },
+          ...(mvpFeature
+            ? {}
+            : {
+                [`${name}-release`]: {
+                  id: `${name}-release`,
+                  isAbstractNode: true,
+                  data: {
+                    label: 'release',
+                    workflowType: WorkflowNodeType.PIPELINE,
+                    status: releaseStatus,
+                    isDisabled: compReleases.length === 0,
+                    resources: compReleases,
+                  },
+                  runBefore: [],
+                  runAfter: isResourcesAvailable(compEnvironments)
+                    ? getLastEnvironmentsNames(compEnvironments)
+                    : [`${name}-static-env`],
+                },
+                [`${name}-releasePlan`]: {
+                  id: `${name}-release-plans`,
+                  data: {
+                    label: 'managed environments',
+                    workflowType: WorkflowNodeType.MANAGED_ENVIRONMENT,
+                    status: releasePlanStatus,
+                    isDisabled: compReleasePlans.length === 0,
+                    resources: compReleasePlans,
+                  },
+                  runBefore: [],
+                  runAfter: [`${name}-release`],
+                },
+              }),
         };
       }
     }

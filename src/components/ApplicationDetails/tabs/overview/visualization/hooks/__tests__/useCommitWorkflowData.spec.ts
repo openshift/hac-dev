@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { renderHook } from '@testing-library/react-hooks';
 import { useBuildPipelines } from '../../../../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../../../../hooks/useComponents';
@@ -57,6 +58,10 @@ jest.mock('../../../../../../../hooks/useSnapshotsEnvironmentBindings', () => ({
   useSnapshotsEnvironmentBindings: jest.fn(),
 }));
 
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
+}));
+
 const useActiveNamespaceMock = useNamespace as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
 const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
@@ -66,6 +71,7 @@ const useReleasesMock = useReleases as jest.Mock;
 const useReleasePlansMock = useReleasePlans as jest.Mock;
 const useTestPipelinesMock = useTestPipelines as jest.Mock;
 const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
+const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 describe('useCommitWorkflowData hook', () => {
   beforeEach(() => {
@@ -78,6 +84,7 @@ describe('useCommitWorkflowData hook', () => {
     useReleasesMock.mockReturnValue([sampleReleases, true]);
     useTestPipelinesMock.mockReturnValue([[sampleTestPipelines[0]], true]);
     useSnapshotsEnvironmentBindingsMock.mockReturnValue([sampleSnapshotsEnvironmentBindings, true]);
+    useFeatureFlagMock.mockReturnValue([false]);
 
     const createElement = document.createElement.bind(document);
     document.createElement = (tagName) => {
@@ -198,5 +205,25 @@ describe('useCommitWorkflowData hook', () => {
 
     const [nodes] = result.current;
     expect(nodes).toHaveLength(9);
+  });
+
+  it('should return commit nodes without integration tests, releases and managed environments when mvp flag is true', () => {
+    useFeatureFlagMock.mockReturnValue([true]);
+    useEnvironmentsMock.mockReturnValue([[sampleEnvironments[0]], true]);
+
+    const { result } = renderHook(() => useCommitWorkflowData(commit));
+
+    const [mvpNodes] = result.current;
+    const nonMVPNodes = mvpNodes.filter((n) =>
+      [
+        WorkflowNodeType.COMPONENT_TEST,
+        WorkflowNodeType.APPLICATION_TEST,
+        WorkflowNodeType.RELEASE,
+        WorkflowNodeType.MANAGED_ENVIRONMENT,
+      ].includes(n.data.workflowType),
+    );
+
+    expect(nonMVPNodes).toHaveLength(0);
+    expect(mvpNodes).toHaveLength(3);
   });
 });
