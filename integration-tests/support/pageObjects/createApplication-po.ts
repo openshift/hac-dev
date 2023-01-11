@@ -1,6 +1,6 @@
 export const addComponentPagePO = {
   samples: 'Start with a sample.',
-  addComponent: '[data-test="add-component-button"]',
+  addComponent: '[data-test="add-component"]',
   enterSource: '[data-test="enter-source"]',
   gitOptions: 'Git options',
   gitReference: '[data-test="git-reference"]',

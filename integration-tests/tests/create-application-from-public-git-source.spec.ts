@@ -7,6 +7,8 @@ import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
 describe('Create Component from Public Git Source', () => {
+  const LOCAL_STORAGE_KEY_GS_MODAL = 'getting-started-modal';
+  const LOCAL_STORAGE_KEY_APPLICATION_MODAL = 'showApplicationModal';
   const addComponent = new AddComponentPage();
   const componentPage = new ComponentPage();
   const applicationDetailPage = new ApplicationDetailPage();
@@ -19,12 +21,15 @@ describe('Create Component from Public Git Source', () => {
   const cpuUnit = CPUUnit.millicore;
 
   before(() => {
-    // Disable HACBS
-    localStorage.setItem('hacbs', 'false');
-    // Need to reload the page after enabling HACBS via localStorage
-    cy.reload();
+    localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
+    localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
     //set application name
     Applications.createApplication(applicationName);
+  });
+
+  beforeEach(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
+    localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
   });
 
   after(() => {
@@ -79,6 +84,7 @@ describe('Create Component from Public Git Source', () => {
 
     it('Create Application', () => {
       componentPage.createApplication();
+      Applications.goToComponentsTab();
       applicationDetailPage.createdComponentExists(componentPage.componentName, applicationName);
     });
 
@@ -98,6 +104,7 @@ describe('Create Component from Public Git Source', () => {
       componentPage.setRam(2, MemoryUnit.gigabyte);
       componentPage.setCpuByButton(cpuCount, cpuUnit);
       componentPage.saveChanges();
+      Applications.goToComponentsTab();
       applicationDetailPage.expandDetails(componentPage.componentName);
       applicationDetailPage.checkCpuAndMemory(cpuCount, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
     });
