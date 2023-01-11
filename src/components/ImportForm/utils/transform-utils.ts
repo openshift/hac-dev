@@ -1,5 +1,6 @@
+import { sanitizeName } from '../../../utils/create-utils';
 import { ResourceRequirements, DetectedComponents } from './../../../types';
-import { FormResources } from './types';
+import { DetectedFormComponent, FormResources, MemoryUnits } from './types';
 
 const getResourceData = (res: string) => {
   const resourcesRegEx = /^[0-9]*|[a-zA-Z]*/g;
@@ -16,7 +17,7 @@ type ResourceData = {
   requests?: { cpu?: string; memory?: string };
 };
 
-export const createResourceData = (resources: ResourceData) => {
+export const createResourceData = (resources: ResourceData): FormResources => {
   const memory = (resources?.requests?.memory || resources?.limits?.memory) ?? '512Mi';
   const cpu = (resources?.requests?.cpu || resources?.limits?.cpu) ?? '1';
   const [memoryResource, memoryUnit] = getResourceData(memory);
@@ -26,7 +27,7 @@ export const createResourceData = (resources: ResourceData) => {
     cpu: cpuResource || '',
     cpuUnit: CPUResourceMap[cpuUnit] || CPUResourceMap[''],
     memory: memoryResource || '',
-    memoryUnit: memoryUnit || 'Gi',
+    memoryUnit: (memoryUnit as MemoryUnits) || MemoryUnits.Gi,
   };
 };
 
@@ -41,7 +42,9 @@ export const transformResources = (formResources: FormResources): ResourceRequir
   };
 };
 
-export const transformComponentValues = (detectedComponents: DetectedComponents) => {
+export const transformComponentValues = (
+  detectedComponents: DetectedComponents,
+): DetectedFormComponent[] => {
   return Object.values(detectedComponents).map((detectedComponent) => {
     const component = detectedComponent.componentStub;
     return {
@@ -54,4 +57,17 @@ export const transformComponentValues = (detectedComponents: DetectedComponents)
       },
     };
   }, []);
+};
+
+export const sampleComponentValues = (
+  application: string,
+  detectedComponents: DetectedComponents,
+): DetectedFormComponent[] => {
+  return transformComponentValues(detectedComponents).map((component) => ({
+    ...component,
+    componentStub: {
+      ...component.componentStub,
+      componentName: `${sanitizeName(application)}-${component.componentStub.componentName}-sample`,
+    },
+  }));
 };

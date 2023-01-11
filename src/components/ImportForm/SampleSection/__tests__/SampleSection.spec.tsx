@@ -2,7 +2,6 @@ import * as React from 'react';
 import { configure, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useFormikContext } from 'formik';
 import { mockCatalogItem } from '../../../../utils/__data__/mock-devfile-data';
-import { useComponentDetection } from '../../utils/cdq-utils';
 import { useDevfileSamples } from '../../utils/useDevfileSamples';
 import SampleSection from '../SampleSection';
 
@@ -14,10 +13,6 @@ jest.mock('../../utils/useDevfileSamples', () => ({
   useDevfileSamples: jest.fn(),
 }));
 
-jest.mock('../../utils/cdq-utils', () => ({
-  useComponentDetection: jest.fn().mockReturnValue([null, null, null]),
-}));
-
 jest.mock('formik', () => ({
   useFormikContext: jest.fn(),
 }));
@@ -26,15 +21,9 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
-jest.mock('../../../../shared/hooks/useResizeObserver', () => ({
-  useResizeObserver: jest.fn(),
-}));
-
 const onStrategyChangeMock = jest.fn();
 
 const useFormikContextMock = useFormikContext as jest.Mock;
-
-const useComponentDetectionMock = useComponentDetection as jest.Mock;
 
 const useDevfileSamplesMock = useDevfileSamples as jest.Mock;
 
@@ -74,13 +63,13 @@ describe('SampleSection', () => {
     });
   });
 
-  it('renders run useComponentDetection hook when a sample is selected', async () => {
+  it('sets source after a sample is selected', async () => {
+    const setFieldValue = jest.fn();
     useFormikContextMock.mockReturnValue({
       values: { source: 'https://github.com/repo', application: 'test-app' },
-      setFieldValue: jest.fn(),
+      setFieldValue,
       setStatus: jest.fn(),
     });
-    useComponentDetectionMock.mockReturnValue([[], true, null]);
     useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
 
     render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
@@ -88,139 +77,31 @@ describe('SampleSection', () => {
     await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
 
     await waitFor(() => {
-      expect(useComponentDetectionMock).toHaveBeenCalledWith('https://github.com/repo', 'test-app');
+      expect(setFieldValue).toHaveBeenLastCalledWith(
+        'source',
+        'https://github.com/nodeshift-starters/devfile-sample.git',
+      );
     });
   });
 
-  it('validates form after a sample is selected', async () => {
+  it('unsets source after a selected sample is deselected', async () => {
     const setFieldValue = jest.fn();
     useFormikContextMock.mockReturnValue({
       values: { source: 'https://github.com/repo', application: 'test-app' },
       setFieldValue,
       setStatus: jest.fn(),
     });
-    useComponentDetectionMock.mockReturnValue([[], true, null]);
     useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
 
     render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+
+    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
 
     await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
 
     await waitFor(() => {
-      expect(setFieldValue).toHaveBeenLastCalledWith('isValidated', true);
+      expect(setFieldValue).toHaveBeenLastCalledWith('source', undefined);
     });
-  });
-
-  it('unvalidates form after a selected sample is deselected', async () => {
-    const setFieldValue = jest.fn();
-    useFormikContextMock.mockReturnValue({
-      values: { source: 'https://github.com/repo', application: 'test-app' },
-      setFieldValue,
-      setStatus: jest.fn(),
-    });
-    useComponentDetectionMock.mockReturnValue([[], true, null]);
-    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
-
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
-
-    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
-
-    useComponentDetectionMock.mockReturnValue([null, true, null]);
-    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
-
-    await waitFor(() => {
-      expect(setFieldValue).toHaveBeenLastCalledWith('isValidated', false);
-    });
-  });
-
-  it('prefixes application to sample name', async () => {
-    const setFieldValue = jest.fn();
-    useFormikContextMock.mockReturnValue({
-      values: { source: 'https://github.com/repo', application: 'MyApp' },
-      setFieldValue,
-      setStatus: jest.fn(),
-    });
-    useComponentDetectionMock.mockReturnValue([
-      [{ componentStub: { componentName: 'node' } }],
-      true,
-      null,
-    ]);
-    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
-
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
-
-    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
-
-    expect(setFieldValue).toHaveBeenCalledWith('components', [
-      {
-        componentStub: expect.objectContaining({
-          componentName: 'myapp-node-sample',
-        }),
-      },
-    ]);
-  });
-
-  it('sanitizes app prefix for sample name', async () => {
-    const setFieldValue = jest.fn();
-    useFormikContextMock.mockReturnValue({
-      values: { source: 'https://github.com/repo', application: 'My Application' },
-      setFieldValue,
-      setStatus: jest.fn(),
-    });
-    useComponentDetectionMock.mockReturnValue([
-      [{ componentStub: { componentName: 'node' } }],
-      true,
-      null,
-    ]);
-    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
-
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
-
-    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
-
-    expect(setFieldValue).toHaveBeenCalledWith('components', [
-      {
-        componentStub: expect.objectContaining({
-          componentName: 'my-application-node-sample',
-        }),
-      },
-    ]);
-  });
-
-  it('should show loading indicator while detecting components', async () => {
-    const setFieldValue = jest.fn();
-    useFormikContextMock.mockReturnValue({
-      values: { source: 'https://github.com/repo', application: 'test-app' },
-      setFieldValue,
-      setStatus: jest.fn(),
-    });
-    useComponentDetectionMock.mockReturnValue([null, false, null]);
-    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
-
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
-
-    await waitFor(() => expect(screen.queryByRole('progressbar')).not.toBeInTheDocument());
-
-    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
-
-    await waitFor(() => screen.getByRole('progressbar'));
-  });
-
-  it('should show alert if component detection fails', async () => {
-    const setFieldValue = jest.fn();
-    useFormikContextMock.mockReturnValue({
-      values: { source: 'https://github.com/repo', application: 'test-app' },
-      setFieldValue,
-      setStatus: jest.fn(),
-    });
-    useComponentDetectionMock.mockReturnValue([null, false, { message: 'abcd' }]);
-    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
-
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
-
-    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
-
-    await waitFor(() => screen.getByText('Unable to load Basic Node.js'));
   });
 
   it('should show empty state for filtered samples', async () => {
@@ -230,7 +111,6 @@ describe('SampleSection', () => {
       setFieldValue,
       setStatus: jest.fn(),
     });
-    useComponentDetectionMock.mockReturnValue([null, false, { message: 'abcd' }]);
     useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
 
     render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
@@ -256,7 +136,6 @@ describe('SampleSection', () => {
       setFieldValue,
       setStatus: jest.fn(),
     });
-    useComponentDetectionMock.mockReturnValue([null, false, { message: 'abcd' }]);
     useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
 
     render(<SampleSection onStrategyChange={onStrategyChangeMock} />);

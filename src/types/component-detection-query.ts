@@ -19,6 +19,6 @@ export type ComponentDetectionQueryKind = K8sResourceCommon & {
   isMultiComponent?: boolean;
   status?: {
     componentDetected?: DetectedComponents;
-    conditions?: any[];
+    conditions?: { type: string; status: string; reason: string; message: string }[];
   };
 };

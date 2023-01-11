@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { FormikWizardStep } from 'formik-pf';
 import ApplicationSection from '../ApplicationSection/ApplicationSection';
 import ReviewSection from '../ReviewSection/ReviewSection';
@@ -9,12 +9,15 @@ import { ImportStrategy } from './types';
 import {
   applicationValidationSchema,
   reviewValidationSchema,
+  sampleValidationSchema,
   sourceValidationSchema,
 } from './validation-utils';
 
-export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
-  const [strategy, setStrategy] = useState(ImportStrategy.GIT);
-
+export const useImportSteps = (
+  applicationName: string,
+  strategy: ImportStrategy,
+  changeStrategy: (newStrategy: ImportStrategy) => void,
+): FormikWizardStep[] => {
   const steps = useMemo(
     () => [
       ...(applicationName
@@ -33,7 +36,7 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
             {
               id: 'source',
               name: 'Add components',
-              component: <SourceSection onStrategyChange={setStrategy} />,
+              component: <SourceSection onStrategyChange={changeStrategy} />,
               validationSchema: sourceValidationSchema,
             },
             {
@@ -51,15 +54,15 @@ export const useImportSteps = (applicationName: string): FormikWizardStep[] => {
             {
               id: 'sample',
               name: 'Select sample',
-              component: <SampleSection onStrategyChange={setStrategy} />,
+              component: <SampleSection onStrategyChange={changeStrategy} />,
               hasNoBodyPadding: true,
               nextButtonText: 'Create',
-              validationSchema: sourceValidationSchema,
+              validationSchema: sampleValidationSchema,
             },
           ]
         : []),
     ],
-    [applicationName, strategy],
+    [applicationName, strategy, changeStrategy],
   );
 
   return steps;

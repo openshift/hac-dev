@@ -1,7 +1,8 @@
 import { FormikHelpers } from 'formik';
 import { createApplication, createComponent } from '../../../utils/create-utils';
-import { transformResources } from './transform-utils';
-import { DetectedFormComponent, ImportFormValues } from './types';
+import { detectComponents } from './cdq-utils';
+import { transformResources, sampleComponentValues } from './transform-utils';
+import { DetectedFormComponent, ImportFormValues, ImportStrategy } from './types';
 
 export const createComponents = async (
   components: DetectedFormComponent[],
@@ -34,24 +35,44 @@ export const createComponents = async (
   return Promise.all(createComponentPromises);
 };
 
-export const createResources = async (formValues: ImportFormValues) => {
-  const { application, inAppContext, components, secret, namespace, pipelinesascode } = formValues;
+export const createResources = async (formValues: ImportFormValues, strategy: ImportStrategy) => {
+  const { source, application, inAppContext, components, secret, namespace, pipelinesascode, git } =
+    formValues;
   const shouldCreateApplication = !inAppContext;
   let applicationName = application;
+  let detectedComponents = components;
+  if (strategy === ImportStrategy.SAMPLE) {
+    const detectedSampleComponents = await detectComponents(
+      source,
+      application,
+      namespace,
+      secret,
+      git.context,
+      git.ref,
+    );
+    detectedComponents = sampleComponentValues(application, detectedSampleComponents);
+  }
 
   if (shouldCreateApplication) {
     const applicationData = await createApplication(application, namespace, true);
     applicationName = applicationData.metadata.name;
   }
 
-  await createComponents(components, applicationName, namespace, secret, true);
+  await createComponents(detectedComponents, applicationName, namespace, secret, true);
 
   if (shouldCreateApplication) {
     const applicationData = await createApplication(application, namespace);
     applicationName = applicationData.metadata.name;
   }
 
-  await createComponents(components, applicationName, namespace, secret, false, pipelinesascode);
+  await createComponents(
+    detectedComponents,
+    applicationName,
+    namespace,
+    secret,
+    false,
+    pipelinesascode,
+  );
 
   return applicationName;
 };

@@ -38,6 +38,10 @@ const createSourceValidationSchema = (containerImageSupport: boolean) =>
 export const sourceValidationSchema = createSourceValidationSchema(true);
 export const gitSourceValidationSchema = createSourceValidationSchema(false);
 
+export const sampleValidationSchema = yup.object({
+  source: yup.string().required(),
+});
+
 export const reviewValidationSchema = yup.object({
   components: yup.array().of(
     yup.object({

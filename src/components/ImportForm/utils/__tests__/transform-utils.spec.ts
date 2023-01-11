@@ -1,5 +1,9 @@
 import { mockDetectedComponent } from '../__data__/mock-cdq';
-import { createResourceData, transformComponentValues } from '../transform-utils';
+import {
+  createResourceData,
+  sampleComponentValues,
+  transformComponentValues,
+} from '../transform-utils';
 
 const mockResourceLimits = {
   limits: {
@@ -43,5 +47,23 @@ describe('Transform Utils', () => {
         projectType: 'nodejs',
       },
     ]);
+  });
+});
+
+describe('sampleComponentValues', () => {
+  it('should prefix application to sample name', () => {
+    const mockDetectedComponents = {
+      node: { componentStub: { componentName: 'node', application: 'my-app' } },
+    };
+    const values = sampleComponentValues('my-app', mockDetectedComponents);
+    expect(values[0].componentStub).toHaveProperty('componentName', 'my-app-node-sample');
+  });
+
+  it('should sanitize application prefix', () => {
+    const mockDetectedComponents = {
+      node: { componentStub: { componentName: 'node', application: 'My Application' } },
+    };
+    const values = sampleComponentValues('My Application', mockDetectedComponents);
+    expect(values[0].componentStub).toHaveProperty('componentName', 'my-application-node-sample');
   });
 });

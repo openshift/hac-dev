@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { useK8sWatchResource, k8sDeleteResource } from '@openshift/dynamic-plugin-sdk-utils';
+import {
+  useK8sWatchResource,
+  k8sDeleteResource,
+  k8sGetResource,
+} from '@openshift/dynamic-plugin-sdk-utils';
 import {
   ComponentDetectionQueryModel,
   ComponentDetectionQueryGroupVersionKind,
@@ -109,4 +113,51 @@ export const useComponentDetection = (
 
 export const mapDetectedComponents = (detectedComponents: DetectedComponents) => {
   return Object.values(detectedComponents).map((component) => component.componentStub);
+};
+
+const CDQ_POLL_INTERVAL = 500;
+
+/**
+ * Create a ComponentDetectionQuery and poll it until detection is completed.
+ * return the detected components after completion and delete the resource.
+ */
+export const detectComponents = async (
+  source: string,
+  application: string,
+  namespace: string,
+  secret?: string,
+  context?: string,
+  ref?: string,
+) => {
+  let cdq = await createComponentDetectionQuery(
+    application,
+    source,
+    namespace,
+    secret,
+    context,
+    ref,
+  );
+  try {
+    while (!cdq.status?.conditions?.find((c) => c.type === 'Completed' && c.status === 'True')) {
+      await new Promise((r) => setTimeout(r, CDQ_POLL_INTERVAL));
+      cdq = await k8sGetResource({
+        model: ComponentDetectionQueryModel,
+        queryOptions: {
+          name: cdq.metadata.name,
+          ns: namespace,
+        },
+      });
+    }
+    const completeCondition = cdq.status.conditions.find((c) => c.type === 'Completed');
+    if (!cdq.status.componentDetected || completeCondition.reason === 'Error') {
+      throw new Error(completeCondition.message);
+    }
+  } finally {
+    await k8sDeleteResource({
+      model: ComponentDetectionQueryModel,
+      queryOptions: { name: cdq.metadata.name, ns: namespace },
+    });
+  }
+
+  return cdq.status.componentDetected;
 };

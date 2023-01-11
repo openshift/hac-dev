@@ -4,7 +4,7 @@ import { PageSection, PageSectionTypes, PageSectionVariants } from '@patternfly/
 import { FormikWizard } from 'formik-pf';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import { createResources } from './utils/submit-utils';
-import { ImportFormValues } from './utils/types';
+import { ImportFormValues, ImportStrategy } from './utils/types';
 import { useImportSteps } from './utils/useImportSteps';
 
 type ImportFormProps = {
@@ -14,6 +14,7 @@ type ImportFormProps = {
 const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName }) => {
   const navigate = useNavigate();
   const namespace = useNamespace();
+  const [strategy, setStrategy] = React.useState(ImportStrategy.GIT);
 
   const initialValues: ImportFormValues = {
     application: applicationName || '',
@@ -29,11 +30,11 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
     source: '',
   };
 
-  const steps = useImportSteps(applicationName);
+  const steps = useImportSteps(applicationName, strategy, setStrategy);
 
   const handleSubmit = React.useCallback(
     (values, formikHelpers) => {
-      return createResources(values)
+      return createResources(values, strategy)
         .then((appName) => {
           navigate(`/stonesoup/applications/${appName}`);
         })
@@ -44,7 +45,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
           formikHelpers.setStatus({ submitError: error.message });
         });
     },
-    [navigate],
+    [navigate, strategy],
   );
 
   const handleReset = () => {

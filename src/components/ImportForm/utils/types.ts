@@ -17,9 +17,9 @@ export enum MemoryUnits {
 }
 
 export type FormResources = {
-  cpu: number;
+  cpu: string;
   cpuUnit: CPUUnits;
-  memory: number;
+  memory: string;
   memoryUnit: MemoryUnits;
 };
 
