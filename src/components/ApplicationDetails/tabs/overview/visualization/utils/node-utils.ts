@@ -73,9 +73,9 @@ export const statusToRunStatus = (status: string): RunStatus => {
   }
 };
 
-export const getLinkForElement = (
+export const getLinkDataForElement = (
   element: Node<PipelineNodeModel, WorkflowNodeModelData>,
-): { tab: string; filter?: { name: string; value: string } } => {
+): { tab?: string; path?: string; filter?: { name: string; value: string } } => {
   const { workflowType, label, isDisabled, groupNode, status } = element.getData();
 
   switch (workflowType) {
@@ -101,10 +101,13 @@ export const getLinkForElement = (
     case WorkflowNodeType.TESTS:
     case WorkflowNodeType.COMPONENT_TEST:
     case WorkflowNodeType.APPLICATION_TEST:
-      return {
-        tab: 'integrationtests',
-        filter: !groupNode && !isDisabled ? { name: 'name', value: label } : undefined,
-      };
+      return !groupNode && !isDisabled
+        ? {
+            path: `/stonesoup/${element.getData().application}/integrationtests/${label}`,
+          }
+        : {
+            tab: 'integrationtests',
+          };
     case WorkflowNodeType.STATIC_ENVIRONMENT:
       return {
         tab: 'environments',
@@ -127,6 +130,21 @@ export const getLinkForElement = (
         tab: 'overview',
       };
   }
+};
+
+export const getLinksForElement = (
+  element: Node<PipelineNodeModel, WorkflowNodeModelData>,
+): { elementRef: string; pipelinesRef: string } => {
+  const linkData = getLinkDataForElement(element);
+
+  const appPath = `/stonesoup/applications/${element.getData().application}`;
+  const tabPath = linkData.tab ? `/${linkData.tab}` : '';
+  const filter = linkData.filter ? `?${linkData.filter.name}=${linkData.filter.value}` : '';
+
+  return {
+    elementRef: linkData.path ? linkData.path : `${appPath}${tabPath}${filter}`,
+    pipelinesRef: `${appPath}/pipelineruns`,
+  };
 };
 
 export const getRunStatusComponent = (
@@ -159,6 +177,7 @@ export const worstWorkflowStatus = (workFlows: PipelineNodeModel[]) =>
 
 export const resourceToPipelineNode = (
   resource: K8sResourceCommon,
+  application: string,
   workflowType: WorkflowNodeType,
   runAfterTasks: string[] = [],
   status?: runStatus | string,
@@ -171,6 +190,7 @@ export const resourceToPipelineNode = (
   width: getNodeWidth(resource.metadata.name, status),
   runAfterTasks,
   data: {
+    application,
     label: label || resource.metadata.name,
     workflowType,
     status,
@@ -180,6 +200,7 @@ export const resourceToPipelineNode = (
 
 export const emptyPipelineNode = (
   id: string,
+  application: string,
   label: string,
   workflowType: WorkflowNodeType,
   runAfterTasks: string[] = [],
@@ -191,6 +212,7 @@ export const emptyPipelineNode = (
   width: getNodeWidth(label),
   runAfterTasks,
   data: {
+    application,
     label,
     isDisabled: true,
     workflowType,
@@ -199,6 +221,7 @@ export const emptyPipelineNode = (
 
 export const groupToPipelineNode = (
   id: string,
+  application: string,
   label: string,
   workflowType: WorkflowNodeType,
   runAfterTasks: string[] = [],
@@ -220,6 +243,7 @@ export const groupToPipelineNode = (
     runAfterTasks: group ? [] : runAfterTasks,
     style: { padding: [35] },
     data: {
+      application,
       label,
       workflowType,
       isDisabled,
@@ -233,6 +257,7 @@ export const groupToPipelineNode = (
 
 export const getBuildNodeForComponent = (
   component: ComponentKind,
+  application: string,
   latestBuilds: PipelineRunKind[],
 ): WorkflowNodeModel<WorkflowNodeModelData> => {
   const latestBuild = latestBuilds.find(
@@ -241,6 +266,7 @@ export const getBuildNodeForComponent = (
   if (latestBuild) {
     return resourceToPipelineNode(
       latestBuild,
+      application,
       WorkflowNodeType.BUILD,
       [component.metadata.uid],
       pipelineRunStatus(latestBuild),
@@ -255,6 +281,7 @@ export const getBuildNodeForComponent = (
     width: 0,
     runAfterTasks: [component.metadata.uid],
     data: {
+      application,
       label: `Build for ${component.metadata.name}`,
       isDisabled: false,
       status: NEEDS_MERGE_STATUS,

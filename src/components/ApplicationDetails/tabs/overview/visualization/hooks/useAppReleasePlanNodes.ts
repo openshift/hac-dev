@@ -42,6 +42,7 @@ export const useAppReleasePlanNodes = (
               : 'no-releases';
             return resourceToPipelineNode(
               releasePlan,
+              applicationName,
               WorkflowNodeType.MANAGED_ENVIRONMENT,
               latestRelease ? [latestRelease.metadata.uid] : [notFoundPrevTask],
               latestRelease ? pipelineRunStatus(latestRelease) : 'Pending',
@@ -50,6 +51,7 @@ export const useAppReleasePlanNodes = (
         : [
             emptyPipelineNode(
               'no-managed-environments',
+              applicationName,
               'No managed environments set',
               WorkflowNodeType.MANAGED_ENVIRONMENT,
               previousTasks,
@@ -57,13 +59,14 @@ export const useAppReleasePlanNodes = (
           ];
     updateParallelNodeWidths(nodes);
     return nodes;
-  }, [allLoaded, releasePlans, previousTasks, releases, allErrors]);
+  }, [allLoaded, releasePlans, allErrors.length, applicationName, previousTasks, releases]);
 
   const releasePlanGroup = React.useMemo(
     () =>
       allLoaded && allErrors.length === 0
         ? groupToPipelineNode(
             'managed-environments',
+            applicationName,
             releasePlans?.length ? 'Managed environments' : 'No managed environments yet',
             WorkflowNodeType.MANAGED_ENVIRONMENT,
             previousTasks,
@@ -74,7 +77,15 @@ export const useAppReleasePlanNodes = (
             worstWorkflowStatus(releasePlanNodes),
           )
         : undefined,
-    [allLoaded, expanded, releasePlanNodes, releasePlans, previousTasks, allErrors],
+    [
+      allLoaded,
+      allErrors.length,
+      applicationName,
+      releasePlans,
+      previousTasks,
+      expanded,
+      releasePlanNodes,
+    ],
   );
 
   return [releasePlanNodes, releasePlanGroup, allLoaded, allErrors];

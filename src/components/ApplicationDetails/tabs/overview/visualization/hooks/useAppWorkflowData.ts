@@ -58,6 +58,7 @@ export const useAppWorkflowData = (
       integrationTestsLoaded && applicationTestsLoaded
         ? groupToPipelineNode(
             'tests',
+            applicationName,
             !applicationIntegrationTests?.length && !applicationIntegrationTests.length
               ? 'No tests set'
               : 'Tests',
@@ -78,14 +79,15 @@ export const useAppWorkflowData = (
     [
       integrationTestsLoaded,
       applicationTestsLoaded,
-      applicationIntegrationTestTasks,
+      applicationName,
       applicationIntegrationTests,
-      applicationIntegrationTestNodes,
       buildTasks,
-      componentIntegrationTestTasks,
-      componentIntegrationTests,
-      componentIntegrationTestNodes,
       expanded,
+      componentIntegrationTestTasks,
+      applicationIntegrationTestTasks,
+      componentIntegrationTestNodes,
+      applicationIntegrationTestNodes,
+      componentIntegrationTests,
     ],
   );
 

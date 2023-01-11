@@ -192,11 +192,11 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                   name: applicationName,
                 },
                 {
-                  path: `/stonesoup/applications/${applicationName}?activeTab=commits`,
+                  path: `/stonesoup/applications/${applicationName}/commits`,
                   name: 'commits',
                 },
                 {
-                  path: `/stonesoup/applications/${applicationName}/commit/${commitName}`,
+                  path: `/stonesoup/${applicationName}/commit/${commitName}`,
                   name: commitDisplayName,
                 },
               ]}
@@ -278,6 +278,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                   onClick: () => window.open(commit.shaURL),
                 },
               ]}
+              baseURL={`/stonesoup/${applicationName}/commit/${commitName}`}
               tabs={[
                 {
                   key: 'overview',

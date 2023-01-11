@@ -76,10 +76,7 @@ const AppRecentCommits = ({ applicationName }) => {
         <EmptyStateSecondaryActions>
           <Button
             component={(props) => (
-              <Link
-                {...props}
-                to={`/stonesoup/applications/${applicationName}?activeTab=components&hacbs=true`}
-              />
+              <Link {...props} to={`/stonesoup/applications/${applicationName}/components`} />
             )}
             variant="secondary"
             data-test="go-to-components-tab"

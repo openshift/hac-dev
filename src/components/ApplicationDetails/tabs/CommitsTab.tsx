@@ -63,10 +63,7 @@ const CommitsTab: React.FC<CommitTabProps> = ({ applicationName }) => {
       <EmptyStateSecondaryActions>
         <Button
           component={(props) => (
-            <Link
-              {...props}
-              to={`/stonesoup/applications/${applicationName}?activeTab=components`}
-            />
+            <Link {...props} to={`/stonesoup/applications/${applicationName}/components`} />
           )}
           variant="secondary"
         >

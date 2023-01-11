@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { css } from '@patternfly/react-styles';
 import pipelineStyles from '@patternfly/react-styles/css/components/Topology/topology-pipelines';
 import {
@@ -11,7 +11,7 @@ import {
   PipelineNodeModel,
 } from '@patternfly/react-topology';
 import { WorkflowNodeModelData, WorkflowNodeType } from '../types';
-import { getLinkForElement, statusToRunStatus, TYPE_DESCRIPTIONS } from '../utils/node-utils';
+import { getLinksForElement, statusToRunStatus, TYPE_DESCRIPTIONS } from '../utils/node-utils';
 
 import './WorkflowNodeTipContent.scss';
 
@@ -21,18 +21,7 @@ type WorkflowNodeTipContentProps = {
 
 const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({ element }) => {
   const { label, workflowType, children } = element.getData();
-  const { pathname } = useLocation();
-
-  const { elementRef, pipelinesRef } = React.useMemo(() => {
-    const linkData = getLinkForElement(element);
-    const queryParams = `?activeTab=${linkData.tab}${
-      linkData.filter ? `&${linkData.filter.name}=${linkData.filter.value}` : ''
-    }`;
-    return {
-      elementRef: `${pathname}${queryParams}`,
-      pipelinesRef: `${pathname}?activeTab=pipelineruns`,
-    };
-  }, [element, pathname]);
+  const { elementRef, pipelinesRef } = getLinksForElement(element);
 
   const links = React.useMemo(() => {
     switch (workflowType) {
@@ -56,7 +45,7 @@ const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({ element
       case WorkflowNodeType.APPLICATION_TEST:
         return [
           <Link key="element-link" data-testid="element-link" to={elementRef}>
-            View in tab
+            View details
           </Link>,
           <Link key="pipeline-runs-link" data-testid="pipeline-runs-link" to={pipelinesRef}>
             View pipeline runs

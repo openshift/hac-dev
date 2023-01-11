@@ -29,10 +29,7 @@ const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicati
       <EmptyStateSecondaryActions>
         <Button
           component={(props) => (
-            <Link
-              {...props}
-              to={`/stonesoup/applications/${applicationName}?activeTab=components`}
-            />
+            <Link {...props} to={`/stonesoup/applications/${applicationName}/components`} />
           )}
           variant="secondary"
         >

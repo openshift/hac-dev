@@ -36,6 +36,7 @@ export const useAppComponentsNodes = (
       ? components.map((component) =>
           resourceToPipelineNode(
             component,
+            applicationName,
             WorkflowNodeType.COMPONENT,
             previousTasks,
             getRunStatusComponent(component, buildPipelines),
@@ -44,6 +45,7 @@ export const useAppComponentsNodes = (
       : [
           emptyPipelineNode(
             'no-components',
+            applicationName,
             'No components set',
             WorkflowNodeType.COMPONENT,
             previousTasks,
@@ -51,13 +53,14 @@ export const useAppComponentsNodes = (
         ];
     updateParallelNodeWidths(nodes);
     return nodes;
-  }, [buildPipelines, components, previousTasks]);
+  }, [applicationName, buildPipelines, components, previousTasks]);
 
   const componentGroup: WorkflowNodeModel<WorkflowNodeModelData> = React.useMemo(
     () =>
       allResourcesLoaded && allErrors.length === 0
         ? groupToPipelineNode(
             'components',
+            applicationName,
             components?.length ? 'Components' : 'No components set',
             WorkflowNodeType.COMPONENT,
             previousTasks,
@@ -68,7 +71,15 @@ export const useAppComponentsNodes = (
             worstWorkflowStatus(componentNodes),
           )
         : undefined,
-    [allResourcesLoaded, componentNodes, components, expanded, previousTasks, allErrors],
+    [
+      allResourcesLoaded,
+      allErrors.length,
+      applicationName,
+      components,
+      previousTasks,
+      expanded,
+      componentNodes,
+    ],
   );
 
   const componentTasks = React.useMemo(

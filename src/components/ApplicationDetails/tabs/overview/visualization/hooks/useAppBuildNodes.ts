@@ -55,17 +55,28 @@ export const useAppBuildNodes = (
   const buildNodes: WorkflowNodeModel<WorkflowNodeModelData>[] = React.useMemo(() => {
     const nodes =
       components.length && latestBuilds.length
-        ? components.map((component) => getBuildNodeForComponent(component, latestBuilds))
-        : [emptyPipelineNode('no-builds', 'No builds yet', WorkflowNodeType.BUILD, previousTasks)];
+        ? components.map((component) =>
+            getBuildNodeForComponent(component, applicationName, latestBuilds),
+          )
+        : [
+            emptyPipelineNode(
+              'no-builds',
+              applicationName,
+              'No builds yet',
+              WorkflowNodeType.BUILD,
+              previousTasks,
+            ),
+          ];
     updateParallelNodeWidths(nodes);
     return nodes;
-  }, [previousTasks, components, latestBuilds]);
+  }, [components, latestBuilds, applicationName, previousTasks]);
 
   const buildGroup = React.useMemo(
     () =>
       allResourcesLoaded
         ? groupToPipelineNode(
             'builds',
+            applicationName,
             latestBuilds?.length ? 'Builds' : 'No builds yet',
             WorkflowNodeType.BUILD,
             previousTasks,
@@ -78,7 +89,15 @@ export const useAppBuildNodes = (
               : worstWorkflowStatus(buildNodes),
           )
         : undefined,
-    [allResourcesLoaded, previousTasks, expanded, buildNodes, latestBuilds, components.length],
+    [
+      allResourcesLoaded,
+      applicationName,
+      latestBuilds,
+      previousTasks,
+      expanded,
+      buildNodes,
+      components.length,
+    ],
   );
 
   const buildTasks = React.useMemo(

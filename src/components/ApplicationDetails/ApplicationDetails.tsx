@@ -181,6 +181,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
               }),
           },
         ]}
+        baseURL={`/stonesoup/applications/${applicationName}`}
         tabs={[
           {
             key: 'overview',

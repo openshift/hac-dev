@@ -75,6 +75,32 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
+        path: '/stonesoup/pipelineruns/:plrName/:activeTab',
+        exact: true,
+        component: {
+          $codeRef: 'PipelineRuns',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/stonesoup/pipelineruns/:plrName/:activeTab',
+        exact: true,
+        component: {
+          $codeRef: 'PipelineRuns',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
         path: '/stonesoup/applications/:appName/integration-test',
         exact: true,
         component: {
@@ -154,7 +180,7 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
-        path: '/stonesoup/:appName/test/:testName',
+        path: '/stonesoup/:appName/integrationtests/:testName',
         exact: true,
         component: {
           $codeRef: 'IntegrationTestDetails',
@@ -167,7 +193,33 @@ module.exports = {
     {
       type: 'core.page/route',
       properties: {
-        path: '/stonesoup/:appName/test/:testName',
+        path: '/stonesoup/:appName/integrationtests/:testName',
+        exact: true,
+        component: {
+          $codeRef: 'IntegrationTestDetails',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/stonesoup/:appName/integrationtests/:testName/:activeTab',
+        exact: true,
+        component: {
+          $codeRef: 'IntegrationTestDetails',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/stonesoup/:appName/integrationtests/:testName/:activeTab',
         exact: true,
         component: {
           $codeRef: 'IntegrationTestDetails',
@@ -220,6 +272,32 @@ module.exports = {
       type: 'core.page/route',
       properties: {
         path: '/stonesoup/applications/:appName',
+        exact: true,
+        component: {
+          $codeRef: 'ApplicationDetails',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/stonesoup/applications/:appName/:activeTab',
+        exact: true,
+        component: {
+          $codeRef: 'ApplicationDetails',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/stonesoup/applications/:appName/:activeTab',
         exact: true,
         component: {
           $codeRef: 'ApplicationDetails',

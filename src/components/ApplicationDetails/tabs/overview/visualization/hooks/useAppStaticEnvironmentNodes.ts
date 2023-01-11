@@ -69,6 +69,7 @@ export const useAppStaticEnvironmentNodes = (
 
           return resourceToPipelineNode(
             staticEnvironment,
+            applicationName,
             WorkflowNodeType.STATIC_ENVIRONMENT,
             prevEnv ? [prevEnv.metadata.uid] : previousTasks,
             testPipeline ? pipelineRunStatus(testPipeline) : 'Pending',
@@ -77,6 +78,7 @@ export const useAppStaticEnvironmentNodes = (
       : [
           emptyPipelineNode(
             'no-static-environments',
+            applicationName,
             'No static environments set',
             WorkflowNodeType.STATIC_ENVIRONMENT,
             previousTasks,
@@ -86,6 +88,7 @@ export const useAppStaticEnvironmentNodes = (
     return nodes;
   }, [
     allLoaded,
+    applicationName,
     staticEnvironments,
     previousTasks,
     snapshotsEnvironmentBindings,
@@ -98,6 +101,7 @@ export const useAppStaticEnvironmentNodes = (
       allLoaded && previousTasks?.length && allErrors.length === 0
         ? groupToPipelineNode(
             'static-environments',
+            applicationName,
             staticEnvironments?.length ? 'Static environments' : 'No static environments set',
             WorkflowNodeType.STATIC_ENVIRONMENT,
             previousTasks,
@@ -108,7 +112,15 @@ export const useAppStaticEnvironmentNodes = (
             worstWorkflowStatus(staticEnvironmentNodes),
           )
         : undefined,
-    [allLoaded, previousTasks, expanded, staticEnvironmentNodes, staticEnvironments, allErrors],
+    [
+      allLoaded,
+      previousTasks,
+      allErrors.length,
+      applicationName,
+      staticEnvironments,
+      expanded,
+      staticEnvironmentNodes,
+    ],
   );
 
   const lastStaticEnv = React.useMemo(

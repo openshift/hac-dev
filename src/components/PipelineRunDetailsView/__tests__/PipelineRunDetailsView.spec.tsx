@@ -2,8 +2,9 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource, k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { DataState, testPipelineRuns } from '../../../__data__/pipelinerun-data';
+import { routerRenderer } from '../../../utils/test-utils';
 import { PipelineRunDetailsView } from '../PipelineRunDetailsView';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -13,11 +14,15 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 jest.mock('../../PipelineRunDetailsView/PipelineRunVisualization', () => () => <div />);
 
-jest.mock('react-router-dom', () => ({
-  Link: (props) => <a href={props.to}>{props.children}</a>,
-  useNavigate: jest.fn(),
-  useSearchParams: () => React.useState(() => new URLSearchParams()),
-}));
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
+  return {
+    ...actual,
+    Link: (props) => <a href={props.to}>{props.children}</a>,
+    useNavigate: jest.fn(),
+    useSearchParams: () => React.useState(() => new URLSearchParams()),
+  };
+});
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useNavigateMock = useNavigate as jest.Mock;
@@ -111,19 +116,19 @@ const mockApplication = {
 describe('PipelineRunDetailsView', () => {
   it('should render spinner if pipelinerun data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
-    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     screen.getByRole('progressbar');
   });
 
   it('should render application display name if application data is loaded', () => {
     watchResourceMock.mockReturnValueOnce([mockApplication, true]).mockReturnValue([[], true]);
-    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     screen.getAllByText(pipelineRunName);
   });
 
   it('should render application if components data is loaded', () => {
     watchResourceMock.mockReturnValueOnce([mockApplication, true]).mockReturnValue([[], true]);
-    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     expect(screen.queryByText('Pipeline run details')).toBeInTheDocument();
     expect(screen.queryByText('Status')).toBeInTheDocument();
     expect(screen.queryByText('Namespace')).toBeInTheDocument();
@@ -134,7 +139,7 @@ describe('PipelineRunDetailsView', () => {
       .mockReturnValueOnce([testPipelineRuns[DataState.SUCCEEDED], true])
       .mockReturnValue([[], true]);
 
-    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
 
     const actionsDropdown = screen.queryByRole('button', { name: 'Actions' });
     expect(actionsDropdown).toBeInTheDocument();
@@ -149,7 +154,7 @@ describe('PipelineRunDetailsView', () => {
     watchResourceMock
       .mockReturnValueOnce([testPipelineRuns[DataState.RUNNING], true])
       .mockReturnValue([[], true]);
-    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
 
     fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
 
@@ -162,7 +167,7 @@ describe('PipelineRunDetailsView', () => {
       .mockReturnValueOnce([testPipelineRuns[DataState.SUCCEEDED], true])
       .mockReturnValue([[], true]);
 
-    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
 
     expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'true');
@@ -174,7 +179,7 @@ describe('PipelineRunDetailsView', () => {
       .mockReturnValueOnce([testPipelineRuns[DataState.PIPELINE_RUN_CANCELLED], true])
       .mockReturnValue([[], true]);
 
-    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
 
     expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'true');
@@ -186,7 +191,7 @@ describe('PipelineRunDetailsView', () => {
       .mockReturnValueOnce([testPipelineRuns[DataState.PIPELINE_RUN_STOPPED], true])
       .mockReturnValue([[], true]);
 
-    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
 
     expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'true');
@@ -205,7 +210,7 @@ describe('PipelineRunDetailsView', () => {
       .mockReturnValueOnce([testPipelineRuns[DataState.RUNNING], true])
       .mockReturnValue([[], true]);
 
-    render(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
 
     expect(screen.queryByText('Rerun')).toHaveAttribute('aria-disabled', 'false');
