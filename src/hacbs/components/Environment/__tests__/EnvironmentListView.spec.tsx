@@ -112,7 +112,7 @@ describe('EnvironmentListView', () => {
     expect(screen.getByText(/No environments found yet./)).toBeVisible();
     expect(
       screen.getByText(
-        /Add static environments or link to external, managed environments as your release destination/,
+        /Use environments to develop, test, and stage your applications before you release them/,
       ),
     ).toBeVisible();
     expect(screen.getByText('Create environment')).toBeVisible();
