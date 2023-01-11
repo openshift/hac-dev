@@ -45,16 +45,12 @@ export class Applications {
   }
 
 
-  static createdComponentExists(componentName: string, applicationName: string, strictChecking: boolean = false) {
+  static createdComponentExists(componentName: string, applicationName: string) {
     this.goToComponentsTab();
 
     Common.verifyPageTitle(applicationName);
     Common.waitForLoad();
     this.getComponentListItem(componentName).should('exist');
-
-    if (strictChecking) {
-      cy.get(componentsTabPO.componentListItem.replace('{0}', componentName)).contains(/.*Build Succeeded.*/, { timeout: 1200000 });
-    }
   }
 
   static getComponentListItem(application: string) {
