@@ -47,14 +47,14 @@ describe('SourceSection', () => {
     renderSourceSection();
 
     expect(screen.getByPlaceholderText('Enter your source')).toBeInTheDocument();
-    expect(screen.getByText('Start with a sample.')).toBeInTheDocument();
+    expect(screen.queryByTestId('start-with-sample-button')).toBeInTheDocument();
   });
 
   it('hides sample button', () => {
     useAccessCheckMock.mockReturnValue([{}, false]);
     renderSourceSection(false);
 
-    expect(screen.queryByText('Start with a sample.')).toBeNull();
+    expect(screen.queryByTestId('start-with-sample-button')).toBeNull();
   });
 
   it('fires callback on sample button click', () => {
@@ -62,7 +62,7 @@ describe('SourceSection', () => {
 
     const { onClick } = renderSourceSection();
 
-    fireEvent.click(screen.getByText('Start with a sample.'));
+    fireEvent.click(screen.getByTestId('start-with-sample-button'));
     expect(onClick).toHaveBeenCalled();
   });
 
@@ -199,5 +199,17 @@ describe('SourceSection', () => {
     useAccessCheckMock.mockReturnValue([{}, false]);
     renderSourceSection(false);
     expect(screen.queryByText(/container/)).toBeNull();
+  });
+
+  it('should render the sample info alert', () => {
+    useAccessCheckMock.mockReturnValue([{}, false]);
+    renderSourceSection();
+    screen.getByTestId('samples-info-alert');
+  });
+
+  it('should not render the samples info alert', () => {
+    useAccessCheckMock.mockReturnValue([{}, false]);
+    renderSourceSection(false);
+    expect(screen.queryByTestId('samples-info-alert')).toBeNull();
   });
 });
