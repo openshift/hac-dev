@@ -107,7 +107,12 @@ export const appendStatus = (
     }
     // append task status
     if (!mTask.status) {
-      mTask.status = { reason: RunStatus.Idle };
+      const isSkipped = !!pipelineRun.status.skippedTasks?.find((t) => t.name === task.name);
+      if (isSkipped) {
+        mTask.status = { reason: RunStatus.Skipped };
+      } else {
+        mTask.status = { reason: RunStatus.Idle };
+      }
     } else if (mTask.status && mTask.status.conditions) {
       mTask.status.reason = pipelineRunStatus(mTask) || RunStatus.Idle;
     } else if (mTask.status && !mTask.status.reason) {
