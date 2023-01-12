@@ -10,6 +10,7 @@ import {
   TextContent,
   Text,
   HelperTextItem,
+  EmptyStateBody,
 } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
 import { CheckboxField } from '../../../shared';
@@ -25,8 +26,12 @@ const ComponentLoadingState: React.FC = () => {
       <EmptyState>
         <EmptyStateIcon variant="container" component={Spinner} />
         <Title size="lg" headingLevel="h4">
-          Detecting Components
+          Detecting
         </Title>
+        <EmptyStateBody>
+          We&apos;re scanning your GitHub repo to determine runtime and other default settings. This
+          might take some time.
+        </EmptyStateBody>
       </EmptyState>
     </Bullseye>
   );
