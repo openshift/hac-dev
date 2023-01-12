@@ -8,7 +8,7 @@ import {
   RunStatus,
   StatusIcon as PfStatusIcon,
 } from '@patternfly/react-topology';
-import { runStatus } from './utils';
+import { getLabelColorFromStatus, runStatus } from './utils';
 
 import './StatusIcon.scss';
 
@@ -55,7 +55,7 @@ export const StatusIconWithText: React.FC<
   StatusIconProps & { text?: string; dataTestAttribute?: string }
 > = ({ status, text, dataTestAttribute, ...others }) => {
   return (
-    <Label>
+    <Label color={getLabelColorFromStatus(status)}>
       <span
         className={css(
           'pf-u-mr-xs',

@@ -2,7 +2,7 @@ import { DataState, testPipelineRuns } from '../../../../__data__/pipelinerun-da
 import { ContainerStatus } from '../../types';
 import {
   containerToLogSourceStatus,
-  getRunStatusColor,
+  getLabelColorFromStatus,
   LOG_SOURCE_RESTARTING,
   LOG_SOURCE_RUNNING,
   LOG_SOURCE_TERMINATED,
@@ -114,30 +114,6 @@ describe('containerToLogSourceStatus', () => {
   });
 });
 
-describe('getRunStatusColor', () => {
-  it('should return the default case', () => {
-    const { message, pftoken, labelColor } = getRunStatusColor(runStatus.PipelineNotStarted);
-    expect(message).toBeDefined();
-    expect(pftoken).toBeDefined();
-    expect(labelColor).toBeDefined();
-  });
-
-  it('should result the message, pftoken and label colour for all the handled statuses', () => {
-    const handledStatuses = Object.keys(runStatus)
-      .filter((status) => status !== runStatus.PipelineNotStarted)
-      .map((status) => runStatus[status]);
-
-    expect(handledStatuses).not.toHaveLength(0);
-
-    handledStatuses.forEach((statusValue) => {
-      const { message, pftoken, labelColor } = getRunStatusColor(statusValue);
-      expect(message).toBeDefined();
-      expect(pftoken).toBeDefined();
-      expect(labelColor).toBeDefined();
-    });
-  });
-});
-
 describe('pipelineRunStatusToGitOpsStatus', () => {
   it('should return the default case', () => {
     expect(pipelineRunStatusToGitOpsStatus('-')).toBe('Unknown');
@@ -151,5 +127,27 @@ describe('pipelineRunStatusToGitOpsStatus', () => {
     expect(pipelineRunStatusToGitOpsStatus(runStatus.Cancelled)).toBe('Suspended');
     expect(pipelineRunStatusToGitOpsStatus(runStatus.Cancelling)).toBe('Suspended');
     expect(pipelineRunStatusToGitOpsStatus(runStatus.Skipped)).toBe('Missing');
+  });
+});
+
+describe('getLabelColorFromStatus', () => {
+  it('should return the null', () => {
+    expect(getLabelColorFromStatus(runStatus.Idle)).toBeNull();
+    expect(getLabelColorFromStatus(runStatus.Pending)).toBeNull();
+    expect(getLabelColorFromStatus(runStatus.Skipped)).toBeNull();
+    expect(getLabelColorFromStatus(runStatus.PipelineNotStarted)).toBeNull();
+  });
+
+  it('should return green for success', () => {
+    expect(getLabelColorFromStatus(runStatus.Succeeded)).toBe('green');
+  });
+
+  it('should return red for failed', () => {
+    expect(getLabelColorFromStatus(runStatus.Failed)).toBe('red');
+  });
+
+  it('should return gold for cancelled/cancelling status', () => {
+    expect(getLabelColorFromStatus(runStatus.Cancelled)).toBe('gold');
+    expect(getLabelColorFromStatus(runStatus.Cancelling)).toBe('gold');
   });
 });
