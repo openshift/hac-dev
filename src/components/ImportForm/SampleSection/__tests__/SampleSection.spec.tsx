@@ -30,7 +30,7 @@ const useDevfileSamplesMock = useDevfileSamples as jest.Mock;
 describe('SampleSection', () => {
   it('renders component samples page with a progressbar when samples are loading', async () => {
     useFormikContextMock.mockReturnValue({
-      values: { source: '', application: { name: '' } },
+      values: { source: { git: {} }, application: { name: '' } },
       setFieldValue: jest.fn(),
     });
     useDevfileSamplesMock.mockReturnValue([[], false, null]);
@@ -41,7 +41,7 @@ describe('SampleSection', () => {
 
   it('renders component samples page with an empty state when no samples are loaded', async () => {
     useFormikContextMock.mockReturnValue({
-      values: { source: '', application: { name: '' } },
+      values: { source: { git: {} }, application: { name: '' } },
       setFieldValue: jest.fn(),
     });
     useDevfileSamplesMock.mockReturnValue([[], true, null]);
@@ -53,7 +53,7 @@ describe('SampleSection', () => {
 
   it('renders component samples page with nodejs sample tile', async () => {
     useFormikContextMock.mockReturnValue({
-      values: { source: '', application: { name: '' } },
+      values: { source: { git: {} }, application: { name: '' } },
       setFieldValue: jest.fn(),
     });
     useDevfileSamplesMock.mockReturnValue([[mockCatalogItem[0]], true, null]);
@@ -66,7 +66,7 @@ describe('SampleSection', () => {
   it('sets source after a sample is selected', async () => {
     const setFieldValue = jest.fn();
     useFormikContextMock.mockReturnValue({
-      values: { source: 'https://github.com/repo', application: 'test-app' },
+      values: { source: { git: { url: 'https://github.com/repo' } }, application: 'test-app' },
       setFieldValue,
       setStatus: jest.fn(),
     });
@@ -78,7 +78,7 @@ describe('SampleSection', () => {
 
     await waitFor(() => {
       expect(setFieldValue).toHaveBeenLastCalledWith(
-        'source',
+        'source.git.url',
         'https://github.com/nodeshift-starters/devfile-sample.git',
       );
     });
@@ -87,7 +87,7 @@ describe('SampleSection', () => {
   it('unsets source after a selected sample is deselected', async () => {
     const setFieldValue = jest.fn();
     useFormikContextMock.mockReturnValue({
-      values: { source: 'https://github.com/repo', application: 'test-app' },
+      values: { source: { git: { url: 'https://github.com/repo' } }, application: 'test-app' },
       setFieldValue,
       setStatus: jest.fn(),
     });
@@ -100,14 +100,14 @@ describe('SampleSection', () => {
     await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
 
     await waitFor(() => {
-      expect(setFieldValue).toHaveBeenLastCalledWith('source', undefined);
+      expect(setFieldValue).toHaveBeenLastCalledWith('source.git.url', undefined);
     });
   });
 
   it('should show empty state for filtered samples', async () => {
     const setFieldValue = jest.fn();
     useFormikContextMock.mockReturnValue({
-      values: { source: 'https://github.com/repo', application: 'test-app' },
+      values: { source: { git: { url: 'https://github.com/repo' } }, application: 'test-app' },
       setFieldValue,
       setStatus: jest.fn(),
     });
@@ -132,7 +132,7 @@ describe('SampleSection', () => {
   it('should filter sample items based on input value', async () => {
     const setFieldValue = jest.fn();
     useFormikContextMock.mockReturnValue({
-      values: { source: 'https://github.com/repo', application: 'test-app' },
+      values: { source: { git: { url: 'https://github.com/repo' } }, application: 'test-app' },
       setFieldValue,
       setStatus: jest.fn(),
     });

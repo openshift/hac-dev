@@ -31,7 +31,9 @@ const renderAuthOptions = () => namespaceRenderer(<AuthOptions />, 'test-ns');
 describe('AuthOptions', () => {
   it('should show spinner if auth url is not loaded', () => {
     useAccessTokenBindingMock.mockReturnValue([{}, false]);
-    useFormikContextMock.mockReturnValue({ values: { source: 'test-source', secret: null } });
+    useFormikContextMock.mockReturnValue({
+      values: { source: { git: { url: 'test-source' } }, secret: null },
+    });
     renderAuthOptions();
     screen.getByRole('progressbar');
   });
@@ -39,7 +41,7 @@ describe('AuthOptions', () => {
   it('should show success message if secret is available', () => {
     useAccessTokenBindingMock.mockReturnValue([{}, true]);
     useFormikContextMock.mockReturnValue({
-      values: { source: 'test-source', secret: 'test-secret' },
+      values: { source: { git: { url: 'test-source' } }, secret: 'test-secret' },
     });
     renderAuthOptions();
     expect(screen.getByText('Authorized access')).toBeInTheDocument();
@@ -50,7 +52,7 @@ describe('AuthOptions', () => {
   it('should not call window.open if auth url is not available', async () => {
     useAccessTokenBindingMock.mockReturnValue([{}, true]);
     useFormikContextMock.mockReturnValue({
-      values: { source: 'https://github.com/test/repository', secret: null },
+      values: { source: { git: { url: 'https://github.com/test/repository' } }, secret: null },
     });
 
     renderAuthOptions();
@@ -67,7 +69,7 @@ describe('AuthOptions', () => {
   it('should call window.open with auth url and token', async () => {
     useAccessTokenBindingMock.mockReturnValue([{ oAuthUrl: 'example.com/auth?state=abcd' }, true]);
     useFormikContextMock.mockReturnValue({
-      values: { source: 'https://github.com/test/repository', secret: null },
+      values: { source: { git: { url: 'https://github.com/test/repository' } }, secret: null },
     });
     renderAuthOptions();
     const button = screen.getByText('Sign in');

@@ -35,7 +35,11 @@ describe('Submit Utils: createResources', () => {
           },
         ],
         namespace: 'test-ns',
-        source: 'https://github.com/example/repo',
+        source: {
+          git: {
+            url: 'https://github.com/example/repo',
+          },
+        },
       },
       ImportStrategy.GIT,
     );
@@ -58,7 +62,11 @@ describe('Submit Utils: createResources', () => {
           },
         ],
         namespace: 'test-ns',
-        source: 'https://github.com/example/repo',
+        source: {
+          git: {
+            url: 'https://github.com/example/repo',
+          },
+        },
       },
       ImportStrategy.GIT,
     );
@@ -82,7 +90,11 @@ describe('Submit Utils: createResources', () => {
             },
           ],
           namespace: 'test-ns',
-          source: 'https://github.com/example/repo',
+          source: {
+            git: {
+              url: 'https://github.com/example/repo',
+            },
+          },
         },
         ImportStrategy.GIT,
       ),
@@ -108,7 +120,11 @@ describe('Submit Utils: createResources', () => {
             },
           ],
           namespace: 'test-ns',
-          source: 'https://github.com/example/repo',
+          source: {
+            git: {
+              url: 'https://github.com/example/repo',
+            },
+          },
         },
         ImportStrategy.GIT,
       ),
@@ -125,10 +141,12 @@ describe('Submit Utils: createResources', () => {
         application: 'test-app',
         inAppContext: true,
         namespace: 'test-ns',
-        source: 'https://github.com/example/repo',
-        git: {
-          context: '/',
-          ref: 'main',
+        source: {
+          git: {
+            url: 'https://github.com/example/repo',
+            context: '/',
+            revision: 'main',
+          },
         },
       },
       ImportStrategy.SAMPLE,

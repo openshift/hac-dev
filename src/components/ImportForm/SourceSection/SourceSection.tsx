@@ -35,7 +35,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
   const [showGitOptions, setShowGitOptions] = React.useState<boolean>(false);
 
   const [, { value: source, touched, error }] = useField<string>({
-    name: 'source',
+    name: 'source.git.url',
     type: 'input',
   });
   const {
@@ -48,7 +48,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
   const [helpText, setHelpText] = React.useState('');
   const [helpTextInvalid, setHelpTextInvalid] = React.useState('');
 
-  const fieldId = getFieldId('source', 'input');
+  const fieldId = getFieldId('source.git.url', 'input');
   const isValid = !(touched && error);
   const label = 'Git repo URL';
 
@@ -137,7 +137,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
   });
 
   const handleStrategyChange = React.useCallback(() => {
-    setFieldValue('source', '');
+    setFieldValue('source.git.url', '');
     onStrategyChange(ImportStrategy.SAMPLE);
   }, [onStrategyChange, setFieldValue]);
 
@@ -176,7 +176,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
           <Grid hasGutter>
             <GridItem span={onStrategyChange ? 8 : 12}>
               <InputField
-                name="source"
+                name="source.git.url"
                 placeholder="Enter your source"
                 onChange={debouncedHandleSourceChange}
                 validated={validated}

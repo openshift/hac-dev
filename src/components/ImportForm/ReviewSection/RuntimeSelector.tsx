@@ -26,7 +26,15 @@ const patchSourceUrl = (stub: any, url: string) => {
 export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedComponentIndex }) => {
   const fieldPrefix = `components[${detectedComponentIndex}]`;
   const {
-    values: { secret, application, git, source, isDetected, components },
+    values: {
+      secret,
+      application,
+      source: {
+        git: { url: sourceUrl, revision, context },
+      },
+      isDetected,
+      components,
+    },
     setFieldValue,
     setFieldError,
     setFieldTouched,
@@ -58,8 +66,8 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     runtimeSource,
     application,
     secret,
-    git.context,
-    git.ref,
+    context,
+    revision,
   );
 
   React.useEffect(() => {
@@ -82,7 +90,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       setTimeout(() => setFieldValue('isDetected', true));
       setTimeout(() => setFieldValue('detectionFailed', false));
       const componentValues = transformComponentValues(detectedComponents)[0];
-      const component = patchSourceUrl(componentValues.componentStub, source);
+      const component = patchSourceUrl(componentValues.componentStub, sourceUrl);
       setFieldValue(`${fieldPrefix}.componentStub`, component);
       setFieldValue(`${fieldPrefix}.language`, componentValues.language);
     }
@@ -94,7 +102,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     fieldPrefix,
     setFieldError,
     setFieldValue,
-    source,
+    sourceUrl,
   ]);
 
   // touch the dropdown field on load so validation error message can be shown

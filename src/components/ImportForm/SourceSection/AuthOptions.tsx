@@ -29,7 +29,7 @@ const AuthOptions: React.FC = () => {
   } = useChrome();
   const showModal = useModalLauncher();
 
-  const [{ oAuthUrl, uploadUrl }, loaded] = useAccessTokenBinding(source);
+  const [{ oAuthUrl, uploadUrl }, loaded] = useAccessTokenBinding(source.git.url);
 
   const startAuthorization = React.useCallback(async () => {
     if (oAuthUrl) {

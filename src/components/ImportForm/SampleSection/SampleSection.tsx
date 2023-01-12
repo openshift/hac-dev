@@ -76,12 +76,12 @@ const SampleSection = ({ onStrategyChange }) => {
     (item) => {
       setSelected((prevState) => {
         if (prevState?.name === item.name) {
-          setFieldValue('source', undefined);
+          setFieldValue('source.git.url', undefined);
           return undefined;
         }
-        const sourceUrl = item?.attributes?.git?.remotes?.origin;
+        const newSourceUrl = item?.attributes?.git?.remotes?.origin;
 
-        setFieldValue('source', sourceUrl);
+        setFieldValue('source.git.url', newSourceUrl);
         return item;
       });
     },
@@ -89,7 +89,7 @@ const SampleSection = ({ onStrategyChange }) => {
   );
 
   const handleStrategyChange = React.useCallback(() => {
-    setFieldValue('source', '');
+    setFieldValue('source.git.url', '');
     onStrategyChange(ImportStrategy.GIT);
   }, [onStrategyChange, setFieldValue]);
 

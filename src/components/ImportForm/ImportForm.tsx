@@ -21,13 +21,15 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
     inAppContext: applicationName ? true : false,
     components: [],
     pipelinesascode: false,
-    git: {
-      context: '',
-      ref: '',
+    source: {
+      git: {
+        url: '',
+        context: '',
+        revision: '',
+      },
     },
     namespace,
     secret: '',
-    source: '',
   };
 
   const steps = useImportSteps(applicationName, strategy, setStrategy);

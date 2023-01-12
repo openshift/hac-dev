@@ -32,7 +32,7 @@ const renderSourceSection = (showSamples = true) => {
 
   const utils = formikRenderer(
     <SourceSection onStrategyChange={showSamples ? onClick : undefined} />,
-    { source: '' },
+    { source: { git: { url: '' } } },
   );
   const user = userEvent.setup();
 
