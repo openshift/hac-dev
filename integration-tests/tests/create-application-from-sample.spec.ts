@@ -6,8 +6,6 @@ import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
 describe('Create Application from Sample', () => {
-  const LOCAL_STORAGE_KEY_GS_MODAL = 'getting-started-modal';
-  const LOCAL_STORAGE_KEY_APPLICATION_MODAL = 'showApplicationModal';
   const applicationName = Common.generateAppName();
   const applicationDetailPage = new ApplicationDetailPage();
   const componentPage = new ComponentPage();
@@ -19,8 +17,6 @@ describe('Create Application from Sample', () => {
   ];
 
   beforeEach(function () {
-    localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
-    localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
     cy.intercept(
       {
         method: 'GET',

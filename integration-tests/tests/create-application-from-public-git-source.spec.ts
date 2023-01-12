@@ -7,8 +7,6 @@ import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
 describe('Create Component from Public Git Source', () => {
-  const LOCAL_STORAGE_KEY_GS_MODAL = 'getting-started-modal';
-  const LOCAL_STORAGE_KEY_APPLICATION_MODAL = 'showApplicationModal';
   const addComponent = new AddComponentPage();
   const componentPage = new ComponentPage();
   const applicationDetailPage = new ApplicationDetailPage();
@@ -21,15 +19,8 @@ describe('Create Component from Public Git Source', () => {
   const cpuUnit = CPUUnit.millicore;
 
   before(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
-    localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
     //set application name
     Applications.createApplication(applicationName);
-  });
-
-  beforeEach(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
-    localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
   });
 
   after(() => {

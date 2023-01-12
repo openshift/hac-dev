@@ -4,8 +4,6 @@ import { addIntegrationTestStep, Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
 describe('Create Components using the UI', () => {
-  const LOCAL_STORAGE_KEY_GS_MODAL = 'getting-started-modal';
-  const LOCAL_STORAGE_KEY_APPLICATION_MODAL = 'showApplicationModal';
   const applicationName = Common.generateAppName();
   const integrationTestsTabPage = new IntegrationTestsTabPage();
   const containerImage = 'https://quay.io/kpavic/test-bundle:pipeline';
@@ -24,16 +22,6 @@ describe('Create Components using the UI', () => {
     'test.appstudio.openshift.io/optional=true',
     applicationName,
   ];
-
-  before(function () {
-    localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
-    localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
-  });
-
-  beforeEach(function () {
-    localStorage.setItem(LOCAL_STORAGE_KEY_GS_MODAL, 'true');
-    localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATION_MODAL, 'true');
-  });
 
   after(function () {
     //Delete the application
