@@ -97,7 +97,7 @@ describe('SourceSection', () => {
     renderSourceSection();
 
     expect(screen.getByPlaceholderText('Enter your source')).toBeValid();
-    expect(screen.getByText('Validated authentication')).toBeVisible();
+    expect(screen.getByText('Access validated')).toBeVisible();
   });
 
   it('should show Authorization when github repo is not accessible', async () => {
@@ -163,7 +163,7 @@ describe('SourceSection', () => {
     await user.type(input, 'https://github.com/example/repo');
 
     await waitFor(() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
-    await waitFor(() => screen.getByText('Validating authentication...'));
+    await waitFor(() => screen.getByText('Checking access...'));
 
     useAccessCheckMock.mockReturnValue([
       { isRepoAccessible: true, isGit: true, serviceProvider: ServiceProviderType.GitHub },
@@ -173,7 +173,7 @@ describe('SourceSection', () => {
     await user.type(input, 's');
 
     await waitFor(() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
-    await waitFor(() => screen.getByText('Validated authentication'));
+    await waitFor(() => screen.getByText('Access validated'));
     await waitFor(() => expect(screen.getByText('Git options')).toBeInTheDocument());
   });
 
