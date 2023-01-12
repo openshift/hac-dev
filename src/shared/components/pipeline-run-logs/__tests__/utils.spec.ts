@@ -15,9 +15,14 @@ import {
 
 describe('pipelineRunStatus', () => {
   it('should return null if an invalid pipelineruns', () => {
-    expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITHOUT_CONDITIONS])).toBeNull();
-    expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITH_EMPTY_CONDITIONS])).toBeNull();
     expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITHOUT_CONDITION_TYPE])).toBeNull();
+    expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITH_EMPTY_CONDITIONS])).toBeNull();
+  });
+
+  it('should return Pending status for pipelineruns with status but no conditions', () => {
+    expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITHOUT_CONDITIONS])).toBe(
+      'Pending',
+    );
   });
 
   it('should return Pending status for pipelinerun status  with type as "Succeeded" & Pending condition', () => {

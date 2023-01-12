@@ -80,8 +80,10 @@ export const PipelineRunModel: K8sModelCommon = {
 // Converts the PipelineRun (and TaskRun) condition status into a human readable string.
 // See also tkn cli implementation at https://github.com/tektoncd/cli/blob/release-v0.15.0/pkg/formatted/k8s.go#L54-L83
 export const pipelineRunStatus = (pipelineRun): string => {
+  if (!pipelineRun?.status) return null;
+
   const conditions = get(pipelineRun, ['status', 'conditions'], []);
-  if (conditions.length === 0) return null;
+  if (conditions.length === 0) return 'Pending';
 
   const cancelledCondition = conditions.find((c) => c.reason === 'Cancelled');
   const succeedCondition = conditions.find((c) => c.type === 'Succeeded');
