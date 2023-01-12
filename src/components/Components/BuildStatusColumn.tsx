@@ -34,7 +34,7 @@ export const getURLForComponentPRs = (components: ComponentKind[]): string => {
     }
     return acc;
   }, '');
-  return `https://github.com/pulls?q=is:pr+author:app/${PR_BOT_NAME}${repos}`;
+  return `https://github.com/pulls?q=is:pr+is:open+author:app/${PR_BOT_NAME}${repos}`;
 };
 
 const BuildStatusColumn: React.FC<BuildStatusComponentProps> = ({ component, allComponents }) => {
