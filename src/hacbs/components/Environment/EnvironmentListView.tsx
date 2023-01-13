@@ -197,11 +197,13 @@ const EnvironmentListView: React.FC<Props> = ({
     environment,
   }) => <EnvironmentCard environment={environment} applicationName={applicationName} />;
 
+  const EnvironmentSubtext =
+    'Use environments to develop, test, and stage your applications before you release them.';
+
   const emptyStateContent = (
     <>
       <Title headingLevel="h4" size="lg">
-        Add static environments or link to external, managed environments as your release
-        destination
+        {EnvironmentSubtext}
       </Title>
       <EmptyStateBody>
         No environments found yet.
@@ -216,10 +218,7 @@ const EnvironmentListView: React.FC<Props> = ({
       <Title size="lg" headingLevel="h3" className="pf-c-title pf-u-mt-lg pf-u-mb-sm">
         Environments
       </Title>
-      <Text className="pf-u-mb-lg">
-        Add static environments or link to external, managed environments as your release
-        destination.
-      </Text>
+      <Text className="pf-u-mb-lg">{EnvironmentSubtext}</Text>
     </>
   );
 
