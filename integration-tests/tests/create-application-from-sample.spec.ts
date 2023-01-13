@@ -11,12 +11,18 @@ describe('Create Application from Sample', () => {
   const componentPage = new ComponentPage();
   const addComponent = new AddComponentPage();
   const componentSamplesPage = new ComponentSamplesPage();
+  const publicRepos = [
+    'https://github.com/nodeshift-starters/devfile-sample.git',
+    'https://github.com/devfile-samples/devfile-sample-code-with-quarkus.git'
+  ];
 
-  before(() => {
-    // Disable HACBS
-    localStorage.setItem('hacbs', 'false');
-    // Need to reload the page after enabling HACBS via localStorage
-    cy.reload();
+  beforeEach(function () {
+    cy.intercept(
+      {
+        method: 'GET',
+        url: /^.*\/namespaces\/[A-za-z0-9-]+\/components\?limit=250.*$/,
+      }
+    ).as('componentsAPI');
   });
 
   it('NodeJS app can be created', () => {
@@ -29,15 +35,19 @@ describe('Create Application from Sample', () => {
 
     // Create sample component
     componentPage.createApplication();
+    Applications.goToComponentsTab();
 
-    //Check application
-    applicationDetailPage.createdComponentExists(
-      `${applicationName}-nodejs-sample`,
-      applicationName,
-    );
+    cy.wait('@componentsAPI').then((xhr) => {
+      for (let item of xhr.response.body.items) {
+        if (item.spec.application == applicationName && item.spec.source.git.url == publicRepos[0]) {
+          applicationDetailPage.createdComponentExists(item.spec.componentName, applicationName);
+          break;
+        }
+      }
+    });
   });
 
-  it('Add quarkus component', () => {
+  it('Add and then delete a quarkus component', () => {
     //Open components page
     Common.openApplicationURL(applicationName);
     //open app sample page
@@ -47,22 +57,26 @@ describe('Create Application from Sample', () => {
 
     // Create sample component
     componentPage.createApplication();
+    Applications.goToComponentsTab();
 
-    //Check if application exists
-    applicationDetailPage.createdComponentExists(
-      `${applicationName}-java-quarkus-sample`,
-      applicationName,
-    );
-  });
+    cy.wait('@componentsAPI').then((xhr) => {
+      for (let item of xhr.response.body.items) {
+        if (item.spec.application == applicationName && item.spec.source.git.url == publicRepos[1]) {
+          var quarkusComponentName = item.spec.componentName;
 
-  it('Delete quarkus component', () => {
-    //Open components page
-    Common.openApplicationURL(applicationName);
-    //Review component page
-    applicationDetailPage.deleteComponent(`${applicationName}-java-quarkus-sample`);
+          //Check if component exists
+          applicationDetailPage.createdComponentExists(quarkusComponentName, applicationName);
 
-    //Check if application does not exists
-    applicationDetailPage.createdComponentNotExists(`${applicationName}-java-quarkus-sample`);
+          //Open components page
+          Common.openApplicationURL(applicationName);
+          applicationDetailPage.deleteComponent(quarkusComponentName);
+
+          //Check if component does not exists
+          applicationDetailPage.createdComponentNotExists(quarkusComponentName);
+          break;
+        }
+      }
+    });
   });
 
   it('Delete application with existing component', () => {

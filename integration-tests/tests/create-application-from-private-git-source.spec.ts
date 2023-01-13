@@ -16,10 +16,6 @@ describe('Create Component from Private Git Source', () => {
   const token = Cypress.env('GH_TOKEN');
 
   before(function () {
-    // Disable HACBS
-    localStorage.setItem('hacbs', 'false');
-    // Need to reload the page after enabling HACBS via localStorage
-    cy.reload();
     Applications.createApplication(applicationName);
   });
 
@@ -39,7 +35,9 @@ describe('Create Component from Private Git Source', () => {
     });
 
     it('Create Application', () => {
+      componentPage.editComponentName(componentName);
       componentPage.createApplication();
+      Applications.goToComponentsTab();
       applicationDetailPage.createdComponentExists(componentName, applicationName);
     });
   });

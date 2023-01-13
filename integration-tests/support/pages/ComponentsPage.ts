@@ -1,10 +1,12 @@
 import { Common } from '../../utils/Common';
 import { CPUUnit, MemoryUnit } from '../constants/Units';
-import { ComponentsPagePO } from '../pageObjects/createApplication-po';
+import { addComponentPagePO, ComponentsPagePO } from '../pageObjects/createApplication-po';
 import { alertTitle } from '../pageObjects/global-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class ComponentPage extends AbstractWizardPage {
+  public componentName: string;
+  
   editComponentName(newName: string) {
     cy.get(ComponentsPagePO.editComponentNameIcon).eq(0).click();
     cy.get(ComponentsPagePO.editNameInput).clear().type(newName);
@@ -86,6 +88,6 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   expandDetails(componentName: string) {
-    cy.get(`[aria-label="${componentName}"]`).click();
+    cy.get(addComponentPagePO.toggleButton.replace('{0}', componentName)).click();
   }
 }

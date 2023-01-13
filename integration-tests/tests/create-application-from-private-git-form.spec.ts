@@ -18,11 +18,7 @@ describe('Create Component from Private Git Using Login Form', () => {
   const pass = Cypress.env('GH_PASSWORD');
   const deviceId = '2e478c118996feb7e058965e62fef9fe';
 
-  before(() => {
-    // Disable HACBS
-    localStorage.setItem('hacbs', 'false');
-    // Need to reload the page after enabling HACBS via localStorage
-    cy.reload();
+  before(function () {
     Applications.createApplication(applicationName);
   });
 
@@ -82,7 +78,9 @@ describe('Create Component from Private Git Using Login Form', () => {
       addComponent.waitRepoValidated();
       addComponent.clickNext();
 
+      componentPage.editComponentName(componentName);
       componentPage.createApplication();
+      Applications.goToComponentsTab();
       applicationDetailPage.createdComponentExists(componentName, applicationName);
     });
   });

@@ -1,11 +1,12 @@
 export const addComponentPagePO = {
   samples: 'Start with a sample.',
-  addComponent: '[data-test="add-component-button"]',
+  addComponent: '[data-test="add-component"]',
   enterSource: '[data-test="enter-source"]',
   gitOptions: 'Git options',
   gitReference: '[data-test="git-reference"]',
   contextDir: '[data-test="context-dir"]',
   next: 'button[type=submit]',
+  toggleButton: '[data-test="{0}-toggle-button"]',
   username: '[data-testid="auth-username"]',
   token: '[data-testid="auth-token"]',
   authenticateButton: '[data-testid="authenticate-token"]',
@@ -31,6 +32,7 @@ export const createApplicationPagePO = {
 export const ComponentsPagePO = {
   create: 'button[type=submit]',
   createText: 'Create',
+  extractComponentName: '[class="editable-label-field__label"]',
   editComponentNameIcon: '[data-test="pencil-icon"]',
   checkIcon: '[data-test="check-icon"]',
   closeIcon: '[data-test="close-icon"]',
