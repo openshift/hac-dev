@@ -72,7 +72,7 @@ describe('Create Components using the UI', () => {
     });
   });
 
-  describe.skip('Explore Integration Tests Tab', () => {
+  describe('Explore Integration Tests Tab', () => {
     it("Click 'Actions' dropdown to add a integration test", () => {
       Applications.clickActionsDropdown('Add integration test');
       addIntegrationTestStep(integrationTestNames[0]);
@@ -126,13 +126,34 @@ describe('Create Components using the UI', () => {
       );
     });
 
-    it('Explore the Integration Test Details page (with the Optional tag) and delete it', () => {
+    it('Edit Integration Test Details page (with the Optional tag) from Actions and delete it', () => {
       cy.contains(integrationTestNames[1]).click();
       integrationTestsTabPage.checkMetadata(integrationTestMetadata);
+      integrationTestsTabPage.verifyLabelAndValue('Optional for release','Optional')
+
+      Applications.clickActionsDropdown('Edit');
+
+      integrationTestsTabPage.editIntegrationTest(null,'demo-pipeline-update','uncheck')
+
+      integrationTestsTabPage.verifyLabelAndValue('Pipeline to run','demo-pipeline-update')
+      integrationTestsTabPage.verifyLabelAndValue('Optional for release','Mandatory')
 
       Applications.clickActionsDropdown('Delete');
       cy.get(actions.deleteModalButton).click();
       cy.get(integrationTestNames[1]).should('not.exist');
+    });
+
+    it('Edit Integration Test Details page (with the Mandatory tag) from Kebab Menu', () => {
+      integrationTestsTabPage.openKebabMenu(integrationTestNames[0]);
+      cy.get(actions.editItem).click();
+      integrationTestsTabPage.editIntegrationTest(null,'demo-pipeline-update2','check')
+      integrationTestsTabPage.checkRowValues(
+        integrationTestNames[0],
+        containerImage,
+        'Optional',
+        'demo-pipeline-update2',
+      );
+
     });
 
     it('Delete all the remaining Integration Tests from the list view', () => {

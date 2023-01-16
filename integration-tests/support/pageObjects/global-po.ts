@@ -36,6 +36,7 @@ export const actions = {
   deleteItem: '[data-testid="Delete"]',
   deleteModalInput: 'input[name*="resourceName"]',
   deleteModalButton: 'button[data-testid="delete-resource"]',
+  editItem: '[data-testid="Edit"]',
 };
 
 export const navigation = {
