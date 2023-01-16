@@ -9,9 +9,7 @@ import {
   TextVariants,
   Title,
 } from '@patternfly/react-core';
-import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind, PipelineRunKind } from '../../types';
 import { default as BaseComponentListView } from '../ComponentsListView/ComponentListView';
 import BuildStatusColumn, { getURLForComponentPRs, hasPACAnnotation } from './BuildStatusColumn';
@@ -69,15 +67,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
         </Title>
         <TextContent>
           <Text component={TextVariants.p}>
-            Components are the things that construct the app, they are usually mapped to a repo.{' '}
-            <ExternalLink
-              href="#"
-              text={
-                <>
-                  Learn more <ExternalLinkAltIcon />
-                </>
-              }
-            />
+            Components are the things that construct the app, they are usually mapped to a repo.
           </Text>
         </TextContent>
         {!allMerged && !mergeAlertHidden ? (

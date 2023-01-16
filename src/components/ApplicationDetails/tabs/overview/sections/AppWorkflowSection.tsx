@@ -15,7 +15,6 @@ import {
 } from '@patternfly/react-core';
 import { useSearchParam } from '../../../../../hooks/useSearchParam';
 import GraphErrorState from '../../../../topology/factories/GraphErrorState';
-import ApplicationModal from '../../../ApplicationModal';
 import { WorkflowGraph } from '../visualization';
 import { useAppWorkflowData } from '../visualization/hooks/useAppWorkflowData';
 
@@ -26,16 +25,7 @@ type AppWorkflowSectionProps = {
 };
 
 const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName }) => {
-  const [showApplicationModal, setShowApplicationModal] = React.useState<boolean>(false);
   const [expanded, setExpanded] = useSearchParam('expanded', '');
-
-  const openModal = () => {
-    setShowApplicationModal(true);
-  };
-
-  const closeModal = () => {
-    setShowApplicationModal(false);
-  };
 
   const [workflowModel, loaded, errors] = useAppWorkflowData(applicationName, expanded === 'true');
 
@@ -45,7 +35,6 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
 
   return (
     <React.Fragment>
-      <ApplicationModal showApplicationModal={showApplicationModal} onClose={closeModal} />
       <Grid hasGutter className="app-workflow">
         <GridItem>
           <TextContent>
@@ -55,9 +44,6 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
                 <Text component={TextVariants.p}>
                   This is a visualization of your application pipeline, from source code through
                   test to deployments.
-                  <Button className="pf-u-ml-xs pf-u-pl-xs" variant="link" onClick={openModal}>
-                    Learn more
-                  </Button>
                 </Text>
               </FlexItem>
               {loaded && errors.length === 0 && (
