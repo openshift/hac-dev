@@ -24,7 +24,7 @@ const BuildStatusColumn: React.FC<BuildStatusColumnProps> = ({ component }) => {
             {getBuildStatusIcon(status)} Build {status}
           </FlexItem>
         )}
-        {!isContainerImage && (
+        {pipelineRun && !isContainerImage && (
           <FlexItem align={{ default: 'alignRight' }}>
             <Button
               onClick={buildLogsModal}

@@ -52,7 +52,7 @@ const BuildStatusColumn: React.FC<BuildStatusComponentProps> = ({ component, all
   });
 
   const merged = pipelineRunsLoaded && pipelineBuildRuns.length;
-  const hasPAC = hasPACAnnotation(component);
+  const hasPAC = pipelineRunsLoaded && hasPACAnnotation(component);
   const openPRsURL = getURLForComponentPRs(allComponents);
 
   return merged || !hasPAC ? (

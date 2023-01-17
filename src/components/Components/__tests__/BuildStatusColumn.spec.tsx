@@ -36,6 +36,17 @@ describe('BuildStatusColumn', () => {
     await waitFor(() => screen.getByText('Build Failed'));
     await waitFor(() => screen.getByText('View logs'));
   });
+
+  it('should not render merge status if the pipelineruns is still loading', async () => {
+    useK8sWatchResourceMock.mockReturnValue([[], false]);
+    render(
+      <BrowserRouter>
+        <BuildStatusColumn component={componentCRMocks[1]} allComponents={componentCRMocks} />
+      </BrowserRouter>,
+    );
+    expect(screen.queryByText('Merge build PR')).not.toBeInTheDocument();
+  });
+
   it('should render needs merge status', async () => {
     useK8sWatchResourceMock.mockReturnValue([[], true]);
     render(
@@ -45,8 +56,19 @@ describe('BuildStatusColumn', () => {
     );
     await waitFor(() => screen.getByText('Merge build PR'));
   });
-  it('should render View Build logs action item for components without PAC annotation', async () => {
+
+  it('should not render View Build logs action item for components without build pipelinerun', async () => {
     useK8sWatchResourceMock.mockReturnValue([[], true]);
+    render(
+      <BrowserRouter>
+        <BuildStatusColumn component={componentCRMocks[0]} allComponents={componentCRMocks} />
+      </BrowserRouter>,
+    );
+    expect(screen.queryByText('View logs')).not.toBeInTheDocument();
+  });
+
+  it('should render View Build logs action item for components without PAC annotation', async () => {
+    useK8sWatchResourceMock.mockReturnValue([[mockPipelineRuns], true]);
     render(
       <BrowserRouter>
         <BuildStatusColumn component={componentCRMocks[0]} allComponents={componentCRMocks} />
