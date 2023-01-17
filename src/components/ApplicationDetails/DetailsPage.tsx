@@ -23,10 +23,12 @@ import BreadCrumbs from '../../shared/components/breadcrumbs/BreadCrumbs';
 
 import './DetailsPage.scss';
 
-type Action = { type?: string; key: string; label: React.ReactNode } & Omit<
-  DropdownItemProps,
-  'label'
->;
+type Action = {
+  type?: string;
+  key: string;
+  label: React.ReactNode;
+  hidden?: boolean;
+} & Omit<DropdownItemProps, 'label'>;
 type DetailsPageTabProps = {
   key: string;
   label: string;
@@ -77,21 +79,30 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
 
   const dropdownItems = React.useMemo(
     () =>
-      actions?.map((action) => {
+      actions?.reduce((acc, action) => {
         const { type, key, label, ...props } = action;
-        if (type === 'separator') return <DropdownSeparator key={key} />;
-        if (type === 'section-label')
-          return (
+        if (action.hidden) {
+          return acc;
+        }
+        if (type === 'separator') {
+          acc.push(<DropdownSeparator key={key} />);
+          return acc;
+        }
+        if (type === 'section-label') {
+          acc.push(
             <DropdownItem key={key} data-test={key} {...props} isDisabled>
               <span className="pf-u-color-400 pf-u-font-size-sm">{label}</span>
-            </DropdownItem>
+            </DropdownItem>,
           );
-        return (
+          return acc;
+        }
+        acc.push(
           <DropdownItem key={key} data-test={key} {...props}>
             {label}
-          </DropdownItem>
+          </DropdownItem>,
         );
-      }),
+        return acc;
+      }, [] as React.ReactNode[]),
     [actions],
   );
 

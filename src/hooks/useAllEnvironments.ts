@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createEnvironmentKindFromReleasePlan } from '../hacbs/components/Environment/utils';
+import { createEnvironmentKindFromReleasePlan } from '../components/Environment/environment-utils';
 import { EnvironmentKind } from '../types';
 import { useNamespace } from '../utils/namespace-context-utils';
 import { useEnvironments } from './useEnvironments';

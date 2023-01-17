@@ -33,6 +33,10 @@ const useSearchParamsMock = useSearchParams as jest.Mock;
 const useChromeMock = useChrome as jest.Mock;
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
+}));
+
 configure({ testIdAttribute: 'data-test' });
 
 describe('WorkspaceSettings', () => {

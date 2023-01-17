@@ -1,12 +1,12 @@
 import React from 'react';
 import EnterpriseContractView from '../../../components/EnterpriseContractView/EnterpriseContractView';
+import { EnvironmentType } from '../../../components/Environment/environment-utils';
 import {
   default as BaseWorkspaceSettings,
   GettingStartedWithEnvironments,
   GettingStartedWithUsers,
 } from '../../../components/WorkspaceSettings/WorkspaceSettings';
 import EnvironmentListView from '../Environment/EnvironmentListView';
-import { EnvironmentType } from '../Environment/utils';
 
 const WorkspaceSettings: React.FC = () => {
   return (

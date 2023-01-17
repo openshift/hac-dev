@@ -13,13 +13,17 @@ import {
   Label,
 } from '@patternfly/react-core';
 import { useEnvironmentActions } from '../../../components/Environment/environment-actions';
+import {
+  EnvironmentType,
+  getEnvironmentType,
+  getEnvironmentTypeLabel,
+} from '../../../components/Environment/environment-utils';
 import { EnvironmentKindWithHealthStatus } from '../../../hooks/useAllApplicationEnvironmentsWithHealthStatus';
 import ActionMenu from '../../../shared/components/action-menu/ActionMenu';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { EnvironmentKind } from '../../../types';
 import { getEnvironmentDeploymentStrategyLabel } from '../../../utils/environment-utils';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../../utils/gitops-utils';
-import { EnvironmentType, getEnvironmentType, getEnvironmentTypeLabel } from './utils';
 
 const ApplicationEnvironmentStatus: React.FC<{
   environment: EnvironmentKindWithHealthStatus;
@@ -76,7 +80,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment, applicat
             </Label>
           </TextContent>
         </CardTitle>
-        {type === EnvironmentType.static ? (
+        {actions?.length ? (
           <CardActions>
             <ActionMenu actions={actions} />
           </CardActions>

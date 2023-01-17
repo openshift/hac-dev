@@ -1,5 +1,6 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, configure } from '@testing-library/react';
 import { useApplications } from '../../../hooks/useApplications';
@@ -22,6 +23,13 @@ jest.mock('react-router-dom', () => ({
 jest.mock('../../../hooks/useApplications', () => ({
   useApplications: jest.fn(),
 }));
+
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
+}));
+
+const useFeatureFlagMock = useFeatureFlag as jest.Mock;
+useFeatureFlagMock.mockReturnValue([false, () => {}]);
 
 const environment: EnvironmentKind = {
   kind: 'Environment',

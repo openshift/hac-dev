@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { getLatestResource } from '../components/ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
+import { EnvironmentType } from '../components/Environment/environment-utils';
 import { PipelineRunLabel } from '../consts/pipelinerun';
-import { EnvironmentType } from '../hacbs/components/Environment/utils';
 import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../shared';
 import { EnvironmentKind } from '../types';
 import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';

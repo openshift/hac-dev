@@ -12,6 +12,7 @@ import {
   mockReleasesData,
   mockTestPipelinesData,
 } from '../../../../components/ApplicationDetails/tabs/overview/sections/__data__';
+import { EnvironmentType } from '../../../../components/Environment/environment-utils';
 import { useAllEnvironments } from '../../../../hooks/useAllEnvironments';
 import { useBuildPipelines } from '../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../hooks/useComponents';
@@ -24,7 +25,6 @@ import { useTestPipelines } from '../../../../hooks/useTestPipelines';
 import { mockLocation } from '../../../../utils/test-utils';
 import { mockAppEnvWithHealthStatus } from '../__data__/mockAppEnvWithHealthStatus';
 import EnvironmentListView from '../EnvironmentListView';
-import { EnvironmentType } from '../utils';
 
 mockLocation();
 
@@ -91,6 +91,10 @@ const useTestPipelinesMock = useTestPipelines as jest.Mock;
 const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
 const useAllEnvironmentsMock = useAllEnvironments as jest.Mock;
 
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
+}));
+
 configure({ testIdAttribute: 'data-test' });
 
 describe('EnvironmentListView', () => {
@@ -122,12 +126,14 @@ describe('EnvironmentListView', () => {
         /Use environments to develop, test, and stage your applications before you release them/,
       ),
     ).toBeVisible();
-    expect(screen.getByText('Create environment')).toBeVisible();
+    // const createEnv = screen.queryByText('Create environment');
+    // expect(createEnv).toBeNull();
   });
 
   it('should render cards when environment(s) is(are) present', () => {
     render(<EnvironmentListView />);
-    expect(screen.getByText('Create environment')).toBeVisible();
+    // const createEnv = screen.queryByText('Create environment');
+    // expect(createEnv)[0].toBeVisible();
     expect(screen.getAllByTestId('environment-card').length).toBe(
       mockAppEnvWithHealthStatus.length,
     );

@@ -1,9 +1,17 @@
 import React from 'react';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { EnvironmentModel } from '../../../../models';
 import { EnvironmentKind } from '../../../../types';
 import EnvironmentCard from '../EnvironmentCard';
+
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
+}));
+
+const useFeatureFlagMock = useFeatureFlag as jest.Mock;
+useFeatureFlagMock.mockReturnValue([false, () => {}]);
 
 const testEnv: EnvironmentKind = {
   apiVersion: `${EnvironmentModel.apiGroup}/${EnvironmentModel.apiVersion}`,

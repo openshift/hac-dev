@@ -107,7 +107,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
           },
           {
             type: 'separator',
-            key: 'separator',
+            key: 'add-separator',
             label: '',
           },
           {
@@ -137,6 +137,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             component: (
               <Link to="/stonesoup/workspace-settings/environment/create">Create environment</Link>
             ),
+            hidden: mvpFeature,
           },
           {
             type: 'section-label',
@@ -145,7 +146,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
           },
           {
             type: 'separator',
-            key: 'separator',
+            key: 'help-separator',
             label: '',
           },
           {
@@ -158,6 +159,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
           },
           {
             key: 'explore-documentation',
+            component: 'span',
             label: (
               <ExternalLink href="https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation">
                 Explore Documentation <ExternalLinkAltIcon />
@@ -167,7 +169,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
 
           {
             type: 'separator',
-            key: 'separator',
+            key: 'delete-separator',
             label: '',
           },
           {
