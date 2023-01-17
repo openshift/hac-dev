@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Button, Popover, Skeleton } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
@@ -8,6 +9,9 @@ import { useNamespace } from '../../utils/namespace-context-utils';
 
 const RelatedPipelineRuns = ({ pipelineRun }) => {
   const namespace = useNamespace();
+  const sha =
+    pipelineRun?.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] ||
+    pipelineRun?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];
 
   const [relatedPipelineRuns, relatedPipelineRunsLoaded] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
@@ -15,29 +19,43 @@ const RelatedPipelineRuns = ({ pipelineRun }) => {
     isList: true,
     selector: {
       matchLabels: {
-        [PipelineRunLabel.COMMIT_LABEL]:
-          pipelineRun.metadata?.labels[PipelineRunLabel.COMMIT_LABEL],
+        [PipelineRunLabel.COMPONENT]: pipelineRun?.metadata?.labels[PipelineRunLabel.COMPONENT],
       },
     },
   });
 
+  const filteredRelatedPipelineruns = React.useMemo(() => {
+    return relatedPipelineRuns.filter(
+      (plr: PipelineRunKind) =>
+        (plr?.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] === sha ||
+          plr.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT] === sha) &&
+        plr?.metadata.uid !== pipelineRun?.metadata.uid,
+    );
+  }, [relatedPipelineRuns, sha, pipelineRun]);
+
   return relatedPipelineRunsLoaded ? (
     <Popover
+      data-testid="related-pipelines-popover"
       aria-label="Related pipelines"
       headerContent="Related pipelines"
       bodyContent={
-        relatedPipelineRuns.entries.length === 0
+        filteredRelatedPipelineruns.length === 0
           ? 'No related pipelines'
-          : relatedPipelineRuns?.map((relatedPipelineRun: PipelineRunKind) => (
+          : filteredRelatedPipelineruns?.map((relatedPipelineRun: PipelineRunKind) => (
               <div key={relatedPipelineRun?.metadata?.uid}>
-                {relatedPipelineRun?.metadata?.name}
+                <Link
+                  to={`/stonesoup/pipelineruns/${relatedPipelineRun.metadata?.name}`}
+                  title={relatedPipelineRun.metadata?.name}
+                >
+                  {relatedPipelineRun.metadata?.name}
+                </Link>
               </div>
             ))
       }
     >
       <Button variant="link" isInline>
-        {`${relatedPipelineRuns?.entries.length} ${
-          relatedPipelineRuns?.entries.length === 1 ? 'pipeline' : 'pipelines'
+        {`${filteredRelatedPipelineruns?.length} ${
+          filteredRelatedPipelineruns?.length === 1 ? 'pipeline' : 'pipelines'
         }`}
       </Button>
     </Popover>
