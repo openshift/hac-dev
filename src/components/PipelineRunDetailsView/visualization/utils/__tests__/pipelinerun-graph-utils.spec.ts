@@ -128,6 +128,15 @@ describe('pipelinerun-graph-utils: ', () => {
       expect(taskList.filter((t) => t.status.reason === RunStatus.Skipped)).toHaveLength(2);
     });
 
+    it('should append Skipped status for the tasks without status/reason but marked as skipped in pipelinerun status', () => {
+      const plrwithoutSkippedStatus = testPipelineRuns[DataState.SKIPPED];
+      const taskList = appendStatus(
+        getPipelineFromPipelineRun(plrwithoutSkippedStatus),
+        plrwithoutSkippedStatus,
+      );
+      expect(taskList.filter((t) => t.status.reason === RunStatus.Skipped)).toHaveLength(1);
+    });
+
     it('should append Idle status if the taskruns are missing and overall pipelinerun status is PipelineRunPending', () => {
       const pendingPipelineRun: PipelineRunKind = {
         ...testPipelineRun,
