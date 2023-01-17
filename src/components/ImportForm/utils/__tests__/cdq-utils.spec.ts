@@ -1,7 +1,11 @@
-import { useK8sWatchResource, k8sDeleteResource } from '@openshift/dynamic-plugin-sdk-utils';
+import {
+  useK8sWatchResource,
+  k8sGetResource,
+  k8sDeleteResource,
+} from '@openshift/dynamic-plugin-sdk-utils';
 import { renderHook } from '@testing-library/react-hooks';
 import { createComponentDetectionQuery } from '../../../../utils/create-utils';
-import { useComponentDetection } from '../cdq-utils';
+import { detectComponents, useComponentDetection } from '../cdq-utils';
 import { mockCDQ, mockDetectedComponent } from './../__data__/mock-cdq';
 
 import '@testing-library/jest-dom';
@@ -10,6 +14,7 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
   k8sCreateResource: jest.fn(),
   k8sDeleteResource: jest.fn(),
+  k8sGetResource: jest.fn(),
 }));
 
 jest.mock('../../../../utils/create-utils', () => ({
@@ -20,6 +25,7 @@ jest.mock('lodash/debounce', () => (fn: Function) => fn);
 
 const useK8sWatchMock = useK8sWatchResource as jest.Mock;
 const createCDQMock = createComponentDetectionQuery as jest.Mock;
+const getResourceMock = k8sGetResource as jest.Mock;
 
 describe('CDQ Utils: useComponentDetection', () => {
   afterEach(jest.resetAllMocks);
@@ -137,5 +143,61 @@ describe('CDQ Utils: useComponentDetection', () => {
     await waitForNextUpdate();
 
     expect(result.current).toStrictEqual([mockDetectedComponent, true, undefined]);
+  });
+});
+
+describe('detectComponents', () => {
+  it('should poll cdq until components are detected', async () => {
+    createCDQMock.mockResolvedValue({
+      metadata: { name: 'test-cdq' },
+      status: { conditions: [{ type: 'Completed', status: 'False' }] },
+    });
+    getResourceMock
+      .mockResolvedValueOnce({
+        metadata: { name: 'test-cdq' },
+        status: { conditions: [{ type: 'Completed', status: 'False' }] },
+      })
+      .mockResolvedValueOnce({
+        metadata: { name: 'test-cdq' },
+        status: { conditions: [{ type: 'Completed', status: 'True' }], componentDetected: true },
+      });
+    await detectComponents('https:://github.com/test/repo', 'app', 'ns');
+    expect(getResourceMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('should throw error if components were not detected', () => {
+    createCDQMock.mockResolvedValue({
+      metadata: { name: 'test-cdq' },
+      status: {
+        conditions: [
+          { type: 'Completed', status: 'True', reson: 'Error', message: 'Could not detect!' },
+        ],
+      },
+    });
+    expect(detectComponents('https:://github.com/test/repo', 'app', 'ns')).rejects.toThrowError(
+      'Could not detect!',
+    );
+  });
+
+  it('should delete cdq after components are detected', async () => {
+    createCDQMock.mockResolvedValue({
+      metadata: { name: 'test-cdq' },
+      status: { conditions: [{ type: 'Completed', status: 'True' }], componentDetected: true },
+    });
+    await detectComponents('https:://github.com/test/repo', 'app', 'ns');
+    () => expect(k8sDeleteResource).toHaveBeenCalled();
+  });
+
+  it('should delete cdq even if components were not detected', async () => {
+    createCDQMock.mockResolvedValue({
+      metadata: { name: 'test-cdq' },
+      status: {
+        conditions: [
+          { type: 'Completed', status: 'True', reson: 'Error', message: 'Could not detect!' },
+        ],
+      },
+    });
+    expect(detectComponents('https:://github.com/test/repo', 'app', 'ns')).rejects.toThrowError();
+    expect(k8sDeleteResource).toHaveBeenCalled();
   });
 });
