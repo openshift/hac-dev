@@ -1,6 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useSearchParams } from 'react-router-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, fireEvent, screen } from '@testing-library/react';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
@@ -23,6 +24,12 @@ jest.mock('react-router-dom', () => {
     useSearchParams: jest.fn(),
   };
 });
+
+jest.mock('@openshift/dynamic-plugin-sdk', () => ({
+  useFeatureFlag: jest.fn(),
+}));
+
+const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 const useSearchParamsMock = useSearchParams as jest.Mock;
 const useChromeMock = useChrome as jest.Mock;
 const watchResourceMock = useK8sWatchResource as jest.Mock;
@@ -47,6 +54,7 @@ describe('WorkspaceSettings', () => {
       quickStarts: { set, toggle },
       helpTopics: { setActiveTopic, enableTopics, disableTopics },
     });
+    useFeatureFlagMock.mockReturnValue([false]);
     watchResourceMock.mockReturnValue([[], true]);
     params = new URLSearchParams();
     useSearchParamsMock.mockImplementation(() => [
