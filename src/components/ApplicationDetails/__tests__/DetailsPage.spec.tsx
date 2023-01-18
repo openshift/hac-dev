@@ -1,6 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { act, configure, fireEvent, render, screen } from '@testing-library/react';
+import { act, configure, fireEvent, screen } from '@testing-library/react';
+import { routerRenderer } from '../../../utils/test-utils';
 import DetailsPage from '../DetailsPage';
 
 jest.mock('react-router-dom', () => {
@@ -15,24 +16,25 @@ configure({ testIdAttribute: 'data-test' });
 
 describe('DetailsPage', () => {
   it('should render the DetailsPage', () => {
-    const { getByTestId } = render(<DetailsPage title="Details" tabs={[]} />);
+    const { getByTestId } = routerRenderer(<DetailsPage title="Details" baseURL="/" tabs={[]} />);
     expect(getByTestId('details')).toBeInTheDocument();
   });
 
   it('should render the DetailsPage', () => {
-    const { getByTestId } = render(<DetailsPage title="Details" tabs={[]} />);
+    const { getByTestId } = routerRenderer(<DetailsPage title="Details" baseURL="/" tabs={[]} />);
     expect(getByTestId('details')).toBeInTheDocument();
   });
 
   it('should not render the tabs if invalid values are passed', () => {
-    render(<DetailsPage title="Details" tabs={null} />);
+    routerRenderer(<DetailsPage title="Details" baseURL="/" tabs={null} />);
     expect(screen.queryByTestId('app-details__tabs')).not.toBeInTheDocument();
   });
 
   it('should render the tabs', () => {
-    const { getByTestId } = render(
+    const { getByTestId } = routerRenderer(
       <DetailsPage
         title="Details"
+        baseURL="/"
         tabs={[{ key: 'tab1', label: 'Tab 1', component: <div>Tab1 content</div> }]}
       />,
     );
@@ -41,10 +43,11 @@ describe('DetailsPage', () => {
 
   it('should render the tabs', async () => {
     const onTabSelect = jest.fn();
-    render(
+    routerRenderer(
       <DetailsPage
         onTabSelect={onTabSelect}
         title="Details"
+        baseURL="/"
         tabs={[
           { key: 'tab1', label: 'Tab 1', component: <div>Tab1 content</div> },
           { key: 'tab2', label: 'Tab 1', component: <div>Tab1 content</div> },
@@ -61,12 +64,12 @@ describe('DetailsPage', () => {
   });
 
   it('should not render the actions if it is not passed', () => {
-    render(<DetailsPage title="Details" tabs={[]} />);
+    routerRenderer(<DetailsPage title="Details" baseURL="/" tabs={[]} />);
     expect(screen.queryByTestId('details__actions')).not.toBeInTheDocument();
   });
 
   it('should not render actions invalid values are passed to actions', () => {
-    render(<DetailsPage title="Details" tabs={[]} actions={null} />);
+    routerRenderer(<DetailsPage title="Details" baseURL="/" tabs={[]} actions={null} />);
     expect(screen.queryByTestId('details__actions')).not.toBeInTheDocument();
   });
 });

@@ -37,7 +37,7 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
         { path: '/stonesoup/applications', name: 'Applications' },
         { path: `/stonesoup/applications/${applicationName}`, name: applicationName },
         {
-          path: `/stonesoup/applications/${applicationName}?activeTab=integrationtests`,
+          path: `/stonesoup/applications/${applicationName}/integrationtests`,
           name: 'Integration tests',
         },
         { path: '#', name: title },

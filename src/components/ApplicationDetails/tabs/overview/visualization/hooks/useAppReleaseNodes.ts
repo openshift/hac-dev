@@ -13,6 +13,7 @@ import {
 import { updateParallelNodeWidths } from '../utils/visualization-utils';
 
 const getPlaceholderReleaseNodes = (
+  applicationName: string,
   releases: ReleaseKind[],
   releasePlans: ReleasePlanKind[],
   previousTasks: string[],
@@ -27,6 +28,7 @@ const getPlaceholderReleaseNodes = (
   return placeholdersNeeded.map((releasePlan) =>
     emptyPipelineNode(
       `no-release-${releasePlan.metadata.name}`,
+      applicationName,
       'No release set',
       WorkflowNodeType.RELEASE,
       previousTasks,
@@ -76,6 +78,7 @@ export const useAppReleaseNodes = (
         if (groupedReleases[key].length === 1) {
           return resourceToPipelineNode(
             groupedReleases[key][0],
+            applicationName,
             WorkflowNodeType.RELEASE,
             previousTasks,
             pipelineRunStatus(groupedReleases[key][0]),
@@ -86,6 +89,7 @@ export const useAppReleaseNodes = (
           .map((release) =>
             resourceToPipelineNode(
               release,
+              applicationName,
               WorkflowNodeType.RELEASE,
               previousTasks,
               pipelineRunStatus(release),
@@ -103,6 +107,7 @@ export const useAppReleaseNodes = (
 
         return groupToPipelineNode(
           latestRelease.metadata.uid,
+          applicationName,
           key,
           WorkflowNodeType.RELEASE,
           previousTasks,
@@ -113,13 +118,16 @@ export const useAppReleaseNodes = (
           pipelineRunStatus(latestRelease),
         );
       });
-      nodes.push(...getPlaceholderReleaseNodes(releases, releasePlans, previousTasks));
+      nodes.push(
+        ...getPlaceholderReleaseNodes(applicationName, releases, releasePlans, previousTasks),
+      );
     } else if (releasePlans?.length) {
-      nodes = getPlaceholderReleaseNodes(releases, releasePlans, previousTasks);
+      nodes = getPlaceholderReleaseNodes(applicationName, releases, releasePlans, previousTasks);
     } else {
       nodes = [
         emptyPipelineNode(
           'no-releases',
+          applicationName,
           'No releases set',
           WorkflowNodeType.RELEASE,
           previousTasks,
@@ -128,13 +136,22 @@ export const useAppReleaseNodes = (
     }
     updateParallelNodeWidths(nodes);
     return nodes;
-  }, [allLoaded, groupedReleases, releasePlans, releases, previousTasks, allErrors]);
+  }, [
+    allLoaded,
+    allErrors.length,
+    groupedReleases,
+    releasePlans,
+    applicationName,
+    releases,
+    previousTasks,
+  ]);
 
   const releaseGroup = React.useMemo(
     () =>
       allLoaded && allErrors.length === 0
         ? groupToPipelineNode(
             'release-plans',
+            applicationName,
             releases?.length ? 'Releases' : 'No releases set',
             WorkflowNodeType.RELEASE,
             previousTasks,
@@ -145,7 +162,7 @@ export const useAppReleaseNodes = (
             worstWorkflowStatus(releaseNodes),
           )
         : undefined,
-    [allLoaded, expanded, previousTasks, releaseNodes, releases, allErrors],
+    [allLoaded, allErrors.length, applicationName, releases, previousTasks, expanded, releaseNodes],
   );
 
   const releaseTasks = React.useMemo(

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Dropdown,
   DropdownItem,
@@ -31,7 +31,6 @@ type DetailsPageTabProps = {
   key: string;
   label: string;
   component: React.ReactNode;
-  href?: string;
   isDisabled?: true;
   className?: string;
   isFilled?: boolean;
@@ -46,6 +45,7 @@ type DetailsPageProps = {
   breadcrumbItems?: React.ReactNode;
   actions?: Action[];
   tabs: DetailsPageTabProps[];
+  baseURL: string;
   onTabSelect?: (selectedTabKey: string) => void;
 };
 
@@ -57,33 +57,23 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
   breadcrumbItems,
   actions = [],
   tabs = [],
+  baseURL,
   onTabSelect,
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('activeTab');
-  const tabMatched = tabs?.find((t) => t.key === activeTab)?.key || tabs?.[0]?.key;
   const [isOpen, setIsOpen] = React.useState(false);
+  const params = useParams();
+  const { activeTab: tab } = params;
 
+  const activeTab = React.useMemo(() => tab || tabs?.[0]?.key, [tab, tabs]);
+  const navigate = useNavigate();
   const setActiveTab = React.useCallback(
-    (tab: string, replace = false) => {
-      if (activeTab !== tab) {
-        const params = new URLSearchParams();
-        params.set('activeTab', tab);
-        setSearchParams(params, { replace });
+    (newTab: string) => {
+      if (activeTab !== newTab) {
+        navigate(`${baseURL}/${newTab}`);
       }
     },
-    [setSearchParams, activeTab],
+    [activeTab, baseURL, navigate],
   );
-
-  React.useEffect(() => {
-    if (!tabMatched) {
-      setSearchParams(new URLSearchParams(), { replace: true });
-    } else {
-      setActiveTab(tabMatched, true);
-    }
-    // Only run once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const dropdownItems = React.useMemo(
     () =>

@@ -71,11 +71,11 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
             name: applicationName,
           },
           {
-            path: `/stonesoup/applications/${applicationName}?activeTab=integrationtests`,
+            path: `/stonesoup/applications/${applicationName}/integrationtests`,
             name: 'Integration tests',
           },
           {
-            path: `/stonesoup/applications/${applicationName}/test/${testName}`,
+            path: `/stonesoup/${applicationName}/integrationtests/${testName}`,
             name: integrationTest.metadata.name,
           },
         ]}
@@ -96,12 +96,13 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
                 integrationTestDeleteModalAndNavigate(integrationTest),
               ).closed.then(({ submitClicked }) => {
                 if (submitClicked)
-                  navigate(`/stonesoup/applications/${applicationName}?activeTab=integrationtests`);
+                  navigate(`/stonesoup/applications/${applicationName}/integrationtests`);
               }),
             key: `delete-${integrationTest.metadata.name.toLowerCase()}`,
             label: 'Delete',
           },
         ]}
+        baseURL={`/stonesoup/${applicationName}/integrationtests/${testName}`}
         tabs={[
           {
             key: 'overview',

@@ -74,6 +74,7 @@ export type Workflow = {
 };
 
 export type WorkflowNodeModelData = {
+  application?: string;
   label: string;
   workflowType: WorkflowNodeType;
   isDisabled?: boolean;

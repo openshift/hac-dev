@@ -55,11 +55,11 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
               name: applicationName,
             },
             {
-              path: `/stonesoup/applications/${applicationName}?activeTab=pipelineruns`,
+              path: `/stonesoup/applications/${applicationName}/pipelineruns`,
               name: 'Pipeline runs',
             },
             {
-              path: `/stonesoup/applications/${pipelineRunName}`,
+              path: `/stonesoup/pipelineruns/${pipelineRunName}`,
               name: pipelineRunName,
             },
           ]}
@@ -93,6 +93,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
               onClick: () => pipelineRunCancel(pipelineRun),
             },
           ]}
+          baseURL={`/stonesoup/pipelineruns/${pipelineRunName}`}
           tabs={[
             {
               key: 'detail',

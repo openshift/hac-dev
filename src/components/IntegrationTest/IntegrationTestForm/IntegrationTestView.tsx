@@ -46,7 +46,7 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
             navigate(`/stonesoup/${applicationName}/test/${integrationTest.metadata.name}`);
           }
         } else {
-          navigate(`/stonesoup/applications/${applicationName}?activeTab=integrationtests`);
+          navigate(`/stonesoup/applications/${applicationName}/integrationtests`);
         }
       })
       .catch((error) => {

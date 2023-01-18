@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Popover } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
 import { Node, NodeModel, observer, TaskNode, useHover } from '@patternfly/react-topology';
 import { WorkflowNodeModelData } from '../types';
 import { getWorkflowNodeIcon } from '../utils/node-icon-utils';
-import { getLinkForElement, statusToRunStatus } from '../utils/node-utils';
+import { statusToRunStatus, getLinksForElement } from '../utils/node-utils';
 import WorkflowNodeTipContent from './WorkflowNodeTipContent';
 
 import './WorkflowNode.scss';
@@ -15,24 +15,17 @@ type WorkflowNodeProps = {
 };
 
 const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
+  const navigate = useNavigate();
   const [tipHover, setTipHover] = React.useState<boolean>(false);
   const [tipVisible, setTipVisible] = React.useState<boolean>(false);
   const [hover, hoverRef] = useHover();
-  const setSearchParams = useSearchParams()[1];
-  const setActiveTab = React.useCallback(
-    (tabData: { tab: string; filter?: { name: string; value: string } }, replace = false) => {
-      const params = new URLSearchParams();
-      params.set('activeTab', tabData.tab);
-      if (tabData.filter) {
-        params.set(tabData.filter.name, tabData.filter.value);
-      }
-      setSearchParams(params, { replace });
-    },
-    [setSearchParams],
-  );
   const { isDisabled, workflowType, status, children, hidden } = element.getData();
-
   const childNodes = children?.filter((n) => !n.data.isDisabled) || [];
+
+  const setActiveTab = React.useCallback(() => {
+    navigate(getLinksForElement(element).elementRef);
+  }, [element, navigate]);
+
   React.useEffect(() => {
     let canceled = false;
     if (tipHover || hover) {
@@ -77,7 +70,7 @@ const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
           className={css('workload-node', { 'm-disabled': isDisabled })}
           taskIcon={getWorkflowNodeIcon(workflowType)}
           paddingY={6}
-          onSelect={() => setActiveTab(getLinkForElement(element))}
+          onSelect={setActiveTab}
         />
       </g>
     </Popover>

@@ -28,7 +28,7 @@ import {
 import { componentFactory } from '../../factories';
 import { useAppWorkflowData } from '../../hooks/useAppWorkflowData';
 import { WorkflowNodeModelData } from '../../types';
-import { getLinkForElement, TYPE_DESCRIPTIONS } from '../../utils/node-utils';
+import { getLinkDataForElement, TYPE_DESCRIPTIONS } from '../../utils/node-utils';
 import WorkflowNodeTipContent from '../WorkflowNodeTipContent';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -134,7 +134,7 @@ describe('WorkflowNode', () => {
     expect(
       screen.getByText(TYPE_DESCRIPTIONS[mockElement.getData().workflowType]),
     ).toBeInTheDocument();
-    let linkData = getLinkForElement(mockElement);
+    let linkData = getLinkDataForElement(mockElement);
     expect(linkData.tab).toBe('components');
     expect(linkData.filter).toBeUndefined();
     expect(screen.getAllByTestId('child-row')).toHaveLength(mockComponentsData.length);
@@ -158,7 +158,7 @@ describe('WorkflowNode', () => {
     ).toBeInTheDocument();
 
     expect(screen.getByTestId('element-link')).toBeVisible();
-    linkData = getLinkForElement(mockElement);
+    linkData = getLinkDataForElement(mockElement);
     expect(linkData.tab).toBe('integrationtests');
     expect(linkData.filter).toBeUndefined();
 
@@ -179,7 +179,7 @@ describe('WorkflowNode', () => {
     ).toBeInTheDocument();
     const link = screen.getByTestId('element-link');
     expect(link).toBeVisible();
-    const linkData = getLinkForElement(mockElement);
+    const linkData = getLinkDataForElement(mockElement);
     expect(linkData.tab).toBe('components');
     expect(linkData.filter.name).toBe('name');
     expect(linkData.filter.value).toBe(mockElement.getLabel());

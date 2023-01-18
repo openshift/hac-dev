@@ -54,6 +54,7 @@ export const useAppApplicationTestNodes = (
           );
           return resourceToPipelineNode(
             test,
+            applicationName,
             WorkflowNodeType.APPLICATION_TEST,
             previousTasks,
             testPipeline ? pipelineRunStatus(testPipeline) : 'Pending',
@@ -62,6 +63,7 @@ export const useAppApplicationTestNodes = (
       : [
           emptyPipelineNode(
             'no-application-tests',
+            applicationName,
             'No application tests set',
             WorkflowNodeType.APPLICATION_TEST,
             previousTasks,
@@ -69,7 +71,14 @@ export const useAppApplicationTestNodes = (
         ];
     updateParallelNodeWidths(nodes);
     return nodes;
-  }, [allLoaded, applicationIntegrationTests, previousTasks, testPipelines, allErrors]);
+  }, [
+    allLoaded,
+    allErrors.length,
+    applicationIntegrationTests,
+    applicationName,
+    previousTasks,
+    testPipelines,
+  ]);
 
   const applicationIntegrationTestTasks = React.useMemo(
     () => (expanded ? applicationTestNodes.map((c) => c.id) : []),

@@ -2,7 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useSearchParams } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { act, configure, fireEvent, render, screen } from '@testing-library/react';
+import { act, configure, fireEvent, screen } from '@testing-library/react';
 import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../../../hooks/useComponents';
 import { useEnvironments } from '../../../../../../hooks/useEnvironments';
@@ -14,7 +14,7 @@ import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnap
 import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
 import { CustomError } from '../../../../../../shared/utils/error/custom-error';
 import { useNamespace } from '../../../../../../utils/namespace-context-utils';
-import { mockLocation } from '../../../../../../utils/test-utils';
+import { mockLocation, routerRenderer } from '../../../../../../utils/test-utils';
 import {
   mockSnapshotsEnvironmentBindings,
   mockBuildPipelinesData,
@@ -41,10 +41,13 @@ jest.mock('../../../../../../shared/hooks/useQueryParams', () => ({
   useQueryParams: () => new Map(),
 }));
 
+const mockNavigate = jest.fn();
+
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
   return {
     ...actual,
+    useNavigate: () => mockNavigate,
     Link: (props) => <a href={props.to}>{props.children}</a>,
     useSearchParams: jest.fn(),
   };
@@ -157,12 +160,12 @@ describe('useAppWorkflowData hook', () => {
       [new CustomError('Model does not exist')],
     ]);
 
-    render(<AppWorkflowSection applicationName="test-dev-samples" />);
+    routerRenderer(<AppWorkflowSection applicationName="test-dev-samples" />);
     screen.queryByText('graph-error-state');
   });
 
   it('should render the graph unexpanded by default', () => {
-    render(<AppWorkflowSection applicationName="test-dev-samples" />);
+    routerRenderer(<AppWorkflowSection applicationName="test-dev-samples" />);
     const graph = screen.getByTestId('application-overview-graph');
     expect(graph).toBeVisible();
     const nodes = graph.querySelectorAll('[data-kind="node"]');
@@ -170,7 +173,7 @@ describe('useAppWorkflowData hook', () => {
   });
   it('should render the graph expanded when set', () => {
     params.expanded = 'true';
-    render(<AppWorkflowSection applicationName="test-dev-samples" />);
+    routerRenderer(<AppWorkflowSection applicationName="test-dev-samples" />);
     const graph = screen.getByTestId('application-overview-graph');
     expect(graph).toBeVisible();
     const nodes = graph.querySelectorAll('[data-kind="node"]');
@@ -180,7 +183,7 @@ describe('useAppWorkflowData hook', () => {
   });
   it('should navigate to the correct tab on a node click', async () => {
     act(() => {
-      render(<AppWorkflowSection applicationName="test-dev-samples" />);
+      routerRenderer(<AppWorkflowSection applicationName="test-dev-samples" />);
     });
     const componentsNode = screen.getByTestId('components');
 
@@ -189,11 +192,13 @@ describe('useAppWorkflowData hook', () => {
     expect(clickable).toBeVisible();
 
     fireEvent.click(clickable);
-    expect(window.location.search).toBe('?activeTab=components');
+    expect(mockNavigate).toHaveBeenCalledWith(
+      '/stonesoup/applications/test-dev-samples/components',
+    );
   });
   it('should navigate to the correct tab on a group node click', async () => {
     act(() => {
-      render(<AppWorkflowSection applicationName="test-dev-samples" />);
+      routerRenderer(<AppWorkflowSection applicationName="test-dev-samples" />);
     });
     const componentsNode = screen.getByTestId('components');
 
@@ -202,12 +207,14 @@ describe('useAppWorkflowData hook', () => {
     expect(clickable).toBeVisible();
 
     fireEvent.click(clickable);
-    expect(window.location.search).toBe('?activeTab=components');
+    expect(mockNavigate).toHaveBeenCalledWith(
+      '/stonesoup/applications/test-dev-samples/components',
+    );
   });
   it('should navigate to the correct tab on a node click', async () => {
     params.expanded = 'true';
     act(() => {
-      render(<AppWorkflowSection applicationName="test-dev-samples" />);
+      routerRenderer(<AppWorkflowSection applicationName="test-dev-samples" />);
     });
     const components = screen.queryAllByTestId('components');
 
@@ -216,8 +223,8 @@ describe('useAppWorkflowData hook', () => {
     expect(clickable).toBeVisible();
 
     fireEvent.click(clickable);
-    expect(window.location.search).toBe(
-      `?activeTab=components&name=${mockComponentsData[0].metadata.name}`,
+    expect(mockNavigate).toHaveBeenCalledWith(
+      `/stonesoup/applications/test-dev-samples/components?name=${mockComponentsData[0].metadata.name}`,
     );
   });
 });

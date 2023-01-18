@@ -118,7 +118,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
         <Button
           className="pf-u-mt-md"
           variant="secondary"
-          onClick={() => navigate(`/stonesoup/applications/${applicationName}?activeTab=commits`)}
+          onClick={() => navigate(`/stonesoup/applications/${applicationName}/commits`)}
         >
           View More
         </Button>
