@@ -3,7 +3,7 @@ import { getComponentRouteWebURL } from './../route-utils';
 
 describe('Route Utils', () => {
   it('Should return route url for given component', async () => {
-    const result = getComponentRouteWebURL(mockRoutes, 'nodejs');
+    const result = getComponentRouteWebURL(mockRoutes, 'basic-node-js');
 
     expect(result).toEqual('https://nodejs-test.apps.appstudio-stage.x99m.p1.openshiftapps.com');
   });

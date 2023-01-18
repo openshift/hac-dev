@@ -2,6 +2,7 @@ import * as React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import { configure, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { mockRoutes } from '../../../hooks/__data__/mock-data';
 import { useLatestPipelineRunForComponent } from '../../../hooks/usePipelineRunsForApplication';
 import { componentCRMocks } from '../../ApplicationDetailsView/__data__/mock-data';
 import { mockPipelineRuns } from '../../ApplicationDetailsView/__data__/mock-pipeline-run';
@@ -24,6 +25,17 @@ describe('ComponentListItem', () => {
   it('should render display name of the component', () => {
     render(<ComponentListItem component={componentCRMocks[0]} routes={[]} />);
     screen.getByText('basic-node-js');
+  });
+
+  it('should render git repository link of the component', () => {
+    render(<ComponentListItem component={componentCRMocks[0]} routes={[]} />);
+    screen.getByText('Git repository');
+    expect(screen.queryByText('Route')).not.toBeInTheDocument();
+  });
+
+  it('should render component URL link of the component if route exists', () => {
+    render(<ComponentListItem component={componentCRMocks[0]} routes={mockRoutes} />);
+    screen.getAllByText('Route');
   });
 
   it('should render View Build logs action item', async () => {
