@@ -51,7 +51,7 @@ describe('ReviewComponentCard', () => {
         detectedComponentIndex={0}
         showRuntimeSelector
       />,
-      { isDetected: true, git: {} },
+      { isDetected: true, source: { git: {} } },
     );
 
     expect(
@@ -69,7 +69,7 @@ describe('ReviewComponentCard', () => {
         detectedComponentIndex={0}
         showRuntimeSelector
       />,
-      { isDetected: true, git: {} },
+      { isDetected: true, source: { git: {} } },
     );
 
     expect(screen.getByText('quay.io/sbudhwar/demo:latest')).toBeInTheDocument();
@@ -83,7 +83,7 @@ describe('ReviewComponentCard', () => {
         detectedComponentIndex={0}
         showRuntimeSelector
       />,
-      { isDetected: true, git: {} },
+      { isDetected: true, source: { git: {} } },
     );
     await act(async () => screen.getByRole('button', { expanded: false }).click());
 
@@ -98,7 +98,7 @@ describe('ReviewComponentCard', () => {
         detectedComponentIndex={0}
         showRuntimeSelector
       />,
-      { isDetected: false, git: {} },
+      { isDetected: false, source: { git: {} } },
     );
     await act(async () => screen.getByRole('button', { expanded: false }).click());
 
@@ -110,7 +110,7 @@ describe('ReviewComponentCard', () => {
     useDevfileSamplesMock.mockReturnValue([[], true]);
     formikRenderer(
       <ReviewComponentCard detectedComponent={gitRepoComponent} detectedComponentIndex={0} />,
-      { isDetected: true, git: {} },
+      { isDetected: true, source: { git: {} } },
     );
     expect(screen.queryByRole('button', { name: 'Select a runtime' })).not.toBeInTheDocument();
   });

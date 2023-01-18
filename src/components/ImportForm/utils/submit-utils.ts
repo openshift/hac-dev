@@ -36,19 +36,19 @@ export const createComponents = async (
 };
 
 export const createResources = async (formValues: ImportFormValues, strategy: ImportStrategy) => {
-  const { source, application, inAppContext, components, secret, namespace, pipelinesascode, git } =
+  const { source, application, inAppContext, components, secret, namespace, pipelinesascode } =
     formValues;
   const shouldCreateApplication = !inAppContext;
   let applicationName = application;
   let detectedComponents = components;
   if (strategy === ImportStrategy.SAMPLE) {
     const detectedSampleComponents = await detectComponents(
-      source,
+      source.git.url,
       application,
       namespace,
       secret,
-      git.context,
-      git.ref,
+      source.git.context,
+      source.git.revision,
     );
     detectedComponents = sampleComponentValues(application, detectedSampleComponents);
   }

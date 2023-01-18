@@ -29,7 +29,7 @@ describe('RuntimeSelector', () => {
   it('should show loading indicator if runtimes are not fetched', () => {
     useDevfileSamplesMock.mockReturnValue([]);
     useComponentDetectionMock.mockReturnValue([]);
-    formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, { git: {} });
+    formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, { source: { git: {} } });
 
     expect(screen.getByRole('progressbar')).toBeVisible();
   });
@@ -37,7 +37,7 @@ describe('RuntimeSelector', () => {
   it('should show dropdown if runtimes are fetched', () => {
     useDevfileSamplesMock.mockReturnValue([[], true]);
     useComponentDetectionMock.mockReturnValue([]);
-    formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, { git: {} });
+    formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, { source: { git: {} } });
 
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
     expect(screen.getByText('Select a runtime')).toBeVisible();
@@ -50,7 +50,6 @@ describe('RuntimeSelector', () => {
     ]);
     useComponentDetectionMock.mockReturnValue([]);
     formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
-      git: {},
       isDetected: true,
       components: [
         {
@@ -79,7 +78,7 @@ describe('RuntimeSelector', () => {
     ]);
     useComponentDetectionMock.mockReturnValue([]);
     formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
-      git: {},
+      source: { git: {} },
       isDetected: false,
       components: [
         {
@@ -92,7 +91,7 @@ describe('RuntimeSelector', () => {
     await act(async () => screen.getByText('Select a runtime').click());
 
     useComponentDetectionMock.mockReturnValue([
-      { node: { componentStub: { source: { git: {} } } } },
+      { node: { componentStub: { source: { source: { git: {} } } } } },
       true,
     ]);
     await act(async () => screen.getByText('Basic Nodejs').click());
