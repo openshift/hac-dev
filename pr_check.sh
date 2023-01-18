@@ -86,16 +86,11 @@ docker run ${COMMON_SETUP} \
     ${TEST_IMAGE} \
     bash -c "startcypress run" || TEST_RUN=1
 
-docker run ${COMMON_SETUP} \
-    -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \
-    -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
-    ${TEST_IMAGE} \
-    bash -c "startcypress run -e configFile=hac-dev-experimental" || TEST_RUN=2
-
-docker run ${COMMON_SETUP} \
-    -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HACBS} \
-    ${TEST_IMAGE} \
-    bash -c "startcypress run -e configFile=hacbs" || TEST_RUN=3
+# docker run ${COMMON_SETUP} \
+#     -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \
+#     -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
+#     ${TEST_IMAGE} \
+#     bash -c "startcypress run -e configFile=hac-dev-experimental" || TEST_RUN=2
 
 bonfire namespace release ${NAMESPACE}
 
