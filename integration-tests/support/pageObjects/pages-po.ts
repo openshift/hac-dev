@@ -13,6 +13,7 @@ export const componentsTabPO = {
 export const integrationTestsTabPO = {
   clickTab: '[data-test="details__tabItem integrationtests"]',
   filterInputField: '[data-test="name-input-filter"]',
+  saveChangesButton:'[data-test="submit-button"]',
 };
 
 export const actionsDropdown = {

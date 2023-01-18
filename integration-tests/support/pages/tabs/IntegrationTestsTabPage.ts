@@ -1,5 +1,5 @@
 import { actions } from "../../pageObjects/global-po";
-import { integrationTestsTabPO } from "../../pageObjects/pages-po";
+import { integrationTestsTabPO, addIntegrationTestStepPO } from "../../pageObjects/pages-po";
 
 export class IntegrationTestsTabPage {
     checkRowValues(integrationTestName: string, containerImage: string, releaseStatus: string, pipelineName: string) {
@@ -29,4 +29,35 @@ export class IntegrationTestsTabPage {
             cy.get('div').should('contain', metadata);
         }
     }
+    editIntegrationTest(imagebundle?: string, pipelineName?: string, markOptionalForRelease?: string) {
+        this.verifyIntegrationNameIsDisabled()
+        this.verifySaveChangesIsDisabled()
+
+        if(imagebundle)
+            cy.get(addIntegrationTestStepPO.displayNameInput).clear().type(imagebundle);
+
+        if (pipelineName)
+            cy.get(addIntegrationTestStepPO.pipelineNameInput).clear().type(pipelineName);
+
+        if(markOptionalForRelease == 'uncheck')
+            cy.get(addIntegrationTestStepPO.optionalreleaseCheckbox).uncheck();
+        else if (markOptionalForRelease == 'check')
+            cy.get(addIntegrationTestStepPO.optionalreleaseCheckbox).check();
+
+        cy.get(integrationTestsTabPO.saveChangesButton).click().should('not.exist')
+
+    }
+
+    verifyLabelAndValue(label: string, value: string) {
+        cy.contains('div', label).contains('dd', value)
+    }
+
+    verifyIntegrationNameIsDisabled() {
+        cy.get(addIntegrationTestStepPO.displayNameInput).should('have.attr', 'readonly');
+    }
+
+    verifySaveChangesIsDisabled() {
+        cy.get(integrationTestsTabPO.saveChangesButton).should('be.disabled')
+    }
+
 }
