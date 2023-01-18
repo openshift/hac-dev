@@ -1,0 +1,7 @@
+.status-icon.pf-m-spin svg {
+    filter: blur(0);
+    -webkit-filter: blur(0);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: status-spin 2s infinite linear;
+}

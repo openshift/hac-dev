@@ -1,10 +1,4 @@
 import { K8sModelCommon } from '@openshift/dynamic-plugin-sdk-utils';
-import { chart_color_black_400 as skippedColor } from '@patternfly/react-tokens/dist/js/chart_color_black_400';
-import { chart_color_black_500 as cancelledColor } from '@patternfly/react-tokens/dist/js/chart_color_black_500';
-import { chart_color_blue_100 as pendingColor } from '@patternfly/react-tokens/dist/js/chart_color_blue_100';
-import { chart_color_blue_300 as runningColor } from '@patternfly/react-tokens/dist/js/chart_color_blue_300';
-import { chart_color_green_400 as successColor } from '@patternfly/react-tokens/dist/js/chart_color_green_400';
-import { global_danger_color_100 as failureColor } from '@patternfly/react-tokens/dist/js/global_danger_color_100';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { K8sGroupVersionKind } from '../../../dynamic-plugin-sdk';
@@ -80,8 +74,10 @@ export const PipelineRunModel: K8sModelCommon = {
 // Converts the PipelineRun (and TaskRun) condition status into a human readable string.
 // See also tkn cli implementation at https://github.com/tektoncd/cli/blob/release-v0.15.0/pkg/formatted/k8s.go#L54-L83
 export const pipelineRunStatus = (pipelineRun): string => {
+  if (!pipelineRun?.status) return null;
+
   const conditions = get(pipelineRun, ['status', 'conditions'], []);
-  if (conditions.length === 0) return null;
+  if (conditions.length === 0) return 'Pending';
 
   const cancelledCondition = conditions.find((c) => c.reason === 'Cancelled');
   const succeedCondition = conditions.find((c) => c.type === 'Succeeded');
@@ -147,41 +143,6 @@ export enum runStatus {
   Idle = 'Idle',
 }
 
-export const getRunStatusColor = (status: string) => {
-  switch (status) {
-    case runStatus.Succeeded:
-      return { message: 'Succeeded', pftoken: successColor, labelColor: 'green' };
-    case runStatus.Failed:
-      return { message: 'Failed', pftoken: failureColor, labelColor: 'red' };
-    case runStatus.FailedToStart:
-      return {
-        message: 'PipelineRun failed to start',
-        pftoken: failureColor,
-        labelColor: 'orange',
-      };
-    case runStatus.Running:
-      return { message: 'Running', pftoken: runningColor, labelColor: 'blue' };
-    case runStatus['In Progress']:
-      return { message: 'Running', pftoken: runningColor, labelColor: 'blue' };
-
-    case runStatus.Skipped:
-      return { message: 'Skipped', pftoken: skippedColor, labelColor: 'grey' };
-    case runStatus.Cancelled:
-      return { message: 'Cancelled', pftoken: cancelledColor, labelColor: 'grey' };
-    case runStatus.Cancelling:
-      return { message: 'Cancelling', pftoken: cancelledColor, labelColor: 'grey' };
-    case runStatus.Idle:
-    case runStatus.Pending:
-      return { message: 'Pending', pftoken: pendingColor, labelColor: 'yellow' };
-    default:
-      return {
-        message: 'PipelineRun not started yet',
-        pftoken: pendingColor,
-        labelColor: 'grey',
-      };
-  }
-};
-
 export const pipelineRunStatusToGitOpsStatus = (status: string): GitOpsDeploymentHealthStatus => {
   switch (status) {
     case 'Succeeded':
@@ -198,5 +159,27 @@ export const pipelineRunStatusToGitOpsStatus = (status: string): GitOpsDeploymen
       return GitOpsDeploymentHealthStatus.Missing;
     default:
       return GitOpsDeploymentHealthStatus.Unknown;
+  }
+};
+
+export const getLabelColorFromStatus = (
+  status: string,
+): 'blue' | 'cyan' | 'green' | 'orange' | 'purple' | 'red' | 'grey' | 'gold' => {
+  switch (status) {
+    case runStatus.Succeeded:
+      return 'green';
+    case runStatus.Failed:
+      return 'red';
+    case runStatus['In Progress']:
+    case runStatus.Running:
+      return 'blue';
+    case runStatus.Cancelled:
+    case runStatus.Cancelling:
+      return 'gold';
+    case runStatus.Idle:
+    case runStatus.Pending:
+    case runStatus.Skipped:
+    default:
+      return null;
   }
 };

@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { Label } from '@patternfly/react-core';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons/dist/js/icons';
+import { css } from '@patternfly/react-styles';
+import pipelineStyles from '@patternfly/react-styles/css/components/Topology/topology-pipelines';
 import {
-  AngleDoubleRightIcon,
-  BanIcon,
-  CheckCircleIcon,
-  CircleIcon,
-  ExclamationCircleIcon,
-  HourglassHalfIcon,
-  SyncAltIcon,
-} from '@patternfly/react-icons/dist/js/icons';
-import cx from 'classnames';
-import { getRunStatusColor, runStatus } from './utils';
+  getRunStatusModifier,
+  RunStatus,
+  StatusIcon as PfStatusIcon,
+} from '@patternfly/react-topology';
+import { getLabelColorFromStatus, runStatus } from './utils';
+
+import './StatusIcon.scss';
 
 type StatusIconProps = {
   status: string;
@@ -19,42 +19,32 @@ type StatusIconProps = {
   disableSpin?: boolean;
 };
 
-export const StatusIcon: React.FC<StatusIconProps> = ({ status, disableSpin, ...props }) => {
-  switch (status) {
-    case runStatus['In Progress']:
-    case runStatus.Running:
-      return <SyncAltIcon {...props} className={cx({ 'fa-spin': !disableSpin })} />;
-
-    case runStatus.Succeeded:
-      return <CheckCircleIcon {...props} />;
-
-    case runStatus.Failed:
-      return <ExclamationCircleIcon {...props} />;
-
-    case runStatus.Idle:
-    case runStatus.Pending:
-      return <HourglassHalfIcon {...props} />;
-
-    case runStatus.Cancelling:
-    case runStatus.Cancelled:
-      return <BanIcon {...props} />;
-
-    case runStatus.Skipped:
-      return <AngleDoubleRightIcon {...props} />;
-
-    default:
-      return <CircleIcon {...props} />;
+export const StatusIcon: React.FC<StatusIconProps> = ({ status, ...props }) => {
+  if (status === runStatus.Cancelling) {
+    // Interim state required to avoid any other actions on pipelinerun that is currently being cancelled.
+    return (
+      <div
+        className={css(
+          pipelineStyles.topologyPipelinesStatusIcon,
+          getRunStatusModifier(RunStatus.Cancelled),
+        )}
+      >
+        <ExclamationTriangleIcon {...props} />
+      </div>
+    );
   }
+  return <PfStatusIcon status={status as RunStatus} {...props} />;
 };
 
 export const ColoredStatusIcon: React.FC<StatusIconProps> = ({ status, ...others }) => {
   return (
     <div
-      style={{
-        color: status
-          ? getRunStatusColor(status).pftoken.value
-          : getRunStatusColor(runStatus.Cancelled).pftoken.value,
-      }}
+      className={css(
+        'status-icon',
+        pipelineStyles.topologyPipelinesStatusIcon,
+        (status === RunStatus.Running || status === RunStatus.InProgress) && 'pf-m-spin',
+        getRunStatusModifier(status as RunStatus),
+      )}
     >
       <StatusIcon status={status} {...others} />
     </div>
@@ -65,17 +55,17 @@ export const StatusIconWithText: React.FC<
   StatusIconProps & { text?: string; dataTestAttribute?: string }
 > = ({ status, text, dataTestAttribute, ...others }) => {
   return (
-    <Label>
+    <Label color={getLabelColorFromStatus(status)}>
       <span
-        className="pf-u-mr-xs"
-        style={{
-          color: status
-            ? getRunStatusColor(status).labelColor
-            : getRunStatusColor(runStatus.Cancelled).pftoken.value,
-        }}
+        className={css(
+          'pf-u-mr-xs',
+          pipelineStyles.topologyPipelinesPillStatus,
+          (status === RunStatus.Running || status === RunStatus.InProgress) && 'pf-m-spin',
+          getRunStatusModifier(status as RunStatus),
+        )}
       >
         <StatusIcon status={status} {...others} />
-      </span>{' '}
+      </span>
       <span data-test={dataTestAttribute}>{text ?? status}</span>
     </Label>
   );
