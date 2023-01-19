@@ -146,11 +146,11 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                       min={0}
                       helpText="Number of instances of your image"
                     />
-                    <InputField
+                    {/* <InputField
                       name={`${fieldPrefix}.route`}
                       label="Route"
                       placeholder="Route exposed by the deployment"
-                    />
+                    /> */}
                     <EnvironmentField
                       name={`${fieldPrefix}.env`}
                       envs={component.env}
