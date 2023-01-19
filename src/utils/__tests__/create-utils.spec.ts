@@ -5,9 +5,10 @@ import {
 } from '@openshift/dynamic-plugin-sdk-utils';
 import omit from 'lodash/omit';
 import { SPIAccessTokenBindingModel } from '../../models';
+import { ComponentDetectionQueryKind, SPIAccessTokenBindingKind } from '../../types';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
-import { ComponentSpecs } from './../../types/component';
+import { ComponentKind, ComponentSpecs } from './../../types/component';
 import {
   createApplication,
   createComponent,
@@ -53,7 +54,7 @@ const mockComponentWithDevfile = {
   },
 };
 
-const mockComponentData = {
+const mockComponentData: ComponentKind = {
   apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
   kind: ComponentModel.kind,
   metadata: {
@@ -77,7 +78,7 @@ const mockComponentData = {
   },
 };
 
-const mockComponentDataWithDevfile = {
+const mockComponentDataWithDevfile: ComponentKind = {
   ...mockComponentData,
   spec: {
     ...mockComponentData.spec,
@@ -105,7 +106,7 @@ const mockComponentDataWithPAC = {
   },
 };
 
-const mockCDQData = {
+const mockCDQData: ComponentDetectionQueryKind = {
   apiVersion: `${ComponentDetectionQueryModel.apiGroup}/${ComponentDetectionQueryModel.apiVersion}`,
   kind: ComponentDetectionQueryModel.kind,
   metadata: {
@@ -117,7 +118,7 @@ const mockCDQData = {
   },
 };
 
-const mockAccessTokenBinding = {
+const mockAccessTokenBinding: SPIAccessTokenBindingKind = {
   apiVersion: `${SPIAccessTokenBindingModel.apiGroup}/${SPIAccessTokenBindingModel.apiVersion}`,
   kind: SPIAccessTokenBindingModel.kind,
   metadata: {
@@ -307,6 +308,79 @@ describe('Create Utils', () => {
     );
 
     expect(k8sUpdateResource).toHaveBeenCalled();
+  });
+
+  it('Should delete the environment variables while updating', async () => {
+    const oldComponentSpecWithEnv = {
+      ...mockComponentData,
+      spec: {
+        ...mockComponentData.spec,
+        env: [{ name: 'env', value: 'test' }],
+      },
+    };
+
+    const updatedComponentWithoutEnv = {
+      ...mockComponentData.spec,
+      env: undefined,
+    };
+
+    await createComponent(
+      updatedComponentWithoutEnv,
+      'test-application',
+      'test-ns',
+      '',
+      false,
+      oldComponentSpecWithEnv,
+      'update',
+    );
+    expect(k8sUpdateResource).toHaveBeenCalledWith({
+      model: ComponentModel,
+      resource: expect.objectContaining({
+        spec: expect.objectContaining({ env: undefined }),
+      }),
+    });
+  });
+
+  it('Should update the environment variables with new values', async () => {
+    const oldComponentSpecWithEnv = {
+      ...mockComponentData,
+      spec: {
+        ...mockComponentData.spec,
+        env: [{ name: 'old-key', value: 'old-value' }],
+      },
+    };
+
+    const updatedComponentWithoutEnv = {
+      ...mockComponentData.spec,
+      env: [{ name: 'new-key', value: 'new-value' }],
+    };
+
+    await createComponent(
+      updatedComponentWithoutEnv,
+      'test-application',
+      'test-ns',
+      '',
+      false,
+      oldComponentSpecWithEnv,
+      'update',
+    );
+    expect(k8sUpdateResource).toHaveBeenCalledWith({
+      model: ComponentModel,
+      resource: expect.objectContaining({
+        spec: expect.objectContaining({
+          env: expect.arrayContaining([
+            expect.not.objectContaining({
+              name: 'old-key',
+              value: 'old-value',
+            }),
+            expect.objectContaining({
+              name: 'new-key',
+              value: 'new-value',
+            }),
+          ]),
+        }),
+      }),
+    });
   });
 
   it('Should call k8s create util with correct model and data for component detection query', async () => {

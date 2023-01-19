@@ -5,7 +5,6 @@ import {
 } from '@openshift/dynamic-plugin-sdk-utils';
 import isEqual from 'lodash/isEqual';
 import isNumber from 'lodash/isNumber';
-import merge from 'lodash/merge';
 import uniqueId from 'lodash/uniqueId';
 import {
   ApplicationModel,
@@ -120,7 +119,7 @@ export const createComponent = (
   };
 
   const resource =
-    verb === 'update' ? merge({}, originalComponent || {}, newComponent) : newComponent;
+    verb === 'update' ? { ...originalComponent, spec: newComponent.spec } : newComponent;
 
   return verb === 'create'
     ? k8sCreateResource({
