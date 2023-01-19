@@ -57,13 +57,13 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
 
   const setFormValidating = React.useCallback(() => {
     setValidated(ValidatedOptions.default);
-    setHelpText('Validating authentication...');
+    setHelpText('Checking access...');
     setFieldValue('isValidated', false);
   }, [setFieldValue]);
 
   const setFormValidated = React.useCallback(() => {
     setValidated(ValidatedOptions.success);
-    setHelpText('Validated authentication');
+    setHelpText('Access validated');
     setFieldValue('isValidated', true);
   }, [setFieldValue]);
 
