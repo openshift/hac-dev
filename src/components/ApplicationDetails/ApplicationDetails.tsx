@@ -24,6 +24,8 @@ import ComponentsTab from './tabs/ComponentsTab';
 import EnvironmentsTab from './tabs/EnvironmentsTab';
 import IntegrationTestsTab from './tabs/IntegrationTestsTab';
 
+import './ApplicationDetails.scss';
+
 type HacbsApplicationDetailsProps = {
   applicationName: string;
 };
@@ -191,6 +193,8 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
           {
             key: 'activity',
             label: 'Activity',
+            isFilled: true,
+            className: 'application-details__activity',
             component: <ActivityTab applicationName={applicationName} />,
           },
           {

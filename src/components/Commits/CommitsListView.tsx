@@ -67,7 +67,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
         }
       }
       return acc;
-    }, {} as { [key: string]: number });
+    }, {});
   }, [commits]);
 
   const filteredCommits = React.useMemo(
@@ -184,7 +184,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
         <Button
           className="pf-u-mt-md"
           variant="secondary"
-          onClick={() => navigate(`/stonesoup/applications/${applicationName}/commits`)}
+          onClick={() => navigate(`/stonesoup/applications/${applicationName}/activity`)}
         >
           View More
         </Button>

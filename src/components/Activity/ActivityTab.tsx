@@ -3,6 +3,8 @@ import { Tab, Tabs, TabTitleText, Title } from '@patternfly/react-core';
 import CommitsTab from '../ApplicationDetails/tabs/CommitsTab';
 import PipelineRunsTab from '../ApplicationDetails/tabs/PipelineRunsTab';
 
+import './ActivityTab.scss';
+
 export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicationName }) => {
   const [activeTab, setActiveTab] = React.useState('latest-commits');
   return (
@@ -25,6 +27,7 @@ export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicatio
           title={<TabTitleText>Latest commits</TabTitleText>}
           key="latest-commits"
           eventKey="latest-commits"
+          className="activity-tab"
         >
           <CommitsTab applicationName={applicationName} />
         </Tab>
@@ -32,6 +35,7 @@ export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicatio
           title={<TabTitleText>Pipeline runs</TabTitleText>}
           key="pipelineruns"
           eventKey="pipelineruns"
+          className="activity-tab"
         >
           <PipelineRunsTab applicationName={applicationName} />
         </Tab>
