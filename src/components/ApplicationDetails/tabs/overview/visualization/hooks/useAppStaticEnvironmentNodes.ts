@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
 import {
   EnvironmentType,
   getEnvironmentType,
-} from '../../../../../../hacbs/components/Environment/utils';
+} from '../../../../../../components/Environment/environment-utils';
+import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
 import { useEnvironments } from '../../../../../../hooks/useEnvironments';
 import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnapshotsEnvironmentBindings';
 import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';

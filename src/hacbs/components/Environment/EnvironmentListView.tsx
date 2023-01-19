@@ -1,5 +1,9 @@
 import * as React from 'react';
 import { Title, EmptyStateBody, Text } from '@patternfly/react-core';
+import {
+  EnvironmentType,
+  getEnvironmentType,
+} from '../../../components/Environment/environment-utils';
 import EnvironmentListViewBase from '../../../components/Environment/EnvironmentListView';
 import { useAllApplicationEnvironmentsWithHealthStatus } from '../../../hooks/useAllApplicationEnvironmentsWithHealthStatus';
 import { useAllEnvironments } from '../../../hooks/useAllEnvironments';
@@ -8,7 +12,6 @@ import { EnvironmentKind } from '../../../types';
 import { GitOpsDeploymentHealthStatus } from '../../../types/gitops-deployment';
 import EnvironmentCard from './EnvironmentCard';
 import EnvironmentToolbarGroups from './EnvironmentToolbarGroups';
-import { EnvironmentType, getEnvironmentType } from './utils';
 
 type EnvironmentListViewProps = {
   applicationName?: string;

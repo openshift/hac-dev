@@ -45,10 +45,6 @@ const FilteredEmptyState: React.FC<{ onClearFilters: () => void }> = ({ onClearF
   </EmptyState>
 );
 
-export type ToolbarGroupsProps = {
-  environments: EnvironmentKind[];
-};
-
 type Props = {
   environments: EnvironmentKind[];
   environmentsLoaded: boolean;
@@ -84,8 +80,12 @@ const EnvironmentListView: React.FC<Props> = ({
     return result;
   }, [environments, filter, nameFilter]);
 
-  const createEnvironmentButton = React.useMemo(
-    () => (
+  const createEnvironmentButton = React.useMemo(() => {
+    if (mvpFeature) {
+      return null;
+    }
+
+    return (
       <Button
         variant="secondary"
         component={(props) => (
@@ -94,9 +94,8 @@ const EnvironmentListView: React.FC<Props> = ({
       >
         Create environment
       </Button>
-    ),
-    [],
-  );
+    );
+  }, [mvpFeature]);
 
   if (!environmentsLoaded) {
     return (
@@ -118,10 +117,14 @@ const EnvironmentListView: React.FC<Props> = ({
               <Title headingLevel="h4" size="lg">
                 No Environments
               </Title>
-              <EmptyStateBody>To get started, create an environment.</EmptyStateBody>
+              {!mvpFeature ? (
+                <EmptyStateBody>To get started, create an environment.</EmptyStateBody>
+              ) : null}
             </>
           )}
-          <div className="pf-u-mt-xl">{createEnvironmentButton}</div>
+          {createEnvironmentButton ? (
+            <div className="pf-u-mt-xl">{createEnvironmentButton}</div>
+          ) : null}
         </EmptyState>
       ) : (
         <>

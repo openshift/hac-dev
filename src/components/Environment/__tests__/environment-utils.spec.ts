@@ -1,5 +1,5 @@
-import { EnvironmentKind } from '../../../../types';
-import { EnvironmentType, getEnvironmentType, getEnvironmentTypeLabel } from '../utils';
+import { EnvironmentKind } from '../../../types';
+import { EnvironmentType, getEnvironmentType, getEnvironmentTypeLabel } from '../environment-utils';
 
 describe('utils#getEnvironmentType', () => {
   it('should identify environment type from tags', () => {
