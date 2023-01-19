@@ -32,14 +32,14 @@ export const useCommitStatus = (
 
   const commitStatus = React.useMemo(() => {
     if (!loaded || loadErr) {
-      return '-';
+      return 'Pending';
     }
 
     const plrStatus = pipelineRunFilterReducer(plrsForCommit[plrsForCommit.length - 1]);
     if (statuses.includes(plrStatus)) {
       return plrStatus;
     }
-    return '-';
+    return 'Pending';
   }, [loaded, loadErr, plrsForCommit]);
 
   return [commitStatus, loaded, loadErr];
