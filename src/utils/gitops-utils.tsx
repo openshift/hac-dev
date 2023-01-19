@@ -12,6 +12,8 @@ import {
   GitOpsDeploymentStrategy,
 } from '../types/gitops-deployment';
 
+import './gitops-utils.scss';
+
 export const getGitOpsDeploymentHealthStatusIcon = (status: GitOpsDeploymentHealthStatus) => {
   switch (status) {
     case GitOpsDeploymentHealthStatus.Healthy:
@@ -41,7 +43,7 @@ export const getBuildStatusIcon = (status: runStatus) => {
       return <ExclamationCircleIcon color={redColor.value} />;
     case runStatus.Running:
     case runStatus['In Progress']:
-      return <InProgressIcon />;
+      return <InProgressIcon className="status-icon-spin" />;
     default:
       return <NotStartedIcon />;
   }
