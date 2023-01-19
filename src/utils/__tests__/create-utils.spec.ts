@@ -3,6 +3,7 @@ import {
   k8sGetResource,
   k8sUpdateResource,
 } from '@openshift/dynamic-plugin-sdk-utils';
+import omit from 'lodash/omit';
 import { SPIAccessTokenBindingModel } from '../../models';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
@@ -58,6 +59,9 @@ const mockComponentData = {
   metadata: {
     name: 'test-component',
     namespace: 'test-ns',
+    annotations: {
+      'skip-initial-checks': 'true',
+    },
   },
   spec: {
     componentName: mockComponent.componentName,
@@ -85,6 +89,11 @@ const mockComponentDataWithDevfile = {
     },
   },
 };
+
+const mockComponentDataWithoutAnnotation = omit(
+  mockComponentDataWithDevfile,
+  'metadata.annotations',
+);
 
 const mockComponentDataWithPAC = {
   ...mockComponentDataWithDevfile,
@@ -247,6 +256,24 @@ describe('Create Utils', () => {
     expect(k8sUpdateResource).toHaveBeenCalledWith({
       model: ComponentModel,
       resource: mockComponentDataWithDevfile,
+    });
+  });
+
+  it('Should not add skip-initial-checks annotations while updating existing components', async () => {
+    await createComponent(
+      mockComponentWithDevfile,
+      'test-application',
+      'test-ns',
+      undefined,
+      false,
+      mockComponentDataWithoutAnnotation,
+      'update',
+      false,
+    );
+
+    expect(k8sUpdateResource).toHaveBeenCalledWith({
+      model: ComponentModel,
+      resource: mockComponentDataWithoutAnnotation,
     });
   });
 

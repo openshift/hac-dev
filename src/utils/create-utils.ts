@@ -93,12 +93,18 @@ export const createComponent = (
     metadata: {
       name,
       namespace,
-      ...(enablePac &&
-        verb === 'create' && {
-          annotations: {
-            pipelinesascode: '1',
-          },
-        }),
+      ...(verb === 'create' &&
+        (enablePac
+          ? {
+              annotations: {
+                pipelinesascode: '1',
+              },
+            }
+          : {
+              annotations: {
+                'skip-initial-checks': 'true',
+              },
+            })),
     },
     spec: {
       componentName,
