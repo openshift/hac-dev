@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import * as dateTime from '../../../shared/components/timestamp/datetime';
 import { getCommitsFromPLRs } from '../../../utils/commits-utils';
@@ -31,5 +31,18 @@ describe('CommitsListRow', () => {
     expect(container).toHaveTextContent(expectedDate.toString());
     expect(getByText('branch_1')).toBeInTheDocument();
     expect(getByText('sample-component')).toBeInTheDocument();
+  });
+
+  it('should show commit icon for commits', () => {
+    render(<CommitsListRow columns={null} obj={commits[0]} />);
+    screen.getByAltText('Commit icon');
+  });
+
+  it('should show pull request icon for pull requests', () => {
+    commits[0].isPullRequest = true;
+    commits[0].pullRequestNumber = '23';
+    render(<CommitsListRow columns={null} obj={commits[0]} />);
+    screen.getByAltText('Pull request icon');
+    screen.getAllByText('#23 test-title');
   });
 });

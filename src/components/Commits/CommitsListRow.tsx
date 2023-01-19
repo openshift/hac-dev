@@ -25,9 +25,9 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
     <>
       <TableData className={commitsTableColumnClasses.name}>
         {obj.isPullRequest ? (
-          <img className="sha-title-icon" src={codePullRequestImg} alt="Commit icon" />
+          <img className="sha-title-icon" src={codePullRequestImg} alt="Pull request icon" />
         ) : (
-          <img className="sha-title-icon" src={codeCommitImg} alt="Pull request icon" />
+          <img className="sha-title-icon" src={codeCommitImg} alt="Commit icon" />
         )}
 
         <Link to={`/stonesoup/${obj.application}/commit/${obj.sha}`}>
