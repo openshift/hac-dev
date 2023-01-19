@@ -4,6 +4,8 @@ import './a11y';
 import './perf';
 import { Result } from 'axe-core';
 import { initPerfMeasuring } from './perf';
+const registerCypressGrep = require('cypress-grep')
+registerCypressGrep()
 
 declare global {
   namespace Cypress {

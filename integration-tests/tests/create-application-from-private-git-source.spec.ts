@@ -5,7 +5,7 @@ import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 import { Tokens } from '../utils/Tokens';
 
-describe('Create Component from Private Git Source', () => {
+describe('Create Component from Private Git Source', { tags: ['@PR-check', '@privateRepo'] }, () => {
   const addComponent = new AddComponentPage();
   const componentPage = new ComponentPage();
   const applicationDetailPage = new ApplicationDetailPage();

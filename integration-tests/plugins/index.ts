@@ -10,6 +10,10 @@ function getConfigurationByFile(file: string) {
 }
 
 module.exports = (on, config) => {
+  // optional: register cypress-grep plugin code
+  // https://github.com/cypress-io/cypress-grep/tree/v2.14.0
+  require('cypress-grep/src/plugin')(config)
+
   const logOptions = {
     outputRoot: `${config.projectRoot}/cypress`,
     outputTarget: {
