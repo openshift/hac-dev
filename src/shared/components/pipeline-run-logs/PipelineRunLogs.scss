@@ -11,6 +11,9 @@
     position: relative;
     top: 0.35em;
   }
+  &__navitem {
+    cursor: pointer;
+  }
   &__namespan {
     margin-left: var(--pf-global--spacer--sm);
     white-space: nowrap;
