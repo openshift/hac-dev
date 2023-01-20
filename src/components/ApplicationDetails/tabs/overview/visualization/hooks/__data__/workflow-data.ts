@@ -586,8 +586,7 @@ export const sampleComponents: ComponentKind[] = [
     kind: 'Component',
     metadata: {
       annotations: {
-        'com.redhat.appstudio/component-initial-build-happend': 'true',
-        'com.redhat.appstudio/component-initial-build-processed': 'true',
+        'appstudio.openshift.io/component-initial-build': 'processed',
       },
       name: '1-nodejs',
       uid: '585309d5-6156-427b-8fd3-ea55cb1b2606',

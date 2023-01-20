@@ -3,7 +3,7 @@ kind: Component
 metadata:
   name:
   annotations:
-    pipelinesascode: "1"
+    appstudio.openshift.io/pac-provision: request
 spec:
   componentName:
   application: test-application
