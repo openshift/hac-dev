@@ -67,7 +67,8 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
         </Title>
         <TextContent>
           <Text component={TextVariants.p}>
-            Components are the things that construct the app, they are usually mapped to a repo.
+            Components are images that Stonesoup typically builds from code in a source repository.
+            One or more components that run together form an application.
           </Text>
         </TextContent>
         {!allMerged && !mergeAlertHidden ? (
