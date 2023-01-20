@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { pipelineRunFilterReducer } from '../../../shared';
 import * as dateTime from '../../../shared/components/timestamp/datetime';
 import { getCommitsFromPLRs } from '../../../utils/commits-utils';
 import { pipelineWithCommits } from '../__data__/pipeline-with-commits';
@@ -22,20 +23,20 @@ const commits = getCommitsFromPLRs(pipelineWithCommits);
 
 describe('CommitsListRow', () => {
   it('lists correct Commit details', () => {
-    const { getByText, queryByText, container } = render(
+    const { getAllByText, queryByText, container } = render(
       <CommitsListRow columns={null} obj={commits[0]} />,
     );
     const expectedDate = dateTime.dateTimeFormatter.format(new Date(commits[0].creationTime));
     expect(queryByText('commit1')).not.toBeInTheDocument();
-    expect(getByText('test-title')).toBeInTheDocument();
+    expect(getAllByText('test-title')[0]).toBeInTheDocument();
     expect(container).toHaveTextContent(expectedDate.toString());
-    expect(getByText('branch_1')).toBeInTheDocument();
-    expect(getByText('sample-component')).toBeInTheDocument();
+    expect(getAllByText('branch_1')[0]).toBeInTheDocument();
+    expect(getAllByText('sample-component')[0]).toBeInTheDocument();
   });
 
   it('should show commit icon for commits', () => {
     render(<CommitsListRow columns={null} obj={commits[0]} />);
-    screen.getByAltText('Commit icon');
+    expect(screen.getByAltText('Commit icon')).toBeInTheDocument();
   });
 
   it('should show pull request icon for pull requests', () => {
@@ -45,4 +46,9 @@ describe('CommitsListRow', () => {
     screen.getByAltText('Pull request icon');
     screen.getAllByText('#23 test-title');
   });
+
+  it('should show plr status on the row', () => {});
+  const status = pipelineRunFilterReducer(commits[0].pipelineRuns[0]);
+  render(<CommitsListRow columns={null} obj={commits[0]} />);
+  screen.getByText(status);
 });
