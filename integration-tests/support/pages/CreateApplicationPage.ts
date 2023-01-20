@@ -17,11 +17,12 @@ export class CreateApplicationPage extends AbstractWizardPage {
     cy.get(createApplicationPagePO.applicationName).clear();
   }
 
-  clickCreateApplication() {    
-    cy.get('body').then(body => {
+  clickCreateApplication() {
+    cy.get('body').then((body) => {
       if (body.find("h4:contains('No applications')").length > 0) {
         cy.get('.pf-c-empty-state__content')
-          .contains(createApplicationPagePO.createApplication).click({ force: true });
+          .contains(createApplicationPagePO.createApplication)
+          .click({ force: true });
       } else {
         cy.contains(createApplicationPagePO.createApplication).click({ force: true });
       }
@@ -31,6 +32,6 @@ export class CreateApplicationPage extends AbstractWizardPage {
   }
 
   clickNext() {
-    cy.get(createApplicationPagePO.next).trigger('click');
+    cy.get(createApplicationPagePO.next).click({ force: true });
   }
 }
