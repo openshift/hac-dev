@@ -45,6 +45,14 @@ describe('PipelineRunDetailsTab', () => {
     screen.getByText('Pipeline run details');
   });
 
+  it('should render the pipelinerun component reference', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    render(<PipelineRunDetailsTab pipelineRun={sampleBuildPipelines[0]} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    expect(screen.getByRole('link', { name: /1-nodejs/ })).toBeInTheDocument();
+  });
+
   it('should not render the pipelinerun visualization if the status field is missing', () => {
     watchResourceMock.mockReturnValue([[], true]);
     render(<PipelineRunDetailsTab pipelineRun={sampleBuildPipelines[1]} error={null} />, {
@@ -96,6 +104,20 @@ describe('PipelineRunDetailsTab', () => {
   });
 
   it('should render the graph error state', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    render(
+      <PipelineRunDetailsTab
+        pipelineRun={testPipelineRun}
+        error={new CustomError('Model not found')}
+      />,
+      {
+        wrapper: BrowserRouter,
+      },
+    );
+    screen.getByTestId('graph-error-state');
+  });
+
+  it('should render the component link', () => {
     watchResourceMock.mockReturnValue([[], true]);
     render(
       <PipelineRunDetailsTab

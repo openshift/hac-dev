@@ -161,6 +161,29 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
                   </DescriptionListDescription>
                 </DescriptionListGroup>
                 <DescriptionListGroup>
+                  <DescriptionListTerm>Component</DescriptionListTerm>
+                  <DescriptionListDescription>
+                    {pipelineRun.metadata?.labels?.[PipelineRunLabel.COMPONENT] ? (
+                      pipelineRun.metadata?.labels?.[PipelineRunLabel.APPLICATION] ? (
+                        <Link
+                          to={`/stonesoup/applications/${
+                            pipelineRun.metadata.labels[PipelineRunLabel.APPLICATION]
+                          }/components?name=${
+                            pipelineRun.metadata.labels[PipelineRunLabel.COMPONENT]
+                          }`}
+                        >
+                          {pipelineRun.metadata.labels[PipelineRunLabel.COMPONENT]}
+                        </Link>
+                      ) : (
+                        pipelineRun.metadata.labels[PipelineRunLabel.COMPONENT]
+                      )
+                    ) : (
+                      '-'
+                    )}
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+
+                <DescriptionListGroup>
                   <DescriptionListTerm>Source</DescriptionListTerm>
                   <DescriptionListDescription>
                     {pipelineRun.metadata?.annotations?.[
