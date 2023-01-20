@@ -6,6 +6,7 @@ import codePullRequestImg from '../../imgs/code-pull-request.svg';
 import { pipelineRunFilterReducer } from '../../shared';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
+import { StatusIconWithText } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../types';
@@ -59,7 +60,7 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
         <Timestamp timestamp={obj.creationTime} />
       </TableData>
       <TableData className={commitsTableColumnClasses.status}>
-        {statuses.includes(status) ? status : '-'}
+        {statuses.includes(status) ? <StatusIconWithText status={status} /> : '-'}
       </TableData>
       <TableData className={commitsTableColumnClasses.kebab}>
         <ActionMenu actions={actions} />

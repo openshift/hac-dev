@@ -21,7 +21,7 @@ import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../models';
 import { pipelineRunFilterReducer } from '../../shared';
 import ExternalLink from '../../shared/components/links/ExternalLink';
-import { StatusIconWithText } from '../../shared/components/pipeline-run-logs/StatusIcon';
+import { StatusIconWithTextLabel } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../types';
 import { createCommitObjectFromPLR, getCommitShortName, statuses } from '../../utils/commits-utils';
@@ -211,7 +211,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                     variant="plain"
                     onClick={onStatusClick}
                   >
-                    <StatusIconWithText status={commitStatus} />
+                    <StatusIconWithTextLabel status={commitStatus} />
                   </Button>
                 </Text>
               }
