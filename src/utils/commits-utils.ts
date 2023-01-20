@@ -25,7 +25,7 @@ export const createCommitObjectFromPLR = (plr: PipelineRunKind): Commit => {
   const repoURL = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_URL_LABEL];
   const repoOrg = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_ORG_LABEL];
   const gitProvider = plr.metadata.labels[PipelineRunLabel.COMMIT_PROVIDER_LABEL];
-  const pullRequestNumber = plr.metadata.annotations[PipelineRunLabel.PULL_REQUEST_NUMBER_LABEL];
+  const pullRequestNumber = plr.metadata.labels[PipelineRunLabel.PULL_REQUEST_NUMBER_LABEL];
   const isPullRequest =
     plr.metadata.labels[PipelineRunLabel.COMMIT_EVENT_TYPE_LABEL] === PipelineRunEventType.PULL;
 
