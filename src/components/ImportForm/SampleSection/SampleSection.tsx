@@ -114,7 +114,9 @@ const SampleSection = ({ onStrategyChange }) => {
         </TextContent>
         <SamplesInfoAlert>
           <p>
-            Just be sure to fork the sample so that you<span>&apos;</span>re free to make changes.
+            If you select a sample, be sure to fork it to your own repository. That way, you can
+            edit the sample and choose to customize your pipeline and rebuilds whenever changes are
+            made.
           </p>
         </SamplesInfoAlert>
       </PageSection>
