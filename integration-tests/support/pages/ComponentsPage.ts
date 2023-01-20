@@ -6,7 +6,7 @@ import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class ComponentPage extends AbstractWizardPage {
   public componentName: string;
-  
+
   editComponentName(newName: string) {
     cy.get(ComponentsPagePO.editComponentNameIcon).eq(0).click();
     cy.get(ComponentsPagePO.editNameInput).clear().type(newName);
@@ -78,7 +78,7 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   createApplication() {
-    cy.get(ComponentsPagePO.create).trigger('click');
+    cy.get(ComponentsPagePO.create).click({ force: true });
     cy.get(ComponentsPagePO.create).should('be.disabled');
     Common.waitForLoad();
   }
