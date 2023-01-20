@@ -21,7 +21,7 @@ import { BuildStatusComponentProps } from '../ComponentsListView/ComponentListVi
 
 export const PR_BOT_NAME = 'appstudio-staging-ci';
 export const GIT_URL_PREFIX = 'https://github.com/';
-export const PAC_ANNOTATION_KEY = 'pipelinesascode';
+export const PAC_ANNOTATION_KEY = 'appstudio.openshift.io/pac-provision';
 
 export const hasPACAnnotation = (component: ComponentKind) =>
   component.metadata.annotations?.[PAC_ANNOTATION_KEY] === '1';

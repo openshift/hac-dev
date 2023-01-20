@@ -101,7 +101,7 @@ const mockComponentDataWithPAC = {
   metadata: {
     ...mockComponentDataWithDevfile.metadata,
     annotations: {
-      pipelinesascode: '1',
+      "appstudio.openshift.io/pac-provision": "request",
     },
   },
 };
