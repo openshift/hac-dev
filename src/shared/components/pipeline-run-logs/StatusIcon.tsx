@@ -55,10 +55,10 @@ export const StatusIconWithText: React.FC<
   StatusIconProps & { text?: string; dataTestAttribute?: string }
 > = ({ status, text, dataTestAttribute, ...others }) => {
   return (
-    <Label color={getLabelColorFromStatus(status)}>
+    <>
       <span
         className={css(
-          'pf-u-mr-xs',
+          'pf-u-mr-xs status-icon',
           pipelineStyles.topologyPipelinesPillStatus,
           (status === RunStatus.Running || status === RunStatus.InProgress) && 'pf-m-spin',
           getRunStatusModifier(status as RunStatus),
@@ -67,6 +67,16 @@ export const StatusIconWithText: React.FC<
         <StatusIcon status={status} {...others} />
       </span>
       <span data-test={dataTestAttribute}>{text ?? status}</span>
+    </>
+  );
+};
+
+export const StatusIconWithTextLabel: React.FC<
+  StatusIconProps & { text?: string; dataTestAttribute?: string }
+> = ({ status, ...others }) => {
+  return (
+    <Label color={getLabelColorFromStatus(status)}>
+      <StatusIconWithText status={status} {...others} />
     </Label>
   );
 };
