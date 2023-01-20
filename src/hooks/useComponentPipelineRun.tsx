@@ -9,11 +9,13 @@ export const useComponentPipelineRun = (
   name: string,
   application: string,
   namespace: string,
+  type?: string,
 ): { pipelineRun: PipelineRunKind; loaded: boolean } => {
   const watchResource: WatchK8sResource = React.useMemo(() => {
     const matchLabels = {
       [PipelineRunLabel.COMPONENT]: name,
       [PipelineRunLabel.APPLICATION]: application,
+      ...(type && { [PipelineRunLabel.PIPELINE_TYPE]: type }),
     };
 
     return {
@@ -22,7 +24,7 @@ export const useComponentPipelineRun = (
       selector: { matchLabels },
       isList: true,
     };
-  }, [name, application, namespace]);
+  }, [name, application, namespace, type]);
 
   const [pipelineRuns, loaded, error] = useK8sWatchResource(watchResource);
 
