@@ -1,4 +1,4 @@
-import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
+import { PipelineRunEventType, PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { runStatus } from '../shared';
 import { PipelineRunKind, Commit } from '../types';
 
@@ -25,6 +25,9 @@ export const createCommitObjectFromPLR = (plr: PipelineRunKind): Commit => {
   const repoURL = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_URL_LABEL];
   const repoOrg = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_ORG_LABEL];
   const gitProvider = plr.metadata.labels[PipelineRunLabel.COMMIT_PROVIDER_LABEL];
+  const pullRequestNumber = plr.metadata.annotations[PipelineRunLabel.PULL_REQUEST_NUMBER_LABEL];
+  const isPullRequest =
+    plr.metadata.labels[PipelineRunLabel.COMMIT_EVENT_TYPE_LABEL] === PipelineRunEventType.PULL;
 
   return {
     metadata: {
@@ -43,6 +46,8 @@ export const createCommitObjectFromPLR = (plr: PipelineRunKind): Commit => {
     pipelineRuns: [plr],
     application,
     shaTitle,
+    isPullRequest,
+    pullRequestNumber,
   };
 };
 
@@ -66,7 +71,7 @@ const updateCommitObject = (plr: PipelineRunKind, commit: Commit): Commit => {
 
 export const getCommitsFromPLRs = (plrList: PipelineRunKind[], limit?: number): Commit[] => {
   const commits: Commit[] = [];
-  plrList.map((plr) => {
+  plrList.forEach((plr) => {
     const commitSHA = plr.metadata.labels?.[PipelineRunLabel.COMMIT_LABEL];
     if (commitSHA) {
       const existingCommitIndex = commits.findIndex((commit) => commit.sha === commitSHA);
@@ -77,9 +82,14 @@ export const getCommitsFromPLRs = (plrList: PipelineRunKind[], limit?: number): 
       }
     }
   });
-  const sortedCommits = commits.sort(
-    (a, b) => parseInt(a.creationTime, 10) - parseInt(b.creationTime, 10),
-  );
+  const sortedCommits = commits
+    .map((c) => {
+      const pipelineRuns = c.pipelineRuns.sort(
+        (a, b) => new Date(b.status?.startTime).getTime() - new Date(a.status?.startTime).getTime(),
+      );
+      return { ...c, pipelineRuns };
+    })
+    .sort((a, b) => new Date(b.creationTime).getTime() - new Date(a.creationTime).getTime());
   return limit && limit < sortedCommits.length ? sortedCommits.slice(0, limit) : sortedCommits;
 };
 

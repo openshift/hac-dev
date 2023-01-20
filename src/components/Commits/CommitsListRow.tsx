@@ -1,28 +1,42 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Skeleton } from '@patternfly/react-core';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
+import codeCommitImg from '../../imgs/code-commit.svg';
+import codePullRequestImg from '../../imgs/code-pull-request.svg';
+import { pipelineRunFilterReducer } from '../../shared';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../types';
+import { statuses } from '../../utils/commits-utils';
 import { useCommitActions } from './commit-actions';
-import { useCommitStatus } from './commit-status';
 import { commitsTableColumnClasses } from './CommitsListHeader';
+
+import './CommitsListRow.scss';
 
 const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
   const actions = useCommitActions(obj);
-  const [status, statusLoaded] = useCommitStatus(obj.application, obj.sha);
+
+  const status = pipelineRunFilterReducer(obj.pipelineRuns[0]);
+
+  const prNumber = obj.isPullRequest ? `#${obj.pullRequestNumber}` : '';
   return (
     <>
       <TableData className={commitsTableColumnClasses.name}>
-        <Link to={`/stonesoup/${obj.application}/commit/${obj.sha}`}>{`${obj.sha.slice(
-          0,
-          7,
-        )} `}</Link>
+        {obj.isPullRequest ? (
+          <img className="sha-title-icon" src={codePullRequestImg} alt="Pull request icon" />
+        ) : (
+          <img className="sha-title-icon" src={codeCommitImg} alt="Commit icon" />
+        )}
+
+        <Link to={`/stonesoup/${obj.application}/commit/${obj.sha}`}>
+          {prNumber} {obj.shaTitle}
+        </Link>
+
         {obj.shaURL && (
           <ExternalLink href={obj.shaURL}>
+            {' '}
             <GithubIcon />
           </ExternalLink>
         )}
@@ -45,7 +59,7 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
         <Timestamp timestamp={obj.creationTime} />
       </TableData>
       <TableData className={commitsTableColumnClasses.status}>
-        {statusLoaded ? status : <Skeleton width="50%" screenreaderText="Loading commit status" />}
+        {statuses.includes(status) ? status : '-'}
       </TableData>
       <TableData className={commitsTableColumnClasses.kebab}>
         <ActionMenu actions={actions} />

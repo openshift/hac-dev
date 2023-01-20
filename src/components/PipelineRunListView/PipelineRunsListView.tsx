@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { Bullseye, Spinner, Title } from '@patternfly/react-core';
+import { Bullseye, Spinner } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../models';
 import { Table } from '../../shared';
@@ -43,21 +43,16 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
   );
 
   return (
-    <>
-      <Title headingLevel="h3" className="pf-c-title pf-u-mt-lg pf-u-mb-lg">
-        Pipeline runs
-      </Title>
-      <Table
-        data={pipelineRuns}
-        aria-label="Pipeline run List"
-        Header={PipelineRunListHeader}
-        Row={PipelineRunListRow}
-        loaded={loaded}
-        getRowProps={(obj: PipelineRunKind) => ({
-          id: obj.metadata.name,
-        })}
-      />
-    </>
+    <Table
+      data={pipelineRuns}
+      aria-label="Pipeline run List"
+      Header={PipelineRunListHeader}
+      Row={PipelineRunListRow}
+      loaded={loaded}
+      getRowProps={(obj: PipelineRunKind) => ({
+        id: obj.metadata.name,
+      })}
+    />
   );
 };
 
