@@ -5,6 +5,13 @@ import {
   transformComponentValues,
 } from '../transform-utils';
 
+const mockResourceRequests = {
+  requests: {
+    cpu: '2',
+    memory: '1Gi',
+  },
+};
+
 const mockResourceLimits = {
   limits: {
     cpu: '48m',
@@ -13,12 +20,32 @@ const mockResourceLimits = {
 };
 
 describe('Transform Utils', () => {
-  it('Should create resource data from resource limits', () => {
+  it('should create resource data from resource requests', () => {
+    const result = createResourceData(mockResourceRequests);
+    expect(result).toEqual({
+      cpu: '2',
+      cpuUnit: 'cores',
+      memory: '1',
+      memoryUnit: 'Gi',
+    });
+  });
+
+  it('should create resource data from resource limits', () => {
     const result = createResourceData(mockResourceLimits);
     expect(result).toEqual({
       cpu: '48',
       cpuUnit: 'millicores',
       memory: '516',
+      memoryUnit: 'Mi',
+    });
+  });
+
+  it('should create default resource data', () => {
+    const result = createResourceData({});
+    expect(result).toEqual({
+      cpu: '10',
+      cpuUnit: 'millicores',
+      memory: '50',
       memoryUnit: 'Mi',
     });
   });
@@ -36,7 +63,7 @@ describe('Transform Utils', () => {
               url: 'https://github.com/nodeshift-starters/devfile-sample.git',
             },
           },
-          resources: { cpu: '1', cpuUnit: 'cores', memory: '512', memoryUnit: 'Mi' },
+          resources: { cpu: '10', cpuUnit: 'millicores', memory: '50', memoryUnit: 'Mi' },
           replicas: 1,
           targetPort: 8080,
           route: undefined,

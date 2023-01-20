@@ -1,15 +1,15 @@
 import { sanitizeName } from '../../../utils/create-utils';
 import { ResourceRequirements, DetectedComponents } from './../../../types';
-import { DetectedFormComponent, FormResources, MemoryUnits } from './types';
+import { CPUUnits, DetectedFormComponent, FormResources, MemoryUnits } from './types';
 
-const getResourceData = (res: string) => {
+const getResourceData = (res?: string) => {
   const resourcesRegEx = /^[0-9]*|[a-zA-Z]*/g;
-  return res.match(resourcesRegEx);
+  return res ? res.match(resourcesRegEx) : [];
 };
 
 const CPUResourceMap = {
-  m: 'millicores',
-  '': 'cores',
+  m: CPUUnits.millicores,
+  '': CPUUnits.cores,
 };
 
 type ResourceData = {
@@ -18,16 +18,16 @@ type ResourceData = {
 };
 
 export const createResourceData = (resources: ResourceData): FormResources => {
-  const memory = (resources?.requests?.memory || resources?.limits?.memory) ?? '512Mi';
-  const cpu = (resources?.requests?.cpu || resources?.limits?.cpu) ?? '1';
+  const memory = resources?.requests?.memory || resources?.limits?.memory;
+  const cpu = resources?.requests?.cpu || resources?.limits?.cpu;
   const [memoryResource, memoryUnit] = getResourceData(memory);
   const [cpuResource, cpuUnit] = getResourceData(cpu);
 
   return {
-    cpu: cpuResource || '',
-    cpuUnit: CPUResourceMap[cpuUnit] || CPUResourceMap[''],
-    memory: memoryResource || '',
-    memoryUnit: (memoryUnit as MemoryUnits) || MemoryUnits.Gi,
+    cpu: cpuResource || '10',
+    cpuUnit: CPUResourceMap[cpuUnit] || CPUUnits.millicores,
+    memory: memoryResource || '50',
+    memoryUnit: MemoryUnits[memoryUnit] || MemoryUnits.Mi,
   };
 };
 
