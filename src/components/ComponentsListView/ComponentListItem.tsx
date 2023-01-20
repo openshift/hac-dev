@@ -10,13 +10,13 @@ import {
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
-  DescriptionListTermHelpText,
-  DescriptionListTermHelpTextButton,
+  DescriptionListTerm,
   Flex,
   FlexItem,
   Tooltip,
 } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
+import ExternalLinkAltIcon from '@patternfly/react-icons/dist/js/icons/external-link-alt-icon';
 import { global_palette_red_100 as redColor } from '@patternfly/react-tokens/dist/js/global_palette_red_100';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
@@ -81,16 +81,16 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
                   <b>{name}</b>
                 </FlexItem>
                 <FlexItem>
-                  Source:{' '}
-                  <ExternalLink
-                    href={
-                      component.spec.source?.git?.url ||
-                      (component.spec.containerImage.includes('http')
-                        ? component.spec.containerImage
-                        : `https://${component.spec.containerImage}`)
-                    }
-                    text={component.spec.source?.git?.url || component.spec.containerImage}
-                  />
+                  <ExternalLink href={component.spec.source?.git?.url}>
+                    Git repository <ExternalLinkAltIcon />
+                  </ExternalLink>
+                </FlexItem>
+                <FlexItem>
+                  {componentRouteWebURL && (
+                    <ExternalLink href={componentRouteWebURL}>
+                      Route <ExternalLinkAltIcon />
+                    </ExternalLink>
+                  )}
                 </FlexItem>
               </Flex>
             </DataListCell>,
@@ -130,11 +130,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
         >
           {resourceRequests && (
             <DescriptionListGroup>
-              <DescriptionListTermHelpText>
-                <DescriptionListTermHelpTextButton>
-                  CPU/Mem Requests
-                </DescriptionListTermHelpTextButton>
-              </DescriptionListTermHelpText>
+              <DescriptionListTerm>CPU / Memory</DescriptionListTerm>
               <DescriptionListDescription>
                 {`${resourceRequests.cpu}, ${resourceRequests.memory}`}
               </DescriptionListDescription>
@@ -142,25 +138,19 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
           )}
           {replicas && (
             <DescriptionListGroup>
-              <DescriptionListTermHelpText>
-                <DescriptionListTermHelpTextButton>Instances</DescriptionListTermHelpTextButton>
-              </DescriptionListTermHelpText>
+              <DescriptionListTerm>Instances</DescriptionListTerm>
               <DescriptionListDescription>{replicas}</DescriptionListDescription>
             </DescriptionListGroup>
           )}
           {targetPort && (
             <DescriptionListGroup>
-              <DescriptionListTermHelpText>
-                <DescriptionListTermHelpTextButton>Target Port</DescriptionListTermHelpTextButton>
-              </DescriptionListTermHelpText>
+              <DescriptionListTerm>Target Port</DescriptionListTerm>
               <DescriptionListDescription>{targetPort}</DescriptionListDescription>
             </DescriptionListGroup>
           )}
           {componentRouteWebURL && (
             <DescriptionListGroup>
-              <DescriptionListTermHelpText>
-                <DescriptionListTermHelpTextButton>Route</DescriptionListTermHelpTextButton>
-              </DescriptionListTermHelpText>
+              <DescriptionListTerm>Route</DescriptionListTerm>
               <DescriptionListDescription>
                 <ExternalLink href={componentRouteWebURL} text={componentRouteWebURL} />
               </DescriptionListDescription>
@@ -168,11 +158,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
           )}
           {containerImage && (
             <DescriptionListGroup>
-              <DescriptionListTermHelpText>
-                <DescriptionListTermHelpTextButton>
-                  Built container image
-                </DescriptionListTermHelpTextButton>
-              </DescriptionListTermHelpText>
+              <DescriptionListTerm>Built container image</DescriptionListTerm>
               <DescriptionListDescription>
                 <ExternalLink href={`https://${containerImage}`} text={containerImage} />
               </DescriptionListDescription>

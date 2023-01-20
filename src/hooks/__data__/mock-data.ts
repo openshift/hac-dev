@@ -15,7 +15,7 @@ export const mockRoutes: RouteKind[] = [
         'app.kubernetes.io/created-by': 'application-service',
         'app.kubernetes.io/instance': 'gitopsdepl-f56e3027-168b-43cf-aa3a-99d784d69b05',
         'app.kubernetes.io/managed-by': 'kustomize',
-        'app.kubernetes.io/name': 'nodejs',
+        'app.kubernetes.io/name': 'basic-node-js',
         'app.kubernetes.io/part-of': 'new-application',
       },
       name: 'nodejs',
