@@ -68,7 +68,7 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       'update',
     )
       .then(() => {
-        navigate(`/stonesoup/applications/${applicationName}`);
+        navigate(`/stonesoup/applications/${applicationName}/components`);
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
