@@ -26,6 +26,8 @@ describe('commit-utils', () => {
     expect(result[result.length - 1].components.length).toBe(2);
     expect(result[result.length - 1].user).toBe('abhi');
     expect(result[result.length - 1].pipelineRuns).toHaveLength(2);
+    expect(result[1].isPullRequest).toBe(true);
+    expect(result[1].pullRequestNumber).toBe('11');
   });
 
   it('Should return 2 commits with correct details', () => {
