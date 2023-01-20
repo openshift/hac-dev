@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { ModalVariant, Stack, StackItem } from '@patternfly/react-core';
 import dayjs from 'dayjs';
+import { PipelineRunType } from '../../consts/pipelinerun';
 import { useComponentPipelineRun } from '../../hooks';
 import PipelineRunLogs from '../../shared/components/pipeline-run-logs/PipelineRunLogs';
 import { EmptyBox, LoadingBox } from '../../shared/components/status-box/StatusBox';
 import { ComponentKind } from '../../types';
 import { ComponentProps, createModalLauncher } from '../modal/createModalLauncher';
-import './BuildLogViewer.scss';
 import { useModalLauncher } from '../modal/ModalProvider';
+
+import './BuildLogViewer.scss';
 
 type BuildLogViewerProps = ComponentProps & {
   component: ComponentKind;
@@ -18,6 +20,7 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
     component.metadata.name,
     component.spec.application,
     component.metadata.namespace,
+    PipelineRunType.BUILD,
   );
 
   if (loaded && !pipelineRun) {
