@@ -65,8 +65,11 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
         }}
       >
         <CardTitle>
-          <Flex>
-            <FlexItem spacer={{ default: 'spacer4xl' }}>
+          <Flex alignItems={{ default: 'alignItemsCenter' }}>
+            <FlexItem
+              style={{ marginBottom: 'var(--pf-global--spacer--md)' }}
+              spacer={{ default: 'spacer4xl' }}
+            >
               {editMode ? (
                 <p>{name}</p>
               ) : (
