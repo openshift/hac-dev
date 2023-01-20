@@ -32,10 +32,12 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
         />
       </TableData>
       <TableData className={pipelineRunTableColumnClasses.duration}>
-        {calculateDuration(
-          typeof obj.status?.startTime === 'string' ? obj.status?.startTime : '',
-          typeof obj.status?.completionTime === 'string' ? obj.status?.completionTime : '',
-        )}
+        {status !== 'Pending'
+          ? calculateDuration(
+              typeof obj.status?.startTime === 'string' ? obj.status?.startTime : '',
+              typeof obj.status?.completionTime === 'string' ? obj.status?.completionTime : '',
+            )
+          : '-'}
       </TableData>
       <TableData className={pipelineRunTableColumnClasses.status}>
         <StatusIconWithText status={status} />

@@ -14,13 +14,14 @@ import {
 } from '../utils';
 
 describe('pipelineRunStatus', () => {
-  it('should return null if an invalid pipelineruns', () => {
-    expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITHOUT_CONDITION_TYPE])).toBeNull();
-    expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITH_EMPTY_CONDITIONS])).toBeNull();
-  });
-
-  it('should return Pending status for pipelineruns with status but no conditions', () => {
+  it('should return Pending status for pipelineruns with no status or no conditions', () => {
     expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITHOUT_CONDITIONS])).toBe(
+      'Pending',
+    );
+    expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITHOUT_CONDITION_TYPE])).toBe(
+      'Pending',
+    );
+    expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITH_EMPTY_CONDITIONS])).toBe(
       'Pending',
     );
   });
@@ -69,9 +70,9 @@ describe('pipelineRunFilterReducer', () => {
     expect(pipelineRunFilterReducer(testPipelineRuns[DataState.RUNNING])).toBe('Running');
   });
 
-  it('should return "-" for pipelinerun status with empty conditions', () => {
+  it('should return "Pending" state for pipelinerun status with empty conditions', () => {
     expect(pipelineRunFilterReducer(testPipelineRuns[DataState.STATUS_WITH_EMPTY_CONDITIONS])).toBe(
-      '-',
+      'Pending',
     );
   });
 });

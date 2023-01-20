@@ -11,16 +11,16 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('useCommitStatus', () => {
-  it('returns empty status if pipelineruns are not loaded', () => {
+  it('returns Pending status if pipelineruns are not loaded', () => {
     watchResourceMock.mockReturnValue([null, false]);
     const { result } = renderHook(() => useCommitStatus('app', 'commit'));
-    expect(result.current).toEqual(['-', false, undefined]);
+    expect(result.current).toEqual(['Pending', false, undefined]);
   });
 
-  it('returns empty status if pipelineruns for given commit are not found', () => {
+  it('returns Pending status if pipelineruns for given commit are not found', () => {
     watchResourceMock.mockReturnValue([pipelineWithCommits, true]);
     const { result } = renderHook(() => useCommitStatus('app', 'commit123'));
-    expect(result.current).toEqual(['-', true, undefined]);
+    expect(result.current).toEqual(['Pending', true, undefined]);
   });
 
   it('returns correct status if pipelineruns are loaded', () => {
