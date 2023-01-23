@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Dropdown,
+  DropdownGroup,
   DropdownItem,
   DropdownItemProps,
   DropdownSeparator,
@@ -86,14 +87,13 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
         }
         if (type === 'separator') {
           acc.push(<DropdownSeparator key={key} />);
+          if (label) {
+            acc.push(<DropdownGroup key={`${key}-group`} label={label} />);
+          }
           return acc;
         }
         if (type === 'section-label') {
-          acc.push(
-            <DropdownItem key={key} data-test={key} {...props} isDisabled>
-              <span className="pf-u-color-400 pf-u-font-size-sm">{label}</span>
-            </DropdownItem>,
-          );
+          acc.push(<DropdownGroup key={`${key}-group`} label={label} data-test={key} />);
           return acc;
         }
         acc.push(

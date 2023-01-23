@@ -72,4 +72,24 @@ describe('DetailsPage', () => {
     routerRenderer(<DetailsPage title="Details" baseURL="/" tabs={[]} actions={null} />);
     expect(screen.queryByTestId('details__actions')).not.toBeInTheDocument();
   });
+
+  it('should render the DetailsPage action groups', () => {
+    const { getByTestId, getByRole } = routerRenderer(
+      <DetailsPage
+        title="Details"
+        baseURL="/"
+        tabs={[]}
+        actions={[
+          {
+            type: 'section-label',
+            key: 'help-section',
+            label: 'Help-Section',
+          },
+        ]}
+      />,
+    );
+    const actionsMenu = getByRole('button', { name: /Actions/ });
+    act(() => actionsMenu.click());
+    expect(getByTestId('help-section')).toBeInTheDocument();
+  });
 });

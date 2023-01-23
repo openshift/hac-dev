@@ -107,11 +107,6 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             label: 'Add',
           },
           {
-            type: 'separator',
-            key: 'add-separator',
-            label: '',
-          },
-          {
             key: 'add-component',
             label: 'Add components',
             component: (
@@ -141,14 +136,14 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             hidden: mvpFeature,
           },
           {
-            type: 'section-label',
-            key: 'help',
-            label: 'Help',
-          },
-          {
             type: 'separator',
             key: 'help-separator',
             label: '',
+          },
+          {
+            type: 'section-label',
+            key: 'help',
+            label: 'Help',
           },
           {
             key: 'application-quickstart',
