@@ -5,7 +5,7 @@ import { pipelineRunFilterReducer, pipelineRunStatus, runStatus } from '../../..
 import { PipelineRunKind } from '../../../../../../shared/components/pipeline-run-logs/types';
 import { ComponentKind } from '../../../../../../types';
 import { GitOpsDeploymentHealthStatus } from '../../../../../../types/gitops-deployment';
-import { hasPACAnnotation } from '../../../../../Components/BuildStatusColumn';
+import { hasPACProvisionDone } from '../../../../../Components/BuildStatusColumn';
 import { DEFAULT_NODE_HEIGHT } from '../../../../../topology/const';
 import { NodeType } from '../const';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
@@ -160,7 +160,7 @@ export const getRunStatusComponent = (
     )?.[0];
   if (latestPipelineRun) {
     return pipelineRunFilterReducer(latestPipelineRun);
-  } else if (hasPACAnnotation(component)) {
+  } else if (hasPACProvisionDone(component)) {
     return NEEDS_MERGE_STATUS;
   }
   return UNKNOWN_STATUS;
