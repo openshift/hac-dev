@@ -96,7 +96,7 @@ export const createComponent = (
         (enablePac
           ? {
               annotations: {
-                "appstudio.openshift.io/pac-provision": 'request',
+                'appstudio.openshift.io/pac-provision': 'request',
               },
             }
           : {

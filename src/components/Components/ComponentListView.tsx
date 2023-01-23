@@ -12,7 +12,7 @@ import {
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { ComponentKind, PipelineRunKind } from '../../types';
 import { default as BaseComponentListView } from '../ComponentsListView/ComponentListView';
-import BuildStatusColumn, { getURLForComponentPRs, hasPACAnnotation } from './BuildStatusColumn';
+import BuildStatusColumn, { getURLForComponentPRs, hasPACProvisionDone } from './BuildStatusColumn';
 import ComponentsFilterToolbarGroups, {
   NEEDS_MERGE_FILTER_ID,
 } from './ComponentsFilterToolbarGroups';
@@ -54,7 +54,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
   const renderTitle = (pipelineRuns: PipelineRunKind[]) => {
     const allMerged = components.every(
       (component) =>
-        !hasPACAnnotation(component) ||
+        !hasPACProvisionDone(component) ||
         pipelineRuns.find(
           ({ metadata: { labels } }) =>
             labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name,

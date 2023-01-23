@@ -4,7 +4,7 @@ export const mockComponentsData = [
     kind: 'Component',
     metadata: {
       annotations: {
-        "appstudio.openshift.io/pac-provision": "request",
+        'appstudio.openshift.io/pac-provision': 'request',
       },
       resourceVersion: '999994539',
       name: 'test-dotnet60',
@@ -327,7 +327,7 @@ export const mockComponentsData = [
     kind: 'Component',
     metadata: {
       annotations: {
-        "appstudio.openshift.io/pac-provision": "request",
+        'appstudio.openshift.io/pac-provision': 'request',
       },
       resourceVersion: '1089930845',
       name: 'nodejs-test',

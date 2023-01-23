@@ -49,7 +49,7 @@ export const componentCRMocks: ComponentKind[] = [
       namespace: 'rorai',
       uid: '5a14d4b4-480b-4ca5-b7ab-10c2cfffd3d9',
       annotations: {
-        "appstudio.openshift.io/pac-provision": 'request',
+        'appstudio.openshift.io/pac-provision': 'done',
       },
     },
     spec: {
