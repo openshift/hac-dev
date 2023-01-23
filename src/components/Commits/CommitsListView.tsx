@@ -77,9 +77,12 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
           (!nameFilter ||
             commit.sha.indexOf(nameFilter) !== -1 ||
             commit.components.some(
-              (c) => c.toLowerCase().indexOf(nameFilter.toLowerCase()) !== -1,
+              (c) => c.toLowerCase().indexOf(nameFilter.trim().toLowerCase()) !== -1,
             ) ||
-            commit.shaTitle.toLowerCase().includes(nameFilter.toLowerCase())) &&
+            commit.pullRequestNumber
+              .toLowerCase()
+              .indexOf(nameFilter.trim().replace('#', '').toLowerCase()) !== -1 ||
+            commit.shaTitle.toLowerCase().includes(nameFilter.trim().toLowerCase())) &&
           (!statusFilters.length ||
             statusFilters.includes(pipelineRunFilterReducer(commit.pipelineRuns[0]))),
       ),

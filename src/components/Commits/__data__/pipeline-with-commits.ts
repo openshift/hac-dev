@@ -35,6 +35,8 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'pipelinesascode.tekton.dev/url-org': 'openshift',
         'build.appstudio.redhat.com/url-repository': 'console',
         'pipelinesascode.tekton.dev/git-provider': 'github',
+        'pipelinesascode.tekton.dev/pull-request': '11',
+        'pipelinesascode.tekton.dev/event-type': 'pull_request',
       },
       name: 'java-springboot-sample-x778q',
       namespace: 'test',

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { Table as PfTable, TableHeader } from '@patternfly/react-table';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import * as dateTime from '../../../shared/components/timestamp/datetime';
 import { getCommitsFromPLRs } from '../../../utils/commits-utils';
@@ -22,6 +23,30 @@ jest.mock('../commit-status', () => ({
   useCommitStatus: () => ['-', true],
 }));
 
+jest.mock('../../../shared/components/table', () => {
+  const actual = jest.requireActual('../../../shared/components/table');
+  return {
+    ...actual,
+    Table: (props) => {
+      const { data, filters, selected, match, kindObj } = props;
+      const cProps = { data, filters, selected, match, kindObj };
+      const columns = props.Header(cProps);
+      return (
+        <PfTable role="table" aria-label="table" cells={columns} variant="compact" borders={false}>
+          <TableHeader role="rowgroup" />
+          <tbody>
+            {props.data.map((d, i) => (
+              <tr key={i}>
+                <CommitsListRow columns={null} obj={d} />
+              </tr>
+            ))}
+          </tbody>
+        </PfTable>
+      );
+    },
+  };
+});
+
 const mockNavigate = useNavigate as jest.Mock;
 
 const commits = getCommitsFromPLRs(pipelineWithCommits.slice(0, 4));
@@ -33,7 +58,7 @@ describe('CommitsListView', () => {
     );
     const expectedDate = dateTime.dateTimeFormatter.format(new Date(commits[0].creationTime));
     expect(queryByText('commit1')).not.toBeInTheDocument();
-    expect(getByText('test-title')).toBeInTheDocument();
+    expect(getByText('#11 test-title')).toBeInTheDocument();
     expect(container).toHaveTextContent(expectedDate.toString());
     expect(getByText('branch_1')).toBeInTheDocument();
     expect(getByText('sample-component')).toBeInTheDocument();
@@ -60,5 +85,64 @@ describe('CommitsListView', () => {
     render(<CommitsListView commits={commits} applicationName="purple-mermaid-app" recentOnly />);
     fireEvent.click(screen.getByText('View More'));
     expect(navigate).toHaveBeenCalledWith(`/stonesoup/applications/purple-mermaid-app/activity`);
+  });
+
+  it('should contain the list of commits', () => {
+    render(<CommitsListView commits={commits} applicationName="purple-mermaid-app" recentOnly />);
+
+    screen.getByText('#11 test-title');
+    screen.getByText('#11 test-title-2');
+  });
+
+  it('should match the commit if it is filtered by name', () => {
+    render(<CommitsListView commits={commits} applicationName="purple-mermaid-app" />);
+
+    const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
+    act(() => {
+      fireEvent.change(filter, {
+        target: { value: 'test-title-2' },
+      });
+    });
+    expect(screen.queryByText('#11 test-title-2')).toBeInTheDocument();
+    expect(screen.queryByText('#11 test-title')).not.toBeInTheDocument();
+  });
+
+  it('should match the commits if it is filtered by pr number', () => {
+    render(<CommitsListView commits={commits} applicationName="purple-mermaid-app" />);
+
+    const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
+    act(() => {
+      fireEvent.change(filter, {
+        target: { value: '#11' },
+      });
+    });
+    expect(screen.queryByText('#11 test-title-2')).toBeInTheDocument();
+    expect(screen.queryByText('#11 test-title')).toBeInTheDocument();
+  });
+
+  it('should perform case insensitive filter by name', () => {
+    render(<CommitsListView commits={commits} applicationName="purple-mermaid-app" />);
+
+    const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
+    act(() => {
+      fireEvent.change(filter, {
+        target: { value: 'TEST-TITLE-2' },
+      });
+    });
+    expect(screen.queryByText('#11 test-title-2')).toBeInTheDocument();
+    expect(screen.queryByText('#11 test-title')).not.toBeInTheDocument();
+  });
+
+  it('should not match the commit if filtered by unmatched name', () => {
+    render(<CommitsListView commits={commits} applicationName="purple-mermaid-app" />);
+
+    const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
+    act(() => {
+      fireEvent.change(filter, {
+        target: { value: 'invalid-test-title-2' },
+      });
+    });
+    expect(screen.queryByText('#11 test-title')).not.toBeInTheDocument();
+    expect(screen.queryByText('#11 test-title-2')).not.toBeInTheDocument();
   });
 });

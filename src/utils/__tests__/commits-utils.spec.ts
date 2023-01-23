@@ -65,6 +65,38 @@ describe('commit-utils create from plr', () => {
     const result = createCommitObjectFromPLR(pipelineWithoutCommits[0]);
     expect(result).toBe(null);
   });
+
+  it('Should return isPullRequest true for pac based pipelinerun', () => {
+    const result = createCommitObjectFromPLR(pipelineWithCommits[1]);
+    expect(result.isPullRequest).toBe(true);
+  });
+
+  it('Should return pullRequestNumber true for pac based pipelinerun', () => {
+    const result = createCommitObjectFromPLR(pipelineWithCommits[1]);
+    expect(result.pullRequestNumber).toBe('11');
+  });
+
+  it('Should return isPullRequest false if the labels are missing', () => {
+    const result = createCommitObjectFromPLR(pipelineWithCommits[2]);
+    expect(result.isPullRequest).toBe(false);
+    expect(result.pullRequestNumber).toBe('');
+  });
+
+  it('Should not return undefined value in the pullRequestNumber', () => {
+    const missingPRnumberLabel = {
+      ...pipelineWithCommits[1],
+      metadata: {
+        ...pipelineWithCommits[1].metadata,
+        labels: {
+          ...pipelineWithCommits[1].metadata.labels,
+          'pipelinesascode.tekton.dev/pull-request': undefined,
+        },
+      },
+    };
+    const result = createCommitObjectFromPLR(missingPRnumberLabel);
+    expect(result.isPullRequest).toBe(true);
+    expect(result.pullRequestNumber).toBe('');
+  });
 });
 
 describe('commit short name', () => {
