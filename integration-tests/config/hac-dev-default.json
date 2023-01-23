@@ -1,5 +1,5 @@
 {
-  "ignoreTestFiles": ["*private*"],
+  "ignoreTestFiles": ["*private-git-form.spec.ts"],
   "extends": "../cypress.json",
   "reporterOptions": {
     "reporterEnabled": "spec, mocha-junit-reporter, @reportportal/agent-js-cypress",
