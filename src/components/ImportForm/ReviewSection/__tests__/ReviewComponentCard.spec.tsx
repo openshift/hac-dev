@@ -90,7 +90,7 @@ describe('ReviewComponentCard', () => {
     expect(screen.getByText('Deploy configuration')).toBeInTheDocument();
   });
 
-  it('should hide expandable config when components are not detected', async () => {
+  it('should not hide expandable config when components are not detected', async () => {
     useComponentDetectionMock.mockReturnValue([]);
     formikRenderer(
       <ReviewComponentCard
@@ -98,11 +98,11 @@ describe('ReviewComponentCard', () => {
         detectedComponentIndex={0}
         showRuntimeSelector
       />,
-      { isDetected: false, source: { git: {} } },
+      { source: { git: {} } },
     );
     await act(async () => screen.getByRole('button', { expanded: false }).click());
 
-    expect(screen.queryByText('Deploy configuration')).not.toBeInTheDocument();
+    expect(screen.queryByText('Deploy configuration')).toBeInTheDocument();
   });
 
   it('should not show runtime selector when not specified', async () => {
