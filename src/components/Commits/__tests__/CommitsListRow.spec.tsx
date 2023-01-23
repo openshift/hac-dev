@@ -28,14 +28,14 @@ describe('CommitsListRow', () => {
     );
     const expectedDate = dateTime.dateTimeFormatter.format(new Date(commits[0].creationTime));
     expect(queryByText('commit1')).not.toBeInTheDocument();
-    expect(getAllByText('test-title')[0]).toBeInTheDocument();
+    expect(getAllByText('#11 test-title')[0]).toBeInTheDocument();
     expect(container).toHaveTextContent(expectedDate.toString());
     expect(getAllByText('branch_1')[0]).toBeInTheDocument();
     expect(getAllByText('sample-component')[0]).toBeInTheDocument();
   });
 
   it('should show commit icon for commits', () => {
-    render(<CommitsListRow columns={null} obj={commits[0]} />);
+    render(<CommitsListRow columns={null} obj={commits[2]} />);
     expect(screen.getByAltText('Commit icon')).toBeInTheDocument();
   });
 
