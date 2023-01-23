@@ -120,5 +120,6 @@ describe('Pipeline run List', () => {
     screen.getByText('Duration');
     screen.getByText('Status');
     screen.getByText('Type');
+    screen.getByText('Component');
   });
 });
