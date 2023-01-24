@@ -146,7 +146,7 @@ describe('EnvironmentListView', () => {
 
     cleanup();
     render(<EnvironmentListView validTypes={[EnvironmentType.static]} />);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
 
     cleanup();
     render(<EnvironmentListView validTypes={[EnvironmentType.managed]} />);
@@ -160,12 +160,12 @@ describe('EnvironmentListView', () => {
     render(
       <EnvironmentListView validTypes={[EnvironmentType.static, EnvironmentType.ephemeral]} />,
     );
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
   });
 
   it('should filter cards by type', async () => {
     render(<EnvironmentListView />);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
 
     // interact with filters
     const filterMenuButton = screen.getByRole('button', { name: /filter/i });
@@ -174,19 +174,19 @@ describe('EnvironmentListView', () => {
     const staticCb = screen.getByLabelText(/Static/i, { selector: 'input' }) as HTMLInputElement;
     fireEvent.click(staticCb);
     expect(staticCb.checked).toBe(true);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
 
     const managedCb = screen.getByLabelText(/Managed/i, { selector: 'input' }) as HTMLInputElement;
     fireEvent.click(managedCb);
     expect(managedCb.checked).toBe(true);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
 
     const ephemeralCb = screen.getByLabelText(/Ephemeral/i, {
       selector: 'input',
     }) as HTMLInputElement;
     fireEvent.click(ephemeralCb);
     expect(ephemeralCb.checked).toBe(true);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
 
     // filter only some of the envs
     fireEvent.click(staticCb);
@@ -196,12 +196,12 @@ describe('EnvironmentListView', () => {
     // clear the filter
     const clearFilterButton = screen.getAllByRole('button', { name: 'Clear filters' })[1];
     fireEvent.click(clearFilterButton);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
   });
 
   it('should filter cards by name', () => {
     render(<EnvironmentListView />);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
 
     const textFilterInput = screen.getByRole('textbox', { name: 'name filter' });
     fireEvent.change(textFilterInput, { target: { value: 'd' } });
@@ -212,7 +212,7 @@ describe('EnvironmentListView', () => {
 
   it('should clear filters from empty state', () => {
     render(<EnvironmentListView />);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
 
     const textFilterInput = screen.getByRole('textbox', { name: 'name filter' });
     fireEvent.change(textFilterInput, { target: { value: 'no match' } });
@@ -221,12 +221,12 @@ describe('EnvironmentListView', () => {
 
     const clearFilterButton = screen.getByRole('button', { name: 'Clear all filters' });
     fireEvent.click(clearFilterButton);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
   });
 
   it('should filter cards by status', async () => {
     render(<EnvironmentListView applicationName="application-to-test" />);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
 
     // interact with filters
     const filterMenuButton = screen.getByRole('button', { name: /filter/i });
@@ -251,6 +251,18 @@ describe('EnvironmentListView', () => {
     // clear the filter
     const clearFilterButton = screen.getAllByRole('button', { name: 'Clear filters' })[1];
     fireEvent.click(clearFilterButton);
-    await expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
+    await expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
+  });
+
+  it('should contain Healthy application status', () => {
+    useAllEnvironmentsMock.mockReturnValue([mockAppEnvWithHealthStatus, true]);
+    render(<EnvironmentListView applicationName="test" />);
+    screen.getByText('Application Healthy');
+  });
+
+  it('should contain application Missing status', () => {
+    useAllEnvironmentsMock.mockReturnValue([[mockAppEnvWithHealthStatus[0]], true]);
+    render(<EnvironmentListView applicationName="test" />);
+    screen.queryByText('Application Missing');
   });
 });

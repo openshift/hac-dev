@@ -48,5 +48,19 @@ describe('', () => {
     expect(screen.getByText(testEnv.metadata.name)).toBeVisible();
     expect(screen.queryByText(testEnv.spec.displayName)).toBeNull();
   });
+
+  it('should render Application Healthy card in the list view', () => {
+    const env = {
+      ...testEnv,
+      spec: {
+        ...testEnv.spec,
+        displayName: undefined,
+      },
+      healthStatus: 'Healthy',
+    };
+    render(<EnvironmentCard environment={env} applicationName="test" />);
+    expect(screen.getByText('Manual')).toBeVisible();
+    expect(screen.getByText('Application Healthy')).toBeVisible();
+  });
 });
 EnvironmentCard;

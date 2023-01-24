@@ -89,7 +89,14 @@ export const getComponentDeploymentStatus = (
 ): GitOpsDeploymentHealthStatus => {
   if (!snapshotEnvironmentBinding || !snapshotEnvironmentBinding.status) {
     return GitOpsDeploymentHealthStatus.Missing;
+  } else if (
+    snapshotEnvironmentBinding?.status?.componentDeploymentConditions?.some(
+      (c) => c.type === 'ErrorOccurred',
+    )
+  ) {
+    return GitOpsDeploymentHealthStatus.Degraded;
   }
+
   const allcomponentsDeployed =
     snapshotEnvironmentBinding?.status?.componentDeploymentConditions?.some(
       (c) =>
