@@ -1,4 +1,7 @@
+import { RunStatus } from '@patternfly/react-topology';
 import { EnvironmentKind } from '../types';
+import { SnapshotEnvironmentBinding } from '../types/coreBuildService';
+import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
 
 export enum EnvironmentDeploymentStrategy {
   AppStudioAutomated = 'Automatic',
@@ -79,4 +82,47 @@ export const sortEnvironmentsBasedonParent = (
   const positionedEnvs = environments.filter((env) => isPositionedEnvironment(env, environments));
   insertPositionedEnvironments(positionedEnvs, sortedEnvs);
   return sortedEnvs;
+};
+
+export const getComponentDeploymentStatus = (
+  snapshotEnvironmentBinding: SnapshotEnvironmentBinding,
+): GitOpsDeploymentHealthStatus => {
+  if (!snapshotEnvironmentBinding || !snapshotEnvironmentBinding.status) {
+    return GitOpsDeploymentHealthStatus.Missing;
+  } else if (
+    snapshotEnvironmentBinding?.status?.componentDeploymentConditions?.some(
+      (c) => c.type === 'ErrorOccurred',
+    )
+  ) {
+    return GitOpsDeploymentHealthStatus.Degraded;
+  }
+
+  const allcomponentsDeployed =
+    snapshotEnvironmentBinding?.status?.componentDeploymentConditions?.some(
+      (c) =>
+        c.reason === 'CommitsSynced' && c.status === 'True' && c.type === 'AllComponentsDeployed',
+    );
+
+  if (allcomponentsDeployed) {
+    return GitOpsDeploymentHealthStatus.Healthy;
+  }
+
+  return GitOpsDeploymentHealthStatus.Progressing;
+};
+
+export const getComponentDeploymentRunStatus = (
+  snapshotEnvironmentBinding: SnapshotEnvironmentBinding,
+): RunStatus => {
+  const status = getComponentDeploymentStatus(snapshotEnvironmentBinding);
+
+  switch (status) {
+    case GitOpsDeploymentHealthStatus.Healthy:
+      return RunStatus.Succeeded;
+    case GitOpsDeploymentHealthStatus.Progressing:
+      return RunStatus.Running;
+    case GitOpsDeploymentHealthStatus.Degraded:
+      return RunStatus.Failed;
+    default:
+      return RunStatus.Pending;
+  }
 };

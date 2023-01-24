@@ -108,4 +108,21 @@ export const mockAppEnvWithHealthStatus = [
     },
     healthStatus: 'Missing',
   },
+  {
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    kind: 'Environment',
+    metadata: {
+      creationTimestamp: '2022-09-15T18:08:46Z',
+      name: 'sre-env',
+      namespace: 'test-namespace',
+      resourceVersion: '1090588522',
+      uid: '76a54ef3-f655-4fda-ab30-dc2348ca250d',
+    },
+    spec: {
+      deploymentStrategy: 'Manual',
+      displayName: 'SRE environment',
+      type: 'poc',
+    },
+    healthStatus: 'Healthy',
+  },
 ];
