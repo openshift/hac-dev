@@ -17,6 +17,7 @@
     "@types/node": "^17.0.13",
     "axe-core": "^4.4.2",
     "cypress": "^9.6.0",
+    "cypress-grep": "^2.14.0",
     "cypress-axe": "^0.14.0",
     "cypress-multi-reporters": "^1.6.0",
     "cypress-terminal-report": "^3.5.2",

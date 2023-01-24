@@ -5,7 +5,7 @@ import { ComponentPage } from '../support/pages/ComponentsPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
-describe('Create Application from Sample', () => {
+describe('Create Application from Sample', { tags: ['@PR-check', '@publicRepo'] }, () => {
   const applicationName = Common.generateAppName();
   const applicationDetailPage = new ApplicationDetailPage();
   const componentPage = new ComponentPage();
