@@ -78,6 +78,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
     <React.Fragment>
       <ApplicationModal showApplicationModal={showApplicationModal} onClose={onModalClose} />
       <DetailsPage
+        headTitle={appDisplayName}
         breadcrumbs={[
           { path: '/stonesoup/applications', name: 'Applications' },
           {

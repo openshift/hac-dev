@@ -64,6 +64,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
   if (integrationTest?.metadata) {
     return (
       <DetailsPage
+        headTitle={integrationTest.metadata.name}
         breadcrumbs={[
           { path: '/stonesoup/applications', name: 'Applications' },
           {

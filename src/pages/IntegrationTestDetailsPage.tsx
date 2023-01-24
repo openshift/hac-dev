@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import IntegrationTestDetailsView from '../components/IntegrationTest/IntegrationTestDetailsView';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
@@ -16,9 +15,6 @@ const IntegrationTestDetailsPage = () => {
 
   return (
     <NamespacedPage>
-      <Helmet>
-        <title>IntegrationTest Details</title>
-      </Helmet>
       <IntegrationTestDetailsView testName={testName} applicationName={appName} />
     </NamespacedPage>
   );

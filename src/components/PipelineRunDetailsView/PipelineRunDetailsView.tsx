@@ -48,6 +48,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
     <>
       <React.Fragment>
         <DetailsPage
+          headTitle={pipelineRunName}
           breadcrumbs={[
             { path: '/stonesoup/applications', name: 'Applications' },
             {

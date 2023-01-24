@@ -185,6 +185,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
               onHide={() => setGettingStartedShown(false)}
             />
             <DetailsPage
+              headTitle={commitDisplayName}
               breadcrumbs={[
                 { path: '/stonesoup/applications', name: 'Applications' },
                 {
