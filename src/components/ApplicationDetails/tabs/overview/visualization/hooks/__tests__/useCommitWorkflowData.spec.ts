@@ -7,6 +7,7 @@ import { useEnvironments } from '../../../../../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../../../../../hooks/useIntegrationTestScenarios';
 import { useReleasePlans } from '../../../../../../../hooks/useReleasePlans';
 import { useReleases } from '../../../../../../../hooks/useReleases';
+import { useSnapshots } from '../../../../../../../hooks/useSnapshots';
 import { useSnapshotsEnvironmentBindings } from '../../../../../../../hooks/useSnapshotsEnvironmentBindings';
 import { useTestPipelines } from '../../../../../../../hooks/useTestPipelines';
 import { createCommitObjectFromPLR } from '../../../../../../../utils/commits-utils';
@@ -58,6 +59,10 @@ jest.mock('../../../../../../../hooks/useSnapshotsEnvironmentBindings', () => ({
   useSnapshotsEnvironmentBindings: jest.fn(),
 }));
 
+jest.mock('../../../../../../../hooks/useSnapshots', () => ({
+  useSnapshots: jest.fn(),
+}));
+
 jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
@@ -71,6 +76,7 @@ const useReleasesMock = useReleases as jest.Mock;
 const useReleasePlansMock = useReleasePlans as jest.Mock;
 const useTestPipelinesMock = useTestPipelines as jest.Mock;
 const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
+const useSnapshotsMock = useSnapshots as jest.Mock;
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 describe('useCommitWorkflowData hook', () => {
@@ -84,6 +90,7 @@ describe('useCommitWorkflowData hook', () => {
     useReleasesMock.mockReturnValue([sampleReleases, true]);
     useTestPipelinesMock.mockReturnValue([[sampleTestPipelines[0]], true]);
     useSnapshotsEnvironmentBindingsMock.mockReturnValue([sampleSnapshotsEnvironmentBindings, true]);
+    useSnapshotsMock.mockReturnValue([[], true]);
     useFeatureFlagMock.mockReturnValue([false]);
 
     const createElement = document.createElement.bind(document);

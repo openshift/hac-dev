@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { RunStatus } from '@patternfly/react-topology';
-import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
+import { PipelineRunEventType, PipelineRunLabel } from '../../../../../../consts/pipelinerun';
 import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../../../hooks/useComponents';
 import { useEnvironments } from '../../../../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../../../../hooks/useIntegrationTestScenarios';
 import { useReleasePlans } from '../../../../../../hooks/useReleasePlans';
 import { useReleases } from '../../../../../../hooks/useReleases';
+import { useSnapshots } from '../../../../../../hooks/useSnapshots';
 import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnapshotsEnvironmentBindings';
 import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
 import { pipelineRunStatus } from '../../../../../../shared';
@@ -56,10 +57,12 @@ export const useCommitWorkflowData = (
     commit.sha,
   );
 
-  const [snapshotsEB, snapshotsLoaded, snapshotsError] = useSnapshotsEnvironmentBindings(
+  const [snapshotsEB, snapshotsEBLoaded, snapshotsEBError] = useSnapshotsEnvironmentBindings(
     namespace,
     applicationName,
   );
+
+  const [snapshots, sloaded, serror] = useSnapshots(namespace, commit.sha);
 
   const allResourcesLoaded: boolean =
     componentsLoaded &&
@@ -67,8 +70,9 @@ export const useCommitWorkflowData = (
     buildPipelinesLoaded &&
     testPipelinesLoaded &&
     environmentsLoaded &&
-    snapshotsLoaded &&
+    snapshotsEBLoaded &&
     releasesLoaded &&
+    sloaded &&
     releasePlansLoaded;
   const allErrors = [
     environmentsError,
@@ -76,7 +80,8 @@ export const useCommitWorkflowData = (
     releasesError,
     buildPipelinesError,
     testPipelinesError,
-    snapshotsError,
+    snapshotsEBError,
+    serror,
   ].filter((e) => !!e);
 
   const commitComponents = React.useMemo(
@@ -108,20 +113,21 @@ export const useCommitWorkflowData = (
           (tp) => tp.metadata?.labels[PipelineRunLabel.COMPONENT] === compName,
         );
 
-        const latestTestPipeline: PipelineRunKind =
-          buildPipelinestatus !== RunStatus.Running
-            ? getLatestResource(integrationTestPipelines)
-            : undefined;
-
-        const latestSnapshot: string =
-          latestTestPipeline?.metadata?.labels[PipelineRunLabel.SNAPSHOT];
+        const currentSnapshotName = getLatestResource(
+          snapshots.filter(
+            (s) =>
+              s.metadata.labels[PipelineRunLabel.COMPONENT] === compName &&
+              s.metadata.labels[PipelineRunLabel.TEST_SERVICE_EVENT_TYPE_LABEL] ===
+                PipelineRunEventType.PUSH,
+          ),
+        )?.metadata?.name;
 
         const compSnapshots: SnapshotEnvironmentBinding[] = snapshotsEB.filter(
-          (as) => as.spec.snapshot === latestSnapshot,
+          (as) => as.spec.snapshot === currentSnapshotName,
         );
 
         const latestRelease: ReleaseKind = getLatestResource(
-          releases.filter((r) => r.spec.snapshot === latestSnapshot),
+          releases.filter((r) => r.spec.snapshot === currentSnapshotName),
         );
 
         const integrationTestStatus: (test: IntegrationTestScenarioKind) => RunStatus = (
@@ -187,6 +193,7 @@ export const useCommitWorkflowData = (
         return acc;
       }, {}),
     [
+      snapshots,
       snapshotsEB,
       buildPipelines,
       commitComponents,

@@ -1,15 +1,13 @@
 import * as React from 'react';
-import { getLatestResource } from '../components/ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
 import { EnvironmentType } from '../components/Environment/environment-utils';
-import { PipelineRunLabel } from '../consts/pipelinerun';
 import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../shared';
 import { EnvironmentKind } from '../types';
 import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
+import { getComponentDeploymentStatus } from '../utils/environment-utils';
 import { useNamespace } from '../utils/namespace-context-utils';
 import { useAllEnvironments } from './useAllEnvironments';
 import { useReleases } from './useReleases';
 import { useSnapshotsEnvironmentBindings } from './useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from './useTestPipelines';
 
 export type EnvironmentKindWithHealthStatus = EnvironmentKind & {
   healthStatus: GitOpsDeploymentHealthStatus;
@@ -26,9 +24,8 @@ export const useAllApplicationEnvironmentsWithHealthStatus = (
     namespace,
     applicationName,
   );
-  const [testPipelines, testPipelinesLoaded] = useTestPipelines(namespace, applicationName);
 
-  const allLoaded = environmentsLoaded && releasesLoaded && snapshotsLoaded && testPipelinesLoaded;
+  const allLoaded = environmentsLoaded && releasesLoaded && snapshotsLoaded;
 
   const envsWithStatus: EnvironmentKindWithHealthStatus[] = React.useMemo(() => {
     if (!allLoaded) {
@@ -48,28 +45,18 @@ export const useAllApplicationEnvironmentsWithHealthStatus = (
           lastDeploy: latestRelease?.status.completionTime,
         };
       }
-      const snapshotsEnvironmentBinding = getLatestResource(
-        snapshotsEnvironmentBindings.filter(
-          (as) => as.spec.environment === environment.metadata.name,
-        ),
+      const snapshotsEnvironmentBinding = snapshotsEnvironmentBindings.find(
+        (as) => as.spec.environment === environment.metadata.name,
       );
-      const testPipeline = snapshotsEnvironmentBinding
-        ? testPipelines.find(
-            (pipeline) =>
-              pipeline?.metadata?.labels[PipelineRunLabel.SNAPSHOT] ===
-              snapshotsEnvironmentBinding.spec.snapshot,
-          )
-        : undefined;
 
       return {
         ...environment,
-        healthStatus: testPipeline
-          ? pipelineRunStatusToGitOpsStatus(pipelineRunStatus(testPipeline))
-          : GitOpsDeploymentHealthStatus.Missing,
-        lastDeploy: testPipeline?.status.completionTime,
+        healthStatus: getComponentDeploymentStatus(snapshotsEnvironmentBinding),
+        lastDeploy:
+          snapshotsEnvironmentBinding?.status?.componentDeploymentConditions[0]?.lastTransitionTime,
       };
     });
-  }, [allLoaded, snapshotsEnvironmentBindings, environments, releases, testPipelines]);
+  }, [allLoaded, snapshotsEnvironmentBindings, environments, releases]);
 
   return [envsWithStatus, allLoaded];
 };
