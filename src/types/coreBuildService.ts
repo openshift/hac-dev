@@ -99,11 +99,51 @@ export type component = {
   configuration: Configuration;
 };
 
+export type Snapshot = K8sResourceCommon & {
+  spec: {
+    application: string;
+    displayName?: string;
+    displayDescription?: string;
+    components: {
+      containerImage: string;
+      name: string;
+    }[];
+    artifacts?: {
+      [key: string]: unknown;
+    };
+  };
+  status?: {
+    conditions: Condition[];
+  };
+};
+export interface GitopsRepository {
+  branch: string;
+  commitID: string;
+  generatedResources: string[];
+  path: string;
+  url: string;
+}
+
+export interface GitopsDeployment {
+  componentName: string;
+  gitopsDeployment: string;
+}
+
 export type SnapshotEnvironmentBinding = K8sResourceCommon & {
   spec: {
     application: string;
     components: component[];
     environment: string;
     snapshot: string;
+  };
+  status?: {
+    bindingConditions: Condition[];
+    componentDeploymentConditions: Condition[];
+    components: {
+      gitopsRepository: GitopsRepository;
+      name: string;
+    }[];
+    gitopsDeployments: GitopsDeployment[];
+    gitopsRepoConditions: Condition[];
   };
 };

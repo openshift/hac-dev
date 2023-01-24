@@ -3,11 +3,9 @@ import {
   EnvironmentType,
   getEnvironmentType,
 } from '../../../../../../components/Environment/environment-utils';
-import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
 import { useEnvironments } from '../../../../../../hooks/useEnvironments';
 import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
-import { pipelineRunStatus } from '../../../../../../shared';
+import { getComponentDeploymentRunStatus } from '../../../../../../utils/environment-utils';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import {
   emptyPipelineNode,
@@ -36,8 +34,7 @@ export const useAppStaticEnvironmentNodes = (
   const [environments, environmentsLoaded, environmentsError] = useEnvironments();
   const [snapshotsEnvironmentBindings, snapshotsLoaded, snapshotsError] =
     useSnapshotsEnvironmentBindings(namespace, applicationName);
-  const [testPipelines, testPipelinesLoaded] = useTestPipelines(namespace, applicationName);
-  const allLoaded = environmentsLoaded && testPipelinesLoaded && snapshotsLoaded;
+  const allLoaded = environmentsLoaded && snapshotsLoaded;
 
   const staticEnvironments = React.useMemo(
     () =>
@@ -55,24 +52,18 @@ export const useAppStaticEnvironmentNodes = (
           const prevEnv = staticEnvironments.find(
             (e) => e.metadata.name === staticEnvironment.spec.parentEnvironment,
           );
-          const snapshot = getLatestResource(
+          const snapshotEB = getLatestResource(
             snapshotsEnvironmentBindings.filter(
               (as) => as.spec.environment === staticEnvironment.metadata.name,
             ),
           );
-          const testPipeline = snapshot
-            ? testPipelines.find(
-                (pipeline) =>
-                  pipeline?.metadata?.labels[PipelineRunLabel.SNAPSHOT] === snapshot.spec.snapshot,
-              )
-            : undefined;
 
           return resourceToPipelineNode(
             staticEnvironment,
             applicationName,
             WorkflowNodeType.STATIC_ENVIRONMENT,
             prevEnv ? [prevEnv.metadata.uid] : previousTasks,
-            testPipeline ? pipelineRunStatus(testPipeline) : 'Pending',
+            getComponentDeploymentRunStatus(snapshotEB),
           );
         })
       : [
@@ -92,7 +83,6 @@ export const useAppStaticEnvironmentNodes = (
     staticEnvironments,
     previousTasks,
     snapshotsEnvironmentBindings,
-    testPipelines,
     allErrors,
   ]);
 
