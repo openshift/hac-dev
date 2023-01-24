@@ -143,7 +143,7 @@ export const getLinksForElement = (
 
   return {
     elementRef: linkData.path ? linkData.path : `${appPath}${tabPath}${filter}`,
-    pipelinesRef: `${appPath}/pipelineruns`,
+    pipelinesRef: `${appPath}/activity/pipelineruns`,
   };
 };
 

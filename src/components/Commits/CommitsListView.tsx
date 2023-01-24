@@ -184,7 +184,9 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
         <Button
           className="pf-u-mt-md"
           variant="secondary"
-          onClick={() => navigate(`/stonesoup/applications/${applicationName}/activity`)}
+          onClick={() =>
+            navigate(`/stonesoup/applications/${applicationName}/activity/latest-commits`)
+          }
         >
           View More
         </Button>

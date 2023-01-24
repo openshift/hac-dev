@@ -54,11 +54,13 @@ describe('CommitsListView', () => {
     expect(screen.queryByText('Recent commits')).toBeInTheDocument();
   });
 
-  it('should navigate to activiy tab', () => {
+  it('should navigate to activity tab', () => {
     const navigate = jest.fn();
     mockNavigate.mockImplementation(() => navigate);
     render(<CommitsListView commits={commits} applicationName="purple-mermaid-app" recentOnly />);
     fireEvent.click(screen.getByText('View More'));
-    expect(navigate).toHaveBeenCalledWith(`/stonesoup/applications/purple-mermaid-app/activity`);
+    expect(navigate).toHaveBeenCalledWith(
+      `/stonesoup/applications/purple-mermaid-app/activity/latest-commits`,
+    );
   });
 });
