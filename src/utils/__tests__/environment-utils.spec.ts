@@ -1,5 +1,12 @@
+import { RunStatus } from '@patternfly/react-topology';
+import { mockSnapshotsEnvironmentBindings } from '../../components/ApplicationDetails/tabs/overview/sections/__data__';
 import { EnvironmentKind } from '../../types';
-import { sortEnvironmentsBasedonParent } from '../environment-utils';
+import { GitOpsDeploymentHealthStatus } from '../../types/gitops-deployment';
+import {
+  getComponentDeploymentRunStatus,
+  getComponentDeploymentStatus,
+  sortEnvironmentsBasedonParent,
+} from '../environment-utils';
 
 describe('environment-utils', () => {
   const a = {
@@ -117,5 +124,55 @@ describe('environment-utils', () => {
       cb,
       ac,
     ]);
+  });
+
+  describe('getComponentDeploymentStatus', () => {
+    it('should return Missing status for SEB without status', () => {
+      expect(
+        getComponentDeploymentStatus({ ...mockSnapshotsEnvironmentBindings[0], status: undefined }),
+      ).toBe(GitOpsDeploymentHealthStatus.Missing);
+    });
+
+    it('should return Progressing status for SEB with progressing status', () => {
+      expect(
+        getComponentDeploymentStatus({
+          ...mockSnapshotsEnvironmentBindings[1],
+        }),
+      ).toBe(GitOpsDeploymentHealthStatus.Progressing);
+    });
+
+    it('should return Healthy status', () => {
+      expect(getComponentDeploymentStatus(mockSnapshotsEnvironmentBindings[0])).toBe(
+        GitOpsDeploymentHealthStatus.Healthy,
+      );
+    });
+
+    it('should return Degraded status', () => {
+      expect(getComponentDeploymentStatus(mockSnapshotsEnvironmentBindings[2])).toBe(
+        GitOpsDeploymentHealthStatus.Degraded,
+      );
+    });
+  });
+
+  describe('getComponentDeploymentRunStatus', () => {
+    it('should return Pending status for SEB without status', () => {
+      const missingApplication = { ...mockSnapshotsEnvironmentBindings[0], status: undefined };
+      expect(getComponentDeploymentRunStatus(missingApplication)).toBe(RunStatus.Pending);
+    });
+
+    it('should return Running status for progressing application', () => {
+      const progressingApplication = mockSnapshotsEnvironmentBindings[1];
+      expect(getComponentDeploymentRunStatus(progressingApplication)).toBe(RunStatus.Running);
+    });
+
+    it('should return Succeeded status for healthy application', () => {
+      const healthyApplication = mockSnapshotsEnvironmentBindings[0];
+      expect(getComponentDeploymentRunStatus(healthyApplication)).toBe(RunStatus.Succeeded);
+    });
+
+    it('should return Succeeded status for healthy application', () => {
+      const degradedApplication = mockSnapshotsEnvironmentBindings[2];
+      expect(getComponentDeploymentRunStatus(degradedApplication)).toBe(RunStatus.Failed);
+    });
   });
 });

@@ -87,6 +87,7 @@ export type Condition = {
   status: string;
   reason?: string;
   message?: string;
+  binding?: string;
   lastTransitionTime?: string;
 };
 

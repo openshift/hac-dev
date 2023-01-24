@@ -53,11 +53,6 @@ export type Env = {
   value: string;
 };
 
-export type SnapshotEnvironmentBindingKind = K8sResourceCommon & {
-  spec: ReleaseSpec;
-  status: ReleaseStatus;
-};
-
 export type ReleaseKind = K8sResourceCommon & {
   spec: ReleaseSpec;
   status: ReleaseStatus;
