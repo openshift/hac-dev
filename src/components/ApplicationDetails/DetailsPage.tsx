@@ -21,6 +21,7 @@ import {
 import { CaretDownIcon } from '@patternfly/react-icons/dist/esm/icons/caret-down-icon';
 import cx from 'classnames';
 import BreadCrumbs from '../../shared/components/breadcrumbs/BreadCrumbs';
+import { HeadTitle } from '../HeadTitle';
 
 import './DetailsPage.scss';
 
@@ -41,6 +42,7 @@ type DetailsPageTabProps = {
 
 type DetailsPageProps = {
   title: React.ReactNode;
+  headTitle: string;
   children?: React.ReactNode;
   footer?: React.ReactNode;
   description?: React.ReactNode;
@@ -54,6 +56,7 @@ type DetailsPageProps = {
 
 const DetailsPage: React.FC<DetailsPageProps> = ({
   title,
+  headTitle,
   footer,
   description,
   breadcrumbs,
@@ -67,15 +70,15 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
   const params = useParams();
   const { activeTab: tab } = params;
 
-  const activeTab = React.useMemo(() => tab || tabs?.[0]?.key, [tab, tabs]);
+  const activeTabKey = React.useMemo(() => tab || tabs?.[0]?.key, [tab, tabs]);
   const navigate = useNavigate();
   const setActiveTab = React.useCallback(
     (newTab: string) => {
-      if (activeTab !== newTab) {
+      if (activeTabKey !== newTab) {
         navigate(`${baseURL}/${newTab}`);
       }
     },
-    [activeTab, baseURL, navigate],
+    [activeTabKey, baseURL, navigate],
   );
 
   const dropdownItems = React.useMemo(
@@ -132,8 +135,14 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
     return title;
   };
 
+  const activeTab: DetailsPageTabProps = React.useMemo(
+    () => tabs?.filter((t) => t.key === activeTabKey)[0],
+    [activeTabKey, tabs],
+  );
+
   return (
     <PageGroup data-test="details">
+      <HeadTitle>{`${headTitle} - ${activeTab?.label} | Stonesoup`}</HeadTitle>
       <PageSection type="breadcrumb">
         {breadcrumbs && (
           <BreadCrumbs
@@ -180,7 +189,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
               onTabSelect && onTabSelect(k);
             }}
             unmountOnExit
-            activeKey={activeTab}
+            activeKey={activeTabKey}
           >
             {tabComponents}
           </Tabs>

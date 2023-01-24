@@ -18,6 +18,7 @@ import { useOnMount } from '../../../hooks/useOnMount';
 import { getFieldId, InputField } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
 import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../../types';
+import { HeadTitle } from '../../HeadTitle';
 import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
 import SamplesInfoAlert from '../SampleSection/SampleInfoAlert';
 import { useAccessCheck, useAccessTokenBinding } from '../utils/auth-utils';
@@ -145,6 +146,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
 
   return (
     <>
+      <HeadTitle>Import - Add components | Stonesoup</HeadTitle>
       <TextContent>
         <Text component="h2">Add components to your application</Text>
         <HelperText>

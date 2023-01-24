@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import ApplicationDetails from '../components/ApplicationDetails/ApplicationDetails';
@@ -13,9 +12,6 @@ const ApplicationDetailsPage = () => {
 
   return (
     <NamespacedPage>
-      <Helmet>
-        <title>Application Details Page</title>
-      </Helmet>
       {hacbs ? (
         <ApplicationDetails applicationName={appName} />
       ) : (
