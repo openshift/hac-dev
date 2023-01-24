@@ -23,14 +23,14 @@ export const StatusIcon: React.FC<StatusIconProps> = ({ status, ...props }) => {
   if (status === runStatus.Cancelling) {
     // Interim state required to avoid any other actions on pipelinerun that is currently being cancelled.
     return (
-      <div
+      <span
         className={css(
           pipelineStyles.topologyPipelinesStatusIcon,
           getRunStatusModifier(RunStatus.Cancelled),
         )}
       >
         <ExclamationTriangleIcon {...props} />
-      </div>
+      </span>
     );
   }
   return <PfStatusIcon status={status as RunStatus} {...props} />;
