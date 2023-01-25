@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import CommitDetailsView from '../components/Commits/CommitDetailsView';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
@@ -16,9 +15,6 @@ const CommitsPage = () => {
 
   return (
     <NamespacedPage>
-      <Helmet>
-        <title>Commit Details</title>
-      </Helmet>
       <CommitDetailsView commitName={commitName} applicationName={appName} />
     </NamespacedPage>
   );

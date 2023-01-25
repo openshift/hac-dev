@@ -14,12 +14,14 @@ import {
 } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
 import { CheckboxField } from '../../../shared';
+import { HeadTitle } from '../../HeadTitle';
 import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
 import { useComponentDetection } from '../utils/cdq-utils';
 import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues } from '../utils/types';
 import { containerImageRegex } from '../utils/validation-utils';
 import { ReviewComponentCard } from './ReviewComponentCard';
+
 const ComponentLoadingState: React.FC = () => {
   return (
     <Bullseye>
@@ -132,6 +134,7 @@ const ReviewSection: React.FunctionComponent = () => {
 
   return (
     <>
+      <HeadTitle>Import - Configure components | Stonesoup</HeadTitle>
       <TextContent>
         <Text component="h2">Configure your components for deployment</Text>
         <HelperText>

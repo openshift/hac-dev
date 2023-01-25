@@ -33,6 +33,7 @@ import { getIconProps } from '../../../shared/components/catalog/utils/catalog-u
 import { skeletonTileSelector } from '../../../shared/components/catalog/utils/skeleton-catalog';
 import { CatalogItem } from '../../../shared/components/catalog/utils/types';
 import { StatusBox } from '../../../shared/components/status-box/StatusBox';
+import { HeadTitle } from '../../HeadTitle';
 import { ImportFormValues, ImportStrategy } from '../utils/types';
 import { useDevfileSamples } from '../utils/useDevfileSamples';
 import SamplesInfoAlert from './SampleInfoAlert';
@@ -95,6 +96,7 @@ const SampleSection = ({ onStrategyChange }) => {
 
   return (
     <>
+      <HeadTitle>Import - Select sample | Stonesoup</HeadTitle>
       <PageSection variant="light" isFilled>
         <TextContent>
           <Text component={TextVariants.h2}>

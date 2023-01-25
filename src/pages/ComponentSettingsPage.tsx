@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import {
   EmptyState,
@@ -10,6 +9,7 @@ import {
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import ComponentSettingsView from '../components/ComponentSettingsForm/ComponentSettingsView';
+import { HeadTitle } from '../components/HeadTitle';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
 import { getQueryArgument } from '../shared/utils';
@@ -45,7 +45,7 @@ const ComponentSettingsPage: React.FunctionComponent = () => {
 
   return (
     <NamespacedPage>
-      <Helmet>Component Settings Page</Helmet>
+      <HeadTitle>{componentName} - Component Settings | Stonesoup</HeadTitle>
       <ComponentSettingsView componentName={componentName} />
     </NamespacedPage>
   );

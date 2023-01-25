@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import ImportForm from '../components/ImportForm/ImportForm';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
@@ -15,9 +14,6 @@ const ImportPage: React.FunctionComponent = () => {
 
   return (
     <NamespacedPage>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
       <PageLayout
         breadcrumbs={[
           { path: '/stonesoup/applications', name: 'Applications' },

@@ -17,9 +17,6 @@ const PipelineRunPage = () => {
     <NamespacedPage>
       {name ? (
         <React.Fragment>
-          <Helmet>
-            <title>Pipeline run Details Page</title>
-          </Helmet>
           <PipelineRunDetailsView pipelineRunName={name} />
         </React.Fragment>
       ) : (
