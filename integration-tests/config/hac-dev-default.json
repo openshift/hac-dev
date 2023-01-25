@@ -4,7 +4,7 @@
   "reporterOptions": {
     "reporterEnabled": "spec, mocha-junit-reporter, @reportportal/agent-js-cypress",
     "reportportalAgentJsCypressReporterOptions": {
-      "endpoint": "https://reportportal-hac-dev-qe.apps.ocp-c1.prod.psi.redhat.com/api/v1",
+      "endpoint": "https://reportportal-appstudio-qe.apps.ocp-c1.prod.psi.redhat.com/api/v1",
       "token": "xxx",
       "launch": "hac-dev-pr-check",
       "project": "hac-dev",
