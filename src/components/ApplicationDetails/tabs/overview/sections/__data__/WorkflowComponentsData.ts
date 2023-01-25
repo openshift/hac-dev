@@ -4,7 +4,7 @@ export const mockComponentsData = [
     kind: 'Component',
     metadata: {
       annotations: {
-        pipelinesascode: '1',
+        'appstudio.openshift.io/pac-provision': 'request',
       },
       resourceVersion: '999994539',
       name: 'test-dotnet60',
@@ -41,7 +41,7 @@ export const mockComponentsData = [
             'f:metadata': {
               'f:annotations': {
                 '.': {},
-                'f:pipelinesascode': {},
+                'f:appstudio.openshift.io/pac-provision': {},
               },
             },
             'f:spec': {
@@ -158,8 +158,8 @@ export const mockComponentsData = [
     kind: 'Component',
     metadata: {
       annotations: {
-        'com.redhat.appstudio/component-initial-build-processed': 'true',
-        pipelinesascode: '1',
+        'appstudio.openshift.io/component-initial-build': 'processed',
+        'appstudio.openshift.io/pac-provision': 'request',
       },
       resourceVersion: '999922571',
       name: 'test-go',
@@ -196,7 +196,7 @@ export const mockComponentsData = [
             'f:metadata': {
               'f:annotations': {
                 '.': {},
-                'f:pipelinesascode': {},
+                'f:appstudio.openshift.io/pac-provision': {},
               },
             },
             'f:spec': {
@@ -255,7 +255,7 @@ export const mockComponentsData = [
           fieldsV1: {
             'f:metadata': {
               'f:annotations': {
-                'f:com.redhat.appstudio/component-initial-build-processed': {},
+                'f:appstudio.openshift.io/component-initial-build': {},
               },
             },
           },
@@ -327,7 +327,7 @@ export const mockComponentsData = [
     kind: 'Component',
     metadata: {
       annotations: {
-        pipelinesascode: '1',
+        'appstudio.openshift.io/pac-provision': 'request',
       },
       resourceVersion: '1089930845',
       name: 'nodejs-test',
@@ -364,7 +364,7 @@ export const mockComponentsData = [
             'f:metadata': {
               'f:annotations': {
                 '.': {},
-                'f:pipelinesascode': {},
+                'f:appstudio.openshift.io/pac-provision': {},
               },
             },
             'f:spec': {
