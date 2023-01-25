@@ -128,7 +128,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
                           component={(props) => (
                             <Link
                               {...props}
-                              to={`/stonesoup/pipelineruns/${pipelineRun.metadata?.name}?activeTab=logs`}
+                              to={`/stonesoup/pipelineruns/${pipelineRun.metadata?.name}/logs`}
                             />
                           )}
                         >

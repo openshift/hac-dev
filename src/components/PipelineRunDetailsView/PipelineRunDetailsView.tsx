@@ -55,7 +55,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
               name: applicationName,
             },
             {
-              path: `/stonesoup/applications/${applicationName}/pipelineruns`,
+              path: `/stonesoup/applications/${applicationName}/activity/pipelineruns`,
               name: 'Pipeline runs',
             },
             {

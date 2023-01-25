@@ -180,6 +180,32 @@ module.exports = {
     {
       type: 'console.page/route',
       properties: {
+        path: '/stonesoup/:appName/commit/:commitName/:activeTab',
+        exact: true,
+        component: {
+          $codeRef: 'CommitsPage',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/stonesoup/:appName/commit/:commitName/:activeTab',
+        exact: true,
+        component: {
+          $codeRef: 'CommitsPage',
+        },
+      },
+      flags: {
+        required: ['HACBS', 'SIGNUP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
         path: '/stonesoup/:appName/integrationtests/:testName',
         exact: true,
         component: {
@@ -298,6 +324,32 @@ module.exports = {
       type: 'core.page/route',
       properties: {
         path: '/stonesoup/applications/:appName/:activeTab',
+        exact: true,
+        component: {
+          $codeRef: 'ApplicationDetails',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/stonesoup/applications/:appName/:activeTab/:activity',
+        exact: true,
+        component: {
+          $codeRef: 'ApplicationDetails',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/stonesoup/applications/:appName/:activeTab/:activity',
         exact: true,
         component: {
           $codeRef: 'ApplicationDetails',
@@ -403,6 +455,34 @@ module.exports = {
       type: 'core.page/route',
       properties: {
         path: '/stonesoup/workspace-settings',
+        exact: true,
+        component: {
+          $codeRef: 'WorkspaceSettings',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+        disallowed: ['MVP'],
+      },
+    },
+    {
+      type: 'console.page/route',
+      properties: {
+        path: '/stonesoup/workspace-settings/:activeTab',
+        exact: true,
+        component: {
+          $codeRef: 'WorkspaceSettings',
+        },
+      },
+      flags: {
+        required: ['SIGNUP'],
+        disallowed: ['MVP'],
+      },
+    },
+    {
+      type: 'core.page/route',
+      properties: {
+        path: '/stonesoup/workspace-settings/:activeTab',
         exact: true,
         component: {
           $codeRef: 'WorkspaceSettings',

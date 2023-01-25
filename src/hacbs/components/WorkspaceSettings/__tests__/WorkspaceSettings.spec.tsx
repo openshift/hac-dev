@@ -1,9 +1,9 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { configure, fireEvent, screen } from '@testing-library/react';
+import { act, configure, fireEvent, screen } from '@testing-library/react';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { MockEnterpriseContractPolicies } from '../../../../components/EnterpriseContractView/__data__/mockEnterpriseContractPolicies';
 import { mockLocation, routerRenderer } from '../../../../utils/test-utils';
@@ -21,7 +21,7 @@ jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
   return {
     ...actual,
-    useSearchParams: jest.fn(),
+    useNavigate: jest.fn(),
   };
 });
 
@@ -30,9 +30,9 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
 }));
 
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
-const useSearchParamsMock = useSearchParams as jest.Mock;
 const useChromeMock = useChrome as jest.Mock;
 const watchResourceMock = useK8sWatchResource as jest.Mock;
+const useNavigateMock = useNavigate as jest.Mock;
 
 jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
@@ -47,7 +47,8 @@ global.fetch = jest.fn(() =>
 );
 
 describe('WorkspaceSettings', () => {
-  let params: URLSearchParams;
+  let navigateMock;
+
   beforeEach(() => {
     const set = jest.fn();
     const toggle = jest.fn();
@@ -60,14 +61,11 @@ describe('WorkspaceSettings', () => {
     });
     useFeatureFlagMock.mockReturnValue([false]);
     watchResourceMock.mockReturnValue([[], true]);
-    params = new URLSearchParams();
-    useSearchParamsMock.mockImplementation(() => [
-      params,
-      (newParams: URLSearchParams) => {
-        params = newParams;
-        window.location.search = `?${newParams.toString()}`;
-      },
-    ]);
+    navigateMock = jest.fn();
+    useNavigateMock.mockImplementation(() => navigateMock);
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
   });
   it('should render workspace settings', () => {
     routerRenderer(<WorkspaceSettings />);
@@ -77,14 +75,14 @@ describe('WorkspaceSettings', () => {
     routerRenderer(<WorkspaceSettings />);
     expect(screen.getByText('Enterprise Contract')).toBeVisible();
   });
-  it('should render the enterprise contract view when selected', async () => {
-    const original = routerRenderer(<WorkspaceSettings />);
+  it('should navigate to the enterprise contract tab when selected', async () => {
+    routerRenderer(<WorkspaceSettings />);
     const testTab = screen.getByText('Enterprise Contract');
     expect(testTab).toBeVisible();
-    fireEvent.click(testTab);
-    original.unmount();
 
-    const updated = routerRenderer(<WorkspaceSettings />);
-    expect(updated.getByTestId('enterprise-contract-title')).toBeVisible();
+    await act(async () => {
+      fireEvent.click(testTab);
+    });
+    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspace-settings/enterprise-contract');
   });
 });

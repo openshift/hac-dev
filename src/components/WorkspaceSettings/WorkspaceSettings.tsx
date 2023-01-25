@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Flex,
   FlexItem,
@@ -64,33 +64,18 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = ({
   tabs,
 }) => {
   useQuickstartCloseOnUnmount();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('activeTab');
-  const tabMatched =
-    activeTab === ENVIRONMENTS_TAB_KEY
-      ? ENVIRONMENTS_TAB_KEY
-      : tabs?.find((t) => t.key === activeTab)?.key;
+  const navigate = useNavigate();
+  const params = useParams();
+  const { activeTab } = params;
 
   const setActiveTab = React.useCallback(
-    (tab: string, replace = false) => {
-      if ((activeTab || ENVIRONMENTS_TAB_KEY) !== tab) {
-        const params = new URLSearchParams();
-        params.set('activeTab', tab);
-        setSearchParams(params, { replace });
+    (newTab: string) => {
+      if (activeTab !== newTab) {
+        navigate(`/stonesoup/workspace-settings/${newTab}`);
       }
     },
-    [setSearchParams, activeTab],
+    [activeTab, navigate],
   );
-
-  React.useEffect(() => {
-    if (!tabMatched) {
-      setSearchParams(new URLSearchParams(), { replace: true });
-    } else {
-      setActiveTab(tabMatched, true);
-    }
-    // Only run once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const environments = (
     <>
