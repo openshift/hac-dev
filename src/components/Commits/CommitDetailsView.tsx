@@ -28,6 +28,7 @@ import { createCommitObjectFromPLR, getCommitShortName, statuses } from '../../u
 import { useNamespace } from '../../utils/namespace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import { useCommitStatus } from './commit-status';
+import { CommitIcon } from './CommitIcon';
 import CommitsGettingStartedModal from './CommitsGettingStartedModal';
 import CommitSidePanel from './CommitSidePanel';
 import { SortedPLRList } from './CommitSidePanelHeader';
@@ -57,7 +58,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
   };
 
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
-  const [isFull, setIsFull] = React.useState<boolean>(false);
+  // const [isFull, setIsFull] = React.useState<boolean>(false);
   const [selectedPipelineRun, setSelectedPipelineRun] = React.useState<PipelineRunKind>(null);
   const drawerRef = React.useRef<HTMLDivElement>();
 
@@ -203,7 +204,11 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
               title={
                 <Text component={TextVariants.h2}>
                   <span className="pf-u-mr-sm">
-                    <b>{commitDisplayName}</b>
+                    <CommitIcon
+                      isPR={commit.isPullRequest}
+                      className="commit-details__title-icon"
+                    />{' '}
+                    <b>{commit.shaTitle}</b>
                   </span>
                   <Button
                     className="pf-u-pl-xs"
@@ -228,6 +233,11 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                       )}
                     </ExternalLink>
                   </Text>
+                  {commit.isPullRequest ? (
+                    <Text component="p" className="pf-u-mt-xs pf-u-mb-xs">
+                      Pull request: {commit.pullRequestNumber}
+                    </Text>
+                  ) : null}
                   <Text component="p" className="pf-u-mt-xs pf-u-mb-xs">
                     Branch:{' '}
                     {commit.gitProvider === 'github' && commit.repoOrg ? (
@@ -244,7 +254,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                       By {commit.user} at <Timestamp timestamp={commit.creationTime} />
                     </span>
                   </Text>
-                  {commit.shaTitle && commit.shaTitle.length > 75 ? (
+                  {/* {commit.shaTitle && commit.shaTitle.length > 75 ? (
                     <p className="pf-u-mt-xs pf-u-mb-xs">
                       {`"${isFull ? commit.shaTitle : commit.shaTitle.slice(0, 75)}"`}
                       <Button
@@ -257,7 +267,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                     </p>
                   ) : (
                     <p className="pf-u-mt-xs pf-u-mb-xs">{`"${commit.shaTitle}"`}</p>
-                  )}
+                  )} */}
                   <Text component="p" className="pf-u-mt-sm pf-u-mb-sm">
                     Component:{' '}
                     {commit.components.map((component, index) => {
