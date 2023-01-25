@@ -3,11 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Flex, FlexItem, Spinner, Text, Tooltip } from '@patternfly/react-core';
-import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { ApplicationGroupVersionKind } from '../../models';
-import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
 import { MVP_FLAG } from '../../utils/flag-utils';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
@@ -153,16 +151,6 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
               quickStarts.toggle('hacbs-getting-started-app');
             },
           },
-          {
-            key: 'explore-documentation',
-            component: 'span',
-            label: (
-              <ExternalLink href="https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation">
-                Explore Documentation <ExternalLinkAltIcon />
-              </ExternalLink>
-            ),
-          },
-
           {
             type: 'separator',
             key: 'delete-separator',
