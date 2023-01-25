@@ -8,7 +8,7 @@ import { StatusIconWithText } from '../../shared/components/pipeline-run-logs/St
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../types';
-import { statuses } from '../../utils/commits-utils';
+import { createRepoBranchURL, statuses } from '../../utils/commits-utils';
 import { useCommitActions } from './commit-actions';
 import { CommitIcon } from './CommitIcon';
 import { commitsTableColumnClasses } from './CommitsListHeader';
@@ -37,11 +37,8 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
         )}
       </TableData>
       <TableData className={commitsTableColumnClasses.branch}>
-        {obj.gitProvider === 'github' && obj.repoOrg ? (
-          <ExternalLink
-            href={`https://github.com/${obj.repoOrg}/${obj.repoURL}/tree/${obj.branch}`}
-            text={`${obj.branch}`}
-          />
+        {obj.gitProvider === 'github' && createRepoBranchURL(obj) ? (
+          <ExternalLink href={createRepoBranchURL(obj)} text={`${obj.branch}`} />
         ) : (
           `${obj.branch}`
         )}

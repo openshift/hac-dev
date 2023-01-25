@@ -187,18 +187,18 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
                   <DescriptionListTerm>Source</DescriptionListTerm>
                   <DescriptionListDescription>
                     {pipelineRun.metadata?.annotations?.[
-                      PipelineRunLabel.COMMIT_FULL_REPO_URL_LABEL
+                      PipelineRunLabel.COMMIT_FULL_REPO_URL_ANNOTATION
                     ] ? (
                       <ExternalLink
                         href={
                           pipelineRun.metadata?.annotations[
-                            PipelineRunLabel.COMMIT_FULL_REPO_URL_LABEL
+                            PipelineRunLabel.COMMIT_FULL_REPO_URL_ANNOTATION
                           ]
                         }
                       >
                         {
                           pipelineRun.metadata?.annotations[
-                            PipelineRunLabel.COMMIT_FULL_REPO_URL_LABEL
+                            PipelineRunLabel.COMMIT_FULL_REPO_URL_ANNOTATION
                           ]
                         }
                       </ExternalLink>

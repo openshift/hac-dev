@@ -22,7 +22,8 @@ export const createCommitObjectFromPLR = (plr: PipelineRunKind): Commit => {
   const creationTime = plr.metadata.creationTimestamp;
   const application = plr.metadata.labels[PipelineRunLabel.APPLICATION];
   const component = plr.metadata.labels[PipelineRunLabel.COMPONENT] ?? '';
-  const repoURL = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_URL_LABEL];
+  const repoName = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_URL_LABEL];
+  const repoURL = plr.metadata.annotations[PipelineRunLabel.COMMIT_FULL_REPO_URL_ANNOTATION];
   const repoOrg = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_ORG_LABEL];
   const gitProvider = plr.metadata.labels[PipelineRunLabel.COMMIT_PROVIDER_LABEL];
   const pullRequestNumber = plr.metadata.labels[PipelineRunLabel.PULL_REQUEST_NUMBER_LABEL] ?? '';
@@ -38,6 +39,7 @@ export const createCommitObjectFromPLR = (plr: PipelineRunKind): Commit => {
     user: commitUser,
     sha: commitSHA,
     shaURL,
+    repoName,
     repoURL,
     repoOrg,
     gitProvider,
@@ -130,4 +132,30 @@ export const showPLRMessage = (plr: PipelineRunKind): string => {
   if (runType === PipelineRunType.RELEASE) {
     return 'Releasing';
   }
+};
+
+export const createRepoUrl = (commit: Commit): string | null => {
+  if (commit.repoURL) {
+    return commit.repoURL;
+  }
+  if (commit.repoName && commit.repoOrg) {
+    return `https://github.com/${commit.repoOrg}/${commit.repoName}`;
+  }
+  return null;
+};
+
+export const createRepoBranchURL = (commit: Commit): string | null => {
+  const repoUrl = createRepoUrl(commit);
+  if (commit.branch && repoUrl) {
+    return `${repoUrl}/tree/${commit.branch}`;
+  }
+  return null;
+};
+
+export const createRepoPullRequestURL = (commit: Commit): string | null => {
+  const repoURL = createRepoUrl(commit);
+  if (commit.pullRequestNumber && repoURL) {
+    return `${repoURL}/pull/${commit.pullRequestNumber}`;
+  }
+  return null;
 };

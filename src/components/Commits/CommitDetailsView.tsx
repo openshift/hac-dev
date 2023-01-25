@@ -24,7 +24,13 @@ import ExternalLink from '../../shared/components/links/ExternalLink';
 import { StatusIconWithTextLabel } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../types';
-import { createCommitObjectFromPLR, getCommitShortName, statuses } from '../../utils/commits-utils';
+import {
+  createCommitObjectFromPLR,
+  createRepoBranchURL,
+  createRepoPullRequestURL,
+  getCommitShortName,
+  statuses,
+} from '../../utils/commits-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import { useCommitStatus } from './commit-status';
@@ -235,16 +241,21 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                   </Text>
                   {commit.isPullRequest ? (
                     <Text component="p" className="pf-u-mt-xs pf-u-mb-xs">
-                      Pull request: {commit.pullRequestNumber}
+                      Pull request:{' '}
+                      {commit.gitProvider === 'github' && createRepoPullRequestURL(commit) ? (
+                        <ExternalLink
+                          href={createRepoPullRequestURL(commit)}
+                          text={`${commit.pullRequestNumber}`}
+                        />
+                      ) : (
+                        commit.pullRequestNumber
+                      )}
                     </Text>
                   ) : null}
                   <Text component="p" className="pf-u-mt-xs pf-u-mb-xs">
                     Branch:{' '}
-                    {commit.gitProvider === 'github' && commit.repoOrg ? (
-                      <ExternalLink
-                        href={`https://github.com/${commit.repoOrg}/${commit.repoURL}/tree/${commit.branch}`}
-                        text={`${commit.branch}`}
-                      />
+                    {commit.gitProvider === 'github' && createRepoBranchURL(commit) ? (
+                      <ExternalLink href={createRepoBranchURL(commit)} text={`${commit.branch}`} />
                     ) : (
                       `${commit.branch}`
                     )}

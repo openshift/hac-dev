@@ -10,7 +10,7 @@ export enum PipelineRunLabel {
   COMMIT_USER_LABEL = 'pipelinesascode.tekton.dev/sender',
   COMMIT_REPO_ORG_LABEL = 'pipelinesascode.tekton.dev/url-org',
   COMMIT_REPO_URL_LABEL = 'pipelinesascode.tekton.dev/url-repository',
-  COMMIT_FULL_REPO_URL_LABEL = 'pipelinesascode.tekton.dev/repo-url',
+  COMMIT_FULL_REPO_URL_ANNOTATION = 'pipelinesascode.tekton.dev/repo-url',
   COMMIT_PROVIDER_LABEL = 'pipelinesascode.tekton.dev/git-provider',
   COMMIT_SHA_TITLE_ANNOTATION = 'pipelinesascode.tekton.dev/sha-title',
   COMMIT_TYPE_LABEL = 'pipelines.appstudio.openshift.io/type',
