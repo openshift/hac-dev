@@ -2,6 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen } from '@testing-library/react';
+import { useSearchParam } from '../../../hooks/useSearchParam';
 import { PipelineRunKind } from '../../../types';
 import PipelineRunsListView from '../PipelineRunsListView';
 
@@ -16,6 +17,24 @@ jest.mock('react-i18next', () => ({
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
+
+jest.mock('../../../hooks/useSearchParam', () => ({
+  useSearchParam: jest.fn(),
+}));
+
+const useSearchParamMock = useSearchParam as jest.Mock;
+
+const params: any = {};
+
+const mockUseSearchParam = (name: string) => {
+  const setter = (value) => {
+    params[name] = value;
+  };
+  const unset = () => {
+    params[name] = '';
+  };
+  return [params[name], setter, unset];
+};
 
 const appName = 'my-test-app';
 
@@ -94,6 +113,10 @@ const pipelineRuns: PipelineRunKind[] = [
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('Pipeline run List', () => {
+  beforeEach(() => {
+    useSearchParamMock.mockImplementation(mockUseSearchParam);
+  });
+
   it('should render spinner if application data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
     render(<PipelineRunsListView applicationName={appName} />);
@@ -118,7 +141,7 @@ describe('Pipeline run List', () => {
     screen.getByText('Name');
     screen.getByText('Started');
     screen.getByText('Duration');
-    screen.getByText('Status');
+    screen.getAllByText('Status');
     screen.getByText('Type');
     screen.getByText('Component');
   });
