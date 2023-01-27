@@ -142,7 +142,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
 
   return (
     <PageGroup data-test="details">
-      <HeadTitle>{`${headTitle} - ${activeTab?.label} | Stonesoup`}</HeadTitle>
+      <HeadTitle>{`${headTitle} - ${activeTab?.label} | CI/CD`}</HeadTitle>
       <PageSection type="breadcrumb">
         {breadcrumbs && (
           <BreadCrumbs

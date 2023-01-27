@@ -146,7 +146,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
 
   return (
     <>
-      <HeadTitle>Import - Add components | Stonesoup</HeadTitle>
+      <HeadTitle>Import - Add components | CI/CD</HeadTitle>
       <TextContent>
         <Text component="h2">Add components to your application</Text>
         <HelperText>
