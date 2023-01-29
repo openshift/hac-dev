@@ -19,6 +19,7 @@ import {
   SPIAccessTokenBindingKind,
 } from '../types';
 import { ComponentSpecs } from './../types/component';
+import { PAC_ANNOTATION } from './component-utils';
 
 export const sanitizeName = (name: string) => name.split(/ |\./).join('-').toLowerCase();
 /**
@@ -65,6 +66,7 @@ export const createApplication = (
  * @param application application name
  * @param namespace namespace of the application
  * @param dryRun dry run without creating any resources
+ * @param annotations optional set of additional annotations
  * @returns Returns HAS Component CR data
  *
  * TODO: Return type any should be changed to a proper type like K8sResourceCommon
@@ -79,7 +81,8 @@ export const createComponent = (
   originalComponent?: ComponentKind,
   verb: 'create' | 'update' = 'create',
   enablePac: boolean = false,
-): any => {
+  annotations?: { [key: string]: string },
+) => {
   const { componentName, containerImage, source, replicas, resources, env, targetPort } = component;
 
   const name = component.componentName.split(/ |\./).join('-').toLowerCase();
@@ -94,7 +97,7 @@ export const createComponent = (
         (enablePac
           ? {
               annotations: {
-                'appstudio.openshift.io/pac-provision': 'request',
+                [PAC_ANNOTATION]: 'request',
               },
             }
           : {
@@ -118,6 +121,11 @@ export const createComponent = (
 
   const resource =
     verb === 'update' ? { ...originalComponent, spec: newComponent.spec } : newComponent;
+
+  // merge additional annotations
+  if (annotations) {
+    resource.metadata.annotations = { ...resource.metadata.annotations, ...annotations };
+  }
 
   return verb === 'create'
     ? k8sCreateResource({

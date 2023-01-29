@@ -36,7 +36,7 @@ export type ImportFormValues = {
   application: string;
   inAppContext?: boolean;
   components?: DetectedFormComponent[];
-  pipelinesascode?: boolean;
+  pipelinesascode?: 'manual' | 'automatic';
   source: {
     git: {
       url: string;

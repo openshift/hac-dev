@@ -5,7 +5,7 @@ import { pipelineRunFilterReducer, pipelineRunStatus, runStatus } from '../../..
 import { PipelineRunKind } from '../../../../../../shared/components/pipeline-run-logs/types';
 import { ComponentKind } from '../../../../../../types';
 import { GitOpsDeploymentHealthStatus } from '../../../../../../types/gitops-deployment';
-import { hasPACProvisionDone } from '../../../../../Components/BuildStatusColumn';
+import { isPACEnabled } from '../../../../../../utils/component-utils';
 import { DEFAULT_NODE_HEIGHT } from '../../../../../topology/const';
 import { NodeType } from '../const';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
@@ -160,7 +160,7 @@ export const getRunStatusComponent = (
     )?.[0];
   if (latestPipelineRun) {
     return pipelineRunFilterReducer(latestPipelineRun);
-  } else if (hasPACProvisionDone(component)) {
+  } else if (isPACEnabled(component)) {
     return NEEDS_MERGE_STATUS;
   }
   return UNKNOWN_STATUS;
@@ -284,7 +284,7 @@ export const getBuildNodeForComponent = (
       application,
       label: `Build for ${component.metadata.name}`,
       isDisabled: false,
-      status: hasPACProvisionDone(component) ? NEEDS_MERGE_STATUS : runStatus.Pending,
+      status: isPACEnabled(component, true) ? NEEDS_MERGE_STATUS : runStatus.Pending,
       workflowType: WorkflowNodeType.BUILD,
     },
   };

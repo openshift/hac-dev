@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { PageSection, PageSectionTypes, PageSectionVariants } from '@patternfly/react-core';
 import { FormikWizard } from 'formik-pf';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
+import { useModalLauncher } from '../modal/ModalProvider';
 import { createResources } from './utils/submit-utils';
 import { ImportFormValues, ImportStrategy } from './utils/types';
 import { useImportSteps } from './utils/useImportSteps';
@@ -20,7 +22,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
     application: applicationName || '',
     inAppContext: applicationName ? true : false,
     components: [],
-    pipelinesascode: false,
+    pipelinesascode: 'manual',
     source: {
       git: {
         url: '',
@@ -33,12 +35,27 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
   };
 
   const steps = useImportSteps(applicationName, strategy, setStrategy);
+  const showModal = useModalLauncher();
 
   const handleSubmit = React.useCallback(
-    (values, formikHelpers) => {
+    (values: ImportFormValues, formikHelpers) => {
       return createResources(values, strategy)
-        .then((appName) => {
-          navigate(`/stonesoup/applications/${appName}`);
+        .then(({ applicationName: appName, componentNames }) => {
+          const doNavigate = () => navigate(`/stonesoup/applications/${appName}`);
+          if (values.pipelinesascode === 'automatic') {
+            showModal(
+              createCustomizeAllPipelinesModalLauncher(
+                appName,
+                namespace,
+                (c) => componentNames.includes(c.metadata.name),
+                () => {
+                  setTimeout(() => doNavigate(), 0);
+                },
+              ),
+            );
+          } else {
+            doNavigate();
+          }
         })
         .catch((error) => {
           // eslint-disable-next-line no-console
@@ -47,7 +64,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
           formikHelpers.setStatus({ submitError: error.message });
         });
     },
-    [navigate, strategy],
+    [navigate, strategy, showModal, namespace],
   );
 
   const handleReset = () => {

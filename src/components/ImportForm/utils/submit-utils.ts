@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import { SAMPLE_ANNOTATION } from '../../../utils/component-utils';
 import { createApplication, createComponent } from '../../../utils/create-utils';
 import { detectComponents } from './cdq-utils';
 import { transformResources, transformComponentValues } from './transform-utils';
@@ -11,6 +12,7 @@ export const createComponents = async (
   secret?: string,
   dryRun?: boolean,
   enablePac?: boolean,
+  annotations?: { [key: string]: string },
 ) => {
   const createComponentPromises = components.map((component) => {
     const componentData = component.componentStub;
@@ -29,6 +31,7 @@ export const createComponents = async (
       null,
       'create',
       enablePac,
+      annotations,
     );
   });
 
@@ -41,6 +44,8 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
   const shouldCreateApplication = !inAppContext;
   let applicationName = application;
   let detectedComponents = components;
+  let componentAnnotations: { [key: string]: string };
+
   if (strategy === ImportStrategy.SAMPLE) {
     const detectedSampleComponents = await detectComponents(
       source.git.url,
@@ -51,17 +56,11 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
       source.git.revision,
     );
     detectedComponents = transformComponentValues(detectedSampleComponents);
+    componentAnnotations = { [SAMPLE_ANNOTATION]: 'true' };
   }
 
   if (shouldCreateApplication) {
     const applicationData = await createApplication(application, namespace, true);
-    applicationName = applicationData.metadata.name;
-  }
-
-  await createComponents(detectedComponents, applicationName, namespace, secret, true);
-
-  if (shouldCreateApplication) {
-    const applicationData = await createApplication(application, namespace);
     applicationName = applicationData.metadata.name;
   }
 
@@ -70,11 +69,27 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
     applicationName,
     namespace,
     secret,
-    false,
-    pipelinesascode,
+    true,
+    pipelinesascode === 'automatic',
+    componentAnnotations,
   );
 
-  return applicationName;
+  if (shouldCreateApplication) {
+    const applicationData = await createApplication(application, namespace);
+    applicationName = applicationData.metadata.name;
+  }
+
+  const createdComponents = await createComponents(
+    detectedComponents,
+    applicationName,
+    namespace,
+    secret,
+    false,
+    pipelinesascode === 'automatic',
+    componentAnnotations,
+  );
+
+  return { applicationName, componentNames: createdComponents.map((c) => c.metadata.name) };
 };
 
 export const checkApplicationName = async (

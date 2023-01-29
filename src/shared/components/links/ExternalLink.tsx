@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Button, ButtonProps, ButtonVariant } from '@patternfly/react-core';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 
 type ExternalLinkProps = {
   href: string;
@@ -7,6 +9,8 @@ type ExternalLinkProps = {
   dataTestID?: string;
   stopPropagation?: boolean;
   style?: React.CSSProperties;
+  showIcon?: boolean;
+  variant?: ButtonProps['variant'];
 };
 
 const ExternalLink: React.FC<ExternalLinkProps> = ({
@@ -17,8 +21,11 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
   dataTestID,
   stopPropagation,
   style,
+  showIcon,
+  variant = ButtonVariant.link,
 }) => (
-  <a
+  <Button
+    component="a"
     style={style}
     className={additionalClassName}
     href={href}
@@ -26,9 +33,17 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
     rel="noopener noreferrer"
     data-test-id={dataTestID}
     {...(stopPropagation ? { onClick: (e) => e.stopPropagation() } : {})}
+    isInline
+    variant={variant}
   >
     {children || text}
-  </a>
+    {showIcon ? (
+      <>
+        {' '}
+        <ExternalLinkAltIcon />
+      </>
+    ) : null}
+  </Button>
 );
 
 export default ExternalLink;

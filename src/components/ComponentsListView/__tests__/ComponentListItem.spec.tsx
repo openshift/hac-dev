@@ -9,6 +9,10 @@ import { mockPipelineRuns } from '../../ApplicationDetailsView/__data__/mock-pip
 import BuildStatusColumn from '../BuildStatusColumn';
 import { ComponentListItem } from '../ComponentListItem';
 
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  useK8sWatchResource: jest.fn(() => [[], true]),
+}));
+
 configure({ testIdAttribute: 'data-testid' });
 
 jest.mock('../../../hooks/usePipelineRunsForApplication', () => ({

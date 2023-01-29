@@ -13,7 +13,7 @@ import {
   EmptyStateBody,
 } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
-import { CheckboxField } from '../../../shared';
+import { RadioButtonField } from '../../../shared';
 import { HeadTitle } from '../../HeadTitle';
 import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
 import { useComponentDetection } from '../utils/cdq-utils';
@@ -157,11 +157,33 @@ const ReviewSection: React.FunctionComponent = () => {
           />
         ))}
 
-        <CheckboxField
+        <RadioButtonField
           name="pipelinesascode"
-          aria-label="Send pull request"
-          label="Send pull request"
-          helpText="This will create a custom pipeline in your repository."
+          aria-label="Default"
+          label="Default"
+          description={
+            <>
+              Use our default build pipeline.
+              <br />
+              Manually trigger rebuilds from the Application screen.
+            </>
+          }
+          value="manual"
+        />
+        <RadioButtonField
+          name="pipelinesascode"
+          aria-label="Custom"
+          label="Custom"
+          description={
+            <>
+              Use build pipelines as code.
+              <br />
+              Own and customize our default build pipelines in your component&apos;s repository.
+              <br />
+              Automatically trigger rebuilds when pushing commits.
+            </>
+          }
+          value="automatic"
           data-test="send-pull-request"
         />
       </FormSection>
