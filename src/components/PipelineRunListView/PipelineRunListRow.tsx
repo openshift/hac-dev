@@ -45,6 +45,23 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
       <TableData className={pipelineRunTableColumnClasses.type}>
         {capitalize(obj.metadata?.labels[PipelineRunLabel.PIPELINE_TYPE])}
       </TableData>
+      <TableData className={pipelineRunTableColumnClasses.component}>
+        {obj.metadata?.labels[PipelineRunLabel.COMPONENT] ? (
+          obj.metadata?.labels[PipelineRunLabel.APPLICATION] ? (
+            <Link
+              to={`/stonesoup/applications/${
+                obj.metadata?.labels[PipelineRunLabel.APPLICATION]
+              }/components`}
+            >
+              {obj.metadata?.labels[PipelineRunLabel.COMPONENT]}
+            </Link>
+          ) : (
+            obj.metadata?.labels[PipelineRunLabel.COMPONENT]
+          )
+        ) : (
+          '-'
+        )}
+      </TableData>
       <TableData data-testid="plr-list-row-kebab" className={pipelineRunTableColumnClasses.kebab}>
         <ActionMenu actions={actions} />
       </TableData>

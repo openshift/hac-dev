@@ -1,9 +1,10 @@
 export const pipelineRunTableColumnClasses = {
   name: 'pf-m-width-20',
-  status: 'pf-m-width-15',
-  started: 'pf-m-width-15',
-  type: 'pf-m-hidden pf-m-visible-on-xl',
-  duration: 'pf-m-width-15',
+  status: 'pf-m-width-10',
+  started: 'pf-m-width-20',
+  type: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-10',
+  duration: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-10',
+  component: 'pf-m-hidden pf-m-visible-on-xl',
   kebab: 'pf-c-table__action',
 };
 
@@ -28,6 +29,10 @@ export const PipelineRunListHeader = () => {
     {
       title: 'Type',
       props: { className: pipelineRunTableColumnClasses.type },
+    },
+    {
+      title: 'Component',
+      props: { className: pipelineRunTableColumnClasses.component },
     },
     {
       title: '',
