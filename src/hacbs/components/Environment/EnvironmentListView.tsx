@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { Title, EmptyStateBody, Text } from '@patternfly/react-core';
+import { Link } from 'react-router-dom';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
+import { Button, EmptyStateBody, Flex, Text, Title, Tooltip } from '@patternfly/react-core';
+import AppEmptyState from '../../../components/EmptyState/AppEmptyState';
 import {
   EnvironmentType,
   getEnvironmentType,
@@ -8,8 +11,10 @@ import EnvironmentListViewBase from '../../../components/Environment/Environment
 import { useAllApplicationEnvironmentsWithHealthStatus } from '../../../hooks/useAllApplicationEnvironmentsWithHealthStatus';
 import { useAllEnvironments } from '../../../hooks/useAllEnvironments';
 import { useSearchParam } from '../../../hooks/useSearchParam';
+import emptyStateImgUrl from '../../../imgs/Environment.svg';
 import { EnvironmentKind } from '../../../types';
 import { GitOpsDeploymentHealthStatus } from '../../../types/gitops-deployment';
+import { MVP_FLAG } from '../../../utils/flag-utils';
 import EnvironmentCard from './EnvironmentCard';
 import EnvironmentToolbarGroups from './EnvironmentToolbarGroups';
 
@@ -175,6 +180,7 @@ const EnvironmentListView: React.FC<Props> = ({
   applicationName,
   validTypes = DEFAULT_VALID_TYPES,
 }) => {
+  const [mvpFeature] = useFeatureFlag(MVP_FLAG);
   const [typesFilterParam, setTypesFilterParam, unsetTypesFilter] = useSearchParam('envType', '');
   const typesFilter = React.useMemo(
     () =>
@@ -203,17 +209,40 @@ const EnvironmentListView: React.FC<Props> = ({
   const EnvironmentSubtext =
     'An environment is a set of compute resources that you can use to develop, test, and stage your applications. You can share static environments across all applications in the workspace.';
 
-  const emptyStateContent = (
-    <>
-      <Title headingLevel="h4" size="lg">
-        {EnvironmentSubtext}
-      </Title>
+  const createEnvironmentButton = React.useMemo(() => {
+    const envButton = (
+      <Button
+        variant="secondary"
+        isDisabled={mvpFeature}
+        component={(props) => (
+          <Link {...props} to="/stonesoup/workspace-settings/environment/create" />
+        )}
+      >
+        Create environment
+      </Button>
+    );
+    if (mvpFeature) {
+      return (
+        <Flex justifyContent={{ default: 'justifyContentCenter' }} data-test="disabled-create-env">
+          <Tooltip content="In a future release, you'll be able to add more environments and configure version promotion.">
+            <div>{envButton}</div>
+          </Tooltip>
+        </Flex>
+      );
+    }
+    return envButton;
+  }, [mvpFeature]);
+
+  const emptyState = (
+    <AppEmptyState emptyStateImg={emptyStateImgUrl} title="Manage your deployments">
       <EmptyStateBody>
-        No environments found yet.
+        An environment is a set of compute resources that you can use to develop, test, and stage
+        your applications.
         <br />
-        To get started, create an environment or connect to a release environment.
+        To get started, create an environment.
       </EmptyStateBody>
-    </>
+      <div className="pf-u-mt-xl">{createEnvironmentButton}</div>
+    </AppEmptyState>
   );
 
   const description = (
@@ -236,7 +265,7 @@ const EnvironmentListView: React.FC<Props> = ({
         setTypesFilter={setTypesFilter}
         unsetTypesFilter={unsetTypesFilter}
         CardComponent={CardComponent}
-        emptyStateContent={emptyStateContent}
+        emptyStateContent={emptyState}
       />
     );
   }
@@ -249,7 +278,7 @@ const EnvironmentListView: React.FC<Props> = ({
       setTypesFilter={setTypesFilter}
       unsetTypesFilter={unsetTypesFilter}
       CardComponent={CardComponent}
-      emptyStateContent={emptyStateContent}
+      emptyStateContent={emptyState}
     />
   );
 };

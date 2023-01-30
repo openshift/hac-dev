@@ -17,33 +17,16 @@ import {
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-  EmptyStateSecondaryActions,
   SearchInput,
 } from '@patternfly/react-core';
-import { CubesIcon, SearchIcon } from '@patternfly/react-icons/dist/esm/icons';
+import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { EnvironmentKind } from '../../types';
 import { MVP_FLAG } from '../../utils/flag-utils';
+import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import EnvironmentCard from './EnvironmentCard';
 
 import './EnvironmentListView.scss';
-
-const FilteredEmptyState: React.FC<{ onClearFilters: () => void }> = ({ onClearFilters }) => (
-  <EmptyState>
-    <EmptyStateIcon icon={SearchIcon} />
-    <Title headingLevel="h2" size="lg">
-      No results found
-    </Title>
-    <EmptyStateBody>
-      No results match the filter criteria. Remove filters or clear all filters to show results.
-    </EmptyStateBody>
-    <EmptyStateSecondaryActions>
-      <Button variant="link" onClick={onClearFilters}>
-        Clear all filters
-      </Button>
-    </EmptyStateSecondaryActions>
-  </EmptyState>
-);
 
 type Props = {
   environments: EnvironmentKind[];
@@ -110,22 +93,20 @@ const EnvironmentListView: React.FC<Props> = ({
   return (
     <>
       {environments.length === 0 ? (
-        <EmptyState variant={EmptyStateVariant.large}>
-          <EmptyStateIcon icon={CubesIcon} />
-          {emptyStateContent ?? (
-            <>
-              <Title headingLevel="h4" size="lg">
-                No Environments
-              </Title>
-              {!mvpFeature ? (
-                <EmptyStateBody>To get started, create an environment.</EmptyStateBody>
-              ) : null}
-            </>
-          )}
-          {createEnvironmentButton ? (
-            <div className="pf-u-mt-xl">{createEnvironmentButton}</div>
-          ) : null}
-        </EmptyState>
+        emptyStateContent ?? (
+          <EmptyState variant={EmptyStateVariant.large}>
+            <EmptyStateIcon icon={CubesIcon} />
+            <Title headingLevel="h4" size="lg">
+              No Environments
+            </Title>
+            {!mvpFeature ? (
+              <EmptyStateBody>To get started, create an environment.</EmptyStateBody>
+            ) : null}
+            {createEnvironmentButton ? (
+              <div className="pf-u-mt-xl">{createEnvironmentButton}</div>
+            ) : null}
+          </EmptyState>
+        )
       ) : (
         <>
           {description}

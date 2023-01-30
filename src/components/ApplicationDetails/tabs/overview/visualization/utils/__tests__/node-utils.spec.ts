@@ -1,4 +1,4 @@
-import { componentCRMocks } from '../../../../../../ApplicationDetailsView/__data__/mock-data';
+import { componentCRMocks } from '../../../../../__data__/mock-data';
 import { getBuildNodeForComponent } from '../node-utils';
 
 describe('getBuildNodeForComponent', () => {

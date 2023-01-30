@@ -4,11 +4,6 @@ import {
   Badge,
   Button,
   ButtonVariant,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStateSecondaryActions,
-  EmptyStateVariant,
   Gallery,
   GalleryItem,
   HelperText,
@@ -19,20 +14,19 @@ import {
   Text,
   TextContent,
   TextVariants,
-  Title,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
   ToolbarItemVariant,
 } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
-import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useFormikContext } from 'formik';
 import { HelpTooltipIcon } from '../../../shared';
 import { getIconProps } from '../../../shared/components/catalog/utils/catalog-utils';
 import { skeletonTileSelector } from '../../../shared/components/catalog/utils/skeleton-catalog';
 import { CatalogItem } from '../../../shared/components/catalog/utils/types';
 import { StatusBox } from '../../../shared/components/status-box/StatusBox';
+import FilteredEmptyState from '../../EmptyState/FilteredEmptyState';
 import { HeadTitle } from '../../HeadTitle';
 import { ImportFormValues, ImportStrategy } from '../utils/types';
 import { useDevfileSamples } from '../utils/useDevfileSamples';
@@ -40,23 +34,6 @@ import SamplesInfoAlert from './SampleInfoAlert';
 
 import './SampleSection.scss';
 import '../../../shared/style.scss';
-
-const SamplesEmptyState = ({ onClear }) => (
-  <EmptyState variant={EmptyStateVariant.full}>
-    <EmptyStateIcon icon={SearchIcon} />
-    <Title headingLevel="h2" size="lg">
-      No results found
-    </Title>
-    <EmptyStateBody>
-      No results match the filter criteria. Remove filters or clear all filters to show results.
-    </EmptyStateBody>
-    <EmptyStateSecondaryActions>
-      <Button variant="link" onClick={onClear} data-test="catalog-clear-filters">
-        Clear all filters
-      </Button>
-    </EmptyStateSecondaryActions>
-  </EmptyState>
-);
 
 const SampleSection = ({ onStrategyChange }) => {
   const { setFieldValue } = useFormikContext<ImportFormValues>();
@@ -204,7 +181,7 @@ const SampleSection = ({ onStrategyChange }) => {
               </Gallery>
             </div>
           ) : (
-            <SamplesEmptyState onClear={() => setFilter('')} />
+            <FilteredEmptyState onClearFilters={() => setFilter('')} />
           )}
         </StatusBox>
       </PageSection>

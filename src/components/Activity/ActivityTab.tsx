@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Tab, Tabs, TabTitleText, Title } from '@patternfly/react-core';
-import CommitsTab from '../ApplicationDetails/tabs/CommitsTab';
 import PipelineRunsTab from '../ApplicationDetails/tabs/PipelineRunsTab';
+import CommitsListView from '../Commits/CommitsListView';
 
 import './ActivityTab.scss';
 
@@ -43,7 +43,7 @@ export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicatio
           eventKey="latest-commits"
           className="activity-tab"
         >
-          <CommitsTab applicationName={applicationName} />
+          <CommitsListView applicationName={applicationName} />
         </Tab>
         <Tab
           data-testid={`activity__tabItem pipelineruns`}

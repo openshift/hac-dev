@@ -100,8 +100,7 @@ describe('Application List', () => {
     useFeatureFlagMock.mockReturnValue([false]);
     watchResourceMock.mockReturnValue([[], true]);
     render(<ApplicationListView />);
-    screen.getByText('No applications');
-    screen.getByText('To get started, create an application.');
+    screen.getByText('Easily onboard your applications');
     screen.getByText('Create and manage your applications');
     const button = screen.getByText('Create application');
     expect(button).toBeInTheDocument();
@@ -112,7 +111,7 @@ describe('Application List', () => {
     useFeatureFlagMock.mockReturnValue([true]);
     watchResourceMock.mockReturnValue([[], true]);
     render(<ApplicationListView />);
-    screen.getByText('No applications');
+    screen.getByText('Easily onboard your applications');
     expect(screen.queryByText('Create and manage your applications.')).toBeNull();
   });
 

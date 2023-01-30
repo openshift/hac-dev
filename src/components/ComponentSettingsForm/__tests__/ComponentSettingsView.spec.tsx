@@ -2,7 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen } from '@testing-library/react';
-import { componentCRMocks } from '../../../components/ApplicationDetailsView/__data__/mock-data';
+import { componentCRMocks } from '../../ApplicationDetails/__data__/mock-data';
 import ComponentSettingsView from '../ComponentSettingsView';
 
 jest.mock('react-i18next', () => ({

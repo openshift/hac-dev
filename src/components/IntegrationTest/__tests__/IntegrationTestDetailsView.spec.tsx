@@ -6,7 +6,7 @@ import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
 import { IntegrationTestScenarioGroupVersionKind } from '../../../models';
 import { PipelineRunGroupVersionKind } from '../../../shared';
 import { routerRenderer } from '../../../utils/test-utils';
-import { mockPipelineRuns } from '../../ApplicationDetailsView/__data__/mock-pipeline-run';
+import { mockPipelineRuns } from '../../ApplicationDetails/__data__/mock-pipeline-run';
 import IntegrationTestDetailsView from '../IntegrationTestDetailsView';
 import { MockIntegrationTests } from '../IntegrationTestsListView/__data__/mock-integration-tests';
 

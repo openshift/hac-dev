@@ -2,26 +2,18 @@ import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
-  Button,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStateSecondaryActions,
-  EmptyStateVariant,
   SearchInput,
   Select,
   SelectGroup,
   SelectOption,
   SelectVariant,
   Spinner,
-  Title,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
-import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { PipelineRunGroupVersionKind } from '../../models';
@@ -29,6 +21,7 @@ import { pipelineRunFilterReducer, Table } from '../../shared';
 import { PipelineRunKind } from '../../types';
 import { statuses } from '../../utils/commits-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import PipelineRunEmptyState from '../PipelineRunDetailsView/PipelineRunEmptyState';
 import { PipelineRunListHeader } from './PipelineRunListHeader';
 import PipelineRunListRow from './PipelineRunListRow';
@@ -91,23 +84,6 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
 
   const onClearFilters = () => setNameFilter('');
   const onNameInput = (name: string) => setNameFilter(name);
-
-  const emptyMessage = (
-    <EmptyState data-test="filtered-empty-state" variant={EmptyStateVariant.full}>
-      <EmptyStateIcon icon={SearchIcon} />
-      <Title headingLevel="h2" size="lg">
-        No results found
-      </Title>
-      <EmptyStateBody>
-        No results match the filter criteria. Remove filters or clear all filters to show results.
-      </EmptyStateBody>
-      <EmptyStateSecondaryActions>
-        <Button variant="link" onClick={onClearFilters} data-test="pipelineRun-clear-filters">
-          Clear all filters
-        </Button>
-      </EmptyStateSecondaryActions>
-    </EmptyState>
-  );
 
   if (!loaded) {
     return (
@@ -192,7 +168,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
           })}
         />
       ) : (
-        emptyMessage
+        <FilteredEmptyState onClearFilters={onClearFilters} />
       )}
     </>
   );

@@ -3,28 +3,13 @@ import '@testing-library/jest-dom';
 import { useSearchParams } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { act, configure, fireEvent, screen } from '@testing-library/react';
-import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
-import { useComponents } from '../../../../../../hooks/useComponents';
-import { useEnvironments } from '../../../../../../hooks/useEnvironments';
-import { useIntegrationTestScenarios } from '../../../../../../hooks/useIntegrationTestScenarios';
-import { useReleasePlans } from '../../../../../../hooks/useReleasePlans';
-import { useReleases } from '../../../../../../hooks/useReleases';
 import { useSearchParam } from '../../../../../../hooks/useSearchParam';
 import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
 import { CustomError } from '../../../../../../shared/utils/error/custom-error';
 import { useNamespace } from '../../../../../../utils/namespace-context-utils';
 import { mockLocation, routerRenderer } from '../../../../../../utils/test-utils';
-import {
-  mockSnapshotsEnvironmentBindings,
-  mockBuildPipelinesData,
-  mockComponentsData,
-  mockEnvironmentsData,
-  mockIntegrationTestScenariosData,
-  mockReleasePlansData,
-  mockReleasesData,
-  mockTestPipelinesData,
-} from '../__data__';
+import { mockSnapshotsEnvironmentBindings, mockComponentsData } from '../../../../__data__';
+import { getMockWorkflows } from '../../../../__data__/WorkflowTestUtils';
 import AppWorkflowSection from '../AppWorkflowSection';
 
 mockLocation();
@@ -103,15 +88,10 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
 const useSearchParamsMock = useSearchParams as jest.Mock;
 
 const useActiveNamespaceMock = useNamespace as jest.Mock;
-const useComponentsMock = useComponents as jest.Mock;
-const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
-const useBuildPipelinesMock = useBuildPipelines as jest.Mock;
-const useEnvironmentsMock = useEnvironments as jest.Mock;
-const useReleasesMock = useReleases as jest.Mock;
-const useReleasePlansMock = useReleasePlans as jest.Mock;
-const useTestPipelinesMock = useTestPipelines as jest.Mock;
 const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
+
+const { workflowMocks, applyWorkflowMocks } = getMockWorkflows();
 
 configure({ testIdAttribute: 'data-id' });
 
@@ -121,15 +101,8 @@ describe('useAppWorkflowData hook', () => {
   beforeEach(() => {
     params.expanded = undefined;
     useActiveNamespaceMock.mockReturnValue('test-ns');
-    useComponentsMock.mockReturnValue([mockComponentsData, true]);
-    useIntegrationTestScenariosMock.mockReturnValue([mockIntegrationTestScenariosData, true]);
-    useBuildPipelinesMock.mockReturnValue([mockBuildPipelinesData, true]);
-    useEnvironmentsMock.mockReturnValue([mockEnvironmentsData, true]);
-    useReleasePlansMock.mockReturnValue([mockReleasePlansData, true]);
-    useReleasesMock.mockReturnValue([mockReleasesData, true]);
-    useTestPipelinesMock.mockReturnValue([mockTestPipelinesData, true]);
-    useSnapshotsEnvironmentBindingsMock.mockReturnValue([mockSnapshotsEnvironmentBindings, true]);
     useFeatureFlagMock.mockReturnValue([false]);
+    applyWorkflowMocks(workflowMocks);
 
     useSearchParamMock.mockImplementation(mockUseSearchParam);
 

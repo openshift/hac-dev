@@ -2,24 +2,19 @@ import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
-  Button,
   EmptyState,
   EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStateSecondaryActions,
-  EmptyStateVariant,
   SearchInput,
   Spinner,
-  Title,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
 } from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { Table } from '../../shared';
 import { TaskRunGroupVersionKind, TaskRunKind } from '../../types';
+import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import { TaskRunListHeader } from './TaskRunListHeader';
 import TaskRunListRow from './TaskRunListRow';
 
@@ -61,23 +56,6 @@ const TaskRunListView: React.FC<Props> = ({ pipelineName, namespace }) => {
 
   const onClearFilters = () => setNameFilter('');
   const onNameInput = (name: string) => setNameFilter(name);
-
-  const emptyMessage = (
-    <EmptyState variant={EmptyStateVariant.full}>
-      <EmptyStateIcon icon={SearchIcon} />
-      <Title headingLevel="h2" size="lg">
-        No results found
-      </Title>
-      <EmptyStateBody>
-        No results match the filter criteria. Remove filters or clear all filters to show results.
-      </EmptyStateBody>
-      <EmptyStateSecondaryActions>
-        <Button variant="link" onClick={onClearFilters} data-test="taskrun-clear-filters">
-          Clear all filters
-        </Button>
-      </EmptyStateSecondaryActions>
-    </EmptyState>
-  );
 
   if (!loaded) {
     return (
@@ -123,7 +101,7 @@ const TaskRunListView: React.FC<Props> = ({ pipelineName, namespace }) => {
           loaded={loaded}
         />
       ) : (
-        emptyMessage
+        <FilteredEmptyState onClearFilters={onClearFilters} />
       )}
     </>
   );

@@ -1,5 +1,5 @@
 import { RunStatus } from '@patternfly/react-topology';
-import { mockSnapshotsEnvironmentBindings } from '../../components/ApplicationDetails/tabs/overview/sections/__data__';
+import { mockSnapshotsEnvironmentBindings } from '../../components/ApplicationDetails/__data__';
 import { EnvironmentKind } from '../../types';
 import { GitOpsDeploymentHealthStatus } from '../../types/gitops-deployment';
 import {

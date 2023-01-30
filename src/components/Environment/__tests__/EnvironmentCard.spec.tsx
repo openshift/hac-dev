@@ -5,7 +5,7 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, configure } from '@testing-library/react';
 import { useApplications } from '../../../hooks/useApplications';
 import { EnvironmentKind } from '../../../types';
-import { mockApplication } from '../../ApplicationEnvironment/__data__/mock-data';
+import { mockApplication } from '../../ApplicationDetails/__data__/mock-data';
 import EnvironmentCard from '../EnvironmentCard';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({

@@ -12,6 +12,11 @@ import { componentCRMocks } from '../__data__/mock-data';
 import { mockPipelineRuns } from '../__data__/mock-pipeline-run';
 import ComponentListView from '../ComponentListView';
 
+const mockComponents = componentCRMocks.reduce((acc, mock) => {
+  acc.push({ ...mock, spec: { ...mock.spec, application: 'test-app' } });
+  return acc;
+}, []);
+
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
@@ -28,17 +33,21 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
-jest.mock('react-router-dom', () => ({
-  useSearchParams: () => {
-    const [params, setParams] = React.useState(() => new URLSearchParams());
-    const setParamsCb = React.useCallback((newParams: URLSearchParams) => {
-      setParams(newParams);
-      window.location.search = `?${newParams.toString()}`;
-    }, []);
-    return [params, setParamsCb];
-  },
-  Link: (props) => <a href={props.to}>{props.children}</a>,
-}));
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
+  return {
+    ...actual,
+    useSearchParams: () => {
+      const [params, setParams] = React.useState(() => new URLSearchParams());
+      const setParamsCb = React.useCallback((newParams: URLSearchParams) => {
+        setParams(newParams);
+        window.location.search = `?${newParams.toString()}`;
+      }, []);
+      return [params, setParamsCb];
+    },
+    Link: (props) => <a href={props.to}>{props.children}</a>,
+  };
+});
 
 jest.mock('../../../hooks/usePipelineRunsForApplication', () => ({
   useLatestPipelineRunForComponent: () => mockPipelineRuns[0],
@@ -49,8 +58,11 @@ const applicationRoutesMock = useApplicationRoutes as jest.Mock;
 const gitOpsDeploymentMock = useGitOpsDeploymentCR as jest.Mock;
 
 const getMockedResources = (kind: WatchK8sResource) => {
-  if (kind?.groupVersionKind === ComponentGroupVersionKind) {
-    return [componentCRMocks, true];
+  if (!kind) {
+    return [[], true];
+  }
+  if (kind.groupVersionKind === ComponentGroupVersionKind) {
+    return [mockComponents, true];
   }
   if (kind?.groupVersionKind === PipelineRunGroupVersionKind) {
     return [mockPipelineRuns, true];
@@ -62,27 +74,28 @@ describe('ComponentListViewPage', () => {
   beforeAll(() => {
     gitOpsDeploymentMock.mockReturnValue([[], false]);
   });
+  beforeEach(() => {
+    useK8sWatchResourceMock.mockImplementation(getMockedResources);
+    applicationRoutesMock.mockReturnValue([[], true]);
+  });
 
   it('should render spinner if routes are not loaded', () => {
     useK8sWatchResourceMock.mockReturnValue([[], false]);
     applicationRoutesMock.mockReturnValue([[], false]);
-    render(<ComponentListView applicationName="test" components={componentCRMocks} />);
+    render(<ComponentListView applicationName="test-app" />);
     screen.getByRole('progressbar');
   });
 
   it('should render button to add components', () => {
     useK8sWatchResourceMock.mockReturnValue([[], true]);
-    applicationRoutesMock.mockReturnValue([[], true]);
-    render(<ComponentListView applicationName="test-app" components={componentCRMocks} />);
+    render(<ComponentListView applicationName="test-app" />);
     const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
     expect(button.closest('a').href).toBe('http://localhost/stonesoup/import?application=test-app');
   });
 
   it('should render filter toolbar and filter components based on name', () => {
-    useK8sWatchResourceMock.mockReturnValue([[], true]);
-    applicationRoutesMock.mockReturnValue([[], true]);
-    render(<ComponentListView applicationName="test-app" components={componentCRMocks} />);
+    render(<ComponentListView applicationName="test-app" />);
     expect(screen.getByTestId('component-list-toolbar')).toBeInTheDocument();
     const searchInput = screen.getByRole('textbox', { name: 'name filter' });
     fireEvent.change(searchInput, { target: { value: 'nodejs' } });
@@ -92,56 +105,45 @@ describe('ComponentListViewPage', () => {
   });
 
   it('should render routes URL when route is created on cluster', () => {
-    useK8sWatchResourceMock.mockReturnValue([[], true]);
     applicationRoutesMock.mockReturnValue([mockRoutes, true]);
-    render(<ComponentListView applicationName="test" components={componentCRMocks} />);
+    render(<ComponentListView applicationName="test-app" />);
     screen.getByText('https://nodejs-test.apps.appstudio-stage.x99m.p1.openshiftapps.com');
   });
 
   it('should render spinner in toolbar if gitOpsDeploymentCR is not loaded', () => {
-    useK8sWatchResourceMock.mockReturnValue([[], true]);
-    applicationRoutesMock.mockReturnValue([[], true]);
     gitOpsDeploymentMock.mockReturnValue([[], false]);
-    render(<ComponentListView applicationName="test" components={componentCRMocks} />);
+    render(<ComponentListView applicationName="test-app" />);
     screen.getByRole('progressbar');
   });
 
   it('should render Application health status if gitOpsDeployment CR is loaded', () => {
-    useK8sWatchResourceMock.mockReturnValue([[], true]);
-    applicationRoutesMock.mockReturnValue([[], true]);
     gitOpsDeploymentMock.mockReturnValue([{ status: { health: { status: 'Degraded' } } }, true]);
-    render(<ComponentListView applicationName="test" components={componentCRMocks} />);
+    render(<ComponentListView applicationName="test-app" />);
     screen.getByText('Application Degraded');
   });
 
   it('should render deployment strategy if gitOpsDeployment CR is loaded', () => {
-    useK8sWatchResourceMock.mockReturnValue([[], true]);
-    applicationRoutesMock.mockReturnValue([[], true]);
     gitOpsDeploymentMock.mockReturnValue([
       { spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } },
       true,
     ]);
-    render(<ComponentListView applicationName="test" components={componentCRMocks} />);
+    render(<ComponentListView applicationName="test-app" />);
     screen.getByText('Automated');
   });
   it('should show a warning when showMergeStatus is set', () => {
-    useK8sWatchResourceMock.mockImplementation(getMockedResources);
-    applicationRoutesMock.mockReturnValue([[], true]);
     gitOpsDeploymentMock.mockReturnValue([
       { spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } },
       true,
     ]);
-    render(<ComponentListView applicationName="test" components={componentCRMocks} />);
+    render(<ComponentListView applicationName="test-app" />);
     screen.getByTestId('components-unmerged-build-pr');
   });
   it('should filter components by type', async () => {
-    useK8sWatchResourceMock.mockImplementation(getMockedResources);
-    applicationRoutesMock.mockReturnValue([[], true]);
     gitOpsDeploymentMock.mockReturnValue([
       { spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } },
       true,
     ]);
-    const view = render(<ComponentListView applicationName="test" components={componentCRMocks} />);
+    const view = render(<ComponentListView applicationName="test-app" />);
 
     expect(view.getAllByTestId('component-list-item')).toHaveLength(2);
 
@@ -189,13 +191,11 @@ describe('ComponentListViewPage', () => {
     expect(view.queryAllByTestId('component-list-item')).toHaveLength(2);
   });
   it('should clear filters from empty state', () => {
-    useK8sWatchResourceMock.mockImplementation(getMockedResources);
-    applicationRoutesMock.mockReturnValue([[], true]);
     gitOpsDeploymentMock.mockReturnValue([
       { spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } },
       true,
     ]);
-    render(<ComponentListView applicationName="test" components={componentCRMocks} />);
+    render(<ComponentListView applicationName="test-app" />);
     expect(screen.getAllByTestId('component-list-item')).toHaveLength(2);
 
     const textFilterInput = screen.getByRole('textbox', { name: 'name filter' });

@@ -4,7 +4,7 @@ import { configure, render, screen } from '@testing-library/react';
 import { shallow } from 'enzyme';
 import { PipelineRunLabel, PipelineRunType } from '../../../consts/pipelinerun';
 import { PipelineRunLogs } from '../../../shared';
-import { componentCRMocks } from '../../ApplicationDetailsView/__data__/mock-data';
+import { componentCRMocks } from '../../ApplicationDetails/__data__/mock-data';
 import { pipelineRunMock } from '../__data__/pipelineRunMocks';
 import { BuildLogViewer } from '../BuildLogViewer';
 
