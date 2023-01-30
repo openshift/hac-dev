@@ -4,9 +4,10 @@ import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome'
 
 type HelpTopicLinkProps = {
   topicId: string;
+  isInline?: boolean;
 };
 
-export const HelpTopicLink: React.FC<HelpTopicLinkProps> = ({ topicId, children }) => {
+export const HelpTopicLink: React.FC<HelpTopicLinkProps> = ({ topicId, isInline, children }) => {
   const {
     helpTopics: { setActiveTopic, enableTopics, disableTopics },
   } = useChrome();
@@ -19,7 +20,11 @@ export const HelpTopicLink: React.FC<HelpTopicLinkProps> = ({ topicId, children 
   }, []);
 
   return (
-    <Button variant={ButtonVariant.link} onClick={() => setActiveTopic(topicId)} isInline>
+    <Button
+      variant={ButtonVariant.link}
+      onClick={() => setActiveTopic(topicId)}
+      isInline={isInline}
+    >
       {children}
     </Button>
   );

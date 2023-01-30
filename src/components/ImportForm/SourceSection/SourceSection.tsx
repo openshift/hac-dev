@@ -152,7 +152,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
         <HelperText>
           <HelperTextItem>
             {description}{' '}
-            <HelpTopicLink topicId="add-component">
+            <HelpTopicLink topicId="add-component" isInline>
               Learn more <OpenDrawerRightIcon />
             </HelpTopicLink>
           </HelperTextItem>

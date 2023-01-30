@@ -1,0 +1,10 @@
+.whats-next-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: var(--pf-global--spacer--md);
+  margin-bottom: var(--pf-global--spacer--sm);
+  &__content {
+    margin-left: var(--pf-global--spacer--3xl);
+  }
+}
