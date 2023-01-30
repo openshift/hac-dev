@@ -37,7 +37,7 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
         )}
       </TableData>
       <TableData className={commitsTableColumnClasses.branch}>
-        {obj.gitProvider === 'github' && createRepoBranchURL(obj) ? (
+        {createRepoBranchURL(obj) ? (
           <ExternalLink href={createRepoBranchURL(obj)} text={`${obj.branch}`} />
         ) : (
           `${obj.branch}`

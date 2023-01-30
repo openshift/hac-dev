@@ -135,6 +135,9 @@ export const showPLRMessage = (plr: PipelineRunKind): string => {
 };
 
 export const createRepoUrl = (commit: Commit): string | null => {
+  if (commit.gitProvider !== 'github') {
+    return null;
+  }
   if (commit.repoURL) {
     return commit.repoURL;
   }

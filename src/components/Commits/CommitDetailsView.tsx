@@ -64,7 +64,6 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
   };
 
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
-  // const [isFull, setIsFull] = React.useState<boolean>(false);
   const [selectedPipelineRun, setSelectedPipelineRun] = React.useState<PipelineRunKind>(null);
   const drawerRef = React.useRef<HTMLDivElement>();
 
@@ -242,7 +241,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                   {commit.isPullRequest ? (
                     <Text component="p" className="pf-u-mt-xs pf-u-mb-xs">
                       Pull request:{' '}
-                      {commit.gitProvider === 'github' && createRepoPullRequestURL(commit) ? (
+                      {createRepoPullRequestURL(commit) ? (
                         <ExternalLink
                           href={createRepoPullRequestURL(commit)}
                           text={`${commit.pullRequestNumber}`}
@@ -254,7 +253,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                   ) : null}
                   <Text component="p" className="pf-u-mt-xs pf-u-mb-xs">
                     Branch:{' '}
-                    {commit.gitProvider === 'github' && createRepoBranchURL(commit) ? (
+                    {createRepoBranchURL(commit) ? (
                       <ExternalLink href={createRepoBranchURL(commit)} text={`${commit.branch}`} />
                     ) : (
                       `${commit.branch}`
@@ -265,20 +264,6 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                       By {commit.user} at <Timestamp timestamp={commit.creationTime} />
                     </span>
                   </Text>
-                  {/* {commit.shaTitle && commit.shaTitle.length > 75 ? (
-                    <p className="pf-u-mt-xs pf-u-mb-xs">
-                      {`"${isFull ? commit.shaTitle : commit.shaTitle.slice(0, 75)}"`}
-                      <Button
-                        className="pf-u-pl-xs"
-                        variant="link"
-                        onClick={() => setIsFull(!isFull)}
-                      >
-                        {isFull ? 'read less' : 'read more'}
-                      </Button>
-                    </p>
-                  ) : (
-                    <p className="pf-u-mt-xs pf-u-mb-xs">{`"${commit.shaTitle}"`}</p>
-                  )} */}
                   <Text component="p" className="pf-u-mt-sm pf-u-mb-sm">
                     Component:{' '}
                     {commit.components.map((component, index) => {
