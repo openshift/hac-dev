@@ -2,12 +2,24 @@ import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { mockAppEnvWithHealthStatus } from '../../../hacbs/components/Environment/__data__/mockAppEnvWithHealthStatus';
+import { useAllEnvironments } from '../../../hooks/useAllEnvironments';
+import { useSnapshotsEnvironmentBindings } from '../../../hooks/useSnapshotsEnvironmentBindings';
 import * as dateTime from '../../../shared/components/timestamp/datetime';
 import { ApplicationKind, ComponentKind } from '../../../types';
+import { mockSnapshotsEnvironmentBindings } from '../../ApplicationDetails/tabs/overview/sections/__data__';
 import ApplicationListRow from '../ApplicationListRow';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+}));
+
+jest.mock('../../../hooks/useSnapshotsEnvironmentBindings', () => ({
+  useSnapshotsEnvironmentBindings: jest.fn(),
+}));
+
+jest.mock('../../../hooks/useAllEnvironments', () => ({
+  useAllEnvironments: jest.fn(),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -68,19 +80,38 @@ const components: ComponentKind[] = [
 ];
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
+const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
+const useAllEnvironmentsMock = useAllEnvironments as jest.Mock;
 
 describe('Application List Row', () => {
+  beforeEach(() => {
+    useAllEnvironmentsMock.mockReturnValue([mockAppEnvWithHealthStatus, true]);
+    useSnapshotsEnvironmentBindingsMock.mockReturnValue([mockSnapshotsEnvironmentBindings, true]);
+  });
+
   it('renders application list row', () => {
     watchResourceMock.mockReturnValue([components, true]);
     const { getByText, container } = render(
       <ApplicationListRow columns={null} obj={application} />,
     );
     const expectedDate = dateTime.dateTimeFormatter.format(
-      new Date(application.metadata.creationTimestamp),
+      new Date(
+        mockSnapshotsEnvironmentBindings[0].status.componentDeploymentConditions[0].lastTransitionTime,
+      ),
     );
     expect(getByText(application.metadata.name)).toBeInTheDocument();
     expect(getByText('2 Components')).toBeInTheDocument();
     expect(container).toHaveTextContent(expectedDate.toString());
+  });
+
+  it('should render the last deployed environment timestamp in an application list', () => {
+    watchResourceMock.mockReturnValue([components, true]);
+    render(<ApplicationListRow columns={null} obj={application} />);
+    dateTime.dateTimeFormatter.format(
+      new Date(
+        mockSnapshotsEnvironmentBindings[0].status.componentDeploymentConditions[0].lastTransitionTime,
+      ),
+    );
   });
 
   it('renders 0 components in the component column if the application has none available', () => {
