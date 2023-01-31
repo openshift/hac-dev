@@ -152,4 +152,32 @@ describe('SampleSection', () => {
     await waitFor(() => screen.getByText('Basic Node.js'));
     await waitFor(() => expect(screen.queryByText('Basic Quarkus')).not.toBeInTheDocument());
   });
+
+  it('should filter sample items based on tags', async () => {
+    const setFieldValue = jest.fn();
+    useFormikContextMock.mockReturnValue({
+      values: { source: { git: { url: 'https://github.com/repo' } }, application: 'test-app' },
+      setFieldValue,
+      setStatus: jest.fn(),
+    });
+    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
+
+    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+
+    await waitFor(() => screen.getByText('Basic Node.js'));
+    await waitFor(() => screen.getByText('Basic Quarkus'));
+    await waitFor(() => screen.getByText('Basic Python'));
+    await waitFor(() => screen.getByText('Basic Spring Boot'));
+
+    await waitFor(() =>
+      fireEvent.input(screen.getByPlaceholderText('Filter by keyword...'), {
+        target: { value: 'spring' },
+      }),
+    );
+
+    await waitFor(() => screen.getByText('Basic Spring Boot'));
+    await waitFor(() => expect(screen.queryByText('Basic Node.js')).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByText('Basic Quarkus')).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByText('Basic Python')).not.toBeInTheDocument());
+  });
 });
