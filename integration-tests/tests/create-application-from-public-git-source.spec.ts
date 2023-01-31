@@ -80,8 +80,13 @@ describe('Create Component from Public Git Source', { tags: ['@PR-check', '@publ
     });
 
     it('Check Component Build Log', () => {
-      // TODO: implement check for build log appropriate text
-      applicationDetailPage.checkBuildLog(componentPage.componentName, 'text to verify');
+      applicationDetailPage.openBuildLog(componentPage.componentName);
+
+      // Workaround for https://issues.redhat.com/browse/HAC-3071
+      cy.get('div[class="multi-stream-logs__taskName"]', {timeout: 40000}).should("include.text", "clone-repository");
+
+      applicationDetailPage.checkBuildLog("appstudio-init", 'Determine if Image Already Exists');
+      applicationDetailPage.closeBuildLog();
     });
 
     it('Check Resources Value', () => {

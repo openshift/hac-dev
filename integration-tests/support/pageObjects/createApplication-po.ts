@@ -53,7 +53,7 @@ export const ComponentsPagePO = {
 
 export const applicationDetailPagePO = {
   item: '[data-testid="component-list-item-name"] > b',
-  componentBuildLog: '[data-testid="view-build-logs"]',
+  componentBuildLog: (param: string) => `[data-testid="view-build-logs-${param}"]`,
   componentSettings: '[data-testid="Component settings"]',
   detailsArrow: '[aria-label="Details"]',
   cpuRamLabel: 'CPU / Memory',
@@ -67,5 +67,7 @@ export const componentsListPagePO = {
 };
 
 export const buildLogModalContentPO = {
+  modal: '[id="pf-modal-part-2"]',
   closeButton: '[aria-label="Close"]',
+  logText: '[class="logs__content"]',
 };
