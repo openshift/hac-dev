@@ -21,7 +21,7 @@
     "start:prod": "ENVIRONMENT=prod npm run start",
     "start:prod:beta": "ENVIRONMENT=prod npm run start:beta",
     "test": "jest",
-    "verify": "npm-run-all build lint coverage",
+    "verify": "if test \"$IS_PR\" = \"true\" ; then npm run build; else npm-run-all build lint coverage; fi",
     "prepare": "husky install"
   },
   "dependencies": {
