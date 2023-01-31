@@ -5,6 +5,7 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, render, screen } from '@testing-library/react';
 import { CustomError } from '../../../../shared/utils/error/custom-error';
 import { sampleBuildPipelines } from '../../../ApplicationDetails/tabs/overview/visualization/hooks/__data__/workflow-data';
+import { pipelineWithCommits } from '../../../Commits/__data__/pipeline-with-commits';
 import { testPipelineRun } from '../../../topology/__data__/pipeline-test-data';
 import PipelineRunDetailsTab from '../PipelineRunDetailsTab';
 
@@ -119,15 +120,25 @@ describe('PipelineRunDetailsTab', () => {
 
   it('should render the component link', () => {
     watchResourceMock.mockReturnValue([[], true]);
-    render(
-      <PipelineRunDetailsTab
-        pipelineRun={testPipelineRun}
-        error={new CustomError('Model not found')}
-      />,
-      {
-        wrapper: BrowserRouter,
-      },
-    );
-    screen.getByTestId('graph-error-state');
+    render(<PipelineRunDetailsTab pipelineRun={testPipelineRun} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    screen.getByText('Component');
+  });
+
+  it('should not render the commit link for simple pipelinerun', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    render(<PipelineRunDetailsTab pipelineRun={testPipelineRun} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    expect(screen.queryByText('Commit')).not.toBeInTheDocument();
+  });
+
+  it('should render the commit link for pac pipelinerun', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    render(<PipelineRunDetailsTab pipelineRun={pipelineWithCommits[0]} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    screen.getByText('Commit');
   });
 });
