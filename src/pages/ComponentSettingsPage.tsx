@@ -45,7 +45,7 @@ const ComponentSettingsPage: React.FunctionComponent = () => {
 
   return (
     <NamespacedPage>
-      <HeadTitle>{componentName} - Component Settings | Stonesoup</HeadTitle>
+      <HeadTitle>{componentName} - Component Settings | CI/CD</HeadTitle>
       <ComponentSettingsView componentName={componentName} />
     </NamespacedPage>
   );

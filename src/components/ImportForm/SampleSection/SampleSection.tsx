@@ -100,7 +100,7 @@ const SampleSection = ({ onStrategyChange }) => {
 
   return (
     <>
-      <HeadTitle>Import - Select sample | Stonesoup</HeadTitle>
+      <HeadTitle>Import - Select sample | CI/CD</HeadTitle>
       <PageSection variant="light" isFilled>
         <TextContent>
           <Text component={TextVariants.h2}>

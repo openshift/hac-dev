@@ -8,7 +8,7 @@ const ApplicationsPage = () => {
   useQuickstartCloseOnUnmount();
   return (
     <NamespacedPage>
-      <HeadTitle>Applications | Stonesoup</HeadTitle>
+      <HeadTitle>Applications | CI/CD</HeadTitle>
       <ApplicationListView />
     </NamespacedPage>
   );
