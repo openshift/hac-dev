@@ -40,13 +40,13 @@ const WhatsNextSection: React.FunctionComponent<WhatsNextSectionProps> = ({ what
       {whatsNextItems.map((item) => (
         <Card className="whats-next-card" key={item.title} isFlat>
           <SplitItem>
-            <img src={item.icon} alt={item.title} width="51px" />
+            <img src={item.icon} alt={item.title} className="whats-next-card__icon" />
           </SplitItem>
           <SplitItem className="whats-next-card__content" isFilled>
             <Title headingLevel="h4">{item.title}</Title>
             <HelperText>{item.description}</HelperText>
           </SplitItem>
-          <SplitItem>
+          <SplitItem className="whats-next-card__cta">
             <Button
               {...(item.cta.onClick
                 ? { onClick: item.cta.onClick }

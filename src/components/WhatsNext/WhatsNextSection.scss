@@ -5,6 +5,19 @@
   padding: var(--pf-global--spacer--md);
   margin-bottom: var(--pf-global--spacer--sm);
   &__content {
-    margin-left: var(--pf-global--spacer--3xl);
+    margin-left: var(--pf-global--spacer--xl);
+    margin-right: var(--pf-global--spacer--lg);
+  }
+
+  &__icon {
+    min-width: var(--pf-global--target-size--MinWidth);
+    min-height: var(--pf-global--target-size--MinHeight);
+    width: 55px;
+    height: 55px;
+  }
+
+  &__cta {
+    display: inherit;
+    flex-wrap: nowrap;
   }
 }
