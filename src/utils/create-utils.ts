@@ -5,7 +5,7 @@ import {
 } from '@openshift/dynamic-plugin-sdk-utils';
 import isEqual from 'lodash/isEqual';
 import isNumber from 'lodash/isNumber';
-import uniqueId from 'lodash/uniqueId';
+import { v4 as uuidv4 } from 'uuid';
 import {
   ApplicationModel,
   ComponentModel,
@@ -36,7 +36,6 @@ export const createApplication = (
   dryRun?: boolean,
 ): Promise<ApplicationKind> => {
   const name = sanitizeName(application);
-  // const uniqueName = uniqueId(`${name}-`);
   const requestData = {
     apiVersion: `${ApplicationModel.apiGroup}/${ApplicationModel.apiVersion}`,
     kind: ApplicationModel.kind,
@@ -134,12 +133,6 @@ export const createComponent = (
     : k8sUpdateResource({ model: ComponentModel, resource });
 };
 
-// https://stackoverflow.com/q/105034/7683374
-const uid = () =>
-  Math.floor((1 + Math.random()) * 0x10000)
-    .toString(16)
-    .substring(1);
-
 /**
  * Create ComponentDetectionQuery CR
  *
@@ -163,8 +156,8 @@ export const createComponentDetectionQuery = async (
   dryRun?: boolean,
 ): Promise<ComponentDetectionQueryKind> => {
   // append name with uid for additional randomness
-  const name = `${appName.split(/ |\./).join('-').toLowerCase()}-${uid()}`;
-  const uniqueName = uniqueId(name);
+  const name = `${appName.split(/ |\./).join('-').toLowerCase()}`;
+  const uniqueName = `${name}-${uuidv4()}`;
 
   const requestData = {
     apiVersion: `${ComponentDetectionQueryModel.apiGroup}/${ComponentDetectionQueryModel.apiVersion}`,
@@ -207,7 +200,7 @@ export const createAccessTokenBinding = async (
   namespace: string,
   dryRun?: boolean,
 ) => {
-  const id = uid();
+  const id = uuidv4();
   const requestData = {
     apiVersion: `${SPIAccessTokenBindingModel.apiGroup}/${SPIAccessTokenBindingModel.apiVersion}`,
     kind: SPIAccessTokenBindingModel.kind,

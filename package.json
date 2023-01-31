@@ -59,6 +59,7 @@
     "react-virtualized": "^9.22.3",
     "redux-thunk": "^2.4.1",
     "showdown": "^1.9.0",
+    "uuid": "^9.0.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -77,6 +78,7 @@
     "@types/react-helmet": "5.x",
     "@types/react-router-dom": "^5.3.2",
     "@types/react-virtualized": "9.x",
+    "@types/uuid": "^9.0.0",
     "@types/yup": "^0.29.13",
     "@typescript-eslint/eslint-plugin": "^5.3.0",
     "@typescript-eslint/parser": "^5.3.0",
