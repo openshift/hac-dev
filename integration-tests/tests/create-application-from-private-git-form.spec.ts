@@ -73,6 +73,7 @@ describe('Create Component from Private Git Using Login Form', { tags: ['@PR-che
       const appPage = new CreateApplicationPage();
       appPage.setApplicationName(applicationName);
       appPage.clickNext();
+      appPage.clickNext();
 
       addComponent.setSource(privateRepo);
       addComponent.waitRepoValidated();
