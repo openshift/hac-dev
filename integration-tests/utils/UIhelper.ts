@@ -5,7 +5,7 @@ export class UIhelper {
     cy.xpath(`//div[@data-test="app-details__tabs"]//button[child::span[text()='${tabName}']]`).click()
   }
 
-  static inputValueInTextBoxByLableName(label: string, value: string) {
+  static inputValueInTextBoxByLabelName(label: string, value: string) {
     cy.xpath(`//div[@class="pf-c-form__group" and descendant::*[text()='${label}']]//input`).clear().type(value)
   }
 
@@ -20,11 +20,27 @@ export class UIhelper {
     cy.contains('div', label).contains('dd', value)
   }
 
-  static clickButton(label: string) {
-    cy.xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`).click();
+  static clickButton(label: string, options?: { invoke?: boolean, force?: boolean }) {
+    if (options?.invoke) {
+      cy.xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`).invoke("click");
+    }
+    else if (options?.force) {
+      cy.xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`).click({ force: true });
+    }
+    else {
+      cy.xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`).click();
+    }
   }
 
-  static clickLink(link: string) {
-    cy.xpath(`//a[text()='${link}']`).click()
+  static clickLink(link: string, options?: { invoke?: boolean, force?: boolean }) {
+    if (options?.invoke) {
+      cy.xpath(`//a[text()='${link}']`).invoke("click");
+    }
+    else if (options?.force) {
+      cy.xpath(`//a[text()='${link}']`).click({ force: true });
+    }
+    else {
+      cy.xpath(`//a[text()='${link}']`).click();
+    }
   }
 }
