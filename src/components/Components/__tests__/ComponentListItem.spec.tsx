@@ -89,7 +89,7 @@ describe('ComponentListItem', () => {
     );
     const kebabButton = screen.getByTestId('kebab-button');
     fireEvent.click(kebabButton);
-    await waitFor(() => screen.getByText('Component settings'));
+    await waitFor(() => screen.getByText('Edit component settings'));
   });
 
   it('should not render Success component condition status on UI', async () => {

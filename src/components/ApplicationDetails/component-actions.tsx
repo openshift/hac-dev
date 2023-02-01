@@ -25,7 +25,7 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
     {
       cta: { href: `/stonesoup/component-settings?componentName=${name}` },
       id: 'component-settings',
-      label: 'Component settings',
+      label: 'Edit component settings',
     },
     {
       cta: () => showModal(componentDeleteModal(component)),
