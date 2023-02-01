@@ -11,6 +11,7 @@ import {
   Flex,
   FlexItem,
   Title,
+  Divider,
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { pipelineRunFilterReducer } from '../../../shared';
@@ -25,6 +26,7 @@ import { calculateDuration } from '../../../utils/pipeline-utils';
 import MetadataList from '../MetadataList';
 import PipelineRunVisualization from '../PipelineRunVisualization';
 import RelatedPipelineRuns from '../RelatedPipelineRuns';
+import RunResultsList from './RunResultsList';
 
 type PipelineRunDetailsTabProps = {
   pipelineRun: PipelineRunKind;
@@ -42,6 +44,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
     pipelineRun?.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] ||
     pipelineRun?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];
 
+  const pipelineRunStatus = !error ? pipelineRunFilterReducer(pipelineRun) : null;
   return (
     <>
       <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
@@ -107,7 +110,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
                 <DescriptionListGroup>
                   <DescriptionListTerm>Status</DescriptionListTerm>
                   <DescriptionListDescription>
-                    <StatusIconWithText status={pipelineRunFilterReducer(pipelineRun)} />
+                    <StatusIconWithText status={pipelineRunStatus} />
                   </DescriptionListDescription>
                 </DescriptionListGroup>
                 {Object.keys(pipelineRunFailed).length > 0 && (
@@ -235,6 +238,15 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
               </DescriptionList>
             </FlexItem>
           </Flex>
+          {pipelineRun.status?.pipelineResults ? (
+            <>
+              <Divider style={{ padding: 'var(--pf-global--spacer--lg) 0' }} />
+              <RunResultsList
+                results={pipelineRun.status.pipelineResults}
+                status={pipelineRunStatus}
+              />
+            </>
+          ) : null}
         </Flex>
       )}
     </>
