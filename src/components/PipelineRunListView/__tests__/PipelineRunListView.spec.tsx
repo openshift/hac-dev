@@ -1,9 +1,11 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { render, screen } from '@testing-library/react';
+import { Table as PfTable, TableHeader } from '@patternfly/react-table';
+import { render, screen, waitFor, fireEvent, act, configure } from '@testing-library/react';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import { PipelineRunKind } from '../../../types';
+import PipelineRunListRow from '../PipelineRunListRow';
 import PipelineRunsListView from '../PipelineRunsListView';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -21,6 +23,32 @@ jest.mock('react-router-dom', () => ({
 jest.mock('../../../hooks/useSearchParam', () => ({
   useSearchParam: jest.fn(),
 }));
+
+configure({ testIdAttribute: 'data-test' });
+
+jest.mock('../../../shared/components/table', () => {
+  const actual = jest.requireActual('../../../shared/components/table');
+  return {
+    ...actual,
+    Table: (props) => {
+      const { data, filters, selected, match, kindObj } = props;
+      const cProps = { data, filters, selected, match, kindObj };
+      const columns = props.Header(cProps);
+      return (
+        <PfTable role="table" aria-label="table" cells={columns} variant="compact" borders={false}>
+          <TableHeader role="rowgroup" />
+          <tbody>
+            {props.data.map((d, i) => (
+              <tr key={i}>
+                <PipelineRunListRow columns={null} obj={d} />
+              </tr>
+            ))}
+          </tbody>
+        </PfTable>
+      );
+    },
+  };
+});
 
 const useSearchParamMock = useSearchParam as jest.Mock;
 
@@ -57,6 +85,7 @@ const pipelineRuns: PipelineRunKind[] = [
       ],
       resourceVersion: '497868251',
       uid: '9c1f121c-1eb6-490f-b2d9-befbfc658df1',
+      labels: {},
     },
     spec: {
       key: 'key1',
@@ -80,6 +109,7 @@ const pipelineRuns: PipelineRunKind[] = [
       ],
       resourceVersion: '497868252',
       uid: '9c1f121c-1eb6-490f-b2d9-befbfc658dfb',
+      labels: {},
     },
     spec: {
       key: 'key2',
@@ -103,6 +133,7 @@ const pipelineRuns: PipelineRunKind[] = [
       ],
       resourceVersion: '497868253',
       uid: '9c1f121c-1eb6-490f-b2d9-befbfc658dfc',
+      labels: {},
     },
     spec: {
       key: 'key3',
@@ -135,7 +166,7 @@ describe('Pipeline run List', () => {
     expect(button.closest('a').href).toContain(`/stonesoup/applications/${appName}/components`);
   });
 
-  it('should render pipelineRuns list when pipelineRuns are present', () => {
+  it('should render correct columns when pipelineRuns are present', () => {
     watchResourceMock.mockReturnValue([pipelineRuns, true]);
     render(<PipelineRunsListView applicationName={appName} />);
     screen.getByText('Name');
@@ -144,5 +175,66 @@ describe('Pipeline run List', () => {
     screen.getAllByText('Status');
     screen.getByText('Type');
     screen.getByText('Component');
+  });
+
+  it('should render entire pipelineRuns list when no filter value', async () => {
+    watchResourceMock.mockReturnValue([pipelineRuns, true]);
+    render(<PipelineRunsListView applicationName={appName} />);
+    await waitFor(() => {
+      expect(screen.getByText('basic-node-js-first')).toBeInTheDocument;
+      expect(screen.getByText('basic-node-js-second')).toBeInTheDocument;
+      expect(screen.getByText('basic-node-js-third')).toBeInTheDocument;
+    });
+    const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
+    expect(filter.value).toBe('');
+  });
+
+  it('should render filtered pipelinerun list', async () => {
+    watchResourceMock.mockReturnValue([pipelineRuns, true]);
+    render(<PipelineRunsListView applicationName={appName} />);
+    await waitFor(() => {
+      expect(screen.getByText('basic-node-js-first')).toBeInTheDocument;
+    });
+
+    const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
+    act(() => {
+      fireEvent.change(filter, {
+        target: { value: 'basic-node-js-second' },
+      });
+    });
+
+    expect(screen.getByText('basic-node-js-first')).not.toBeInTheDocument;
+    expect(screen.getByText('basic-node-js-second')).toBeInTheDocument;
+    expect(screen.getByText('basic-node-js-third')).not.toBeInTheDocument;
+  });
+
+  it('should render no pipelineruns and Empty State', async () => {
+    watchResourceMock.mockReturnValue([pipelineRuns, true]);
+    render(<PipelineRunsListView applicationName={appName} />);
+    await waitFor(() => {
+      expect(screen.getByText('basic-node-js-first')).toBeInTheDocument;
+    });
+
+    const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
+    act(() => {
+      fireEvent.change(filter, {
+        target: { value: 'no-match' },
+      });
+    });
+
+    await waitFor(() => {
+      expect(filter.value).toBe('no-match');
+    });
+
+    expect(screen.getByText('basic-node-js-first')).not.toBeInTheDocument;
+    expect(screen.getByText('basic-node-js-second')).not.toBeInTheDocument;
+    expect(screen.getByText('basic-node-js-third')).not.toBeInTheDocument;
+    expect(screen.findByTestId('filtered-empty-state')).toBeInTheDocument;
+    expect(screen.findByText('No results found')).toBeInTheDocument;
+    expect(
+      screen.findByText(
+        'No results match the filter criteria. Remove filters or clear all filters to show results',
+      ),
+    ).toBeInTheDocument;
   });
 });

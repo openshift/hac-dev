@@ -93,7 +93,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
   const onNameInput = (name: string) => setNameFilter(name);
 
   const emptyMessage = (
-    <EmptyState variant={EmptyStateVariant.full}>
+    <EmptyState data-test="filtered-empty-state" variant={EmptyStateVariant.full}>
       <EmptyStateIcon icon={SearchIcon} />
       <Title headingLevel="h2" size="lg">
         No results found
@@ -102,7 +102,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
         No results match the filter criteria. Remove filters or clear all filters to show results.
       </EmptyStateBody>
       <EmptyStateSecondaryActions>
-        <Button variant="link" onClick={onClearFilters} data-test="commit-clear-filters">
+        <Button variant="link" onClick={onClearFilters} data-test="pipelineRun-clear-filters">
           Clear all filters
         </Button>
       </EmptyStateSecondaryActions>
@@ -128,7 +128,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
 
   return (
     <>
-      <Toolbar data-test="commit-list-toolbar" clearAllFilters={onClearFilters}>
+      <Toolbar data-test="pipelinerun-list-toolbar" clearAllFilters={onClearFilters}>
         <ToolbarContent>
           <ToolbarGroup alignment={{ default: 'alignLeft' }}>
             <ToolbarItem className="pf-u-ml-0">
