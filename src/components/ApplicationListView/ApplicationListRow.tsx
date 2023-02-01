@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { pluralize, Skeleton } from '@patternfly/react-core';
+import { useAllApplicationEnvironmentsWithHealthStatus } from '../../hooks/useAllApplicationEnvironmentsWithHealthStatus';
 import { ComponentGroupVersionKind } from '../../models';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
@@ -16,6 +17,20 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
     namespace: obj.metadata.namespace,
     isList: true,
   });
+
+  const [allEnvironments, environmentsLoaded] = useAllApplicationEnvironmentsWithHealthStatus(
+    obj.metadata.name,
+  );
+  const lastDeployedTimestamp = React.useMemo(
+    () =>
+      environmentsLoaded
+        ? allEnvironments?.sort?.(
+            (a, b) => new Date(b.lastDeploy).getTime() - new Date(a.lastDeploy).getTime(),
+          )?.[0].lastDeploy
+        : '-',
+    [environmentsLoaded, allEnvironments],
+  );
+
   const actions = useApplicationActions(obj);
 
   const components = allComponents?.filter((c) => c.spec.application === obj.metadata.name) ?? [];
@@ -35,7 +50,7 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
         )}
       </TableData>
       <TableData className={applicationTableColumnClasses.lastDeploy}>
-        <Timestamp timestamp={obj.metadata.creationTimestamp} />
+        <Timestamp timestamp={lastDeployedTimestamp} />
       </TableData>
       <TableData className={applicationTableColumnClasses.kebab}>
         <ActionMenu actions={actions} />

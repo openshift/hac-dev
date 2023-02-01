@@ -117,6 +117,6 @@ describe('DetailsPage', () => {
       />,
     );
 
-    await waitFor(() => expect(document.title).toEqual('tab-title - Tab 1 | Stonesoup'));
+    await waitFor(() => expect(document.title).toEqual('tab-title - Tab 1 | CI/CD'));
   });
 });

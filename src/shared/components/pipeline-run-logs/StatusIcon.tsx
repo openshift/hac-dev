@@ -42,7 +42,7 @@ export const ColoredStatusIcon: React.FC<StatusIconProps> = ({ status, ...others
       className={css(
         'status-icon',
         pipelineStyles.topologyPipelinesStatusIcon,
-        (status === RunStatus.Running || status === RunStatus.InProgress) && 'pf-m-spin',
+        (status === RunStatus.Running || status === RunStatus.InProgress) && 'icon-spin',
         getRunStatusModifier(status as RunStatus),
       )}
     >
@@ -60,7 +60,7 @@ export const StatusIconWithText: React.FC<
         className={css(
           'pf-u-mr-xs status-icon',
           pipelineStyles.topologyPipelinesPillStatus,
-          (status === RunStatus.Running || status === RunStatus.InProgress) && 'pf-m-spin',
+          (status === RunStatus.Running || status === RunStatus.InProgress) && 'icon-spin',
           getRunStatusModifier(status as RunStatus),
         )}
       >

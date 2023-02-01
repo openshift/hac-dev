@@ -68,7 +68,11 @@ const SampleSection = ({ onStrategyChange }) => {
   const filteredSamples = React.useMemo(
     () =>
       loaded
-        ? samples.filter((item) => item.name.toLowerCase().includes(filter.toLowerCase()))
+        ? samples.filter(
+            (item) =>
+              item.name.toLowerCase().includes(filter.toLowerCase()) ||
+              item.tags.some((c) => c.toLowerCase().indexOf(filter.trim().toLowerCase()) !== -1),
+          )
         : [],
     [filter, samples, loaded],
   );
@@ -96,7 +100,7 @@ const SampleSection = ({ onStrategyChange }) => {
 
   return (
     <>
-      <HeadTitle>Import - Select sample | Stonesoup</HeadTitle>
+      <HeadTitle>Import - Select sample | CI/CD</HeadTitle>
       <PageSection variant="light" isFilled>
         <TextContent>
           <Text component={TextVariants.h2}>

@@ -134,7 +134,7 @@ const ReviewSection: React.FunctionComponent = () => {
 
   return (
     <>
-      <HeadTitle>Import - Configure components | Stonesoup</HeadTitle>
+      <HeadTitle>Import - Configure components | CI/CD</HeadTitle>
       <TextContent>
         <Text component="h2">Configure your components for deployment</Text>
         <HelperText>
