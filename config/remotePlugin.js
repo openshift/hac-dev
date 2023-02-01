@@ -1,6 +1,356 @@
 const { resolve } = require('path');
 const packageInfo = require('../package.json');
 
+const navExtensions = [
+  {
+    type: 'core.navigation/href',
+    properties: {
+      href: '/stonesoup',
+      name: 'Overview',
+    },
+  },
+  {
+    type: 'core.navigation/href',
+    properties: {
+      href: '/stonesoup/applications',
+      name: 'Applications',
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+];
+
+const flagExtensions = [
+  {
+    type: 'core.flag',
+    properties: {
+      handler: {
+        $codeRef: 'HACBSFlag.enableHACBSFlagFromQueryParam',
+      },
+    },
+  },
+  {
+    type: 'core.flag',
+    properties: {
+      handler: {
+        $codeRef: 'FlagUtils.setSignupFeatureFlags',
+      },
+    },
+  },
+  {
+    type: 'core.flag',
+    properties: {
+      handler: {
+        $codeRef: 'FlagUtils.setMvpFeatureFlag',
+      },
+    },
+  },
+];
+
+const contextProviderExtensions = [
+  {
+    type: 'core.context-provider',
+    properties: {
+      provider: {
+        $codeRef: 'NamespaceContext.NamespaceProvider',
+      },
+      useValueHook: {
+        $codeRef: 'NamespaceContext.useActiveNamespace',
+      },
+    },
+  },
+];
+
+const routeExtensions = [
+  // Redirect from app-studio for now
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/app-studio',
+      component: {
+        $codeRef: 'Redirect',
+      },
+    },
+  },
+
+  // Stonesoup overview
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup',
+      exact: true,
+      component: {
+        $codeRef: 'SignupView',
+      },
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/applications',
+      exact: true,
+      component: {
+        $codeRef: 'SignupView',
+      },
+    },
+    flags: {
+      disallowed: ['SIGNUP'],
+    },
+  },
+
+  // Import
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/import',
+      exact: true,
+      component: {
+        $codeRef: 'Import',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+
+  // Applications page.
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/applications',
+      exact: true,
+      component: {
+        $codeRef: 'Applications',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/applications/:appName',
+      exact: true,
+      component: {
+        $codeRef: 'ApplicationDetails',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/applications/:appName/:activeTab',
+      exact: true,
+      component: {
+        $codeRef: 'ApplicationDetails',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/applications/:appName/:activeTab/:activity',
+      exact: true,
+      component: {
+        $codeRef: 'ApplicationDetails',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+
+  // Pipelineruns page.
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/pipelineruns/:plrName',
+      exact: true,
+      component: {
+        $codeRef: 'PipelineRuns',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/pipelineruns/:plrName/:activeTab',
+      exact: true,
+      component: {
+        $codeRef: 'PipelineRuns',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+
+  // Integration tests tab.
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/applications/:appName/integration-test',
+      exact: true,
+      component: {
+        $codeRef: 'IntegrationTest',
+      },
+    },
+    flags: {
+      required: ['HACBS', 'SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/integration-test/:name/edit',
+      exact: true,
+      component: {
+        $codeRef: 'EditIntegrationTest',
+      },
+    },
+    flags: {
+      required: ['HACBS', 'SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/:appName/integrationtests/:testName',
+      exact: true,
+      component: {
+        $codeRef: 'IntegrationTestDetails',
+      },
+    },
+    flags: {
+      required: ['HACBS', 'SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/:appName/integrationtests/:testName/:activeTab',
+      exact: true,
+      component: {
+        $codeRef: 'IntegrationTestDetails',
+      },
+    },
+    flags: {
+      required: ['HACBS', 'SIGNUP'],
+    },
+  },
+
+  // Commits page.
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/:appName/commit/:commitName',
+      exact: true,
+      component: {
+        $codeRef: 'CommitsPage',
+      },
+    },
+    flags: {
+      required: ['HACBS', 'SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/:appName/commit/:commitName/:activeTab',
+      exact: true,
+      component: {
+        $codeRef: 'CommitsPage',
+      },
+    },
+    flags: {
+      required: ['HACBS', 'SIGNUP'],
+    },
+  },
+
+  // Component settings
+
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/component-settings',
+      exact: true,
+      component: {
+        $codeRef: 'ComponentSettings',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+
+  // Workspace settings
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/workspace-settings',
+      exact: true,
+      component: {
+        $codeRef: 'WorkspaceSettings',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+      disallowed: ['MVP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/workspace-settings/:activeTab',
+      exact: true,
+      component: {
+        $codeRef: 'WorkspaceSettings',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+      disallowed: ['MVP'],
+    },
+  },
+  {
+    type: 'console.page/route',
+    properties: {
+      path: '/stonesoup/workspace-settings/environment/create',
+      exact: true,
+      component: {
+        $codeRef: 'CreateEnvironment',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/workspace-settings/environment/create',
+      exact: true,
+      component: {
+        $codeRef: 'CreateEnvironment',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+];
+
 module.exports = {
   pluginMetadata: {
     name: packageInfo.name,
@@ -25,622 +375,10 @@ module.exports = {
     },
   },
   extensions: [
-    // Redirect from app-studio for now
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/app-studio',
-        component: {
-          $codeRef: 'Redirect',
-        },
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/app-studio',
-        component: {
-          $codeRef: 'Redirect',
-        },
-      },
-    },
-
-    // Stonesoup
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/pipelineruns/:plrName',
-        exact: true,
-        component: {
-          $codeRef: 'PipelineRuns',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/pipelineruns/:plrName',
-        exact: true,
-        component: {
-          $codeRef: 'PipelineRuns',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/pipelineruns/:plrName/:activeTab',
-        exact: true,
-        component: {
-          $codeRef: 'PipelineRuns',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/pipelineruns/:plrName/:activeTab',
-        exact: true,
-        component: {
-          $codeRef: 'PipelineRuns',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/applications/:appName/integration-test',
-        exact: true,
-        component: {
-          $codeRef: 'IntegrationTest',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/applications/:appName/integration-test',
-        exact: true,
-        component: {
-          $codeRef: 'IntegrationTest',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/integration-test/:name/edit',
-        exact: true,
-        component: {
-          $codeRef: 'EditIntegrationTest',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/integration-test/:name/edit',
-        exact: true,
-        component: {
-          $codeRef: 'EditIntegrationTest',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/:appName/commit/:commitName',
-        exact: true,
-        component: {
-          $codeRef: 'CommitsPage',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/:appName/commit/:commitName',
-        exact: true,
-        component: {
-          $codeRef: 'CommitsPage',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/:appName/commit/:commitName/:activeTab',
-        exact: true,
-        component: {
-          $codeRef: 'CommitsPage',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/:appName/commit/:commitName/:activeTab',
-        exact: true,
-        component: {
-          $codeRef: 'CommitsPage',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/:appName/integrationtests/:testName',
-        exact: true,
-        component: {
-          $codeRef: 'IntegrationTestDetails',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/:appName/integrationtests/:testName',
-        exact: true,
-        component: {
-          $codeRef: 'IntegrationTestDetails',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/:appName/integrationtests/:testName/:activeTab',
-        exact: true,
-        component: {
-          $codeRef: 'IntegrationTestDetails',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/:appName/integrationtests/:testName/:activeTab',
-        exact: true,
-        component: {
-          $codeRef: 'IntegrationTestDetails',
-        },
-      },
-      flags: {
-        required: ['HACBS', 'SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup',
-        exact: true,
-        component: {
-          $codeRef: 'Applications',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup',
-        exact: true,
-        component: {
-          $codeRef: 'Applications',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/applications/:appName',
-        exact: true,
-        component: {
-          $codeRef: 'ApplicationDetails',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/applications/:appName',
-        exact: true,
-        component: {
-          $codeRef: 'ApplicationDetails',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/applications/:appName/:activeTab',
-        exact: true,
-        component: {
-          $codeRef: 'ApplicationDetails',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/applications/:appName/:activeTab',
-        exact: true,
-        component: {
-          $codeRef: 'ApplicationDetails',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/applications/:appName/:activeTab/:activity',
-        exact: true,
-        component: {
-          $codeRef: 'ApplicationDetails',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/applications/:appName/:activeTab/:activity',
-        exact: true,
-        component: {
-          $codeRef: 'ApplicationDetails',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/applications',
-        exact: true,
-        component: {
-          $codeRef: 'Applications',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/applications',
-        exact: true,
-        component: {
-          $codeRef: 'Applications',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/import',
-        exact: true,
-        component: {
-          $codeRef: 'Import',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/import',
-        exact: true,
-        component: {
-          $codeRef: 'Import',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/component-settings',
-        exact: true,
-        component: {
-          $codeRef: 'ComponentSettings',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/component-settings',
-        exact: true,
-        component: {
-          $codeRef: 'ComponentSettings',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/workspace-settings',
-        exact: true,
-        component: {
-          $codeRef: 'WorkspaceSettings',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-        disallowed: ['MVP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/workspace-settings',
-        exact: true,
-        component: {
-          $codeRef: 'WorkspaceSettings',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-        disallowed: ['MVP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/workspace-settings/:activeTab',
-        exact: true,
-        component: {
-          $codeRef: 'WorkspaceSettings',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-        disallowed: ['MVP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/workspace-settings/:activeTab',
-        exact: true,
-        component: {
-          $codeRef: 'WorkspaceSettings',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-        disallowed: ['MVP'],
-      },
-    },
-    {
-      type: 'console.navigation/href',
-      properties: {
-        href: '/stonesoup',
-        name: 'Applications',
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.navigation/href',
-      properties: {
-        href: '/stonesoup',
-        name: 'Applications',
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    // {
-    //   type: 'console.navigation/href',
-    //   properties: {
-    //     href: '/stonesoup/workspace-settings',
-    //     name: 'Settings',
-    //   },
-    //   flags: {
-    //     required: ['SIGNUP'],
-    //     disallowed: ['MVP'],
-    //   },
-    // },
-    // {
-    //   type: 'core.navigation/href',
-    //   properties: {
-    //     href: '/stonesoup/workspace-settings',
-    //     name: 'Settings',
-    //   },
-    //   flags: {
-    //     required: ['SIGNUP'],
-    //     disallowed: ['MVP'],
-    //   },
-    // },
-    {
-      type: 'core.flag',
-      properties: {
-        handler: {
-          $codeRef: 'HACBSFlag.enableHACBSFlagFromQueryParam',
-        },
-      },
-    },
-    {
-      type: 'core.flag',
-      properties: {
-        handler: {
-          $codeRef: 'FlagUtils.setSignupFeatureFlags',
-        },
-      },
-    },
-
-    {
-      type: 'core.flag',
-      properties: {
-        handler: {
-          $codeRef: 'FlagUtils.setMvpFeatureFlag',
-        },
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup/workspace-settings/environment/create',
-        exact: true,
-        component: {
-          $codeRef: 'CreateEnvironment',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup/workspace-settings/environment/create',
-        exact: true,
-        component: {
-          $codeRef: 'CreateEnvironment',
-        },
-      },
-      flags: {
-        required: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'console.page/route',
-      properties: {
-        path: '/stonesoup',
-        component: {
-          $codeRef: 'SignupView',
-        },
-      },
-      flags: {
-        disallowed: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.page/route',
-      properties: {
-        path: '/stonesoup',
-        component: {
-          $codeRef: 'SignupView',
-        },
-      },
-      flags: {
-        disallowed: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'console.navigation/href',
-      properties: {
-        href: '/stonesoup',
-        name: 'Signup',
-      },
-      flags: {
-        disallowed: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.navigation/href',
-      properties: {
-        href: '/stonesoup',
-        name: 'Signup',
-      },
-      flags: {
-        disallowed: ['SIGNUP'],
-      },
-    },
-    {
-      type: 'core.context-provider',
-      properties: {
-        provider: {
-          $codeRef: 'NamespaceContext.NamespaceProvider',
-        },
-        useValueHook: {
-          $codeRef: 'NamespaceContext.useActiveNamespace',
-        },
-      },
-    },
+    ...navExtensions,
+    ...flagExtensions,
+    ...contextProviderExtensions,
+    ...routeExtensions,
   ],
   sharedModules: {
     'react-router-dom': { singleton: true },
