@@ -13,7 +13,7 @@ import { pipelineRunTableColumnClasses } from './PipelineRunListHeader';
 
 const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) => {
   const capitalize = (label: string) => {
-    return label.charAt(0).toUpperCase() + label.slice(1);
+    return label && label.charAt(0).toUpperCase() + label.slice(1);
   };
 
   const status = pipelineRunFilterReducer(obj);
