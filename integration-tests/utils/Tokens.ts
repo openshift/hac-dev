@@ -5,7 +5,7 @@ export class Tokens {
     static removeBindingsAndTokens(){
         cy.getCookie('cs_jwt').should('exist').then((cookie) => { 
             let token = cookie.value;
-            let namespace = Cypress.env("USERNAME").toLowerCase();
+            let namespace = (Cypress.env("USERNAME").toLowerCase()).concat("-tenant");
 
             removeAllResources(token, namespace, "spiaccesstokenbinding");
             removeAllResources(token, namespace, "spiaccesstoken");
