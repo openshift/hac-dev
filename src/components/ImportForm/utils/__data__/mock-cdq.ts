@@ -52,4 +52,68 @@ export const mockCDQ = {
   },
 };
 
+export const mockEmptyCDQ = {
+  apiVersion: 'appstudio.redhat.com/v1alpha1',
+  kind: 'ComponentDetectionQuery',
+  metadata: {
+    name: 'test-cdq',
+    namespace: 'test-ns',
+  },
+  spec: {
+    git: {
+      url: 'https://github.com/example/empty-repo',
+    },
+  },
+  status: {
+    conditions: [
+      {
+        lastTransitionTime: '2022-06-01T19:46:56Z',
+        message: 'ComponentDetectionQuery is processing',
+        reason: 'Success',
+        status: 'True',
+        type: 'Processing',
+      },
+      {
+        lastTransitionTime: '2022-06-01T19:46:56Z',
+        message: 'ComponentDetectionQuery has successfully finished',
+        reason: 'OK',
+        status: 'True',
+        type: 'Completed',
+      },
+    ],
+  },
+};
+
+export const mockFailedCDQ = {
+  apiVersion: 'appstudio.redhat.com/v1alpha1',
+  kind: 'ComponentDetectionQuery',
+  metadata: {
+    name: 'test-cdq',
+    namespace: 'test-ns',
+  },
+  spec: {
+    git: {
+      url: 'https://github.com/openshift/dynamic-plugin-sdk/tree/main/packages/sample-app',
+    },
+  },
+  status: {
+    conditions: [
+      {
+        lastTransitionTime: '2022-06-01T19:46:56Z',
+        message: 'ComponentDetectionQuery is processing',
+        reason: 'Success',
+        status: 'True',
+        type: 'Processing',
+      },
+      {
+        lastTransitionTime: '2022-06-01T19:46:56Z',
+        message: 'Error when cloning repository',
+        reason: 'Error',
+        status: 'True',
+        type: 'Completed',
+      },
+    ],
+  },
+};
+
 export const mockDetectedComponent = mockCDQ.status.componentDetected;
