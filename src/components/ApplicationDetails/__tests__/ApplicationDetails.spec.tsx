@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { screen, configure, fireEvent, act, waitFor } from '@testing-library/react';
-import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { useGitOpsDeploymentCR } from '../../../hooks/useGitOpsDeploymentCR';
 import { routerRenderer } from '../../../utils/test-utils';
 import { mockApplication } from '../../ApplicationDetailsView/__data__/mock-data';
@@ -24,13 +23,17 @@ jest.mock('react-router-dom', () => {
   };
 });
 
+jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
+  useChrome: () => ({
+    quickStarts: { set: jest.fn(), toggle: jest.fn() },
+    helpTopics: { setActiveTopic: jest.fn(), enableTopics: jest.fn(), disableTopics: jest.fn() },
+  }),
+}));
+
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 
-jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
-  useChrome: jest.fn(),
-}));
 jest.mock('../../../hooks/useGitOpsDeploymentCR', () => ({
   useGitOpsDeploymentCR: jest.fn(),
 }));
@@ -39,7 +42,6 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
 
-const useChromeMock = useChrome as jest.Mock;
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
@@ -55,22 +57,12 @@ describe('ApplicationDetails', () => {
   });
   it('should render spinner if application data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
-    const set = jest.fn();
-    const toggle = jest.fn();
-    useChromeMock.mockReturnValue({
-      quickStarts: { set, toggle },
-    });
     routerRenderer(<ApplicationDetails applicationName="test" />);
     expect(screen.queryByTestId('spinner')).toBeInTheDocument();
   });
 
   it('should render application display name if application data is loaded', () => {
     watchResourceMock.mockReturnValueOnce([mockApplication, true]);
-    const set = jest.fn();
-    const toggle = jest.fn();
-    useChromeMock.mockReturnValue({
-      quickStarts: { set, toggle },
-    });
     routerRenderer(<ApplicationDetails applicationName="test" />);
     expect(screen.queryByTestId('details__title')).toBeInTheDocument();
     expect(screen.queryByTestId('details__title').innerHTML).toBe('Test Application');

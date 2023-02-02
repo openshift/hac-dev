@@ -140,7 +140,9 @@ const ReviewSection: React.FunctionComponent = () => {
         <HelperText>
           <HelperTextItem>
             Review and define deployment settings and options.{' '}
-            <HelpTopicLink topicId="create-app-config">Learn more</HelpTopicLink>
+            <HelpTopicLink topicId="create-app-config" isInline>
+              Learn more
+            </HelpTopicLink>
           </HelperTextItem>
         </HelperText>
       </TextContent>

@@ -137,7 +137,9 @@ const ApplicationDetailsView: React.FunctionComponent<ApplicationViewProps> = ({
         description={
           <>
             Use this application view to access logs and promote your components.{' '}
-            <HelpTopicLink topicId="app-view">Learn more</HelpTopicLink>
+            <HelpTopicLink topicId="app-view" isInline>
+              Learn more
+            </HelpTopicLink>
           </>
         }
         actions={actions}
