@@ -95,7 +95,7 @@ export const getLinkDataForElement = (
         };
       }
       return {
-        tab: 'pipelineruns',
+        tab: 'activity/pipelineruns',
         // TODO: filter by build once the PLR tab supports filtering
       };
     case WorkflowNodeType.TESTS:
