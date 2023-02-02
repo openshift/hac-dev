@@ -1,3 +1,4 @@
+import { overviewCreateAppButton } from './../support/pageObjects/global-po';
 import { pageTitles } from '../support/constants/PageTitle';
 import { loginPO, kcLoginPO } from '../support/pageObjects/global-po';
 import { Common } from './Common';
@@ -28,6 +29,8 @@ export class Login {
   }
 
   private static waitForApps() {
+    Common.waitForLoad();
+    cy.get(overviewCreateAppButton).click();
     Common.verifyPageTitle(pageTitles.applications);
     Common.waitForLoad();
     cy.testA11y(`${pageTitles.applications} page`);

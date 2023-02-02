@@ -25,7 +25,12 @@ const InfoBanner = () => (
           <Card isPlain isCompact>
             <CardTitle>
               <Bullseye>
-                <img src={overviewInfo1} alt="Icon" width="30px" height="30px" />
+                <img
+                  src={overviewInfo1}
+                  alt="OpenShift and Kubernetes"
+                  width="30px"
+                  height="30px"
+                />
               </Bullseye>
             </CardTitle>
             <CardBody>
@@ -47,7 +52,7 @@ const InfoBanner = () => (
           <Card isPlain isCompact>
             <CardTitle>
               <Bullseye>
-                <img src={overviewInfo2} alt="Icon" width="30px" height="30px" />
+                <img src={overviewInfo2} alt="Secure supply chain" width="30px" height="30px" />
               </Bullseye>
             </CardTitle>
             <CardBody>
@@ -66,7 +71,7 @@ const InfoBanner = () => (
           <Card isPlain isCompact>
             <CardTitle>
               <Bullseye>
-                <img src={overviewInfo3} alt="Icon" width="30px" height="30px" />
+                <img src={overviewInfo3} alt="Cloud deployment" width="30px" height="30px" />
               </Bullseye>
             </CardTitle>
             <CardBody>

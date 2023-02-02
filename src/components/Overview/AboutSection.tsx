@@ -17,8 +17,25 @@ import pythonLogo from '../../imgs/overview/Python.svg';
 import redhatLogo from '../../imgs/overview/RedHat.svg';
 import springLogo from '../../imgs/overview/Spring.svg';
 import tektonLogo from '../../imgs/overview/Tekton.svg';
+import ExternalLink from '../../shared/components/links/ExternalLink';
 
-const AboutSection = () => (
+import './AboutSection.scss';
+
+type TechnologyTileProps = {
+  name: string;
+  logo: string;
+};
+
+const TechnologyTile: React.FC<TechnologyTileProps> = ({ name, logo }) => (
+  <Split hasGutter>
+    <SplitItem>
+      <img src={logo} alt={`${name} logo`} className="technology-logo" />
+    </SplitItem>
+    <SplitItem isFilled>{name}</SplitItem>
+  </Split>
+);
+
+const AboutSection: React.FC = () => (
   <Grid hasGutter>
     <GridItem span={8}>
       <Card isLarge>
@@ -36,9 +53,7 @@ const AboutSection = () => (
             <CardTitle>Shift Left for DevSecOps</CardTitle>
             <CardBody>
               Out-of-the-box support for{' '}
-              <a href="https://slsa.dev/spec/v0.1/levels" target="_blank" rel="noreferrer">
-                SLSA Level 3
-              </a>{' '}
+              <ExternalLink href="https://slsa.dev/spec/v0.1/levels">SLSA Level 3</ExternalLink>{' '}
               means you can identify critical vulnerabilities in your application much earlier with
               each pull request introspecting your direct and transitive dependencies.
             </CardBody>
@@ -70,48 +85,13 @@ const AboutSection = () => (
           <Card isLarge>
             <CardTitle>Related technologies</CardTitle>
             <CardBody>
-              <Split hasGutter>
-                <SplitItem>
-                  <img src={nodeLogo} alt="Icon" width="30px" height="30px" />
-                </SplitItem>
-                <SplitItem isFilled>Node.js</SplitItem>
-              </Split>
-              <Split hasGutter>
-                <SplitItem>
-                  <img src={clairLogo} alt="Icon" width="30px" height="30px" />
-                </SplitItem>
-                <SplitItem isFilled>Clair</SplitItem>
-              </Split>
-              <Split hasGutter>
-                <SplitItem>
-                  <img src={pythonLogo} alt="Icon" width="30px" height="30px" />
-                </SplitItem>
-                <SplitItem isFilled>Python</SplitItem>
-              </Split>
-              <Split hasGutter>
-                <SplitItem>
-                  <img src={springLogo} alt="Icon" width="30px" height="30px" />
-                </SplitItem>
-                <SplitItem isFilled>Spring</SplitItem>
-              </Split>
-              <Split hasGutter>
-                <SplitItem>
-                  <img src={tektonLogo} alt="Icon" width="30px" height="30px" />
-                </SplitItem>
-                <SplitItem isFilled>Tekton</SplitItem>
-              </Split>
-              <Split hasGutter>
-                <SplitItem>
-                  <img src={openPolicyAgentLogo} alt="Icon" width="30px" height="30px" />
-                </SplitItem>
-                <SplitItem isFilled>Open Policy Agent</SplitItem>
-              </Split>
-              <Split hasGutter>
-                <SplitItem>
-                  <img src={redhatLogo} alt="Icon" width="30px" height="30px" />
-                </SplitItem>
-                <SplitItem isFilled>OpenShift</SplitItem>
-              </Split>
+              <TechnologyTile name="Node.js" logo={nodeLogo} />
+              <TechnologyTile name="Clair" logo={clairLogo} />
+              <TechnologyTile name="Python" logo={pythonLogo} />
+              <TechnologyTile name="Spring" logo={springLogo} />
+              <TechnologyTile name="Tekton" logo={tektonLogo} />
+              <TechnologyTile name="Open Policy Agent" logo={openPolicyAgentLogo} />
+              <TechnologyTile name="OpenShift" logo={redhatLogo} />
             </CardBody>
           </Card>
         </StackItem>
@@ -120,9 +100,9 @@ const AboutSection = () => (
             <CardTitle>Contact us</CardTitle>
             <CardBody>
               Join the{' '}
-              <a href="https://rhdevnation.slack.com/join/" target="_blank" rel="noreferrer">
+              <ExternalLink href="https://dn.dev/slack">
                 #software-supply-chain-security
-              </a>{' '}
+              </ExternalLink>{' '}
               channel on Slack
             </CardBody>
           </Card>

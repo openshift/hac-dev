@@ -1,7 +1,18 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { Card, CardTitle, CardBody, Alert, Grid, GridItem, Button } from '@patternfly/react-core';
+import {
+  Card,
+  CardTitle,
+  CardBody,
+  Alert,
+  Grid,
+  GridItem,
+  Button,
+  Title,
+  Text,
+} from '@patternfly/react-core';
+import ExternalLink from '../../shared/components/links/ExternalLink';
 import { SIGNUP_FLAG, SIGNUP_PENDING_FLAG } from '../../utils/flag-utils';
 import SignupButton from './SignupButton';
 
@@ -15,11 +26,17 @@ const IntroBanner: React.FC = () => {
     <Grid>
       <GridItem span={8}>
         <Card className="intro-banner__content" isLarge>
-          <CardTitle>Get started with CI/CD</CardTitle>
+          <CardTitle>
+            <Title headingLevel="h1" size="2xl">
+              Get started with CI/CD
+            </Title>
+          </CardTitle>
           <CardBody>
-            Import, containerize and deploy to a development environment. With just a few clicks,
-            you can interact with your application running in OpenShift and Kubernetes. Build here,
-            go anywhere.
+            <Text>
+              Import, containerize and deploy to a development environment. With just a few clicks,
+              you can interact with your application running in OpenShift and Kubernetes. Build
+              here, go anywhere.
+            </Text>
           </CardBody>
           <CardBody>
             {!signupFlag ? (
@@ -36,9 +53,9 @@ const IntroBanner: React.FC = () => {
                   </p>
                   <p>
                     Join the{' '}
-                    <a href="https://rhdevnation.slack.com/join/" target="_blank" rel="noreferrer">
+                    <ExternalLink href="https://dn.dev/slack">
                       #software-supply-chain-security
-                    </a>{' '}
+                    </ExternalLink>{' '}
                     channel on Slack
                   </p>
                 </Alert>
