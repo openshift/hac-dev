@@ -10,6 +10,7 @@ export type Commit = {
   displayName?: string;
   user: string;
   components: string[];
+  repoName?: string;
   repoURL?: string;
   repoOrg?: string;
   gitProvider?: string;
