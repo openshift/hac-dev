@@ -81,7 +81,7 @@ const routeExtensions = [
       path: '/stonesoup',
       exact: true,
       component: {
-        $codeRef: 'SignupView',
+        $codeRef: 'OverviewPage',
       },
     },
   },
@@ -91,7 +91,7 @@ const routeExtensions = [
       path: '/stonesoup/applications',
       exact: true,
       component: {
-        $codeRef: 'SignupView',
+        $codeRef: 'OverviewPage',
       },
     },
     flags: {
@@ -369,7 +369,7 @@ module.exports = {
       WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),
       CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
       NamespaceContext: resolve(__dirname, '../src/utils/namespace-context-utils'),
-      SignupView: resolve(__dirname, '../src/components/Signup/SignupView'),
+      OverviewPage: resolve(__dirname, '../src/pages/OverviewPage'),
       FlagUtils: resolve(__dirname, '../src/utils/flag-utils'),
       Redirect: resolve(__dirname, '../src/pages/RedirectPage'),
     },

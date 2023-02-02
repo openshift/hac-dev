@@ -11,15 +11,14 @@ const AppBanner: React.FC = () => {
           position="bottom"
           bodyContent={
             <div data-test="dev-preview-banner-popover">
-              Development preview releases provide early access to a limited set of features that
-              might not be fully tested. Users should not use development preview software in
-              production or for business-critical workloads. You have 1 workspace available for
-              development preview.
+              Private preview releases provide early access to a limited set of features that might
+              not be fully tested. Users should not use private preview software in production or
+              for business-critical workloads.
             </div>
           }
         >
           <Button variant="link" isInline>
-            Development Preview
+            Private Preview
           </Button>
         </Popover>
       </Banner>
