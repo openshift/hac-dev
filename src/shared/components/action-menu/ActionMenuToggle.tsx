@@ -57,15 +57,19 @@ const ActionMenuToggle: React.FC<ActionMenuToggleProps> = ({
     }; // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]); // This needs to be run only on component mount/unmount
 
-  const handleToggleClick = (ev) => {
-    ev.stopPropagation(); // Stop handleClickOutside from handling
-    setTimeout(() => {
-      const firstElement = menuRef?.current?.querySelector<HTMLElement>(
-        'li > button:not(:disabled)',
-      );
-      firstElement?.focus();
-    }, 0);
-    onToggleClick((open) => !open);
+  const handleToggleClick = () => {
+    // let the click event propagate before opening (to avoid immediate close on window click)
+    requestAnimationFrame(() => {
+      onToggleClick((open) => !open);
+
+      // let the menu show before setting focus
+      requestAnimationFrame(() => {
+        const firstElement = menuRef?.current?.querySelector<HTMLElement>(
+          'li > button:not(:disabled)',
+        );
+        firstElement?.focus();
+      });
+    });
   };
 
   return (
