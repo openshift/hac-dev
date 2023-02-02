@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { useNamespace } from '../utils/namespace-context-utils';
 import { RouteGroupVersionKind } from './../models/route';
 import { RouteKind } from './../types/routes';
 
 export const useApplicationRoutes = (
   application: string,
-  namespace: string,
+  namespace?: string,
 ): [routes: RouteKind[], loaded: boolean] => {
+  const ns = useNamespace();
   const [allRoutes, loaded] = useK8sWatchResource<RouteKind[]>({
     groupVersionKind: RouteGroupVersionKind,
-    namespace,
+    namespace: namespace ?? ns,
     isList: true,
   });
 

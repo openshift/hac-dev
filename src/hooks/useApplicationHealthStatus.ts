@@ -1,24 +1,39 @@
-import * as React from 'react';
-import { getGitOpsDeploymentHealthStatusIcon } from '../utils/gitops-utils';
-import { useGitOpsDeploymentCR } from './useGitOpsDeploymentCR';
+import { useMemo } from 'react';
+import { getComponentDeploymentRunStatus } from '../utils/environment-utils';
+import { useNamespace } from '../utils/namespace-context-utils';
+import { useSnapshotsEnvironmentBindings } from './useSnapshotsEnvironmentBindings';
+
+const SNAPSHOT_BINDING_ENV_LABEL = 'appstudio.environment';
 
 export const useApplicationHealthStatus = (
-  namespace: string,
   applicationName: string,
-): [string, React.ReactNode, boolean] => {
-  // TODO: Change from gitOpsDeployment to environment based query
-  const [gitOpsDeployment, gitOpsDeploymentLoaded] = useGitOpsDeploymentCR(
-    applicationName,
-    namespace,
-  );
+  envName?: string,
+): [{ status: string; envName: string }, boolean, unknown] => {
+  const namespace = useNamespace();
+  const [snapshotEBs, loaded, error] = useSnapshotsEnvironmentBindings(namespace, applicationName);
+  const healthStatus = useMemo(() => {
+    if (loaded && !error) {
+      if (envName) {
+        const seb = snapshotEBs.filter(
+          (as) => as.metadata?.labels[SNAPSHOT_BINDING_ENV_LABEL] === envName,
+        );
+        return seb ? { status: getComponentDeploymentRunStatus(seb[0]), envName } : null;
+      }
+      const seb = snapshotEBs.sort(
+        (a, b) =>
+          new Date(b.metadata.creationTimestamp).getTime() -
+          new Date(a.metadata?.creationTimestamp).getTime(),
+      )[0];
 
-  const gitOpsDeploymentHealthStatus = gitOpsDeploymentLoaded
-    ? gitOpsDeployment?.status?.health?.status
-    : null;
+      return seb
+        ? {
+            status: getComponentDeploymentRunStatus(seb),
+            envName: seb.metadata.labels[SNAPSHOT_BINDING_ENV_LABEL],
+          }
+        : null;
+    }
+    return null;
+  }, [envName, error, loaded, snapshotEBs]);
 
-  const gitOpsDeploymentHealthStatusIcon = getGitOpsDeploymentHealthStatusIcon(
-    gitOpsDeploymentHealthStatus,
-  );
-
-  return [gitOpsDeploymentHealthStatus, gitOpsDeploymentHealthStatusIcon, gitOpsDeploymentLoaded];
+  return [healthStatus, loaded, error];
 };

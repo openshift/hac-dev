@@ -4,6 +4,7 @@ import {
   k8sUpdateResource,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import omit from 'lodash/omit';
+import { THUMBNAIL_ANNOTATION } from '../../components/ApplicationDetails/ApplicationThumbnail';
 import { SPIAccessTokenBindingModel } from '../../models';
 import { ComponentDetectionQueryKind, SPIAccessTokenBindingKind } from '../../types';
 import { ApplicationModel } from './../../models/application';
@@ -22,12 +23,20 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils');
 const createResourceMock = k8sCreateResource as jest.Mock;
 const getResourceMock = k8sGetResource as jest.Mock;
 
+jest.mock('../../components/ApplicationDetails/ApplicationThumbnail', () => {
+  const actual = jest.requireActual('../../components/ApplicationDetails/ApplicationThumbnail');
+  return { ...actual, getRandomSvgNumber: () => 7 };
+});
+
 const mockApplicationRequestData = {
   apiVersion: `${ApplicationModel.apiGroup}/${ApplicationModel.apiVersion}`,
   kind: ApplicationModel.kind,
   metadata: {
     name: 'test-application',
     namespace: 'test-ns',
+    annotations: {
+      [THUMBNAIL_ANNOTATION]: '7',
+    },
   },
   spec: {
     displayName: 'test-application',
