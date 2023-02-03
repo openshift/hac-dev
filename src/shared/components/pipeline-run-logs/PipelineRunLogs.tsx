@@ -102,11 +102,11 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
 
     const waitingForPods = !!(activeItem && !resource);
     const taskName = get(taskRunFromYaml, [activeItem, 'pipelineTaskName'], '-');
-    const pipelineRunFinished = ![runStatus.Running].includes(pipelineRunStatus);
+    const pipelineRunFinished = pipelineRunStatus !== runStatus.Running;
 
     return (
       <div className="pipeline-run-logs">
-        <div className="pipeline-run-logs__tasklist" data-test-id="logs-tasklist">
+        <div className="pipeline-run-logs__tasklist" data-testid="logs-tasklist">
           {taskCount > 0 ? (
             <Nav onSelect={this.onNavSelect} theme="light">
               <NavList className="pipeline-run-logs__nav">
@@ -145,7 +145,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
             />
           ) : (
             <div className="pipeline-run-logs__log">
-              <div className="pipeline-run-logs__logtext">
+              <div className="pipeline-run-logs__logtext" data-testid="task-logs-error">
                 {waitingForPods && !pipelineRunFinished && `Waiting for ${taskName} task to start `}
                 {!resource &&
                   pipelineRunFinished &&

@@ -22,10 +22,11 @@ const LogsWrapperComponent: React.FC<LogsWrapperComponentProps> = ({ resource, .
     resourceRef.current = null;
   }
 
-  let errorMessage;
-  if ((error as HttpError)?.code === 404) {
-    errorMessage = `Logs are no longer accessible for ${props.taskName} task`;
-  }
+  const errorMessage =
+    (error as HttpError)?.code === 404
+      ? `Logs are no longer accessible for ${props.taskName} task`
+      : null;
+
   return (
     <MultiStreamLogs
       {...props}

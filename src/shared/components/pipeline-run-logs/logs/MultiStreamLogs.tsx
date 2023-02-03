@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 import { DownloadIcon, CompressIcon, ExpandIcon } from '@patternfly/react-icons/dist/js/icons';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { saveAs } from 'file-saver';
 import { useFullscreen } from '../../../hooks/fullscreen';
 import { useScrollDirection, ScrollDirection } from '../../../hooks/scroll';
@@ -136,7 +136,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
           </FlexItem>
         )}
       </Flex>
-      <div className="multi-stream-logs__taskName">
+      <div className="multi-stream-logs__taskName" data-testid="logs-taskName">
         {taskName}
         {(loadingContainers || stillFetching) && resource && (
           <span className="multi-stream-logs__taskName__loading-indicator">
@@ -147,11 +147,13 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
       <div
         className="multi-stream-logs__container"
         onScroll={handleScrollCallback}
-        data-test-id="logs-task-container"
+        data-testid="logs-task-container"
       >
         <div className="multi-stream-logs__container__logs" ref={scrollPane}>
           {resource === null && errorMessage && (
-            <div className="pipeline-run-logs__logtext">{errorMessage}</div>
+            <div className="pipeline-run-logs__logtext" data-testid="logs-error-message">
+              {errorMessage}
+            </div>
           )}
           {!loadingContainers &&
             containers.map((container, idx) => {
