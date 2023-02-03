@@ -19,6 +19,7 @@ type MultiStreamLogsProps = {
   taskName: string;
   downloadAllLabel?: string;
   onDownloadAll?: () => Promise<Error>;
+  errorMessage?: string;
 };
 
 export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
@@ -27,6 +28,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
   resourceName,
   downloadAllLabel,
   onDownloadAll,
+  errorMessage,
 }) => {
   const { t } = useTranslation();
   const scrollPane = React.useRef<HTMLDivElement>();
@@ -40,7 +42,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
   const dataRef = React.useRef(null);
   dataRef.current = containers;
 
-  const loadingContainers = resource.metadata.name !== resourceName;
+  const loadingContainers = resource?.metadata?.name !== resourceName;
 
   const handleComplete = React.useCallback((containerName) => {
     const index = dataRef.current.findIndex(({ name }) => name === containerName);
@@ -83,7 +85,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
     saveAs(blob, `${taskName}.log`);
   };
 
-  const containerStatus = resource.status?.containerStatuses ?? [];
+  const containerStatus = resource?.status?.containerStatuses ?? [];
   const divider = <FlexItem className="multi-stream-logs__divider">|</FlexItem>;
   return (
     <div ref={fullscreenRef} className="multi-stream-logs">
@@ -136,7 +138,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
       </Flex>
       <div className="multi-stream-logs__taskName">
         {taskName}
-        {(loadingContainers || stillFetching) && (
+        {(loadingContainers || stillFetching) && resource && (
           <span className="multi-stream-logs__taskName__loading-indicator">
             <LoadingInline />
           </span>
@@ -148,6 +150,9 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
         data-test-id="logs-task-container"
       >
         <div className="multi-stream-logs__container__logs" ref={scrollPane}>
+          {resource === null && errorMessage && (
+            <div className="pipeline-run-logs__logtext">{errorMessage}</div>
+          )}
           {!loadingContainers &&
             containers.map((container, idx) => {
               const statusIndex = containerStatus.findIndex((c) => c.name === container.name);

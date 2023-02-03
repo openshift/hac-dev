@@ -13,6 +13,7 @@ type LogsProps = {
   render: boolean;
   autoScroll?: boolean;
   onComplete: (containerName: string) => void;
+  errorMessage?: string;
 };
 
 const Logs: React.FC<LogsProps> = ({
@@ -22,6 +23,7 @@ const Logs: React.FC<LogsProps> = ({
   onComplete,
   render,
   autoScroll = true,
+  errorMessage,
 }) => {
   const { t } = useTranslation();
   const { name } = container;
@@ -113,13 +115,18 @@ const Logs: React.FC<LogsProps> = ({
   return (
     <div className="logs" style={{ display: render ? '' : 'none' }}>
       <p className="logs__name">{name}</p>
-      {error && (
-        <Alert
-          variant="danger"
-          isInline
-          title={t('An error occurred while retrieving the requested logs.')}
-        />
-      )}
+      {error ||
+        (!resource && errorMessage && (
+          <Alert
+            variant="danger"
+            isInline
+            title={
+              errorMessage
+                ? errorMessage
+                : t('An error occurred while retrieving the requested logs.')
+            }
+          />
+        ))}
       <div>
         <div className="logs__content" ref={contentRef} />
         <div ref={scrollToRef} />
