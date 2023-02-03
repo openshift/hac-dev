@@ -1,4 +1,8 @@
 .context-switcher {
+  &__dropdown {
+    padding-left: 0;
+    padding-right: 0.6rem;
+  }
   &__menu {
     --pf-c-menu--Width: 360px;
   }

@@ -46,8 +46,7 @@ type DetailsPageProps = {
   children?: React.ReactNode;
   footer?: React.ReactNode;
   description?: React.ReactNode;
-  breadcrumbs?: { name: string; path: string }[];
-  breadcrumbItems?: React.ReactNode;
+  breadcrumbs?: ({ name: string; path: string } | React.ReactElement)[];
   actions?: Action[];
   tabs: DetailsPageTabProps[];
   baseURL: string;
@@ -60,7 +59,6 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
   footer,
   description,
   breadcrumbs,
-  breadcrumbItems,
   actions = [],
   tabs = [],
   baseURL,
@@ -144,13 +142,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
     <PageGroup data-test="details">
       <HeadTitle>{`${headTitle} - ${activeTab?.label} | CI/CD`}</HeadTitle>
       <PageSection type="breadcrumb">
-        {breadcrumbs && (
-          <BreadCrumbs
-            data-test="details__breadcrumbs"
-            breadcrumbs={breadcrumbs}
-            breadcrumbItems={breadcrumbItems}
-          />
-        )}
+        {breadcrumbs && <BreadCrumbs data-test="details__breadcrumbs" breadcrumbs={breadcrumbs} />}
         <Flex style={{ paddingTop: 'var(--pf-global--spacer--lg)' }}>
           <FlexItem>
             <TextContent>

@@ -9,7 +9,7 @@ export const ContextMenuListItem: React.FC<{ item: ContextMenuItem }> = ({ item 
         itemId={`group:${item.key}`}
         direction="down"
         drilldownMenu={
-          <DrilldownMenu id={item.key}>
+          <DrilldownMenu id={`drilldown-${item.key}`}>
             <MenuItem itemId={`group:${item.key}`} direction="up">
               {item.name}
             </MenuItem>

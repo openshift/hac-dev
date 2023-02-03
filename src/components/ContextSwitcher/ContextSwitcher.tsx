@@ -6,6 +6,7 @@ import {
   MenuContent,
   MenuFooter,
   MenuInput,
+  MenuList,
   Tab,
   Tabs,
   TabTitleText,
@@ -55,6 +56,7 @@ export const ContextSwitcher: React.FC<ContextSwitcherProps> = ({
   const [searchText, setSearchText] = React.useState('');
   const [menuDrilledIn, setMenuDrilledIn] = React.useState<string[]>([]);
   const [drilldownPath, setDrilldownPath] = React.useState<string[]>([]);
+  const [menuHeights, setMenuHeights] = React.useState<{ [key: string]: number }>({});
   const [activeMenu, setActiveMenu] = React.useState<string>('context-switcher-root-menu');
   const [localStorage, setLocalStorage] = useLocalStorage<LocalStorageKeys>(LOCAL_STORAGE_KEY);
 
@@ -69,7 +71,7 @@ export const ContextSwitcher: React.FC<ContextSwitcherProps> = ({
   );
 
   const [activeTab, setActiveTab] = React.useState<ContextTab>(
-    lastTab[resourceType] || ContextTab.Recent,
+    lastTab[resourceType] === undefined ? ContextTab.All : lastTab[resourceType],
   );
 
   const recentMenuItems = React.useMemo(() => {
@@ -89,8 +91,9 @@ export const ContextSwitcher: React.FC<ContextSwitcherProps> = ({
   );
 
   const onItemSelect = (_: React.MouseEvent, key: string) => {
-    const item = findItemByKey(menuItems, key);
-    if (item.subItems) {
+    const itemKey = key.startsWith('group:') ? key.replace('group:', '') : key;
+    const item = findItemByKey(menuItems, itemKey);
+    if (item.subItems?.length === 0) {
       return;
     }
     const recentKeys = (recentItems[resourceType] as string[]) || [];
@@ -113,6 +116,10 @@ export const ContextSwitcher: React.FC<ContextSwitcherProps> = ({
       lastTab: { ...lastTab, [resourceType]: key },
     });
     setActiveTab(key);
+    setMenuDrilledIn([]);
+    setDrilldownPath([]);
+    setMenuHeights({});
+    setActiveMenu('context-switcher-root-menu');
   };
 
   const onDrillIn = (fromMenuId: string, toMenuId: string, pathId: string) => {
@@ -129,11 +136,21 @@ export const ContextSwitcher: React.FC<ContextSwitcherProps> = ({
     setActiveMenu(toMenuId);
   };
 
+  const setHeight = (menuId: string, height: number) => {
+    if (
+      menuHeights[menuId] === undefined ||
+      (menuId !== 'context-switcher-root-menu' && menuHeights[menuId] !== height)
+    ) {
+      setMenuHeights({ ...menuHeights, [menuId]: height });
+    }
+  };
+
   return (
     <Dropdown
       toggle={
         <DropdownToggle
           id="toggle-context-switcher"
+          className="context-switcher__dropdown"
           aria-label="toggle context switcher menu"
           onToggle={setIsOpen}
           toggleIndicator={null}
@@ -155,6 +172,7 @@ export const ContextSwitcher: React.FC<ContextSwitcherProps> = ({
         activeMenu={activeMenu}
         onDrillIn={onDrillIn}
         onDrillOut={onDrillOut}
+        onGetMenuHeight={setHeight}
         containsDrilldown
         isScrollable
         isPlain
@@ -169,17 +187,21 @@ export const ContextSwitcher: React.FC<ContextSwitcherProps> = ({
             onChange={setSearchText}
           />
         </MenuInput>
-        <MenuContent>
+        <MenuContent menuHeight={`${menuHeights[activeMenu]}px`}>
           <Tabs activeKey={activeTab} onSelect={onTabChange} isFilled>
             <Tab eventKey={ContextTab.Recent} title={<TabTitleText>Recent</TabTitleText>}>
-              {filteredRecentItems.map((item) => (
-                <ContextMenuListItem key={item.key} item={item} />
-              ))}
+              <MenuList>
+                {filteredRecentItems.map((item) => (
+                  <ContextMenuListItem key={item.key} item={item} />
+                ))}
+              </MenuList>
             </Tab>
             <Tab eventKey={ContextTab.All} title={<TabTitleText>All</TabTitleText>}>
-              {filteredAllItems.map((item) => (
-                <ContextMenuListItem key={item.key} item={item} />
-              ))}
+              <MenuList>
+                {filteredAllItems.map((item) => (
+                  <ContextMenuListItem key={item.key} item={item} />
+                ))}
+              </MenuList>
             </Tab>
           </Tabs>
         </MenuContent>

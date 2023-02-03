@@ -2,7 +2,8 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { Bullseye, Spinner } from '@patternfly/react-core';
+import { Badge, BreadcrumbItem, Bullseye, Spinner } from '@patternfly/react-core';
+import styles from '@patternfly/react-styles/css/components/Breadcrumb/breadcrumb';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { ApplicationGroupVersionKind } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
@@ -23,6 +24,7 @@ import ApplicationOverviewTab from './tabs/ApplicationOverviewTab';
 import ComponentsTab from './tabs/ComponentsTab';
 import EnvironmentsTab from './tabs/EnvironmentsTab';
 import IntegrationTestsTab from './tabs/IntegrationTestsTab';
+import { WorkspaceSwitcher } from './WorkspaceSwitcher';
 
 import './ApplicationDetails.scss';
 
@@ -65,6 +67,9 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
     );
   }
 
+  // temporary placeholder
+  const workspaceName = 'myworkspace';
+
   const loading = (
     <Bullseye>
       <Spinner data-test="spinner" />
@@ -82,14 +87,35 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
         data-test="application-details-test-id"
         headTitle={appDisplayName}
         breadcrumbs={[
-          { path: '/stonesoup/applications', name: 'Applications' },
+          ...(mvpFeature
+            ? []
+            : [
+                <Badge key="badge" isRead>
+                  WS
+                </Badge>,
+                <span key="badge-divider" className={styles.breadcrumbItemDivider} />,
+                <BreadcrumbItem key="workspace-link" component="div" to="#">
+                  <Link className="pf-c-breadcrumb__link" to="#">
+                    {workspaceName}
+                  </Link>
+                </BreadcrumbItem>,
+                <WorkspaceSwitcher key="workspace" selectedWorkspace={workspaceName} />,
+                <span key="workspace-divider" className={styles.breadcrumbItemDivider}>
+                  │
+                </span>,
+              ]),
+          <BreadcrumbItem key="app-link" component="div">
+            <Link className="pf-c-breadcrumb__link" to="/stonesoup/applications">
+              Applications
+            </Link>
+          </BreadcrumbItem>,
           {
-            path: `/stonesoup/applications/${applicationName}`,
+            path: '',
             name: appDisplayName,
           },
+          <ApplicationSwitcher key="app" selectedApplication={application.metadata.name} />,
         ]}
         title={<ApplicationHeader application={application} />}
-        breadcrumbItems={<ApplicationSwitcher selectedApplication={application.metadata.name} />}
         actions={[
           {
             onClick: () =>

@@ -18,8 +18,7 @@ type PageLayoutProps = {
   children: React.ReactNode;
   footer?: React.ReactNode;
   description?: React.ReactNode;
-  breadcrumbs?: { name: string; path: string }[];
-  breadcrumbItems?: React.ReactNode;
+  breadcrumbs?: ({ name: string; path: string } | React.ReactElement)[];
   actions?: Action[];
 };
 
@@ -29,7 +28,6 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   footer,
   description,
   breadcrumbs,
-  breadcrumbItems,
   actions,
 }) => {
   return (
@@ -37,7 +35,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       <PageGroup>
         {breadcrumbs && (
           <PageBreadcrumb>
-            <BreadCrumbs breadcrumbs={breadcrumbs} breadcrumbItems={breadcrumbItems} />
+            <BreadCrumbs breadcrumbs={breadcrumbs} />
           </PageBreadcrumb>
         )}
         <PageSection variant={PageSectionVariants.light}>
