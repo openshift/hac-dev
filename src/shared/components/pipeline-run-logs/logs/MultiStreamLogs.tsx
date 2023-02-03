@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 import { DownloadIcon, CompressIcon, ExpandIcon } from '@patternfly/react-icons/dist/js/icons';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { saveAs } from 'file-saver';
 import { useFullscreen } from '../../../hooks/fullscreen';
 import { useScrollDirection, ScrollDirection } from '../../../hooks/scroll';
@@ -19,6 +19,7 @@ type MultiStreamLogsProps = {
   taskName: string;
   downloadAllLabel?: string;
   onDownloadAll?: () => Promise<Error>;
+  errorMessage?: string;
 };
 
 export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
@@ -27,6 +28,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
   resourceName,
   downloadAllLabel,
   onDownloadAll,
+  errorMessage,
 }) => {
   const { t } = useTranslation();
   const scrollPane = React.useRef<HTMLDivElement>();
@@ -40,7 +42,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
   const dataRef = React.useRef(null);
   dataRef.current = containers;
 
-  const loadingContainers = resource.metadata.name !== resourceName;
+  const loadingContainers = resource?.metadata?.name !== resourceName;
 
   const handleComplete = React.useCallback((containerName) => {
     const index = dataRef.current.findIndex(({ name }) => name === containerName);
@@ -83,7 +85,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
     saveAs(blob, `${taskName}.log`);
   };
 
-  const containerStatus = resource.status?.containerStatuses ?? [];
+  const containerStatus = resource?.status?.containerStatuses ?? [];
   const divider = <FlexItem className="multi-stream-logs__divider">|</FlexItem>;
   return (
     <div ref={fullscreenRef} className="multi-stream-logs">
@@ -134,9 +136,9 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
           </FlexItem>
         )}
       </Flex>
-      <div className="multi-stream-logs__taskName">
+      <div className="multi-stream-logs__taskName" data-testid="logs-taskName">
         {taskName}
-        {(loadingContainers || stillFetching) && (
+        {(loadingContainers || stillFetching) && resource && (
           <span className="multi-stream-logs__taskName__loading-indicator">
             <LoadingInline />
           </span>
@@ -145,9 +147,14 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
       <div
         className="multi-stream-logs__container"
         onScroll={handleScrollCallback}
-        data-test-id="logs-task-container"
+        data-testid="logs-task-container"
       >
         <div className="multi-stream-logs__container__logs" ref={scrollPane}>
+          {resource === null && errorMessage && (
+            <div className="pipeline-run-logs__logtext" data-testid="logs-error-message">
+              {errorMessage}
+            </div>
+          )}
           {!loadingContainers &&
             containers.map((container, idx) => {
               const statusIndex = containerStatus.findIndex((c) => c.name === container.name);

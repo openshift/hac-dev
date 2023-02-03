@@ -8,7 +8,7 @@ import LogsWrapperComponent from './logs/LogsWrapperComponent';
 import { getPLRLogSnippet } from './logs/pipelineRunLogSnippet';
 import { ColoredStatusIcon } from './StatusIcon';
 import { PipelineRunKind } from './types/pipelineRun';
-import { PodGroupVersionKind, pipelineRunFilterReducer } from './utils';
+import { PodGroupVersionKind, pipelineRunFilterReducer, runStatus } from './utils';
 import './PipelineRunLogs.scss';
 
 interface PipelineRunLogsProps {
@@ -79,6 +79,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
     const taskRunFromYaml = get(obj, ['status', 'taskRuns'], {});
     const taskRuns = this.getSortedTaskRun(taskRunFromYaml);
     const logDetails = getPLRLogSnippet(obj) as ErrorDetailsWithStaticLog;
+    const pipelineRunStatus = pipelineRunFilterReducer(obj);
 
     const taskCount = taskRuns.length;
     const downloadAllCallback =
@@ -98,9 +99,14 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
         namespace: obj.metadata.namespace,
         isList: false,
       };
+
+    const waitingForPods = !!(activeItem && !resource);
+    const taskName = get(taskRunFromYaml, [activeItem, 'pipelineTaskName'], '-');
+    const pipelineRunFinished = pipelineRunStatus !== runStatus.Running;
+
     return (
       <div className="pipeline-run-logs">
-        <div className="pipeline-run-logs__tasklist" data-test-id="logs-tasklist">
+        <div className="pipeline-run-logs__tasklist" data-testid="logs-tasklist">
           {taskCount > 0 ? (
             <Nav onSelect={this.onNavSelect} theme="light">
               <NavList className="pipeline-run-logs__nav">
@@ -133,14 +139,17 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
           {activeItem && resource ? (
             <LogsWrapperComponent
               resource={resource}
-              taskName={get(taskRunFromYaml, [activeItem, 'pipelineTaskName'], '-')}
+              taskName={taskName}
               downloadAllLabel={'Download all task logs'}
               onDownloadAll={downloadAllCallback}
             />
           ) : (
             <div className="pipeline-run-logs__log">
-              <div className="pipeline-run-logs__logtext">
-                {get(obj, ['status', 'conditions', 0, 'message'], 'No logs found')}
+              <div className="pipeline-run-logs__logtext" data-testid="task-logs-error">
+                {waitingForPods && !pipelineRunFinished && `Waiting for ${taskName} task to start `}
+                {!resource &&
+                  pipelineRunFinished &&
+                  get(obj, ['status', 'conditions', 0, 'message'], 'No logs found')}
                 {logDetails && (
                   <div className="pipeline-run-logs__logsnippet">{logDetails.staticMessage}</div>
                 )}

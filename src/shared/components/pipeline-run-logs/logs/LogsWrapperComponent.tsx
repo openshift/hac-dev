@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { WatchK8sResource } from '../../../../dynamic-plugin-sdk';
-import { LoadingBox } from '../../status-box/StatusBox';
+import { HttpError } from '../../../utils/error/http-error';
 import { PodKind } from '../../types';
 import { MultiStreamLogs } from './MultiStreamLogs';
 
@@ -18,12 +18,22 @@ const LogsWrapperComponent: React.FC<LogsWrapperComponentProps> = ({ resource, .
 
   if (loaded && !error && resource.name === obj.metadata.name) {
     resourceRef.current = obj;
+  } else if (error) {
+    resourceRef.current = null;
   }
 
-  return resourceRef.current ? (
-    <MultiStreamLogs {...props} resourceName={resource.name} resource={resourceRef.current} />
-  ) : (
-    <LoadingBox />
+  const errorMessage =
+    (error as HttpError)?.code === 404
+      ? `Logs are no longer accessible for ${props.taskName} task`
+      : null;
+
+  return (
+    <MultiStreamLogs
+      {...props}
+      resourceName={resource?.name}
+      resource={resourceRef.current}
+      errorMessage={errorMessage}
+    />
   );
 };
 
