@@ -134,7 +134,7 @@ describe('PipelineRunDetailsView', () => {
     expect(screen.queryByText('Namespace')).toBeInTheDocument();
   });
 
-  it('should render Rerun, Stop and Cancel button under the Actions dropdown', () => {
+  it('should render  Stop and Cancel button under the Actions dropdown', () => {
     watchResourceMock
       .mockReturnValueOnce([testPipelineRuns[DataState.SUCCEEDED], true])
       .mockReturnValue([[], true]);
@@ -145,7 +145,6 @@ describe('PipelineRunDetailsView', () => {
     expect(actionsDropdown).toBeInTheDocument();
     fireEvent.click(actionsDropdown);
 
-    expect(screen.queryByText('Rerun')).toBeInTheDocument();
     expect(screen.queryByText('Stop')).toBeInTheDocument();
     expect(screen.queryByText('Cancel')).toBeInTheDocument();
   });
@@ -198,7 +197,8 @@ describe('PipelineRunDetailsView', () => {
     expect(screen.queryByText('Cancel')).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should rerun and navigate to new pipelinerun page', async () => {
+  // Todo: will re-enable this after we figure out the proper rerun solution after mvp
+  xit('should rerun and navigate to new pipelinerun page', async () => {
     const navigateMock = jest.fn();
     useNavigateMock.mockImplementation(() => navigateMock);
     let newPlrName: string;
