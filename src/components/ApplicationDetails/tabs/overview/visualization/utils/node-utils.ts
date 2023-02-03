@@ -284,7 +284,7 @@ export const getBuildNodeForComponent = (
       application,
       label: `Build for ${component.metadata.name}`,
       isDisabled: false,
-      status: NEEDS_MERGE_STATUS,
+      status: hasPACProvisionDone(component) ? NEEDS_MERGE_STATUS : runStatus.Pending,
       workflowType: WorkflowNodeType.BUILD,
     },
   };
