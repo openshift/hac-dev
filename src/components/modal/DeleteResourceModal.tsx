@@ -100,7 +100,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
                 <StackItem>
                   <InputField
                     name="resourceName"
-                    label={`Type ${resourceName} to confirm deletion`}
+                    label={`Type "${resourceName}" to confirm deletion`}
                     helpTextInvalid={`${obj.kind} name does not match`}
                     helpText={helpText}
                     validated={validatedState}
