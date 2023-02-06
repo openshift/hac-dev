@@ -71,7 +71,6 @@ COMMON_SETUP="-u $ID \
     -w /e2e \
     -e CYPRESS_CACHE_FOLDER=/e2e/.cache \
     -e CYPRESS_PR_CHECK=true \
-    -e CYPRESS_GH_PR_ID='${ghprbPullId}' \
     -e CYPRESS_GH_PR_LINK=${ghprbPullLink} \
     -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/stonesoup \
     -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` \
@@ -92,7 +91,7 @@ docker run ${COMMON_SETUP} \
     -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \
     -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
     ${TEST_IMAGE} \
-    bash -c "startcypress run -e configFile=hac-dev-experimental" || TEST_RUN=2
+    bash -c "startcypress run -e configFile=hac-dev-experimental,GH_PR_TITLE='${ghprbPullTitle}'" || TEST_RUN=2
 
 bonfire namespace release ${NAMESPACE}
 
