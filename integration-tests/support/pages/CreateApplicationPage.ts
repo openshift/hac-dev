@@ -9,6 +9,7 @@ export class CreateApplicationPage extends AbstractWizardPage {
   }
 
   setApplicationName(name: string) {
+    cy.wait(500);
     this.clearApplicationName();
     cy.get(createApplicationPagePO.applicationName).type(name);
   }

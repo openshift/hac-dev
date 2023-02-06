@@ -30,7 +30,7 @@ const mockApplicationRequestData = {
     namespace: 'test-ns',
   },
   spec: {
-    displayName: 'Test Application',
+    displayName: 'test-application',
   },
 };
 
@@ -142,7 +142,7 @@ const mockAccessTokenBinding: SPIAccessTokenBindingKind = {
 
 describe('Create Utils', () => {
   it('Should call k8s create util with correct model and data for application', async () => {
-    await createApplication('Test Application', 'test-ns');
+    await createApplication('test-application', 'test-ns');
 
     expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ApplicationModel,
