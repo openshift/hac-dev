@@ -199,7 +199,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                   name: applicationName,
                 },
                 {
-                  path: `/stonesoup/applications/${applicationName}/commits`,
+                  path: `/stonesoup/applications/${applicationName}/activity/latest-commits`,
                   name: 'commits',
                 },
                 {

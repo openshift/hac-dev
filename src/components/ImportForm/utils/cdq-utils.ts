@@ -81,7 +81,9 @@ export const useComponentDetection = (
   const detectionCompleted = React.useMemo(() => {
     if (cdqName && loaded && cdq) {
       return cdq?.status?.conditions?.some(
-        (condition) => condition.type === 'Completed' && condition.reason === 'OK',
+        (condition) =>
+          condition.type === 'Completed' &&
+          (condition.reason === 'OK' || condition.reason === 'Error'),
       );
     }
     return false;

@@ -6,7 +6,12 @@ import {
 import { renderHook } from '@testing-library/react-hooks';
 import { createComponentDetectionQuery } from '../../../../utils/create-utils';
 import { detectComponents, useComponentDetection } from '../cdq-utils';
-import { mockCDQ, mockDetectedComponent } from './../__data__/mock-cdq';
+import {
+  mockCDQ,
+  mockDetectedComponent,
+  mockEmptyCDQ,
+  mockFailedCDQ,
+} from './../__data__/mock-cdq';
 
 import '@testing-library/jest-dom';
 
@@ -143,6 +148,70 @@ describe('CDQ Utils: useComponentDetection', () => {
     await waitForNextUpdate();
 
     expect(result.current).toStrictEqual([mockDetectedComponent, true, undefined]);
+  });
+
+  it('should stop detection & return error when detection fails with error status', async () => {
+    useK8sWatchMock
+      .mockReturnValueOnce([{}, true, null])
+      .mockReturnValue([mockFailedCDQ, true, null]);
+    createCDQMock.mockResolvedValue({
+      metadata: { name: 'test-cdq' },
+      spec: {
+        git: {
+          url: 'https://github.com/openshift/dynamic-plugin-sdk/tree/main/packages/sample-app',
+        },
+      },
+    });
+
+    const { result, rerender, waitForNextUpdate } = renderHook(() =>
+      useComponentDetection(
+        'https://github.com/openshift/dynamic-plugin-sdk/tree/main/packages/sample-app',
+        'test-app',
+        undefined,
+        '/',
+        'dev',
+      ),
+    );
+
+    expect(result.current).toStrictEqual([undefined, false, undefined]);
+
+    rerender();
+
+    await waitForNextUpdate();
+
+    expect(result.current).toStrictEqual([undefined, true, 'Error when cloning repository']);
+  });
+
+  it('should stop detection & return error when detection fails with ok status', async () => {
+    useK8sWatchMock
+      .mockReturnValueOnce([{}, true, null])
+      .mockReturnValue([mockEmptyCDQ, true, null]);
+    createCDQMock.mockResolvedValue({
+      metadata: { name: 'test-cdq' },
+      spec: {
+        git: {
+          url: 'https://github.com/example/empty-repo',
+        },
+      },
+    });
+
+    const { result, rerender, waitForNextUpdate } = renderHook(() =>
+      useComponentDetection(
+        'https://github.com/example/empty-repo',
+        'test-app',
+        undefined,
+        '/',
+        'dev',
+      ),
+    );
+
+    expect(result.current).toStrictEqual([undefined, false, undefined]);
+
+    rerender();
+
+    await waitForNextUpdate();
+
+    expect(result.current).toStrictEqual([undefined, true, undefined]);
   });
 });
 

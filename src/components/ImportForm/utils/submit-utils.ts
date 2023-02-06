@@ -1,7 +1,7 @@
 import { FormikHelpers } from 'formik';
 import { createApplication, createComponent } from '../../../utils/create-utils';
 import { detectComponents } from './cdq-utils';
-import { transformResources, sampleComponentValues } from './transform-utils';
+import { transformResources, transformComponentValues } from './transform-utils';
 import { DetectedFormComponent, ImportFormValues, ImportStrategy } from './types';
 
 export const createComponents = async (
@@ -50,7 +50,7 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
       source.git.context,
       source.git.revision,
     );
-    detectedComponents = sampleComponentValues(application, detectedSampleComponents);
+    detectedComponents = transformComponentValues(detectedSampleComponents);
   }
 
   if (shouldCreateApplication) {

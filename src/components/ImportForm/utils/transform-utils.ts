@@ -1,4 +1,3 @@
-import { sanitizeName } from '../../../utils/create-utils';
 import { ResourceRequirements, DetectedComponents } from './../../../types';
 import { CPUUnits, DetectedFormComponent, FormResources, MemoryUnits } from './types';
 
@@ -57,17 +56,4 @@ export const transformComponentValues = (
       },
     };
   }, []);
-};
-
-export const sampleComponentValues = (
-  application: string,
-  detectedComponents: DetectedComponents,
-): DetectedFormComponent[] => {
-  return transformComponentValues(detectedComponents).map((component) => ({
-    ...component,
-    componentStub: {
-      ...component.componentStub,
-      componentName: `${sanitizeName(application)}-${component.componentStub.componentName}-sample`,
-    },
-  }));
 };

@@ -95,7 +95,7 @@ export const getLinkDataForElement = (
         };
       }
       return {
-        tab: 'pipelineruns',
+        tab: 'activity/pipelineruns',
         // TODO: filter by build once the PLR tab supports filtering
       };
     case WorkflowNodeType.TESTS:
@@ -284,7 +284,7 @@ export const getBuildNodeForComponent = (
       application,
       label: `Build for ${component.metadata.name}`,
       isDisabled: false,
-      status: NEEDS_MERGE_STATUS,
+      status: hasPACProvisionDone(component) ? NEEDS_MERGE_STATUS : runStatus.Pending,
       workflowType: WorkflowNodeType.BUILD,
     },
   };

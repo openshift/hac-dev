@@ -201,7 +201,7 @@ const EnvironmentListView: React.FC<Props> = ({
   }) => <EnvironmentCard environment={environment} applicationName={applicationName} />;
 
   const EnvironmentSubtext =
-    'Use environments to develop, test, and stage your applications before you release them.';
+    'An environment is a set of compute resources that you can use to develop, test, and stage your applications. You can share static environments across all applications in the workspace.';
 
   const emptyStateContent = (
     <>
