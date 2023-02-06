@@ -29,5 +29,5 @@ const logOptions = {
   enableExtendedCollector: true,
 };
 require('cypress-terminal-report/src/installLogsCollector')(logOptions);
-
+require('@cypress/xpath');
 initPerfMeasuring('cypress/perfstats.json');

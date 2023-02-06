@@ -12,6 +12,7 @@
     "cy:open:hac-dev-experimental": "cypress open -e configFile=hac-dev-experimental"
   },
   "devDependencies": {
+    "@cypress/xpath": "^2.0.3",
     "@reportportal/agent-js-cypress": "^5.1.0",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^17.0.13",
