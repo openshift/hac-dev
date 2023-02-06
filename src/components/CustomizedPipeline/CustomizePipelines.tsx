@@ -245,8 +245,6 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, loading }) =>
             title="Sending pull request is taking more time than expected"
             className="pf-u-mt-lg"
           >
-            Pull request did not reach its destination yet.
-            <br />
             You may need to install the GitHub application and grant permissions to the component
             repository.
             <br />

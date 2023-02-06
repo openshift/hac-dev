@@ -108,26 +108,25 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             key: 'customize-build-pipelines',
             label: 'Customize build pipelines',
           },
-          {
-            type: 'separator',
-            key: 'add-separator',
-            label: '',
-          },
-          {
-            type: 'section-label',
-            key: 'add',
-            label: 'Add',
-          },
+          ...(!mvpFeature
+            ? [
+                {
+                  type: 'section-label',
+                  key: 'add',
+                  label: 'Add',
+                },
+              ]
+            : []),
           {
             key: 'add-component',
-            label: 'Add components',
+            label: 'Add component',
             component: (
               <Link to={`/stonesoup/import?application=${applicationName}`}>Add component</Link>
             ),
           },
           {
             key: 'add-integration-test',
-            label: 'Add integration tests',
+            label: 'Add integration test',
             component: (
               <Link to={`/stonesoup/applications/${applicationName}/integration-test`}>
                 Add integration test
@@ -153,6 +152,15 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             },
             hidden: mvpFeature,
           },
+          ...(!mvpFeature
+            ? [
+                {
+                  type: 'separator',
+                  key: 'delete-separator',
+                  label: '',
+                },
+              ]
+            : []),
           {
             key: 'delete-application',
             label: 'Delete application',

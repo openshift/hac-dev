@@ -78,7 +78,7 @@ describe('ComponentListItem', () => {
     );
     const kebabButton = screen.getByTestId('kebab-button');
     fireEvent.click(kebabButton);
-    await waitFor(() => screen.getByText('Delete'));
+    await waitFor(() => screen.getByText('Delete component'));
   });
 
   it('should render Component settings action item', async () => {

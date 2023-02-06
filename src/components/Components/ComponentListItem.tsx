@@ -114,7 +114,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
               </DataListCell>
             ) : null,
             <DataListCell key="status" alignRight>
-              <BuildStatusColumn component={component} allComponents={allComponents} />,
+              <BuildStatusColumn component={component} allComponents={allComponents} />
             </DataListCell>,
           ]}
         />
