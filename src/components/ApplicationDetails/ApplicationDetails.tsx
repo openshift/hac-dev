@@ -12,6 +12,7 @@ import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import { ActivityTab } from '../Activity/ActivityTab';
 import { ApplicationSwitcher } from '../ApplicationDetailsView/ApplicationSwitcher';
+import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
 import ApplicationModal, { HACBS_APPLICATION_MODAL_HIDE_KEY } from './ApplicationModal';
@@ -100,6 +101,22 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
         }
         breadcrumbItems={<ApplicationSwitcher selectedApplication={application.metadata.name} />}
         actions={[
+          {
+            onClick: () =>
+              showModal(createCustomizeAllPipelinesModalLauncher(applicationName, namespace)),
+            key: 'customize-build-pipelines',
+            label: 'Customize build pipelines',
+          },
+          {
+            type: 'separator',
+            key: 'add-separator',
+            label: '',
+          },
+          {
+            type: 'section-label',
+            key: 'add',
+            label: 'Add',
+          },
           {
             key: 'add-component',
             label: 'Add components',

@@ -15,10 +15,10 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 }));
 
 const getMockedResources = (kind: WatchK8sResource) => {
-  if (kind.groupVersionKind === ComponentGroupVersionKind) {
+  if (kind?.groupVersionKind === ComponentGroupVersionKind) {
     return [componentCRMocks, true];
   }
-  if (kind.groupVersionKind === PipelineRunGroupVersionKind) {
+  if (kind?.groupVersionKind === PipelineRunGroupVersionKind) {
     return [mockPipelineRuns, true];
   }
   return [[], true];

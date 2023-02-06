@@ -11,8 +11,9 @@ import {
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { ComponentKind, PipelineRunKind } from '../../types';
+import { getURLForComponentPRs, isPACEnabled } from '../../utils/component-utils';
 import { default as BaseComponentListView } from '../ComponentsListView/ComponentListView';
-import BuildStatusColumn, { getURLForComponentPRs, hasPACProvisionDone } from './BuildStatusColumn';
+import BuildStatusColumn from './BuildStatusColumn';
 import ComponentsFilterToolbarGroups, {
   NEEDS_MERGE_FILTER_ID,
 } from './ComponentsFilterToolbarGroups';
@@ -54,7 +55,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName, 
   const renderTitle = (pipelineRuns: PipelineRunKind[]) => {
     const allMerged = components.every(
       (component) =>
-        !hasPACProvisionDone(component) ||
+        !isPACEnabled(component) ||
         pipelineRuns.find(
           ({ metadata: { labels } }) =>
             labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name,

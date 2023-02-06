@@ -1,0 +1,1924 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: devfile-sample-0rod-on-pull-request-
+  annotations:
+    pipelinesascode.tekton.dev/on-target-branch: '[main,master]'
+    pipelinesascode.tekton.dev/repo-url: 'https://github.com/christianvogt/devfile-sample'
+    pipelinesascode.tekton.dev/sha-title: Appstudio update devfile-sample-0rod
+    results.tekton.dev/record: >-
+      christianvogt-tenant/results/ca41a533-ab26-4194-8c9b-1a0d21d59b89/records/ca41a533-ab26-4194-8c9b-1a0d21d59b89
+    pipelinesascode.tekton.dev/git-auth-secret: pac-gitauth-vjxi
+    results.tekton.dev/result: christianvogt-tenant/results/ca41a533-ab26-4194-8c9b-1a0d21d59b89
+    pipelinesascode.tekton.dev/log-url: >-
+      https://console-openshift-console.apps.appstudio-stage.x99m.p1.openshiftapps.com/k8s/ns/christianvogt-tenant/tekton.dev~v1beta1~PipelineRun/devfile-sample-0rod-on-pull-request-9wqsb
+    build.appstudio.redhat.com/target_branch: main
+    pipelinesascode.tekton.dev/max-keep-runs: '3'
+    build.appstudio.redhat.com/pull_request_number: '14'
+    pipelinesascode.tekton.dev/sha-url: >-
+      https://github.com/christianvogt/devfile-sample/commit/ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+    pipelinesascode.tekton.dev/on-event: '[pull_request]'
+    pipelinesascode.tekton.dev/installation-id: '33664734'
+    build.appstudio.redhat.com/commit_sha: ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+  resourceVersion: '1701603895'
+  name: devfile-sample-0rod-on-pull-request-9wqsb
+  uid: ca41a533-ab26-4194-8c9b-1a0d21d59b89
+  creationTimestamp: '2023-02-01T18:32:13Z'
+  generation: 1
+  managedFields:
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:finalizers':
+            'v:"chains.tekton.dev/pipelinerun"': {}
+      manager: controller
+      operation: Update
+      time: '2023-02-01T18:32:13Z'
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:pipelinesascode.tekton.dev/on-event': {}
+            'f:build.appstudio.redhat.com/target_branch': {}
+            'f:pipelinesascode.tekton.dev/log-url': {}
+            'f:pipelinesascode.tekton.dev/max-keep-runs': {}
+            'f:build.appstudio.redhat.com/commit_sha': {}
+            'f:build.appstudio.redhat.com/pull_request_number': {}
+            'f:pipelinesascode.tekton.dev/on-target-branch': {}
+            .: {}
+            'f:pipelinesascode.tekton.dev/repo-url': {}
+            'f:pipelinesascode.tekton.dev/sha-url': {}
+            'f:pipelinesascode.tekton.dev/installation-id': {}
+            'f:pipelinesascode.tekton.dev/sha-title': {}
+            'f:pipelinesascode.tekton.dev/git-auth-secret': {}
+          'f:generateName': {}
+          'f:labels':
+            'f:pipelinesascode.tekton.dev/pull-request': {}
+            'f:pipelinesascode.tekton.dev/url-repository': {}
+            'f:pipelines.appstudio.openshift.io/type': {}
+            'f:pipelinesascode.tekton.dev/repository': {}
+            'f:app.kubernetes.io/managed-by': {}
+            'f:appstudio.openshift.io/application': {}
+            'f:pipelinesascode.tekton.dev/url-org': {}
+            'f:pipelinesascode.tekton.dev/git-provider': {}
+            'f:pipelinesascode.tekton.dev/event-type': {}
+            'f:pipelinesascode.tekton.dev/original-prname': {}
+            .: {}
+            'f:pipelinesascode.tekton.dev/sha': {}
+            'f:pipelinesascode.tekton.dev/sender': {}
+            'f:pipelinesascode.tekton.dev/state': {}
+            'f:appstudio.openshift.io/component': {}
+            'f:app.kubernetes.io/version': {}
+            'f:pipelinesascode.tekton.dev/branch': {}
+            'f:pipelinesascode.tekton.dev/check-run-id': {}
+        'f:spec':
+          .: {}
+          'f:params': {}
+          'f:pipelineSpec':
+            .: {}
+            'f:finally': {}
+            'f:params': {}
+            'f:results': {}
+            'f:tasks': {}
+            'f:workspaces': {}
+          'f:workspaces': {}
+      manager: pipelines-as-code-controller
+      operation: Update
+      time: '2023-02-01T18:32:13Z'
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:finalizers':
+            .: {}
+            'v:"pipelinesascode.tekton.dev"': {}
+      manager: pipelines-as-code-watcher
+      operation: Update
+      time: '2023-02-01T18:32:13Z'
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:results.tekton.dev/record': {}
+            'f:results.tekton.dev/result': {}
+      manager: watcher
+      operation: Update
+      time: '2023-02-01T18:32:13Z'
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:labels':
+            'f:tekton.dev/pipeline': {}
+      manager: Go-http-client
+      operation: Update
+      time: '2023-02-01T18:32:16Z'
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:status':
+          .: {}
+          'f:conditions': {}
+          'f:pipelineSpec':
+            .: {}
+            'f:finally': {}
+            'f:params': {}
+            'f:results': {}
+            'f:tasks': {}
+            'f:workspaces': {}
+          'f:skippedTasks': {}
+          'f:startTime': {}
+          'f:taskRuns':
+            .: {}
+            'f:devfi884524e51b9c2130a1abd1e565de4b11-appstudio-configure-build':
+              .: {}
+              'f:pipelineTaskName': {}
+              'f:status':
+                .: {}
+                'f:completionTime': {}
+                'f:conditions': {}
+                'f:podName': {}
+                'f:startTime': {}
+                'f:steps': {}
+                'f:taskResults': {}
+                'f:taskSpec':
+                  .: {}
+                  'f:description': {}
+                  'f:params': {}
+                  'f:results': {}
+                  'f:steps': {}
+                  'f:volumes': {}
+                  'f:workspaces': {}
+            'f:devfile-sample-0rod-on-pull-request-9wqsb-appstudio-init':
+              .: {}
+              'f:pipelineTaskName': {}
+              'f:status':
+                .: {}
+                'f:completionTime': {}
+                'f:conditions': {}
+                'f:podName': {}
+                'f:startTime': {}
+                'f:steps': {}
+                'f:taskResults': {}
+                'f:taskSpec':
+                  .: {}
+                  'f:description': {}
+                  'f:params': {}
+                  'f:results': {}
+                  'f:steps': {}
+            'f:devfile-sample-0rod-on-pull-request-9wqsb-build-container':
+              .: {}
+              'f:pipelineTaskName': {}
+              'f:status':
+                .: {}
+                'f:conditions': {}
+                'f:podName': {}
+                'f:startTime': {}
+                'f:steps': {}
+                'f:taskSpec':
+                  .: {}
+                  'f:description': {}
+                  'f:params': {}
+                  'f:results': {}
+                  'f:stepTemplate':
+                    .: {}
+                    'f:env': {}
+                    'f:name': {}
+                    'f:resources': {}
+                  'f:steps': {}
+                  'f:volumes': {}
+                  'f:workspaces': {}
+            'f:devfile-sample-0rod-on-pull-request-9wqsb-clone-repository':
+              .: {}
+              'f:pipelineTaskName': {}
+              'f:status':
+                .: {}
+                'f:completionTime': {}
+                'f:conditions': {}
+                'f:podName': {}
+                'f:startTime': {}
+                'f:steps': {}
+                'f:taskResults': {}
+                'f:taskSpec':
+                  .: {}
+                  'f:description': {}
+                  'f:params': {}
+                  'f:results': {}
+                  'f:steps': {}
+                  'f:workspaces': {}
+              'f:whenExpressions': {}
+            'f:devfile-sample-0rod-on-pull-request-9wqsb-sast-snyk-check':
+              .: {}
+              'f:pipelineTaskName': {}
+              'f:status':
+                .: {}
+                'f:completionTime': {}
+                'f:conditions': {}
+                'f:podName': {}
+                'f:startTime': {}
+                'f:steps': {}
+                'f:taskSpec':
+                  .: {}
+                  'f:description': {}
+                  'f:params': {}
+                  'f:results': {}
+                  'f:steps': {}
+                  'f:volumes': {}
+                  'f:workspaces': {}
+      manager: Go-http-client
+      operation: Update
+      subresource: status
+      time: '2023-02-01T18:33:46Z'
+  namespace: christianvogt-tenant
+  finalizers:
+    - pipelinesascode.tekton.dev
+    - chains.tekton.dev/pipelinerun
+  labels:
+    pipelinesascode.tekton.dev/state: started
+    appstudio.openshift.io/component: devfile-sample-0rod
+    pipelinesascode.tekton.dev/sender: appstudio-staging-ci__bot
+    app.kubernetes.io/version: v0.15.0
+    tekton.dev/pipeline: devfile-sample-0rod-on-pull-request-9wqsb
+    app.kubernetes.io/managed-by: pipelinesascode.tekton.dev
+    pipelinesascode.tekton.dev/check-run-id: '11042080778'
+    pipelinesascode.tekton.dev/branch: main
+    appstudio.openshift.io/application: app2
+    pipelinesascode.tekton.dev/url-org: christianvogt
+    pipelinesascode.tekton.dev/original-prname: devfile-sample-0rod-on-pull-request
+    pipelinesascode.tekton.dev/pull-request: '14'
+    pipelines.appstudio.openshift.io/type: build
+    pipelinesascode.tekton.dev/url-repository: devfile-sample
+    pipelinesascode.tekton.dev/repository: devfile-sample-0rod
+    pipelinesascode.tekton.dev/sha: ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+    pipelinesascode.tekton.dev/git-provider: github
+    pipelinesascode.tekton.dev/event-type: pull_request
+spec:
+  params:
+    - name: dockerfile
+      value: Dockerfile
+    - name: git-url
+      value: 'https://github.com/christianvogt/devfile-sample'
+    - name: output-image
+      value: >-
+        quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+    - name: path-context
+      value: .
+    - name: revision
+      value: ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+  pipelineSpec:
+    finally:
+      - name: show-summary
+        params:
+          - name: pipeline-run-name
+            value: $(context.pipelineRun.name)
+          - name: git-url
+            value: >-
+              $(tasks.clone-repository.results.url)?rev=$(tasks.clone-repository.results.commit)
+          - name: image-url
+            value: $(params.output-image)
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-summary:0.1@sha256:245f5017f0a58840212cfd2de0a50844f78b2b2c74976289f34b238bdaa700e5
+          kind: Task
+          name: summary
+    params:
+      - description: Source Repository URL
+        name: git-url
+        type: string
+      - default: ''
+        description: Revision of the Source Repository
+        name: revision
+        type: string
+      - description: Fully Qualified Output Image
+        name: output-image
+        type: string
+      - default: .
+        description: The path to your source code
+        name: path-context
+        type: string
+      - default: Dockerfile
+        description: Path to the Dockerfile
+        name: dockerfile
+        type: string
+      - default: 'false'
+        description: Force rebuild image
+        name: rebuild
+        type: string
+      - default: 'false'
+        description: Skip checks against built image
+        name: skip-checks
+        type: string
+      - default: 'false'
+        description: Execute the build with network isolation
+        name: hermetic
+        type: string
+      - default: ''
+        description: Build dependencies to be prefetched by Cachi2
+        name: prefetch-input
+        type: string
+      - default: 'false'
+        description: Java build
+        name: java
+        type: string
+    results:
+      - description: ''
+        name: IMAGE_URL
+        value: $(tasks.build-container.results.IMAGE_URL)
+      - description: ''
+        name: IMAGE_DIGEST
+        value: $(tasks.build-container.results.IMAGE_DIGEST)
+      - description: ''
+        name: CHAINS-GIT_URL
+        value: $(tasks.clone-repository.results.url)
+      - description: ''
+        name: CHAINS-GIT_COMMIT
+        value: $(tasks.clone-repository.results.commit)
+      - description: ''
+        name: JAVA_COMMUNITY_DEPENDENCIES
+        value: $(tasks.build-container.results.JAVA_COMMUNITY_DEPENDENCIES)
+    tasks:
+      - name: appstudio-init
+        params:
+          - name: image-url
+            value: $(params.output-image)
+          - name: rebuild
+            value: $(params.rebuild)
+          - name: skip-checks
+            value: $(params.skip-checks)
+          - name: pipeline-run-name
+            value: $(context.pipelineRun.name)
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-init:0.1@sha256:f9e8e66798d02afee87ff13c8d5a0d4bb2667c05a7010fbd286a4afa319c7323
+          kind: Task
+          name: init
+      - name: clone-repository
+        params:
+          - name: url
+            value: $(params.git-url)
+          - name: revision
+            value: $(params.revision)
+        runAfter:
+          - appstudio-init
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-git-clone:0.1@sha256:f4e37778cba00296606ddfbc1c58181330899cafcaa1ee41c75a7cf8bed312f0
+          kind: Task
+          name: git-clone
+        when:
+          - input: $(tasks.appstudio-init.results.build)
+            operator: in
+            values:
+              - 'true'
+        workspaces:
+          - name: output
+            workspace: workspace
+          - name: basic-auth
+            workspace: git-auth
+      - name: appstudio-configure-build
+        runAfter:
+          - clone-repository
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-configure-build:0.1@sha256:787d29329a2ea1b618ddf0ec4cb208d7f3dbc5c969c6e61ea920fb063b09a477
+          kind: Task
+          name: configure-build
+        when:
+          - input: $(tasks.appstudio-init.results.build)
+            operator: in
+            values:
+              - 'true'
+        workspaces:
+          - name: source
+            workspace: workspace
+      - name: prefetch-dependencies
+        params:
+          - name: input
+            value: $(params.prefetch-input)
+        runAfter:
+          - appstudio-configure-build
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-prefetch-dependencies:0.1@sha256:d2f044dc2b9646007c6ae7298fac50971a7a2460e933980313fd689c76226233
+          kind: Task
+          name: prefetch-dependencies
+        when:
+          - input: $(params.hermetic)
+            operator: in
+            values:
+              - 'true'
+        workspaces:
+          - name: source
+            workspace: workspace
+      - name: build-container
+        params:
+          - name: IMAGE
+            value: $(params.output-image)
+          - name: DOCKERFILE
+            value: $(params.dockerfile)
+          - name: CONTEXT
+            value: $(params.path-context)
+          - name: BUILD_EXTRA_ARGS
+            value: $(tasks.appstudio-configure-build.results.buildah-auth-param)
+          - name: PUSH_EXTRA_ARGS
+            value: $(tasks.appstudio-configure-build.results.buildah-auth-param)
+          - name: HERMETIC
+            value: $(params.hermetic)
+          - name: PREFETCH_INPUT
+            value: $(params.prefetch-input)
+        runAfter:
+          - prefetch-dependencies
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.1@sha256:b4a1cf097be6b9c411ad3a1fdb4a48e598f92fce01627c4f5f0d85ee28767784
+          kind: Task
+          name: buildah
+        when:
+          - input: $(tasks.appstudio-init.results.build)
+            operator: in
+            values:
+              - 'true'
+        workspaces:
+          - name: source
+            workspace: workspace
+      - name: sanity-inspect-image
+        params:
+          - name: IMAGE_URL
+            value: >-
+              $(tasks.build-container.results.IMAGE_URL)@$(tasks.build-container.results.IMAGE_DIGEST)
+        runAfter:
+          - build-container
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-sanity-inspect-image:0.1@sha256:1ff8cea8259a415a7ca6de7d47ade692813721653f89166f549e732cecaf2dcf
+          kind: Task
+          name: sanity-inspect-image
+        when:
+          - input: $(params.skip-checks)
+            operator: in
+            values:
+              - 'false'
+        workspaces:
+          - name: workspace
+            workspace: workspace
+      - name: sanity-label-check
+        runAfter:
+          - sanity-inspect-image
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-sanity-label-check:0.1@sha256:710e07f1e38d93ac740b056c4bd7a962df5ad1b09cece5923fae0fde47f9fa76
+          kind: Task
+          name: sanity-label-check
+        when:
+          - input: $(params.skip-checks)
+            operator: in
+            values:
+              - 'false'
+        workspaces:
+          - name: workspace
+            workspace: workspace
+      - name: sanity-optional-label-check
+        params:
+          - name: POLICY_NAMESPACE
+            value: optional_checks
+        runAfter:
+          - sanity-inspect-image
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-sanity-label-check:0.1@sha256:710e07f1e38d93ac740b056c4bd7a962df5ad1b09cece5923fae0fde47f9fa76
+          kind: Task
+          name: sanity-label-check
+        when:
+          - input: $(params.skip-checks)
+            operator: in
+            values:
+              - 'false'
+        workspaces:
+          - name: workspace
+            workspace: workspace
+      - name: deprecated-base-image-check
+        params:
+          - name: BASE_IMAGES_DIGESTS
+            value: $(tasks.build-container.results.BASE_IMAGES_DIGESTS)
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-deprecated-image-check:0.1@sha256:268fd657c069d12b6b24d8e02ce6f0330e2a02e53dce787724445591a90682cd
+          kind: Task
+          name: deprecated-image-check
+        when:
+          - input: $(params.skip-checks)
+            operator: in
+            values:
+              - 'false'
+        workspaces:
+          - name: sanity-ws
+            workspace: workspace
+      - name: clair-scan
+        params:
+          - name: image-digest
+            value: $(tasks.build-container.results.IMAGE_DIGEST)
+          - name: image-url
+            value: $(tasks.build-container.results.IMAGE_URL)
+        runAfter:
+          - build-container
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1@sha256:10b191f72ca767c787f0d7f66f46f5ad3117123ee185e8c57b73667358a7b3a6
+          kind: Task
+          name: clair-scan
+        when:
+          - input: $(params.skip-checks)
+            operator: in
+            values:
+              - 'false'
+      - name: sast-snyk-check
+        runAfter:
+          - clone-repository
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-sast-snyk-check:0.1@sha256:c97f5267e12a4f4da51ed950e4f57dbe63812e89253d0b85c37b3e0d3c024bdb
+          kind: Task
+          name: sast-snyk-check
+        when:
+          - input: $(params.skip-checks)
+            operator: in
+            values:
+              - 'false'
+        workspaces:
+          - name: workspace
+            workspace: workspace
+      - name: clamav-scan
+        params:
+          - name: image-digest
+            value: $(tasks.build-container.results.IMAGE_DIGEST)
+          - name: image-url
+            value: $(tasks.build-container.results.IMAGE_URL)
+        runAfter:
+          - build-container
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-clamav-scan:0.1@sha256:2e19ce2503a8471878fe070364066328e4f2912205ee4aaaf9d66a30037d1cb7
+          kind: Task
+          name: clamav-scan
+        when:
+          - input: $(params.skip-checks)
+            operator: in
+            values:
+              - 'false'
+      - name: sbom-json-check
+        params:
+          - name: IMAGE_URL
+            value: $(tasks.build-container.results.IMAGE_URL)
+        runAfter:
+          - build-container
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-sbom-json-check:0.1@sha256:631b875a9e265d48a1f00d21e51560c175bc7aafb4358b6525785d4ecc685d69
+          kind: Task
+          name: sbom-json-check
+        when:
+          - input: $(params.skip-checks)
+            operator: in
+            values:
+              - 'false'
+        workspaces:
+          - name: workspace
+            workspace: workspace
+    workspaces:
+      - name: workspace
+      - name: git-auth
+        optional: true
+  serviceAccountName: pipeline
+  timeout: 1h0m0s
+  workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+        status: {}
+    - name: git-auth
+      secret:
+        secretName: pac-gitauth-vjxi
+status:
+  conditions:
+    - lastTransitionTime: '2023-02-01T18:33:43Z'
+      message: 'Tasks Completed: 4 (Failed: 0, Cancelled 0), Incomplete: 9, Skipped: 1'
+      reason: Running
+      status: Unknown
+      type: Succeeded
+  pipelineSpec:
+    finally:
+      - name: show-summary
+        params:
+          - name: pipeline-run-name
+            value: devfile-sample-0rod-on-pull-request-9wqsb
+          - name: git-url
+            value: >-
+              $(tasks.clone-repository.results.url)?rev=$(tasks.clone-repository.results.commit)
+          - name: image-url
+            value: >-
+              quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-summary:0.1@sha256:245f5017f0a58840212cfd2de0a50844f78b2b2c74976289f34b238bdaa700e5
+          kind: Task
+          name: summary
+    params:
+      - description: Source Repository URL
+        name: git-url
+        type: string
+      - default: ''
+        description: Revision of the Source Repository
+        name: revision
+        type: string
+      - description: Fully Qualified Output Image
+        name: output-image
+        type: string
+      - default: .
+        description: The path to your source code
+        name: path-context
+        type: string
+      - default: Dockerfile
+        description: Path to the Dockerfile
+        name: dockerfile
+        type: string
+      - default: 'false'
+        description: Force rebuild image
+        name: rebuild
+        type: string
+      - default: 'false'
+        description: Skip checks against built image
+        name: skip-checks
+        type: string
+      - default: 'false'
+        description: Execute the build with network isolation
+        name: hermetic
+        type: string
+      - default: ''
+        description: Build dependencies to be prefetched by Cachi2
+        name: prefetch-input
+        type: string
+      - default: 'false'
+        description: Java build
+        name: java
+        type: string
+    results:
+      - description: ''
+        name: IMAGE_URL
+        value: $(tasks.build-container.results.IMAGE_URL)
+      - description: ''
+        name: IMAGE_DIGEST
+        value: $(tasks.build-container.results.IMAGE_DIGEST)
+      - description: ''
+        name: CHAINS-GIT_URL
+        value: $(tasks.clone-repository.results.url)
+      - description: ''
+        name: CHAINS-GIT_COMMIT
+        value: $(tasks.clone-repository.results.commit)
+      - description: ''
+        name: JAVA_COMMUNITY_DEPENDENCIES
+        value: $(tasks.build-container.results.JAVA_COMMUNITY_DEPENDENCIES)
+    tasks:
+      - name: appstudio-init
+        params:
+          - name: image-url
+            value: >-
+              quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+          - name: rebuild
+            value: 'false'
+          - name: skip-checks
+            value: 'false'
+          - name: pipeline-run-name
+            value: devfile-sample-0rod-on-pull-request-9wqsb
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-init:0.1@sha256:f9e8e66798d02afee87ff13c8d5a0d4bb2667c05a7010fbd286a4afa319c7323
+          kind: Task
+          name: init
+      - name: clone-repository
+        params:
+          - name: url
+            value: 'https://github.com/christianvogt/devfile-sample'
+          - name: revision
+            value: ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+        runAfter:
+          - appstudio-init
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-git-clone:0.1@sha256:f4e37778cba00296606ddfbc1c58181330899cafcaa1ee41c75a7cf8bed312f0
+          kind: Task
+          name: git-clone
+        when:
+          - input: $(tasks.appstudio-init.results.build)
+            operator: in
+            values:
+              - 'true'
+        workspaces:
+          - name: output
+            workspace: workspace
+          - name: basic-auth
+            workspace: git-auth
+      - name: appstudio-configure-build
+        runAfter:
+          - clone-repository
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-configure-build:0.1@sha256:787d29329a2ea1b618ddf0ec4cb208d7f3dbc5c969c6e61ea920fb063b09a477
+          kind: Task
+          name: configure-build
+        when:
+          - input: $(tasks.appstudio-init.results.build)
+            operator: in
+            values:
+              - 'true'
+        workspaces:
+          - name: source
+            workspace: workspace
+      - name: prefetch-dependencies
+        params:
+          - name: input
+            value: ''
+        runAfter:
+          - appstudio-configure-build
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-prefetch-dependencies:0.1@sha256:d2f044dc2b9646007c6ae7298fac50971a7a2460e933980313fd689c76226233
+          kind: Task
+          name: prefetch-dependencies
+        when:
+          - input: 'false'
+            operator: in
+            values:
+              - 'true'
+        workspaces:
+          - name: source
+            workspace: workspace
+      - name: build-container
+        params:
+          - name: IMAGE
+            value: >-
+              quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+          - name: DOCKERFILE
+            value: Dockerfile
+          - name: CONTEXT
+            value: .
+          - name: BUILD_EXTRA_ARGS
+            value: $(tasks.appstudio-configure-build.results.buildah-auth-param)
+          - name: PUSH_EXTRA_ARGS
+            value: $(tasks.appstudio-configure-build.results.buildah-auth-param)
+          - name: HERMETIC
+            value: 'false'
+          - name: PREFETCH_INPUT
+            value: ''
+        runAfter:
+          - prefetch-dependencies
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.1@sha256:b4a1cf097be6b9c411ad3a1fdb4a48e598f92fce01627c4f5f0d85ee28767784
+          kind: Task
+          name: buildah
+        when:
+          - input: $(tasks.appstudio-init.results.build)
+            operator: in
+            values:
+              - 'true'
+        workspaces:
+          - name: source
+            workspace: workspace
+      - name: sanity-inspect-image
+        params:
+          - name: IMAGE_URL
+            value: >-
+              $(tasks.build-container.results.IMAGE_URL)@$(tasks.build-container.results.IMAGE_DIGEST)
+        runAfter:
+          - build-container
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-sanity-inspect-image:0.1@sha256:1ff8cea8259a415a7ca6de7d47ade692813721653f89166f549e732cecaf2dcf
+          kind: Task
+          name: sanity-inspect-image
+        when:
+          - input: 'false'
+            operator: in
+            values:
+              - 'false'
+        workspaces:
+          - name: workspace
+            workspace: workspace
+      - name: sanity-label-check
+        runAfter:
+          - sanity-inspect-image
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-sanity-label-check:0.1@sha256:710e07f1e38d93ac740b056c4bd7a962df5ad1b09cece5923fae0fde47f9fa76
+          kind: Task
+          name: sanity-label-check
+        when:
+          - input: 'false'
+            operator: in
+            values:
+              - 'false'
+        workspaces:
+          - name: workspace
+            workspace: workspace
+      - name: sanity-optional-label-check
+        params:
+          - name: POLICY_NAMESPACE
+            value: optional_checks
+        runAfter:
+          - sanity-inspect-image
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-sanity-label-check:0.1@sha256:710e07f1e38d93ac740b056c4bd7a962df5ad1b09cece5923fae0fde47f9fa76
+          kind: Task
+          name: sanity-label-check
+        when:
+          - input: 'false'
+            operator: in
+            values:
+              - 'false'
+        workspaces:
+          - name: workspace
+            workspace: workspace
+      - name: deprecated-base-image-check
+        params:
+          - name: BASE_IMAGES_DIGESTS
+            value: $(tasks.build-container.results.BASE_IMAGES_DIGESTS)
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-deprecated-image-check:0.1@sha256:268fd657c069d12b6b24d8e02ce6f0330e2a02e53dce787724445591a90682cd
+          kind: Task
+          name: deprecated-image-check
+        when:
+          - input: 'false'
+            operator: in
+            values:
+              - 'false'
+        workspaces:
+          - name: sanity-ws
+            workspace: workspace
+      - name: clair-scan
+        params:
+          - name: image-digest
+            value: $(tasks.build-container.results.IMAGE_DIGEST)
+          - name: image-url
+            value: $(tasks.build-container.results.IMAGE_URL)
+        runAfter:
+          - build-container
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1@sha256:10b191f72ca767c787f0d7f66f46f5ad3117123ee185e8c57b73667358a7b3a6
+          kind: Task
+          name: clair-scan
+        when:
+          - input: 'false'
+            operator: in
+            values:
+              - 'false'
+      - name: sast-snyk-check
+        runAfter:
+          - clone-repository
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-sast-snyk-check:0.1@sha256:c97f5267e12a4f4da51ed950e4f57dbe63812e89253d0b85c37b3e0d3c024bdb
+          kind: Task
+          name: sast-snyk-check
+        when:
+          - input: 'false'
+            operator: in
+            values:
+              - 'false'
+        workspaces:
+          - name: workspace
+            workspace: workspace
+      - name: clamav-scan
+        params:
+          - name: image-digest
+            value: $(tasks.build-container.results.IMAGE_DIGEST)
+          - name: image-url
+            value: $(tasks.build-container.results.IMAGE_URL)
+        runAfter:
+          - build-container
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-clamav-scan:0.1@sha256:2e19ce2503a8471878fe070364066328e4f2912205ee4aaaf9d66a30037d1cb7
+          kind: Task
+          name: clamav-scan
+        when:
+          - input: 'false'
+            operator: in
+            values:
+              - 'false'
+      - name: sbom-json-check
+        params:
+          - name: IMAGE_URL
+            value: $(tasks.build-container.results.IMAGE_URL)
+        runAfter:
+          - build-container
+        taskRef:
+          bundle: >-
+            quay.io/redhat-appstudio-tekton-catalog/task-sbom-json-check:0.1@sha256:631b875a9e265d48a1f00d21e51560c175bc7aafb4358b6525785d4ecc685d69
+          kind: Task
+          name: sbom-json-check
+        when:
+          - input: 'false'
+            operator: in
+            values:
+              - 'false'
+        workspaces:
+          - name: workspace
+            workspace: workspace
+    workspaces:
+      - name: workspace
+      - name: git-auth
+        optional: true
+  skippedTasks:
+    - name: prefetch-dependencies
+      reason: When Expressions evaluated to false
+      whenExpressions:
+        - input: 'false'
+          operator: in
+          values:
+            - 'true'
+  startTime: '2023-02-01T18:32:13Z'
+  taskRuns:
+    devfi884524e51b9c2130a1abd1e565de4b11-appstudio-configure-build:
+      pipelineTaskName: appstudio-configure-build
+      status:
+        completionTime: '2023-02-01T18:33:36Z'
+        conditions:
+          - lastTransitionTime: '2023-02-01T18:33:36Z'
+            message: All Steps have completed executing
+            reason: Succeeded
+            status: 'True'
+            type: Succeeded
+        podName: devfi884524e51b9c2130a1abd11cf26bdf6fb36333cf2fddff9214f689-pod
+        startTime: '2023-02-01T18:32:52Z'
+        steps:
+          - container: step-appstudio-configure-build
+            imageID: >-
+              quay.io/redhat-appstudio/appstudio-utils@sha256:e1d7e2bbff7032f078df41ab4d6345ada8474f615c0e93f6268ae9ba48a81b1d
+            name: appstudio-configure-build
+            terminated:
+              containerID: >-
+                cri-o://3f884251d981d5880eb61a5105000a29b216133eab5fdc41b9c968b1ea02f5bd
+              exitCode: 0
+              finishedAt: '2023-02-01T18:33:36Z'
+              message: >-
+                [{"key":"buildah-auth-param","value":"--authfile
+                /workspace/source/.dockerconfigjson","type":1}]
+              reason: Completed
+              startedAt: '2023-02-01T18:33:36Z'
+        taskResults:
+          - name: buildah-auth-param
+            type: string
+            value: '--authfile /workspace/source/.dockerconfigjson'
+        taskSpec:
+          description: App Studio Configure Build Secrets in Source.
+          params:
+            - default: redhat-appstudio-user-workload
+              name: shared-secret
+              type: string
+          results:
+            - description: pass this to the build optional params to configure secrets
+              name: buildah-auth-param
+              type: string
+          steps:
+            - image: >-
+                quay.io/redhat-appstudio/appstudio-utils:4580b3ba3012095ff3981e50b6bbf753d4afd4c3
+              name: appstudio-configure-build
+              resources: {}
+              script: >
+                #!/usr/bin/env bash
+
+                echo "App Studio Configure Build"
+
+
+                DEST=/workspace/source/.dockerconfigjson
+
+                SHARED=/secret/default-push-secret/.dockerconfigjson
+
+                if [ -f $SHARED ]; then
+                   jq -M -s '.[0] * .[1]' $SHARED ~/.docker/config.json > $DEST
+                else
+                   cp ~/.docker/config.json $DEST
+                fi
+
+                chmod 644 $DEST
+
+                echo -n "--authfile $DEST"  > 
+                /tekton/results/buildah-auth-param
+              volumeMounts:
+                - mountPath: /secret/default-push-secret
+                  name: default-push-secret
+          volumes:
+            - csi:
+                driver: csi.sharedresource.openshift.io
+                readOnly: true
+                volumeAttributes:
+                  sharedSecret: redhat-appstudio-user-workload
+              name: default-push-secret
+          workspaces:
+            - name: source
+    devfile-sample-0rod-on-pull-request-9wqsb-appstudio-init:
+      pipelineTaskName: appstudio-init
+      status:
+        completionTime: '2023-02-01T18:32:24Z'
+        conditions:
+          - lastTransitionTime: '2023-02-01T18:32:24Z'
+            message: All Steps have completed executing
+            reason: Succeeded
+            status: 'True'
+            type: Succeeded
+        podName: devfile-sample-0rod-on-pull-request-9wqsb-appstudio-init-pod
+        startTime: '2023-02-01T18:32:16Z'
+        steps:
+          - container: step-init
+            imageID: >-
+              registry.access.redhat.com/ubi9/skopeo@sha256:6ebbdfce633f9915a6a99d8ee035d9fd258121aa1acf944229e90696eb353549
+            name: init
+            terminated:
+              containerID: >-
+                cri-o://4ce28a6ea9e8ead866dc57f69079772e97dbdf3ee208087080153723434424d2
+              exitCode: 0
+              finishedAt: '2023-02-01T18:32:24Z'
+              message: '[{"key":"build","value":"true","type":1}]'
+              reason: Completed
+              startedAt: '2023-02-01T18:32:23Z'
+        taskResults:
+          - name: build
+            type: string
+            value: 'true'
+        taskSpec:
+          description: >-
+            App Studio Initialize Pipeline Task, include flags for rebuild and
+            auth.
+          params:
+            - description: Image URL for testing
+              name: image-url
+              type: string
+            - default: 'false'
+              description: Rebuild the image if exists
+              name: rebuild
+              type: string
+            - default: 'false'
+              description: skip checks against built image
+              name: skip-checks
+              type: string
+            - name: pipeline-run-name
+              type: string
+          results:
+            - name: build
+              type: string
+          steps:
+            - image: >-
+                registry.access.redhat.com/ubi9/skopeo:9.1.0-5@sha256:6ebbdfce633f9915a6a99d8ee035d9fd258121aa1acf944229e90696eb353549
+              name: init
+              resources: {}
+              script: >
+                #!/bin/bash
+
+                echo "App Studio Build Initialize:
+                quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027"
+
+                echo
+
+                echo "Determine if Image Already Exists"
+
+                # Build the image when image does not exists or rebuild is set
+                to true
+
+                if ! skopeo inspect --no-tags
+                docker://quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+                &>/dev/null || [ "false" == "true" ] || [ "false" == "false" ];
+                then
+                  echo -n "true" > /tekton/results/build
+                else
+                  echo -n "false" > /tekton/results/build
+                fi
+    devfile-sample-0rod-on-pull-request-9wqsb-build-container:
+      pipelineTaskName: build-container
+      status:
+        conditions:
+          - lastTransitionTime: '2023-02-01T18:34:00Z'
+            message: Not all Steps in the Task have finished executing
+            reason: Running
+            status: Unknown
+            type: Succeeded
+        podName: devfile-sample-0rod-on-pull-request-9wqsb-build-container-pod
+        startTime: '2023-02-01T18:33:40Z'
+        steps:
+          - container: step-build
+            imageID: >-
+              registry.access.redhat.com/ubi9/buildah@sha256:c8b1d312815452964885680fc5bc8d99b3bfe9b6961228c71a09c72ca8e915eb
+            name: build
+            running:
+              startedAt: '2023-02-01T18:33:58Z'
+          - container: step-mount-container
+            imageID: >-
+              registry.access.redhat.com/ubi9/buildah@sha256:c8b1d312815452964885680fc5bc8d99b3bfe9b6961228c71a09c72ca8e915eb
+            name: mount-container
+            running:
+              startedAt: '2023-02-01T18:33:58Z'
+          - container: step-sbom-get
+            imageID: >-
+              quay.io/redhat-appstudio/syft@sha256:09afc449976230f66848c19bb5ccf344eb0eeb4ed50747e33b53aff49462c319
+            name: sbom-get
+            running:
+              startedAt: '2023-02-01T18:33:58Z'
+          - container: step-analyse-dependencies-java-sbom
+            imageID: >-
+              quay.io/redhat-appstudio/hacbs-jvm-build-request-processor@sha256:d477bd0d2c7d06a2bcf56ea6c2baf2cf0a519769247e95d05cef43341704ca3a
+            name: analyse-dependencies-java-sbom
+            running:
+              startedAt: '2023-02-01T18:33:59Z'
+          - container: step-merge-sboms
+            imageID: >-
+              registry.redhat.io/ubi9/python-39@sha256:a4833397a08024b156f7bccbf220b3012c206ba902767978de640128132f30c7
+            name: merge-sboms
+            running:
+              startedAt: '2023-02-01T18:33:59Z'
+          - container: step-inject-sbom-and-push
+            imageID: >-
+              registry.access.redhat.com/ubi9/buildah@sha256:c8b1d312815452964885680fc5bc8d99b3bfe9b6961228c71a09c72ca8e915eb
+            name: inject-sbom-and-push
+            running:
+              startedAt: '2023-02-01T18:33:59Z'
+        taskSpec:
+          description: >-
+            Buildah task builds source into a container image and then pushes it
+            to a container registry.
+
+            Buildah Task builds source into a container image using Project
+            Atomic's Buildah build tool.It uses Buildah's support for building
+            from Dockerfiles, using its buildah bud command.This command
+            executes the directives in the Dockerfile to assemble a container
+            image, then pushes that image to a container registry.
+          params:
+            - default: 'false'
+              description: Skip checks against built image
+              name: SKIP_CHECKS
+              type: string
+            - description: Reference of the image buildah will produce.
+              name: IMAGE
+              type: string
+            - default: >-
+                registry.access.redhat.com/ubi9/buildah:9.0.0-19@sha256:c8b1d312815452964885680fc5bc8d99b3bfe9b6961228c71a09c72ca8e915eb
+              description: The location of the buildah builder image.
+              name: BUILDER_IMAGE
+              type: string
+            - default: ./Dockerfile
+              description: Path to the Dockerfile to build.
+              name: DOCKERFILE
+              type: string
+            - default: .
+              description: Path to the directory to use as context.
+              name: CONTEXT
+              type: string
+            - default: 'true'
+              description: >-
+                Verify the TLS on the registry endpoint (for push/pull to a
+                non-TLS registry)
+              name: TLSVERIFY
+              type: string
+            - default: ''
+              description: >-
+                Extra parameters passed for the build command when building
+                images.
+              name: BUILD_EXTRA_ARGS
+              type: string
+            - default: ''
+              description: >-
+                Extra parameters passed for the push command when pushing
+                images.
+              name: PUSH_EXTRA_ARGS
+              type: string
+            - default: 'false'
+              description: Determines if build will be executed without network access.
+              name: HERMETIC
+              type: string
+            - default: ''
+              description: >-
+                In case it is not empty, the prefetched content should be made
+                available to the build.
+              name: PREFETCH_INPUT
+              type: string
+          results:
+            - description: Digest of the image just built
+              name: IMAGE_DIGEST
+              type: string
+            - description: Image repository where the built image was pushed
+              name: IMAGE_URL
+              type: string
+            - description: Digests of the base images used for build
+              name: BASE_IMAGES_DIGESTS
+              type: string
+            - description: The counting of Java components by publisher in JSON format
+              name: SBOM_JAVA_COMPONENTS_COUNT
+              type: string
+            - description: >-
+                The Java dependencies that came from community sources such as
+                Maven central.
+              name: JAVA_COMMUNITY_DEPENDENCIES
+              type: string
+          stepTemplate:
+            env:
+              - name: BUILDAH_FORMAT
+                value: oci
+              - name: STORAGE_DRIVER
+                value: vfs
+              - name: HERMETIC
+                value: 'false'
+              - name: PREFETCH_INPUT
+            name: ''
+            resources: {}
+          steps:
+            - image: >-
+                registry.access.redhat.com/ubi9/buildah:9.0.0-19@sha256:c8b1d312815452964885680fc5bc8d99b3bfe9b6961228c71a09c72ca8e915eb
+              name: build
+              resources:
+                limits:
+                  cpu: '2'
+                  memory: 4Gi
+                requests:
+                  cpu: 10m
+                  memory: 512Mi
+              script: >
+                if [ -e "./Dockerfile" ]; then
+                  dockerfile_path=./Dockerfile
+                elif [ -e "Dockerfile" ]; then
+                  dockerfile_path=Dockerfile
+                elif echo "Dockerfile" | grep -q "^https\?://"; then
+                  echo "Fetch Dockerfile from Dockerfile"
+                  dockerfile_path=$(mktemp --suffix=-Dockerfile)
+                  http_code=$(curl -s -L -w "%{http_code}" --output "$dockerfile_path" Dockerfile)
+                  if [ $http_code != 200 ]; then
+                    echo "No Dockerfile is fetched. Server responds $http_code"
+                    exit 1
+                  fi
+                else
+                  echo "Cannot find Dockerfile Dockerfile"
+                  exit 1
+                fi
+
+                if [ -n "$JVM_BUILD_WORKSPACE_ARTIFACT_CACHE_PORT_80_TCP_ADDR" ]
+                && grep -q '^RUN \(./\)\?mvn' "$dockerfile_path"; then
+                  sed -i -e "s|^RUN \(\(./\)\?mvn\(.*\)\)|RUN echo \"<settings><mirrors><mirror><id>mirror.default</id><url>http://$JVM_BUILD_WORKSPACE_ARTIFACT_CACHE_PORT_80_TCP_ADDR/v1/cache/default/0/</url><mirrorOf>*</mirrorOf></mirror></mirrors></settings>\" > /tmp/settings.yaml; \1 -s /tmp/settings.yaml|g" "$dockerfile_path"
+                  touch /var/lib/containers/java
+                fi
+
+
+
+                sed -i 's/^short-name-mode = .*/short-name-mode = "disabled"/'
+                /etc/containers/registries.conf
+
+
+                if [ "${HERMETIC}" == "true" ]; then
+                  NETWORK="--network none"
+                  echo "Build will be executed with network isolation"
+                fi
+
+
+                if [ ! -z "${PREFETCH_INPUT}" ]; then
+                  VOLUME_MOUNTS="
+                    --volume $(realpath ./cachi2/output):/cachi2/output:U \
+                    --volume $(realpath ./cachi2/cachi2.env):/cachi2/cachi2.env:U"
+
+                  echo "Prefetched content will be made available"
+                fi
+
+
+                buildah bud \
+                  --authfile /workspace/source/.dockerconfigjson \
+                  $NETWORK \
+                  $VOLUME_MOUNTS \
+                  --tls-verify=true --no-cache \
+                  --ulimit nofile=4096:4096 \
+                  -f "$dockerfile_path" -t quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027 .
+              securityContext:
+                capabilities:
+                  add:
+                    - SETFCAP
+              volumeMounts:
+                - mountPath: /var/lib/containers
+                  name: varlibcontainers
+              workingDir: $(workspaces.source.path)
+            - image: >-
+                registry.access.redhat.com/ubi9/buildah:9.0.0-19@sha256:c8b1d312815452964885680fc5bc8d99b3bfe9b6961228c71a09c72ca8e915eb
+              name: mount-container
+              resources: {}
+              script: >
+                container=$(buildah from --pull-never
+                quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027)
+
+                buildah mount $container | tee /workspace/container_path
+
+                echo $container > /workspace/container_name
+              securityContext:
+                capabilities:
+                  add:
+                    - SETFCAP
+              volumeMounts:
+                - mountPath: /var/lib/containers
+                  name: varlibcontainers
+              workingDir: $(workspaces.source.path)
+            - image: 'quay.io/redhat-appstudio/syft:v0.47.0'
+              name: sbom-get
+              resources: {}
+              script: >
+                syft dir:$(workspaces.source.path)
+                --file=$(workspaces.source.path)/sbom-source.json
+                --output=cyclonedx-json
+
+                find $(cat /workspace/container_path) -xtype l -delete
+
+                syft dir:$(cat /workspace/container_path)
+                --file=$(workspaces.source.path)/sbom-image.json
+                --output=cyclonedx-json
+              volumeMounts:
+                - mountPath: /var/lib/containers
+                  name: varlibcontainers
+            - image: >-
+                quay.io/redhat-appstudio/hacbs-jvm-build-request-processor:efd0d0342a2c0fbbf35b107fb51c3ca850073f23
+              name: analyse-dependencies-java-sbom
+              resources: {}
+              script: |
+                if [ -f /var/lib/containers/java ]; then
+                  /opt/jboss/container/java/run/run-java.sh analyse-dependencies path $(cat /workspace/container_path) -s $(workspaces.source.path)/sbom-java.json --task-run-name devfile-sample-0rod-on-pull-request-9wqsb-build-container
+                fi
+              securityContext:
+                runAsUser: 0
+              volumeMounts:
+                - mountPath: /var/lib/containers
+                  name: varlibcontainers
+            - env:
+                - name: SBOM_JAVA_COMPONENTS_COUNT_PATH
+                  value: /tekton/results/SBOM_JAVA_COMPONENTS_COUNT
+              image: 'registry.redhat.io/ubi9/python-39:1-90.1669637098'
+              name: merge-sboms
+              resources: {}
+              script: >
+                #!/bin/python3
+
+                import json
+
+                import os
+
+
+                # load SBOMs
+
+                with open("./sbom-image.json") as f:
+                  image_sbom = json.load(f)
+
+                with open("./sbom-source.json") as f:
+                  source_sbom = json.load(f)
+
+                java_sbom = { "components" : [] }
+
+                if os.path.exists("./sbom-java.json"):
+                  with open("./sbom-java.json") as f:
+                    java_sbom = json.load(f)
+
+                # fetch unique components from available SBOMs
+
+                def get_identifier(component):
+                  return component["name"] + '@' + component.get("version", "")
+
+                existing_components = [get_identifier(component) for component
+                in image_sbom["components"]]
+
+
+                for component in source_sbom["components"]:
+                  if get_identifier(component) not in existing_components:
+                    image_sbom["components"].append(component)
+                    existing_components.append(get_identifier(component))
+
+                for component in java_sbom.get("components", []):
+                  if get_identifier(component) not in existing_components:
+                    image_sbom["components"].append(component)
+
+                image_sbom["components"].sort(key=lambda c: get_identifier(c))
+
+
+                # write the CycloneDX unified SBOM
+
+                with open("./sbom-cyclonedx.json", "w") as f:
+                  json.dump(image_sbom, f, indent=4)
+
+                # create and write the PURL unified SBOM
+
+                purls = [{"purl": component["purl"]} for component in
+                image_sbom["components"] if "purl" in component]
+
+                purl_content = {"image_contents": {"dependencies": purls}}
+
+
+                with open("sbom-purl.json", "w") as output_file:
+                  json.dump(purl_content, output_file, indent=4)
+
+                # create Tekton result containing counting of Java publishers
+
+                java_publishers = {}
+
+
+                for component in java_sbom.get("components", []):
+                  publisher = component.get("publisher", None)
+
+                  if publisher is None:
+                    continue
+
+                  if publisher not in java_publishers.keys():
+                    java_publishers[publisher] = 0
+
+                  java_publishers[publisher] += 1
+
+                with open(os.getenv("SBOM_JAVA_COMPONENTS_COUNT_PATH"), "w") as
+                f:
+                  json.dump(java_publishers, f, indent=4)
+              securityContext:
+                runAsUser: 0
+              workingDir: $(workspaces.source.path)
+            - image: >-
+                registry.access.redhat.com/ubi9/buildah:9.0.0-19@sha256:c8b1d312815452964885680fc5bc8d99b3bfe9b6961228c71a09c72ca8e915eb
+              name: inject-sbom-and-push
+              resources: {}
+              script: >
+                # Expose base image digests
+
+                buildah images --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' |
+                grep -v
+                quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+                > /tekton/results/BASE_IMAGES_DIGESTS
+
+
+                base_image_name=$(buildah inspect --format '{{ index
+                .ImageAnnotations "org.opencontainers.image.base.name"}}'
+                quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027)
+
+                base_image_digest=$(buildah inspect --format '{{ index
+                .ImageAnnotations "org.opencontainers.image.base.digest"}}'
+                quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027)
+
+                container=$(buildah from --pull-never
+                quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027)
+
+                buildah copy $container sbom-cyclonedx.json sbom-purl.json
+                /root/buildinfo/content_manifests/
+
+                buildah config -a
+                org.opencontainers.image.base.name=${base_image_name} -a
+                org.opencontainers.image.base.digest=${base_image_digest}
+                $container
+
+                buildah commit $container
+                quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+
+                buildah push \
+                  --authfile /workspace/source/.dockerconfigjson --tls-verify=true \
+                  --digestfile $(workspaces.source.path)/image-digest quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027 \
+                  docker://quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+                cat "$(workspaces.source.path)"/image-digest | tee
+                /tekton/results/IMAGE_DIGEST
+
+                echo -n
+                "quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027"
+                | tee /tekton/results/IMAGE_URL
+
+
+                # Create and push sbom image
+
+                sbom_container=$(buildah from scratch)
+
+                sbom_container_mountpath=$(buildah mount $sbom_container)
+
+                cp sbom-cyclonedx.json sbom-purl.json $sbom_container_mountpath
+
+                buildah umount $sbom_container
+
+                buildah commit working-container
+                quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027.sbom
+
+                buildah push \
+                  --authfile /workspace/source/.dockerconfigjson --tls-verify=true \
+                  quay.io/redhat-appstudio/user-workload:on-pr-ddb5f3b3dbbf2a76f546bb2195678a2194dc1027.sbom
+              securityContext:
+                capabilities:
+                  add:
+                    - SETFCAP
+                runAsUser: 0
+              volumeMounts:
+                - mountPath: /var/lib/containers
+                  name: varlibcontainers
+              workingDir: $(workspaces.source.path)
+          volumes:
+            - emptyDir: {}
+              name: varlibcontainers
+          workspaces:
+            - name: source
+    devfile-sample-0rod-on-pull-request-9wqsb-clone-repository:
+      pipelineTaskName: clone-repository
+      status:
+        completionTime: '2023-02-01T18:32:48Z'
+        conditions:
+          - lastTransitionTime: '2023-02-01T18:32:48Z'
+            message: All Steps have completed executing
+            reason: Succeeded
+            status: 'True'
+            type: Succeeded
+        podName: devfile-sample-0rod-on-pull-request-9wqsb-clone-repository-pod
+        startTime: '2023-02-01T18:32:28Z'
+        steps:
+          - container: step-clone
+            imageID: >-
+              registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:2fa0b06d52b04f377c696412e19307a9eff27383f81d87aae0b4f71672a1cd0b
+            name: clone
+            terminated:
+              containerID: >-
+                cri-o://c0126c3429f81f32bd1ae24f3bf743ded5290f169382bbc136f1ca9685e9013d
+              exitCode: 0
+              finishedAt: '2023-02-01T18:32:48Z'
+              message: >-
+                [{"key":"commit","value":"ddb5f3b3dbbf2a76f546bb2195678a2194dc1027","type":1},{"key":"url","value":"https://github.com/christianvogt/devfile-sample","type":1}]
+              reason: Completed
+              startedAt: '2023-02-01T18:32:48Z'
+        taskResults:
+          - name: commit
+            type: string
+            value: ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+          - name: url
+            type: string
+            value: 'https://github.com/christianvogt/devfile-sample'
+        taskSpec:
+          description: >-
+            These Tasks are Git tasks to work with repositories used by other
+            tasks in your Pipeline.
+
+            The git-clone Task will clone a repo from the provided url into the
+            output Workspace. By default the repo will be cloned into the root
+            of your Workspace. You can clone into a subdirectory by setting this
+            Task's subdirectory param. This Task also supports sparse checkouts.
+            To perform a sparse checkout, pass a list of comma separated
+            directory patterns to this Task's sparseCheckoutDirectories param.
+          params:
+            - description: Repository URL to clone from.
+              name: url
+              type: string
+            - default: ''
+              description: 'Revision to checkout. (branch, tag, sha, ref, etc...)'
+              name: revision
+              type: string
+            - default: ''
+              description: Refspec to fetch before checking out revision.
+              name: refspec
+              type: string
+            - default: 'true'
+              description: Initialize and fetch git submodules.
+              name: submodules
+              type: string
+            - default: '1'
+              description: >-
+                Perform a shallow clone, fetching only the most recent N
+                commits.
+              name: depth
+              type: string
+            - default: 'true'
+              description: >-
+                Set the `http.sslVerify` global git config. Setting this to
+                `false` is not advised unless you are sure that you trust your
+                git remote.
+              name: sslVerify
+              type: string
+            - default: ''
+              description: >-
+                Subdirectory inside the `output` Workspace to clone the repo
+                into.
+              name: subdirectory
+              type: string
+            - default: ''
+              description: >-
+                Define the directory patterns to match or exclude when
+                performing a sparse checkout.
+              name: sparseCheckoutDirectories
+              type: string
+            - default: 'true'
+              description: >-
+                Clean out the contents of the destination directory if it
+                already exists before cloning.
+              name: deleteExisting
+              type: string
+            - default: ''
+              description: HTTP proxy server for non-SSL requests.
+              name: httpProxy
+              type: string
+            - default: ''
+              description: HTTPS proxy server for SSL requests.
+              name: httpsProxy
+              type: string
+            - default: ''
+              description: Opt out of proxying HTTP/HTTPS requests.
+              name: noProxy
+              type: string
+            - default: 'true'
+              description: >-
+                Log the commands that are executed during `git-clone`'s
+                operation.
+              name: verbose
+              type: string
+            - default: >-
+                registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8:v1.8.2-8@sha256:a538c423e7a11aae6ae582a411fdb090936458075f99af4ce5add038bb6983e8
+              description: The image providing the git-init binary that this Task runs.
+              name: gitInitImage
+              type: string
+            - default: /tekton/home
+              description: >
+                Absolute path to the user's home directory. Set this explicitly
+                if you are running the image as a non-root user or have
+                overridden
+
+                the gitInitImage param with an image containing custom user
+                configuration.
+              name: userHome
+              type: string
+          results:
+            - description: The precise commit SHA that was fetched by this Task.
+              name: commit
+              type: string
+            - description: The precise URL that was fetched by this Task.
+              name: url
+              type: string
+          steps:
+            - env:
+                - name: HOME
+                  value: /tekton/home
+                - name: PARAM_URL
+                  value: 'https://github.com/christianvogt/devfile-sample'
+                - name: PARAM_REVISION
+                  value: ddb5f3b3dbbf2a76f546bb2195678a2194dc1027
+                - name: PARAM_REFSPEC
+                - name: PARAM_SUBMODULES
+                  value: 'true'
+                - name: PARAM_DEPTH
+                  value: '1'
+                - name: PARAM_SSL_VERIFY
+                  value: 'true'
+                - name: PARAM_SUBDIRECTORY
+                - name: PARAM_DELETE_EXISTING
+                  value: 'true'
+                - name: PARAM_HTTP_PROXY
+                - name: PARAM_HTTPS_PROXY
+                - name: PARAM_NO_PROXY
+                - name: PARAM_VERBOSE
+                  value: 'true'
+                - name: PARAM_SPARSE_CHECKOUT_DIRECTORIES
+                - name: PARAM_USER_HOME
+                  value: /tekton/home
+                - name: WORKSPACE_OUTPUT_PATH
+                  value: $(workspaces.output.path)
+                - name: WORKSPACE_SSH_DIRECTORY_BOUND
+                  value: $(workspaces.ssh-directory.bound)
+                - name: WORKSPACE_SSH_DIRECTORY_PATH
+                  value: $(workspaces.ssh-directory.path)
+                - name: WORKSPACE_BASIC_AUTH_DIRECTORY_BOUND
+                  value: $(workspaces.basic-auth.bound)
+                - name: WORKSPACE_BASIC_AUTH_DIRECTORY_PATH
+                  value: $(workspaces.basic-auth.path)
+              image: >-
+                registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8:v1.8.2-8@sha256:a538c423e7a11aae6ae582a411fdb090936458075f99af4ce5add038bb6983e8
+              name: clone
+              resources: {}
+              script: >
+                #!/usr/bin/env sh
+
+                set -eu
+
+
+                if [ "${PARAM_VERBOSE}" = "true" ] ; then
+                  set -x
+                fi
+
+
+                if [ "${WORKSPACE_BASIC_AUTH_DIRECTORY_BOUND}" = "true" ] ; then
+                  cp "${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/.git-credentials" "${PARAM_USER_HOME}/.git-credentials"
+                  cp "${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/.gitconfig" "${PARAM_USER_HOME}/.gitconfig"
+                  chmod 400 "${PARAM_USER_HOME}/.git-credentials"
+                  chmod 400 "${PARAM_USER_HOME}/.gitconfig"
+                fi
+
+
+                if [ "${WORKSPACE_SSH_DIRECTORY_BOUND}" = "true" ] ; then
+                  cp -R "${WORKSPACE_SSH_DIRECTORY_PATH}" "${PARAM_USER_HOME}"/.ssh
+                  chmod 700 "${PARAM_USER_HOME}"/.ssh
+                  chmod -R 400 "${PARAM_USER_HOME}"/.ssh/*
+                fi
+
+
+                CHECKOUT_DIR="${WORKSPACE_OUTPUT_PATH}/${PARAM_SUBDIRECTORY}"
+
+
+                cleandir() {
+                  # Delete any existing contents of the repo directory if it exists.
+                  #
+                  # We don't just "rm -rf ${CHECKOUT_DIR}" because ${CHECKOUT_DIR} might be "/"
+                  # or the root of a mounted volume.
+                  if [ -d "${CHECKOUT_DIR}" ] ; then
+                    # Delete non-hidden files and directories
+                    rm -rf "${CHECKOUT_DIR:?}"/*
+                    # Delete files and directories starting with . but excluding ..
+                    rm -rf "${CHECKOUT_DIR}"/.[!.]*
+                    # Delete files and directories starting with .. plus any other character
+                    rm -rf "${CHECKOUT_DIR}"/..?*
+                  fi
+                }
+
+
+                if [ "${PARAM_DELETE_EXISTING}" = "true" ] ; then
+                  cleandir
+                fi
+
+
+                test -z "${PARAM_HTTP_PROXY}" || export
+                HTTP_PROXY="${PARAM_HTTP_PROXY}"
+
+                test -z "${PARAM_HTTPS_PROXY}" || export
+                HTTPS_PROXY="${PARAM_HTTPS_PROXY}"
+
+                test -z "${PARAM_NO_PROXY}" || export
+                NO_PROXY="${PARAM_NO_PROXY}"
+
+
+                /ko-app/git-init \
+                  -url="${PARAM_URL}" \
+                  -revision="${PARAM_REVISION}" \
+                  -refspec="${PARAM_REFSPEC}" \
+                  -path="${CHECKOUT_DIR}" \
+                  -sslVerify="${PARAM_SSL_VERIFY}" \
+                  -submodules="${PARAM_SUBMODULES}" \
+                  -depth="${PARAM_DEPTH}" \
+                  -sparseCheckoutDirectories="${PARAM_SPARSE_CHECKOUT_DIRECTORIES}"
+                cd "${CHECKOUT_DIR}"
+
+                RESULT_SHA="$(git rev-parse HEAD)"
+
+                EXIT_CODE="$?"
+
+                if [ "${EXIT_CODE}" != 0 ] ; then
+                  exit "${EXIT_CODE}"
+                fi
+
+                printf "%s" "${RESULT_SHA}" > "/tekton/results/commit"
+
+                printf "%s" "${PARAM_URL}" > "/tekton/results/url"
+              securityContext:
+                runAsUser: 0
+          workspaces:
+            - description: >-
+                The git repo will be cloned onto the volume backing this
+                Workspace.
+              name: output
+            - description: >
+                A .ssh directory with private key, known_hosts, config, etc.
+                Copied to
+
+                the user's home before git commands are executed. Used to
+                authenticate
+
+                with the git remote when performing the clone. Binding a Secret
+                to this
+
+                Workspace is strongly recommended over other volume types.
+              name: ssh-directory
+              optional: true
+            - description: >
+                A Workspace containing a .gitconfig and .git-credentials file.
+                These
+
+                will be copied to the user's home before any git commands are
+                run. Any
+
+                other files in this Workspace are ignored. It is strongly
+                recommended
+
+                to use ssh-directory over basic-auth whenever possible and to
+                bind a
+
+                Secret to this Workspace over other volume types.
+              name: basic-auth
+              optional: true
+      whenExpressions:
+        - input: 'true'
+          operator: in
+          values:
+            - 'true'
+    devfile-sample-0rod-on-pull-request-9wqsb-sast-snyk-check:
+      pipelineTaskName: sast-snyk-check
+      status:
+        completionTime: '2023-02-01T18:33:10Z'
+        conditions:
+          - lastTransitionTime: '2023-02-01T18:33:10Z'
+            message: All Steps have completed executing
+            reason: Succeeded
+            status: 'True'
+            type: Succeeded
+        podName: devfile-sample-0rod-on-pull-request-9wqsb-sast-snyk-check-pod
+        startTime: '2023-02-01T18:32:52Z'
+        steps:
+          - container: step-sast-snyk-check
+            imageID: >-
+              quay.io/redhat-appstudio/hacbs-test@sha256:1b92b23a9c7be61f4b0acf1a61348d66836f4744abc9bf9e83f06af85436bc3c
+            name: sast-snyk-check
+            terminated:
+              containerID: >-
+                cri-o://8a8549860e6a2b1c617641177d8aa2e818e736e8438306d9feba62692e8eb042
+              exitCode: 0
+              finishedAt: '2023-02-01T18:33:09Z'
+              reason: Completed
+              startedAt: '2023-02-01T18:33:09Z'
+        taskSpec:
+          description: Static code security test with snyk
+          params:
+            - default: snyk-shared-secret
+              name: SHARED_SECRET
+              type: string
+            - default: '--all-projects --exclude=test*,vendor,deps'
+              description: extra args needs to append
+              name: ARGS
+              type: string
+          results:
+            - description: Test output
+              name: HACBS_TEST_OUTPUT
+              type: string
+          steps:
+            - image: 'quay.io/redhat-appstudio/hacbs-test:feature-sast'
+              name: sast-snyk-check
+              resources: {}
+              script: >
+                #!/usr/bin/env bash
+
+                . /utils.sh
+
+                SNYK_TOKEN="$(cat /etc/secrets/snyk_token)"
+
+                if [[ -z $SNYK_TOKEN ]]; then
+                  echo "SNYK_TOKEN is empty and please set params.SHARED_SECRET" | tee stdout.txt
+                  exit 0
+                fi
+
+                export SNYK_TOKEN
+
+                SNYK_EXIT_CODE=0
+
+                snyk code test --all-projects --exclude=test*,vendor,deps ../..
+                --sarif-file-output=sast_snyk_check_out.json 1>&2>> stdout.txt
+                || SNYK_EXIT_CODE=$?
+
+                test_not_skipped=0
+
+                SKIP_MSG="We found 0 supported files"
+
+                grep -q "$SKIP_MSG" stdout.txt || test_not_skipped=$?
+
+
+                HACBS_ERROR_OUTPUT=$(jq -rc --arg date $(date +%s) --null-input
+                \
+                  '{result: "ERROR", timestamp: $date}')
+
+                if [[ "$SNYK_EXIT_CODE" -eq 0 ]] || [[ "$SNYK_EXIT_CODE" -eq 1
+                ]]; then
+                  cat sast_snyk_check_out.json
+                  HACBS_TEST_OUTPUT=
+                  parse_hacbs_test_output sast-snyk-check sarif sast_snyk_check_out.json  || true
+
+                # When the test is skipped, the "SNYK_EXIT_CODE" is 3 and it can
+                also be 3 in some other situation
+
+                elif [[ "$test_not_skipped" -eq 0 ]]; then
+                  HACBS_ERROR_OUTPUT=$(jq -rc --arg date $(date +%s) --arg SKIP_MESSAGE "${SKIP_MSG}" --null-input \
+                    '{result: "SKIPPED", note: $SKIP_MESSAGE, timestamp: $date}')
+                else
+                  echo "The sast-snyk-check test has failed with the following issues:"
+                  cat stdout.txt
+                fi
+
+                echo "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee
+                /tekton/results/HACBS_TEST_OUTPUT
+              volumeMounts:
+                - mountPath: /etc/secrets
+                  name: snyk-secret
+                  readOnly: true
+              workingDir: $(workspaces.workspace.path)/hacbs/sast-snyk-check
+          volumes:
+            - name: snyk-secret
+              secret:
+                optional: true
+                secretName: snyk-shared-secret
+          workspaces:
+            - name: workspace

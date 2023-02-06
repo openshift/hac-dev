@@ -22,6 +22,7 @@ const detectComponentsMock = detectComponents as jest.Mock;
 describe('Submit Utils: createResources', () => {
   it('should create application and components', async () => {
     createApplicationMock.mockResolvedValue({ metadata: { name: 'test-app' } });
+    createComponentMock.mockResolvedValue({ metadata: { name: 'test-component' } });
     await createResources(
       {
         application: 'test-app',
@@ -135,7 +136,7 @@ describe('Submit Utils: createResources', () => {
   it('should detect components first for sample flow', async () => {
     createApplicationMock.mockResolvedValue({ metadata: { name: 'test-app' } });
     detectComponentsMock.mockResolvedValue({ node: { componentStub: {} } });
-    createComponentMock.mockResolvedValue({});
+    createComponentMock.mockResolvedValue({ metadata: { name: 'test-component' } });
     await createResources(
       {
         application: 'test-app',

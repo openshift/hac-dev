@@ -18,6 +18,7 @@ import {
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import ExternalLinkAltIcon from '@patternfly/react-icons/dist/js/icons/external-link-alt-icon';
 import { global_palette_red_100 as redColor } from '@patternfly/react-tokens/dist/js/global_palette_red_100';
+// import { PACState } from '../../hooks/usePACState';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind, RouteKind, ResourceStatusCondition } from '../../types';
@@ -25,6 +26,7 @@ import { getConditionForResource } from '../../utils/common-utils';
 import { getComponentRouteWebURL } from '../../utils/route-utils';
 import { useComponentActions } from '../ApplicationDetailsView/component-actions';
 import BuildStatusColumn from './BuildStatusColumn';
+import ComponentPACStateLabel from './ComponentPACStateLabel';
 
 import './ComponentListItem.scss';
 
@@ -64,6 +66,8 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
   const componentRouteWebURL = routes?.length > 0 && getComponentRouteWebURL(routes, name);
   const condition = getConditionForResource<ComponentKind>(component);
 
+  // const [componnentState, setComponentState] = React.useState<{ [name: string]: PACState }>({});
+
   return (
     <DataListItem aria-label={name} isExpanded={expanded} data-testid="component-list-item">
       <DataListItemRow data-test={`${name}-component-list-item`}>
@@ -75,11 +79,24 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
         />
         <DataListItemCells
           dataListCells={[
-            <DataListCell key="name">
+            <DataListCell key="name" width={3}>
               <Flex direction={{ default: 'column' }}>
-                <FlexItem data-testid="component-list-item-name">
-                  <b>{name}</b>
-                </FlexItem>
+                <Flex>
+                  <FlexItem data-testid="component-list-item-name" style={{ minWidth: '30%' }}>
+                    <b>{name}</b>
+                  </FlexItem>
+                  <FlexItem>
+                    <ComponentPACStateLabel
+                      component={component}
+                      // onStateChange={(pacState) =>
+                      //   setComponentState((prevState) => ({
+                      //     ...prevState,
+                      //     [component.metadata.name]: pacState,
+                      //   }))
+                      // }
+                    />
+                  </FlexItem>
+                </Flex>
                 <FlexItem>
                   <ExternalLink href={component.spec.source?.git?.url}>
                     Git repository <ExternalLinkAltIcon />
@@ -101,11 +118,9 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
                 </Tooltip>
               </DataListCell>
             ) : null,
-            <BuildStatusComponent
-              key="status"
-              component={component}
-              allComponents={allComponents}
-            />,
+            <DataListCell key="status" alignRight>
+              <BuildStatusComponent component={component} allComponents={allComponents} />
+            </DataListCell>,
           ]}
         />
         <DataListAction

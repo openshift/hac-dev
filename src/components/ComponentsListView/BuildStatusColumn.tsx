@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, DataListCell, Flex, FlexItem } from '@patternfly/react-core';
+import { Button, Flex, FlexItem } from '@patternfly/react-core';
 import { useLatestPipelineRunForComponent } from '../../hooks/usePipelineRunsForApplication';
 import { pipelineRunFilterReducer } from '../../shared';
 import { ComponentKind } from '../../types';
@@ -17,27 +17,25 @@ const BuildStatusColumn: React.FC<BuildStatusColumnProps> = ({ component }) => {
   const isContainerImage = !component.spec.source?.git?.url;
 
   return (
-    <DataListCell alignRight>
-      <Flex direction={{ default: 'column' }}>
-        {pipelineRun && (
-          <FlexItem align={{ default: 'alignRight' }}>
-            {getBuildStatusIcon(status)} Build {status}
-          </FlexItem>
-        )}
-        {pipelineRun && !isContainerImage && (
-          <FlexItem align={{ default: 'alignRight' }}>
-            <Button
-              onClick={buildLogsModal}
-              variant="link"
-              data-testid={`view-build-logs-${component.metadata.name}`}
-              isInline
-            >
-              View logs
-            </Button>
-          </FlexItem>
-        )}
-      </Flex>
-    </DataListCell>
+    <Flex direction={{ default: 'column' }}>
+      {pipelineRun && (
+        <FlexItem align={{ default: 'alignRight' }}>
+          {getBuildStatusIcon(status)} Build {status}
+        </FlexItem>
+      )}
+      {pipelineRun && !isContainerImage && (
+        <FlexItem align={{ default: 'alignRight' }}>
+          <Button
+            onClick={buildLogsModal}
+            variant="link"
+            data-testid={`view-build-logs-${component.metadata.name}`}
+            isInline
+          >
+            View logs
+          </Button>
+        </FlexItem>
+      )}
+    </Flex>
   );
 };
 

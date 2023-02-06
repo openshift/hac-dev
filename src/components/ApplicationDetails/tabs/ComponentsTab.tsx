@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   EmptyState,
   EmptyStateIcon,
@@ -12,8 +11,7 @@ import {
   EmptyStateVariant,
 } from '@patternfly/react-core';
 import { OutlinedFileImageIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-file-image-icon';
-import { ComponentGroupVersionKind } from '../../../models';
-import { ComponentKind } from '../../../types';
+import { useComponents } from '../../../hooks/useComponents';
 import ComponentListView from '../../Components/ComponentListView';
 
 type ComponentTabProps = {
@@ -22,11 +20,7 @@ type ComponentTabProps = {
 };
 
 const ComponentsTab: React.FC<ComponentTabProps> = ({ applicationName, namespace }) => {
-  const [components, componentsLoaded] = useK8sWatchResource<ComponentKind[]>({
-    groupVersionKind: ComponentGroupVersionKind,
-    namespace,
-    isList: true,
-  });
+  const [components, componentsLoaded] = useComponents(namespace, applicationName);
 
   const filteredComponents = React.useMemo(
     () =>
