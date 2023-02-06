@@ -1,4 +1,8 @@
-import { containerImageRegex, reviewValidationSchema } from '../validation-utils';
+import {
+  containerImageRegex,
+  resourceNameRegex,
+  reviewValidationSchema,
+} from '../validation-utils';
 
 describe('Review form validation schema', () => {
   it('should fail when component name is missing', async () => {
@@ -98,5 +102,19 @@ describe('containerImageRegex', () => {
   it('should not validate a non-quay container image url', () => {
     expect('https://docker.io/example/repo').not.toMatch(containerImageRegex);
     expect('quay.com/example/repo').not.toMatch(containerImageRegex);
+  });
+});
+
+describe('resourceNameRegex', () => {
+  it('should not allow names starting with number', () => {
+    ['1test-name', '123resource'].forEach((str) => {
+      expect(str).not.toMatch(resourceNameRegex);
+    });
+  });
+
+  it('should not allow special characters', () => {
+    ['resource-@$*-name', 'test-namé'].forEach((str) => {
+      expect(str).not.toMatch(resourceNameRegex);
+    });
   });
 });

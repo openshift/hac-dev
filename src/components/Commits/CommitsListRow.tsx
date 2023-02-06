@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
-import codeCommitImg from '../../imgs/code-commit.svg';
-import codePullRequestImg from '../../imgs/code-pull-request.svg';
 import { pipelineRunFilterReducer } from '../../shared';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
@@ -10,8 +8,9 @@ import { StatusIconWithText } from '../../shared/components/pipeline-run-logs/St
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../types';
-import { statuses } from '../../utils/commits-utils';
+import { createRepoBranchURL, statuses } from '../../utils/commits-utils';
 import { useCommitActions } from './commit-actions';
+import { CommitIcon } from './CommitIcon';
 import { commitsTableColumnClasses } from './CommitsListHeader';
 
 import './CommitsListRow.scss';
@@ -25,12 +24,7 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
   return (
     <>
       <TableData className={commitsTableColumnClasses.name}>
-        {obj.isPullRequest ? (
-          <img className="sha-title-icon" src={codePullRequestImg} alt="Pull request icon" />
-        ) : (
-          <img className="sha-title-icon" src={codeCommitImg} alt="Commit icon" />
-        )}
-
+        <CommitIcon isPR={obj.isPullRequest} className="sha-title-icon" />
         <Link to={`/stonesoup/${obj.application}/commit/${obj.sha}`}>
           {prNumber} {obj.shaTitle}
         </Link>
@@ -43,11 +37,8 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
         )}
       </TableData>
       <TableData className={commitsTableColumnClasses.branch}>
-        {obj.gitProvider === 'github' && obj.repoOrg ? (
-          <ExternalLink
-            href={`https://github.com/${obj.repoOrg}/${obj.repoURL}/tree/${obj.branch}`}
-            text={`${obj.branch}`}
-          />
+        {createRepoBranchURL(obj) ? (
+          <ExternalLink href={createRepoBranchURL(obj)} text={`${obj.branch}`} />
         ) : (
           `${obj.branch}`
         )}

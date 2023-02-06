@@ -69,6 +69,7 @@ module.exports = (on, config) => {
 
   if (newConfig.env.PR_CHECK === true && newConfig.reporterOptions.reportportalAgentJsCypressReporterOptions) {
     newConfig.reporterOptions.reportportalAgentJsCypressReporterOptions.token = config.env.RP_TOKEN;
+    newConfig.reporterOptions.reportportalAgentJsCypressReporterOptions.description = `${config.env.GH_PR_TITLE}\n${config.env.GH_PR_LINK}`;
     registerReportPortalPlugin(on, newConfig);
   } else {
     const reporters = (newConfig.reporterOptions.reporterEnabled as string).split(',').filter((value) => {

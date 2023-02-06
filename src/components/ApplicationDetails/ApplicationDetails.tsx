@@ -101,31 +101,23 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
         breadcrumbItems={<ApplicationSwitcher selectedApplication={application.metadata.name} />}
         actions={[
           {
-            type: 'section-label',
-            key: 'add',
-            label: 'Add',
-          },
-          {
             key: 'add-component',
             label: 'Add components',
             component: (
               <Link to={`/stonesoup/import?application=${applicationName}`}>Add component</Link>
             ),
           },
-          ...(mvpFeature
-            ? []
-            : [
-                {
-                  key: 'add-integration-test',
-                  label: 'Add integration tests',
-                  component: (
-                    <Link to={`/stonesoup/applications/${applicationName}/integration-test`}>
-                      Add integration test
-                    </Link>
-                  ),
-                  isDisabled: false,
-                },
-              ]),
+          {
+            key: 'add-integration-test',
+            label: 'Add integration tests',
+            component: (
+              <Link to={`/stonesoup/applications/${applicationName}/integration-test`}>
+                Add integration test
+              </Link>
+            ),
+            isDisabled: false,
+            hidden: mvpFeature,
+          },
           {
             key: 'create-environment',
             label: 'Create environment',
@@ -135,27 +127,13 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             hidden: mvpFeature,
           },
           {
-            type: 'separator',
-            key: 'help-separator',
-            label: '',
-          },
-          {
-            type: 'section-label',
-            key: 'help',
-            label: 'Help',
-          },
-          {
             key: 'application-quickstart',
             label: 'Getting started with an application',
             onClick: () => {
               quickStarts.set('hac-dev', [applicationQuickstartContent]);
               quickStarts.toggle('hacbs-getting-started-app');
             },
-          },
-          {
-            type: 'separator',
-            key: 'delete-separator',
-            label: '',
+            hidden: mvpFeature,
           },
           {
             key: 'delete-application',

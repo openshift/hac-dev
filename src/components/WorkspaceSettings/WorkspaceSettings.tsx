@@ -81,7 +81,9 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = ({
     <>
       <Text component="p" className="pf-u-mt-lg">
         Manage the continuous delivery process for your applications with environments.{' '}
-        <HelpTopicLink topicId="settings">Learn more</HelpTopicLink>
+        <HelpTopicLink topicId="settings" isInline>
+          Learn more
+        </HelpTopicLink>
       </Text>
       {environmentsView}
     </>
