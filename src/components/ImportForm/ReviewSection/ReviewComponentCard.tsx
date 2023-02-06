@@ -107,15 +107,15 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
           >
             <FormSection>
               <Grid hasGutter>
-                <GridItem span={3}>
+                <GridItem sm={6} md={3} lg={3}>
                   <InputField
                     name={`${fieldPrefix}.targetPort`}
                     label="Target port"
                     type={TextInputTypes.number}
                   />
                 </GridItem>
-                <GridItem span={5} />
-                <GridItem span={6}>
+                <GridItem span={6} className="pf-m-hidden pf-m-visible-on-lg" />
+                <GridItem sm={12} md={12} lg={6}>
                   <ResourceLimitField
                     name={`${fieldPrefix}.resources.cpu`}
                     unitName={`${fieldPrefix}.resources.cpuUnit`}
@@ -125,7 +125,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                     helpText="The amount of CPU the container is guaranteed"
                   />
                 </GridItem>
-                <GridItem span={6}>
+                <GridItem sm={12} md={12} lg={6}>
                   <ResourceLimitField
                     name={`${fieldPrefix}.resources.memory`}
                     unitName={`${fieldPrefix}.resources.memoryUnit`}
