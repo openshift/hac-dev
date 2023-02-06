@@ -2,26 +2,9 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { render, screen, configure, cleanup, fireEvent } from '@testing-library/react';
-import {
-  mockSnapshotsEnvironmentBindings,
-  mockBuildPipelinesData,
-  mockComponentsData,
-  mockEnvironmentsData,
-  mockIntegrationTestScenariosData,
-  mockReleasePlansData,
-  mockReleasesData,
-  mockTestPipelinesData,
-} from '../../../../components/ApplicationDetails/tabs/overview/sections/__data__';
+import { getMockWorkflows } from '../../../../components/ApplicationDetails/__data__/WorkflowTestUtils';
 import { EnvironmentType } from '../../../../components/Environment/environment-utils';
 import { useAllEnvironments } from '../../../../hooks/useAllEnvironments';
-import { useBuildPipelines } from '../../../../hooks/useBuildPipelines';
-import { useComponents } from '../../../../hooks/useComponents';
-import { useEnvironments } from '../../../../hooks/useEnvironments';
-import { useIntegrationTestScenarios } from '../../../../hooks/useIntegrationTestScenarios';
-import { useReleasePlans } from '../../../../hooks/useReleasePlans';
-import { useReleases } from '../../../../hooks/useReleases';
-import { useSnapshotsEnvironmentBindings } from '../../../../hooks/useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from '../../../../hooks/useTestPipelines';
 import { mockLocation } from '../../../../utils/test-utils';
 import { mockAppEnvWithHealthStatus } from '../__data__/mockAppEnvWithHealthStatus';
 import EnvironmentListView from '../EnvironmentListView';
@@ -52,44 +35,14 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
 
-jest.mock('../../../../hooks/useComponents', () => ({
-  useComponents: jest.fn(),
-}));
-jest.mock('../../../../hooks/useIntegrationTestScenarios', () => ({
-  useIntegrationTestScenarios: jest.fn(),
-}));
-jest.mock('../../../../hooks/useBuildPipelines', () => ({
-  useBuildPipelines: jest.fn(),
-}));
-jest.mock('../../../../hooks/useEnvironments', () => ({
-  useEnvironments: jest.fn(),
-}));
-jest.mock('../../../../hooks/useReleases', () => ({
-  useReleases: jest.fn(),
-}));
-jest.mock('../../../../hooks/useReleasePlans', () => ({
-  useReleasePlans: jest.fn(),
-}));
-jest.mock('../../../../hooks/useTestPipelines', () => ({
-  useTestPipelines: jest.fn(),
-}));
-jest.mock('../../../../hooks/useSnapshotsEnvironmentBindings', () => ({
-  useSnapshotsEnvironmentBindings: jest.fn(),
-}));
 jest.mock('../../../../hooks/useAllEnvironments', () => ({
   useAllEnvironments: jest.fn(),
 }));
 
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
-const useComponentsMock = useComponents as jest.Mock;
-const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
-const useBuildPipelinesMock = useBuildPipelines as jest.Mock;
-const useEnvironmentsMock = useEnvironments as jest.Mock;
-const useReleasesMock = useReleases as jest.Mock;
-const useReleasePlansMock = useReleasePlans as jest.Mock;
-const useTestPipelinesMock = useTestPipelines as jest.Mock;
-const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
 const useAllEnvironmentsMock = useAllEnvironments as jest.Mock;
+
+const { workflowMocks, applyWorkflowMocks } = getMockWorkflows();
 
 jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
@@ -99,14 +52,8 @@ configure({ testIdAttribute: 'data-test' });
 
 describe('EnvironmentListView', () => {
   beforeEach(() => {
-    useComponentsMock.mockReturnValue([mockComponentsData, true]);
-    useIntegrationTestScenariosMock.mockReturnValue([mockIntegrationTestScenariosData, true]);
-    useBuildPipelinesMock.mockReturnValue([mockBuildPipelinesData, true]);
-    useEnvironmentsMock.mockImplementation(() => [mockEnvironmentsData, true]);
-    useReleasePlansMock.mockReturnValue([mockReleasePlansData, true]);
-    useReleasesMock.mockReturnValue([mockReleasesData, true]);
-    useTestPipelinesMock.mockReturnValue([mockTestPipelinesData, true]);
-    useSnapshotsEnvironmentBindingsMock.mockReturnValue([mockSnapshotsEnvironmentBindings, true]);
+    applyWorkflowMocks(workflowMocks);
+
     useAllEnvironmentsMock.mockReturnValue([mockAppEnvWithHealthStatus, true]);
     useFeatureFlagMock.mockReturnValue([false]);
   });
@@ -120,14 +67,32 @@ describe('EnvironmentListView', () => {
   it('should render empty state if no environment is present', () => {
     useAllEnvironmentsMock.mockReturnValue([[], true]);
     render(<EnvironmentListView />);
-    expect(screen.getByText(/No environments found yet./)).toBeVisible();
     expect(
       screen.getByText(
-        /An environment is a set of compute resources that you can use to develop, test, and stage your applications. You can share static environments across all applications in the workspace./,
+        /An environment is a set of compute resources that you can use to develop, test, and stage your applications./,
       ),
     ).toBeVisible();
-    // const createEnv = screen.queryByText('Create environment');
-    // expect(createEnv).toBeNull();
+    expect(screen.getByText(/Manage your deployments/)).toBeVisible();
+    const createEnv = screen.queryByText('Create environment');
+    expect(createEnv).toBeVisible();
+    const disabledEnv = screen.queryByTestId('disabled-create-env');
+    expect(disabledEnv).toBeFalsy();
+  });
+
+  it('should disable the create environment button for MVP', () => {
+    useAllEnvironmentsMock.mockReturnValue([[], true]);
+    useFeatureFlagMock.mockReturnValue([true]);
+    render(<EnvironmentListView />);
+    expect(
+      screen.getByText(
+        /An environment is a set of compute resources that you can use to develop, test, and stage your applications./,
+      ),
+    ).toBeVisible();
+    expect(screen.getByText(/Manage your deployments/)).toBeVisible();
+    const createEnv = screen.queryByText('Create environment');
+    expect(createEnv).toBeVisible();
+    const disabledEnv = screen.queryByTestId('disabled-create-env');
+    expect(disabledEnv).toBeTruthy();
   });
 
   it('should render cards when environment(s) is(are) present', () => {
@@ -141,7 +106,6 @@ describe('EnvironmentListView', () => {
 
   it('should pre-filter environments by type', () => {
     render(<EnvironmentListView validTypes={[]} />);
-    expect(screen.getByText(/No environments found yet./)).toBeVisible();
     expect(screen.queryAllByTestId('environment-card')).toHaveLength(0);
 
     cleanup();

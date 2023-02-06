@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import { render, screen, configure } from '@testing-library/react';
 import { useApplications } from '../../../hooks/useApplications';
 import { EnvironmentKind } from '../../../types';
-import { mockApplication } from '../../ApplicationEnvironment/__data__/mock-data';
+import { mockApplication } from '../../ApplicationDetails/__data__/mock-data';
 import EnvironmentListView from '../EnvironmentListView';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -85,10 +85,20 @@ describe('EnvironmentListView', () => {
   it('should render empty state if no environment is present', () => {
     render(<EnvironmentListView environments={[]} environmentsLoaded={true} />);
     screen.getByText('No Environments');
-    // const createText = screen.queryByText('To get started, create an environment.');
-    // expect(createText).toBeTruthy();
-    // const button = screen.queryByText('Create environment');
-    // expect(button).toBeInTheDocument();
+    const createText = screen.queryByText('To get started, create an environment.');
+    expect(createText).toBeTruthy();
+    const button = screen.queryByText('Create environment');
+    expect(button).toBeInTheDocument();
+  });
+
+  it('should hide the create environment components for MVP', () => {
+    useFeatureFlagMock.mockReturnValue([true]);
+    render(<EnvironmentListView environments={[]} environmentsLoaded={true} />);
+    screen.getByText('No Environments');
+    const createText = screen.queryByText('To get started, create an environment.');
+    expect(createText).toBeFalsy();
+    const button = screen.queryByText('Create environment');
+    expect(button).toBeFalsy();
   });
 
   it('should render application list when environment(s) is(are) present', () => {

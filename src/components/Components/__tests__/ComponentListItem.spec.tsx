@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import '@testing-library/jest-dom';
 import { configure, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { mockRoutes } from '../../../hooks/__data__/mock-data';
 import { useLatestPipelineRunForComponent } from '../../../hooks/usePipelineRunsForApplication';
-import { componentCRMocks } from '../../ApplicationDetailsView/__data__/mock-data';
-import { mockPipelineRuns } from '../../ApplicationDetailsView/__data__/mock-pipeline-run';
-import BuildStatusColumn from '../BuildStatusColumn';
+import { componentCRMocks } from '../../ApplicationDetails/__data__/mock-data';
+import { mockPipelineRuns } from '../../ApplicationDetails/__data__/mock-pipeline-run';
 import { ComponentListItem } from '../ComponentListItem';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -15,15 +15,22 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 configure({ testIdAttribute: 'data-testid' });
 
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  useK8sWatchResource: jest.fn(),
+}));
+
 jest.mock('../../../hooks/usePipelineRunsForApplication', () => ({
   useLatestPipelineRunForComponent: jest.fn(),
 }));
 
+const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
+
 describe('ComponentListItem', () => {
-  const mockLatestPipelineRunForcomponent = useLatestPipelineRunForComponent as jest.Mock;
+  const mockLatestPipelineRunForComponent = useLatestPipelineRunForComponent as jest.Mock;
 
   beforeEach(() => {
-    mockLatestPipelineRunForcomponent.mockReturnValue(mockPipelineRuns[0]);
+    mockLatestPipelineRunForComponent.mockReturnValue(mockPipelineRuns[0]);
+    useK8sWatchResourceMock.mockReturnValue([[mockPipelineRuns[2]], true]);
   });
 
   it('should render display name of the component', () => {
@@ -53,7 +60,7 @@ describe('ComponentListItem', () => {
   });
 
   it('should render View Build logs action item', async () => {
-    mockLatestPipelineRunForcomponent.mockReturnValue(mockPipelineRuns[1]);
+    mockLatestPipelineRunForComponent.mockReturnValue(mockPipelineRuns[1]);
     render(
       <BrowserRouter>
         <ComponentListItem component={componentCRMocks[0]} routes={[]} />
@@ -88,13 +95,7 @@ describe('ComponentListItem', () => {
   it('should not render Success component condition status on UI', async () => {
     const component = componentCRMocks[0];
     component.status.conditions = [];
-    render(
-      <ComponentListItem
-        component={component}
-        routes={[]}
-        BuildStatusComponent={BuildStatusColumn}
-      />,
-    );
+    render(<ComponentListItem component={component} routes={[]} />);
     await waitFor(() => expect(screen.queryByText('Component Created')).not.toBeInTheDocument());
   });
 });

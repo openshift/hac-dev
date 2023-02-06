@@ -25,13 +25,13 @@ describe('Commit Pipelinerun List', () => {
   it('should render empty state if no pipelinerun is present', () => {
     watchResourceMock.mockReturnValue([[], true]);
     render(<CommitsPipelineRunTab applicationName={appName} pipelineRuns={[]} />);
-    screen.getByText(/No pipeline run triggered yet./);
-    screen.getByText(
-      /To get started, create components and merge their pull request for build pipeline/,
-    );
-    const button = screen.getByText('Go to components tab');
+    screen.getByText(/Keep tabs on components and activity/);
+    screen.getByText(/Monitor your components with pipelines and oversee CI\/CD activity./);
+    const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
-    expect(button.closest('a').href).toContain(`/stonesoup/applications/${appName}/components`);
+    expect(button.closest('a').href).toContain(
+      `http://localhost/stonesoup/import?application=my-test-app`,
+    );
   });
 
   it('should render pipelineRuns list when pipelineRuns are present', () => {

@@ -7,7 +7,7 @@ import { useAllEnvironments } from '../../../hooks/useAllEnvironments';
 import { useSnapshotsEnvironmentBindings } from '../../../hooks/useSnapshotsEnvironmentBindings';
 import * as dateTime from '../../../shared/components/timestamp/datetime';
 import { ApplicationKind, ComponentKind } from '../../../types';
-import { mockSnapshotsEnvironmentBindings } from '../../ApplicationDetails/tabs/overview/sections/__data__';
+import { mockSnapshotsEnvironmentBindings } from '../../ApplicationDetails/__data__';
 import ApplicationListRow from '../ApplicationListRow';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({

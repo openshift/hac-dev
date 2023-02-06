@@ -24,21 +24,11 @@ import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind, RouteKind, ResourceStatusCondition } from '../../types';
 import { getConditionForResource } from '../../utils/common-utils';
 import { getComponentRouteWebURL } from '../../utils/route-utils';
-import { useComponentActions } from '../ApplicationDetailsView/component-actions';
+import { useComponentActions } from '../ApplicationDetails/component-actions';
 import BuildStatusColumn from './BuildStatusColumn';
 import ComponentPACStateLabel from './ComponentPACStateLabel';
 
 import './ComponentListItem.scss';
-
-export type ComponentListViewItemProps = {
-  component: ComponentKind;
-  routes: RouteKind[];
-  allComponents?: ComponentKind[];
-  BuildStatusComponent?: React.ComponentType<{
-    component: ComponentKind;
-    allComponents?: ComponentKind[];
-  }>;
-};
 
 const getConditionStatus = (condition: ResourceStatusCondition) => {
   if (condition.reason === 'Error') {
@@ -51,11 +41,16 @@ const getConditionStatus = (condition: ResourceStatusCondition) => {
   return null;
 };
 
+export type ComponentListViewItemProps = {
+  component: ComponentKind;
+  routes: RouteKind[];
+  allComponents?: ComponentKind[];
+};
+
 export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
   component,
   routes,
   allComponents,
-  BuildStatusComponent = BuildStatusColumn,
 }) => {
   const [expanded, setExpanded] = React.useState(false);
   const { replicas, targetPort, resources } = component.spec;
@@ -119,7 +114,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
               </DataListCell>
             ) : null,
             <DataListCell key="status" alignRight>
-              <BuildStatusComponent component={component} allComponents={allComponents} />
+              <BuildStatusColumn component={component} allComponents={allComponents} />,
             </DataListCell>,
           ]}
         />

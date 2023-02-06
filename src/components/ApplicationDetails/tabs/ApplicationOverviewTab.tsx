@@ -3,7 +3,7 @@ import componentsIcon from '../../../imgs/illustrations/Components.svg';
 import editCodeIcon from '../../../imgs/illustrations/Edit code.svg';
 import githubAppIcon from '../../../imgs/illustrations/Github app.svg';
 import pipelineIcon from '../../../imgs/illustrations/Pipeline.svg';
-import AppRecentCommits from '../../Commits/AppRecentCommits';
+import CommitsListView from '../../Commits/CommitsListView';
 import WhatsNextSection, { WhatsNextItem } from '../../WhatsNext/WhatsNextSection';
 import AppWorkflowSection from './overview/sections/AppWorkflowSection';
 
@@ -60,7 +60,7 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applica
   return (
     <>
       <AppWorkflowSection applicationName={applicationName} />
-      <AppRecentCommits applicationName={applicationName} />
+      <CommitsListView applicationName={applicationName} recentOnly />
       <WhatsNextSection whatsNextItems={whatsNextItems} />
     </>
   );

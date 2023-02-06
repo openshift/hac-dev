@@ -13,12 +13,19 @@ import {
 import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-triangle-icon';
 import { global_warning_color_100 as warningColor } from '@patternfly/react-tokens/dist/js/global_warning_color_100';
 import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
+import { useLatestPipelineRunForComponent } from '../../hooks/usePipelineRunsForApplication';
 import { PipelineRunGroupVersionKind } from '../../models';
+import { pipelineRunFilterReducer } from '../../shared';
 import ExternalLink from '../../shared/components/links/ExternalLink';
-import { PipelineRunKind } from '../../types';
+import { ComponentKind, PipelineRunKind } from '../../types';
 import { getURLForComponentPRs, isPACEnabled } from '../../utils/component-utils';
-import { default as BaseBuildStatusColumn } from '../ComponentsListView/BuildStatusColumn';
-import { BuildStatusComponentProps } from '../ComponentsListView/ComponentListView';
+import { getBuildStatusIcon } from '../../utils/gitops-utils';
+import { useBuildLogViewerModal } from '../LogViewer/BuildLogViewer';
+
+type BuildStatusComponentProps = {
+  component: ComponentKind;
+  allComponents: ComponentKind[];
+};
 
 const BuildStatusColumn: React.FC<BuildStatusComponentProps> = ({ component, allComponents }) => {
   const hasPAC = isPACEnabled(component);
@@ -40,10 +47,33 @@ const BuildStatusColumn: React.FC<BuildStatusComponentProps> = ({ component, all
       : null,
   );
 
+  const pipelineRun = useLatestPipelineRunForComponent(component);
+  const status = pipelineRunFilterReducer(pipelineRun);
+  const buildLogsModal = useBuildLogViewerModal(component);
+  const isContainerImage = !component.spec.source?.git?.url;
+
   const merged = pipelineRunsLoaded && pipelineBuildRuns?.length;
 
   return merged || !(pipelineRunsLoaded && hasPAC) ? (
-    <BaseBuildStatusColumn component={component} />
+    <Flex direction={{ default: 'column' }}>
+      {pipelineRun && (
+        <FlexItem align={{ default: 'alignRight' }}>
+          {getBuildStatusIcon(status)} Build {status}
+        </FlexItem>
+      )}
+      {pipelineRun && !isContainerImage && (
+        <FlexItem align={{ default: 'alignRight' }}>
+          <Button
+            onClick={buildLogsModal}
+            variant="link"
+            data-testid={`view-build-logs-${component.metadata.name}`}
+            isInline
+          >
+            View logs
+          </Button>
+        </FlexItem>
+      )}
+    </Flex>
   ) : (
     <DataListCell alignRight>
       <Flex justifyContent={{ default: 'justifyContentFlexEnd' }}>

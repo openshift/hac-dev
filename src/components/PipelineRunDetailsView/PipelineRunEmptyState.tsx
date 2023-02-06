@@ -1,14 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStateSecondaryActions,
-  Title,
-} from '@patternfly/react-core';
-import { OutlinedFileImageIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-file-image-icon';
+import { Button, EmptyStateBody, EmptyStateSecondaryActions } from '@patternfly/react-core';
+import emptyStateImgUrl from '../../imgs/Pipeline.svg';
+import AppEmptyState from '../EmptyState/AppEmptyState';
 
 interface PipelineRunEmptyStateProps {
   applicationName: string;
@@ -16,27 +10,23 @@ interface PipelineRunEmptyStateProps {
 
 const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicationName }) => {
   return (
-    <EmptyState>
-      <EmptyStateIcon icon={OutlinedFileImageIcon} />
-      <Title headingLevel="h4" size="lg">
-        Manage your components via pipelines. Monitor CI/CD activity.
-      </Title>
+    <AppEmptyState emptyStateImg={emptyStateImgUrl} title="Keep tabs on components and activity">
       <EmptyStateBody>
-        No pipeline run triggered yet.
+        Monitor your components with pipelines and oversee CI/CD activity.
         <br />
-        To get started, create components and merge their pull request for build pipeline.
+        To get started, add a component and merge its pull request for a build pipeline.
       </EmptyStateBody>
       <EmptyStateSecondaryActions>
         <Button
           component={(props) => (
-            <Link {...props} to={`/stonesoup/applications/${applicationName}/components`} />
+            <Link {...props} to={`/stonesoup/import?application=${applicationName}`} />
           )}
           variant="secondary"
         >
-          Go to components tab
+          Add component
         </Button>
       </EmptyStateSecondaryActions>
-    </EmptyState>
+    </AppEmptyState>
   );
 };
 

@@ -1,4 +1,4 @@
-import { SnapshotEnvironmentBinding } from '../../../../../../types/coreBuildService';
+import { SnapshotEnvironmentBinding } from '../../../types/coreBuildService';
 
 export const mockSnapshotsEnvironmentBindings: SnapshotEnvironmentBinding[] = [
   {

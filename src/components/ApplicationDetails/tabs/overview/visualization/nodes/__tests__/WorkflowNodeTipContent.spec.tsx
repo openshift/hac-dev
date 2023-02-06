@@ -4,27 +4,11 @@ import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { ModelKind, Node, NodeModel, Visualization } from '@patternfly/react-topology';
 import { screen } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
-import { useBuildPipelines } from '../../../../../../../hooks/useBuildPipelines';
-import { useComponents } from '../../../../../../../hooks/useComponents';
-import { useEnvironments } from '../../../../../../../hooks/useEnvironments';
-import { useIntegrationTestScenarios } from '../../../../../../../hooks/useIntegrationTestScenarios';
-import { useReleasePlans } from '../../../../../../../hooks/useReleasePlans';
-import { useReleases } from '../../../../../../../hooks/useReleases';
-import { useSnapshotsEnvironmentBindings } from '../../../../../../../hooks/useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from '../../../../../../../hooks/useTestPipelines';
 import { useNamespace } from '../../../../../../../utils/namespace-context-utils';
 import { routerRenderer } from '../../../../../../../utils/test-utils';
 import { layoutFactory, PipelineLayout } from '../../../../../../topology/factories';
-import {
-  mockSnapshotsEnvironmentBindings,
-  mockBuildPipelinesData,
-  mockComponentsData,
-  mockEnvironmentsData,
-  mockIntegrationTestScenariosData,
-  mockReleasePlansData,
-  mockReleasesData,
-  mockTestPipelinesData,
-} from '../../../sections/__data__';
+import { mockComponentsData } from '../../../../../__data__';
+import { getMockWorkflows } from '../../../../../__data__/WorkflowTestUtils';
 import { componentFactory } from '../../factories';
 import { useAppWorkflowData } from '../../hooks/useAppWorkflowData';
 import { WorkflowNodeModelData } from '../../types';
@@ -39,57 +23,19 @@ jest.mock('../../../../../../../utils/namespace-context-utils', () => ({
   useNamespace: jest.fn(() => 'test-ns'),
 }));
 
-jest.mock('../../../../../../../hooks/useComponents', () => ({
-  useComponents: jest.fn(),
-}));
-jest.mock('../../../../../../../hooks/useIntegrationTestScenarios', () => ({
-  useIntegrationTestScenarios: jest.fn(),
-}));
-jest.mock('../../../../../../../hooks/useBuildPipelines', () => ({
-  useBuildPipelines: jest.fn(),
-}));
-jest.mock('../../../../../../../hooks/useEnvironments', () => ({
-  useEnvironments: jest.fn(),
-}));
-jest.mock('../../../../../../../hooks/useReleases', () => ({
-  useReleases: jest.fn(),
-}));
-jest.mock('../../../../../../../hooks/useReleasePlans', () => ({
-  useReleasePlans: jest.fn(),
-}));
-jest.mock('../../../../../../../hooks/useTestPipelines', () => ({
-  useTestPipelines: jest.fn(),
-}));
-jest.mock('../../../../../../../hooks/useSnapshotsEnvironmentBindings', () => ({
-  useSnapshotsEnvironmentBindings: jest.fn(),
-}));
-
 jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
 
 const useActiveNamespaceMock = useNamespace as jest.Mock;
-const useComponentsMock = useComponents as jest.Mock;
-const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
-const useBuildPipelinesMock = useBuildPipelines as jest.Mock;
-const useEnvironmentsMock = useEnvironments as jest.Mock;
-const useReleasesMock = useReleases as jest.Mock;
-const useReleasePlansMock = useReleasePlans as jest.Mock;
-const useTestPipelinesMock = useTestPipelines as jest.Mock;
-const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
+
+const { workflowMocks, applyWorkflowMocks } = getMockWorkflows();
 
 describe('WorkflowNode', () => {
   beforeEach(() => {
     useActiveNamespaceMock.mockReturnValue('test-ns');
-    useComponentsMock.mockReturnValue([mockComponentsData, true]);
-    useIntegrationTestScenariosMock.mockReturnValue([mockIntegrationTestScenariosData, true]);
-    useBuildPipelinesMock.mockReturnValue([mockBuildPipelinesData, true]);
-    useEnvironmentsMock.mockReturnValue([mockEnvironmentsData, true]);
-    useReleasePlansMock.mockReturnValue([mockReleasePlansData, true]);
-    useReleasesMock.mockReturnValue([mockReleasesData, true]);
-    useTestPipelinesMock.mockReturnValue([mockTestPipelinesData, true]);
-    useSnapshotsEnvironmentBindingsMock.mockReturnValue([mockSnapshotsEnvironmentBindings, true]);
+    applyWorkflowMocks(workflowMocks);
     useFeatureFlagMock.mockReturnValue([false]);
 
     const createElement = document.createElement.bind(document);

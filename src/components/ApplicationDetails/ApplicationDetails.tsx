@@ -11,12 +11,12 @@ import { MVP_FLAG } from '../../utils/flag-utils';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import { ActivityTab } from '../Activity/ActivityTab';
-import { ApplicationSwitcher } from '../ApplicationDetailsView/ApplicationSwitcher';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
 import ApplicationModal, { HACBS_APPLICATION_MODAL_HIDE_KEY } from './ApplicationModal';
 import { applicationQuickstartContent } from './ApplicationQuickstartContent';
+import { ApplicationSwitcher } from './ApplicationSwitcher';
 import DetailsPage from './DetailsPage';
 import ApplicationOverviewTab from './tabs/ApplicationOverviewTab';
 import ComponentsTab from './tabs/ComponentsTab';
@@ -77,6 +77,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
     <React.Fragment>
       <ApplicationModal showApplicationModal={showApplicationModal} onClose={onModalClose} />
       <DetailsPage
+        data-test="application-details-test-id"
         headTitle={appDisplayName}
         breadcrumbs={[
           { path: '/stonesoup/applications', name: 'Applications' },
@@ -182,7 +183,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             key: 'components',
             label: 'Components',
             isFilled: true,
-            component: <ComponentsTab applicationName={applicationName} namespace={namespace} />,
+            component: <ComponentsTab applicationName={applicationName} />,
           },
 
           ...(mvpFeature

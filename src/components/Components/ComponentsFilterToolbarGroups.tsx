@@ -1,15 +1,21 @@
 import * as React from 'react';
-import { PipelineRunLabel } from '../../consts/pipelinerun';
 import {
-  default as BaseComponentsFilterToolbarGroups,
-  ComponentsFilterToolbarProps,
-  getStatusFilterIdForComponent,
-  RunStatusFilters as BaseRunStatusFilters,
-  BUILDING_STATUS_FILTER_ID,
-  FAILED_STATUS_FILTER_ID,
-  SUCCESS_STATUS_FILTER_ID,
-} from '../ComponentsListView/ComponentsFilterToolbarGroups';
+  Select,
+  SelectGroup,
+  SelectOption,
+  SelectVariant,
+  ToolbarChip,
+  ToolbarFilter,
+  ToolbarGroup,
+} from '@patternfly/react-core';
+import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
+import { PipelineRunLabel } from '../../consts/pipelinerun';
+import { pipelineRunFilterReducer, runStatus } from '../../shared';
+import { ComponentKind, PipelineRunKind } from '../../types';
 
+export const FAILED_STATUS_FILTER_ID = 'failed';
+export const SUCCESS_STATUS_FILTER_ID = 'success';
+export const BUILDING_STATUS_FILTER_ID = 'building';
 export const NEEDS_MERGE_FILTER_ID = 'needs-merge';
 
 export const RunStatusFilters = [
@@ -17,14 +23,61 @@ export const RunStatusFilters = [
     id: NEEDS_MERGE_FILTER_ID,
     label: 'Merge build PR',
   },
-  ...BaseRunStatusFilters,
+  {
+    id: FAILED_STATUS_FILTER_ID,
+    label: 'Build failed',
+  },
+  {
+    id: SUCCESS_STATUS_FILTER_ID,
+    label: 'Build successful',
+  },
+  {
+    id: BUILDING_STATUS_FILTER_ID,
+    label: 'Building',
+  },
 ];
+
+export const getStatusFilterIdForComponent = (component, pipelineRuns: PipelineRunKind[]) => {
+  const latestPipelineRun = pipelineRuns
+    .filter((pr) => pr.metadata.labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name)
+    .sort(
+      (a, b) =>
+        new Date(b.metadata.creationTimestamp).getTime() -
+        new Date(a.metadata.creationTimestamp).getTime(),
+    )?.[0];
+  if (latestPipelineRun) {
+    const status = pipelineRunFilterReducer(latestPipelineRun);
+    switch (status) {
+      case runStatus.Succeeded:
+        return SUCCESS_STATUS_FILTER_ID;
+      case runStatus.Failed:
+      case runStatus.FailedToStart:
+        return FAILED_STATUS_FILTER_ID;
+      case runStatus.Running:
+      case runStatus['In Progress']:
+        return BUILDING_STATUS_FILTER_ID;
+      default:
+        return '';
+    }
+  }
+  return '';
+};
+
+export type ComponentsFilterToolbarProps = {
+  components: ComponentKind[];
+  pipelineRuns: PipelineRunKind[];
+  statusFilters?: string[];
+  setStatusFilters: (filters: string[]) => void;
+};
 
 const ComponentsFilterToolbarGroups: React.FC<ComponentsFilterToolbarProps> = ({
   components,
   pipelineRuns,
-  ...rest
+  statusFilters,
+  setStatusFilters,
 }) => {
+  const [statusFilterIsExpanded, setStatusFilterIsExpanded] = React.useState(false);
+
   const getMergedStatusFilterIdForComponent = React.useCallback(
     (component) => {
       const unMerged = !pipelineRuns?.find(
@@ -56,13 +109,60 @@ const ComponentsFilterToolbarGroups: React.FC<ComponentsFilterToolbarProps> = ({
   }, [components, getMergedStatusFilterIdForComponent]);
 
   return (
-    <BaseComponentsFilterToolbarGroups
-      {...rest}
-      components={components}
-      pipelineRuns={pipelineRuns}
-      runStatusOptions={RunStatusFilters}
-      customFilterCounts={filterCounts}
-    />
+    <ToolbarGroup alignment={{ default: 'alignLeft' }} variant="filter-group">
+      <ToolbarFilter
+        chips={statusFilters.map((key) => {
+          const option = RunStatusFilters.find((o) => o.id === key);
+          return { key: option?.id ?? '', node: option.label ?? null };
+        })}
+        deleteChip={(type, chip: ToolbarChip) => {
+          if (type) {
+            setStatusFilters(statusFilters.filter((v) => v !== chip.key));
+          } else {
+            setStatusFilters([]);
+          }
+        }}
+        deleteChipGroup={() => {
+          setStatusFilters([]);
+        }}
+        categoryName="Status"
+      >
+        <Select
+          className="component-status-filter"
+          placeholderText="Filter"
+          toggleIcon={<FilterIcon />}
+          toggleAriaLabel="filter menu"
+          variant={SelectVariant.checkbox}
+          onToggle={setStatusFilterIsExpanded}
+          isOpen={statusFilterIsExpanded}
+          onSelect={(event, selection) => {
+            const checked = (event.target as HTMLInputElement).checked;
+            setStatusFilters(
+              checked
+                ? [...statusFilters, String(selection)]
+                : statusFilters.filter((value) => value !== selection),
+            );
+          }}
+          selections={statusFilters}
+          isGrouped
+        >
+          {[
+            <SelectGroup label="Status" key="status">
+              {RunStatusFilters.map((filter) => (
+                <SelectOption
+                  key={filter.id}
+                  value={filter.id}
+                  isChecked={statusFilters.includes(filter.id)}
+                  itemCount={filterCounts?.[filter.id] ?? 0}
+                >
+                  {filter.label}
+                </SelectOption>
+              ))}
+            </SelectGroup>,
+          ]}
+        </Select>
+      </ToolbarFilter>
+    </ToolbarGroup>
   );
 };
 

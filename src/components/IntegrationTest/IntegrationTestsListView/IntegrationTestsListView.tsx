@@ -5,9 +5,7 @@ import {
   Bullseye,
   Button,
   ButtonVariant,
-  EmptyState,
   EmptyStateBody,
-  EmptyStateIcon,
   EmptyStateSecondaryActions,
   InputGroup,
   Spinner,
@@ -21,13 +19,15 @@ import {
   ToolbarGroup,
   ToolbarItem,
 } from '@patternfly/react-core';
-import { CodeBranchIcon } from '@patternfly/react-icons/dist/esm/icons/code-branch-icon';
-import { FilterIcon, SearchIcon } from '@patternfly/react-icons/dist/js/icons';
+import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useSearchParam } from '../../../hooks/useSearchParam';
+import emptyStateImgUrl from '../../../imgs/Integration-test.svg';
 import { IntegrationTestScenarioGroupVersionKind } from '../../../models';
 import { Table } from '../../../shared';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { useNamespace } from '../../../utils/namespace-context-utils';
+import AppEmptyState from '../../EmptyState/AppEmptyState';
+import FilteredEmptyState from '../../EmptyState/FilteredEmptyState';
 import { IntegrationTestListHeader } from './IntegrationTestListHeader';
 import IntegrationTestListRow from './IntegrationTestListRow';
 
@@ -36,11 +36,11 @@ type IntegrationTestsListViewProps = {
 };
 
 const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ handleAddTest }) => (
-  <EmptyState data-test="integration-tests__empty">
-    <EmptyStateIcon icon={CodeBranchIcon} />
-    <Title headingLevel="h4" size="lg">
-      Add an integration test to test all your components after you commit code
-    </Title>
+  <AppEmptyState
+    data-test="integration-tests__empty"
+    emptyStateImg={emptyStateImgUrl}
+    title="Add an integration test to test all your components after you commit code"
+  >
     <EmptyStateBody>
       No integration tests found yet.
       <br />
@@ -55,27 +55,9 @@ const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ h
         Add integration test
       </Button>
     </EmptyStateSecondaryActions>
-  </EmptyState>
+  </AppEmptyState>
 );
 
-const IntegrationTestsFilteredState: React.FC<{ onClearFilters: () => void }> = ({
-  onClearFilters,
-}) => (
-  <EmptyState data-test="integration-tests__all-filtered">
-    <EmptyStateIcon icon={SearchIcon} />
-    <Title headingLevel="h2" size="lg">
-      No results found
-    </Title>
-    <EmptyStateBody>
-      No results match the filter criteria. Remove filters or clear all filters to show results.
-    </EmptyStateBody>
-    <EmptyStateSecondaryActions>
-      <Button variant="link" onClick={onClearFilters} data-test="integration-tests__clear-filters">
-        Clear all filters
-      </Button>
-    </EmptyStateSecondaryActions>
-  </EmptyState>
-);
 const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ applicationName }) => {
   const namespace = useNamespace();
   const navigate = useNavigate();
@@ -172,7 +154,7 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
             })}
           />
         ) : (
-          <IntegrationTestsFilteredState onClearFilters={onClearFilters} />
+          <FilteredEmptyState onClearFilters={onClearFilters} />
         )}
       </>
     </>

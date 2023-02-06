@@ -4,33 +4,28 @@ import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import {
   Bullseye,
   Button,
-  EmptyState,
   EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStateVariant,
   PageSection,
   PageSectionVariants,
   Spinner,
-  Title,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
 } from '@patternfly/react-core';
 import { HACBS_FLAG } from '../../hacbs/hacbsFeatureFlag';
 import { useApplications } from '../../hooks/useApplications';
-import emptyStateImgUrl from '../../imgs/application-list-empty.png';
+import emptyStateImgUrl from '../../imgs/Application.svg';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { Table } from '../../shared';
 import { ApplicationKind } from '../../types';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import AppEmptyState from '../EmptyState/AppEmptyState';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
 import PageLayout from '../PageLayout/PageLayout';
 import { ApplicationListHeader } from './ApplicationListHeader';
 import ApplicationListRow from './ApplicationListRow';
 
 const GETTING_STARTED_CARD_KEY = 'application-list-getting-started-card';
-
-const EmptyStateImg = () => <img className="pf-u-w-33" src={emptyStateImgUrl} alt="" />;
 
 const ApplicationListView: React.FC = () => {
   const [hacbs] = useFeatureFlag(HACBS_FLAG);
@@ -73,19 +68,25 @@ const ApplicationListView: React.FC = () => {
           isFilled
         >
           {!applications || applications.length === 0 ? (
-            <EmptyState variant={EmptyStateVariant.large}>
-              <EmptyStateIcon icon={EmptyStateImg} />
-              <Title headingLevel="h4" size="lg">
-                No applications
-              </Title>
-              <EmptyStateBody>To get started, create an application.</EmptyStateBody>
+            <AppEmptyState
+              className="pf-u-mx-lg"
+              isXl
+              emptyStateImg={emptyStateImgUrl}
+              title="Easily onboard your applications"
+            >
+              <EmptyStateBody>
+                Automate the building, testing, and deploying of your applications with just a few
+                clicks.
+                <br />
+                To get started, create an application.
+              </EmptyStateBody>
               <Button
                 variant="primary"
                 component={(props) => <Link {...props} to="/stonesoup/import" />}
               >
                 Create application
               </Button>
-            </EmptyState>
+            </AppEmptyState>
           ) : (
             <>
               <Toolbar usePageInsets>
