@@ -15,8 +15,6 @@ export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ 
 
   const [components, componentsLoaded] = useSortedComponents(application.metadata.name);
 
-  React.useEffect(() => {}, []);
-
   const [routes, loaded] = useApplicationRoutes(application.metadata.name);
   const selectedComponentRoute = React.useMemo(
     () =>
@@ -62,7 +60,12 @@ export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ 
                   : selectedComponentRoute}
               </ExternalLink>{' '}
               <Tooltip content={urlCopied ? 'URL Copied' : 'Copy URL'}>
-                <Button variant="plain" isInline onClick={onCopyButtonClick}>
+                <Button
+                  variant="plain"
+                  data-testid="route-copy-icon"
+                  isInline
+                  onClick={onCopyButtonClick}
+                >
                   <OutlinedCopyIcon color={linkColor.value} />
                 </Button>
               </Tooltip>

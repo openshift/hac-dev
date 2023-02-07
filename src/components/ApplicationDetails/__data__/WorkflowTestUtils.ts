@@ -1,5 +1,5 @@
 import { useBuildPipelines } from '../../../hooks/useBuildPipelines';
-import { useComponents } from '../../../hooks/useComponents';
+import { useComponents, useSortedComponents } from '../../../hooks/useComponents';
 import { useEnvironments } from '../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../hooks/useIntegrationTestScenarios';
 import { useReleasePlans } from '../../../hooks/useReleasePlans';
@@ -19,6 +19,7 @@ import {
 
 jest.mock('../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
+  useSortedComponents: jest.fn(),
 }));
 jest.mock('../../../hooks/useIntegrationTestScenarios', () => ({
   useIntegrationTestScenarios: jest.fn(),
@@ -45,6 +46,7 @@ jest.mock('../../../hooks/useSnapshotsEnvironmentBindings', () => ({
 export const getMockWorkflows = () => {
   const workflowMocks = {
     useComponentsMock: useComponents as jest.Mock,
+    useSortedComponentsMock: useSortedComponents as jest.Mock,
     useIntegrationTestScenariosMock: useIntegrationTestScenarios as jest.Mock,
     useBuildPipelinesMock: useBuildPipelines as jest.Mock,
     useEnvironmentsMock: useEnvironments as jest.Mock,
@@ -56,6 +58,7 @@ export const getMockWorkflows = () => {
 
   const applyWorkflowMocks = (mockFns) => {
     mockFns.useComponentsMock.mockReturnValue([mockComponentsData, true]);
+    mockFns.useSortedComponentsMock.mockReturnValue([[], false]);
     mockFns.useIntegrationTestScenariosMock.mockReturnValue([
       mockIntegrationTestScenariosData,
       true,
