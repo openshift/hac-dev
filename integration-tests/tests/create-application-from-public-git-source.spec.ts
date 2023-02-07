@@ -50,6 +50,7 @@ describe('Create Component from Public Git Source', { tags: ['@PR-check', '@publ
     });
 
     it('Check Changing Resources', () => {
+      Common.waitForLoad();
       cy.get(ComponentsPagePO.extractComponentName).then((innerText) => {
         componentPage.componentName = innerText.text().trim();
 
@@ -83,7 +84,7 @@ describe('Create Component from Public Git Source', { tags: ['@PR-check', '@publ
       applicationDetailPage.openBuildLog(componentPage.componentName);
 
       // Workaround for https://issues.redhat.com/browse/HAC-3071
-      cy.get('div[class="multi-stream-logs__taskName"]', {timeout: 40000}).should("include.text", "clone-repository");
+      cy.get('li[class*="pipeline-run-logs__navitem"]', {timeout: 40000}).should("include.text", "clone-repository");
 
       applicationDetailPage.checkBuildLog("appstudio-init", 'Determine if Image Already Exists');
       applicationDetailPage.closeBuildLog();
