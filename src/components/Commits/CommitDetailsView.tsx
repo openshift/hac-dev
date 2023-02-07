@@ -35,7 +35,6 @@ import { useNamespace } from '../../utils/namespace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import { useCommitStatus } from './commit-status';
 import { CommitIcon } from './CommitIcon';
-import CommitsGettingStartedModal from './CommitsGettingStartedModal';
 import CommitSidePanel from './CommitSidePanel';
 import { SortedPLRList } from './CommitSidePanelHeader';
 import CommitsOverviewTab from './tabs/CommitsOverviewTab';
@@ -52,16 +51,6 @@ export const COMMITS_GS_LOCAL_STORAGE_KEY = 'commits-getting-started-modal';
 
 const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, applicationName }) => {
   const namespace = useNamespace();
-  const [showGettingStarted, setShowGettingStarted] = React.useState<boolean>(
-    !window.localStorage.getItem(COMMITS_GS_LOCAL_STORAGE_KEY),
-  );
-
-  const setGettingStartedShown = (shown: boolean) => {
-    if (!shown) {
-      window.localStorage.setItem(COMMITS_GS_LOCAL_STORAGE_KEY, 'true');
-    }
-    setShowGettingStarted(shown);
-  };
 
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
   const [selectedPipelineRun, setSelectedPipelineRun] = React.useState<PipelineRunKind>(null);
@@ -186,10 +175,6 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
           }
         >
           <DrawerContentBody className="commit-details__content">
-            <CommitsGettingStartedModal
-              shown={showGettingStarted}
-              onHide={() => setGettingStartedShown(false)}
-            />
             <DetailsPage
               headTitle={commitDisplayName}
               breadcrumbs={[
@@ -292,11 +277,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                   label: 'Overview',
                   isFilled: true,
                   component: (
-                    <CommitsOverviewTab
-                      commit={commit}
-                      selectedPipelineRun={selectedPipelineRun}
-                      onLearnMore={() => setGettingStartedShown(true)}
-                    />
+                    <CommitsOverviewTab commit={commit} selectedPipelineRun={selectedPipelineRun} />
                   ),
                 },
                 {
