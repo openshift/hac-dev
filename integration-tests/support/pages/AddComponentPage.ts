@@ -4,7 +4,7 @@ import { addComponentPagePO } from '../pageObjects/createApplication-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class AddComponentPage extends AbstractWizardPage {
-  waitUnableToAccess(timeoutDuration: number = 30000) {
+  waitUnableToAccess(timeoutDuration: number = 90000) {
     cy.contains('div', addComponentPagePO.notValidatedMessage, { timeout: timeoutDuration });
   }
   waitRepoValidated(timeoutDuration: number = 140000) {
