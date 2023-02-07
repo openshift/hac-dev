@@ -38,7 +38,7 @@ export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ 
       <FlexItem>
         <ApplicationThumbnail application={application} />
       </FlexItem>
-      <FlexItem>
+      <FlexItem alignSelf={{ default: 'alignSelfCenter' }}>
         <Flex>
           <FlexItem>
             <Text component="h1" data-test="details__title">
