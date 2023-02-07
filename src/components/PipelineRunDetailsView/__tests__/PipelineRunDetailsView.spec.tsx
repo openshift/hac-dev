@@ -120,6 +120,13 @@ describe('PipelineRunDetailsView', () => {
     screen.getByRole('progressbar');
   });
 
+  it('should render the error state if the application is not found', () => {
+    watchResourceMock.mockReturnValue([[], false, { code: 404 }]);
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    screen.getByText('404: Page not found');
+    screen.getByText('Go to applications list');
+  });
+
   it('should render application display name if application data is loaded', () => {
     watchResourceMock.mockReturnValueOnce([mockApplication, true]).mockReturnValue([[], true]);
     routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);

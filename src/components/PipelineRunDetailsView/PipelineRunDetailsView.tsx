@@ -5,10 +5,12 @@ import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../models/pipelineruns';
 import { pipelineRunFilterReducer } from '../../shared';
 import { StatusIconWithTextLabel } from '../../shared/components/pipeline-run-logs/StatusIcon';
+import { HttpError } from '../../shared/utils/error/http-error';
 import { PipelineRunKind } from '../../types';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
+import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import PipelineRunDetailsTab from './tabs/PipelineRunDetailsTab';
 import PipelineRunLogsTab from './tabs/PipelineRunLogsTab';
 import PipelineRunTaskRunsTab from './tabs/PipelineRunTaskRunsTab';
@@ -32,6 +34,17 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
     () => loaded && pipelineRun && pipelineRunFilterReducer(pipelineRun),
     [loaded, pipelineRun],
   );
+
+  if (error) {
+    const httpError = HttpError.fromCode((error as any).code);
+    return (
+      <ErrorEmptyState
+        httpError={httpError}
+        title={`Unable to load pipeline run ${pipelineRunName}`}
+        body={httpError.message}
+      />
+    );
+  }
 
   if (!loaded) {
     return (

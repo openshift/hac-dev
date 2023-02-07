@@ -46,9 +46,13 @@ describe('IntegrationTestDetailsView', () => {
   });
 
   it('should show error state if test cannot be loaded', () => {
-    watchResourceMock.mockReturnValue([[], false, { message: 'Application does not exist' }]);
+    watchResourceMock.mockReturnValue([
+      [],
+      false,
+      { message: 'Application does not exist', code: 404 },
+    ]);
     routerRenderer(<IntegrationTestDetailsView testName="int-test" applicationName="test" />);
-    screen.getByText('Could not load IntegrationTestScenario');
+    screen.getByText('404: Page not found');
   });
 
   it('should display test data when loaded', () => {

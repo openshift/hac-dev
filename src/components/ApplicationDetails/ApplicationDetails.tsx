@@ -6,12 +6,14 @@ import { Bullseye, Flex, FlexItem, Spinner, Text, Tooltip } from '@patternfly/re
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { ApplicationGroupVersionKind } from '../../models';
+import { HttpError } from '../../shared/utils/error/http-error';
 import { ApplicationKind } from '../../types';
 import { MVP_FLAG } from '../../utils/flag-utils';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import { ActivityTab } from '../Activity/ActivityTab';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
+import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
 import ApplicationModal, { HACBS_APPLICATION_MODAL_HIDE_KEY } from './ApplicationModal';
@@ -56,12 +58,23 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
     gitOpsDeploymentHealthStatus,
   );
 
-  const [application, applicationsLoaded] = useK8sWatchResource<ApplicationKind>({
+  const [application, applicationLoaded, applicationError] = useK8sWatchResource<ApplicationKind>({
     groupVersionKind: ApplicationGroupVersionKind,
     name: applicationName,
     namespace,
   });
-  const appDisplayName = application?.spec?.displayName || '';
+  const appDisplayName = application?.spec?.displayName || applicationName;
+
+  if (applicationError) {
+    const appError = HttpError.fromCode((applicationError as any).code);
+    return (
+      <ErrorEmptyState
+        httpError={appError}
+        title={`Unable to load application ${appDisplayName}`}
+        body={appError.message}
+      />
+    );
+  }
 
   const loading = (
     <Bullseye>
@@ -69,7 +82,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
     </Bullseye>
   );
 
-  if (!applicationsLoaded) {
+  if (!applicationLoaded) {
     return loading;
   }
 
