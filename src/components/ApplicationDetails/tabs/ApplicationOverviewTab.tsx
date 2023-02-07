@@ -21,7 +21,7 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applica
         label: 'Add component',
         href: `/stonesoup/import?application=${applicationName}`,
       },
-      helpId: 'add-component',
+      helpId: 'stonesoup-whatsnext-add-component',
     },
     {
       title: 'Install our GitHub app',
@@ -32,7 +32,7 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applica
         href: 'https://github.com/apps/appstudio-staging-ci',
         external: true,
       },
-      helpId: 'add-component',
+      helpId: 'stonesoup-whatsnext-install-github-app',
     },
     {
       title: 'Make a code change',
@@ -42,7 +42,7 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applica
         label: 'View build activity',
         href: `/stonesoup/applications/${applicationName}/activity`,
       },
-      helpId: 'add-component',
+      helpId: 'stonesoup-whatsnext-make-code-change',
     },
     {
       title: 'Customize build pipeline',
@@ -53,7 +53,7 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applica
         label: 'Open components tab',
         href: `/stonesoup/applications/${applicationName}/components`,
       },
-      helpId: 'add-component',
+      helpId: 'stonesoup-whatsnext-customize-build-pipeline',
     },
   ];
 
