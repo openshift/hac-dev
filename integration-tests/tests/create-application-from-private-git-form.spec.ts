@@ -13,20 +13,20 @@ describe('Create Component from Private Git Using Login Form', { tags: ['@PR-che
   const applicationDetailPage = new ApplicationDetailPage();
   const applicationName = Common.generateAppName();
   const privateRepo = 'https://github.com/hac-test/private-repo-check';
-  const componentName = 'python';
+  const componentName = `py-${applicationName}`;
 
   const user = 'hac-test';
   const pass = Cypress.env('GH_PASSWORD');
   const deviceId = '2e478c118996feb7e058965e62fef9fe';
 
   before(function () {
+    Tokens.removeBindingsAndTokens();
     Applications.createApplication(applicationName);
   });
 
   after(() => {
     Common.openApplicationURL(applicationName);
     Applications.deleteApplication(applicationName);
-    Tokens.removeBindingsAndTokens();
   });
 
   describe('Creating Component From Private Github Repo', () => {

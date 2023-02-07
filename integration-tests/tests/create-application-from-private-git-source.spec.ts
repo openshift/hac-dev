@@ -11,18 +11,18 @@ describe('Create Component from Private Git Source', { tags: ['@PR-check', '@pri
   const applicationDetailPage = new ApplicationDetailPage();
   const applicationName = Common.generateAppName();
   const privateRepo = 'https://github.com/hac-test/private-repo-check';
-  const componentName = 'python';
+  const componentName = `py-${applicationName}`;
   const username = 'hac-test';
   const token = Cypress.env('GH_TOKEN');
 
   before(function () {
+    Tokens.removeBindingsAndTokens();
     Applications.createApplication(applicationName);
   });
 
   after(function () {
     Common.openApplicationURL(applicationName);
     Applications.deleteApplication(applicationName);
-    Tokens.removeBindingsAndTokens();
   });
 
   describe('Creating Component', () => {
