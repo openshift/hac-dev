@@ -142,7 +142,8 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
     onStrategyChange(ImportStrategy.SAMPLE);
   }, [onStrategyChange, setFieldValue]);
 
-  const description = 'Provide a link to your GitHub repo or start with a code sample.';
+  const description =
+    'To add components to your application, provide a link to your GitHub repo or start with a code sample.';
 
   return (
     <>
