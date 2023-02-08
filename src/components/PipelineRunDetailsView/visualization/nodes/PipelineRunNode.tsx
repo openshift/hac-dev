@@ -9,6 +9,8 @@ import {
 } from '@patternfly/react-topology';
 import { observer } from 'mobx-react';
 
+import './PipelineRunNode.scss';
+
 type PipelineRunNodeProps = {
   element: Node;
 } & WithContextMenuProps &
@@ -46,6 +48,7 @@ const PipelineRunNode: React.FunctionComponent<PipelineRunNodeProps> = ({
 
   return (
     <TaskNode
+      className="pipelinerun-node"
       element={element}
       onContextMenu={data.showContextMenu ? onContextMenu : undefined}
       contextMenuOpen={contextMenuOpen}
