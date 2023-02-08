@@ -1,0 +1,12 @@
+.intro-banner {
+  &__content {
+    color: var(--pf-global--Color--light-100);
+    background-color: var(--pf-global--BackgroundColor--dark-100);
+  }
+
+  &__image {
+    background: url(/src/imgs/overview/overview-banner.svg);
+    background-color: var(--pf-global--BackgroundColor--dark-100);
+    background-size: cover;
+  }
+}
