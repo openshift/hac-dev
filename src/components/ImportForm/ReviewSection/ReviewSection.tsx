@@ -11,6 +11,7 @@ import {
   Text,
   HelperTextItem,
   EmptyStateBody,
+  FormGroup,
 } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
 import { RadioButtonField } from '../../../shared';
@@ -157,35 +158,23 @@ const ReviewSection: React.FunctionComponent = () => {
           />
         ))}
 
-        <RadioButtonField
-          name="pipelinesascode"
-          aria-label="Default"
-          label="Default"
-          description={
-            <>
-              Use our default build pipeline.
-              <br />
-              Manually trigger rebuilds from the Application screen.
-            </>
-          }
-          value="manual"
-        />
-        <RadioButtonField
-          name="pipelinesascode"
-          aria-label="Custom"
-          label="Custom"
-          description={
-            <>
-              Use build pipelines as code.
-              <br />
-              Own and customize our default build pipelines in your component&apos;s repository.
-              <br />
-              Automatically trigger rebuilds when pushing commits.
-            </>
-          }
-          value="automatic"
-          data-test="send-pull-request"
-        />
+        <FormGroup label="Build pipeline">
+          <RadioButtonField
+            name="pipelinesascode"
+            aria-label="Default"
+            label="Default"
+            description="Manually trigger rebuilds from the Application screen."
+            value="manual"
+          />
+          <RadioButtonField
+            name="pipelinesascode"
+            aria-label="Custom"
+            label="Custom"
+            description="Customize build pipeline in your component's repository to automatically trigger rebuilds."
+            value="automatic"
+            data-test="send-pull-request"
+          />
+        </FormGroup>
       </FormSection>
     </>
   );

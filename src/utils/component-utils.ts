@@ -53,7 +53,7 @@ export const startNewBuild = (component: ComponentKind) => {
     patches: [
       {
         op: 'remove',
-        path: `/metadata/annotations/${INITIAL_BUILD_ANNOTATION}`,
+        path: `/metadata/annotations/${INITIAL_BUILD_ANNOTATION.replace('/', '~1')}`,
       },
     ],
   });

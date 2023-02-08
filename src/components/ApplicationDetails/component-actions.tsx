@@ -30,7 +30,7 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
     {
       cta: () => showModal(componentDeleteModal(component)),
       id: `delete-${name.toLowerCase()}`,
-      label: 'Delete',
+      label: 'Delete component',
     },
   );
   return actions;

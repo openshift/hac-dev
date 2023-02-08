@@ -4,7 +4,7 @@ import { k8sPatchResource, useK8sWatchResource } from '@openshift/dynamic-plugin
 import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { ComponentKind } from '../../../types';
-import { PAC_ANNOTATION } from '../../../utils/component-utils';
+import { PAC_ANNOTATION, SAMPLE_ANNOTATION } from '../../../utils/component-utils';
 import CustomizePipeline from '../CustomizePipelines';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -15,12 +15,14 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const k8sPatchResourceMock = k8sPatchResource as jest.Mock;
 
-const createComponent = (pacValue?: 'done' | 'request'): ComponentKind =>
+let componentCount = 1;
+const createComponent = (pacValue?: 'done' | 'request', sample?: boolean): ComponentKind =>
   ({
     metadata: {
-      name: 'my-component',
+      name: `my-component-${componentCount++}`,
       annotations: {
         [PAC_ANNOTATION]: pacValue,
+        [SAMPLE_ANNOTATION]: sample ? 'true' : undefined,
       },
     },
     spec: {
@@ -76,5 +78,41 @@ describe('CustomizePipeline', () => {
     );
     const button = result.queryByRole('link', { name: 'Edit pipeline in GitHub' });
     expect(button).toBeInTheDocument();
+  });
+
+  it('should display upgrade status message', () => {
+    expect(
+      render(
+        <CustomizePipeline components={[createComponent('request')]} onClose={() => {}} />,
+      ).queryByText('0 of 1 component upgraded to custom build'),
+    ).toBeInTheDocument();
+  });
+
+  it('should display upgrade status message for a single component', () => {
+    expect(
+      render(
+        <CustomizePipeline components={[createComponent('request')]} onClose={() => {}} />,
+      ).queryByText('0 of 1 component upgraded to custom build'),
+    ).toBeInTheDocument();
+  });
+
+  it('should display upgrade status message for multiple components', () => {
+    expect(
+      render(
+        <CustomizePipeline
+          components={[createComponent(), createComponent(), createComponent(null, true)]}
+          onClose={() => {}}
+        />,
+      ).queryByText('0 of 2 components upgraded to custom build'),
+    ).toBeInTheDocument();
+  });
+
+  it('should display completed upgrade message', () => {
+    useK8sWatchResourceMock.mockReturnValue([[{}], true]);
+    expect(
+      render(
+        <CustomizePipeline components={[createComponent('done')]} onClose={() => {}} />,
+      ).queryByText('1 of 1 component upgraded to custom build'),
+    ).toBeInTheDocument();
   });
 });

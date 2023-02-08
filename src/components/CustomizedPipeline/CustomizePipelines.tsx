@@ -7,6 +7,7 @@ import {
   Label,
   ModalBoxBody,
   ModalBoxFooter,
+  pluralize,
   Skeleton,
   Text,
   TextContent,
@@ -130,24 +131,34 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, loading }) =>
     ? [...components].sort((a, b) => a.metadata.name.localeCompare(b.metadata.name))
     : [];
 
-  const [componnentState, setComponentState] = React.useState<{ [name: string]: PACState }>({});
+  const [componentState, setComponentState] = React.useState<{ [name: string]: PACState }>({});
 
   const completed = React.useMemo(
     () =>
-      Object.values(componnentState).every(
+      Object.values(componentState).every(
         (state) => state === PACState.ready || state === PACState.sample,
       ),
-    [componnentState],
+    [componentState],
   );
 
   const hasRequestedState = React.useMemo(
-    () => Object.values(componnentState).some((state) => state === PACState.requested),
-    [componnentState],
+    () => Object.values(componentState).some((state) => state === PACState.requested),
+    [componentState],
   );
 
   const allLoading = React.useMemo(
-    () => !Object.values(componnentState).some((state) => state !== PACState.loading),
-    [componnentState],
+    () => !Object.values(componentState).some((state) => state !== PACState.loading),
+    [componentState],
+  );
+
+  const count = React.useMemo(
+    () => Object.values(componentState).filter((state) => state === PACState.ready).length,
+    [componentState],
+  );
+
+  const totalCount = React.useMemo(
+    () => Object.values(componentState).filter((state) => state !== PACState.sample).length,
+    [componentState],
   );
 
   React.useEffect(() => {
@@ -177,7 +188,7 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, loading }) =>
               ? 'Components upgraded to using custom build pipeline'
               : 'Customize build pipeline'}
           </Text>
-          <Text component={TextVariants.p} className="pf-u-color-400">
+          <Text component={TextVariants.p}>
             {completed ? (
               'Your commits will trigger a new build using the merged pipeline. You can always customize the build pipeline from your source code.'
             ) : (
@@ -199,7 +210,7 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, loading }) =>
           <Thead>
             <Tr>
               <Th>Component</Th>
-              <Th>Status</Th>
+              <Th />
               <Th />
             </Tr>
           </Thead>
@@ -218,6 +229,15 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, loading }) =>
             ))}
           </Tbody>
         </TableComposable>
+        {totalCount > 0 ? (
+          <p
+            className={`pf-u-pt-lg ${
+              count === totalCount ? 'pf-u-success-color-100' : 'pf-u-color-400'
+            }`}
+          >
+            {`${count} of ${pluralize(totalCount, 'component')} upgraded to custom build`}
+          </p>
+        ) : undefined}
         {showRequestedAlert ? (
           <Alert
             isInline
@@ -225,10 +245,8 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, loading }) =>
             title="Sending pull request is taking more time than expected"
             className="pf-u-mt-lg"
           >
-            Pull request did not react its destination yet.
-            <br />
-            This might be because you need to install the GitHub application and grant permissions
-            for the component repository.
+            You may need to install the GitHub application and grant permissions to the component
+            repository.
             <br />
             <br />
             <ExternalLink href="https://github.com/apps/appstudio-staging-ci" showIcon>
@@ -238,9 +256,7 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, loading }) =>
         ) : undefined}
       </ModalBoxBody>
       <ModalBoxFooter>
-        <Button variant={ButtonVariant.link} onClick={onClose}>
-          Close
-        </Button>
+        <Button onClick={onClose}>Close</Button>
       </ModalBoxFooter>
     </>
   );
