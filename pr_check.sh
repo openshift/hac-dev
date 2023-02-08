@@ -85,7 +85,7 @@ docker run ${COMMON_SETUP} \
     -e CYPRESS_QUAY_TOKEN=${CYPRESS_QUAY_TOKEN} \
     -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
     ${TEST_IMAGE} \
-    bash -c "startcypress run -e GH_PR_TITLE='${ghprbPullTitle}' && npm run posttest" || TEST_RUN=1
+    bash -c "startcypress run -e GH_PR_TITLE='${ghprbPullTitle}' ; npm run posttest" || TEST_RUN=1
 
 docker run ${COMMON_SETUP} \
     -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \
