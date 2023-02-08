@@ -46,7 +46,7 @@ describe('CommitDetailsView', () => {
   });
 
   it('should show plr fetching error if unable to load plrs', () => {
-    watchResourceMock.mockReturnValueOnce([[], true, true]);
+    watchResourceMock.mockReturnValueOnce([[], true, { code: 503 }]);
     routerRenderer(<CommitDetailsView applicationName="test" commitName="commit123" />);
     screen.getByText('Could not load PipelineRun');
     screen.getByText('Not found');
@@ -55,8 +55,8 @@ describe('CommitDetailsView', () => {
   it('should show commit not found error if no matching pipelineruns are found ', () => {
     watchResourceMock.mockReturnValueOnce([[], true]);
     routerRenderer(<CommitDetailsView applicationName="test" commitName="commit123" />);
-    screen.getByText('Commit not found');
-    screen.getByText('No such commit');
+    screen.getByText('404: Page not found');
+    screen.getByText('Go to applications list');
   });
 
   it('should render proper commit details', () => {

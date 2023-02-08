@@ -1,22 +1,13 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import {
-  Bullseye,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  Spinner,
-  Text,
-  TextVariants,
-  Title,
-} from '@patternfly/react-core';
-import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
-import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
+import { Bullseye, Spinner, Text, TextVariants } from '@patternfly/react-core';
 import { IntegrationTestScenarioGroupVersionKind } from '../../models';
+import { HttpError } from '../../shared/utils/error/http-error';
 import { IntegrationTestScenarioKind } from '../../types/coreBuildService';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
+import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { integrationTestDeleteModalAndNavigate } from './IntegrationTestsListView/useIntegrationTestActions';
 import IntegrationTestOverviewTab from './tabs/IntegrationTestOverviewTab';
@@ -44,20 +35,11 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
 
   if (loadErr || (loaded && !integrationTest)) {
     return (
-      <Bullseye>
-        <EmptyState>
-          <EmptyStateIcon
-            style={{ color: 'var(--pf-global--danger-color--100)' }}
-            icon={loadErr ? ExclamationCircleIcon : SearchIcon}
-          />
-          <Title size="lg" headingLevel="h4">
-            {loadErr
-              ? `Could not load ${IntegrationTestScenarioGroupVersionKind.kind}`
-              : 'Integration test not found'}
-          </Title>
-          <EmptyStateBody>{loadErr ? 'Not found' : 'No such Integration test'}</EmptyStateBody>
-        </EmptyState>
-      </Bullseye>
+      <ErrorEmptyState
+        httpError={HttpError.fromCode(loadErr ? (loadErr as any).code : 404)}
+        title="Integration test not found"
+        body="No such Integration test"
+      />
     );
   }
 

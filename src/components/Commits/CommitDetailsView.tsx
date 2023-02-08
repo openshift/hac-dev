@@ -6,16 +6,10 @@ import {
   Drawer,
   DrawerContent,
   DrawerContentBody,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
   Spinner,
   Text,
   TextVariants,
-  Title,
 } from '@patternfly/react-core';
-import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
-import { SearchIcon } from '@patternfly/react-icons/dist/js/icons';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../models';
@@ -23,6 +17,7 @@ import { pipelineRunFilterReducer } from '../../shared';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { StatusIconWithTextLabel } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
+import { HttpError } from '../../shared/utils/error/http-error';
 import { PipelineRunKind } from '../../types';
 import {
   createCommitObjectFromPLR,
@@ -33,6 +28,7 @@ import {
 } from '../../utils/commits-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
+import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { useCommitStatus } from './commit-status';
 import { CommitIcon } from './CommitIcon';
 import CommitSidePanel from './CommitSidePanel';
@@ -139,18 +135,11 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
 
   if (loadErr || (loaded && !commit)) {
     return (
-      <Bullseye>
-        <EmptyState>
-          <EmptyStateIcon
-            style={{ color: 'var(--pf-global--danger-color--100)' }}
-            icon={loadErr ? ExclamationCircleIcon : SearchIcon}
-          />
-          <Title size="lg" headingLevel="h4">
-            {loadErr ? `Could not load ${PipelineRunGroupVersionKind.kind}` : 'Commit not found'}
-          </Title>
-          <EmptyStateBody>{loadErr ? 'Not found' : 'No such commit'}</EmptyStateBody>
-        </EmptyState>
-      </Bullseye>
+      <ErrorEmptyState
+        httpError={HttpError.fromCode(loadErr ? (loadErr as any).code : 404)}
+        title={`Could not load ${PipelineRunGroupVersionKind.kind}`}
+        body={(loadErr as any)?.message ?? 'Not found'}
+      />
     );
   }
 
