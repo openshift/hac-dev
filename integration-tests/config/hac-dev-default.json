@@ -2,7 +2,7 @@
   "ignoreTestFiles": ["*private-git-form*"],
   "extends": "../cypress.json",
   "reporterOptions": {
-    "reporterEnabled": "spec, mocha-junit-reporter, @reportportal/agent-js-cypress",
+    "reporterEnabled": "spec, mocha-junit-reporter, @reportportal/agent-js-cypress, mochawesome",
     "reportportalAgentJsCypressReporterOptions": {
       "endpoint": "https://reportportal-appstudio-qe.apps.ocp-c1.prod.psi.redhat.com/api/v1",
       "token": "xxx",
@@ -11,6 +11,13 @@
       "description": "HAC dev e2e test suite",
       "debug": true,
       "autoMerge": true
+    },
+    "mochawesomeReporterOptions": {
+      "reportDir": "cypress/reports/mocha",
+      "quite": true,
+      "overwrite": false,
+      "html": false,
+      "json": true
     }
   }
 }
