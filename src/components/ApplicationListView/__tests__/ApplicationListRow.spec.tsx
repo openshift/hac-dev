@@ -38,7 +38,7 @@ const application: ApplicationKind = {
     uid: '60725777-a545-4c54-bf25-19a3f231aed1',
   },
   spec: {
-    displayName: 'mno-app',
+    displayName: 'mno app display name',
   },
 };
 
@@ -99,7 +99,7 @@ describe('Application List Row', () => {
         mockSnapshotsEnvironmentBindings[0].status.componentDeploymentConditions[0].lastTransitionTime,
       ),
     );
-    expect(getByText(application.metadata.name)).toBeInTheDocument();
+    expect(getByText(application.spec.displayName)).toBeInTheDocument();
     expect(getByText('2 Components')).toBeInTheDocument();
     expect(container).toHaveTextContent(expectedDate.toString());
   });
@@ -124,5 +124,16 @@ describe('Application List Row', () => {
     watchResourceMock.mockReturnValue([[], false]);
     const { getByText } = render(<ApplicationListRow columns={null} obj={application} />);
     expect(getByText('Loading component count')).toBeInTheDocument();
+  });
+
+  it('should render metadata name if there is no display name', () => {
+    watchResourceMock.mockReturnValue([[], false]);
+    const { getByRole } = render(
+      <ApplicationListRow
+        columns={null}
+        obj={{ ...application, spec: { ...application.spec, displayName: '' } }}
+      />,
+    );
+    expect(getByRole('link', { name: application.metadata.name })).toBeInTheDocument();
   });
 });
