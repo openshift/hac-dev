@@ -63,7 +63,8 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
     name: applicationName,
     namespace,
   });
-  const appDisplayName = application?.spec?.displayName || applicationName;
+
+  const appDisplayName = application?.spec?.displayName || application?.metadata?.name || '';
 
   if (applicationError) {
     const appError = HttpError.fromCode((applicationError as any).code);

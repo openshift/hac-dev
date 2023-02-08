@@ -7,12 +7,13 @@ export const applicationDeleteModal = (applicationObj: ApplicationKind) =>
   createDeleteModalLauncher(applicationObj.kind)({
     obj: applicationObj,
     model: ApplicationModel,
-    displayName: applicationObj.spec.displayName,
+    displayName: applicationObj.spec.displayName || applicationObj.metadata.name,
     description: (
       <>
-        The application <strong>{applicationObj.spec.displayName}</strong> will be deleted
-        permanently with all of its components. The deleted application will be promoted manually or
-        automatically based on the deployment strategy of each environment.
+        The application{' '}
+        <strong>{applicationObj.spec.displayName || applicationObj.metadata.name}</strong> will be
+        deleted permanently with all of its components. The deleted application will be promoted
+        manually or automatically based on the deployment strategy of each environment.
       </>
     ),
   });
