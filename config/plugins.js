@@ -14,6 +14,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = async () => {
   const { DynamicRemotePlugin } = await pckg;
+  // TODO the version of @openshift/dynamic-plugin-sdk-webpack needs to be updated to ^2.0.0 to support passing loadScripts and registration method fields
   plugins.push(new DynamicRemotePlugin(remotePluginOptions));
   return plugins;
 };
