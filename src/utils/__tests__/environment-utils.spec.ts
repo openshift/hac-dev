@@ -1,8 +1,13 @@
 import { RunStatus } from '@patternfly/react-topology';
 import { mockSnapshotsEnvironmentBindings } from '../../components/ApplicationDetails/__data__';
 import { EnvironmentKind } from '../../types';
-import { GitOpsDeploymentHealthStatus } from '../../types/gitops-deployment';
 import {
+  GitOpsDeploymentHealthStatus,
+  GitOpsDeploymentKind,
+  GitOpsDeploymentStrategy,
+} from '../../types/gitops-deployment';
+import {
+  getApplicationGitopsStatus,
   getComponentDeploymentRunStatus,
   getComponentDeploymentStatus,
   sortEnvironmentsBasedonParent,
@@ -173,6 +178,54 @@ describe('environment-utils', () => {
     it('should return Succeeded status for healthy application', () => {
       const degradedApplication = mockSnapshotsEnvironmentBindings[2];
       expect(getComponentDeploymentRunStatus(degradedApplication)).toBe(RunStatus.Failed);
+    });
+  });
+
+  describe('getApplicationGitopsStatus', () => {
+    const getGitOpsMockCr = (status: GitOpsDeploymentHealthStatus) =>
+      ({
+        spec: { type: GitOpsDeploymentStrategy.automated, source: { path: '', repoUrl: '' } },
+        status: { health: { status } },
+      } as GitOpsDeploymentKind);
+
+    it('should return Pending status for SEB without status', () => {
+      const missingApplication = { ...mockSnapshotsEnvironmentBindings[0], status: undefined };
+      expect(
+        getApplicationGitopsStatus(
+          missingApplication,
+          getGitOpsMockCr(GitOpsDeploymentHealthStatus.Healthy),
+        ),
+      ).toBe(RunStatus.Pending);
+    });
+
+    it('should return Succeeded status for healthy application', () => {
+      const healthyApplication = mockSnapshotsEnvironmentBindings[0];
+      expect(
+        getApplicationGitopsStatus(
+          healthyApplication,
+          getGitOpsMockCr(GitOpsDeploymentHealthStatus.Healthy),
+        ),
+      ).toBe(RunStatus.Succeeded);
+    });
+
+    it('should return Failed status for healthy application', () => {
+      const healthyApplication = mockSnapshotsEnvironmentBindings[0];
+      expect(
+        getApplicationGitopsStatus(
+          healthyApplication,
+          getGitOpsMockCr(GitOpsDeploymentHealthStatus.Degraded),
+        ),
+      ).toBe(RunStatus.Failed);
+    });
+
+    it('should return Running status for healthy application', () => {
+      const healthyApplication = mockSnapshotsEnvironmentBindings[0];
+      expect(
+        getApplicationGitopsStatus(
+          healthyApplication,
+          getGitOpsMockCr(GitOpsDeploymentHealthStatus.Progressing),
+        ),
+      ).toBe(RunStatus.Running);
     });
   });
 });

@@ -47,7 +47,7 @@ type ComponentListViewProps = {
 
 const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }) => {
   const namespace = useNamespace();
-  const [routes, loaded] = useApplicationRoutes(applicationName, namespace);
+  const [routes, loaded] = useApplicationRoutes(applicationName);
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
   const [mergeAlertHidden, setMergeAlertHidden] = React.useState<boolean>(false);

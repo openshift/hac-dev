@@ -6,12 +6,11 @@ import { RouteKind } from './../types/routes';
 
 export const useApplicationRoutes = (
   application: string,
-  namespace?: string,
 ): [routes: RouteKind[], loaded: boolean] => {
-  const ns = useNamespace();
+  const namespace = useNamespace();
   const [allRoutes, loaded] = useK8sWatchResource<RouteKind[]>({
     groupVersionKind: RouteGroupVersionKind,
-    namespace: namespace ?? ns,
+    namespace,
     isList: true,
   });
 
