@@ -31,10 +31,7 @@ import emptyStateImgUrl from '../../imgs/Components.svg';
 import { PipelineRunGroupVersionKind } from '../../shared';
 import { PipelineRunKind } from '../../types';
 import { getURLForComponentPRs, isPACEnabled } from '../../utils/component-utils';
-import {
-  getGitOpsDeploymentHealthStatusIcon,
-  getGitOpsDeploymentStrategy,
-} from '../../utils/gitops-utils';
+import { getGitOpsDeploymentStrategy } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
@@ -77,12 +74,6 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
   const [gitOpsDeployment, gitOpsDeploymentLoaded] = useGitOpsDeploymentCR(
     applicationName,
     namespace,
-  );
-  const gitOpsDeploymentHealthStatus = gitOpsDeploymentLoaded
-    ? gitOpsDeployment?.status?.health?.status
-    : null;
-  const gitOpsDeploymentHealthStatusIcon = getGitOpsDeploymentHealthStatusIcon(
-    gitOpsDeploymentHealthStatus,
   );
 
   const statusFilters = React.useMemo(
@@ -217,23 +208,10 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                   <ToolbarGroup alignment={{ default: 'alignRight' }}>
                     {gitOpsDeploymentLoaded ? (
                       gitOpsDeployment ? (
-                        <>
-                          <ToolbarItem>
-                            {gitOpsDeploymentHealthStatusIcon} Application{' '}
-                            {gitOpsDeploymentHealthStatus}
-                          </ToolbarItem>
-                          <ToolbarItem
-                            style={{
-                              color: 'var(--pf-global--palette--black-600)',
-                            }}
-                          >
-                            |
-                          </ToolbarItem>
-                          <ToolbarItem>
-                            Deployment strategy:{' '}
-                            <Label>{getGitOpsDeploymentStrategy(gitOpsDeployment)}</Label>
-                          </ToolbarItem>
-                        </>
+                        <ToolbarItem>
+                          Deployment strategy:{' '}
+                          <Label>{getGitOpsDeploymentStrategy(gitOpsDeployment)}</Label>
+                        </ToolbarItem>
                       ) : null
                     ) : (
                       <Spinner isSVG size="md" />
