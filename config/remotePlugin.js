@@ -324,7 +324,7 @@ const routeExtensions = [
     },
   },
   {
-    type: 'console.page/route',
+    type: 'core.page/route',
     properties: {
       path: '/stonesoup/workspace-settings/environment/create',
       exact: true,
@@ -339,10 +339,10 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/workspace-settings/environment/create',
-      exact: true,
+      path: '/stonesoup',
+      exact: false,
       component: {
-        $codeRef: 'CreateEnvironment',
+        $codeRef: 'NotFound',
       },
     },
     flags: {
@@ -372,6 +372,7 @@ module.exports = {
       OverviewPage: resolve(__dirname, '../src/pages/OverviewPage'),
       FlagUtils: resolve(__dirname, '../src/utils/flag-utils'),
       Redirect: resolve(__dirname, '../src/pages/RedirectPage'),
+      NotFound: resolve(__dirname, '../src/pages/NotFoundPage'),
     },
   },
   extensions: [
