@@ -53,17 +53,6 @@ const contextProviderExtensions = [
     type: 'core.context-provider',
     properties: {
       provider: {
-        $codeRef: 'NamespaceContext.NamespaceProvider',
-      },
-      useValueHook: {
-        $codeRef: 'NamespaceContext.useActiveNamespace',
-      },
-    },
-  },
-  {
-    type: 'core.context-provider',
-    properties: {
-      provider: {
         $codeRef: 'WorkspaceContext.WorkspaceProvider',
       },
       useValueHook: {
@@ -140,7 +129,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/workspaces/:workspaceName/applications/import',
+      path: '/stonesoup/workspaces/:workspaceName/import',
       exact: true,
       component: {
         $codeRef: 'Import',
@@ -391,7 +380,6 @@ module.exports = {
       ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
       WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),
       CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
-      NamespaceContext: resolve(__dirname, '../src/utils/namespace-context-utils'),
       WorkspaceContext: resolve(__dirname, '../src/utils/workspace-context-utils'),
       WorkspacePage: resolve(__dirname, '../src/pages/WorkspacePage'),
       OverviewPage: resolve(__dirname, '../src/pages/OverviewPage'),

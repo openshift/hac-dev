@@ -21,7 +21,7 @@ jest.mock('../utils/create-utils.ts', () => ({
 }));
 
 jest.mock('../../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 const createIntegrationTestMock = createIntegrationTest as jest.Mock;

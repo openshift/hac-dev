@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { ComponentGroupVersionKind } from '../models';
 import { ComponentKind } from '../types';
-import { useNamespace } from '../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
 export const useComponents = (
   namespace: string,
@@ -34,7 +34,7 @@ export const useSortedComponents = (
   applicationName: string,
   namespace?: string,
 ): [ComponentKind[], boolean, unknown] => {
-  const ns = useNamespace();
+  const { namespace: ns } = useWorkspaceInfo();
   const [cmps, loaded, error] = useComponents(namespace ?? ns, applicationName);
 
   const components = React.useMemo(() => {

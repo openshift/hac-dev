@@ -8,6 +8,7 @@ import '@testing-library/jest-dom';
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
   k8sCreateResource: jest.fn(),
+  getActiveWorkspace: jest.fn(),
 }));
 
 jest.mock('../../../../utils/create-utils', () => ({

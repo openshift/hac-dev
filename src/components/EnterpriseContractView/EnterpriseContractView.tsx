@@ -18,7 +18,7 @@ import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/exte
 import { EnterpriseContractPolicyGroupVersionKind } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { EnterpriseContractPolicyKind } from '../../types';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ENTERPRISE_CONTRACT_INFO_LINK, ENTERPRISE_CONTRACT_POLICIES_DATA } from './const';
 import ReleasePolicyPackageItem from './ReleasePolicyPackageItem';
 import { useEnterpriseContractPolicies } from './useEnterpriseContractPolicies';
@@ -35,7 +35,7 @@ const EnterpriseContractViewEmptyState: React.FC = () => (
 );
 
 const EnterpriseContractView: React.FC = () => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [contractPolicies, loaded] = useEnterpriseContractPolicies(
     ENTERPRISE_CONTRACT_POLICIES_DATA,
   );

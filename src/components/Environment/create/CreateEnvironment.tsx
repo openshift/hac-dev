@@ -4,8 +4,7 @@ import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Formik } from 'formik';
 import { EnvironmentModel } from '../../../models';
 import { EnvironmentKind } from '../../../types';
-import { useNamespace } from '../../../utils/namespace-context-utils';
-import { useWorkspace } from '../../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import {
   EnvironmentDeploymentStrategy,
   EnvironmentFormDropdownType,
@@ -15,8 +14,8 @@ import CreateEnvironmentForm, { CreateEnvironmentFormValues } from './CreateEnvi
 
 const CreateEnvironment: React.FC = () => {
   const navigate = useNavigate();
-  const namespace = useNamespace();
-  const workspace = useWorkspace();
+  const { namespace, workspace } = useWorkspaceInfo();
+
   const initialValues: CreateEnvironmentFormValues = {
     name: '',
     deploymentStrategy: 'Automatic',

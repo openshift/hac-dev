@@ -26,8 +26,7 @@ import {
   getCommitShortName,
   statuses,
 } from '../../utils/commits-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { useCommitStatus } from './commit-status';
@@ -47,8 +46,8 @@ type CommitDetailsViewProps = {
 export const COMMITS_GS_LOCAL_STORAGE_KEY = 'commits-getting-started-modal';
 
 const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, applicationName }) => {
-  const namespace = useNamespace();
-  const workspace = useWorkspace();
+  const { namespace, workspace } = useWorkspaceInfo();
+
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
   const [selectedPipelineRun, setSelectedPipelineRun] = React.useState<PipelineRunKind>(null);
   const drawerRef = React.useRef<HTMLDivElement>();
@@ -168,7 +167,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
             <DetailsPage
               headTitle={commitDisplayName}
               breadcrumbs={[
-                { path: '/stonesoup/workspaces/${workspace}/applications', name: 'Applications' },
+                { path: `/stonesoup/workspaces/${workspace}/applications`, name: 'Applications' },
                 {
                   path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}`,
                   name: applicationName,

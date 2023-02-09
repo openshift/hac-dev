@@ -39,7 +39,7 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
 }));
 
 jest.mock('../../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 configure({ testIdAttribute: 'data-testid' });

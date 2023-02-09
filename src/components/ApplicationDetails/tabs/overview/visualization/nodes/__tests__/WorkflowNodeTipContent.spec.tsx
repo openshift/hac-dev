@@ -4,8 +4,8 @@ import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { ModelKind, Node, NodeModel, Visualization } from '@patternfly/react-topology';
 import { screen } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
-import { useNamespace } from '../../../../../../../utils/namespace-context-utils';
 import { routerRenderer } from '../../../../../../../utils/test-utils';
+import { useWorkspaceInfo } from '../../../../../../../utils/workspace-context-utils';
 import { layoutFactory, PipelineLayout } from '../../../../../../topology/factories';
 import { mockComponentsData } from '../../../../../__data__';
 import { getMockWorkflows } from '../../../../../__data__/WorkflowTestUtils';
@@ -17,24 +17,25 @@ import WorkflowNodeTipContent from '../WorkflowNodeTipContent';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
-jest.mock('../../../../../../../utils/namespace-context-utils', () => ({
-  useNamespace: jest.fn(() => 'test-ns'),
+jest.mock('../../../../../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
 
-const useActiveNamespaceMock = useNamespace as jest.Mock;
+const useWorkspaceInfoMock = useWorkspaceInfo as jest.Mock;
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 const { workflowMocks, applyWorkflowMocks } = getMockWorkflows();
 
 describe('WorkflowNode', () => {
   beforeEach(() => {
-    useActiveNamespaceMock.mockReturnValue('test-ns');
+    useWorkspaceInfoMock.mockReturnValue({ namespace: 'test-ns' });
     applyWorkflowMocks(workflowMocks);
     useFeatureFlagMock.mockReturnValue([false]);
 

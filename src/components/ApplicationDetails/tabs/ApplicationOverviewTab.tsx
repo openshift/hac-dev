@@ -3,7 +3,7 @@ import componentsIcon from '../../../imgs/illustrations/Components.svg';
 import editCodeIcon from '../../../imgs/illustrations/Edit code.svg';
 import githubAppIcon from '../../../imgs/illustrations/Github app.svg';
 import pipelineIcon from '../../../imgs/illustrations/Pipeline.svg';
-import { useWorkspace } from '../../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import CommitsListView from '../../Commits/CommitsListView';
 import WhatsNextSection, { WhatsNextItem } from '../../WhatsNext/WhatsNextSection';
 import AppWorkflowSection from './overview/sections/AppWorkflowSection';
@@ -13,7 +13,7 @@ type ApplicationOverviewTabProps = {
 };
 
 const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applicationName }) => {
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
 
   const whatsNextItems: WhatsNextItem[] = [
     {
@@ -22,7 +22,7 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applica
       icon: componentsIcon,
       cta: {
         label: 'Add component',
-        href: `/stonesoup/workspaces/${workspace}/applications/import?application=${applicationName}`,
+        href: `/stonesoup/workspaces/${workspace}/import?application=${applicationName}`,
       },
       helpId: 'stonesoup-whatsnext-add-component',
     },

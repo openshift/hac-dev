@@ -24,7 +24,7 @@ import { useSearchParam } from '../../hooks/useSearchParam';
 import { EnvironmentKind } from '../../types';
 import { sortEnvironmentsBasedonParent } from '../../utils/environment-utils';
 import { MVP_FLAG } from '../../utils/flag-utils';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import EnvironmentCard from './EnvironmentCard';
 
@@ -51,7 +51,7 @@ const EnvironmentListView: React.FC<Props> = ({
   onClearAllFilters,
   emptyStateContent,
 }) => {
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const [mvpFeature] = useFeatureFlag(MVP_FLAG);
   const [nameFilter, setNameFilter, unsetNameFilter] = useSearchParam('name', '');
   const filteredEnvironments = React.useMemo(() => {

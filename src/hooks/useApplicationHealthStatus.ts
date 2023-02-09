@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { getComponentDeploymentRunStatus } from '../utils/environment-utils';
-import { useNamespace } from '../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { useSnapshotsEnvironmentBindings } from './useSnapshotsEnvironmentBindings';
 
 const SNAPSHOT_BINDING_ENV_LABEL = 'appstudio.environment';
@@ -9,7 +9,7 @@ export const useApplicationHealthStatus = (
   applicationName: string,
   envName?: string,
 ): [{ status: string; envName: string }, boolean, unknown] => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [snapshotEBs, loaded, error] = useSnapshotsEnvironmentBindings(namespace, applicationName);
   const healthStatus = useMemo(() => {
     if (loaded && !error) {

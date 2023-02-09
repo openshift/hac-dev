@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Tab, Tabs, TabTitleText, Title } from '@patternfly/react-core';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import PipelineRunsTab from '../ApplicationDetails/tabs/PipelineRunsTab';
 import CommitsListView from '../Commits/CommitsListView';
 
@@ -9,7 +9,7 @@ import './ActivityTab.scss';
 
 export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicationName }) => {
   const params = useParams();
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const { activeTab: parentTab, activity: activeTab } = params;
 
   const navigate = useNavigate();

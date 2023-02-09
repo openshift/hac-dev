@@ -31,7 +31,7 @@ jest.mock('../../../../shared/hooks/useScrollShadows', () => ({
 }));
 
 jest.mock('../../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
@@ -79,7 +79,7 @@ describe('CreateEnvironment', () => {
           kind: 'Environment',
           metadata: {
             name: 'env-1',
-            namespace: '',
+            namespace: 'test-ns',
           },
           spec: {
             deploymentStrategy: 'AppStudioAutomated',

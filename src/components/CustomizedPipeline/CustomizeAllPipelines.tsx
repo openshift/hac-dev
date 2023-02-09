@@ -9,7 +9,7 @@ import {
 } from '@patternfly/react-core';
 import { useComponents } from '../../hooks/useComponents';
 import { ComponentKind } from '../../types';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ComponentProps } from '../modal/createModalLauncher';
 import CustomizePipeline from './CustomizePipelines';
 
@@ -25,7 +25,7 @@ const CustomizeAllPipelines: React.FC<Props> = ({
   filter,
   onClose,
 }) => {
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const [components, loaded] = useComponents(namespace, applicationName);
   const filteredComponents = React.useMemo(
     () => (loaded ? (filter ? components.filter(filter) : components) : []),
@@ -48,7 +48,7 @@ const CustomizeAllPipelines: React.FC<Props> = ({
           component={(props) => (
             <Link
               {...props}
-              to={`/stonesoup/workspaces/${workspace}/applications/import?application=${applicationName}`}
+              to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}
             />
           )}
         >

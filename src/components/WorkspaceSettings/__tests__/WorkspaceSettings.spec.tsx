@@ -17,10 +17,6 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 
-jest.mock('../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
-}));
-
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
   return {
@@ -31,6 +27,10 @@ jest.mock('react-router-dom', () => {
 
 jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
+}));
+
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;

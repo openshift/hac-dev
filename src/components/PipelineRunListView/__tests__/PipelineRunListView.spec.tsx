@@ -16,16 +16,16 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
+}));
+
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
 jest.mock('../../../hooks/useSearchParam', () => ({
   useSearchParam: jest.fn(),
-}));
-
-jest.mock('../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 configure({ testIdAttribute: 'data-test' });
@@ -166,7 +166,7 @@ describe('Pipeline run List', () => {
     const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
     expect(button.closest('a').href).toContain(
-      `http://localhost/stonesoup/workspaces/test-ws/applications/import?application=my-test-app`,
+      `http://localhost/stonesoup/workspaces/test-ws/import?application=my-test-app`,
     );
   });
 

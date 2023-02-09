@@ -9,8 +9,7 @@ import { ApplicationGroupVersionKind } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { ApplicationKind } from '../../types';
 import { MVP_FLAG } from '../../utils/flag-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ActivityTab } from '../Activity/ActivityTab';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
@@ -43,8 +42,8 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
     localStorage.setItem(HACBS_APPLICATION_MODAL_HIDE_KEY, 'true');
   };
 
-  const namespace = useNamespace();
-  const workspace = useWorkspace();
+  const { namespace, workspace } = useWorkspaceInfo();
+
   const navigate = useNavigate();
   const { quickStarts } = useChrome();
   const showModal = useModalLauncher();
@@ -133,9 +132,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             key: 'add-component',
             label: 'Add component',
             component: (
-              <Link
-                to={`/stonesoup/workspaces/${workspace}/applications/import?application=${applicationName}`}
-              >
+              <Link to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}>
                 Add component
               </Link>
             ),

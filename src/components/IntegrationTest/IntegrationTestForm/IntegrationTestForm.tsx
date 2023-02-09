@@ -3,7 +3,7 @@ import { Form, FormSection, PageSection, PageSectionVariants } from '@patternfly
 import { useFormikContext } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import { FormFooter } from '../../../shared';
-import { useWorkspace } from '../../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import PageLayout from '../../PageLayout/PageLayout';
 import IntegrationTestSection from './IntegrationTestSection';
 
@@ -18,7 +18,7 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
   applicationName,
   edit,
 }) => {
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const { dirty, handleSubmit, handleReset, isSubmitting, status, errors } = useFormikContext();
   const footer = (
     <FormFooter

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { useK8sWatchResource, useWorkspace } from '@openshift/dynamic-plugin-sdk-utils';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Card,
   CardTitle,
@@ -17,14 +17,14 @@ import { ApplicationGroupVersionKind } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
 import { SIGNUP_FLAG, SIGNUP_PENDING_FLAG } from '../../utils/flag-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import SignupButton from './SignupButton';
 
 import './IntroBanner.scss';
 
 const IntroBanner: React.FC = () => {
-  const namespace = useNamespace();
-  const workspace = useWorkspace();
+  const { namespace, workspace } = useWorkspaceInfo();
+
   const [signupFlag] = useFeatureFlag(SIGNUP_FLAG);
   const [signupPendingFlag] = useFeatureFlag(SIGNUP_PENDING_FLAG);
 
@@ -84,10 +84,7 @@ const IntroBanner: React.FC = () => {
                 <Button
                   className="intro-banner__cta"
                   component={(props) => (
-                    <Link
-                      {...props}
-                      to={`/stonesoup/workspaces/${workspace}/applications/import`}
-                    />
+                    <Link {...props} to={`/stonesoup/workspaces/${workspace}/import`} />
                   )}
                   variant="primary"
                   data-test="create-application"

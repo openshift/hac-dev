@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Level, LevelItem } from '@patternfly/react-core';
-import WorkspaceContext from '../../utils/workspace-context';
+import { useNavigate } from 'react-router-dom';
+import { WorkspaceContext } from '../../utils/workspace-context-utils';
 import { ContextMenuItem, ContextSwitcher } from '../ContextSwitcher';
 
 export const WorkspaceSwitcher: React.FC<{ selectedWorkspace?: string }> = () => {
@@ -26,11 +25,12 @@ export const WorkspaceSwitcher: React.FC<{ selectedWorkspace?: string }> = () =>
       selectedItem={{ key: selectedItem.metadata.name, name: selectedItem.metadata.name }}
       onSelect={onSelect}
       footer={
-        <Level>
-          <LevelItem>
-            <Link to="#">View workspaces list</Link>
-          </LevelItem>
-        </Level>
+        <></>
+        // <Level>
+        //   <LevelItem>
+        //     <Link to="#">View workspaces list</Link>
+        //   </LevelItem>
+        // </Level>
       }
     />
   ) : null;

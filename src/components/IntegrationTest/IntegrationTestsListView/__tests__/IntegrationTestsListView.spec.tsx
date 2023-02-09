@@ -25,7 +25,7 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 }));
 
 jest.mock('../../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;

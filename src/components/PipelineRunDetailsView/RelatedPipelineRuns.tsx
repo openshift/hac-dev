@@ -5,12 +5,11 @@ import { Button, Popover, Skeleton } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../shared';
 import { PipelineRunKind } from '../../types';
-import { useNamespace } from '../../utils/namespace-context-utils';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 
 const RelatedPipelineRuns = ({ pipelineRun }) => {
-  const namespace = useNamespace();
-  const workspace = useWorkspace();
+  const { namespace, workspace } = useWorkspaceInfo();
+
   const sha =
     pipelineRun?.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] ||
     pipelineRun?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];

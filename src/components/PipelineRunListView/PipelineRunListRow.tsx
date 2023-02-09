@@ -8,7 +8,7 @@ import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../types';
 import { calculateDuration } from '../../utils/pipeline-utils';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { usePipelinerunActions } from './pipelinerun-actions';
 import { pipelineRunTableColumnClasses } from './PipelineRunListHeader';
 
@@ -19,7 +19,7 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
 
   const status = pipelineRunFilterReducer(obj);
   const actions = usePipelinerunActions(obj);
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const applicationName = obj.metadata?.labels[PipelineRunLabel.APPLICATION];
 
   return (

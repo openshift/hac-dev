@@ -23,7 +23,7 @@ import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../../types';
 import { getCommitShortName } from '../../../utils/commits-utils';
 import { calculateDuration } from '../../../utils/pipeline-utils';
-import { useWorkspace } from '../../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import MetadataList from '../MetadataList';
 import PipelineRunVisualization from '../PipelineRunVisualization';
 import RelatedPipelineRuns from '../RelatedPipelineRuns';
@@ -34,7 +34,7 @@ type PipelineRunDetailsTabProps = {
   error: unknown;
 };
 const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineRun, error }) => {
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const pipelineRunFailed = (getPLRLogSnippet(pipelineRun) || {}) as ErrorDetailsWithStaticLog;
   const duration = calculateDuration(
     typeof pipelineRun.status?.startTime === 'string' ? pipelineRun.status?.startTime : '',

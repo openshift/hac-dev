@@ -1,6 +1,6 @@
 import React from 'react';
 import { Bullseye, Spinner } from '@patternfly/react-core';
-import { NamespaceContext } from '../../utils/namespace-context-utils';
+import { WorkspaceContext } from '../../utils/workspace-context-utils';
 import AppBanner from '../AppBanner/AppBanner';
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 import { ModalProvider } from '../modal/ModalProvider';
@@ -12,9 +12,9 @@ type NamespacedPageProps = {
 };
 
 const NamespacedPage: React.FunctionComponent<NamespacedPageProps> = ({ children }) => {
-  const { namespaceLoaded } = React.useContext(NamespaceContext);
+  const { workspacesLoaded } = React.useContext(WorkspaceContext);
 
-  if (!namespaceLoaded) {
+  if (!workspacesLoaded) {
     return (
       <Bullseye>
         <Spinner />

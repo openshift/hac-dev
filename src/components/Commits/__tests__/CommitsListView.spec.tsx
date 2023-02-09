@@ -12,6 +12,7 @@ import CommitsListView from '../CommitsListView';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -20,12 +21,12 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: () => React.useState(() => new URLSearchParams()),
 }));
 
-jest.mock('../commit-status', () => ({
-  useCommitStatus: () => ['-', true],
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
-jest.mock('../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
+jest.mock('../commit-status', () => ({
+  useCommitStatus: () => ['-', true],
 }));
 
 jest.mock('../../../shared/components/table', () => {
@@ -54,6 +55,7 @@ jest.mock('../../../shared/components/table', () => {
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 const mockNavigate = useNavigate as jest.Mock;
@@ -82,7 +84,7 @@ describe('CommitsListView', () => {
     const addButton = screen.queryByText('Add component');
     expect(addButton).toBeInTheDocument();
     expect(addButton.closest('a').href).toContain(
-      `http://localhost/stonesoup/workspaces/test-ws/applications/import?application=purple-mermaid-app`,
+      `http://localhost/stonesoup/workspaces/test-ws/import?application=purple-mermaid-app`,
     );
   });
 

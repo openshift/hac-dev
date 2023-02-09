@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, EmptyStateBody, EmptyStateSecondaryActions } from '@patternfly/react-core';
 import emptyStateImgUrl from '../../imgs/Commit.svg';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 
 type CommitsEmptyStateProps = {
@@ -10,7 +10,7 @@ type CommitsEmptyStateProps = {
 };
 
 const CommitsEmptyState: React.FC<CommitsEmptyStateProps> = ({ applicationName }) => {
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
 
   return (
     <AppEmptyState
@@ -28,7 +28,7 @@ const CommitsEmptyState: React.FC<CommitsEmptyStateProps> = ({ applicationName }
           component={(props) => (
             <Link
               {...props}
-              to={`/stonesoup/workspaces/${workspace}/applications/import?application=${applicationName}`}
+              to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}
             />
           )}
           variant="secondary"

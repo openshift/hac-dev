@@ -5,12 +5,12 @@ import { ComponentGroupVersionKind } from '../models';
 import { PipelineRunGroupVersionKind } from '../shared';
 import { PipelineRunKind } from '../shared/components/pipeline-run-logs/types';
 import { ComponentKind } from '../types';
-import { useNamespace } from '../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
 export const useLatestPipelineRunForComponent = (
   component: ComponentKind,
 ): PipelineRunKind | undefined => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [pipelineRuns, prLoaded, prError] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
     namespace,
@@ -36,7 +36,7 @@ export const useLatestPipelineRunForComponent = (
 export const usePipelineRunsForApplication = (
   applicationName: string,
 ): [{ [componentName: string]: PipelineRunKind[] } | undefined, boolean, any] => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [pipelineRuns, prLoaded, prError] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
     namespace,

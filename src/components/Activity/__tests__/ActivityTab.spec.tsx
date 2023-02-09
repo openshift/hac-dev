@@ -17,7 +17,7 @@ jest.mock('react-router-dom', () => {
 });
 
 jest.mock('../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 const useNavigateMock = useNavigate as jest.Mock;

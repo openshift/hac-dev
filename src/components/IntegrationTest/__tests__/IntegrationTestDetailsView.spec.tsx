@@ -12,6 +12,7 @@ import { MockIntegrationTests } from '../IntegrationTestsListView/__data__/mock-
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('react-router-dom', () => {

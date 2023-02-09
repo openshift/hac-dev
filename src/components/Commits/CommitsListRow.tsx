@@ -9,7 +9,7 @@ import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../types';
 import { createRepoBranchURL, statuses } from '../../utils/commits-utils';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { useCommitActions } from './commit-actions';
 import { CommitIcon } from './CommitIcon';
 import { commitsTableColumnClasses } from './CommitsListHeader';
@@ -18,7 +18,7 @@ import './CommitsListRow.scss';
 
 const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
   const actions = useCommitActions(obj);
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const status = pipelineRunFilterReducer(obj.pipelineRuns[0]);
 
   const prNumber = obj.isPullRequest ? `#${obj.pullRequestNumber}` : '';

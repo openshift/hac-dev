@@ -4,7 +4,7 @@ import { FormikProps, FormikValues, useFormikContext } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import startCase from 'lodash/startCase';
 import { FormFooter } from '../../shared';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ReviewComponentCard } from '../ImportForm/ReviewSection/ReviewComponentCard';
 import PageLayout from '../PageLayout/PageLayout';
 
@@ -20,7 +20,7 @@ const ComponentSettingsForm: React.FunctionComponent<FormikProps<FormikValues>> 
   const {
     values: { components },
   } = useFormikContext<FormikValues>();
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
 
   const footer = (
     <FormFooter

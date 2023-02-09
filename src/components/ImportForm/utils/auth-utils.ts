@@ -15,7 +15,7 @@ import {
   SPIAccessTokenBindingPhase,
 } from '../../../types';
 import { initiateAccessTokenBinding } from '../../../utils/create-utils';
-import { useNamespace } from '../../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 
 /**
  * Create a new SPIAccessCheck when source changes,
@@ -33,7 +33,7 @@ export const useAccessCheck = (
   },
   boolean,
 ] => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [name, setName] = React.useState<string>();
 
   React.useEffect(() => {
@@ -97,7 +97,7 @@ export const useAccessCheck = (
 export const useAccessTokenBinding = (
   source?: string,
 ): [{ oAuthUrl: string; uploadUrl: string }, boolean] => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const { setFieldValue } = useFormikContext();
   const [name, setName] = React.useState<string>();
 

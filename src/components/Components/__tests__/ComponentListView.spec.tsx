@@ -19,6 +19,7 @@ const mockComponents = componentCRMocks.reduce((acc, mock) => {
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  // getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('../../../hooks/useApplicationRoutes', () => ({
@@ -34,7 +35,7 @@ jest.mock('react-i18next', () => ({
 }));
 
 jest.mock('../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 jest.mock('react-router-dom', () => {
@@ -96,7 +97,7 @@ describe('ComponentListViewPage', () => {
     const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
     expect(button.closest('a').href).toBe(
-      'http://localhost/stonesoup/workspaces/test-ws/applications/import?application=test-app',
+      'http://localhost/stonesoup/workspaces/test-ws/import?application=test-app',
     );
   });
 

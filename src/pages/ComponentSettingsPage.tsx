@@ -13,12 +13,12 @@ import { HeadTitle } from '../components/HeadTitle';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
 import { getQueryArgument } from '../shared/utils';
-import { useWorkspace } from '../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
 const ComponentSettingsPage: React.FunctionComponent = () => {
   const componentName = getQueryArgument('componentName');
   const navigate = useNavigate();
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
 
   const emptyState = (
     <PageLayout

@@ -25,8 +25,7 @@ import emptyStateImgUrl from '../../../imgs/Integration-test.svg';
 import { IntegrationTestScenarioGroupVersionKind } from '../../../models';
 import { Table } from '../../../shared';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
-import { useNamespace } from '../../../utils/namespace-context-utils';
-import { useWorkspace } from '../../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import AppEmptyState from '../../EmptyState/AppEmptyState';
 import FilteredEmptyState from '../../EmptyState/FilteredEmptyState';
 import { IntegrationTestListHeader } from './IntegrationTestListHeader';
@@ -60,8 +59,8 @@ const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ h
 );
 
 const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ applicationName }) => {
-  const namespace = useNamespace();
-  const workspace = useWorkspace();
+  const { namespace, workspace } = useWorkspaceInfo();
+
   const navigate = useNavigate();
   const [integrationTests, integrationTestsLoaded] = useK8sWatchResource<
     IntegrationTestScenarioKind[]

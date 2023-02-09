@@ -7,9 +7,8 @@ import { pipelineRunFilterReducer } from '../../shared';
 import { StatusIconWithTextLabel } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { PipelineRunKind } from '../../types';
-import { useNamespace } from '../../utils/namespace-context-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import PipelineRunDetailsTab from './tabs/PipelineRunDetailsTab';
@@ -23,8 +22,7 @@ type PipelineRunDetailsViewProps = {
 export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
   pipelineRunName,
 }) => {
-  const namespace = useNamespace();
-  const workspace = useWorkspace();
+  const { namespace, workspace } = useWorkspaceInfo();
 
   const [pipelineRun, loaded, error] = useK8sWatchResource<PipelineRunKind>({
     groupVersionKind: PipelineRunGroupVersionKind,

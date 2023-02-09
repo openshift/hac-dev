@@ -6,10 +6,6 @@ import { createApplication } from '../../../utils/create-utils';
 import ImportForm from '../ImportForm';
 import { useImportSteps } from '../utils/useImportSteps';
 
-jest.mock('../../../components/NamespacedPage/NamespacedPage', () => ({
-  useNamespace: jest.fn(() => 'test'),
-}));
-
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
 }));
@@ -27,7 +23,7 @@ jest.mock('../../../utils/create-utils', () => ({
 }));
 
 jest.mock('../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 const useNavigateMock = useNavigate as jest.Mock;

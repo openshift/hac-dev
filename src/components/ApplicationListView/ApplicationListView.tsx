@@ -21,8 +21,7 @@ import emptyStateImgUrl from '../../imgs/Application.svg';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { Table } from '../../shared';
 import { ApplicationKind } from '../../types';
-import { useNamespace } from '../../utils/namespace-context-utils';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { WorkspaceSwitcher } from '../ApplicationDetails/WorkspaceSwitcher';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
@@ -34,8 +33,8 @@ const GETTING_STARTED_CARD_KEY = 'application-list-getting-started-card';
 
 const ApplicationListView: React.FC = () => {
   const [hacbs] = useFeatureFlag(HACBS_FLAG);
-  const namespace = useNamespace();
-  const workspace = useWorkspace();
+  const { namespace, workspace } = useWorkspaceInfo();
+
   const [applications, loaded] = useApplications(namespace);
   applications?.sort(
     (app1, app2) =>
@@ -105,7 +104,7 @@ const ApplicationListView: React.FC = () => {
               <Button
                 variant="primary"
                 component={(props) => (
-                  <Link {...props} to={`/stonesoup/workspaces/${workspace}/applications/import`} />
+                  <Link {...props} to={`/stonesoup/workspaces/${workspace}/import`} />
                 )}
               >
                 Create application
@@ -119,10 +118,7 @@ const ApplicationListView: React.FC = () => {
                     <Button
                       variant="primary"
                       component={(props) => (
-                        <Link
-                          {...props}
-                          to="/stonesoup/workspaces/${workspace}/applications/import"
-                        />
+                        <Link {...props} to={`/stonesoup/workspaces/${workspace}/import`} />
                       )}
                     >
                       Create application

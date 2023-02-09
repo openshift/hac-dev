@@ -6,8 +6,7 @@ import { Formik } from 'formik';
 import { ComponentGroupVersionKind } from '../../models';
 import { ComponentKind } from '../../types';
 import { createComponent } from '../../utils/create-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { createResourceData, transformResources } from '../ImportForm/utils/transform-utils';
 import { reviewValidationSchema } from '../ImportForm/utils/validation-utils';
 import ComponentSettingsForm from './ComponentSettingsForm';
@@ -20,8 +19,7 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
   componentName,
 }) => {
   const navigate = useNavigate();
-  const namespace = useNamespace();
-  const workspace = useWorkspace();
+  const { namespace, workspace } = useWorkspaceInfo();
 
   const [component, loaded] = useK8sWatchResource<ComponentKind>({
     groupVersionKind: ComponentGroupVersionKind,

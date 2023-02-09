@@ -7,14 +7,14 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 describe('PipelineRunEmptyState', () => {
   it('should render correct Link to Application Name', () => {
     render(<PipelineRunEmptyState applicationName="test" />);
     expect(screen.getByRole('link').getAttribute('href')).toBe(
-      '/stonesoup/workspaces/test-ws/applications/import?application=test',
+      '/stonesoup/workspaces/test-ws/import?application=test',
     );
     screen.getByText('Add component');
   });

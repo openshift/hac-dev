@@ -20,7 +20,7 @@ import { PipelineRunGroupVersionKind } from '../../models';
 import { pipelineRunFilterReducer, Table } from '../../shared';
 import { PipelineRunKind } from '../../types';
 import { statuses } from '../../utils/commits-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import PipelineRunEmptyState from '../PipelineRunDetailsView/PipelineRunEmptyState';
 import { PipelineRunListHeader } from './PipelineRunListHeader';
@@ -28,7 +28,7 @@ import PipelineRunListRow from './PipelineRunListRow';
 
 type PipelineRunsListViewProps = { applicationName: string };
 const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ applicationName }) => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [statusFilterExpanded, setStatusFilterExpanded] = React.useState<boolean>(false);
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');

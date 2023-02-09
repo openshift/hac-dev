@@ -6,6 +6,7 @@ import CustomizeAllPipelines from '../CustomizeAllPipelines';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(() => [[], true]),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('react-router-dom', () => ({

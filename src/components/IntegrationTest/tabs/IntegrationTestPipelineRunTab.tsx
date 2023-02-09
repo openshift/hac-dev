@@ -5,7 +5,7 @@ import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../../models';
 import { Table } from '../../../shared';
 import { PipelineRunKind } from '../../../types';
-import { useNamespace } from '../../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import PipelineRunEmptyState from '../../PipelineRunDetailsView/PipelineRunEmptyState';
 import { PipelineRunListHeader } from '../../PipelineRunListView/PipelineRunListHeader';
 import PipelineRunListRow from '../../PipelineRunListView/PipelineRunListRow';
@@ -16,7 +16,7 @@ const IntegrationTestPipelineRunTab: React.FC<IntegrationTestPipelineRunTabProps
   applicationName,
   testName,
 }) => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
 
   const [pipelineRuns, loaded] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,

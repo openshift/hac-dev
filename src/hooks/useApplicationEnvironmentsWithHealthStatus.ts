@@ -3,7 +3,7 @@ import { PipelineRunLabel } from '../consts/pipelinerun';
 import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../shared';
 import { EnvironmentKind } from '../types';
 import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
-import { useNamespace } from '../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { useSortedEnvironments } from './useEnvironments';
 import { useSnapshotsEnvironmentBindings } from './useSnapshotsEnvironmentBindings';
 import { useTestPipelines } from './useTestPipelines';
@@ -15,7 +15,7 @@ export type EnvironmentKindWithHealthStatus = EnvironmentKind & {
 export const useApplicationEnvironmentsWithHealthStatus = (
   applicationName: string,
 ): [EnvironmentKindWithHealthStatus[], boolean] => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [environments, environmentsLoaded] = useSortedEnvironments();
   const [snapshotsEnvironmentBindings, snapshotsLoaded] = useSnapshotsEnvironmentBindings(
     namespace,

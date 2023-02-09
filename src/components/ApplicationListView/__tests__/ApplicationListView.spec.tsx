@@ -4,7 +4,7 @@ import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen } from '@testing-library/react';
 import { ApplicationKind } from '../../../types';
-import WorkspaceContext from '../../../utils/workspace-context';
+import { WorkspaceContext } from '../../../utils/workspace-context-utils';
 import ApplicationListView from '../ApplicationListView';
 
 jest.mock('@openshift/dynamic-plugin-sdk', () => ({
@@ -13,15 +13,20 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
-jest.mock('../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
-}));
+jest.mock('../../../utils/workspace-context-utils', () => {
+  const actual = jest.requireActual('../../../utils/workspace-context-utils');
+  return {
+    ...actual,
+    useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
+  };
+});
 
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
@@ -101,6 +106,8 @@ const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 const ApplicationList = () => (
   <WorkspaceContext.Provider
     value={{
+      namespace: 'test-ns',
+      lastUsedWorkspace: 'test-ws',
       setWorkspace: () => {},
       workspace: 'test-ws',
       workspacesLoaded: true,
@@ -126,9 +133,7 @@ describe('Application List', () => {
     screen.getByText('Create and manage your applications');
     const button = screen.getByText('Create application');
     expect(button).toBeInTheDocument();
-    expect(button.closest('a').href).toBe(
-      'http://localhost/stonesoup/workspaces/test-ws/applications/import',
-    );
+    expect(button.closest('a').href).toBe('http://localhost/stonesoup/workspaces/test-ws/import');
   });
 
   it('should render empty state with no card', () => {

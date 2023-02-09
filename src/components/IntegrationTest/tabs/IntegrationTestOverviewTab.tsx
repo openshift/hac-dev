@@ -12,7 +12,7 @@ import {
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
-import { useWorkspace } from '../../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import MetadataList from '../../PipelineRunDetailsView/MetadataList';
 import { IntegrationTestLabels } from '../IntegrationTestForm/types';
 
@@ -22,7 +22,7 @@ interface IntegrationTestOverviewTabProps {
 const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
   integrationTest,
 }) => {
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const optionalReleaseLabel =
     integrationTest.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true';
 

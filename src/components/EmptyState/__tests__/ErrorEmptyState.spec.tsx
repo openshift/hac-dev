@@ -39,7 +39,7 @@ describe('ErrorEmptyState', () => {
     await act(async () => {
       fireEvent.click(appsButton);
     });
-    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/applications');
+    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspaces');
   });
 
   it('Should show title and body on non-404 errors', async () => {

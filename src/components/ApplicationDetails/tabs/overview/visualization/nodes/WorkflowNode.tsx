@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Popover } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
 import { Node, NodeModel, observer, TaskNode, useHover } from '@patternfly/react-topology';
-import { useWorkspace } from '../../../../../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../../../../../utils/workspace-context-utils';
 import { WorkflowNodeModelData } from '../types';
 import { getWorkflowNodeIcon } from '../utils/node-icon-utils';
 import { statusToRunStatus, getLinksForElement } from '../utils/node-utils';
@@ -17,7 +17,7 @@ type WorkflowNodeProps = {
 
 const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
   const navigate = useNavigate();
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const [tipHover, setTipHover] = React.useState<boolean>(false);
   const [tipVisible, setTipVisible] = React.useState<boolean>(false);
   const [hover, hoverRef] = useHover();

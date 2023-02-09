@@ -2,12 +2,12 @@ import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { ApplicationGroupVersionKind } from '../../../models';
 import { ApplicationKind } from '../../../types';
-import { useNamespace } from '../../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 
 const BASE_NAME = 'my-app';
 
 export const useValidApplicationName = (): [string, boolean, unknown] => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
 
   const [applications, loaded, loadErr] = useK8sWatchResource<ApplicationKind[]>({
     groupVersionKind: ApplicationGroupVersionKind,

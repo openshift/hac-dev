@@ -5,8 +5,7 @@ import { Bullseye, Spinner, Text, TextVariants } from '@patternfly/react-core';
 import { IntegrationTestScenarioGroupVersionKind } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { IntegrationTestScenarioKind } from '../../types/coreBuildService';
-import { useNamespace } from '../../utils/namespace-context-utils';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { useModalLauncher } from '../modal/ModalProvider';
@@ -23,8 +22,8 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
   testName,
   applicationName,
 }) => {
-  const namespace = useNamespace();
-  const workspace = useWorkspace();
+  const { namespace, workspace } = useWorkspaceInfo();
+
   const showModal = useModalLauncher();
   const navigate = useNavigate();
 
@@ -95,7 +94,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
             label: 'Delete',
           },
         ]}
-        baseURL={`/stonesoup/${applicationName}/integrationtests/${testName}`}
+        baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/${testName}`}
         tabs={[
           {
             key: 'overview',

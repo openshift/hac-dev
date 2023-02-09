@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, EmptyStateBody, EmptyStateSecondaryActions } from '@patternfly/react-core';
 import emptyStateImgUrl from '../../imgs/Pipeline.svg';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 
 interface PipelineRunEmptyStateProps {
@@ -10,7 +10,7 @@ interface PipelineRunEmptyStateProps {
 }
 
 const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicationName }) => {
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
 
   return (
     <AppEmptyState emptyStateImg={emptyStateImgUrl} title="Keep tabs on components and activity">
@@ -24,7 +24,7 @@ const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicati
           component={(props) => (
             <Link
               {...props}
-              to={`/stonesoup/workspaces/${workspace}/applications/import?application=${applicationName}`}
+              to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}
             />
           )}
           variant="secondary"

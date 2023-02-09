@@ -5,6 +5,7 @@ import { useValidApplicationName } from '../useValidApplicationName';
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
   k8sCreateResource: jest.fn(),
+  getActiveWorkspace: jest.fn(),
 }));
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;

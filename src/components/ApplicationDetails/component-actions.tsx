@@ -1,13 +1,13 @@
 import { Action } from '../../shared/components/action-menu/types';
 import { ComponentKind } from '../../types';
 import { isPACEnabled, startNewBuild } from '../../utils/component-utils';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { createCustomizeComponentPipelineModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { componentDeleteModal } from '../modal/resource-modals';
 
 export const useComponentActions = (component: ComponentKind, name: string): Action[] => {
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const showModal = useModalLauncher();
   const applicationName = component.spec.application;
   const actions: Action[] = [

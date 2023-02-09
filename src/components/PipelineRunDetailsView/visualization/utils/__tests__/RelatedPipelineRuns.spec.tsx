@@ -6,9 +6,13 @@ import { DataState, testPipelineRuns } from '../../../../../__data__/pipelinerun
 import { PipelineRunLabel } from '../../../../../consts/pipelinerun';
 import RelatedPipelineRuns from '../../../RelatedPipelineRuns';
 
-jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
-  useK8sWatchResource: jest.fn(),
-}));
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
+  const actual = jest.requireActual('@openshift/dynamic-plugin-sdk-utils');
+  return {
+    ...actual,
+    useK8sWatchResource: jest.fn(),
+  };
+});
 
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,

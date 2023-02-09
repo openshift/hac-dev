@@ -7,6 +7,7 @@ import PipelineRunVisualization from '../PipelineRunVisualization';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('../../topology/factories/VisualizationFactory', () => () => <div />);

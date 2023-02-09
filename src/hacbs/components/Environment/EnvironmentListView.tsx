@@ -15,7 +15,7 @@ import emptyStateImgUrl from '../../../imgs/Environment.svg';
 import { EnvironmentKind } from '../../../types';
 import { GitOpsDeploymentHealthStatus } from '../../../types/gitops-deployment';
 import { MVP_FLAG } from '../../../utils/flag-utils';
-import { useWorkspace } from '../../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import EnvironmentCard from './EnvironmentCard';
 import EnvironmentToolbarGroups from './EnvironmentToolbarGroups';
 
@@ -182,7 +182,7 @@ const EnvironmentListView: React.FC<Props> = ({
   validTypes = DEFAULT_VALID_TYPES,
 }) => {
   const [mvpFeature] = useFeatureFlag(MVP_FLAG);
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const [typesFilterParam, setTypesFilterParam, unsetTypesFilter] = useSearchParam('envType', '');
   const typesFilter = React.useMemo(
     () =>
@@ -219,7 +219,7 @@ const EnvironmentListView: React.FC<Props> = ({
         component={(props) => (
           <Link
             {...props}
-            to={`/stonesoup/workspaces/${workspace}/workspace-settingsenvironment/create`}
+            to={`/stonesoup/workspaces/${workspace}/workspace-settings/environment/create`}
           />
         )}
       >

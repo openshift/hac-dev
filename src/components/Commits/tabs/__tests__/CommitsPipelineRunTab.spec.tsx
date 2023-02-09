@@ -7,6 +7,7 @@ import CommitsPipelineRunTab from '../CommitsPipelineRunTab';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('react-i18next', () => ({
@@ -18,7 +19,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('../../../../utils/workspace-context-utils', () => ({
-  useWorkspace: jest.fn(() => 'test-ws'),
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 const appName = 'my-test-app';
@@ -34,7 +35,7 @@ describe('Commit Pipelinerun List', () => {
     const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
     expect(button.closest('a').href).toContain(
-      `http://localhost/stonesoup/workspaces/test-ws/applications/import?application=my-test-app`,
+      `http://localhost/stonesoup/workspaces/test-ws/import?application=my-test-app`,
     );
   });
 

@@ -4,7 +4,7 @@ import ActionMenu from '../../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { RowFunctionArgs, TableData } from '../../../shared/components/table';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
-import { useWorkspace } from '../../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { IntegrationTestLabels } from '../IntegrationTestForm/types';
 import { integrationListTableColumnClasses } from './IntegrationTestListHeader';
 import { useIntegrationTestActions } from './useIntegrationTestActions';
@@ -13,7 +13,7 @@ const IntegrationTestListRow: React.FC<RowFunctionArgs<IntegrationTestScenarioKi
   obj,
 }) => {
   const actions = useIntegrationTestActions(obj);
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const containerImageUrl = `https://${obj.spec.bundle}`;
   return (
     <>

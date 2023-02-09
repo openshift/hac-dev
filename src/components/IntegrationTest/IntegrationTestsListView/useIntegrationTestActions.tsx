@@ -1,7 +1,7 @@
 import { IntegrationTestScenarioModel } from '../../../models';
 import { Action } from '../../../shared/components/action-menu/types';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
-import { useWorkspace } from '../../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { createDeleteModalLauncher } from '../../modal/DeleteResourceModal';
 import { useModalLauncher } from '../../modal/ModalProvider';
 
@@ -26,7 +26,7 @@ export const useIntegrationTestActions = (
   integrationTest: IntegrationTestScenarioKind,
 ): Action[] => {
   const showModal = useModalLauncher();
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   return [
     {
       id: `edit-${integrationTest.metadata.name.toLowerCase()}`,

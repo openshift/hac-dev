@@ -26,8 +26,7 @@ import { PipelineRunGroupVersionKind } from '../../models';
 import { pipelineRunFilterReducer, Table } from '../../shared';
 import { PipelineRunKind } from '../../types';
 import { getCommitsFromPLRs, statuses } from '../../utils/commits-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import CommitsEmptyState from './CommitsEmptyState';
 import CommitsListHeader from './CommitsListHeader';
@@ -49,8 +48,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
   const [statusFilterExpanded, setStatusFilterExpanded] = React.useState<boolean>(false);
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
 
-  const namespace = useNamespace();
-  const workspace = useWorkspace();
+  const { namespace, workspace } = useWorkspaceInfo();
 
   const [pipelineRuns, loaded] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,

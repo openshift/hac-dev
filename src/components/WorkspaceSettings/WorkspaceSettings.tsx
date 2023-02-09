@@ -16,7 +16,7 @@ import PageLayout from '../../components/PageLayout/PageLayout';
 import { useSortedEnvironments } from '../../hooks/useEnvironments';
 import { useQuickstartCloseOnUnmount } from '../../hooks/useQuickstartCloseOnUnmount';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
-import { useWorkspace } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
 import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 
@@ -68,7 +68,7 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = ({
   useQuickstartCloseOnUnmount();
   const navigate = useNavigate();
   const params = useParams();
-  const workspace = useWorkspace();
+  const { workspace } = useWorkspaceInfo();
   const { activeTab } = params;
 
   const setActiveTab = React.useCallback(
