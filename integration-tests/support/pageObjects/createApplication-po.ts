@@ -54,7 +54,7 @@ export const ComponentsPagePO = {
 export const applicationDetailPagePO = {
   item: '[data-testid="component-list-item-name"] > b',
   componentBuildLog: (param: string) => `[data-testid="view-build-logs-${param}"]`,
-  componentSettings: '[data-testid="Component settings"]',
+  componentSettings: '[data-testid="Edit component settings"]',
   detailsArrow: '[aria-label="Details"]',
   cpuRamLabel: 'CPU / Memory',
   replicaLabel: 'Instances',
