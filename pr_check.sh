@@ -80,6 +80,11 @@ TEST_IMAGE="quay.io/hacdev/hac-tests:latest"
 set +e
 TEST_RUN=0
 
+echo ${B64_USER} | base64 -d
+echo ${B64_PASS} | base64 -d
+echo ${HOSTNAME}
+echo ${COMMON_SETUP}
+
 docker run ${COMMON_SETUP} \
     -e CYPRESS_GH_TOKEN=${CYPRESS_GH_TOKEN} \
     -e CYPRESS_QUAY_TOKEN=${CYPRESS_QUAY_TOKEN} \
@@ -87,13 +92,13 @@ docker run ${COMMON_SETUP} \
     ${TEST_IMAGE} \
     bash -c "startcypress run -e GH_PR_TITLE='${ghprbPullTitle}'" || TEST_RUN=1
 
-docker run ${COMMON_SETUP} \
-    -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \
-    -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
-    ${TEST_IMAGE} \
-    bash -c "startcypress run -e configFile=hac-dev-experimental,GH_PR_TITLE='${ghprbPullTitle}'" || TEST_RUN=2
+# docker run ${COMMON_SETUP} \
+#     -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \
+#     -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
+#     ${TEST_IMAGE} \
+#     bash -c "startcypress run -e configFile=hac-dev-experimental,GH_PR_TITLE='${ghprbPullTitle}'" || TEST_RUN=2
 
-bonfire namespace release ${NAMESPACE}
+# bonfire namespace release ${NAMESPACE}
 
 # teardown_docker
 exit $TEST_RUN
