@@ -10,7 +10,7 @@ export APP_ROOT=$(pwd)
 export WORKSPACE=${WORKSPACE:-$APP_ROOT} # if running in jenkins, use the build's workspace
 export NODE_BUILD_VERSION=14
 IMAGE="quay.io/cloudservices/hac-dev-frontend"
-COMMON_BUILDER=https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master
+COMMON_BUILDER=https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/990db3673ececc8b13f53610dc560ecb4615d494
 
 # --------------------------------------------
 # Options that must be configured by app owner
