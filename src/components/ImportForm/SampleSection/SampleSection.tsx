@@ -139,7 +139,6 @@ const SampleSection = ({ onStrategyChange }) => {
                       className="hac-catalog__tile"
                       id={sample.uid}
                       title={sample.name}
-                      description={sample.description}
                       featured={sample.name === selected?.name}
                       data-test={`${sample.type}-${sample.name}`}
                       badges={sample.tags?.map((tag) => (
@@ -175,7 +174,9 @@ const SampleSection = ({ onStrategyChange }) => {
                           Git repository
                         </Button>
                       }
-                    />
+                    >
+                      {sample.description}
+                    </CatalogTile>
                   </GalleryItem>
                 ))}
               </Gallery>
