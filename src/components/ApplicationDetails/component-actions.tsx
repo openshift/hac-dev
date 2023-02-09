@@ -1,7 +1,7 @@
 import { Action } from '../../shared/components/action-menu/types';
 import { ComponentKind } from '../../types';
 import { isPACEnabled, startNewBuild } from '../../utils/component-utils';
-import { createCustomizePipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
+import { createCustomizeComponentPipelineModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { componentDeleteModal } from '../modal/resource-modals';
 
@@ -9,7 +9,13 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
   const showModal = useModalLauncher();
   const actions: Action[] = [
     {
-      cta: () => showModal(createCustomizePipelinesModalLauncher([component])),
+      cta: () =>
+        showModal(
+          createCustomizeComponentPipelineModalLauncher(
+            component.metadata.name,
+            component.metadata.namespace,
+          ),
+        ),
       id: 'customize-build-pipeline',
       label: 'Customize build pipeline',
     },

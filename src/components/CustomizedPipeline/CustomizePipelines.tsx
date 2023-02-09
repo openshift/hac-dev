@@ -25,7 +25,6 @@ import { ComponentProps } from '../modal/createModalLauncher';
 
 type Props = ComponentProps & {
   components: ComponentKind[];
-  loading?: boolean;
 };
 
 const Row: React.FC<{
@@ -124,12 +123,13 @@ const Row: React.FC<{
   );
 };
 
-const CustomizePipeline: React.FC<Props> = ({ components, onClose, loading }) => {
+const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
   const [showRequestedAlert, setShowRequestedAlert] = React.useState(false);
 
-  const sortedComponents = !loading
-    ? [...components].sort((a, b) => a.metadata.name.localeCompare(b.metadata.name))
-    : [];
+  const sortedComponents = React.useMemo(
+    () => [...components].sort((a, b) => a.metadata.name.localeCompare(b.metadata.name)),
+    [components],
+  );
 
   const [componentState, setComponentState] = React.useState<{ [name: string]: PACState }>({});
 
@@ -244,14 +244,14 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, loading }) =>
             variant={AlertVariant.warning}
             title="Sending pull request is taking more time than expected"
             className="pf-u-mt-lg"
+            actionLinks={
+              <ExternalLink href="https://github.com/apps/appstudio-staging-ci" showIcon>
+                Start the flow
+              </ExternalLink>
+            }
           >
             You may need to install the GitHub application and grant permissions to the component
             repository.
-            <br />
-            <br />
-            <ExternalLink href="https://github.com/apps/appstudio-staging-ci" showIcon>
-              Start the flow
-            </ExternalLink>
           </Alert>
         ) : undefined}
       </ModalBoxBody>

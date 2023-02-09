@@ -32,9 +32,7 @@ const CustomizeAllPipelines: React.FC<Props> = ({
 
   if (loaded) {
     if (components.length > 0) {
-      return (
-        <CustomizePipeline components={filteredComponents} loading={!loaded} onClose={onClose} />
-      );
+      return <CustomizePipeline components={filteredComponents} onClose={onClose} />;
     }
 
     return (
