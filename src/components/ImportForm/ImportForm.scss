@@ -1,0 +1,11 @@
+.import-form {
+  .pf-c-wizard__main {
+    display: flex;
+    flex-direction: column;
+  }
+  .pf-c-wizard__main-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+}

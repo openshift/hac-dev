@@ -9,6 +9,8 @@ import { createResources } from './utils/submit-utils';
 import { ImportFormValues, ImportStrategy } from './utils/types';
 import { useImportSteps } from './utils/useImportSteps';
 
+import './ImportForm.scss';
+
 type ImportFormProps = {
   applicationName?: string;
 };
@@ -72,7 +74,12 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
   };
 
   return (
-    <PageSection isFilled type={PageSectionTypes.wizard} variant={PageSectionVariants.light}>
+    <PageSection
+      isFilled
+      type={PageSectionTypes.wizard}
+      variant={PageSectionVariants.light}
+      className="import-form"
+    >
       <FormikWizard
         onSubmit={handleSubmit}
         onReset={handleReset}
