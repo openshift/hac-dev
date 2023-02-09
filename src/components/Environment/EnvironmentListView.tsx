@@ -80,6 +80,11 @@ const EnvironmentListView: React.FC<Props> = ({
     );
   }, [mvpFeature]);
 
+  const onClearFilters = React.useCallback(() => {
+    unsetNameFilter();
+    onClearAllFilters?.();
+  }, [unsetNameFilter, onClearAllFilters]);
+
   if (!environmentsLoaded) {
     return (
       <PageSection variant={PageSectionVariants.light} isFilled>
@@ -127,6 +132,7 @@ const EnvironmentListView: React.FC<Props> = ({
                       placeholder="Filter by name..."
                       value={nameFilter}
                       onChange={(name) => setNameFilter(name)}
+                      onClear={() => unsetNameFilter()}
                     />
                   </ToolbarItem>
                 </>
@@ -135,12 +141,7 @@ const EnvironmentListView: React.FC<Props> = ({
             </ToolbarContent>
           </Toolbar>
           {!mvpFeature && filteredEnvironments.length === 0 ? (
-            <FilteredEmptyState
-              onClearFilters={() => {
-                unsetNameFilter();
-                onClearAllFilters?.();
-              }}
-            />
+            <FilteredEmptyState onClearFilters={onClearFilters} />
           ) : (
             <Grid hasGutter>
               {mvpFeature

@@ -198,6 +198,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                       placeholder="Filter by name..."
                       onChange={setNameFilter}
                       value={nameFilter}
+                      onClear={() => setNameFilter('')}
                     />
                   </ToolbarItem>
                   <ToolbarItem>
