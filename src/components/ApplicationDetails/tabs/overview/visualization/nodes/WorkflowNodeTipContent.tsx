@@ -26,11 +26,16 @@ const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({ element
   const links = React.useMemo(() => {
     switch (workflowType) {
       case WorkflowNodeType.COMPONENT:
+        return [
+          <Link key="element-link" data-testid="element-link" to={elementRef}>
+            View Components
+          </Link>,
+        ];
       case WorkflowNodeType.STATIC_ENVIRONMENT:
       case WorkflowNodeType.MANAGED_ENVIRONMENT:
         return [
           <Link key="element-link" data-testid="element-link" to={elementRef}>
-            View in tab
+            View Environments
           </Link>,
         ];
       case WorkflowNodeType.BUILD:

@@ -26,7 +26,9 @@ const ApplicationSection: React.FunctionComponent = () => {
       <HeadTitle>Import - Name application | CI/CD</HeadTitle>
       <TextContent>
         <Text component="h2">Name your application</Text>
-        <HelperText>Enter a name for your application.</HelperText>
+        <HelperText>
+          {"Pick something you really like — application names can't be changed later."}
+        </HelperText>
       </TextContent>
       <FormSection>
         <InputField name="application" label="Name" placeholder="Enter name" required />
