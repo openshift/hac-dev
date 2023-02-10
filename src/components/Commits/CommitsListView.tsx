@@ -150,6 +150,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
                           placeholder="Filter by name..."
                           onChange={(name) => onNameInput(name)}
                           value={nameFilter}
+                          onClear={onClearFilters}
                         />
                       </ToolbarItem>
                       <ToolbarItem>
