@@ -153,7 +153,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
         <HelperText>
           <HelperTextItem>
             {description}{' '}
-            <HelpTopicLink topicId="add-component" isInline>
+            <HelpTopicLink topicId="stonesoup-import-add-component" isInline>
               Learn more <OpenDrawerRightIcon />
             </HelpTopicLink>
           </HelperTextItem>
