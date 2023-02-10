@@ -10,6 +10,10 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
 
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  commonFetch: jest.fn(),
+}));
+
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 useFeatureFlagMock.mockReturnValue([false, () => {}]);
 
