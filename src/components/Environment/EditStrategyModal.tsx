@@ -31,7 +31,7 @@ type DeleteResourceModalProps = ComponentProps & {
 };
 
 export const EditStrategyModal: React.FC<DeleteResourceModalProps> = ({ obj, onClose }) => {
-  const [error, setError] = React.useState();
+  const [error, setError] = React.useState<string>();
   const initialStrategy = dropdownItems.find((i) => i.key === obj.spec.deploymentStrategy).value;
 
   const updateEnvironment = async (values: FormikValues) => {
@@ -47,7 +47,7 @@ export const EditStrategyModal: React.FC<DeleteResourceModalProps> = ({ obj, onC
       });
       onClose({ submitClicked: true });
     } catch (e) {
-      setError(e);
+      setError(e.message || e.toString());
     }
   };
 
