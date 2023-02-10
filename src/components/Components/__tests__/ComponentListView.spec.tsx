@@ -33,6 +33,10 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspace: jest.fn(() => 'test-ws'),
+}));
+
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
   return {
@@ -91,7 +95,9 @@ describe('ComponentListViewPage', () => {
     render(<ComponentListView applicationName="test-app" />);
     const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
-    expect(button.closest('a').href).toBe('http://localhost/stonesoup/import?application=test-app');
+    expect(button.closest('a').href).toBe(
+      'http://localhost/stonesoup/workspaces/test-ws/applications/import?application=test-app',
+    );
   });
 
   it('should render filter toolbar and filter components based on name', () => {

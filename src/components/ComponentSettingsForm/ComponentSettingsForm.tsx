@@ -4,6 +4,7 @@ import { FormikProps, FormikValues, useFormikContext } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import startCase from 'lodash/startCase';
 import { FormFooter } from '../../shared';
+import { useWorkspace } from '../../utils/workspace-context-utils';
 import { ReviewComponentCard } from '../ImportForm/ReviewSection/ReviewComponentCard';
 import PageLayout from '../PageLayout/PageLayout';
 
@@ -19,6 +20,7 @@ const ComponentSettingsForm: React.FunctionComponent<FormikProps<FormikValues>> 
   const {
     values: { components },
   } = useFormikContext<FormikValues>();
+  const workspace = useWorkspace();
 
   const footer = (
     <FormFooter
@@ -34,13 +36,13 @@ const ComponentSettingsForm: React.FunctionComponent<FormikProps<FormikValues>> 
   return (
     <PageLayout
       breadcrumbs={[
-        { path: '/stonesoup/applications', name: 'Applications' },
+        { path: `/stonesoup/workspaces/${workspace}/applications`, name: 'Applications' },
         {
-          path: `/stonesoup/applications/${components[0].componentStub.application}`,
+          path: `/stonesoup/workspaces/${workspace}/applications/${components[0].componentStub.application}`,
           name: startCase(components[0].componentStub.application),
         },
         {
-          path: `/stonesoup/applications/${components[0].componentStub.application}/components`,
+          path: `/stonesoup/workspaces/${workspace}/applications/${components[0].componentStub.application}/components`,
           name: components[0].componentStub.componentName,
         },
         { path: '#', name: 'Component settings' },

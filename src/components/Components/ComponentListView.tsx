@@ -33,6 +33,7 @@ import { PipelineRunKind } from '../../types';
 import { getURLForComponentPRs, isPACEnabled } from '../../utils/component-utils';
 import { getGitOpsDeploymentStrategy } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspace } from '../../utils/workspace-context-utils';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import { ComponentListItem } from './ComponentListItem';
@@ -47,6 +48,7 @@ type ComponentListViewProps = {
 
 const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }) => {
   const namespace = useNamespace();
+  const workspace = useWorkspace();
   const [routes, loaded] = useApplicationRoutes(applicationName);
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
@@ -199,7 +201,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                         <Link
                           {...p}
                           data-test="add-component-button"
-                          to={`/stonesoup/import?application=${applicationName}`}
+                          to={`/stonesoup/workspaces/${workspace}/applications/import?application=${applicationName}`}
                         />
                       )}
                     >
@@ -251,7 +253,10 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
               <Button
                 variant="primary"
                 component={(props) => (
-                  <Link {...props} to={`/stonesoup/import?application=${applicationName}`} />
+                  <Link
+                    {...props}
+                    to={`/stonesoup/workspaces/${workspace}/applications/import?application=${applicationName}`}
+                  />
                 )}
               >
                 Add component

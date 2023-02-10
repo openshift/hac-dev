@@ -26,6 +26,10 @@ jest.mock('../../../utils/create-utils', () => ({
   createApplication: jest.fn(),
 }));
 
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspace: jest.fn(() => 'test-ws'),
+}));
+
 const useNavigateMock = useNavigate as jest.Mock;
 const FormikWizardMock = FormikWizard as jest.Mock;
 const useImportStepsMock = useImportSteps as jest.Mock;
@@ -83,7 +87,7 @@ describe('ImportForm', () => {
     await waitFor(() => {
       wizardProps.onSubmit({ ...wizardProps.initialValues, application: 'my-app' }, {} as any);
     });
-    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/applications/my-app');
+    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspaces/test-ws/applications/my-app');
   });
 
   it('should warn the users about the errors on form submit', async () => {

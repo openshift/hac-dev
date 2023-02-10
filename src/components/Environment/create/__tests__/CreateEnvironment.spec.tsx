@@ -29,6 +29,11 @@ jest.mock('../../../../shared/hooks/useScrollContainer', () => ({
 jest.mock('../../../../shared/hooks/useScrollShadows', () => ({
   useScrollShadows: jest.fn().mockReturnValue('none'),
 }));
+
+jest.mock('../../../../utils/workspace-context-utils', () => ({
+  useWorkspace: jest.fn(() => 'test-ws'),
+}));
+
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
 
 const mockK8sCreate = k8sCreateResource as jest.Mock;
@@ -93,13 +98,15 @@ describe('CreateEnvironment', () => {
     fillEnvironmentForm();
     const submitButton = screen.getByRole('button', { name: 'Create environment' });
     fireEvent.click(submitButton);
-    await waitFor(() => expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspace-settings'));
+    await waitFor(() =>
+      expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspaces/test-ws/workspace-settings'),
+    );
   });
 
   it('should call navigate on form cancel', () => {
     render(<CreateEnvironment />);
     const cancelButton = screen.getByText('Cancel');
     fireEvent.click(cancelButton);
-    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspace-settings');
+    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspaces/test-ws/workspace-settings');
   });
 });

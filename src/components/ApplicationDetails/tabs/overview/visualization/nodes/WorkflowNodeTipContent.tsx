@@ -10,6 +10,7 @@ import {
   RunStatus,
   PipelineNodeModel,
 } from '@patternfly/react-topology';
+import { useWorkspace } from '../../../../../../utils/workspace-context-utils';
 import { WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import { getLinksForElement, statusToRunStatus, TYPE_DESCRIPTIONS } from '../utils/node-utils';
 
@@ -21,7 +22,8 @@ type WorkflowNodeTipContentProps = {
 
 const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({ element }) => {
   const { label, workflowType, children } = element.getData();
-  const { elementRef, pipelinesRef } = getLinksForElement(element);
+  const workspace = useWorkspace();
+  const { elementRef, pipelinesRef } = getLinksForElement(element, workspace);
 
   const links = React.useMemo(() => {
     switch (workflowType) {

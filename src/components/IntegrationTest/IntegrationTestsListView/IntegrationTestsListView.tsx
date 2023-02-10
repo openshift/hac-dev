@@ -26,6 +26,7 @@ import { IntegrationTestScenarioGroupVersionKind } from '../../../models';
 import { Table } from '../../../shared';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { useNamespace } from '../../../utils/namespace-context-utils';
+import { useWorkspace } from '../../../utils/workspace-context-utils';
 import AppEmptyState from '../../EmptyState/AppEmptyState';
 import FilteredEmptyState from '../../EmptyState/FilteredEmptyState';
 import { IntegrationTestListHeader } from './IntegrationTestListHeader';
@@ -60,6 +61,7 @@ const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ h
 
 const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ applicationName }) => {
   const namespace = useNamespace();
+  const workspace = useWorkspace();
   const navigate = useNavigate();
   const [integrationTests, integrationTestsLoaded] = useK8sWatchResource<
     IntegrationTestScenarioKind[]
@@ -89,8 +91,10 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
   );
 
   const handleAddTest = React.useCallback(() => {
-    navigate(`/stonesoup/applications/${applicationName}/integration-test`);
-  }, [navigate, applicationName]);
+    navigate(
+      `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/add`,
+    );
+  }, [navigate, applicationName, workspace]);
 
   const loading = (
     <Bullseye className="pf-u-mt-md" data-test="integration-tests__loading">

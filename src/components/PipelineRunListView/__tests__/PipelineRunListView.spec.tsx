@@ -24,6 +24,10 @@ jest.mock('../../../hooks/useSearchParam', () => ({
   useSearchParam: jest.fn(),
 }));
 
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspace: jest.fn(() => 'test-ws'),
+}));
+
 configure({ testIdAttribute: 'data-test' });
 
 jest.mock('../../../shared/components/table', () => {
@@ -162,7 +166,7 @@ describe('Pipeline run List', () => {
     const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
     expect(button.closest('a').href).toContain(
-      `http://localhost/stonesoup/import?application=my-test-app`,
+      `http://localhost/stonesoup/workspaces/test-ws/applications/import?application=my-test-app`,
     );
   });
 

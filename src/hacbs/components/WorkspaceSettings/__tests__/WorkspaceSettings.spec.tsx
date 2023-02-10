@@ -38,6 +38,10 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
 
+jest.mock('../../../../utils/workspace-context-utils', () => ({
+  useWorkspace: jest.fn(() => 'test-ws'),
+}));
+
 configure({ testIdAttribute: 'data-testid' });
 
 global.fetch = jest.fn(() =>
@@ -83,6 +87,8 @@ describe('WorkspaceSettings', () => {
     await act(async () => {
       fireEvent.click(testTab);
     });
-    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspace-settings/enterprise-contract');
+    expect(navigateMock).toHaveBeenCalledWith(
+      '/stonesoup/workspaces/test-ws/workspace-settings/enterprise-contract',
+    );
   });
 });

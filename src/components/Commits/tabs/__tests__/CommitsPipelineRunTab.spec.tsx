@@ -17,6 +17,10 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
+jest.mock('../../../../utils/workspace-context-utils', () => ({
+  useWorkspace: jest.fn(() => 'test-ws'),
+}));
+
 const appName = 'my-test-app';
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
@@ -30,7 +34,7 @@ describe('Commit Pipelinerun List', () => {
     const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
     expect(button.closest('a').href).toContain(
-      `http://localhost/stonesoup/import?application=my-test-app`,
+      `http://localhost/stonesoup/workspaces/test-ws/applications/import?application=my-test-app`,
     );
   });
 

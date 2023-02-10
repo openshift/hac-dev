@@ -16,6 +16,7 @@ import PageLayout from '../../components/PageLayout/PageLayout';
 import { useSortedEnvironments } from '../../hooks/useEnvironments';
 import { useQuickstartCloseOnUnmount } from '../../hooks/useQuickstartCloseOnUnmount';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
+import { useWorkspace } from '../../utils/workspace-context-utils';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
 import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 
@@ -67,15 +68,16 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = ({
   useQuickstartCloseOnUnmount();
   const navigate = useNavigate();
   const params = useParams();
+  const workspace = useWorkspace();
   const { activeTab } = params;
 
   const setActiveTab = React.useCallback(
     (newTab: string) => {
       if (activeTab !== newTab) {
-        navigate(`/stonesoup/workspace-settings/${newTab}`);
+        navigate(`/stonesoup/workspaces/${workspace}/workspace-settings/${newTab}`);
       }
     },
-    [activeTab, navigate],
+    [activeTab, navigate, workspace],
   );
 
   const environments = (

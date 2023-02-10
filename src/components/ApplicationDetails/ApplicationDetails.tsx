@@ -10,6 +10,7 @@ import { HttpError } from '../../shared/utils/error/http-error';
 import { ApplicationKind } from '../../types';
 import { MVP_FLAG } from '../../utils/flag-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspace } from '../../utils/workspace-context-utils';
 import { ActivityTab } from '../Activity/ActivityTab';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
@@ -43,6 +44,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
   };
 
   const namespace = useNamespace();
+  const workspace = useWorkspace();
   const navigate = useNavigate();
   const { quickStarts } = useChrome();
   const showModal = useModalLauncher();
@@ -66,10 +68,6 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
       />
     );
   }
-
-  // temporary placeholder
-  const workspaceName = 'myworkspace';
-
   const loading = (
     <Bullseye>
       <Spinner data-test="spinner" />
@@ -87,25 +85,24 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
         data-test="application-details-test-id"
         headTitle={appDisplayName}
         breadcrumbs={[
-          ...(mvpFeature
-            ? []
-            : [
-                <Badge key="badge" isRead>
-                  WS
-                </Badge>,
-                <span key="badge-divider" className={styles.breadcrumbItemDivider} />,
-                <BreadcrumbItem key="workspace-link" component="div" to="#">
-                  <Link className="pf-c-breadcrumb__link" to="#">
-                    {workspaceName}
-                  </Link>
-                </BreadcrumbItem>,
-                <WorkspaceSwitcher key="workspace" selectedWorkspace={workspaceName} />,
-                <span key="workspace-divider" className={styles.breadcrumbItemDivider}>
-                  │
-                </span>,
-              ]),
-          <BreadcrumbItem key="app-link" component="div">
-            <Link className="pf-c-breadcrumb__link" to="/stonesoup/applications">
+          <Badge key="badge" isRead>
+            WS
+          </Badge>,
+          <span key="badge-divider" className={styles.breadcrumbItemDivider} />,
+          <BreadcrumbItem key="workspace-link" to="#">
+            <Link className="pf-c-breadcrumb__link" to="#">
+              {workspace}
+            </Link>
+          </BreadcrumbItem>,
+          <WorkspaceSwitcher key="workspace" />,
+          <span key="workspace-divider" className={styles.breadcrumbItemDivider}>
+            |
+          </span>,
+          <BreadcrumbItem key="app-link">
+            <Link
+              className="pf-c-breadcrumb__link"
+              to={`/stonesoup/workspaces/${workspace}/applications`}
+            >
               Applications
             </Link>
           </BreadcrumbItem>,
@@ -136,14 +133,20 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             key: 'add-component',
             label: 'Add component',
             component: (
-              <Link to={`/stonesoup/import?application=${applicationName}`}>Add component</Link>
+              <Link
+                to={`/stonesoup/workspaces/${workspace}/applications/import?application=${applicationName}`}
+              >
+                Add component
+              </Link>
             ),
           },
           {
             key: 'add-integration-test',
             label: 'Add integration test',
             component: (
-              <Link to={`/stonesoup/applications/${applicationName}/integration-test`}>
+              <Link
+                to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/add`}
+              >
                 Add integration test
               </Link>
             ),
@@ -154,7 +157,9 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             key: 'create-environment',
             label: 'Create environment',
             component: (
-              <Link to="/stonesoup/workspace-settings/environment/create">Create environment</Link>
+              <Link to={`/stonesoup/workspaces/${workspace}/workspace-settings/environment/create`}>
+                Create environment
+              </Link>
             ),
             hidden: mvpFeature,
           },
@@ -187,7 +192,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
               }),
           },
         ]}
-        baseURL={`/stonesoup/applications/${applicationName}`}
+        baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}`}
         tabs={[
           {
             key: 'overview',

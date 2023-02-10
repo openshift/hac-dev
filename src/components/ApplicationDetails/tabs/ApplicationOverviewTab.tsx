@@ -3,6 +3,7 @@ import componentsIcon from '../../../imgs/illustrations/Components.svg';
 import editCodeIcon from '../../../imgs/illustrations/Edit code.svg';
 import githubAppIcon from '../../../imgs/illustrations/Github app.svg';
 import pipelineIcon from '../../../imgs/illustrations/Pipeline.svg';
+import { useWorkspace } from '../../../utils/workspace-context-utils';
 import CommitsListView from '../../Commits/CommitsListView';
 import WhatsNextSection, { WhatsNextItem } from '../../WhatsNext/WhatsNextSection';
 import AppWorkflowSection from './overview/sections/AppWorkflowSection';
@@ -12,6 +13,8 @@ type ApplicationOverviewTabProps = {
 };
 
 const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applicationName }) => {
+  const workspace = useWorkspace();
+
   const whatsNextItems: WhatsNextItem[] = [
     {
       title: 'Add a component',
@@ -19,7 +22,7 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applica
       icon: componentsIcon,
       cta: {
         label: 'Add component',
-        href: `/stonesoup/import?application=${applicationName}`,
+        href: `/stonesoup/workspaces/${workspace}/applications/import?application=${applicationName}`,
       },
       helpId: 'stonesoup-whatsnext-add-component',
     },
@@ -40,7 +43,7 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applica
       icon: editCodeIcon,
       cta: {
         label: 'View build activity',
-        href: `/stonesoup/applications/${applicationName}/activity`,
+        href: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity`,
       },
       helpId: 'stonesoup-whatsnext-make-code-change',
     },
@@ -51,7 +54,7 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applica
       icon: pipelineIcon,
       cta: {
         label: 'Open components tab',
-        href: `/stonesoup/applications/${applicationName}/components`,
+        href: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/components`,
       },
       helpId: 'stonesoup-whatsnext-customize-build-pipeline',
     },

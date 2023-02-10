@@ -13,15 +13,17 @@ import { HeadTitle } from '../components/HeadTitle';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
 import { getQueryArgument } from '../shared/utils';
+import { useWorkspace } from '../utils/workspace-context-utils';
 
 const ComponentSettingsPage: React.FunctionComponent = () => {
   const componentName = getQueryArgument('componentName');
   const navigate = useNavigate();
+  const workspace = useWorkspace();
 
   const emptyState = (
     <PageLayout
       breadcrumbs={[
-        { path: '/stonesoup/applications', name: 'Applications' },
+        { path: `/stonesoup/workspaces/${workspace}/applications`, name: 'Applications' },
         { path: '#', name: 'Component settings' },
       ]}
       title="Component settings"

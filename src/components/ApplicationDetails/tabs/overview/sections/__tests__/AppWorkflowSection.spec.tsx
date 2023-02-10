@@ -8,6 +8,7 @@ import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnap
 import { CustomError } from '../../../../../../shared/utils/error/custom-error';
 import { useNamespace } from '../../../../../../utils/namespace-context-utils';
 import { mockLocation, routerRenderer } from '../../../../../../utils/test-utils';
+import { useWorkspace } from '../../../../../../utils/workspace-context-utils';
 import { mockSnapshotsEnvironmentBindings, mockComponentsData } from '../../../../__data__';
 import { getMockWorkflows } from '../../../../__data__/WorkflowTestUtils';
 import AppWorkflowSection from '../AppWorkflowSection';
@@ -20,6 +21,10 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 jest.mock('../../../../../../utils/namespace-context-utils', () => ({
   useNamespace: jest.fn(() => 'test-ns'),
+}));
+
+jest.mock('../../../../../../utils/workspace-context-utils', () => ({
+  useWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('../../../../../../shared/hooks/useQueryParams', () => ({
@@ -88,6 +93,7 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
 const useSearchParamsMock = useSearchParams as jest.Mock;
 
 const useActiveNamespaceMock = useNamespace as jest.Mock;
+const useWorkspaceMock = useWorkspace as jest.Mock;
 const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
@@ -101,6 +107,7 @@ describe('useAppWorkflowData hook', () => {
   beforeEach(() => {
     params.expanded = undefined;
     useActiveNamespaceMock.mockReturnValue('test-ns');
+    useWorkspaceMock.mockReturnValue('test-ws');
     useFeatureFlagMock.mockReturnValue([false]);
     applyWorkflowMocks(workflowMocks);
 
@@ -166,7 +173,7 @@ describe('useAppWorkflowData hook', () => {
 
     fireEvent.click(clickable);
     expect(mockNavigate).toHaveBeenCalledWith(
-      '/stonesoup/applications/test-dev-samples/components',
+      '/stonesoup/workspaces/test-ws/applications/test-dev-samples/components',
     );
   });
   it('should navigate to the correct tab on a group node click', async () => {
@@ -181,7 +188,7 @@ describe('useAppWorkflowData hook', () => {
 
     fireEvent.click(clickable);
     expect(mockNavigate).toHaveBeenCalledWith(
-      '/stonesoup/applications/test-dev-samples/components',
+      '/stonesoup/workspaces/test-ws/applications/test-dev-samples/components',
     );
   });
   it('should navigate to the correct tab on a node click', async () => {
@@ -197,7 +204,7 @@ describe('useAppWorkflowData hook', () => {
 
     fireEvent.click(clickable);
     expect(mockNavigate).toHaveBeenCalledWith(
-      `/stonesoup/applications/test-dev-samples/components?name=${mockComponentsData[0].metadata.name}`,
+      `/stonesoup/workspaces/test-ws/applications/test-dev-samples/components?name=${mockComponentsData[0].metadata.name}`,
     );
   });
 });

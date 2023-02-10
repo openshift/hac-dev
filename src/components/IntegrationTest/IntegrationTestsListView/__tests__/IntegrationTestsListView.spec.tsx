@@ -24,6 +24,10 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 
+jest.mock('../../../../utils/workspace-context-utils', () => ({
+  useWorkspace: jest.fn(() => 'test-ws'),
+}));
+
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const useSearchParamMock = useSearchParam as jest.Mock;
 
@@ -72,7 +76,7 @@ describe('IntegrationTestsListView', () => {
 
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith(
-        '/stonesoup/applications/test-app/integration-test',
+        '/stonesoup/workspaces/test-ws/applications/test-app/integrationtests/add',
       ),
     );
   });

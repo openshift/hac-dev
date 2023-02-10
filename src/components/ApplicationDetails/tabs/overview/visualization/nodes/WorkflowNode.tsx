@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Popover } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
 import { Node, NodeModel, observer, TaskNode, useHover } from '@patternfly/react-topology';
+import { useWorkspace } from '../../../../../../utils/workspace-context-utils';
 import { WorkflowNodeModelData } from '../types';
 import { getWorkflowNodeIcon } from '../utils/node-icon-utils';
 import { statusToRunStatus, getLinksForElement } from '../utils/node-utils';
@@ -16,6 +17,7 @@ type WorkflowNodeProps = {
 
 const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
   const navigate = useNavigate();
+  const workspace = useWorkspace();
   const [tipHover, setTipHover] = React.useState<boolean>(false);
   const [tipVisible, setTipVisible] = React.useState<boolean>(false);
   const [hover, hoverRef] = useHover();
@@ -23,8 +25,8 @@ const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
   const childNodes = children?.filter((n) => !n.data.isDisabled) || [];
 
   const setActiveTab = React.useCallback(() => {
-    navigate(getLinksForElement(element).elementRef);
-  }, [element, navigate]);
+    navigate(getLinksForElement(element, workspace).elementRef);
+  }, [element, navigate, workspace]);
 
   React.useEffect(() => {
     let canceled = false;

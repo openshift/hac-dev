@@ -1,12 +1,15 @@
 import { Action } from '../../shared/components/action-menu/types';
 import { ComponentKind } from '../../types';
 import { isPACEnabled, startNewBuild } from '../../utils/component-utils';
+import { useWorkspace } from '../../utils/workspace-context-utils';
 import { createCustomizeComponentPipelineModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { componentDeleteModal } from '../modal/resource-modals';
 
 export const useComponentActions = (component: ComponentKind, name: string): Action[] => {
+  const workspace = useWorkspace();
   const showModal = useModalLauncher();
+  const applicationName = component.spec.application;
   const actions: Action[] = [
     {
       cta: () =>
@@ -29,7 +32,9 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
   }
   actions.push(
     {
-      cta: { href: `/stonesoup/component-settings?componentName=${name}` },
+      cta: {
+        href: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/component-settings?componentName=${name}`,
+      },
       id: 'component-settings',
       label: 'Edit component settings',
     },

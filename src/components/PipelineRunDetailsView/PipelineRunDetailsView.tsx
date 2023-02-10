@@ -9,6 +9,7 @@ import { HttpError } from '../../shared/utils/error/http-error';
 import { PipelineRunKind } from '../../types';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
+import { useWorkspace } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import PipelineRunDetailsTab from './tabs/PipelineRunDetailsTab';
@@ -23,6 +24,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
   pipelineRunName,
 }) => {
   const namespace = useNamespace();
+  const workspace = useWorkspace();
 
   const [pipelineRun, loaded, error] = useK8sWatchResource<PipelineRunKind>({
     groupVersionKind: PipelineRunGroupVersionKind,
@@ -61,17 +63,17 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
         <DetailsPage
           headTitle={pipelineRunName}
           breadcrumbs={[
-            { path: '/stonesoup/applications', name: 'Applications' },
+            { path: `/stonesoup/workspaces/${workspace}/applications`, name: 'Applications' },
             {
-              path: `/stonesoup/applications/${applicationName}`,
+              path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}`,
               name: applicationName,
             },
             {
-              path: `/stonesoup/applications/${applicationName}/activity/pipelineruns`,
+              path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity/pipelineruns`,
               name: 'Pipeline runs',
             },
             {
-              path: `/stonesoup/pipelineruns/${pipelineRunName}`,
+              path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${pipelineRunName}`,
               name: pipelineRunName,
             },
           ]}
@@ -88,7 +90,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
             //   label: 'Rerun',
             //   onClick: () =>
             //     pipelineRunRerun(pipelineRun).then((data) => {
-            //       navigate(`/stonesoup/pipelineruns/${data.metadata.name}`);
+            //       navigate(`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${data.metadata.name}`);
             //     }),
             // },
             {
@@ -106,7 +108,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
               onClick: () => pipelineRunCancel(pipelineRun),
             },
           ]}
-          baseURL={`/stonesoup/pipelineruns/${pipelineRunName}`}
+          baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${pipelineRunName}`}
           tabs={[
             {
               key: 'detail',

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Tab, Tabs, TabTitleText, Title } from '@patternfly/react-core';
+import { useWorkspace } from '../../utils/workspace-context-utils';
 import PipelineRunsTab from '../ApplicationDetails/tabs/PipelineRunsTab';
 import CommitsListView from '../Commits/CommitsListView';
 
@@ -8,16 +9,19 @@ import './ActivityTab.scss';
 
 export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicationName }) => {
   const params = useParams();
+  const workspace = useWorkspace();
   const { activeTab: parentTab, activity: activeTab } = params;
 
   const navigate = useNavigate();
   const setActiveTab = React.useCallback(
     (newTab: string) => {
       if (activeTab !== newTab) {
-        navigate(`/stonesoup/applications/${applicationName}/${parentTab}/${newTab}`);
+        navigate(
+          `/stonesoup/workspaces/${workspace}/applications/${applicationName}/${parentTab}/${newTab}`,
+        );
       }
     },
-    [applicationName, activeTab, navigate, parentTab],
+    [applicationName, activeTab, navigate, parentTab, workspace],
   );
 
   return (

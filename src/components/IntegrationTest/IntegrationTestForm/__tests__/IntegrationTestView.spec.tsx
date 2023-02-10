@@ -20,6 +20,10 @@ jest.mock('../utils/create-utils.ts', () => ({
   createIntegrationTest: jest.fn(),
 }));
 
+jest.mock('../../../../utils/workspace-context-utils', () => ({
+  useWorkspace: jest.fn(() => 'test-ws'),
+}));
+
 const createIntegrationTestMock = createIntegrationTest as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
@@ -91,7 +95,7 @@ describe('IntegrationTestView', () => {
     await waitFor(() => expect(createIntegrationTestMock).toHaveBeenCalledTimes(1));
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith(
-        '/stonesoup/applications/test-app/integrationtests',
+        '/stonesoup/workspaces/test-ws/applications/test-app/integrationtests',
       ),
     );
   });

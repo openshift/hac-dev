@@ -12,7 +12,7 @@ const navExtensions = [
   {
     type: 'core.navigation/href',
     properties: {
-      href: '/stonesoup/applications',
+      href: '/stonesoup/workspaces',
       name: 'Applications',
     },
     flags: {
@@ -60,6 +60,17 @@ const contextProviderExtensions = [
       },
     },
   },
+  {
+    type: 'core.context-provider',
+    properties: {
+      provider: {
+        $codeRef: 'WorkspaceContext.WorkspaceProvider',
+      },
+      useValueHook: {
+        $codeRef: 'WorkspaceContext.useActiveWorkspace',
+      },
+    },
+  },
 ];
 
 const routeExtensions = [
@@ -70,6 +81,17 @@ const routeExtensions = [
       path: '/app-studio',
       component: {
         $codeRef: 'Redirect',
+      },
+    },
+  },
+  // sets workspace context for the below route
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/workspaces',
+      exact: true,
+      component: {
+        $codeRef: 'WorkspacePage',
       },
     },
   },
@@ -88,7 +110,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/applications',
+      path: '/stonesoup/workspaces',
       exact: true,
       component: {
         $codeRef: 'OverviewPage',
@@ -99,11 +121,26 @@ const routeExtensions = [
     },
   },
 
+  // Applications page.
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/workspaces/:workspaceName/applications',
+      exact: true,
+      component: {
+        $codeRef: 'Applications',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+
   // Import
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/import',
+      path: '/stonesoup/workspaces/:workspaceName/applications/import',
       exact: true,
       component: {
         $codeRef: 'Import',
@@ -114,24 +151,10 @@ const routeExtensions = [
     },
   },
 
-  // Applications page.
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/applications',
-      exact: true,
-      component: {
-        $codeRef: 'Applications',
-      },
-    },
-    flags: {
-      required: ['SIGNUP'],
-    },
-  },
-  {
-    type: 'core.page/route',
-    properties: {
-      path: '/stonesoup/applications/:appName',
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName',
       exact: true,
       component: {
         $codeRef: 'ApplicationDetails',
@@ -144,7 +167,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/applications/:appName/:activeTab',
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/:activeTab',
       exact: true,
       component: {
         $codeRef: 'ApplicationDetails',
@@ -157,7 +180,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/applications/:appName/:activeTab/:activity',
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/:activeTab/:activity',
       exact: true,
       component: {
         $codeRef: 'ApplicationDetails',
@@ -172,7 +195,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/pipelineruns/:plrName',
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/pipelineruns/:plrName',
       exact: true,
       component: {
         $codeRef: 'PipelineRuns',
@@ -185,7 +208,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/pipelineruns/:plrName/:activeTab',
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/pipelineruns/:plrName/:activeTab',
       exact: true,
       component: {
         $codeRef: 'PipelineRuns',
@@ -200,7 +223,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/applications/:appName/integration-test',
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/integrationtests/add',
       exact: true,
       component: {
         $codeRef: 'IntegrationTest',
@@ -213,7 +236,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/integration-test/:name/edit',
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/integrationtests/:name/edit',
       exact: true,
       component: {
         $codeRef: 'EditIntegrationTest',
@@ -226,7 +249,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/:appName/integrationtests/:testName',
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/integrationtests/:testName',
       exact: true,
       component: {
         $codeRef: 'IntegrationTestDetails',
@@ -239,7 +262,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/:appName/integrationtests/:testName/:activeTab',
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/integrationtests/:testName/:activeTab',
       exact: true,
       component: {
         $codeRef: 'IntegrationTestDetails',
@@ -254,7 +277,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/:appName/commit/:commitName',
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/commit/:commitName',
       exact: true,
       component: {
         $codeRef: 'CommitsPage',
@@ -267,7 +290,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/:appName/commit/:commitName/:activeTab',
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/commit/:commitName/:activeTab',
       exact: true,
       component: {
         $codeRef: 'CommitsPage',
@@ -283,7 +306,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/component-settings',
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/component-settings',
       exact: true,
       component: {
         $codeRef: 'ComponentSettings',
@@ -298,7 +321,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/workspace-settings',
+      path: '/stonesoup/workspaces/:workspaceName/workspace-settings',
       exact: true,
       component: {
         $codeRef: 'WorkspaceSettings',
@@ -312,7 +335,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/workspace-settings/:activeTab',
+      path: '/stonesoup/workspaces/:workspaceName/workspace-settings/:activeTab',
       exact: true,
       component: {
         $codeRef: 'WorkspaceSettings',
@@ -326,7 +349,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/workspace-settings/environment/create',
+      path: '/stonesoup/workspaces/:workspaceName/workspace-settings/environment/create',
       exact: true,
       component: {
         $codeRef: 'CreateEnvironment',
@@ -369,6 +392,8 @@ module.exports = {
       WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),
       CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
       NamespaceContext: resolve(__dirname, '../src/utils/namespace-context-utils'),
+      WorkspaceContext: resolve(__dirname, '../src/utils/workspace-context-utils'),
+      WorkspacePage: resolve(__dirname, '../src/pages/WorkspacePage'),
       OverviewPage: resolve(__dirname, '../src/pages/OverviewPage'),
       FlagUtils: resolve(__dirname, '../src/utils/flag-utils'),
       Redirect: resolve(__dirname, '../src/pages/RedirectPage'),

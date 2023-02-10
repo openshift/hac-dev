@@ -6,12 +6,15 @@ import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../shared';
 import { PipelineRunKind } from '../../types';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspace } from '../../utils/workspace-context-utils';
 
 const RelatedPipelineRuns = ({ pipelineRun }) => {
   const namespace = useNamespace();
+  const workspace = useWorkspace();
   const sha =
     pipelineRun?.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] ||
     pipelineRun?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];
+  const applicationName = pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION];
 
   const [relatedPipelineRuns, relatedPipelineRunsLoaded] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
@@ -44,7 +47,7 @@ const RelatedPipelineRuns = ({ pipelineRun }) => {
           : filteredRelatedPipelineruns?.map((relatedPipelineRun: PipelineRunKind) => (
               <div key={relatedPipelineRun?.metadata?.uid}>
                 <Link
-                  to={`/stonesoup/pipelineruns/${relatedPipelineRun.metadata?.name}`}
+                  to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${relatedPipelineRun.metadata?.name}`}
                   title={relatedPipelineRun.metadata?.name}
                 >
                   {relatedPipelineRun.metadata?.name}

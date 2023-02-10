@@ -27,6 +27,7 @@ import { pipelineRunFilterReducer, Table } from '../../shared';
 import { PipelineRunKind } from '../../types';
 import { getCommitsFromPLRs, statuses } from '../../utils/commits-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspace } from '../../utils/workspace-context-utils';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import CommitsEmptyState from './CommitsEmptyState';
 import CommitsListHeader from './CommitsListHeader';
@@ -49,6 +50,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
 
   const namespace = useNamespace();
+  const workspace = useWorkspace();
 
   const [pipelineRuns, loaded] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
@@ -211,7 +213,9 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
                   className="pf-u-mt-md"
                   variant="secondary"
                   onClick={() =>
-                    navigate(`/stonesoup/applications/${applicationName}/activity/latest-commits`)
+                    navigate(
+                      `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity/latest-commits`,
+                    )
                   }
                 >
                   View More

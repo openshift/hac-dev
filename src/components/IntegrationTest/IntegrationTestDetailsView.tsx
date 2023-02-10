@@ -6,6 +6,7 @@ import { IntegrationTestScenarioGroupVersionKind } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { IntegrationTestScenarioKind } from '../../types/coreBuildService';
 import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspace } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { useModalLauncher } from '../modal/ModalProvider';
@@ -23,6 +24,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
   applicationName,
 }) => {
   const namespace = useNamespace();
+  const workspace = useWorkspace();
   const showModal = useModalLauncher();
   const navigate = useNavigate();
 
@@ -48,17 +50,17 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
       <DetailsPage
         headTitle={integrationTest.metadata.name}
         breadcrumbs={[
-          { path: '/stonesoup/applications', name: 'Applications' },
+          { path: `/stonesoup/workspaces/${workspace}/applications`, name: 'Applications' },
           {
-            path: `/stonesoup/applications/${applicationName}`,
+            path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}`,
             name: applicationName,
           },
           {
-            path: `/stonesoup/applications/${applicationName}/integrationtests`,
+            path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
             name: 'Integration tests',
           },
           {
-            path: `/stonesoup/${applicationName}/integrationtests/${testName}`,
+            path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/${testName}`,
             name: integrationTest.metadata.name,
           },
         ]}
@@ -71,7 +73,13 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
           {
             key: 'edit',
             label: 'Edit',
-            component: <Link to={`/stonesoup/integration-test/${testName}/edit`}>Edit</Link>,
+            component: (
+              <Link
+                to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/${testName}/edit`}
+              >
+                Edit
+              </Link>
+            ),
           },
           {
             onClick: () =>
@@ -79,7 +87,9 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
                 integrationTestDeleteModalAndNavigate(integrationTest),
               ).closed.then(({ submitClicked }) => {
                 if (submitClicked)
-                  navigate(`/stonesoup/applications/${applicationName}/integrationtests`);
+                  navigate(
+                    `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
+                  );
               }),
             key: `delete-${integrationTest.metadata.name.toLowerCase()}`,
             label: 'Delete',

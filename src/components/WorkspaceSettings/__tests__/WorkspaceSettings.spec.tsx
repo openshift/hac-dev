@@ -16,6 +16,11 @@ jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
+
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspace: jest.fn(() => 'test-ws'),
+}));
+
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
   return {
@@ -87,6 +92,8 @@ describe('WorkspaceSettings', () => {
     await act(async () => {
       fireEvent.click(testTab);
     });
-    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspace-settings/test-tab');
+    expect(navigateMock).toHaveBeenCalledWith(
+      '/stonesoup/workspaces/test-ws/workspace-settings/test-tab',
+    );
   });
 });

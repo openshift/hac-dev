@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { useK8sWatchResource, useWorkspace } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Card,
   CardTitle,
@@ -24,6 +24,7 @@ import './IntroBanner.scss';
 
 const IntroBanner: React.FC = () => {
   const namespace = useNamespace();
+  const workspace = useWorkspace();
   const [signupFlag] = useFeatureFlag(SIGNUP_FLAG);
   const [signupPendingFlag] = useFeatureFlag(SIGNUP_PENDING_FLAG);
 
@@ -82,7 +83,12 @@ const IntroBanner: React.FC = () => {
               <>
                 <Button
                   className="intro-banner__cta"
-                  component={(props) => <Link {...props} to="/stonesoup/import" />}
+                  component={(props) => (
+                    <Link
+                      {...props}
+                      to={`/stonesoup/workspaces/${workspace}/applications/import`}
+                    />
+                  )}
                   variant="primary"
                   data-test="create-application"
                   isLarge
@@ -92,7 +98,7 @@ const IntroBanner: React.FC = () => {
                 {applicationsLoaded && applications?.length > 0 ? (
                   <Button
                     className="intro-banner__cta"
-                    component={(props) => <Link {...props} to="/stonesoup/applications" />}
+                    component={(props) => <Link {...props} to="/stonesoup/workspaces" />}
                     variant="primary"
                     data-test="view-my-applications"
                     isLarge

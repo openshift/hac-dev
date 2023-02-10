@@ -24,6 +24,10 @@ jest.mock('../commit-status', () => ({
   useCommitStatus: () => ['-', true],
 }));
 
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspace: jest.fn(() => 'test-ws'),
+}));
+
 jest.mock('../../../shared/components/table', () => {
   const actual = jest.requireActual('../../../shared/components/table');
   return {
@@ -78,7 +82,7 @@ describe('CommitsListView', () => {
     const addButton = screen.queryByText('Add component');
     expect(addButton).toBeInTheDocument();
     expect(addButton.closest('a').href).toContain(
-      `http://localhost/stonesoup/import?application=purple-mermaid-app`,
+      `http://localhost/stonesoup/workspaces/test-ws/applications/import?application=purple-mermaid-app`,
     );
   });
 
@@ -113,7 +117,7 @@ describe('CommitsListView', () => {
     render(<CommitsListView applicationName="purple-mermaid-app" recentOnly />);
     fireEvent.click(screen.getByText('View More'));
     expect(navigate).toHaveBeenCalledWith(
-      `/stonesoup/applications/purple-mermaid-app/activity/latest-commits`,
+      `/stonesoup/workspaces/test-ws/applications/purple-mermaid-app/activity/latest-commits`,
     );
   });
 
