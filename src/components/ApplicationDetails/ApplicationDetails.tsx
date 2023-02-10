@@ -2,20 +2,19 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { Bullseye, Flex, FlexItem, Spinner, Text, Tooltip } from '@patternfly/react-core';
+import { Bullseye, Spinner } from '@patternfly/react-core';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
-import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { ApplicationGroupVersionKind } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { ApplicationKind } from '../../types';
 import { MVP_FLAG } from '../../utils/flag-utils';
-import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { useNamespace } from '../../utils/namespace-context-utils';
 import { ActivityTab } from '../Activity/ActivityTab';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
+import { ApplicationHeader } from './ApplicationHeader';
 import ApplicationModal, { HACBS_APPLICATION_MODAL_HIDE_KEY } from './ApplicationModal';
 import { applicationQuickstartContent } from './ApplicationQuickstartContent';
 import { ApplicationSwitcher } from './ApplicationSwitcher';
@@ -46,17 +45,6 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
   const { quickStarts } = useChrome();
   const showModal = useModalLauncher();
   const [mvpFeature] = useFeatureFlag(MVP_FLAG);
-
-  const [gitOpsDeployment, gitOpsDeploymentLoaded] = useGitOpsDeploymentCR(
-    applicationName,
-    namespace,
-  );
-  const gitOpsDeploymentHealthStatus = gitOpsDeploymentLoaded
-    ? gitOpsDeployment?.status?.health?.status
-    : null;
-  const gitOpsDeploymentHealthStatusIcon = getGitOpsDeploymentHealthStatusIcon(
-    gitOpsDeploymentHealthStatus,
-  );
 
   const [application, applicationLoaded, applicationError] = useK8sWatchResource<ApplicationKind>({
     groupVersionKind: ApplicationGroupVersionKind,
@@ -99,20 +87,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             name: appDisplayName,
           },
         ]}
-        title={
-          <Flex>
-            <FlexItem>
-              <Text component="h1" data-test="details__title">
-                {appDisplayName}
-              </Text>
-            </FlexItem>
-            <FlexItem>
-              <Tooltip content={`Application ${gitOpsDeploymentHealthStatus}`}>
-                {gitOpsDeploymentHealthStatusIcon}
-              </Tooltip>
-            </FlexItem>
-          </Flex>
-        }
+        title={<ApplicationHeader application={application} />}
         breadcrumbItems={<ApplicationSwitcher selectedApplication={application.metadata.name} />}
         actions={[
           {

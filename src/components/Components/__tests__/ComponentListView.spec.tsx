@@ -116,12 +116,6 @@ describe('ComponentListViewPage', () => {
     screen.getByRole('progressbar');
   });
 
-  it('should render Application health status if gitOpsDeployment CR is loaded', () => {
-    gitOpsDeploymentMock.mockReturnValue([{ status: { health: { status: 'Degraded' } } }, true]);
-    render(<ComponentListView applicationName="test-app" />);
-    screen.getByText('Application Degraded');
-  });
-
   it('should render deployment strategy if gitOpsDeployment CR is loaded', () => {
     gitOpsDeploymentMock.mockReturnValue([
       { spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } },

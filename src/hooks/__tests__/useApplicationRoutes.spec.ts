@@ -16,7 +16,7 @@ describe('useApplicationRoutes', () => {
 
   it('should return routes for given application', async () => {
     mockUseK8sWatchResource.mockReturnValue([mockRoutes, true]);
-    const { result } = renderHook(() => useApplicationRoutes('new-application', 'test'));
+    const { result } = renderHook(() => useApplicationRoutes('new-application'));
     const [routes, loaded] = result.current;
     expect(loaded).toEqual(true);
     expect(routes.length).toEqual(1);
@@ -25,7 +25,7 @@ describe('useApplicationRoutes', () => {
 
   it('should return empty array if no routes exist for given application', async () => {
     mockUseK8sWatchResource.mockReturnValue([mockRoutes, true]);
-    const { result } = renderHook(() => useApplicationRoutes('some-random-app', 'test'));
+    const { result } = renderHook(() => useApplicationRoutes('some-random-app'));
     const [routes, loaded] = result.current;
     expect(loaded).toEqual(true);
     expect(routes.length).toEqual(0);
