@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  ClipboardCopy,
   DataListAction,
   DataListCell,
   DataListContent,
@@ -170,7 +171,9 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
             <DescriptionListGroup>
               <DescriptionListTerm>Built container image</DescriptionListTerm>
               <DescriptionListDescription>
-                <ExternalLink href={`https://${containerImage}`} text={containerImage} />
+                <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
+                  {containerImage}
+                </ClipboardCopy>
               </DescriptionListDescription>
             </DescriptionListGroup>
           )}

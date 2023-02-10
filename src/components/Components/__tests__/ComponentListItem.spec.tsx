@@ -98,4 +98,18 @@ describe('ComponentListItem', () => {
     render(<ComponentListItem component={component} routes={[]} />);
     await waitFor(() => expect(screen.queryByText('Component Created')).not.toBeInTheDocument());
   });
+
+  it('should not render Built container image if the containerImage is missing in component status', async () => {
+    const component = { ...componentCRMocks[0], status: undefined };
+    render(<ComponentListItem component={component} routes={[]} />);
+    await waitFor(() =>
+      expect(screen.queryByText('Built container image')).not.toBeInTheDocument(),
+    );
+  });
+
+  it('should render Built container image if the component status contains the containerImage field', async () => {
+    const component = componentCRMocks[0];
+    render(<ComponentListItem component={component} routes={[]} />);
+    await waitFor(() => expect(screen.queryByText('Built container image')).toBeInTheDocument());
+  });
 });
