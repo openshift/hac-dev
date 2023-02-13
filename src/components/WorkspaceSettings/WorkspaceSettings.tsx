@@ -10,6 +10,7 @@ import {
   TabTitleText,
   Text,
 } from '@patternfly/react-core';
+import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
 import EnvironmentListView from '../../components/Environment/EnvironmentListView';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import { useSortedEnvironments } from '../../hooks/useEnvironments';
@@ -82,7 +83,7 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = ({
       <Text component="p" className="pf-u-mt-lg">
         Manage the continuous delivery process for your applications with environments.{' '}
         <HelpTopicLink topicId="settings" isInline>
-          Learn more
+          Learn more <OpenDrawerRightIcon />
         </HelpTopicLink>
       </Text>
       {environmentsView}

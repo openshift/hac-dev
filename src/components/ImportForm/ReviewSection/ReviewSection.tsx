@@ -13,6 +13,7 @@ import {
   EmptyStateBody,
   FormGroup,
 } from '@patternfly/react-core';
+import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
 import { useFormikContext } from 'formik';
 import { RadioButtonField } from '../../../shared';
 import { HeadTitle } from '../../HeadTitle';
@@ -141,8 +142,8 @@ const ReviewSection: React.FunctionComponent = () => {
         <HelperText>
           <HelperTextItem>
             Review and define deployment settings and options.{' '}
-            <HelpTopicLink topicId="create-app-config" isInline>
-              Learn more
+            <HelpTopicLink topicId="stonesoup-import-configure-component" isInline>
+              Learn more <OpenDrawerRightIcon />
             </HelpTopicLink>
           </HelperTextItem>
         </HelperText>
