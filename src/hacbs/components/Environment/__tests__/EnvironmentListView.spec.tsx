@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { render, screen, configure, cleanup, fireEvent } from '@testing-library/react';
+import { render, screen, configure, cleanup, fireEvent, within } from '@testing-library/react';
 import { getMockWorkflows } from '../../../../components/ApplicationDetails/__data__/WorkflowTestUtils';
 import { EnvironmentType } from '../../../../components/Environment/environment-utils';
 import { useAllEnvironments } from '../../../../hooks/useAllEnvironments';
@@ -102,6 +102,16 @@ describe('EnvironmentListView', () => {
     expect(screen.getAllByTestId('environment-card').length).toBe(
       mockAppEnvWithHealthStatus.length,
     );
+  });
+
+  it('should render environment(s) in order based on parentEnvironments', () => {
+    useAllEnvironmentsMock.mockReturnValue([mockAppEnvWithHealthStatus.slice(0, 3), true]);
+
+    render(<EnvironmentListView validTypes={[EnvironmentType.static]} />);
+    const environmentCards = screen.getAllByTestId('environment-card');
+    within(environmentCards[0]).getByText('Development');
+    within(environmentCards[1]).getByText('Staging');
+    within(environmentCards[2]).getByText('Production');
   });
 
   it('should pre-filter environments by type', () => {

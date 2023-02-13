@@ -22,6 +22,7 @@ import {
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { EnvironmentKind } from '../../types';
+import { sortEnvironmentsBasedonParent } from '../../utils/environment-utils';
 import { MVP_FLAG } from '../../utils/flag-utils';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import EnvironmentCard from './EnvironmentCard';
@@ -60,7 +61,7 @@ const EnvironmentListView: React.FC<Props> = ({
     // apply filter if present
     result = filter ? result.filter(filter) : result;
 
-    return result;
+    return sortEnvironmentsBasedonParent(result);
   }, [environments, filter, nameFilter]);
 
   const createEnvironmentButton = React.useMemo(() => {
@@ -145,7 +146,7 @@ const EnvironmentListView: React.FC<Props> = ({
           ) : (
             <Grid hasGutter>
               {mvpFeature
-                ? environments.map((env) => (
+                ? filteredEnvironments.map((env) => (
                     <GridItem
                       span={12}
                       md={6}
