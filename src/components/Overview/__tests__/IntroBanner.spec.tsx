@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { commonFetch } from '@openshift/dynamic-plugin-sdk-utils';
+import { commonFetch, useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import IntroBanner from '../IntroBanner';
 import '@testing-library/jest-dom';
@@ -12,6 +12,7 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   commonFetch: jest.fn(),
+  useK8sWatchResource: jest.fn(() => [[], true]),
 }));
 
 jest.mock('react-router-dom', () => {
@@ -26,6 +27,7 @@ jest.mock('react-router-dom', () => {
   };
 });
 
+const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 const fetchMock = commonFetch as jest.Mock;
 
@@ -50,6 +52,16 @@ describe('Intro Banner', () => {
     useFeatureFlagMock.mockReturnValue([true, () => {}]);
     render(<IntroBanner />);
     expect(screen.getByRole('link', { name: '+ Create an application' })).toBeInTheDocument();
+  });
+
+  it('should show view application action when user is signed up and has applications', () => {
+    useFeatureFlagMock.mockReturnValue([true, () => {}]);
+    render(<IntroBanner />);
+    expect(screen.queryByRole('link', { name: 'View my applications' })).not.toBeInTheDocument();
+
+    useK8sWatchResourceMock.mockReturnValue([[{}], true]);
+    render(<IntroBanner />);
+    expect(screen.queryByRole('link', { name: 'View my applications' })).toBeInTheDocument();
   });
 
   it('should make signup call on submit', async () => {

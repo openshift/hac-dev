@@ -37,7 +37,7 @@ const TechnologyTile: React.FC<TechnologyTileProps> = ({ name, logo }) => (
 
 const AboutSection: React.FC = () => (
   <Grid hasGutter>
-    <GridItem span={8}>
+    <GridItem sm={12} lg={8}>
       <Card isLarge>
         <CardTitle>About</CardTitle>
         <CardBody style={{ paddingLeft: '16px' }}>
@@ -79,7 +79,7 @@ const AboutSection: React.FC = () => (
         </CardBody>
       </Card>
     </GridItem>
-    <GridItem span={4}>
+    <GridItem sm={12} lg={4}>
       <Stack hasGutter>
         <StackItem>
           <Card isLarge>

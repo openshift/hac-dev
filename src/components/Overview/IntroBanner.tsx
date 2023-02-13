@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Card,
   CardTitle,
@@ -12,15 +13,30 @@ import {
   Title,
   Text,
 } from '@patternfly/react-core';
+import { ApplicationGroupVersionKind } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
+import { ApplicationKind } from '../../types';
 import { SIGNUP_FLAG, SIGNUP_PENDING_FLAG } from '../../utils/flag-utils';
+import { useNamespace } from '../../utils/namespace-context-utils';
 import SignupButton from './SignupButton';
 
 import './IntroBanner.scss';
 
 const IntroBanner: React.FC = () => {
+  const namespace = useNamespace();
   const [signupFlag] = useFeatureFlag(SIGNUP_FLAG);
   const [signupPendingFlag] = useFeatureFlag(SIGNUP_PENDING_FLAG);
+
+  const [applications, applicationsLoaded] = useK8sWatchResource<ApplicationKind[]>(
+    signupFlag && namespace
+      ? {
+          groupVersionKind: ApplicationGroupVersionKind,
+          namespace,
+          isList: true,
+          limit: 1,
+        }
+      : null,
+  );
 
   return (
     <Grid>
@@ -63,15 +79,28 @@ const IntroBanner: React.FC = () => {
                 <SignupButton />
               )
             ) : (
-              <Button
-                component={(props) => <Link {...props} to="/stonesoup/applications" />}
-                variant="primary"
-                style={{ width: 'fit-content' }}
-                data-test="go-to-applications-page"
-                isLarge
-              >
-                + Create an application
-              </Button>
+              <>
+                <Button
+                  className="intro-banner__cta"
+                  component={(props) => <Link {...props} to="/stonesoup/import" />}
+                  variant="primary"
+                  data-test="create-application"
+                  isLarge
+                >
+                  + Create an application
+                </Button>
+                {applicationsLoaded && applications?.length > 0 ? (
+                  <Button
+                    className="intro-banner__cta"
+                    component={(props) => <Link {...props} to="/stonesoup/applications" />}
+                    variant="primary"
+                    data-test="view-my-applications"
+                    isLarge
+                  >
+                    View my applications
+                  </Button>
+                ) : undefined}
+              </>
             )}
           </CardBody>
         </Card>

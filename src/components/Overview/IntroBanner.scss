@@ -9,4 +9,13 @@
     background-color: var(--pf-global--BackgroundColor--dark-100);
     background-size: cover;
   }
+
+  &__cta {
+    margin-top: var(--pf-global--spacer--sm);
+    margin-right: var(--pf-global--spacer--md);
+
+    & + &__cta {
+      margin-right: none;
+    }
+  }
 }

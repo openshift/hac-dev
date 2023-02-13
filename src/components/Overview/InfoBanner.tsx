@@ -20,6 +20,7 @@ const InfoBanner = () => (
       <Flex
         justifyContent={{ default: 'justifyContentSpaceEvenly' }}
         flexWrap={{ default: 'nowrap' }}
+        direction={{ default: 'column', sm: 'row' }}
       >
         <FlexItem flex={{ default: 'flex_1' }}>
           <Card isPlain isCompact>
