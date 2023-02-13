@@ -1,7 +1,7 @@
 import { RunStatus } from '@patternfly/react-topology';
 import { EnvironmentKind } from '../types';
 import { SnapshotEnvironmentBinding } from '../types/coreBuildService';
-import { GitOpsDeploymentHealthStatus, GitOpsDeploymentKind } from '../types/gitops-deployment';
+import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
 
 export enum EnvironmentDeploymentStrategy {
   AppStudioAutomated = 'Automatic',
@@ -114,27 +114,6 @@ export const getComponentDeploymentRunStatus = (
   snapshotEnvironmentBinding: SnapshotEnvironmentBinding,
 ): RunStatus => {
   const status = getComponentDeploymentStatus(snapshotEnvironmentBinding);
-
-  switch (status) {
-    case GitOpsDeploymentHealthStatus.Healthy:
-      return RunStatus.Succeeded;
-    case GitOpsDeploymentHealthStatus.Progressing:
-      return RunStatus.Running;
-    case GitOpsDeploymentHealthStatus.Degraded:
-      return RunStatus.Failed;
-    default:
-      return RunStatus.Pending;
-  }
-};
-
-export const getApplicationGitopsStatus = (
-  snapshotEnvironmentBinding: SnapshotEnvironmentBinding,
-  gitOpsDeployment: GitOpsDeploymentKind,
-) => {
-  let status = getComponentDeploymentStatus(snapshotEnvironmentBinding);
-  if (status === GitOpsDeploymentHealthStatus.Healthy) {
-    status = gitOpsDeployment?.status?.health?.status;
-  }
 
   switch (status) {
     case GitOpsDeploymentHealthStatus.Healthy:
