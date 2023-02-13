@@ -13,11 +13,12 @@ module.exports = (on, config) => {
   // optional: register cypress-grep plugin code
   // https://github.com/cypress-io/cypress-grep/tree/v2.14.0
   require('cypress-grep/src/plugin')(config)
+  const file = config.env.configFile || 'hac-dev-default';
 
   const logOptions = {
     outputRoot: `${config.projectRoot}/cypress`,
     outputTarget: {
-      'cypress-logs.txt': 'txt',
+      [file]: 'txt',
     },
     printLogsToFile: 'always',
   };
@@ -48,7 +49,6 @@ module.exports = (on, config) => {
     }
   });
 
-  const file = config.env.configFile || 'hac-dev-default';
   const configFile = getConfigurationByFile(file);
   const newConfig: any = merge(config, configFile);
 

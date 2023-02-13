@@ -1,4 +1,4 @@
-import { addComponentPagePO } from '../support/pageObjects/createApplication-po';
+import { addComponentPagePO, createApplicationPagePO } from '../support/pageObjects/createApplication-po';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
@@ -72,6 +72,7 @@ describe('Create Component from Private Git Using Login Form', { tags: ['@PR-che
       });
 
       const appPage = new CreateApplicationPage();
+      cy.get(createApplicationPagePO.applicationName).invoke('val').should('not.be.empty');
       appPage.setApplicationName(applicationName);
       appPage.clickNext();
       appPage.clickNext();

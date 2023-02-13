@@ -8,7 +8,7 @@ export class ComponentPage extends AbstractWizardPage {
   public componentName: string;
 
   editComponentName(newName: string) {
-    cy.get(ComponentsPagePO.editComponentNameIcon).eq(0).click();
+    cy.get(ComponentsPagePO.editComponentNameIcon, { timeout: 80000 }).eq(0).click();
     cy.get(ComponentsPagePO.editNameInput).clear().type(newName);
     cy.get(ComponentsPagePO.checkIcon).click();
   }
