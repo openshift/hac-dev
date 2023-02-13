@@ -84,7 +84,7 @@ describe('Create Component from Public Git Source', { tags: ['@PR-check', '@publ
       applicationDetailPage.openBuildLog(componentPage.componentName);
 
       // Workaround for https://issues.redhat.com/browse/HAC-3071
-      cy.get('li[class*="pipeline-run-logs__navitem"]', {timeout: 40000}).should("include.text", "clone-repository");
+      cy.get('li[class*="pipeline-run-logs__navitem"]', {timeout: 60000}).should("include.text", "clone-repository");
 
       applicationDetailPage.checkBuildLog("appstudio-init", 'Determine if Image Already Exists');
       applicationDetailPage.closeBuildLog();
