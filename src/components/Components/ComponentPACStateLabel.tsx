@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Label, Tooltip } from '@patternfly/react-core';
 import usePACState, { PACState } from '../../hooks/usePACState';
 import { ComponentKind } from '../../types';
-import { createCustomizePipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
+import { createCustomizeComponentPipelineModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../modal/ModalProvider';
 
 type Props = {
@@ -20,8 +20,14 @@ const ComponentPACStateLabel: React.FC<Props> = ({ component, onStateChange }) =
   }, [pacState]);
 
   const customizePipeline = React.useCallback(
-    () => showModal(createCustomizePipelinesModalLauncher([component])),
-    [showModal, component],
+    () =>
+      showModal(
+        createCustomizeComponentPipelineModalLauncher(
+          component.metadata.name,
+          component.metadata.namespace,
+        ),
+      ),
+    [showModal, component.metadata.name, component.metadata.namespace],
   );
 
   switch (pacState) {
