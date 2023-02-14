@@ -23,6 +23,7 @@ export const TableRow: React.FC<TableRowProps> = ({
       data-id={id}
       data-index={index}
       data-test-rows="resource-row"
+      data-test={id}
       data-key={trKey}
       style={style}
       className={className}

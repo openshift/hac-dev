@@ -22,7 +22,7 @@ export class ApplicationDetailPage {
   }
 
   expandDetails(componentName: string) {
-    cy.get(`[aria-label="${componentName}"]`).find(applicationDetailPagePO.detailsArrow).click();
+    cy.get(`[aria-label="${componentName}"]`, { timeout: 60000 }).find(applicationDetailPagePO.detailsArrow).click();
   }
 
   openComponentSettings(componentName: string) {
@@ -33,8 +33,8 @@ export class ApplicationDetailPage {
     cy.testA11y(`${pageTitles.componentSettings} page`);
   }
 
-  checkBuildLog(tasklistItem: string, textToVerify: string, taskTimeout: number = 20000 ) {
-    cy.get('span[class="pipeline-run-logs__namespan"]').contains(tasklistItem,{timeout: taskTimeout}).click();
+  checkBuildLog(tasklistItem: string, textToVerify: string, taskTimeout: number = 20000) {
+    cy.get('span[class="pipeline-run-logs__namespan"]').contains(tasklistItem, { timeout: taskTimeout }).click();
     cy.get(buildLogModalContentPO.logText).should('contain.text', textToVerify);
   }
 

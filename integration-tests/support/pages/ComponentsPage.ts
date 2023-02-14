@@ -77,8 +77,13 @@ export class ComponentPage extends AbstractWizardPage {
     cy.testA11y(`Component deployment options`);
   }
 
-  createApplication() {
-    cy.get(ComponentsPagePO.create).click({ force: true });
+  selectRuntime(runtimeName: string) {
+    cy.get(ComponentsPagePO.dropdown).click();
+    cy.contains(runtimeName).click();
+  }
+
+  createApplication(isAdvancedFlowActive: boolean = false) {
+    (isAdvancedFlowActive) ? cy.get(ComponentsPagePO.create).click().click() : cy.get(ComponentsPagePO.create).click({ force: true });
     cy.get(ComponentsPagePO.create).should('be.disabled');
     Common.waitForLoad();
   }
@@ -88,6 +93,18 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   expandDetails(componentName: string) {
-    cy.get(addComponentPagePO.toggleButton.replace('{0}', componentName)).click();
+    cy.get(addComponentPagePO.toggleButton(componentName)).click();
+  }
+
+  selectCustomBuildPipeline() {
+    cy.get(ComponentsPagePO.customBuildPipelineRadioBtn).click();
+  }
+
+  checkStatusOnModal(statusLocator) {
+    cy.get(statusLocator).should('be.visible');
+  }
+
+  closeModal() {
+    cy.get(ComponentsPagePO.customBuildPipelineModalCloseBtn).click();
   }
 }

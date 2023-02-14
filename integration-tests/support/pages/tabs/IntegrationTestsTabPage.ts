@@ -2,12 +2,6 @@ import { actions } from "../../pageObjects/global-po";
 import { integrationTestsTabPO, addIntegrationTestStepPO } from "../../pageObjects/pages-po";
 
 export class IntegrationTestsTabPage {
-    checkRowValues(integrationTestName: string, containerImage: string, releaseStatus: string, pipelineName: string) {
-        cy.contains(`[data-id="${integrationTestName}"]`, containerImage).should('exist');
-        cy.contains(`[data-id="${integrationTestName}"]`, releaseStatus).should('exist');
-        cy.contains(`[data-id="${integrationTestName}"]`, pipelineName).should('exist');
-    }
-
     filterByName(inputString: string) {
         cy.get(integrationTestsTabPO.filterInputField).clear().type(inputString);
     }
