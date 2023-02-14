@@ -6,7 +6,8 @@ export const addComponentPagePO = {
   gitReference: '[data-test="git-reference"]',
   contextDir: '[data-test="context-dir"]',
   next: 'button[type=submit]',
-  toggleButton: '[data-test="{0}-toggle-button"]',
+  cancel: 'button[type=reset]',
+  toggleButton: (param: string) => `[data-test="${param}-toggle-button"]`,
   username: '[data-testid="auth-username"]',
   token: '[data-testid="auth-token"]',
   authenticateButton: '[data-testid="authenticate-token"]',
@@ -49,6 +50,11 @@ export const ComponentsPagePO = {
   loading: '[data-test="loading-indicator"]',
   saveButton: '[data-test="submit-button"]',
   editNameInput: '[data-test="editable-label-input"]',
+  customBuildPipelineRadioBtn: '[data-test="custom-build-pipelines"]',
+  customBuildRequestedState: '[data-testid="requested-state"]',
+  customBuildPendingState: '[data-testid="pending-state"]',
+  customBuildReadyState: '[data-testid="ready-state"]',
+  customBuildPipelineModalCloseBtn: '[data-test="close-button custom-pipeline-modal"]'
 };
 
 export const applicationDetailPagePO = {
@@ -58,6 +64,7 @@ export const applicationDetailPagePO = {
   detailsArrow: '[aria-label="Details"]',
   cpuRamLabel: 'CPU / Memory',
   replicaLabel: 'Instances',
+  route: (param: string) => `[data-test-id="${param}-route"]`,
 };
 
 export const componentsListPagePO = {

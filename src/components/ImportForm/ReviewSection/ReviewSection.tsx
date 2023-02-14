@@ -173,7 +173,7 @@ const ReviewSection: React.FunctionComponent = () => {
             label="Custom"
             description="Customize build pipeline in your component's repository to automatically trigger rebuilds."
             value="automatic"
-            data-test="send-pull-request"
+            data-test="custom-build-pipelines"
           />
         </FormGroup>
       </FormSection>

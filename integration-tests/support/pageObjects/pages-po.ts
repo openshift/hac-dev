@@ -4,16 +4,37 @@ export const overviewTabPO = {
   addComponent: '[data-test="add-component"]',
 };
 
+export const activityTabPO = {
+  clickTab: '[data-test="details__tabItem activity"]',
+}
+
 export const componentsTabPO = {
   clickTab: '[data-test="details__tabItem components"]',
   addComponent: '[data-test="add-component-button"]',
-  componentListItem: '[data-test="{0}-component-list-item"]',
+  componentListItem: (param: string) => `[data-test="${param}-component-list-item"]`,
 };
+
+export const latestCommitsTabPO = {
+  clickTab: '[data-testid="activity__tabItem latest-commits"]',
+}
+
+export const pipelinerunsTabPO = {
+  clickTab: '[data-testid="activity__tabItem pipelineruns"]',
+
+  clickDetailsTab: '[data-test="details__tabItem detail"]',
+  statusPO: '[data-test="pipelinerun-details status"]',
+
+  clickTaskRunsTab: '[data-test="details__tabItem taskruns"]',
+  taskRunStatus: '[data-test="taskrun-status"]',
+
+  clickLogsTab: '[data-test="details__tabItem logs"]',
+  downloadAllTaskLogsButton: 'Download all task logs',
+}
 
 export const integrationTestsTabPO = {
   clickTab: '[data-test="details__tabItem integrationtests"]',
   filterInputField: '[data-test="name-input-filter"]',
-  saveChangesButton:'[data-test="submit-button"]',
+  saveChangesButton: '[data-test="submit-button"]',
 };
 
 export const actionsDropdown = {

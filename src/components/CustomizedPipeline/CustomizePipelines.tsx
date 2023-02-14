@@ -65,11 +65,23 @@ const Row: React.FC<{
             case PACState.disabled:
               return <Label color="blue">Default build</Label>;
             case PACState.pending:
-              return <Label color="gold">Pull request sent</Label>;
+              return (
+                <Label color="gold" data-testid="pending-state">
+                  Pull request sent
+                </Label>
+              );
             case PACState.requested:
-              return <Label color="gold">Sending pull request</Label>;
+              return (
+                <Label color="gold" data-testid="requested-state">
+                  Sending pull request
+                </Label>
+              );
             case PACState.ready:
-              return <Label color="green">Custom build</Label>;
+              return (
+                <Label color="green" data-testid="ready-state">
+                  Custom build
+                </Label>
+              );
             default:
               return null;
           }
@@ -256,7 +268,9 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
         ) : undefined}
       </ModalBoxBody>
       <ModalBoxFooter>
-        <Button onClick={onClose}>Close</Button>
+        <Button onClick={onClose} data-test="close-button custom-pipeline-modal">
+          Close
+        </Button>
       </ModalBoxFooter>
     </>
   );

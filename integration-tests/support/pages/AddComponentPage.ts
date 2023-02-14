@@ -37,6 +37,10 @@ export class AddComponentPage extends AbstractWizardPage {
     cy.get(addComponentPagePO.next).click({ force: true });
   }
 
+  clickCancel() {
+    cy.get(addComponentPagePO.cancel).trigger('click');
+  }
+
   loginByToken(username: string, token: string) {
     cy.contains('button', addComponentPagePO.useTokenButton, { timeout: 120000 }).click();
     cy.get(addComponentPagePO.username).type(username);
