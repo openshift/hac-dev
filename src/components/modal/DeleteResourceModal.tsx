@@ -39,7 +39,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
   isEntryNotRequired = false,
   description,
 }) => {
-  const [error, setError] = React.useState();
+  const [error, setError] = React.useState<string>();
   const resourceName = displayName || obj.metadata.name;
   const deleteResource = async () => {
     try {
@@ -51,7 +51,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
         },
       });
     } catch (e) {
-      setError(e);
+      setError(e.message || e.toString());
     }
     onClose({ submitClicked: true });
   };

@@ -24,7 +24,7 @@ type AuthTokenModalProps = ComponentProps & {
 };
 
 export const AuthTokenModal: React.FC<AuthTokenModalProps> = ({ onClose, uploadUrl }) => {
-  const [error, setError] = React.useState();
+  const [error, setError] = React.useState<string>();
   const { uploadToken } = useSpiAPI();
 
   const submitToken = React.useCallback(
@@ -33,7 +33,7 @@ export const AuthTokenModal: React.FC<AuthTokenModalProps> = ({ onClose, uploadU
         await uploadToken(uploadUrl, values.username, values.token);
         onClose();
       } catch (e) {
-        setError(e);
+        setError(e.message || e.toString());
       }
     },
     [uploadUrl, onClose, uploadToken],

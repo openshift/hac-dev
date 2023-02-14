@@ -7,8 +7,6 @@ jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
   useChrome: () => ({ auth: { getToken: () => Promise.resolve('token-123') } }),
 }));
 
-global.fetch = jest.fn().mockImplementationOnce(() => Promise.resolve());
-
 describe('AuthTokenModal', () => {
   it('should be disabled when username or token is not entered', () => {
     render(<AuthTokenModal uploadUrl="example.com" />);
@@ -25,6 +23,7 @@ describe('AuthTokenModal', () => {
   });
 
   it('should send token when submitted', async () => {
+    global.fetch = jest.fn().mockImplementationOnce(() => Promise.resolve());
     render(<AuthTokenModal uploadUrl="example.com" onClose={jest.fn()} />);
     await act(async () => {
       fireEvent.change(screen.getByTestId('auth-username'), { target: { value: 'test' } });
@@ -45,5 +44,20 @@ describe('AuthTokenModal', () => {
         }),
       ),
     );
+  });
+
+  it('should render error alert', async () => {
+    global.fetch = jest.fn().mockImplementationOnce(() => {
+      throw new Error('failed');
+    });
+    render(<AuthTokenModal uploadUrl="example.com" onClose={jest.fn()} />);
+    await act(async () => {
+      fireEvent.change(screen.getByTestId('auth-username'), { target: { value: 'test' } });
+      fireEvent.change(screen.getByTestId('auth-token'), { target: { value: '1234' } });
+    });
+    await act(async () => {
+      fireEvent.click(screen.getByText('Connect'));
+    });
+    expect(screen.getByText('failed')).toBeInTheDocument();
   });
 });
