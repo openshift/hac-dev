@@ -13,19 +13,16 @@ import { HeadTitle } from '../components/HeadTitle';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
 import { getQueryArgument } from '../shared/utils';
-import { useWorkspaceInfo } from '../utils/workspace-context-utils';
+import { useApplicationBreadcrumbs } from '../utils/breadcrumb-utils';
 
 const ComponentSettingsPage: React.FunctionComponent = () => {
   const componentName = getQueryArgument('componentName');
   const navigate = useNavigate();
-  const { workspace } = useWorkspaceInfo();
+  const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
   const emptyState = (
     <PageLayout
-      breadcrumbs={[
-        { path: `/stonesoup/workspaces/${workspace}/applications`, name: 'Applications' },
-        { path: '#', name: 'Component settings' },
-      ]}
+      breadcrumbs={[...applicationBreadcrumbs, { path: '#', name: 'Component settings' }]}
       title="Component settings"
       description="View and edit component settings. Updates will take effect when the component is redeployed."
     >

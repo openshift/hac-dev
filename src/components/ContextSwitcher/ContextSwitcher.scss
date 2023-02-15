@@ -1,4 +1,6 @@
 .context-switcher {
+  z-index: var(--pf-global--ZIndex--md);
+
   &__dropdown {
     padding-left: 0;
     padding-right: 0.6rem;

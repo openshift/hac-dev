@@ -147,6 +147,7 @@ export const ContextSwitcher: React.FC<ContextSwitcherProps> = ({
 
   return (
     <Dropdown
+      className="context-switcher"
       toggle={
         <DropdownToggle
           id="toggle-context-switcher"

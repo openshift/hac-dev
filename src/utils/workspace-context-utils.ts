@@ -94,7 +94,7 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
 
       if (ws) {
         setWorkspace(ws);
-        setWorkspaces([...allWorkspaces]);
+        setWorkspaces(allWorkspaces);
         setWorkspacesLoaded(true);
         const wsPath = generatePath('/stonesoup/workspaces/:ws/applications', { ws });
 

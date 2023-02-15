@@ -24,14 +24,7 @@ export const WorkspaceSwitcher: React.FC<{ selectedWorkspace?: string }> = () =>
       menuItems={menuItems}
       selectedItem={{ key: selectedItem.metadata.name, name: selectedItem.metadata.name }}
       onSelect={onSelect}
-      footer={
-        <></>
-        // <Level>
-        //   <LevelItem>
-        //     <Link to="#">View workspaces list</Link>
-        //   </LevelItem>
-        // </Level>
-      }
+      footer={<></>}
     />
   ) : null;
 };

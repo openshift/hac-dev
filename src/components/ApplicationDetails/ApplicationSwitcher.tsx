@@ -38,7 +38,9 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
             <Link to={`/stonesoup/workspaces/${workspace}/import`}>Create application</Link>
           </LevelItem>
           <LevelItem>
-            <Link to={`/stonesoup/workspaces/${workspace}`}>View applications list</Link>
+            <Link to={`/stonesoup/workspaces/${workspace}/applications`}>
+              View applications list
+            </Link>
           </LevelItem>
         </Level>
       }

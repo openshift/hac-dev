@@ -5,6 +5,7 @@ import { Bullseye, Spinner, Text, TextVariants } from '@patternfly/react-core';
 import { IntegrationTestScenarioGroupVersionKind } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { IntegrationTestScenarioKind } from '../../types/coreBuildService';
+import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
@@ -26,6 +27,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
 
   const showModal = useModalLauncher();
   const navigate = useNavigate();
+  const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
   const [integrationTest, loaded, loadErr] = useK8sWatchResource<IntegrationTestScenarioKind>({
     groupVersionKind: IntegrationTestScenarioGroupVersionKind,
@@ -49,11 +51,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
       <DetailsPage
         headTitle={integrationTest.metadata.name}
         breadcrumbs={[
-          { path: `/stonesoup/workspaces/${workspace}/applications`, name: 'Applications' },
-          {
-            path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}`,
-            name: applicationName,
-          },
+          ...applicationBreadcrumbs,
           {
             path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
             name: 'Integration tests',

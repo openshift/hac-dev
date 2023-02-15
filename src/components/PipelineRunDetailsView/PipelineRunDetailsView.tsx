@@ -7,6 +7,7 @@ import { pipelineRunFilterReducer } from '../../shared';
 import { StatusIconWithTextLabel } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { PipelineRunKind } from '../../types';
+import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
@@ -23,6 +24,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
   pipelineRunName,
 }) => {
   const { namespace, workspace } = useWorkspaceInfo();
+  const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
   const [pipelineRun, loaded, error] = useK8sWatchResource<PipelineRunKind>({
     groupVersionKind: PipelineRunGroupVersionKind,
@@ -61,11 +63,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
         <DetailsPage
           headTitle={pipelineRunName}
           breadcrumbs={[
-            { path: `/stonesoup/workspaces/${workspace}/applications`, name: 'Applications' },
-            {
-              path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}`,
-              name: applicationName,
-            },
+            ...applicationBreadcrumbs,
             {
               path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity/pipelineruns`,
               name: 'Pipeline runs',

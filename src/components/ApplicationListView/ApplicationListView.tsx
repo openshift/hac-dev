@@ -2,8 +2,6 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import {
-  Badge,
-  BreadcrumbItem,
   Bullseye,
   Button,
   EmptyStateBody,
@@ -14,15 +12,14 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from '@patternfly/react-core';
-import styles from '@patternfly/react-styles/css/components/Breadcrumb/breadcrumb';
 import { HACBS_FLAG } from '../../hacbs/hacbsFeatureFlag';
 import { useApplications } from '../../hooks/useApplications';
 import emptyStateImgUrl from '../../imgs/Application.svg';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { Table } from '../../shared';
 import { ApplicationKind } from '../../types';
+import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
-import { WorkspaceSwitcher } from '../ApplicationDetails/WorkspaceSwitcher';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
 import PageLayout from '../PageLayout/PageLayout';
@@ -34,6 +31,7 @@ const GETTING_STARTED_CARD_KEY = 'application-list-getting-started-card';
 const ApplicationListView: React.FC = () => {
   const [hacbs] = useFeatureFlag(HACBS_FLAG);
   const { namespace, workspace } = useWorkspaceInfo();
+  const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
   const [applications, loaded] = useApplications(namespace);
   applications?.sort(
@@ -64,22 +62,7 @@ const ApplicationListView: React.FC = () => {
         </GettingStartedCard>
       )}
       <PageLayout
-        breadcrumbs={[
-          <Badge key="badge" isRead>
-            WS
-          </Badge>,
-          <span key="badge-divider" className={styles.breadcrumbItemDivider} />,
-          <BreadcrumbItem key="workspace-link" to="#">
-            <Link className="pf-c-breadcrumb__link" to="#">
-              {workspace}
-            </Link>
-          </BreadcrumbItem>,
-          <WorkspaceSwitcher key="workspace" />,
-          <span key="workspace-divider" className={styles.breadcrumbItemDivider}>
-            |
-          </span>,
-          <BreadcrumbItem key="applications-link">Applications</BreadcrumbItem>,
-        ]}
+        breadcrumbs={applicationBreadcrumbs}
         title="Applications"
         description="Applications are a set of components that run together on environments."
       >

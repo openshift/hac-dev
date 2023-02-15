@@ -2,8 +2,8 @@ import React from 'react';
 import { PageSection, FormSection, Form } from '@patternfly/react-core';
 import { FormikProps, FormikValues, useFormikContext } from 'formik';
 import isEmpty from 'lodash/isEmpty';
-import startCase from 'lodash/startCase';
 import { FormFooter } from '../../shared';
+import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ReviewComponentCard } from '../ImportForm/ReviewSection/ReviewComponentCard';
 import PageLayout from '../PageLayout/PageLayout';
@@ -21,6 +21,7 @@ const ComponentSettingsForm: React.FunctionComponent<FormikProps<FormikValues>> 
     values: { components },
   } = useFormikContext<FormikValues>();
   const { workspace } = useWorkspaceInfo();
+  const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
   const footer = (
     <FormFooter
@@ -36,11 +37,7 @@ const ComponentSettingsForm: React.FunctionComponent<FormikProps<FormikValues>> 
   return (
     <PageLayout
       breadcrumbs={[
-        { path: `/stonesoup/workspaces/${workspace}/applications`, name: 'Applications' },
-        {
-          path: `/stonesoup/workspaces/${workspace}/applications/${components[0].componentStub.application}`,
-          name: startCase(components[0].componentStub.application),
-        },
+        ...applicationBreadcrumbs,
         {
           path: `/stonesoup/workspaces/${workspace}/applications/${components[0].componentStub.application}/components`,
           name: components[0].componentStub.componentName,

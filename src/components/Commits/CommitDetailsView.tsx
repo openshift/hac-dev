@@ -19,6 +19,7 @@ import { StatusIconWithTextLabel } from '../../shared/components/pipeline-run-lo
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { PipelineRunKind } from '../../types';
+import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import {
   createCommitObjectFromPLR,
   createRepoBranchURL,
@@ -51,7 +52,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
   const [selectedPipelineRun, setSelectedPipelineRun] = React.useState<PipelineRunKind>(null);
   const drawerRef = React.useRef<HTMLDivElement>();
-
+  const applicationBreadcrumbs = useApplicationBreadcrumbs();
   // const onPanelExpand = () => {
   //   drawerRef.current && drawerRef.current.focus();
   // };
@@ -167,11 +168,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
             <DetailsPage
               headTitle={commitDisplayName}
               breadcrumbs={[
-                { path: `/stonesoup/workspaces/${workspace}/applications`, name: 'Applications' },
-                {
-                  path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}`,
-                  name: applicationName,
-                },
+                ...applicationBreadcrumbs,
                 {
                   path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity/latest-commits`,
                   name: 'commits',
