@@ -3,19 +3,22 @@ import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
 
 type BreadCrumbsProps = {
-  breadcrumbs: { name: string; path: string }[];
+  breadcrumbs: ({ name: string; path: string } | React.ReactElement)[];
   className?: string;
-  breadcrumbItems?: React.ReactNode;
 };
 
-const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ breadcrumbs, className, breadcrumbItems }) => (
+const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ breadcrumbs, className }) => (
   <Breadcrumb className={className}>
     {breadcrumbs.map((crumb, i, { length }) => {
       const isLast = i === length - 1;
 
+      if (React.isValidElement(crumb)) {
+        return <React.Fragment key={crumb.key}>{crumb}</React.Fragment>;
+      }
+
       return (
-        <BreadcrumbItem key={i} isActive={isLast}>
-          {isLast ? (
+        <BreadcrumbItem key={crumb.name} component="div" isActive={isLast}>
+          {isLast || !crumb.path ? (
             crumb.name
           ) : (
             <Link
@@ -29,7 +32,6 @@ const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ breadcrumbs, className, bread
         </BreadcrumbItem>
       );
     })}
-    {breadcrumbItems}
   </Breadcrumb>
 );
 
