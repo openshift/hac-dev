@@ -47,7 +47,7 @@ describe('Create Component from Private Git Using Login Form', { tags: ['@PR-che
 
       // redirect to github for login, then go back to hac
       cy.url().then((url) => {
-        cy.contains('button', 'Sign in').click();
+        cy.contains('button', 'Sign in').wait(500).click({ force: true });
         cy.origin(
           'https://www.github.com',
           { args: { user, pass, deviceId } },
