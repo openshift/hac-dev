@@ -157,7 +157,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
               showModal<{ submitClicked: boolean }>(
                 applicationDeleteModal(application),
               ).closed.then(({ submitClicked }) => {
-                if (submitClicked) navigate('/stonesoup');
+                if (submitClicked) navigate('/stonesoup/applications');
               }),
           },
         ]}
