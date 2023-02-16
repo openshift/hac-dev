@@ -11,6 +11,7 @@ import {
   ButtonType,
   ButtonVariant,
   Form,
+  FormHelperText,
   ModalVariant,
   Stack,
   StackItem,
@@ -71,7 +72,11 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
       }) => {
         const input = values.resourceName;
         const isValid = input === resourceName;
-        const helpText = touched && !input ? `${obj.kind} name missing` : undefined;
+        const helpText = (
+          <FormHelperText className="pf-m-warning" isHidden={!(touched && !input)}>
+            {obj.kind} name missing
+          </FormHelperText>
+        );
         const validatedState = touched
           ? !input
             ? ValidatedOptions.warning
@@ -104,6 +109,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
                     helpTextInvalid={`${obj.kind} name does not match`}
                     helpText={helpText}
                     validated={validatedState}
+                    autoFocus
                     required
                   />
                 </StackItem>
