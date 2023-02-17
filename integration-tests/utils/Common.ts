@@ -1,4 +1,5 @@
 import { NavItem } from '../support/constants/PageTitle';
+import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { consentButton, navigation, waits } from '../support/pageObjects/global-po';
 
 export class Common {
@@ -7,10 +8,7 @@ export class Common {
   }
 
   static navigateTo(link: NavItem) {
-    cy.get(navigation.sideNavigation).within(() => {
-      cy.get(waits.linkPlaceholder).should('not.exist');
-      cy.get(`[data-ouia-component-id="${link}"]`).click();
-    });
+    cy.get(navigation.sideNavigation(link), { timeout: 80000 }).click()
     Common.waitForLoad();
   }
 

@@ -4,7 +4,11 @@ import { pipelinerunsTabPO } from "../../pageObjects/pages-po";
 export class PipelinerunsTabPage {
     public pipelineRunList: string[] = ["defaultName"];
 
-    static clickOnPipelinerunFromListView(pipelinerun: string) {
+    static clickOnPipelinerun(pipelinerun: string) {
+        cy.get(pipelinerunsTabPO.pipelinerunsList, { timeout: 60000 }).contains(`${pipelinerun}-`).click();
+    }
+
+    static clickOnPipelinerunFromListView(pipelinerun: string) {  //To Do : Need to be remove this method from advance flow and use clickOnPipelinerun() instead
         cy.contains('a', pipelinerun).click();
     }
 
@@ -13,6 +17,7 @@ export class PipelinerunsTabPage {
     }
 
     static checkPipelinerunStatus(isAdvancedFlowActive: boolean = false) {
+        DetailsTab.waitUntilStatusIsNotRunning()
         DetailsTab.checkStatusSucceeded(isAdvancedFlowActive);
     }
 }
@@ -23,12 +28,11 @@ export class DetailsTab {
         cy.get(pipelinerunsTabPO.clickDetailsTab).click();
     }
 
+    static waitUntilStatusIsNotRunning(){
+        cy.get(pipelinerunsTabPO.statusPO, { timeout: 1000000 }).should('not.have.text', 'Running');
+    }
+
     static checkStatusSucceeded(isAdvancedFlowActive: boolean = false) {
-        cy.get(pipelinerunsTabPO.statusPO, { timeout: 50000 }).invoke('text').then(text => {
-            if (text.includes('Running')) {
-                cy.get(pipelinerunsTabPO.statusPO, { timeout: 1000000 }).should('not.have.text', 'Running');
-            }
-        });
 
         cy.get(pipelinerunsTabPO.statusPO).invoke('text').then(text => {
             if (text.includes('Succeeded')) {
@@ -57,22 +61,28 @@ export class TaskRunsTab {
     }
 
     assertTaskNamesAndTaskRunStatus(isAdvancedFlowActive: boolean = false) {
-        for (let i = 0; i < ((isAdvancedFlowActive) ? this.advancedTaskNameList.length : this.basicTaskNameList.length); i++) {
-            cy.get(`[data-test="${i}-0"] > td`).eq(1).then((taskName) => {
-                if (isAdvancedFlowActive) {
-                    expect(this.advancedTaskNameList.includes(taskName.text().trim())).to.equal(true);
-                }
-                else {
-                    expect(this.basicTaskNameList.includes(taskName.text().trim())).to.equal(true);
-                }
-            });
+        cy.get('tbody[role="rowgroup"]').then(($el) => {
+            if (!$el.get(0).textContent.includes('configure-build')) { //TODO : This work around to run test in old vs new version, Remove this Once Backend is updated to latest.
+                this.basicTaskNameList = this.basicTaskNameList.filter(value => value !== 'configure-build')
+            }
 
-            cy.get(`[data-test="${i}-0"] > td`).eq(3).within(() => {
-                cy.get(pipelinerunsTabPO.taskRunStatus).invoke('text').then(status => {
-                    expect(status.includes("Succeeded")).to.equal(true);
-                })
-            });
-        }
+            for (let i = 0; i < ((isAdvancedFlowActive) ? this.advancedTaskNameList.length : this.basicTaskNameList.length); i++) {
+                cy.get(`[data-test="${i}-0"] > td`).eq(1).then((taskName) => {
+                    if (isAdvancedFlowActive) {
+                        expect(this.advancedTaskNameList.includes(taskName.text().trim())).to.equal(true);
+                    }
+                    else {
+                        expect(this.basicTaskNameList.includes(taskName.text().trim())).to.equal(true);
+                    }
+                });
+
+                cy.get(`[data-test="${i}-0"] > td`).eq(3).within(() => {
+                    cy.get(pipelinerunsTabPO.taskRunStatus).invoke('text').then(status => {
+                        expect(status.includes("Succeeded")).to.equal(true);
+                    })
+                });
+            }
+        })
     }
 }
 

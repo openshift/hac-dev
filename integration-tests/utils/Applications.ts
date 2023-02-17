@@ -34,8 +34,10 @@ export class Applications {
   }
 
   static createApplication(name: string) {
+    cy.title().should('eq', 'Applications | CI/CD')
     const createApplicationPage = new CreateApplicationPage();
     createApplicationPage.clickCreateApplication();
+    cy.title().should('eq', 'Import - Name application | CI/CD')
     cy.testA11y(`${pageTitles.createApp} page`);
     createApplicationPage.setApplicationName(name);
     createApplicationPage.clickNext();
@@ -75,9 +77,6 @@ export class Applications {
     PipelinerunsTabPage.clickOnPipelinerunFromListView(pipelinerunName);
     PipelinerunsTabPage.checkPipelinerunStatus(isAdvancedFlowActive);
 
-
-    cy.get('a.pf-c-breadcrumb__link[href*="/activity/pipelineruns"]').click();
-
   }
 
   static getComponentListItem(application: string) {
@@ -89,12 +88,13 @@ export class Applications {
     cy.contains(dropdownItem).click();
   }
 
-  static clickBreadcrumbLinkAtPosition(positionIndex: string) {
-    cy.get(breadcrumb.breadcrumbLink(positionIndex)).click();
+  static clickBreadcrumbLink(link: string) {
+    cy.get(breadcrumb.breadcrumbLink).contains(link).click();
   }
 
   static goToOverviewTab() {
     cy.get(overviewTabPO.clickTab).click();
+    Common.waitForLoad();
     return new OverviewTabPage();
   }
 
@@ -105,6 +105,7 @@ export class Applications {
 
   static goToActivityTab() {
     cy.get(activityTabPO.clickTab, { timeout: 30000 }).click();
+    Common.waitForLoad();
   }
 
   static goToLatestCommitsTab() {
@@ -115,6 +116,7 @@ export class Applications {
   static goToPipelinerunsTab() {
     this.goToActivityTab();
     cy.get(pipelinerunsTabPO.clickTab, { timeout: 30000 }).click();
+    Common.waitForLoad();
   }
 
   static goToIntegrationTestsTab() {
@@ -124,6 +126,7 @@ export class Applications {
 
 function addComponentStep(publicGitRepo: string) {
   const addComponent = new AddComponentPage();
+  cy.title().should('eq', 'Import - Add components | CI/CD')
 
   // Enter git repo URL
   addComponent.setSource(publicGitRepo);
@@ -133,6 +136,7 @@ function addComponentStep(publicGitRepo: string) {
   addComponent.clickGitOptions();
 
   addComponent.clickNext();
+  cy.title().should('eq', 'Import - Configure components | CI/CD')
 }
 
 
