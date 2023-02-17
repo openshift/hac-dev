@@ -1,5 +1,13 @@
+import { renderHook } from '@testing-library/react-hooks';
+import { useStoneSoupGitHubApp } from '../../hooks/useStoneSoupGitHubApp';
 import { ComponentKind } from '../../types';
-import { getURLForComponentPRs, isPACEnabled, PAC_ANNOTATION } from '../component-utils';
+import { isPACEnabled, PAC_ANNOTATION, useURLForComponentPRs } from '../component-utils';
+
+jest.mock('../../hooks/useStoneSoupGitHubApp', () => ({
+  useStoneSoupGitHubApp: jest.fn(),
+}));
+
+const useStoneSoupGitHubAppMock = useStoneSoupGitHubApp as jest.Mock;
 
 describe('component-utils', () => {
   it('should detect pac enabled state', () => {
@@ -24,6 +32,10 @@ describe('component-utils', () => {
   });
 
   it('should create github URL for component PRs', () => {
+    useStoneSoupGitHubAppMock.mockReturnValue({
+      name: 'appstudio-staging-ci',
+      url: 'https://github.com/apps/appstudio-staging-ci',
+    });
     const createComponent = (url: string, pacEnabled = true): ComponentKind =>
       ({
         metadata: {
@@ -40,21 +52,25 @@ describe('component-utils', () => {
         },
       } as any as ComponentKind);
 
-    expect(getURLForComponentPRs([])).toBe(
+    expect(renderHook(() => useURLForComponentPRs([])).result.current).toBe(
       'https://github.com/pulls?q=is:pr+is:open+author:app/appstudio-staging-ci',
     );
     expect(
-      getURLForComponentPRs([
-        createComponent('test', false),
-        createComponent('https://github.com/org/repo', false),
-      ]),
+      renderHook(() =>
+        useURLForComponentPRs([
+          createComponent('test', false),
+          createComponent('https://github.com/org/repo', false),
+        ]),
+      ).result.current,
     ).toBe('https://github.com/pulls?q=is:pr+is:open+author:app/appstudio-staging-ci');
     expect(
-      getURLForComponentPRs([
-        createComponent('test', true),
-        createComponent('https://github.com/org/repo1', true),
-        createComponent('https://github.com/org/repo2', true),
-      ]),
+      renderHook(() =>
+        useURLForComponentPRs([
+          createComponent('test', true),
+          createComponent('https://github.com/org/repo1', true),
+          createComponent('https://github.com/org/repo2', true),
+        ]),
+      ).result.current,
     ).toBe(
       'https://github.com/pulls?q=is:pr+is:open+author:app/appstudio-staging-ci+repo:org/repo1+repo:org/repo2',
     );

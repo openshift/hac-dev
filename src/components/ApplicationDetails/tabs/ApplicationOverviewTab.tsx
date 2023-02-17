@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useStoneSoupGitHubApp } from '../../../hooks/useStoneSoupGitHubApp';
 import componentsIcon from '../../../imgs/illustrations/Components.svg';
 import editCodeIcon from '../../../imgs/illustrations/Edit code.svg';
 import githubAppIcon from '../../../imgs/illustrations/Github app.svg';
@@ -14,6 +15,7 @@ type ApplicationOverviewTabProps = {
 
 const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applicationName }) => {
   const { workspace } = useWorkspaceInfo();
+  const { url: githubAppURL } = useStoneSoupGitHubApp();
 
   const whatsNextItems: WhatsNextItem[] = [
     {
@@ -32,7 +34,7 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applica
       icon: githubAppIcon,
       cta: {
         label: 'Start the flow',
-        href: 'https://github.com/apps/appstudio-staging-ci',
+        href: githubAppURL,
         external: true,
       },
       helpId: 'stonesoup-whatsnext-install-github-app',

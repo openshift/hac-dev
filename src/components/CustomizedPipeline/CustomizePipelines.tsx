@@ -16,11 +16,12 @@ import {
 } from '@patternfly/react-core';
 import { Tbody, Thead, Th, Tr, Td, TableComposable } from '@patternfly/react-table';
 import usePACState, { PACState } from '../../hooks/usePACState';
+import { useStoneSoupGitHubApp } from '../../hooks/useStoneSoupGitHubApp';
 import sendIconUrl from '../../imgs/send.svg';
 import successIconUrl from '../../imgs/success.svg';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind } from '../../types';
-import { enablePAC, getURLForComponentPRs } from '../../utils/component-utils';
+import { useURLForComponentPRs, enablePAC } from '../../utils/component-utils';
 import { ComponentProps } from '../modal/createModalLauncher';
 
 type Props = ComponentProps & {
@@ -32,6 +33,8 @@ const Row: React.FC<{
   onStateChange: (state: PACState) => void;
 }> = ({ component, onStateChange }) => {
   const pacState = usePACState(component);
+  const prURL = useURLForComponentPRs([component]);
+
   React.useEffect(() => {
     onStateChange(pacState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,11 +111,7 @@ const Row: React.FC<{
               );
             case PACState.pending:
               return (
-                <ExternalLink
-                  variant={ButtonVariant.secondary}
-                  href={getURLForComponentPRs([component])}
-                  showIcon
-                >
+                <ExternalLink variant={ButtonVariant.secondary} href={prURL} showIcon>
                   Merge in GitHub
                 </ExternalLink>
               );
@@ -137,6 +136,7 @@ const Row: React.FC<{
 
 const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
   const [showRequestedAlert, setShowRequestedAlert] = React.useState(false);
+  const { url: githubAppURL } = useStoneSoupGitHubApp();
 
   const sortedComponents = React.useMemo(
     () => [...components].sort((a, b) => a.metadata.name.localeCompare(b.metadata.name)),
@@ -257,7 +257,7 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
             title="Sending pull request is taking more time than expected"
             className="pf-u-mt-lg"
             actionLinks={
-              <ExternalLink href="https://github.com/apps/appstudio-staging-ci" showIcon>
+              <ExternalLink href={githubAppURL} showIcon>
                 Start the flow
               </ExternalLink>
             }

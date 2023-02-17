@@ -1,4 +1,5 @@
 import { k8sPatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { useStoneSoupGitHubApp } from '../hooks/useStoneSoupGitHubApp';
 import { ComponentModel } from '../models';
 import { ComponentKind } from '../types';
 
@@ -59,10 +60,10 @@ export const startNewBuild = (component: ComponentKind) => {
   });
 };
 
-const PR_BOT_NAME = 'appstudio-staging-ci';
 const GIT_URL_PREFIX = 'https://github.com/';
 
-export const getURLForComponentPRs = (components: ComponentKind[]): string => {
+export const useURLForComponentPRs = (components: ComponentKind[]): string => {
+  const { name: PR_BOT_NAME } = useStoneSoupGitHubApp();
   const repos = components.reduce((acc, component) => {
     const gitURL = component.spec.source?.git?.url;
     if (gitURL && isPACEnabled(component) && gitURL.startsWith('https://github.com/')) {
