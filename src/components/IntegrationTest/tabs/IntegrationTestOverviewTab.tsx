@@ -25,6 +25,9 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
   const { workspace } = useWorkspaceInfo();
   const optionalReleaseLabel =
     integrationTest.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true';
+  const quayImageLink = /(http(s?)):\/\//i.test(integrationTest.spec.bundle)
+    ? integrationTest.spec.bundle
+    : `https://${integrationTest.spec.bundle}`;
 
   return (
     <>
@@ -85,9 +88,7 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
               <DescriptionListGroup>
                 <DescriptionListTerm>Image bundle</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <ExternalLink href={integrationTest.spec.bundle}>
-                    {integrationTest.spec.bundle}
-                  </ExternalLink>
+                  <ExternalLink href={quayImageLink}>{integrationTest.spec.bundle}</ExternalLink>
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
