@@ -28,7 +28,7 @@ export const waits = {
   gridPlaceholder: '.skeleton-catalog--tile',
   tablePlaceholder: '.loading-skeleton--table',
   viewPlaceholder: '[data-test="skeleton-detail-view"]',
-  linkPlaceholder: 'pf-c-skeleton',
+  linkPlaceholder: '.pf-c-skeleton',
 };
 
 export const actions = {
