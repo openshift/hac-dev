@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { useParams } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { screen, configure, fireEvent, act, waitFor } from '@testing-library/react';
+import { screen, configure } from '@testing-library/react';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
 import { useApplications } from '../../../hooks/useApplications';
 import { useGitOpsDeploymentCR } from '../../../hooks/useGitOpsDeploymentCR';
@@ -15,7 +15,6 @@ import { mockPipelineRuns } from '../../Components/__data__/mock-pipeline-run';
 import { mockApplication } from '../__data__/mock-data';
 import { getMockWorkflows } from '../__data__/WorkflowTestUtils';
 import ApplicationDetails from '../ApplicationDetails';
-import { HACBS_APPLICATION_MODAL_HIDE_KEY } from '../ApplicationModal';
 
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
@@ -81,7 +80,6 @@ const getMockedResources = (kind: WatchK8sResource) => {
 
 describe('ApplicationDetails', () => {
   beforeEach(() => {
-    localStorage.removeItem(HACBS_APPLICATION_MODAL_HIDE_KEY);
     useFeatureFlagMock.mockReturnValue([false]);
     mockGitOpsDeploymentCR.mockReturnValue([[], false]);
     useParamsMock.mockReturnValue({});
@@ -118,21 +116,6 @@ describe('ApplicationDetails', () => {
     routerRenderer(<ApplicationDetails applicationName="test" />);
     expect(screen.queryByTestId('details__title')).toBeInTheDocument();
     expect(screen.queryByTestId('details__title').innerHTML).toBe('Test Application');
-  });
-
-  it('should display overview modal on first run', async () => {
-    routerRenderer(<ApplicationDetails applicationName="test" />);
-    expect(screen.getByTestId('application-modal-content')).toBeVisible();
-
-    act(() => {
-      const dismissButton = screen.getByTestId('application-modal-dismiss-btn');
-      fireEvent.click(dismissButton);
-    });
-
-    waitFor(() => {
-      expect(localStorage[HACBS_APPLICATION_MODAL_HIDE_KEY]).toBe('true');
-      expect(screen.getByTestId('application-modal-content')).not.toBeVisible();
-    });
   });
 
   it('should not display integration test tab if the mvp flag is set to true', async () => {
