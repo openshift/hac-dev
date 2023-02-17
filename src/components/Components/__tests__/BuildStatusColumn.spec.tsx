@@ -14,6 +14,14 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
+jest.mock('../../../utils/component-utils', () => {
+  const actual = jest.requireActual('../../../utils/component-utils');
+  return {
+    ...actual,
+    useURLForComponentPRs: jest.fn(),
+  };
+});
+
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('BuildStatusColumn', () => {

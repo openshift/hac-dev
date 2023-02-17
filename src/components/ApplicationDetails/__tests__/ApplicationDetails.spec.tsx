@@ -36,6 +36,7 @@ jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
   useChrome: () => ({
     quickStarts: { set: jest.fn(), toggle: jest.fn() },
     helpTopics: { setActiveTopic: jest.fn(), enableTopics: jest.fn(), disableTopics: jest.fn() },
+    getEnvironment: jest.fn(),
   }),
 }));
 

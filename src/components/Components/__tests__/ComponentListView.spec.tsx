@@ -58,6 +58,14 @@ jest.mock('../../../hooks/usePipelineRunsForApplication', () => ({
   useLatestPipelineRunForComponent: () => mockPipelineRuns[0],
 }));
 
+jest.mock('../../../utils/component-utils', () => {
+  const actual = jest.requireActual('../../../utils/component-utils');
+  return {
+    ...actual,
+    useURLForComponentPRs: jest.fn(),
+  };
+});
+
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const applicationRoutesMock = useApplicationRoutes as jest.Mock;
 const gitOpsDeploymentMock = useGitOpsDeploymentCR as jest.Mock;
