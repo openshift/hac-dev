@@ -20,6 +20,7 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   k8sCreateResource: jest.fn(),
   k8sDeleteResource: jest.fn(),
   k8sGetResource: jest.fn(),
+  getActiveWorkspace: jest.fn(),
 }));
 
 jest.mock('../../../../utils/create-utils', () => ({

@@ -17,6 +17,7 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;

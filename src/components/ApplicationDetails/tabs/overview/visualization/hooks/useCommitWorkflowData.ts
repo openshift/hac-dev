@@ -21,7 +21,7 @@ import {
   SnapshotEnvironmentBinding,
 } from '../../../../../../types/coreBuildService';
 import { MVP_FLAG } from '../../../../../../utils/flag-utils';
-import { useNamespace } from '../../../../../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../../../../../utils/workspace-context-utils';
 import { CommitComponentResource, Workflow, WorkflowNode, WorkflowNodeType } from '../types';
 import {
   appendPrefixToResources,
@@ -34,7 +34,7 @@ import {
 export const useCommitWorkflowData = (
   commit: Commit,
 ): [nodes: WorkflowNode[], loaded: boolean, errros: unknown[]] => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [mvpFeature] = useFeatureFlag(MVP_FLAG);
 
   const applicationName = commit?.application || '';

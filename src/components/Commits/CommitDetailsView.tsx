@@ -19,6 +19,7 @@ import { StatusIconWithTextLabel } from '../../shared/components/pipeline-run-lo
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { PipelineRunKind } from '../../types';
+import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import {
   createCommitObjectFromPLR,
   createRepoBranchURL,
@@ -26,7 +27,7 @@ import {
   getCommitShortName,
   statuses,
 } from '../../utils/commits-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { useCommitStatus } from './commit-status';
@@ -46,12 +47,12 @@ type CommitDetailsViewProps = {
 export const COMMITS_GS_LOCAL_STORAGE_KEY = 'commits-getting-started-modal';
 
 const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, applicationName }) => {
-  const namespace = useNamespace();
+  const { namespace, workspace } = useWorkspaceInfo();
 
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
   const [selectedPipelineRun, setSelectedPipelineRun] = React.useState<PipelineRunKind>(null);
   const drawerRef = React.useRef<HTMLDivElement>();
-
+  const applicationBreadcrumbs = useApplicationBreadcrumbs();
   // const onPanelExpand = () => {
   //   drawerRef.current && drawerRef.current.focus();
   // };
@@ -167,17 +168,13 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
             <DetailsPage
               headTitle={commitDisplayName}
               breadcrumbs={[
-                { path: '/stonesoup/applications', name: 'Applications' },
+                ...applicationBreadcrumbs,
                 {
-                  path: `/stonesoup/applications/${applicationName}`,
-                  name: applicationName,
-                },
-                {
-                  path: `/stonesoup/applications/${applicationName}/activity/latest-commits`,
+                  path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity/latest-commits`,
                   name: 'commits',
                 },
                 {
-                  path: `/stonesoup/${applicationName}/commit/${commitName}`,
+                  path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/commit/${commitName}`,
                   name: commitDisplayName,
                 },
               ]}
@@ -259,7 +256,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                   onClick: () => window.open(commit.shaURL),
                 },
               ]}
-              baseURL={`/stonesoup/${applicationName}/commit/${commitName}`}
+              baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/commit/${commitName}`}
               tabs={[
                 {
                   key: 'overview',

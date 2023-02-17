@@ -4,7 +4,7 @@ import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../shared';
 import { EnvironmentKind } from '../types';
 import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
 import { getComponentDeploymentStatus } from '../utils/environment-utils';
-import { useNamespace } from '../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { useAllEnvironments } from './useAllEnvironments';
 import { useReleases } from './useReleases';
 import { useSnapshotsEnvironmentBindings } from './useSnapshotsEnvironmentBindings';
@@ -17,7 +17,7 @@ export type EnvironmentKindWithHealthStatus = EnvironmentKind & {
 export const useAllApplicationEnvironmentsWithHealthStatus = (
   applicationName: string,
 ): [EnvironmentKindWithHealthStatus[], boolean] => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [environments, environmentsLoaded] = useAllEnvironments();
   const [releases, releasesLoaded] = useReleases(namespace);
   const [snapshotsEnvironmentBindings, snapshotsLoaded] = useSnapshotsEnvironmentBindings(

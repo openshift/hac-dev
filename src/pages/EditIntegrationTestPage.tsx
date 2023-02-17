@@ -9,12 +9,12 @@ import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import { IntegrationTestScenarioGroupVersionKind } from '../models';
 import { HttpError } from '../shared/utils/error/http-error';
 import { IntegrationTestScenarioKind } from '../types/coreBuildService';
-import { useNamespace } from '../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
 const EditIntegrationTestPage: React.FunctionComponent = () => {
   const { name } = useParams();
 
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
 
   const [integrationTest, loaded, loadErr] = useK8sWatchResource<IntegrationTestScenarioKind>(
     namespace

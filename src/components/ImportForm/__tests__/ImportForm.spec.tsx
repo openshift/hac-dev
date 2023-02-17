@@ -6,10 +6,6 @@ import { createApplication } from '../../../utils/create-utils';
 import ImportForm from '../ImportForm';
 import { useImportSteps } from '../utils/useImportSteps';
 
-jest.mock('../../../components/NamespacedPage/NamespacedPage', () => ({
-  useNamespace: jest.fn(() => 'test'),
-}));
-
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
 }));
@@ -24,6 +20,10 @@ jest.mock('../utils/useImportSteps', () => ({
 
 jest.mock('../../../utils/create-utils', () => ({
   createApplication: jest.fn(),
+}));
+
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 const useNavigateMock = useNavigate as jest.Mock;
@@ -83,7 +83,7 @@ describe('ImportForm', () => {
     await waitFor(() => {
       wizardProps.onSubmit({ ...wizardProps.initialValues, application: 'my-app' }, {} as any);
     });
-    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/applications/my-app');
+    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspaces/test-ws/applications/my-app');
   });
 
   it('should warn the users about the errors on form submit', async () => {

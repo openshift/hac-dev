@@ -7,6 +7,10 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
+jest.mock('../../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
+}));
+
 describe('IntegrationTestOverviewTab', () => {
   it('should render correct details', () => {
     render(<IntegrationTestOverviewTab integrationTest={MockIntegrationTests[0]} />);
@@ -18,7 +22,7 @@ describe('IntegrationTestOverviewTab', () => {
       'quay.io/test-rep/test-bundle:test-1',
     ); // image bundle
     expect(screen.getAllByRole('link')[1].getAttribute('href')).toBe(
-      '/stonesoup/applications/test-app',
+      '/stonesoup/workspaces/test-ws/applications/test-app',
     ); // application link
   });
 
@@ -32,7 +36,7 @@ describe('IntegrationTestOverviewTab', () => {
       'quay.io/test-rep/test-bundle:test-2',
     ); // image bundle
     expect(screen.getAllByRole('link')[1].getAttribute('href')).toBe(
-      '/stonesoup/applications/test-app',
+      '/stonesoup/workspaces/test-ws/applications/test-app',
     ); // application link
   });
 });

@@ -28,11 +28,16 @@ export class Common {
   }
 
   static openApplicationURL(applicationName: string) {
+    const workspacePathMatcher = new RegExp(/workspaces\/([^/]+)/);
+    cy.url().then(url => {   
+    const [, workspace = ''] = url.match(workspacePathMatcher) || []; 
+
     Common.openURL(
-      `${Cypress.env('HAC_BASE_URL')}/applications/${applicationName.replace('.', '-')}`,
+      `${Cypress.env('HAC_BASE_URL')}/workspaces/${workspace}/applications/${applicationName.replace('.', '-')}`,
     );
     Common.verifyPageTitle(applicationName);
     Common.waitForLoad();
+  });
   }
 
   static waitForLoad(timeout = 120000) {

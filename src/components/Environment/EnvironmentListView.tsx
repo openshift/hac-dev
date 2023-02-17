@@ -24,6 +24,7 @@ import { useSearchParam } from '../../hooks/useSearchParam';
 import { EnvironmentKind } from '../../types';
 import { sortEnvironmentsBasedonParent } from '../../utils/environment-utils';
 import { MVP_FLAG } from '../../utils/flag-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import EnvironmentCard from './EnvironmentCard';
 
@@ -50,6 +51,7 @@ const EnvironmentListView: React.FC<Props> = ({
   onClearAllFilters,
   emptyStateContent,
 }) => {
+  const { workspace } = useWorkspaceInfo();
   const [mvpFeature] = useFeatureFlag(MVP_FLAG);
   const [nameFilter, setNameFilter, unsetNameFilter] = useSearchParam('name', '');
   const filteredEnvironments = React.useMemo(() => {
@@ -73,13 +75,16 @@ const EnvironmentListView: React.FC<Props> = ({
       <Button
         variant="secondary"
         component={(props) => (
-          <Link {...props} to="/stonesoup/workspace-settings/environment/create" />
+          <Link
+            {...props}
+            to={`/stonesoup/workspaces/${workspace}/workspace-settings/environment/create`}
+          />
         )}
       >
         Create environment
       </Button>
     );
-  }, [mvpFeature]);
+  }, [mvpFeature, workspace]);
 
   const onClearFilters = React.useCallback(() => {
     unsetNameFilter();

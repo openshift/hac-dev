@@ -134,10 +134,13 @@ export const getLinkDataForElement = (
 
 export const getLinksForElement = (
   element: Node<PipelineNodeModel, WorkflowNodeModelData>,
+  workspace: string,
 ): { elementRef: string; pipelinesRef: string } => {
   const linkData = getLinkDataForElement(element);
 
-  const appPath = `/stonesoup/applications/${element.getData().application}`;
+  const appPath = `/stonesoup/workspaces/${workspace}/applications/${
+    element.getData().application
+  }`;
   const tabPath = linkData.tab ? `/${linkData.tab}` : '';
   const filter = linkData.filter ? `?${linkData.filter.name}=${linkData.filter.value}` : '';
 

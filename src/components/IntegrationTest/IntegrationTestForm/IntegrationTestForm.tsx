@@ -3,6 +3,8 @@ import { Form, FormSection, PageSection, PageSectionVariants } from '@patternfly
 import { useFormikContext } from 'formik';
 import isEmpty from 'lodash/isEmpty';
 import { FormFooter } from '../../../shared';
+import { useApplicationBreadcrumbs } from '../../../utils/breadcrumb-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import PageLayout from '../../PageLayout/PageLayout';
 import IntegrationTestSection from './IntegrationTestSection';
 
@@ -17,6 +19,8 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
   applicationName,
   edit,
 }) => {
+  const { workspace } = useWorkspaceInfo();
+  const applicationBreadcrumbs = useApplicationBreadcrumbs();
   const { dirty, handleSubmit, handleReset, isSubmitting, status, errors } = useFormikContext();
   const footer = (
     <FormFooter
@@ -34,10 +38,9 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
   return (
     <PageLayout
       breadcrumbs={[
-        { path: '/stonesoup/applications', name: 'Applications' },
-        { path: `/stonesoup/applications/${applicationName}`, name: applicationName },
+        ...applicationBreadcrumbs,
         {
-          path: `/stonesoup/applications/${applicationName}/integrationtests`,
+          path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
           name: 'Integration tests',
         },
         { path: '#', name: title },

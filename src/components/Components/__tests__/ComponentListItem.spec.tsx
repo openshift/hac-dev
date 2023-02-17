@@ -9,14 +9,11 @@ import { componentCRMocks } from '../../ApplicationDetails/__data__/mock-data';
 import { mockPipelineRuns } from '../../ApplicationDetails/__data__/mock-pipeline-run';
 import { ComponentListItem } from '../ComponentListItem';
 
-jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
-  useK8sWatchResource: jest.fn(() => [[], true]),
-}));
-
 configure({ testIdAttribute: 'data-testid' });
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('../../../hooks/usePipelineRunsForApplication', () => ({

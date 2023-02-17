@@ -23,6 +23,7 @@ import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../../types';
 import { getCommitShortName } from '../../../utils/commits-utils';
 import { calculateDuration } from '../../../utils/pipeline-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import MetadataList from '../MetadataList';
 import PipelineRunVisualization from '../PipelineRunVisualization';
 import RelatedPipelineRuns from '../RelatedPipelineRuns';
@@ -33,6 +34,7 @@ type PipelineRunDetailsTabProps = {
   error: unknown;
 };
 const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineRun, error }) => {
+  const { workspace } = useWorkspaceInfo();
   const pipelineRunFailed = (getPLRLogSnippet(pipelineRun) || {}) as ErrorDetailsWithStaticLog;
   const duration = calculateDuration(
     typeof pipelineRun.status?.startTime === 'string' ? pipelineRun.status?.startTime : '',
@@ -43,6 +45,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
   const sha =
     pipelineRun?.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] ||
     pipelineRun?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];
+  const applicationName = pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION];
 
   const pipelineRunStatus = !error ? pipelineRunFilterReducer(pipelineRun) : null;
   return (
@@ -138,7 +141,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
                           component={(props) => (
                             <Link
                               {...props}
-                              to={`/stonesoup/pipelineruns/${pipelineRun.metadata?.name}/logs`}
+                              to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${pipelineRun.metadata?.name}/logs`}
                             />
                           )}
                         >
@@ -159,7 +162,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
                   <DescriptionListDescription>
                     {pipelineRun.metadata?.labels?.[PipelineRunLabel.APPLICATION] ? (
                       <Link
-                        to={`/stonesoup/applications/${
+                        to={`/stonesoup/workspaces/${workspace}/applications/${
                           pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION]
                         }`}
                       >
@@ -176,7 +179,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
                     {pipelineRun.metadata?.labels?.[PipelineRunLabel.COMPONENT] ? (
                       pipelineRun.metadata?.labels?.[PipelineRunLabel.APPLICATION] ? (
                         <Link
-                          to={`/stonesoup/applications/${
+                          to={`/stonesoup/workspaces/${workspace}/applications/${
                             pipelineRun.metadata.labels[PipelineRunLabel.APPLICATION]
                           }/components?name=${
                             pipelineRun.metadata.labels[PipelineRunLabel.COMPONENT]
@@ -198,7 +201,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
                     <DescriptionListTerm>Commit</DescriptionListTerm>
                     <DescriptionListDescription>
                       <Link
-                        to={`/stonesoup/${
+                        to={`/stonesoup/workspaces/${workspace}/applications/${
                           pipelineRun.metadata.labels[PipelineRunLabel.APPLICATION]
                         }/commit/${sha}`}
                       >

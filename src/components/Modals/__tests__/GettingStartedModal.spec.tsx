@@ -5,6 +5,7 @@ import { EnterpriseContractPolicyKind } from '../../../types';
 import { GettingStartedModal, LOCAL_STORAGE_KEY } from '../GettingStartedModal';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  getActiveWorkspace: jest.fn(),
   useK8sWatchResource: jest.fn((): [EnterpriseContractPolicyKind[], boolean] => [
     [
       {

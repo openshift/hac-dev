@@ -14,7 +14,7 @@ import classnames from 'classnames';
 import { EnterpriseContractPolicyGroupVersionKind } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { EnterpriseContractPolicyKind } from '../../types';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import ecUrl from './imgs/Enterprise-contract.svg';
 import itUrl from './imgs/Integration-test.svg';
 
@@ -54,7 +54,7 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
   const isVisited = localStorage.getItem(LOCAL_STORAGE_KEY) === 'true';
   const [isDismissed, setIsDismissed] = React.useState<boolean>(isVisited);
   const [currentLevel, setCurrentLevel] = React.useState<number>(0);
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
 
   const [enterpriseContractPolicy, policyLoaded] = useK8sWatchResource<
     EnterpriseContractPolicyKind[]

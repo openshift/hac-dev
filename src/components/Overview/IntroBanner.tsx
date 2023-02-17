@@ -17,13 +17,14 @@ import { ApplicationGroupVersionKind } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
 import { SIGNUP_FLAG, SIGNUP_PENDING_FLAG } from '../../utils/flag-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import SignupButton from './SignupButton';
 
 import './IntroBanner.scss';
 
 const IntroBanner: React.FC = () => {
-  const namespace = useNamespace();
+  const { namespace, workspace } = useWorkspaceInfo();
+
   const [signupFlag] = useFeatureFlag(SIGNUP_FLAG);
   const [signupPendingFlag] = useFeatureFlag(SIGNUP_PENDING_FLAG);
 
@@ -82,7 +83,9 @@ const IntroBanner: React.FC = () => {
               <>
                 <Button
                   className="intro-banner__cta"
-                  component={(props) => <Link {...props} to="/stonesoup/import" />}
+                  component={(props) => (
+                    <Link {...props} to={`/stonesoup/workspaces/${workspace}/import`} />
+                  )}
                   variant="primary"
                   data-test="create-application"
                   isLarge
@@ -92,7 +95,7 @@ const IntroBanner: React.FC = () => {
                 {applicationsLoaded && applications?.length > 0 ? (
                   <Button
                     className="intro-banner__cta"
-                    component={(props) => <Link {...props} to="/stonesoup/applications" />}
+                    component={(props) => <Link {...props} to="/stonesoup/workspaces" />}
                     variant="primary"
                     data-test="view-my-applications"
                     isLarge

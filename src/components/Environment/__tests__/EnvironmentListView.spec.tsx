@@ -9,6 +9,7 @@ import EnvironmentListView from '../EnvironmentListView';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('react-i18next', () => ({

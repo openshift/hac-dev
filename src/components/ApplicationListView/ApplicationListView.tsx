@@ -18,7 +18,8 @@ import emptyStateImgUrl from '../../imgs/Application.svg';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
 import { Table } from '../../shared';
 import { ApplicationKind } from '../../types';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
 import PageLayout from '../PageLayout/PageLayout';
@@ -29,7 +30,9 @@ const GETTING_STARTED_CARD_KEY = 'application-list-getting-started-card';
 
 const ApplicationListView: React.FC = () => {
   const [hacbs] = useFeatureFlag(HACBS_FLAG);
-  const namespace = useNamespace();
+  const { namespace, workspace } = useWorkspaceInfo();
+  const applicationBreadcrumbs = useApplicationBreadcrumbs();
+
   const [applications, loaded] = useApplications(namespace);
   applications?.sort(
     (app1, app2) =>
@@ -59,6 +62,7 @@ const ApplicationListView: React.FC = () => {
         </GettingStartedCard>
       )}
       <PageLayout
+        breadcrumbs={applicationBreadcrumbs}
         title="Applications"
         description="Applications are a set of components that run together on environments."
       >
@@ -82,7 +86,9 @@ const ApplicationListView: React.FC = () => {
               </EmptyStateBody>
               <Button
                 variant="primary"
-                component={(props) => <Link {...props} to="/stonesoup/import" />}
+                component={(props) => (
+                  <Link {...props} to={`/stonesoup/workspaces/${workspace}/import`} />
+                )}
               >
                 Create application
               </Button>
@@ -94,7 +100,9 @@ const ApplicationListView: React.FC = () => {
                   <ToolbarItem>
                     <Button
                       variant="primary"
-                      component={(props) => <Link {...props} to="/stonesoup/import" />}
+                      component={(props) => (
+                        <Link {...props} to={`/stonesoup/workspaces/${workspace}/import`} />
+                      )}
                     >
                       Create application
                     </Button>

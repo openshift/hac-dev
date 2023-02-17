@@ -5,14 +5,14 @@ import { useSnapshotsEnvironmentBindings } from '../../hooks/useSnapshotsEnviron
 import { useTestPipelines } from '../../hooks/useTestPipelines';
 import { GitOpsDeploymentHealthStatus } from '../../types/gitops-deployment';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../components';
 
 export const useApplicationEnvironmentStatus = (
   applicationName: string,
   environmentName: string,
 ): [string, React.ReactNode, string, boolean] => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [snapshotsEnvironmentBindings, snapshotsLoaded] = useSnapshotsEnvironmentBindings(
     namespace,
     applicationName,

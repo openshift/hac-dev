@@ -5,13 +5,13 @@ import { PipelineRunGroupVersionKind } from '../../models';
 import { pipelineRunFilterReducer } from '../../shared';
 import { PipelineRunKind } from '../../types';
 import { statuses } from '../../utils/commits-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 
 export const useCommitStatus = (
   application: string,
   commit: string,
 ): [string, boolean, unknown] => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [pipelineruns, loaded, loadErr] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
     isList: true,

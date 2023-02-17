@@ -6,7 +6,7 @@ import { Formik } from 'formik';
 import { ComponentGroupVersionKind } from '../../models';
 import { ComponentKind } from '../../types';
 import { createComponent } from '../../utils/create-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { createResourceData, transformResources } from '../ImportForm/utils/transform-utils';
 import { reviewValidationSchema } from '../ImportForm/utils/validation-utils';
 import ComponentSettingsForm from './ComponentSettingsForm';
@@ -19,7 +19,7 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
   componentName,
 }) => {
   const navigate = useNavigate();
-  const namespace = useNamespace();
+  const { namespace, workspace } = useWorkspaceInfo();
 
   const [component, loaded] = useK8sWatchResource<ComponentKind>({
     groupVersionKind: ComponentGroupVersionKind,
@@ -68,7 +68,7 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       'update',
     )
       .then(() => {
-        navigate(`/stonesoup/applications/${applicationName}/components`);
+        navigate(`/stonesoup/workspaces/${workspace}/applications/${applicationName}/components`);
       })
       .catch((error) => {
         // eslint-disable-next-line no-console

@@ -9,7 +9,7 @@ import { useReleasePlans } from '../../../../../../../hooks/useReleasePlans';
 import { useReleases } from '../../../../../../../hooks/useReleases';
 import { useSnapshotsEnvironmentBindings } from '../../../../../../../hooks/useSnapshotsEnvironmentBindings';
 import { useTestPipelines } from '../../../../../../../hooks/useTestPipelines';
-import { useNamespace } from '../../../../../../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../../../../../../utils/workspace-context-utils';
 import { WorkflowNodeType } from '../../types';
 import {
   sampleBuildPipelines,
@@ -23,8 +23,8 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 
-jest.mock('../../../../../../../utils/namespace-context-utils', () => ({
-  useNamespace: jest.fn(() => 'test-ns'),
+jest.mock('../../../../../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns' })),
 }));
 
 jest.mock('../../../../../../../hooks/useComponents', () => ({
@@ -56,7 +56,8 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
 
-const useActiveNamespaceMock = useNamespace as jest.Mock;
+const useWorkspaceInfoMock = useWorkspaceInfo as jest.Mock;
+
 const useComponentsMock = useComponents as jest.Mock;
 const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
 const useBuildPipelinesMock = useBuildPipelines as jest.Mock;
@@ -69,7 +70,7 @@ const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 describe('useAppWorkflowData hook', () => {
   beforeEach(() => {
-    useActiveNamespaceMock.mockReturnValue('test-ns');
+    useWorkspaceInfoMock.mockReturnValue({ namespace: 'test-ns' });
     useComponentsMock.mockReturnValue([[], true]);
     useIntegrationTestScenariosMock.mockReturnValue([[], true]);
     useBuildPipelinesMock.mockReturnValue([[], true]);

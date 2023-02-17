@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { createEnvironmentKindFromReleasePlan } from '../components/Environment/environment-utils';
 import { EnvironmentKind } from '../types';
-import { useNamespace } from '../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { useEnvironments } from './useEnvironments';
 import { useReleasePlans } from './useReleasePlans';
 
 export const useAllEnvironments = (): [EnvironmentKind[], boolean] => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [environments, environmentsLoaded] = useEnvironments();
   const [releasePlans, releasePlansLoaded] = useReleasePlans(namespace);
 

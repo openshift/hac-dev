@@ -2,14 +2,14 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { Badge, BreadcrumbItem, Bullseye, Spinner } from '@patternfly/react-core';
-import styles from '@patternfly/react-styles/css/components/Breadcrumb/breadcrumb';
+import { Bullseye, Spinner } from '@patternfly/react-core';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { ApplicationGroupVersionKind } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { ApplicationKind } from '../../types';
+import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { MVP_FLAG } from '../../utils/flag-utils';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ActivityTab } from '../Activity/ActivityTab';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
@@ -18,13 +18,11 @@ import { applicationDeleteModal } from '../modal/resource-modals';
 import { ApplicationHeader } from './ApplicationHeader';
 import ApplicationModal, { HACBS_APPLICATION_MODAL_HIDE_KEY } from './ApplicationModal';
 import { applicationQuickstartContent } from './ApplicationQuickstartContent';
-import { ApplicationSwitcher } from './ApplicationSwitcher';
 import DetailsPage from './DetailsPage';
 import ApplicationOverviewTab from './tabs/ApplicationOverviewTab';
 import ComponentsTab from './tabs/ComponentsTab';
 import EnvironmentsTab from './tabs/EnvironmentsTab';
 import IntegrationTestsTab from './tabs/IntegrationTestsTab';
-import { WorkspaceSwitcher } from './WorkspaceSwitcher';
 
 import './ApplicationDetails.scss';
 
@@ -42,7 +40,8 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
     localStorage.setItem(HACBS_APPLICATION_MODAL_HIDE_KEY, 'true');
   };
 
-  const namespace = useNamespace();
+  const { namespace, workspace } = useWorkspaceInfo();
+
   const navigate = useNavigate();
   const { quickStarts } = useChrome();
   const showModal = useModalLauncher();
@@ -55,6 +54,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
   });
 
   const appDisplayName = application?.spec?.displayName || application?.metadata?.name || '';
+  const applicationBreadcrumbs = useApplicationBreadcrumbs(appDisplayName, false);
 
   if (applicationError) {
     const appError = HttpError.fromCode((applicationError as any).code);
@@ -66,10 +66,6 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
       />
     );
   }
-
-  // temporary placeholder
-  const workspaceName = 'myworkspace';
-
   const loading = (
     <Bullseye>
       <Spinner data-test="spinner" />
@@ -86,35 +82,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
       <DetailsPage
         data-test="application-details-test-id"
         headTitle={appDisplayName}
-        breadcrumbs={[
-          ...(mvpFeature
-            ? []
-            : [
-                <Badge key="badge" isRead>
-                  WS
-                </Badge>,
-                <span key="badge-divider" className={styles.breadcrumbItemDivider} />,
-                <BreadcrumbItem key="workspace-link" component="div" to="#">
-                  <Link className="pf-c-breadcrumb__link" to="#">
-                    {workspaceName}
-                  </Link>
-                </BreadcrumbItem>,
-                <WorkspaceSwitcher key="workspace" selectedWorkspace={workspaceName} />,
-                <span key="workspace-divider" className={styles.breadcrumbItemDivider}>
-                  │
-                </span>,
-              ]),
-          <BreadcrumbItem key="app-link" component="div">
-            <Link className="pf-c-breadcrumb__link" to="/stonesoup/applications">
-              Applications
-            </Link>
-          </BreadcrumbItem>,
-          {
-            path: '',
-            name: appDisplayName,
-          },
-          <ApplicationSwitcher key="app" selectedApplication={application.metadata.name} />,
-        ]}
+        breadcrumbs={applicationBreadcrumbs}
         title={<ApplicationHeader application={application} />}
         actions={[
           {
@@ -136,14 +104,18 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             key: 'add-component',
             label: 'Add component',
             component: (
-              <Link to={`/stonesoup/import?application=${applicationName}`}>Add component</Link>
+              <Link to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}>
+                Add component
+              </Link>
             ),
           },
           {
             key: 'add-integration-test',
             label: 'Add integration test',
             component: (
-              <Link to={`/stonesoup/applications/${applicationName}/integration-test`}>
+              <Link
+                to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/add`}
+              >
                 Add integration test
               </Link>
             ),
@@ -154,7 +126,9 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             key: 'create-environment',
             label: 'Create environment',
             component: (
-              <Link to="/stonesoup/workspace-settings/environment/create">Create environment</Link>
+              <Link to={`/stonesoup/workspaces/${workspace}/workspace-settings/environment/create`}>
+                Create environment
+              </Link>
             ),
             hidden: mvpFeature,
           },
@@ -183,11 +157,11 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
               showModal<{ submitClicked: boolean }>(
                 applicationDeleteModal(application),
               ).closed.then(({ submitClicked }) => {
-                if (submitClicked) navigate('/stonesoup');
+                if (submitClicked) navigate('/stonesoup/workspaces');
               }),
           },
         ]}
-        baseURL={`/stonesoup/applications/${applicationName}`}
+        baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}`}
         tabs={[
           {
             key: 'overview',

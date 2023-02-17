@@ -2,14 +2,15 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Level, LevelItem } from '@patternfly/react-core';
 import { useApplications } from '../../hooks/useApplications';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ContextMenuItem, ContextSwitcher } from '../ContextSwitcher';
 
 export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = ({
   selectedApplication,
 }) => {
   const navigate = useNavigate();
-  const namespace = useNamespace();
+  const { namespace, workspace } = useWorkspaceInfo();
+
   const [applications] = useApplications(namespace);
 
   const menuItems = React.useMemo(
@@ -21,7 +22,8 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
   const selectedItem = menuItems.find((item) => item.key === selectedApplication);
 
   const onSelect = (item: ContextMenuItem) => {
-    selectedItem.key !== item.key && navigate(`/stonesoup/applications/${item.key}`);
+    selectedItem.key !== item.key &&
+      navigate(`/stonesoup/workspaces/${workspace}/applications/${item.key}`);
   };
 
   return menuItems.length > 1 ? (
@@ -33,10 +35,12 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
       footer={
         <Level>
           <LevelItem>
-            <Link to="/stonesoup/import">Create application</Link>
+            <Link to={`/stonesoup/workspaces/${workspace}/import`}>Create application</Link>
           </LevelItem>
           <LevelItem>
-            <Link to="/stonesoup/applications">View applications list</Link>
+            <Link to={`/stonesoup/workspaces/${workspace}/applications`}>
+              View applications list
+            </Link>
           </LevelItem>
         </Level>
       }

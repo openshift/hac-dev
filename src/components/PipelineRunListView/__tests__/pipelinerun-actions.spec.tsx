@@ -8,6 +8,7 @@ import PipelineRunListRow from '../PipelineRunListRow';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   k8sPatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 const patchResourceMock = k8sPatchResource as jest.Mock;

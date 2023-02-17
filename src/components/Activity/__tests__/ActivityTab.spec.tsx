@@ -16,6 +16,10 @@ jest.mock('react-router-dom', () => {
   };
 });
 
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
+}));
+
 const useNavigateMock = useNavigate as jest.Mock;
 
 describe('Activity Tab', () => {
@@ -46,7 +50,7 @@ describe('Activity Tab', () => {
       fireEvent.click(plrTab);
     });
     expect(navigateMock).toHaveBeenCalledWith(
-      '/stonesoup/applications/abcd/undefined/pipelineruns',
+      '/stonesoup/workspaces/test-ws/applications/abcd/undefined/pipelineruns',
     );
   });
 });

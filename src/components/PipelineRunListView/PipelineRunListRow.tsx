@@ -8,6 +8,7 @@ import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../types';
 import { calculateDuration } from '../../utils/pipeline-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { usePipelinerunActions } from './pipelinerun-actions';
 import { pipelineRunTableColumnClasses } from './PipelineRunListHeader';
 
@@ -18,11 +19,16 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
 
   const status = pipelineRunFilterReducer(obj);
   const actions = usePipelinerunActions(obj);
+  const { workspace } = useWorkspaceInfo();
+  const applicationName = obj.metadata?.labels[PipelineRunLabel.APPLICATION];
 
   return (
     <>
       <TableData className={pipelineRunTableColumnClasses.name}>
-        <Link to={`/stonesoup/pipelineruns/${obj.metadata?.name}`} title={obj.metadata?.name}>
+        <Link
+          to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${obj.metadata?.name}`}
+          title={obj.metadata?.name}
+        >
           {obj.metadata?.name}
         </Link>
       </TableData>
@@ -49,7 +55,7 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
         {obj.metadata?.labels[PipelineRunLabel.COMPONENT] ? (
           obj.metadata?.labels[PipelineRunLabel.APPLICATION] ? (
             <Link
-              to={`/stonesoup/applications/${
+              to={`/stonesoup/workspaces/${workspace}/applications/${
                 obj.metadata?.labels[PipelineRunLabel.APPLICATION]
               }/components`}
             >

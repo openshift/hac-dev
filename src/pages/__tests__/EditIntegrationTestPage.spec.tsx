@@ -16,10 +16,9 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-jest.mock('../../components/NamespacedPage/NamespacedPage', () => ({
-  useNamespace: jest.fn(() => 'test'),
+jest.mock('../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
-
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));

@@ -9,6 +9,7 @@ import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../types';
 import { createRepoBranchURL, statuses } from '../../utils/commits-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { useCommitActions } from './commit-actions';
 import { CommitIcon } from './CommitIcon';
 import { commitsTableColumnClasses } from './CommitsListHeader';
@@ -17,7 +18,7 @@ import './CommitsListRow.scss';
 
 const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
   const actions = useCommitActions(obj);
-
+  const { workspace } = useWorkspaceInfo();
   const status = pipelineRunFilterReducer(obj.pipelineRuns[0]);
 
   const prNumber = obj.isPullRequest ? `#${obj.pullRequestNumber}` : '';
@@ -25,7 +26,9 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
     <>
       <TableData className={commitsTableColumnClasses.name}>
         <CommitIcon isPR={obj.isPullRequest} className="sha-title-icon" />
-        <Link to={`/stonesoup/${obj.application}/commit/${obj.sha}`}>
+        <Link
+          to={`/stonesoup/workspaces/${workspace}/applications/${obj.application}/commit/${obj.sha}`}
+        >
           {prNumber} {obj.shaTitle}
         </Link>
 

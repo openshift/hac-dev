@@ -12,12 +12,17 @@ import CommitsListView from '../CommitsListView';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
   useNavigate: jest.fn(),
   useSearchParams: () => React.useState(() => new URLSearchParams()),
+}));
+
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 jest.mock('../commit-status', () => ({
@@ -50,6 +55,7 @@ jest.mock('../../../shared/components/table', () => {
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 const mockNavigate = useNavigate as jest.Mock;
@@ -78,7 +84,7 @@ describe('CommitsListView', () => {
     const addButton = screen.queryByText('Add component');
     expect(addButton).toBeInTheDocument();
     expect(addButton.closest('a').href).toContain(
-      `http://localhost/stonesoup/import?application=purple-mermaid-app`,
+      `http://localhost/stonesoup/workspaces/test-ws/import?application=purple-mermaid-app`,
     );
   });
 
@@ -113,7 +119,7 @@ describe('CommitsListView', () => {
     render(<CommitsListView applicationName="purple-mermaid-app" recentOnly />);
     fireEvent.click(screen.getByText('View More'));
     expect(navigate).toHaveBeenCalledWith(
-      `/stonesoup/applications/purple-mermaid-app/activity/latest-commits`,
+      `/stonesoup/workspaces/test-ws/applications/purple-mermaid-app/activity/latest-commits`,
     );
   });
 

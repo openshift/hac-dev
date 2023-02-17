@@ -19,6 +19,7 @@ const mockComponents = componentCRMocks.reduce((acc, mock) => {
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  // getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('../../../hooks/useApplicationRoutes', () => ({
@@ -31,6 +32,10 @@ jest.mock('../../../hooks/useGitOpsDeploymentCR', () => ({
 
 jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
+}));
+
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 jest.mock('react-router-dom', () => {
@@ -91,7 +96,9 @@ describe('ComponentListViewPage', () => {
     render(<ComponentListView applicationName="test-app" />);
     const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
-    expect(button.closest('a').href).toBe('http://localhost/stonesoup/import?application=test-app');
+    expect(button.closest('a').href).toBe(
+      'http://localhost/stonesoup/workspaces/test-ws/import?application=test-app',
+    );
   });
 
   it('should render filter toolbar and filter components based on name', () => {

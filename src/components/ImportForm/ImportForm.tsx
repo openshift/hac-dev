@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageSection, PageSectionTypes, PageSectionVariants } from '@patternfly/react-core';
 import { FormikWizard } from 'formik-pf';
-import { useNamespace } from '../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { createResources } from './utils/submit-utils';
@@ -17,7 +17,7 @@ type ImportFormProps = {
 
 const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName }) => {
   const navigate = useNavigate();
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [strategy, setStrategy] = React.useState(ImportStrategy.GIT);
 
   const initialValues: ImportFormValues = {
@@ -38,12 +38,14 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
 
   const steps = useImportSteps(applicationName, strategy, setStrategy);
   const showModal = useModalLauncher();
+  const { workspace } = useWorkspaceInfo();
 
   const handleSubmit = React.useCallback(
     (values: ImportFormValues, formikHelpers) => {
       return createResources(values, strategy)
         .then(({ applicationName: appName, componentNames }) => {
-          const doNavigate = () => navigate(`/stonesoup/applications/${appName}`);
+          const doNavigate = () =>
+            navigate(`/stonesoup/workspaces/${workspace}/applications/${appName}`);
           if (values.pipelinesascode === 'automatic') {
             showModal(
               createCustomizeAllPipelinesModalLauncher(
@@ -66,7 +68,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
           formikHelpers.setStatus({ submitError: error.message });
         });
     },
-    [navigate, strategy, showModal, namespace],
+    [navigate, strategy, showModal, namespace, workspace],
   );
 
   const handleReset = () => {

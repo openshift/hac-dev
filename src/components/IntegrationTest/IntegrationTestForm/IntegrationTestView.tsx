@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
-import { useNamespace } from '../../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import IntegrationTestForm from './IntegrationTestForm';
 import { IntegrationTestLabels } from './types';
 import { editIntegrationTest, createIntegrationTest } from './utils/create-utils';
@@ -18,7 +18,7 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
   integrationTest,
 }) => {
   const navigate = useNavigate();
-  const namespace = useNamespace();
+  const { namespace, workspace } = useWorkspaceInfo();
 
   const initialValues = {
     integrationTest: {
@@ -43,10 +43,14 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
             // go back to the page where the edit was launched
             navigate(-1);
           } else {
-            navigate(`/stonesoup/${applicationName}/test/${integrationTest.metadata.name}`);
+            navigate(
+              `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/${integrationTest.metadata.name}`,
+            );
           }
         } else {
-          navigate(`/stonesoup/applications/${applicationName}/integrationtests`);
+          navigate(
+            `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
+          );
         }
       })
       .catch((error) => {

@@ -7,7 +7,7 @@ import {
   PipelineNodeModel,
 } from '@patternfly/react-topology';
 import { MVP_FLAG } from '../../../../../../utils/flag-utils';
-import { useNamespace } from '../../../../../../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../../../../../../utils/workspace-context-utils';
 import { NodeType } from '../const';
 import { WorkflowNodeType } from '../types';
 import { groupToPipelineNode, worstWorkflowStatus } from '../utils/node-utils';
@@ -23,7 +23,7 @@ export const useAppWorkflowData = (
   applicationName: string,
   expanded: boolean,
 ): [model: Model, loaded: boolean, errors: unknown[]] => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   const [mvpFeature] = useFeatureFlag(MVP_FLAG);
   const [componentNodes, componentGroup, componentTasks, componentsLoaded, componentsErrors] =
     useAppComponentsNodes(namespace, applicationName, [], expanded);

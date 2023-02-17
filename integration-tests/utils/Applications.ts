@@ -75,7 +75,9 @@ export class Applications {
     PipelinerunsTabPage.clickOnPipelinerunFromListView(pipelinerunName);
     PipelinerunsTabPage.checkPipelinerunStatus(isAdvancedFlowActive);
 
-    this.clickBreadcrumbLinkAtPosition('2');
+
+    cy.get('a.pf-c-breadcrumb__link[href*="/activity/pipelineruns"]').click();
+
   }
 
   static getComponentListItem(application: string) {

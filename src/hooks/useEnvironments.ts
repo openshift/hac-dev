@@ -3,10 +3,10 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { EnvironmentGroupVersionKind } from '../models/environment';
 import { EnvironmentKind } from '../types';
 import { sortEnvironmentsBasedonParent } from '../utils/environment-utils';
-import { useNamespace } from '../utils/namespace-context-utils';
+import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
 export const useEnvironments = () => {
-  const namespace = useNamespace();
+  const { namespace } = useWorkspaceInfo();
   return useK8sWatchResource<EnvironmentKind[]>({
     groupVersionKind: EnvironmentGroupVersionKind,
     namespace,

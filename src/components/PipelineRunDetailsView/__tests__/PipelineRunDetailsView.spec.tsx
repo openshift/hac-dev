@@ -10,6 +10,7 @@ import { PipelineRunDetailsView } from '../PipelineRunDetailsView';
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
   k8sCreateResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('../../PipelineRunDetailsView/PipelineRunVisualization', () => () => <div />);

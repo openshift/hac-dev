@@ -7,6 +7,7 @@ import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { ApplicationKind } from '../../types';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { useApplicationActions } from './application-actions';
 import { applicationTableColumnClasses } from './ApplicationListHeader';
 
@@ -27,13 +28,17 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
   );
 
   const actions = useApplicationActions(obj);
+  const { workspace } = useWorkspaceInfo();
 
   const displayName = obj.spec.displayName || obj.metadata.name;
 
   return (
     <>
       <TableData className={applicationTableColumnClasses.name}>
-        <Link to={`/stonesoup/applications/${obj.metadata.name}`} title={displayName}>
+        <Link
+          to={`/stonesoup/workspaces/${workspace}/applications/${obj.metadata.name}`}
+          title={displayName}
+        >
           {displayName}
         </Link>
       </TableData>

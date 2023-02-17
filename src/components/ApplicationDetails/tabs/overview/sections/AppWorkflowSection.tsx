@@ -14,18 +14,19 @@ import {
   ButtonVariant,
 } from '@patternfly/react-core';
 import { useSearchParam } from '../../../../../hooks/useSearchParam';
+import { useWorkspaceInfo } from '../../../../../utils/workspace-context-utils';
 import GraphErrorState from '../../../../topology/factories/GraphErrorState';
 import { WorkflowGraph } from '../visualization';
 import { useAppWorkflowData } from '../visualization/hooks/useAppWorkflowData';
 
 import './AppWorkflowSection.scss';
-
 type AppWorkflowSectionProps = {
   applicationName: string;
 };
 
 const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName }) => {
   const [expanded, setExpanded] = useSearchParam('expanded', '');
+  const { workspace } = useWorkspaceInfo();
 
   const [workflowModel, loaded, errors] = useAppWorkflowData(applicationName, expanded === 'true');
 
@@ -77,7 +78,10 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
               <Button
                 variant="secondary"
                 component={(props) => (
-                  <Link {...props} to={`/stonesoup/import?application=${applicationName}`} />
+                  <Link
+                    {...props}
+                    to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}
+                  />
                 )}
                 data-test="add-component"
               >

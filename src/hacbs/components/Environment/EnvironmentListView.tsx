@@ -15,6 +15,7 @@ import emptyStateImgUrl from '../../../imgs/Environment.svg';
 import { EnvironmentKind } from '../../../types';
 import { GitOpsDeploymentHealthStatus } from '../../../types/gitops-deployment';
 import { MVP_FLAG } from '../../../utils/flag-utils';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import EnvironmentCard from './EnvironmentCard';
 import EnvironmentToolbarGroups from './EnvironmentToolbarGroups';
 
@@ -181,6 +182,7 @@ const EnvironmentListView: React.FC<Props> = ({
   validTypes = DEFAULT_VALID_TYPES,
 }) => {
   const [mvpFeature] = useFeatureFlag(MVP_FLAG);
+  const { workspace } = useWorkspaceInfo();
   const [typesFilterParam, setTypesFilterParam, unsetTypesFilter] = useSearchParam('envType', '');
   const typesFilter = React.useMemo(
     () =>
@@ -215,7 +217,10 @@ const EnvironmentListView: React.FC<Props> = ({
         variant="secondary"
         isDisabled={mvpFeature}
         component={(props) => (
-          <Link {...props} to="/stonesoup/workspace-settings/environment/create" />
+          <Link
+            {...props}
+            to={`/stonesoup/workspaces/${workspace}/workspace-settings/environment/create`}
+          />
         )}
       >
         Create environment
@@ -231,7 +236,7 @@ const EnvironmentListView: React.FC<Props> = ({
       );
     }
     return envButton;
-  }, [mvpFeature]);
+  }, [mvpFeature, workspace]);
 
   const emptyState = (
     <AppEmptyState emptyStateImg={emptyStateImgUrl} title="Manage your deployments">

@@ -13,6 +13,7 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   commonFetch: jest.fn(),
   useK8sWatchResource: jest.fn(() => [[], true]),
+  getActiveWorkspace: jest.fn(),
 }));
 
 jest.mock('react-router-dom', () => {

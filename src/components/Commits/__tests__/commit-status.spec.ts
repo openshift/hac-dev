@@ -6,6 +6,7 @@ import { useCommitStatus } from '../commit-status';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(),
 }));
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
