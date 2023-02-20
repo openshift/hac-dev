@@ -17,7 +17,8 @@ export class UIhelper {
   }
 
   static verifyLabelAndValue(label: string, value: string) {
-    return cy.contains('div', label).contains('dd', value)
+    cy.log(`Validate Label : "${label}" should have value : "${value}"`)
+    return cy.xpath(`//div[contains(@class,"list__group") and descendant::dt//*[text()="${label}"]]/dd//*[text()="${value}"]`).scrollIntoView().should('be.visible')
   }
 
   static clickButton(label: string, options?: { invoke?: boolean, force?: boolean }) {

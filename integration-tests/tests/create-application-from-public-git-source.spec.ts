@@ -80,30 +80,21 @@ describe('Create Component from Public Git Source', { tags: ['@PR-check', '@publ
       applicationDetailPage.createdComponentExists(componentPage.componentName, applicationName);
     });
 
-    it('Check Component Build Log', () => {
-      applicationDetailPage.openBuildLog(componentPage.componentName);
-
-      // Workaround for https://issues.redhat.com/browse/HAC-3071
-      cy.get('li[class*="pipeline-run-logs__navitem"]', {timeout: 60000}).should("include.text", "clone-repository");
-
-      applicationDetailPage.checkBuildLog("appstudio-init", 'Determine if Image Already Exists');
-      applicationDetailPage.closeBuildLog();
-    });
-
     it('Check Resources Value', () => {
       applicationDetailPage.expandDetails(componentPage.componentName);
       applicationDetailPage.checkCpuAndMemory(cpuCount + 1, cpuUnit, ramValue, ramUnit);
       applicationDetailPage.checkReplica(replicaCount);
     });
 
-    it('Change Resources Value', () => {
-      applicationDetailPage.openComponentSettings(componentPage.componentName);
-      componentPage.setRam(2, MemoryUnit.gigabyte);
-      componentPage.setCpuByButton(cpuCount, cpuUnit);
-      componentPage.saveChanges();
-      Applications.goToComponentsTab();
-      applicationDetailPage.expandDetails(componentPage.componentName);
-      applicationDetailPage.checkCpuAndMemory(cpuCount, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
-    });
+    // Skipping due to : https://issues.redhat.com/browse/HAC-3184
+    // it('Change Resources Value', () => {
+    //   applicationDetailPage.openComponentSettings(componentPage.componentName);
+    //   componentPage.setRam(2, MemoryUnit.gigabyte);
+    //   componentPage.setCpuByButton(cpuCount, cpuUnit);
+    //   componentPage.saveChanges();
+    //   Applications.goToComponentsTab();
+    //   applicationDetailPage.expandDetails(componentPage.componentName);
+    //   applicationDetailPage.checkCpuAndMemory(cpuCount, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
+    // });
   });
 });

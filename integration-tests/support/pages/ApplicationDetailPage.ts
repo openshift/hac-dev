@@ -43,6 +43,22 @@ export class ApplicationDetailPage {
     cy.get(buildLogModalContentPO.modal).should('exist');
   }
 
+  verifyBuildLogTaskslist(tasklistItems: string[]) {
+    tasklistItems.forEach(item => {
+      cy.contains(buildLogModalContentPO.logsTasklist, item).should('be.visible')
+    })
+  }
+
+  verifyFailedLogTasksNotExists() {
+    cy.get(buildLogModalContentPO.failedPipelineRunLogs).should('not.exist')
+  }
+
+  verifyGraphNodes(nodeText: string) {
+    cy.contains(applicationDetailPagePO.graphNode, nodeText).within(() => {
+      cy.get(applicationDetailPagePO.pipelineStatusSuccess).scrollIntoView().should('be.visible')
+    })
+  }
+
   closeBuildLog() {
     cy.get(buildLogModalContentPO.closeButton).click();
     cy.get(buildLogModalContentPO.modal).should('not.exist');

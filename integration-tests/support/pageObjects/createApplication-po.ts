@@ -65,6 +65,8 @@ export const applicationDetailPagePO = {
   cpuRamLabel: 'CPU / Memory',
   replicaLabel: 'Instances',
   route: (param: string) => `[data-test-id="${param}-route"]`,
+  graphNode: 'g[data-kind="node"]',
+  pipelineStatusSuccess: 'g[class="pf-topology-pipelines__pill-status pf-m-success"]'
 };
 
 export const componentsListPagePO = {
@@ -74,7 +76,9 @@ export const componentsListPagePO = {
 };
 
 export const buildLogModalContentPO = {
-  modal: '[id="pf-modal-part-2"]',
+  modal: 'div[data-ouia-component-type="PF4/ModalContent"]',
   closeButton: '[aria-label="Close"]',
   logText: '[class="logs__content"]',
+  logsTasklist: 'div[data-testid="logs-tasklist"]',
+  failedPipelineRunLogs: 'div[class="pipeline-run-logs"] [class*="pf-m-danger"]'
 };
