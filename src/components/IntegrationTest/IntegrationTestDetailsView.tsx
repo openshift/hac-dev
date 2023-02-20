@@ -1,10 +1,8 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner, Text, TextVariants } from '@patternfly/react-core';
-import { IntegrationTestScenarioGroupVersionKind } from '../../models';
+import { useIntegrationTestScenario } from '../../hooks/useIntegrationTestScenarios';
 import { HttpError } from '../../shared/utils/error/http-error';
-import { IntegrationTestScenarioKind } from '../../types/coreBuildService';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
@@ -29,12 +27,11 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
   const navigate = useNavigate();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
-  const [integrationTest, loaded, loadErr] = useK8sWatchResource<IntegrationTestScenarioKind>({
-    groupVersionKind: IntegrationTestScenarioGroupVersionKind,
-    isList: false,
-    name: testName,
+  const [integrationTest, loaded, loadErr] = useIntegrationTestScenario(
     namespace,
-  });
+    applicationName,
+    testName,
+  );
 
   if (loadErr || (loaded && !integrationTest)) {
     return (

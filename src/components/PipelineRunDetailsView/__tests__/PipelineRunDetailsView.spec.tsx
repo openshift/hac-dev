@@ -30,7 +30,7 @@ const useNavigateMock = useNavigate as jest.Mock;
 const mockK8sCreate = k8sCreateResource as jest.Mock;
 
 const pipelineRunName = 'java-springboot-sample-b4trz';
-const mockApplication = {
+const mockPipelineRun = {
   apiVersion: 'tekton.dev/v1beta1',
   kind: 'PipelineRun',
   metadata: {
@@ -121,28 +121,39 @@ describe('PipelineRunDetailsView', () => {
     screen.getByRole('progressbar');
   });
 
-  it('should render the error state if the application is not found', () => {
+  it('should render the error state if the pipeline run is not found', () => {
     watchResourceMock.mockReturnValue([[], false, { code: 404 }]);
     routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     screen.getByText('404: Page not found');
     screen.getByText('Go to applications list');
   });
 
-  it('should render application display name if application data is loaded', () => {
-    watchResourceMock.mockReturnValueOnce([mockApplication, true]).mockReturnValue([[], true]);
+  it('should render the error state if the pipeline run is being deleted', () => {
+    const deletedPipelineRun = {
+      ...mockPipelineRun,
+      metadata: { ...mockPipelineRun.metadata, deletionTimestamp: '1' },
+    };
+    watchResourceMock.mockReturnValueOnce([deletedPipelineRun, true]).mockReturnValue([[], true]);
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    screen.getByText('404: Page not found');
+    screen.getByText('Go to applications list');
+  });
+
+  it('should render pipeline run name if pipeline run data is loaded', () => {
+    watchResourceMock.mockReturnValueOnce([mockPipelineRun, true]).mockReturnValue([[], true]);
     routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     screen.getAllByText(pipelineRunName);
   });
 
-  it('should render application if components data is loaded', () => {
-    watchResourceMock.mockReturnValueOnce([mockApplication, true]).mockReturnValue([[], true]);
+  it('should render pipeline run if components data is loaded', () => {
+    watchResourceMock.mockReturnValueOnce([mockPipelineRun, true]).mockReturnValue([[], true]);
     routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     expect(screen.queryByText('Pipeline run details')).toBeInTheDocument();
     expect(screen.queryByText('Status')).toBeInTheDocument();
     expect(screen.queryByText('Namespace')).toBeInTheDocument();
   });
 
-  it('should render  Stop and Cancel button under the Actions dropdown', () => {
+  it('should render Stop and Cancel button under the Actions dropdown', () => {
     watchResourceMock
       .mockReturnValueOnce([testPipelineRuns[DataState.SUCCEEDED], true])
       .mockReturnValue([[], true]);

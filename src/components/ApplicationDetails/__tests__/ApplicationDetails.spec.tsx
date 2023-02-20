@@ -5,9 +5,9 @@ import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { screen, configure, fireEvent, act, waitFor } from '@testing-library/react';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
-import { useApplications } from '../../../hooks/useApplications';
+import { useApplication, useApplications } from '../../../hooks/useApplications';
 import { useGitOpsDeploymentCR } from '../../../hooks/useGitOpsDeploymentCR';
-import { ApplicationGroupVersionKind, ComponentGroupVersionKind } from '../../../models';
+import { ComponentGroupVersionKind } from '../../../models';
 import { PipelineRunGroupVersionKind } from '../../../shared';
 import { routerRenderer } from '../../../utils/test-utils';
 import { componentCRMocks } from '../../Components/__data__/mock-data';
@@ -48,6 +48,7 @@ jest.mock('../../../hooks/useGitOpsDeploymentCR', () => ({
   useGitOpsDeploymentCR: jest.fn(),
 }));
 jest.mock('../../../hooks/useApplications', () => ({
+  useApplication: jest.fn(),
   useApplications: jest.fn(),
 }));
 
@@ -57,6 +58,7 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
 
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 const useParamsMock = useParams as jest.Mock;
+const useApplicationMock = useApplication as jest.Mock;
 const useApplicationsMock = useApplications as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
@@ -73,9 +75,6 @@ const getMockedResources = (kind: WatchK8sResource) => {
   if (kind.groupVersionKind === PipelineRunGroupVersionKind) {
     return [mockPipelineRuns, true];
   }
-  if (kind.groupVersionKind === ApplicationGroupVersionKind) {
-    return [mockApplication, true];
-  }
   return [[], true];
 };
 
@@ -86,6 +85,7 @@ describe('ApplicationDetails', () => {
     mockGitOpsDeploymentCR.mockReturnValue([[], false]);
     useParamsMock.mockReturnValue({});
     useApplicationsMock.mockReturnValue([[mockApplication], true]);
+    useApplicationMock.mockReturnValue([mockApplication, true]);
 
     applyWorkflowMocks(workflowMocks);
 
@@ -101,13 +101,13 @@ describe('ApplicationDetails', () => {
     (window.SVGElement as any).prototype.getBBox = undefined;
   });
   it('should render spinner if application data is not loaded', () => {
-    watchResourceMock.mockReturnValue([[], false]);
+    useApplicationMock.mockReturnValue([[], false]);
     routerRenderer(<ApplicationDetails applicationName="test" />);
     expect(screen.queryByTestId('spinner')).toBeInTheDocument();
   });
 
   it('should render the error state if the application is not found', () => {
-    watchResourceMock.mockReturnValue([[], false, { code: 404 }]);
+    useApplicationMock.mockReturnValue([[], false, { code: 404 }]);
     routerRenderer(<ApplicationDetails applicationName="test" />);
     screen.getByText('404: Page not found');
     screen.getByText('Go to applications list');

@@ -3,7 +3,7 @@ import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
 import { useIntegrationTestScenarios } from '../../../../../../hooks/useIntegrationTestScenarios';
 import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
 import { pipelineRunStatus } from '../../../../../../shared';
-import { PipelineRunKind } from '../../../../../../shared/components/pipeline-run-logs/types';
+import { PipelineRunKind } from '../../../../../../types';
 import { IntegrationTestScenarioKind } from '../../../../../../types/coreBuildService';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import { emptyPipelineNode, resourceToPipelineNode } from '../utils/node-utils';

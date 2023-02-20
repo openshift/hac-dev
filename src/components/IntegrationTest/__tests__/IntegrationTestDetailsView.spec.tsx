@@ -5,6 +5,7 @@ import { configure, screen } from '@testing-library/react';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
 import { IntegrationTestScenarioGroupVersionKind } from '../../../models';
 import { PipelineRunGroupVersionKind } from '../../../shared';
+import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { routerRenderer } from '../../../utils/test-utils';
 import { mockPipelineRuns } from '../../ApplicationDetails/__data__/mock-pipeline-run';
 import IntegrationTestDetailsView from '../IntegrationTestDetailsView';
@@ -29,9 +30,14 @@ const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
+const mockIntegrationTests: IntegrationTestScenarioKind[] = [...MockIntegrationTests];
+
 const getMockedResources = (params: WatchK8sResource) => {
   if (params.groupVersionKind === IntegrationTestScenarioGroupVersionKind) {
-    return [MockIntegrationTests[0], true];
+    return [
+      mockIntegrationTests.filter((t) => !params.name || t.metadata.name === params.name),
+      true,
+    ];
   }
   if (params.groupVersionKind === PipelineRunGroupVersionKind) {
     return [[mockPipelineRuns], true];
@@ -42,7 +48,7 @@ const getMockedResources = (params: WatchK8sResource) => {
 describe('IntegrationTestDetailsView', () => {
   it('should render spinner if test data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
-    routerRenderer(<IntegrationTestDetailsView testName="int-test" applicationName="test" />);
+    routerRenderer(<IntegrationTestDetailsView testName="int-test" applicationName="test-app" />);
     screen.getByRole('progressbar');
   });
 
@@ -52,13 +58,24 @@ describe('IntegrationTestDetailsView', () => {
       false,
       { message: 'Application does not exist', code: 404 },
     ]);
-    routerRenderer(<IntegrationTestDetailsView testName="int-test" applicationName="test" />);
+    routerRenderer(<IntegrationTestDetailsView testName="int-test" applicationName="test-app" />);
     screen.getByText('404: Page not found');
   });
 
   it('should display test data when loaded', () => {
     watchResourceMock.mockImplementation(getMockedResources);
-    routerRenderer(<IntegrationTestDetailsView testName="int-test" applicationName="test" />);
-    expect(screen.getByTestId('test-name').innerHTML).toBe(MockIntegrationTests[0].metadata.name);
+    routerRenderer(
+      <IntegrationTestDetailsView testName="test-app-test-1" applicationName="test-app" />,
+    );
+    expect(screen.getByTestId('test-name').innerHTML).toBe('test-app-test-1');
+  });
+
+  it('should show error state if test is being deleted', () => {
+    mockIntegrationTests[0].metadata.deletionTimestamp = '1';
+    watchResourceMock.mockImplementation(getMockedResources);
+    routerRenderer(
+      <IntegrationTestDetailsView testName="test-app-test-1" applicationName="test-app" />,
+    );
+    screen.getByText('404: Page not found');
   });
 });

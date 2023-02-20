@@ -4,9 +4,9 @@ import {
   k8sGetResource,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { saveAs } from 'file-saver';
+import { PLRTaskRunData, PLRTaskRuns } from '../../../../types';
 import { LineBuffer } from '../../../utils/line-buffer';
 import { ContainerSpec, ContainerStatus, PodKind } from '../../types';
-import { PLRTaskRunData, PLRTaskRuns } from '../types';
 import {
   containerToLogSourceStatus,
   LOG_SOURCE_TERMINATED,

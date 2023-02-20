@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import { Condition } from '../types';
+import { Condition } from '../../../../types';
 import { CombinedErrorDetails } from './log-snippet-types';
 
 const joinConditions = (conditions: Condition[]) =>

@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { Formik } from 'formik';
-import { ComponentGroupVersionKind } from '../../models';
-import { ComponentKind } from '../../types';
+import { useComponent } from '../../hooks/useComponents';
+import { HttpError } from '../../shared/utils/error/http-error';
 import { createComponent } from '../../utils/create-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { createResourceData, transformResources } from '../ImportForm/utils/transform-utils';
 import { reviewValidationSchema } from '../ImportForm/utils/validation-utils';
 import ComponentSettingsForm from './ComponentSettingsForm';
@@ -21,11 +21,18 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
   const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
 
-  const [component, loaded] = useK8sWatchResource<ComponentKind>({
-    groupVersionKind: ComponentGroupVersionKind,
-    namespace,
-    name: componentName,
-  });
+  const [component, loaded, componentError] = useComponent(namespace, componentName);
+
+  if (componentError) {
+    const appError = HttpError.fromCode((componentError as any).code);
+    return (
+      <ErrorEmptyState
+        httpError={appError}
+        title={`Unable to load component ${componentName}`}
+        body={appError.message}
+      />
+    );
+  }
 
   if (!loaded) {
     return (

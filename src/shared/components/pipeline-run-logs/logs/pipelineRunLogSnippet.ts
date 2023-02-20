@@ -1,4 +1,4 @@
-import { Condition, PipelineRunKind, PLRTaskRunData, PLRTaskRunStep } from '../types';
+import { Condition, PipelineRunKind, PLRTaskRunData, PLRTaskRunStep } from '../../../../types';
 import { pipelineRunStatus } from '../utils';
 import { CombinedErrorDetails } from './log-snippet-types';
 import { taskRunSnippetMessage } from './log-snippet-utils';

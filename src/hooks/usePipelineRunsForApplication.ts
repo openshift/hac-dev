@@ -3,9 +3,25 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { PipelineRunLabel } from '../consts/pipelinerun';
 import { ComponentGroupVersionKind } from '../models';
 import { PipelineRunGroupVersionKind } from '../shared';
-import { PipelineRunKind } from '../shared/components/pipeline-run-logs/types';
-import { ComponentKind } from '../types';
+import { ComponentKind, PipelineRunKind } from '../types';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
+
+export const usePipelineRun = (
+  namespace: string,
+  pipelineRunName: string,
+): [PipelineRunKind, boolean, unknown] => {
+  const [pipelineRun, loaded, error] = useK8sWatchResource<PipelineRunKind>({
+    groupVersionKind: PipelineRunGroupVersionKind,
+    name: pipelineRunName,
+    namespace,
+  });
+  return React.useMemo(() => {
+    if (loaded && !error && pipelineRun.metadata.deletionTimestamp) {
+      return [null, loaded, { code: 404 }];
+    }
+    return [pipelineRun, loaded, error];
+  }, [pipelineRun, loaded, error]);
+};
 
 export const useLatestPipelineRunForComponent = (
   component: ComponentKind,

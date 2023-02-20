@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Nav, NavItem, NavList } from '@patternfly/react-core';
 import get from 'lodash/get';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
+import { PipelineRunKind } from '../../../types';
 import { ErrorDetailsWithStaticLog } from './logs/log-snippet-types';
 import { getDownloadAllLogsCallback } from './logs/logs-utils';
 import LogsWrapperComponent from './logs/LogsWrapperComponent';
 import { getPLRLogSnippet } from './logs/pipelineRunLogSnippet';
 import { ColoredStatusIcon } from './StatusIcon';
-import { PipelineRunKind } from './types/pipelineRun';
 import { PodGroupVersionKind, pipelineRunFilterReducer, runStatus } from './utils';
 import './PipelineRunLogs.scss';
 

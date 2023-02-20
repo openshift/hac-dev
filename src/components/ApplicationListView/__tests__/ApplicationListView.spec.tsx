@@ -153,4 +153,16 @@ describe('Application List', () => {
     screen.getByText('Components');
     screen.getByText('Last deploy');
   });
+
+  it('should render empty state when the only application is marked for deletion', () => {
+    useFeatureFlagMock.mockReturnValue([false]);
+    const deletedApp = {
+      ...applications[0],
+      metadata: { ...applications[0].metadata, deletionTimestamp: '1' },
+    };
+    watchResourceMock.mockReturnValue([[deletedApp], true]);
+    render(<ApplicationList />);
+    screen.getByText('Easily onboard your applications');
+    expect(screen.queryByText('Create and manage your applications.')).toBeNull();
+  });
 });
