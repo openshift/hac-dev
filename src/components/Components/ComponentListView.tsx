@@ -30,7 +30,7 @@ import { useSearchParam } from '../../hooks/useSearchParam';
 import emptyStateImgUrl from '../../imgs/Components.svg';
 import { PipelineRunGroupVersionKind } from '../../shared';
 import { PipelineRunKind } from '../../types';
-import { getURLForComponentPRs, isPACEnabled } from '../../utils/component-utils';
+import { useURLForComponentPRs, isPACEnabled } from '../../utils/component-utils';
 import { getGitOpsDeploymentStrategy } from '../../utils/gitops-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import AppEmptyState from '../EmptyState/AppEmptyState';
@@ -60,6 +60,8 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
       componentsLoaded ? allComponents?.filter((c) => c.spec.application === applicationName) : [],
     [allComponents, applicationName, componentsLoaded],
   );
+
+  const prURL = useURLForComponentPRs(components);
 
   const [pipelineRuns, pipelineRunsLoaded] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
@@ -140,9 +142,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
             title="Merge pull requests of a build pipeline to your source code"
             actionClose={<AlertActionCloseButton onClose={() => setMergeAlertHidden(true)} />}
             actionLinks={
-              <AlertActionLink
-                onClick={() => window.open(getURLForComponentPRs(components), '_blank')}
-              >
+              <AlertActionLink onClick={() => window.open(prURL, '_blank')}>
                 View all pull requests
               </AlertActionLink>
             }
@@ -156,7 +156,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
         ) : null}
       </>
     );
-  }, [components, mergeAlertHidden, pipelineRuns]);
+  }, [components, mergeAlertHidden, pipelineRuns, prURL]);
 
   return (
     <>

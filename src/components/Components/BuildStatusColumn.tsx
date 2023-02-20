@@ -18,7 +18,7 @@ import { PipelineRunGroupVersionKind } from '../../models';
 import { pipelineRunFilterReducer } from '../../shared';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind, PipelineRunKind } from '../../types';
-import { getURLForComponentPRs, isPACEnabled } from '../../utils/component-utils';
+import { useURLForComponentPRs, isPACEnabled } from '../../utils/component-utils';
 import { getBuildStatusIcon } from '../../utils/gitops-utils';
 import { useBuildLogViewerModal } from '../LogViewer/BuildLogViewer';
 
@@ -29,6 +29,7 @@ type BuildStatusComponentProps = {
 
 const BuildStatusColumn: React.FC<BuildStatusComponentProps> = ({ component, allComponents }) => {
   const hasPAC = isPACEnabled(component);
+  const prURL = useURLForComponentPRs(allComponents);
 
   const [pipelineBuildRuns, pipelineRunsLoaded] = useK8sWatchResource<PipelineRunKind[]>(
     hasPAC
@@ -92,10 +93,7 @@ const BuildStatusColumn: React.FC<BuildStatusComponentProps> = ({ component, all
               <Text component="p" className="pf-u-mt-md">
                 <Flex>
                   <FlexItem onClick={hide}>
-                    <ExternalLink
-                      href={getURLForComponentPRs(allComponents)}
-                      text="View all pull requests."
-                    />
+                    <ExternalLink href={prURL} text="View all pull requests." />
                   </FlexItem>
                 </Flex>
               </Text>

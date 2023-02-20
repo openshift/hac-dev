@@ -9,6 +9,10 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(() => [[], true]),
 }));
 
+jest.mock('../../../hooks/useStoneSoupGitHubApp', () => ({
+  useStoneSoupGitHubApp: jest.fn(() => ({ name: 'test-app', url: 'https://github.com/test-app' })),
+}));
+
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 
 const mockComponent = {
