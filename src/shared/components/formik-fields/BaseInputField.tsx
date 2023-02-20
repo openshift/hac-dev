@@ -4,6 +4,8 @@ import { useField } from 'formik';
 import { BaseInputFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
 
+import './BaseInputField.scss';
+
 const BaseInputField: React.FC<
   BaseInputFieldProps & {
     children: (props) => React.ReactNode;
@@ -35,6 +37,7 @@ const BaseInputField: React.FC<
       validated={!isValid ? ValidatedOptions.error : validated}
       isRequired={required}
       data-test={dataTest}
+      className="hac-input-field"
     >
       {children({
         ...field,
