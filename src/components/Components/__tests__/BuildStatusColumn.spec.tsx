@@ -29,7 +29,7 @@ describe('BuildStatusColumn', () => {
     useK8sWatchResourceMock.mockReturnValue([mockPipelineRuns, true]);
     render(
       <BrowserRouter>
-        <BuildStatusColumn component={componentCRMocks[0]} allComponents={componentCRMocks} />
+        <BuildStatusColumn component={componentCRMocks[0]} />
       </BrowserRouter>,
     );
     await waitFor(() => screen.getByText('Build Succeeded'));
@@ -39,7 +39,7 @@ describe('BuildStatusColumn', () => {
     useK8sWatchResourceMock.mockReturnValue([[mockPipelineRuns[2]], true]);
     render(
       <BrowserRouter>
-        <BuildStatusColumn component={componentCRMocks[1]} allComponents={componentCRMocks} />
+        <BuildStatusColumn component={componentCRMocks[1]} />
       </BrowserRouter>,
     );
     await waitFor(() => screen.getByText('Build Failed'));
@@ -50,27 +50,17 @@ describe('BuildStatusColumn', () => {
     useK8sWatchResourceMock.mockReturnValue([[], false]);
     render(
       <BrowserRouter>
-        <BuildStatusColumn component={componentCRMocks[1]} allComponents={componentCRMocks} />
+        <BuildStatusColumn component={componentCRMocks[1]} />
       </BrowserRouter>,
     );
     expect(screen.queryByText('Merge build PR')).not.toBeInTheDocument();
-  });
-
-  it('should render needs merge status', async () => {
-    useK8sWatchResourceMock.mockReturnValue([[], true]);
-    render(
-      <BrowserRouter>
-        <BuildStatusColumn component={componentCRMocks[1]} allComponents={componentCRMocks} />
-      </BrowserRouter>,
-    );
-    await waitFor(() => screen.getByText('Merge build PR'));
   });
 
   it('should not render View Build logs action item for components without build pipelinerun', async () => {
     useK8sWatchResourceMock.mockReturnValue([[], true]);
     render(
       <BrowserRouter>
-        <BuildStatusColumn component={componentCRMocks[0]} allComponents={componentCRMocks} />
+        <BuildStatusColumn component={componentCRMocks[0]} />
       </BrowserRouter>,
     );
     expect(screen.queryByText('View logs')).not.toBeInTheDocument();
@@ -80,7 +70,7 @@ describe('BuildStatusColumn', () => {
     useK8sWatchResourceMock.mockReturnValue([[mockPipelineRuns], true]);
     render(
       <BrowserRouter>
-        <BuildStatusColumn component={componentCRMocks[0]} allComponents={componentCRMocks} />
+        <BuildStatusColumn component={componentCRMocks[0]} />
       </BrowserRouter>,
     );
     await waitFor(() => screen.getByText('View logs'));

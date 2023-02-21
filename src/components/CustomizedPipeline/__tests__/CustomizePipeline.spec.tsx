@@ -20,7 +20,10 @@ const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const k8sPatchResourceMock = k8sPatchResource as jest.Mock;
 
 let componentCount = 1;
-const createComponent = (pacValue?: 'done' | 'request', sample?: boolean): ComponentKind =>
+const createComponent = (
+  pacValue?: 'done' | 'request' | 'error',
+  sample?: boolean,
+): ComponentKind =>
   ({
     metadata: {
       name: `my-component-${componentCount++}`,
@@ -81,6 +84,26 @@ describe('CustomizePipeline', () => {
       <CustomizePipeline components={[createComponent('done')]} onClose={() => {}} />,
     );
     const button = result.queryByRole('link', { name: 'Edit pipeline in GitHub' });
+    expect(button).toBeInTheDocument();
+  });
+
+  it('should render resend pull request', () => {
+    useK8sWatchResourceMock.mockReturnValue([[{}], true]);
+    const result = render(
+      <CustomizePipeline components={[createComponent('error')]} onClose={() => {}} />,
+    );
+    const button = result.getByRole('button', { name: 'Resend pull request' });
+    expect(button).toBeInTheDocument();
+  });
+
+  it('should render install GitHub app alert', () => {
+    useK8sWatchResourceMock.mockReturnValue([[{}], true]);
+    const result = render(
+      <CustomizePipeline components={[createComponent('error')]} onClose={() => {}} />,
+    );
+    const link = result.getByRole('link', { name: /Install GitHub Application/ });
+    expect(link).toBeInTheDocument();
+    const button = result.getByRole('button', { name: 'Cancel' });
     expect(button).toBeInTheDocument();
   });
 

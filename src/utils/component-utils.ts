@@ -16,6 +16,7 @@ export const INITIAL_BUILD_ANNOTATION = 'appstudio.openshift.io/component-initia
 export enum PACProvision {
   done = 'done',
   request = 'request',
+  error = 'error',
 }
 
 export const getPACProvision = (component: ComponentKind): PACProvision | undefined => {
@@ -38,7 +39,23 @@ export const enablePAC = (component: ComponentKind) => {
       {
         op: 'add',
         path: `/metadata/annotations/${PAC_ANNOTATION.replace('/', '~1')}`,
-        value: 'request',
+        value: PACProvision.request,
+      },
+    ],
+  });
+};
+
+export const disablePAC = (component: ComponentKind) => {
+  k8sPatchResource({
+    model: ComponentModel,
+    queryOptions: {
+      name: component.metadata.name,
+      ns: component.metadata.namespace,
+    },
+    patches: [
+      {
+        op: 'remove',
+        path: `/metadata/annotations/${PAC_ANNOTATION.replace('/', '~1')}`,
       },
     ],
   });

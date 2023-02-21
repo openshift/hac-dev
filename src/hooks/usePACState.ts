@@ -3,24 +3,25 @@ import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../models';
 import { ComponentKind } from '../types';
 import { PipelineRunKind } from '../types/pipeline-run';
-import { isPACEnabled, SAMPLE_ANNOTATION } from '../utils/component-utils';
+import { getPACProvision, SAMPLE_ANNOTATION, PACProvision } from '../utils/component-utils';
 
 export enum PACState {
   sample,
   disabled,
   requested,
+  error,
   pending,
   ready,
   loading,
 }
 
 const usePACState = (component: ComponentKind) => {
-  const pacEnabled = isPACEnabled(component);
-  const pacDone = isPACEnabled(component, true);
+  const isSample = component.metadata?.annotations?.[SAMPLE_ANNOTATION] === 'true';
+  const pacProvision = getPACProvision(component);
 
   // TODO need a better way to identify if the PR has merged on the main branch
   const [pipelineBuildRuns, pipelineBuildRunsLoaded] = useK8sWatchResource<PipelineRunKind[]>(
-    pacEnabled
+    !isSample && pacProvision
       ? {
           groupVersionKind: PipelineRunGroupVersionKind,
           isList: true,
@@ -48,16 +49,18 @@ const usePACState = (component: ComponentKind) => {
       : null,
   );
 
-  return component.metadata?.annotations?.[SAMPLE_ANNOTATION] === 'true'
+  return isSample
     ? PACState.sample
-    : pacDone && !pipelineBuildRunsLoaded
-    ? PACState.loading
-    : pacDone && pipelineBuildRuns?.length > 0
-    ? PACState.ready
-    : pacDone
-    ? PACState.pending
-    : pacEnabled
+    : pacProvision === PACProvision.done
+    ? !pipelineBuildRunsLoaded
+      ? PACState.loading
+      : pipelineBuildRuns?.length > 0
+      ? PACState.ready
+      : PACState.pending
+    : pacProvision === PACProvision.request
     ? PACState.requested
+    : pacProvision === PACProvision.error
+    ? PACState.error
     : PACState.disabled;
 };
 

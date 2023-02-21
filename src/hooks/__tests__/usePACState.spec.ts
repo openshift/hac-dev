@@ -1,6 +1,6 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { ComponentKind } from '../../types';
-import { PAC_ANNOTATION, SAMPLE_ANNOTATION } from '../../utils/component-utils';
+import { PACProvision, PAC_ANNOTATION, SAMPLE_ANNOTATION } from '../../utils/component-utils';
 import usePACState, { PACState } from '../usePACState';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -9,7 +9,7 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 
-const createComponent = (pacValue?: 'done' | 'request'): ComponentKind =>
+const createComponent = (pacValue?: PACProvision): ComponentKind =>
   ({
     metadata: {
       name: 'my-component',
@@ -39,25 +39,31 @@ describe('usePACState', () => {
   });
 
   it('should identify requested state', () => {
-    const component = createComponent('request');
+    const component = createComponent(PACProvision.request);
     expect(usePACState(component)).toBe(PACState.requested);
   });
 
   it('should identify pending state', () => {
     useK8sWatchResourceMock.mockReturnValueOnce([[], true]);
-    const component = createComponent('done');
+    const component = createComponent(PACProvision.done);
     expect(usePACState(component)).toBe(PACState.pending);
   });
 
   it('should identify ready state', () => {
     useK8sWatchResourceMock.mockReturnValueOnce([[{}], true]);
-    const component = createComponent('done');
+    const component = createComponent(PACProvision.done);
     expect(usePACState(component)).toBe(PACState.ready);
   });
 
   it('should identify loading state', () => {
     useK8sWatchResourceMock.mockReturnValueOnce([[], false]);
-    const component = createComponent('done');
+    const component = createComponent(PACProvision.done);
     expect(usePACState(component)).toBe(PACState.loading);
+  });
+
+  it('should identify error state', () => {
+    useK8sWatchResourceMock.mockReturnValueOnce([[], false]);
+    const component = createComponent(PACProvision.error);
+    expect(usePACState(component)).toBe(PACState.error);
   });
 });

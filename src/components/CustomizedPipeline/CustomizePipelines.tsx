@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Alert,
+  AlertActionLink,
   AlertVariant,
   Button,
   ButtonVariant,
@@ -21,7 +22,7 @@ import sendIconUrl from '../../imgs/send.svg';
 import successIconUrl from '../../imgs/success.svg';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind } from '../../types';
-import { useURLForComponentPRs, enablePAC } from '../../utils/component-utils';
+import { useURLForComponentPRs, enablePAC, disablePAC } from '../../utils/component-utils';
 import { ComponentProps } from '../modal/createModalLauncher';
 
 type Props = ComponentProps & {
@@ -32,6 +33,7 @@ const Row: React.FC<{
   component: ComponentKind;
   onStateChange: (state: PACState) => void;
 }> = ({ component, onStateChange }) => {
+  const { url: githubAppURL } = useStoneSoupGitHubApp();
   const pacState = usePACState(component);
   const prURL = useURLForComponentPRs([component]);
 
@@ -41,103 +43,148 @@ const Row: React.FC<{
   }, [pacState]);
 
   return (
-    <Tr data-testid={`component-row ${component.metadata.name}`}>
-      <Td>
-        <div>
-          <b>{component.metadata.name}</b>
-        </div>
-        <div>
-          Code repository:{' '}
-          <ExternalLink href={component.spec.source.git.url}>
-            {component.spec.source.git.url}
-          </ExternalLink>
-        </div>
-      </Td>
+    <>
+      <Tr
+        data-testid={`component-row ${component.metadata.name}`}
+        style={pacState === PACState.error ? { borderBottom: 0 } : {}}
+      >
+        <Td>
+          <div>
+            <b>{component.metadata.name}</b>
+          </div>
+          <div>
+            Code repository:{' '}
+            <ExternalLink href={component.spec.source.git.url}>
+              {component.spec.source.git.url}
+            </ExternalLink>
+          </div>
+        </Td>
 
-      <Td>
-        {(() => {
-          switch (pacState) {
-            case PACState.loading:
-              return <Skeleton width="100px" />;
-            case PACState.sample:
-              return (
-                <Tooltip content="You cannot customize the build pipeline of a sample. Fork the sample to your own repository and create a new component.">
-                  <Label>Sample</Label>
-                </Tooltip>
-              );
-            case PACState.disabled:
-              return <Label color="blue">Default build</Label>;
-            case PACState.pending:
-              return (
-                <Label color="gold" data-testid="pending-state">
-                  Pull request sent
-                </Label>
-              );
-            case PACState.requested:
-              return (
-                <Label color="gold" data-testid="requested-state">
-                  Sending pull request
-                </Label>
-              );
-            case PACState.ready:
-              return (
-                <Label color="green" data-testid="ready-state">
-                  Custom build
-                </Label>
-              );
-            default:
-              return null;
-          }
-        })()}
-      </Td>
-      <Td className="pf-u-text-align-right">
-        {(() => {
-          switch (pacState) {
-            case PACState.disabled:
-              return (
-                <Button
-                  onClick={() => {
-                    enablePAC(component);
-                  }}
-                >
-                  Send pull request
-                </Button>
-              );
-            case PACState.requested:
-              return (
-                <Button spinnerAriaValueText="Sending pull request" isLoading isDisabled>
-                  Sending pull request
-                </Button>
-              );
-            case PACState.pending:
-              return (
-                <ExternalLink variant={ButtonVariant.secondary} href={prURL} showIcon>
-                  Merge in GitHub
-                </ExternalLink>
-              );
-            case PACState.ready:
-              return (
-                <ExternalLink
-                  variant={ButtonVariant.secondary}
-                  href={component.spec.source.git.url}
-                  showIcon
-                >
-                  Edit pipeline in GitHub
-                </ExternalLink>
-              );
-            default:
-              return null;
-          }
-        })()}
-      </Td>
-    </Tr>
+        <Td>
+          {(() => {
+            switch (pacState) {
+              case PACState.loading:
+                return <Skeleton width="100px" />;
+              case PACState.sample:
+                return (
+                  <Tooltip content="You cannot customize the build pipeline of a sample. Fork the sample to your own repository and create a new component.">
+                    <Label data-testid="sample-state">Sample</Label>
+                  </Tooltip>
+                );
+              case PACState.disabled:
+                return (
+                  <Label color="blue" data-testid="default-state">
+                    Default build
+                  </Label>
+                );
+              case PACState.pending:
+                return (
+                  <Label color="gold" data-testid="pending-state">
+                    Pull request sent
+                  </Label>
+                );
+              case PACState.requested:
+                return (
+                  <Label color="gold" data-testid="requested-state">
+                    Sending pull request
+                  </Label>
+                );
+              case PACState.error:
+                return (
+                  <Label color="gold" data-testid="error-state">
+                    Install GitHub app
+                  </Label>
+                );
+              case PACState.ready:
+                return (
+                  <Label color="green" data-testid="ready-state">
+                    Custom build
+                  </Label>
+                );
+              default:
+                return null;
+            }
+          })()}
+        </Td>
+        <Td className="pf-u-text-align-right">
+          {(() => {
+            switch (pacState) {
+              case PACState.disabled:
+                return (
+                  <Button
+                    onClick={() => {
+                      enablePAC(component);
+                    }}
+                  >
+                    Send pull request
+                  </Button>
+                );
+              case PACState.requested:
+                return (
+                  <Button spinnerAriaValueText="Sending pull request" isLoading isDisabled>
+                    Sending pull request
+                  </Button>
+                );
+              case PACState.pending:
+                return (
+                  <ExternalLink variant={ButtonVariant.secondary} href={prURL} showIcon>
+                    Merge in GitHub
+                  </ExternalLink>
+                );
+              case PACState.ready:
+                return (
+                  <ExternalLink
+                    variant={ButtonVariant.secondary}
+                    href={component.spec.source.git.url}
+                    showIcon
+                  >
+                    Edit pipeline in GitHub
+                  </ExternalLink>
+                );
+
+              case PACState.error:
+                return (
+                  <Button
+                    onClick={() => {
+                      enablePAC(component);
+                    }}
+                  >
+                    Resend pull request
+                  </Button>
+                );
+              default:
+                return null;
+            }
+          })()}
+        </Td>
+      </Tr>
+      {pacState === PACState.error ? (
+        <Tr>
+          <Td colSpan={3} style={{ paddingTop: 0 }}>
+            <Alert
+              isInline
+              variant={AlertVariant.warning}
+              title="Unable to send pull request"
+              actionLinks={
+                <>
+                  <ExternalLink href={githubAppURL} showIcon>
+                    Install GitHub Application
+                  </ExternalLink>
+                  <AlertActionLink onClick={() => disablePAC(component)}>Cancel</AlertActionLink>
+                </>
+              }
+            >
+              Please ensure the GitHub application is installed and grant permissions for this
+              component repository.
+            </Alert>
+          </Td>
+        </Tr>
+      ) : null}
+    </>
   );
 };
 
 const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
-  const [showRequestedAlert, setShowRequestedAlert] = React.useState(false);
-  const { url: githubAppURL } = useStoneSoupGitHubApp();
-
   const sortedComponents = React.useMemo(
     () => [...components].sort((a, b) => a.metadata.name.localeCompare(b.metadata.name)),
     [components],
@@ -150,11 +197,6 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
       Object.values(componentState).every(
         (state) => state === PACState.ready || state === PACState.sample,
       ),
-    [componentState],
-  );
-
-  const hasRequestedState = React.useMemo(
-    () => Object.values(componentState).some((state) => state === PACState.requested),
     [componentState],
   );
 
@@ -172,18 +214,6 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
     () => Object.values(componentState).filter((state) => state !== PACState.sample).length,
     [componentState],
   );
-
-  React.useEffect(() => {
-    if (hasRequestedState) {
-      const timeout = setTimeout(() => {
-        setShowRequestedAlert(true);
-      }, 5000);
-      return () => {
-        clearTimeout(timeout);
-      };
-    }
-    setShowRequestedAlert(false);
-  }, [hasRequestedState]);
 
   return (
     <>
@@ -249,22 +279,6 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
           >
             {`${count} of ${pluralize(totalCount, 'component')} upgraded to custom build`}
           </p>
-        ) : undefined}
-        {showRequestedAlert ? (
-          <Alert
-            isInline
-            variant={AlertVariant.warning}
-            title="Sending pull request is taking more time than expected"
-            className="pf-u-mt-lg"
-            actionLinks={
-              <ExternalLink href={githubAppURL} showIcon>
-                Start the flow
-              </ExternalLink>
-            }
-          >
-            You may need to install the GitHub application and grant permissions to the component
-            repository.
-          </Alert>
         ) : undefined}
       </ModalBoxBody>
       <ModalBoxFooter>

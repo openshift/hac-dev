@@ -229,7 +229,6 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                         key={component.metadata.uid}
                         component={component}
                         routes={routes}
-                        allComponents={components}
                       />
                     ))}
                   </>
