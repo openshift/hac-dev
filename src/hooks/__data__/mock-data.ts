@@ -1,4 +1,258 @@
+import { EnvironmentKind } from '../../types';
+import { SnapshotEnvironmentBinding } from '../../types/coreBuildService';
 import { RouteKind } from '../../types/routes';
+
+export const mockEnvironments: EnvironmentKind[] = [
+  {
+    kind: 'Environment',
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    metadata: {
+      name: 'prod',
+      namespace: 'test',
+    },
+    spec: {
+      displayName: 'Prod',
+      deploymentStrategy: 'Manual',
+      type: 'poc',
+    },
+  },
+];
+
+const baseSnapshotEnvironmentBinding: SnapshotEnvironmentBinding = {
+  apiVersion: 'appstudio.redhat.com/v1alpha1',
+  kind: 'SnapshotEnvironmentBinding',
+  metadata: {
+    creationTimestamp: '2023-02-21T05:10:22Z',
+    generateName: 'test-app-prod-binding-',
+    labels: {
+      'appstudio.application': 'test-app',
+      'appstudio.environment': 'prod',
+    },
+    name: 'test-app-prod-binding-dxbcz',
+    namespace: 'test-ns',
+    uid: '30341053-fe45-4bc3-824a-075af3b6ba23',
+  },
+  spec: {
+    application: 'test-app',
+    components: [
+      {
+        configuration: {
+          env: [],
+          replicas: 1,
+        },
+        name: 'test-app-devfile-sample-dlod-sample',
+      },
+    ],
+    environment: 'prod',
+    snapshot: 'test-app-dmmr7',
+  },
+};
+export enum SEB_STATUS {
+  SUCCEEDED = 'Succeeded',
+  RUNNING = 'Running',
+  MISSING = 'Missing',
+  PARTIAL = 'Partial',
+  DEGRADED = 'Degraded',
+}
+
+export const mockSnapshotEnvironmentBindings: {
+  [key in SEB_STATUS]: SnapshotEnvironmentBinding[];
+} = {
+  [SEB_STATUS.MISSING]: [{ ...baseSnapshotEnvironmentBinding }],
+  [SEB_STATUS.PARTIAL]: [
+    {
+      ...baseSnapshotEnvironmentBinding,
+      status: {
+        bindingConditions: [
+          {
+            lastTransitionTime: '2023-02-21T05:10:23Z',
+            message:
+              "Can not Reconcile Binding 'test-app-development-binding-dxbcz', since GitOps Repo Conditions status is false.",
+            reason: 'ErrorOccurred',
+            status: 'True',
+            type: 'ErrorOccurred',
+          },
+        ],
+        gitopsRepoConditions: [
+          {
+            lastTransitionTime: '2023-02-21T05:10:23Z',
+            message:
+              'GitOps repository sync failed: failed to push remote to repository "https://<TOKEN>@github.com/ch007m/test-app-nmNw5-identify-count" "fatal: could not read Password for \'https://<TOKEN>@github.com\': No such device or address\\n": exit status 128',
+            reason: 'GenerateError',
+            status: 'False',
+            type: 'GitOpsResourcesGenerated',
+          },
+        ],
+      },
+    },
+  ],
+  [SEB_STATUS.SUCCEEDED]: [
+    {
+      ...baseSnapshotEnvironmentBinding,
+      status: {
+        bindingConditions: [
+          {
+            lastTransitionTime: '2023-02-21T05:26:52Z',
+            message:
+              "SnapshotEventBinding Component status is required to generate GitOps deployment, waiting for the Application Service controller to finish reconciling binding 'my-app-development-binding-w8plb'",
+            reason: 'ErrorOccurred',
+            status: 'True',
+            type: 'ErrorOccurred',
+          },
+        ],
+        componentDeploymentConditions: [
+          {
+            lastTransitionTime: '2023-02-21T05:27:25Z',
+            message: '1 of 1 components deployed',
+            reason: 'CommitsSynced',
+            status: 'True',
+            type: 'AllComponentsDeployed',
+          },
+        ],
+        components: [
+          {
+            gitopsRepository: {
+              branch: 'main',
+              commitID: 'd99ca37ecdb9213a14123ff775f21f44f16d8c96',
+              generatedResources: ['deployment-patch.yaml'],
+              path: 'components/devfile-sample-guhp/overlays/development',
+              url: 'https://github.com/redhat-appstudio-appdata/my-app-ls2Qa-assess-press',
+            },
+            name: 'devfile-sample-guhp',
+          },
+        ],
+        gitopsDeployments: [
+          {
+            componentName: 'devfile-sample-guhp',
+            gitopsDeployment:
+              'my-app-development-binding-w8plb-my-app-development-devfile-sample-guhp',
+          },
+        ],
+        gitopsRepoConditions: [
+          {
+            lastTransitionTime: '2023-02-21T05:26:53Z',
+            message: 'GitOps repository sync successful',
+            reason: 'OK',
+            status: 'True',
+            type: 'GitOpsResourcesGenerated',
+          },
+        ],
+      },
+    },
+  ],
+  [SEB_STATUS.RUNNING]: [
+    {
+      ...baseSnapshotEnvironmentBinding,
+      status: {
+        components: [
+          {
+            gitopsRepository: {
+              branch: 'main',
+              commitID: '95598ffacde7586c92a1eecf7c813080b8a9a1c8\n',
+              generatedResources: ['deployment-patch.yaml'],
+              path: 'components/test-nodeapp/overlays/production',
+              url: 'https://github.com/HACbs-ui-org/test-application-jephilli-define-laugh',
+            },
+            name: 'test-nodeapp',
+          },
+        ],
+        bindingConditions: [
+          {
+            lastTransitionTime: '2023-01-24T09:31:03Z',
+            message:
+              'SnapshotEventBinding Component status is required to generate GitOps deployment, waiting for the Application Service controller to finish reconciling',
+            binding: 'test-app-2-development-binding-w7f2z',
+            reason: 'ErrorOccurred',
+            status: 'True',
+            type: 'ErrorOccurred',
+          },
+        ],
+
+        componentDeploymentConditions: [
+          {
+            lastTransitionTime: '2023-01-24T09:31:34Z',
+            message: '1 of 1 components deployed',
+            reason: 'CommitsUnsynced',
+            status: 'False',
+            type: 'AllComponentsDeployed',
+          },
+        ],
+        gitopsDeployments: [
+          {
+            componentName: 'test-nodeapp',
+            gitopsDeployment:
+              'test-application-development-binding-8h9wl-test-application-development-test-nodeapp',
+          },
+        ],
+        gitopsRepoConditions: [
+          {
+            lastTransitionTime: '2022-11-09T17:33:47Z',
+            message: 'GitOps repository sync successful',
+            reason: 'OK',
+            status: 'True',
+            type: 'GitOpsResourcesGenerated',
+          },
+        ],
+      },
+    },
+  ],
+  [SEB_STATUS.DEGRADED]: [
+    {
+      ...baseSnapshotEnvironmentBinding,
+      status: {
+        components: [
+          {
+            gitopsRepository: {
+              branch: 'main',
+              commitID: '95598ffacde7586c92a1eecf7c813080b8a9a1c8\n',
+              generatedResources: ['deployment-patch.yaml'],
+              path: 'components/test-nodeapp/overlays/production',
+              url: 'https://github.com/HACbs-ui-org/test-application-jephilli-define-laugh',
+            },
+            name: 'test-nodeapp',
+          },
+        ],
+        bindingConditions: [
+          {
+            lastTransitionTime: '2023-01-24T09:31:03Z',
+            message:
+              'SnapshotEventBinding Component status is required to generate GitOps deployment, waiting for the Application Service controller to finish reconciling',
+            binding: 'test-app-2-development-binding-w7f2z',
+            reason: 'ErrorOccurred',
+            status: 'True',
+            type: 'ErrorOccurred',
+          },
+        ],
+
+        componentDeploymentConditions: [
+          {
+            lastTransitionTime: '2023-01-24T09:31:34Z',
+            message: '1 of 1 components deployed',
+            reason: 'CommitsUnsynced',
+            status: 'False',
+            type: 'ErrorOccurred',
+          },
+        ],
+        gitopsDeployments: [
+          {
+            componentName: 'test-nodeapp',
+            gitopsDeployment:
+              'test-application-development-binding-8h9wl-test-application-development-test-nodeapp',
+          },
+        ],
+        gitopsRepoConditions: [
+          {
+            lastTransitionTime: '2022-11-09T17:33:47Z',
+            message: 'GitOps repository sync successful',
+            reason: 'OK',
+            status: 'True',
+            type: 'GitOpsResourcesGenerated',
+          },
+        ],
+      },
+    },
+  ],
+};
 
 export const mockRoutes: RouteKind[] = [
   {
