@@ -84,10 +84,10 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
       //Verify the Pipeline run details Graph
       piplinerunlogsTasks.forEach((item) => {
         applicationDetailPage.verifyGraphNodes(item);
-      })
+      });
 
       DetailsTab.checkStatusSucceeded();
-    })
+    });
   });
 
   describe('Check Component Deployment and Build logs', () => {
@@ -102,7 +102,7 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
       });
 
       Applications.checkComponentStatus(componentName, 'Build Succeeded');
-    })
+    });
 
     it("Validate Build Logs are successfull", () => {
       applicationDetailPage.openBuildLog(componentName);
@@ -110,14 +110,13 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
       applicationDetailPage.verifyFailedLogTasksNotExists();
       applicationDetailPage.checkBuildLog("show-summary", "Image is in : quay.io");
       applicationDetailPage.closeBuildLog();
-    })
+    });
 
     it("Validate the graph views for the created application", () => {
       Applications.goToOverviewTab()
       applicationDetailPage.verifyGraphNodes("Components");
       applicationDetailPage.verifyGraphNodes("Builds");
       applicationDetailPage.verifyGraphNodes("Static environments");
-
-    })
+    });
   });
 });

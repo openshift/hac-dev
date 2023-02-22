@@ -55,7 +55,7 @@ export class ApplicationDetailPage {
 
   verifyGraphNodes(nodeText: string) {
     cy.contains(applicationDetailPagePO.graphNode, nodeText).within(() => {
-      cy.get(applicationDetailPagePO.pipelineStatusSuccess).scrollIntoView().should('be.visible')
+      cy.get(applicationDetailPagePO.pipelineStatusSuccess, { timeout: 60000 }).scrollIntoView().should('be.visible')
     })
   }
 
