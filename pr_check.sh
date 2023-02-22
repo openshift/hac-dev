@@ -9,6 +9,8 @@ export IMAGE="quay.io/cloudservices/hac-dev-frontend"
 export APP_ROOT=$(pwd)
 export WORKSPACE=${WORKSPACE:-$APP_ROOT} # if running in jenkins, use the build's workspace
 export NODE_BUILD_VERSION=14
+export CHROME_IMAGE="quay.io/cloudservices/insights-chrome-frontend"
+export CHROME_TAG="f5f1929"
 IMAGE="quay.io/cloudservices/hac-dev-frontend"
 COMMON_BUILDER=https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master
 
@@ -47,7 +49,7 @@ bonfire deploy \
         --source=appsre \
         --clowd-env ${ENV_NAME} \
         --set-template-ref ${COMPONENT}=${GIT_COMMIT} \
-        --set-image-tag ${IMAGE}=${IMAGE_TAG} \
+        --set-image-tag ${IMAGE}=${IMAGE_TAG} ${CHROME_IMAGE}=${CHROME_TAG} \
         --namespace ${NAMESPACE}
 
 # Call the keycloak API and add a user
