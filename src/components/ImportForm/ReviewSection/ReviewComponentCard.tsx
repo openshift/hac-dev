@@ -47,13 +47,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
   const [expandedConfig, setExpandedConfig] = React.useState(true);
 
   return (
-    <Card
-      isFlat
-      isCompact
-      isSelectable
-      isSelected={expandedComponent}
-      isExpanded={expandedComponent}
-    >
+    <Card isFlat isCompact isSelected={expandedComponent} isExpanded={expandedComponent}>
       <CardHeader
         onExpand={() => setExpandedComponent((v) => !v)}
         toggleButtonProps={{
