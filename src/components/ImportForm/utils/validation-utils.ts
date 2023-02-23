@@ -36,8 +36,8 @@ const createSourceValidationSchema = (containerImageSupport: boolean) =>
         revision: yup.string(),
         context: yup.string(),
       }),
+      isValidated: yup.boolean().isTrue().required('Required'),
     }),
-    isValidated: yup.boolean().isTrue().required('Required'),
   });
 
 export const sourceValidationSchema = createSourceValidationSchema(true);

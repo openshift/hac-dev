@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../../../types';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { useAccessCheck, useAccessTokenBinding } from '../../utils/auth-utils';
+import { ImportFormValues } from '../../utils/types';
 import { SourceSection } from '../SourceSection';
 
 import '@testing-library/jest-dom';
@@ -27,12 +28,16 @@ jest.mock('../../../../shared/hooks', () => ({
 const useAccessCheckMock = useAccessCheck as jest.Mock;
 const useBindingMock = useAccessTokenBinding as jest.Mock;
 
-const renderSourceSection = (showSamples = true) => {
+const renderSourceSection = (
+  showSamples = true,
+  formikData?: Omit<ImportFormValues, 'application' | 'namespace'>,
+) => {
   const onClick = jest.fn();
+  const data = formikData || { source: { git: { url: '' } } };
 
   const utils = formikRenderer(
     <SourceSection onStrategyChange={showSamples ? onClick : undefined} />,
-    { source: { git: { url: '' } } },
+    data,
   );
   const user = userEvent.setup();
 
@@ -211,5 +216,24 @@ describe('SourceSection', () => {
     useAccessCheckMock.mockReturnValue([{}, false]);
     renderSourceSection(false);
     expect(screen.queryByTestId('samples-info-alert')).toBeNull();
+  });
+
+  it('should not run detection again if repo is previously entered and validated', () => {
+    useAccessCheckMock.mockReturnValue([{}, false]);
+    renderSourceSection(false, {
+      source: { git: { url: 'https://example.com' }, isValidated: true },
+    });
+    expect(useAccessCheckMock).toHaveBeenCalledWith(null, undefined);
+    expect(screen.getByText('Access validated')).toBeVisible();
+    expect(screen.queryByText('Git options')).toBeVisible();
+  });
+
+  it('should run detection if repo is previously entered but not validated', () => {
+    useAccessCheckMock.mockReturnValue([{}, false]);
+    renderSourceSection(false, {
+      source: { git: { url: 'https://example.com' }, isValidated: false },
+    });
+    expect(useAccessCheckMock).toHaveBeenCalledWith('https://example.com', '');
+    expect(screen.queryByText('Access validated')).not.toBeInTheDocument();
   });
 });

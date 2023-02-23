@@ -27,45 +27,55 @@ import { gitUrlRegex } from '../utils/validation-utils';
 import AuthOptions from './AuthOptions';
 import GitOptions from './GitOptions';
 
+enum AccessHelpText {
+  default = '',
+  checking = 'Checking access...',
+  validated = 'Access validated',
+}
+
 type SourceSectionProps = {
   onStrategyChange?: (strategy: ImportStrategy) => void;
 };
 
 export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }) => {
-  const [showAuthOptions, setShowAuthOptions] = React.useState<boolean>(false);
-  const [showGitOptions, setShowGitOptions] = React.useState<boolean>(false);
-
   const [, { value: source, touched, error }] = useField<string>({
     name: 'source.git.url',
     type: 'input',
   });
+  const [, { value: isValidated }] = useField<boolean>('source.isValidated');
   const {
     values: { secret: authSecret },
     setFieldValue,
   } = useFormikContext<ImportFormValues>();
 
   const [sourceUrl, setSourceUrl] = React.useState('');
-  const [validated, setValidated] = React.useState(ValidatedOptions.default);
-  const [helpText, setHelpText] = React.useState('');
+  const [validated, setValidated] = React.useState(
+    isValidated ? ValidatedOptions.success : ValidatedOptions.default,
+  );
+  const [helpText, setHelpText] = React.useState(
+    isValidated ? AccessHelpText.validated : AccessHelpText.default,
+  );
   const [helpTextInvalid, setHelpTextInvalid] = React.useState('');
+  const [showAuthOptions, setShowAuthOptions] = React.useState(false);
+  const [showGitOptions, setShowGitOptions] = React.useState(isValidated);
 
   const fieldId = getFieldId('source.git.url', 'input');
   const isValid = !(touched && error);
   const label = 'Git repo URL';
 
   const [{ isGit, isRepoAccessible, serviceProvider, accessibility }, accessCheckLoaded] =
-    useAccessCheck(sourceUrl, authSecret);
+    useAccessCheck(isValidated ? null : sourceUrl, authSecret);
 
   const setFormValidating = React.useCallback(() => {
     setValidated(ValidatedOptions.default);
-    setHelpText('Checking access...');
-    setFieldValue('isValidated', false);
+    setHelpText(AccessHelpText.checking);
+    setFieldValue('source.isValidated', false);
   }, [setFieldValue]);
 
   const setFormValidated = React.useCallback(() => {
     setValidated(ValidatedOptions.success);
-    setHelpText('Access validated');
-    setFieldValue('isValidated', true);
+    setHelpText(AccessHelpText.validated);
+    setFieldValue('source.isValidated', true);
   }, [setFieldValue]);
 
   const handleSourceChange = React.useCallback(() => {
@@ -134,7 +144,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
   }, [authSecret, isPrivateAuthorized, setFormValidated, setFormValidating]);
 
   useOnMount(() => {
-    source && handleSourceChange();
+    source && !isValidated && handleSourceChange();
   });
 
   const handleStrategyChange = React.useCallback(() => {

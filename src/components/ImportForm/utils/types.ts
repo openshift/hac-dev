@@ -43,6 +43,7 @@ export type ImportFormValues = {
       context?: string;
       revision?: string;
     };
+    isValidated?: boolean;
   };
   namespace: string;
   secret?: string;
