@@ -2,10 +2,10 @@ import * as React from 'react';
 import {
   Button,
   ButtonVariant,
+  Flex,
+  FlexItem,
   FormGroup,
   FormSection,
-  Grid,
-  GridItem,
   HelperText,
   HelperTextItem,
   Text,
@@ -178,8 +178,8 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
           validated={!isValid && ValidatedOptions.error}
           isRequired
         >
-          <Grid hasGutter>
-            <GridItem span={onStrategyChange ? 8 : 12}>
+          <Flex>
+            <FlexItem style={{ flexBasis: '750px' }}>
               <InputField
                 name="source.git.url"
                 placeholder="Enter your source"
@@ -190,9 +190,10 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
                 required
                 data-test="enter-source"
               />
-            </GridItem>
+            </FlexItem>
+
             {onStrategyChange ? (
-              <GridItem span={4}>
+              <FlexItem>
                 No code?{' '}
                 <Button
                   data-testid="start-with-sample-button"
@@ -202,9 +203,9 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
                 >
                   Start with a sample.
                 </Button>
-              </GridItem>
+              </FlexItem>
             ) : null}
-          </Grid>
+          </Flex>
         </FormGroup>
         {showAuthOptions && <AuthOptions />}
         {showGitOptions && <GitOptions />}
