@@ -16,7 +16,6 @@ import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
 import { ApplicationHeader } from './ApplicationHeader';
-import ApplicationModal, { HACBS_APPLICATION_MODAL_HIDE_KEY } from './ApplicationModal';
 import { applicationQuickstartContent } from './ApplicationQuickstartContent';
 import DetailsPage from './DetailsPage';
 import ApplicationOverviewTab from './tabs/ApplicationOverviewTab';
@@ -31,15 +30,6 @@ type HacbsApplicationDetailsProps = {
 };
 
 const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicationName }) => {
-  const [showApplicationModal, setShowApplicationModal] = React.useState<boolean>(
-    window.localStorage.getItem(HACBS_APPLICATION_MODAL_HIDE_KEY) !== 'true',
-  );
-
-  const onModalClose = () => {
-    setShowApplicationModal(false);
-    localStorage.setItem(HACBS_APPLICATION_MODAL_HIDE_KEY, 'true');
-  };
-
   const { namespace, workspace } = useWorkspaceInfo();
 
   const navigate = useNavigate();
@@ -78,7 +68,6 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
 
   return (
     <React.Fragment>
-      <ApplicationModal showApplicationModal={showApplicationModal} onClose={onModalClose} />
       <DetailsPage
         data-test="application-details-test-id"
         headTitle={appDisplayName}

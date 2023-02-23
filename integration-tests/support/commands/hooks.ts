@@ -17,7 +17,6 @@ before(() => {
     JSON.stringify({ 'application-list-getting-started-modal': true }),
   );
 
-  localStorage.setItem('showApplicationModal', 'true');
 
   if (Cypress.env('PR_CHECK') === true) {
     Login.prCheckLogin();
@@ -44,5 +43,4 @@ beforeEach(() => {
     JSON.stringify({ 'application-list-getting-started-modal': true }),
   );
 
-  localStorage.setItem('showApplicationModal', 'true');
 });
