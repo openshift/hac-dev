@@ -107,4 +107,100 @@ describe('RuntimeSelector', () => {
     expect(setFieldValueMock).toHaveBeenCalledWith('detectionFailed', false);
     expect(setFieldValueMock).toHaveBeenCalledWith('isDetected', true);
   });
+
+  it('should set the context directory when the provided repo is matching with sample runtime repo', async () => {
+    useDevfileSamplesMock.mockReturnValue([
+      [
+        {
+          name: 'Basic Nodejs',
+          attributes: {
+            projectType: 'nodejs',
+            git: { remotes: { origin: 'https://github.com/sclorg/nodejs-ex' } },
+          },
+          icon: {},
+        },
+      ],
+      true,
+    ]);
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
+      source: { git: { url: 'https://github.com/sclorg/nodejs-ex', context: '/testDirectory' } },
+      isDetected: false,
+      components: [
+        {
+          projectType: 'nodejs',
+        },
+      ],
+    });
+
+    expect(screen.getByText('Select a runtime')).toBeVisible();
+    await act(async () => screen.getByText('Select a runtime').click());
+
+    useComponentDetectionMock.mockReturnValue([
+      { node: { componentStub: { source: { source: { git: {} } } } } },
+      true,
+    ]);
+    await act(async () => screen.getByText('Basic Nodejs').click());
+
+    expect(screen.getByText('Basic Nodejs')).toBeVisible();
+    expect(useComponentDetectionMock).toHaveBeenLastCalledWith(
+      'https://github.com/sclorg/nodejs-ex',
+      undefined,
+      undefined,
+      '/testDirectory',
+      undefined,
+    );
+    expect(setFieldValueMock).toHaveBeenCalledWith('detectionFailed', false);
+    expect(setFieldValueMock).toHaveBeenCalledWith('isDetected', true);
+  });
+
+  it('should not set the context directory when the runtime is changed', async () => {
+    useDevfileSamplesMock.mockReturnValue([
+      [
+        {
+          name: 'Basic Quarkus',
+          attributes: {
+            projectType: 'quarkus',
+            git: {
+              remotes: {
+                origin: 'https://github.com/devfile-samples/devfile-sample-code-with-quarkus',
+              },
+            },
+          },
+          icon: {},
+        },
+      ],
+      true,
+    ]);
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
+      source: { git: { url: 'https://github.com/sclorg/nodejs-ex', context: '/testDirectory' } },
+      isDetected: false,
+      components: [
+        {
+          projectType: 'nodejs',
+        },
+      ],
+    });
+
+    expect(screen.getByText('Select a runtime')).toBeVisible();
+    await act(async () => screen.getByText('Select a runtime').click());
+
+    useComponentDetectionMock.mockReturnValue([
+      { node: { componentStub: { source: { source: { git: {} } } } } },
+      true,
+    ]);
+    await act(async () => screen.getByText('Basic Quarkus').click());
+
+    expect(screen.getByText('Basic Quarkus')).toBeVisible();
+    expect(useComponentDetectionMock).toHaveBeenLastCalledWith(
+      'https://github.com/devfile-samples/devfile-sample-code-with-quarkus',
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+    );
+    expect(setFieldValueMock).toHaveBeenCalledWith('detectionFailed', false);
+    expect(setFieldValueMock).toHaveBeenCalledWith('isDetected', true);
+  });
 });

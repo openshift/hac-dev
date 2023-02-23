@@ -66,7 +66,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     runtimeSource,
     application,
     secret,
-    context,
+    sourceUrl !== runtimeSource ? undefined : context,
     revision,
   );
 
