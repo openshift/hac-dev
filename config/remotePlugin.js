@@ -83,6 +83,9 @@ const routeExtensions = [
         $codeRef: 'WorkspacePage',
       },
     },
+    flags: {
+      required: ['SIGNUP'],
+    },
   },
 
   // Stonesoup overview
