@@ -18,6 +18,7 @@ describe('DeleteResourceModal', () => {
     const obj = { apiVersion: 'v1', kind: 'Application', metadata: { name: 'test' } };
     const onClose = jest.fn();
     render(<DeleteResourceModal obj={obj} model={ApplicationModel} onClose={onClose} />);
+    expect(screen.getByRole('textbox')).toHaveFocus();
     expect(screen.getByText('Delete')).toBeDisabled();
   });
 
