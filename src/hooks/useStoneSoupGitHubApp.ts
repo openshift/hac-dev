@@ -18,7 +18,7 @@ export const StoneSoupGitHubAppData: { [env: string]: StoneSoupGitHubAppDataType
     url: 'https://github.com/apps/red-hat-appstudio-ci-cd-staging',
     name: 'red-hat-appstudio-ci-cd-staging',
   },
-  prod: { url: 'https://github.com/apps/appstudio-staging-ci', name: 'appstudio-staging-ci' },
+  prod: { url: 'https://github.com/apps/red-hat-appstudio-ci-cd', name: 'red-hat-appstudio-ci-cd' },
 };
 
 export const useStoneSoupGitHubApp = (): StoneSoupGitHubAppDataType => {
