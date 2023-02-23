@@ -132,13 +132,13 @@ export type SnapshotEnvironmentBinding = K8sResourceCommon & {
     snapshot: string;
   };
   status?: {
-    bindingConditions: Condition[];
-    componentDeploymentConditions: Condition[];
-    components: {
+    bindingConditions?: Condition[];
+    componentDeploymentConditions?: Condition[];
+    components?: {
       gitopsRepository: GitopsRepository;
       name: string;
     }[];
-    gitopsDeployments: GitopsDeployment[];
-    gitopsRepoConditions: Condition[];
+    gitopsDeployments?: GitopsDeployment[];
+    gitopsRepoConditions?: Condition[];
   };
 };

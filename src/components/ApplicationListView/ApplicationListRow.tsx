@@ -22,7 +22,7 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
       environmentsLoaded
         ? allEnvironments?.sort?.(
             (a, b) => new Date(b.lastDeploy).getTime() - new Date(a.lastDeploy).getTime(),
-          )?.[0].lastDeploy
+          )?.[0]?.lastDeploy
         : '-',
     [environmentsLoaded, allEnvironments],
   );

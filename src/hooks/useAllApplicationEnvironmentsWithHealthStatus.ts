@@ -53,7 +53,8 @@ export const useAllApplicationEnvironmentsWithHealthStatus = (
         ...environment,
         healthStatus: getComponentDeploymentStatus(snapshotsEnvironmentBinding),
         lastDeploy:
-          snapshotsEnvironmentBinding?.status?.componentDeploymentConditions[0]?.lastTransitionTime,
+          snapshotsEnvironmentBinding?.status?.componentDeploymentConditions?.[0]
+            ?.lastTransitionTime,
       };
     });
   }, [allLoaded, snapshotsEnvironmentBindings, environments, releases]);
