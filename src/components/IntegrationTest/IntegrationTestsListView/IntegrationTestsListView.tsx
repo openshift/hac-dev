@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
   Button,
@@ -20,9 +19,9 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
+import { useIntegrationTestScenarios } from '../../../hooks/useIntegrationTestScenarios';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import emptyStateImgUrl from '../../../imgs/Integration-test.svg';
-import { IntegrationTestScenarioGroupVersionKind } from '../../../models';
 import { Table } from '../../../shared';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
@@ -62,13 +61,10 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
   const { namespace, workspace } = useWorkspaceInfo();
 
   const navigate = useNavigate();
-  const [integrationTests, integrationTestsLoaded] = useK8sWatchResource<
-    IntegrationTestScenarioKind[]
-  >({
-    groupVersionKind: IntegrationTestScenarioGroupVersionKind,
+  const [integrationTests, integrationTestsLoaded] = useIntegrationTestScenarios(
     namespace,
-    isList: true,
-  });
+    applicationName,
+  );
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
 
   const applicationIntegrationTests = React.useMemo(

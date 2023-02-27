@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
-import { ApplicationGroupVersionKind } from '../../models';
+import { useApplication } from '../../hooks/useApplications';
 import { HttpError } from '../../shared/utils/error/http-error';
-import { ApplicationKind } from '../../types';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { MVP_FLAG } from '../../utils/flag-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
@@ -37,11 +35,10 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
   const showModal = useModalLauncher();
   const [mvpFeature] = useFeatureFlag(MVP_FLAG);
 
-  const [application, applicationLoaded, applicationError] = useK8sWatchResource<ApplicationKind>({
-    groupVersionKind: ApplicationGroupVersionKind,
-    name: applicationName,
+  const [application, applicationLoaded, applicationError] = useApplication(
     namespace,
-  });
+    applicationName,
+  );
 
   const appDisplayName = application?.spec?.displayName || application?.metadata?.name || '';
   const applicationBreadcrumbs = useApplicationBreadcrumbs(appDisplayName, false);

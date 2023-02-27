@@ -193,6 +193,18 @@ describe('Pipeline run List', () => {
     expect(filter.value).toBe('');
   });
 
+  it('should not render pipelineRuns with a deletion timestamp', async () => {
+    const updatedPipelineRuns = [...pipelineRuns];
+    pipelineRuns[0].metadata.deletionTimestamp = '1';
+    watchResourceMock.mockReturnValue([updatedPipelineRuns, true]);
+    render(<PipelineRunsListView applicationName={appName} />);
+    await waitFor(() => {
+      expect(screen.getByText('basic-node-js-first')).not.toBeInTheDocument;
+      expect(screen.getByText('basic-node-js-second')).toBeInTheDocument;
+      expect(screen.getByText('basic-node-js-third')).toBeInTheDocument;
+    });
+  });
+
   it('should render filtered pipelinerun list', async () => {
     watchResourceMock.mockReturnValue([pipelineRuns, true]);
     render(<PipelineRunsListView applicationName={appName} />);
@@ -240,5 +252,16 @@ describe('Pipeline run List', () => {
         'No results match the filter criteria. Remove filters or clear all filters to show results',
       ),
     ).toBeInTheDocument;
+  });
+  it('should not render pipelineRuns with a deletionT imestamp', async () => {
+    const updatedPipelineRuns = [...pipelineRuns];
+    pipelineRuns[0].metadata.deletionTimestamp = '1';
+    watchResourceMock.mockReturnValue([updatedPipelineRuns, true]);
+    render(<PipelineRunsListView applicationName={appName} />);
+    await waitFor(() => {
+      expect(screen.getByText('basic-node-js-first')).not.toBeInTheDocument;
+      expect(screen.getByText('basic-node-js-second')).toBeInTheDocument;
+      expect(screen.getByText('basic-node-js-third')).toBeInTheDocument;
+    });
   });
 });

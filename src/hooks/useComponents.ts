@@ -4,6 +4,23 @@ import { ComponentGroupVersionKind } from '../models';
 import { ComponentKind } from '../types';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
+export const useComponent = (
+  namespace: string,
+  componentName: string,
+): [ComponentKind, boolean, unknown] => {
+  const [component, componentsLoaded, error] = useK8sWatchResource<ComponentKind>({
+    groupVersionKind: ComponentGroupVersionKind,
+    namespace,
+    name: componentName,
+  });
+  return React.useMemo(() => {
+    if (componentsLoaded && !error && component?.metadata.deletionTimestamp) {
+      return [null, componentsLoaded, { code: 404 }];
+    }
+    return [component, componentsLoaded, error];
+  }, [component, componentsLoaded, error]);
+};
+
 export const useComponents = (
   namespace: string,
   applicationName: string,
@@ -16,7 +33,9 @@ export const useComponents = (
   const appComponents: ComponentKind[] = React.useMemo(
     () =>
       componentsLoaded
-        ? components?.filter((c) => c.spec.application === applicationName) || []
+        ? components?.filter(
+            (c) => c.spec.application === applicationName && !c.metadata.deletionTimestamp,
+          ) || []
         : [],
     [components, applicationName, componentsLoaded],
   );
