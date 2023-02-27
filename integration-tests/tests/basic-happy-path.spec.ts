@@ -110,7 +110,16 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
       Applications.checkComponentStatus(componentName, 'Build Succeeded');
     });
 
-    it('Validate Build Logs are successfull', () => {
+    it('Verify deployed image exists', () => {
+      cy.get('.component-list-item__details input')
+        .invoke('val')
+        .then((value) => {
+          cy.exec(`skopeo inspect --no-tags -f "Name: {{.Name}} Digest: {{.Digest}}" docker://${value}`)
+            .its('code').should('eq', 0);
+        });
+    });
+
+    it('Validate Build Logs are successful', () => {
       applicationDetailPage.openBuildLog(componentName);
       applicationDetailPage.verifyBuildLogTaskslist(piplinerunlogsTasks); //TO DO : Fetch the piplinerunlogsTasks from cluster using api At runtime.
       applicationDetailPage.verifyFailedLogTasksNotExists();
