@@ -83,7 +83,9 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   createApplication(isAdvancedFlowActive: boolean = false) {
-    (isAdvancedFlowActive) ? cy.get(ComponentsPagePO.create).click().click() : cy.get(ComponentsPagePO.create).click({ force: true });
+    isAdvancedFlowActive
+      ? cy.get(ComponentsPagePO.create).click().click()
+      : cy.get(ComponentsPagePO.create).click({ force: true });
     cy.get(ComponentsPagePO.create).should('be.disabled');
     Common.waitForLoad();
   }

@@ -1,19 +1,18 @@
 // Include the cypress customized commands related files
 import './hooks';
 import './a11y';
-import './perf';
 import { Result } from 'axe-core';
 import { initPerfMeasuring } from './perf';
-const registerCypressGrep = require('cypress-grep')
-registerCypressGrep()
+const registerCypressGrep = require('cypress-grep');
+registerCypressGrep();
 
 declare global {
   namespace Cypress {
     interface Chainable<Subject> {
       logA11yViolations(violations: Result[], target: string): Chainable<Element>;
       testA11y(target: string, selector?: string): Chainable<Element>;
-      perfGroupStart(groupName: string): void
-      perfGroupEnd(groupName: string): void
+      perfGroupStart(groupName: string): void;
+      perfGroupEnd(groupName: string): void;
     }
   }
 }

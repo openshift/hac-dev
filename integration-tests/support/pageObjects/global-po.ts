@@ -40,9 +40,10 @@ export const actions = {
 };
 
 export const navigation = {
-  sideNavigation: (link: string) => `[data-ouia-component-id="SideNavigation"] [data-ouia-component-id="${link}"]`,
+  sideNavigation: (link: string) =>
+    `[data-ouia-component-id="SideNavigation"] [data-ouia-component-id="${link}"]`,
 };
 
 export const breadcrumb = {
-  breadcrumbLink: 'nav[data-ouia-component-type="PF4/Breadcrumb"]'
-}
+  breadcrumbLink: 'nav[data-ouia-component-type="PF4/Breadcrumb"]',
+};

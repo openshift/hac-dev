@@ -1,47 +1,57 @@
-
 export class UIhelper {
-
   static clickTab(tabName: string) {
-    return cy.xpath(`//div[@data-ouia-component-type="PF4/Tabs"]//button[child::span[text()='${tabName}']]`).click()
+    return cy
+      .xpath(
+        `//div[@data-ouia-component-type="PF4/Tabs"]//button[child::span[text()='${tabName}']]`,
+      )
+      .click();
   }
 
   static inputValueInTextBoxByLabelName(label: string, value: string) {
-    return cy.xpath(`//div[@class="pf-c-form__group" and descendant::*[text()='${label}']]//input`).clear().type(value)
+    return cy
+      .xpath(`//div[@class="pf-c-form__group" and descendant::*[text()='${label}']]//input`)
+      .clear()
+      .type(value);
   }
 
   static selectValueInDropdownbyLabelName(label: string, value: string) {
     cy.contains('div[class="pf-c-form__group"]', label).within(() => {
-      cy.get('div[data-test="dropdown"] > button').click()
-      cy.contains('a', value).click().should('not.exist')
-    })
+      cy.get('div[data-test="dropdown"] > button').click();
+      cy.contains('a', value).click().should('not.exist');
+    });
   }
 
   static verifyLabelAndValue(label: string, value: string) {
-    cy.log(`Validate Label : "${label}" should have value : "${value}"`)
-    return cy.xpath(`//div[contains(@class,"list__group") and descendant::dt//*[text()="${label}"]]/dd//*[text()="${value}"]`).scrollIntoView().should('be.visible')
+    cy.log(`Validate Label : "${label}" should have value : "${value}"`);
+    return cy
+      .xpath(
+        `//div[contains(@class,"list__group") and descendant::dt//*[text()="${label}"]]/dd//*[text()="${value}"]`,
+      )
+      .scrollIntoView()
+      .should('be.visible');
   }
 
-  static clickButton(label: string, options?: { invoke?: boolean, force?: boolean }) {
+  static clickButton(label: string, options?: { invoke?: boolean; force?: boolean }) {
     if (options?.invoke) {
-      return cy.xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`).invoke("click");
+      return cy
+        .xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`)
+        .invoke('click');
+    } else if (options?.force) {
+      return cy
+        .xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`)
+        .click({ force: true });
     }
-    else if (options?.force) {
-      return cy.xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`).click({ force: true });
-    }
-    else {
-      return cy.xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`).click();
-    }
+
+    return cy.xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`).click();
   }
 
-  static clickLink(link: string, options?: { invoke?: boolean, force?: boolean }) {
+  static clickLink(link: string, options?: { invoke?: boolean; force?: boolean }) {
     if (options?.invoke) {
-      return cy.xpath(`//a[text()='${link}']`).invoke("click");
-    }
-    else if (options?.force) {
+      return cy.xpath(`//a[text()='${link}']`).invoke('click');
+    } else if (options?.force) {
       return cy.xpath(`//a[text()='${link}']`).click({ force: true });
     }
-    else {
-      return cy.xpath(`//a[text()='${link}']`).click();
-    }
+
+    return cy.xpath(`//a[text()='${link}']`).click();
   }
 }

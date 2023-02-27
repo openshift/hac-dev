@@ -1,5 +1,4 @@
 import { NavItem } from '../support/constants/PageTitle';
-import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { consentButton, navigation, waits } from '../support/pageObjects/global-po';
 
 export class Common {
@@ -8,7 +7,7 @@ export class Common {
   }
 
   static navigateTo(link: NavItem) {
-    cy.get(navigation.sideNavigation(link), { timeout: 80000 }).click()
+    cy.get(navigation.sideNavigation(link), { timeout: 80000 }).click();
     Common.waitForLoad();
   }
 
@@ -27,15 +26,17 @@ export class Common {
 
   static openApplicationURL(applicationName: string) {
     const workspacePathMatcher = new RegExp(/workspaces\/([^/]+)/);
-    cy.url().then(url => {   
-    const [, workspace = ''] = url.match(workspacePathMatcher) || []; 
+    cy.url().then((url) => {
+      const [, workspace = ''] = url.match(workspacePathMatcher) || [];
 
-    Common.openURL(
-      `${Cypress.env('HAC_BASE_URL')}/workspaces/${workspace}/applications/${applicationName.replace('.', '-')}`,
-    );
-    Common.verifyPageTitle(applicationName);
-    Common.waitForLoad();
-  });
+      Common.openURL(
+        `${Cypress.env(
+          'HAC_BASE_URL',
+        )}/workspaces/${workspace}/applications/${applicationName.replace('.', '-')}`,
+      );
+      Common.verifyPageTitle(applicationName);
+      Common.waitForLoad();
+    });
   }
 
   static waitForLoad(timeout = 120000) {
@@ -74,31 +75,35 @@ export class Common {
   }
 
   static checkRowValues(locator: string, valuesToAssert: string[]) {
-    for (let value of valuesToAssert) {
+    for (const value of valuesToAssert) {
       cy.contains(`[data-id="${locator}"]`, value, { timeout: 20000 }).should('exist');
     }
   }
 
-  static checkResponseBodyAndStatusCode(url: string, responseBodyContent: string, waitInterval: number = 2000, retryNum: number = 0) {
+  static checkResponseBodyAndStatusCode(
+    url: string,
+    responseBodyContent: string,
+    waitInterval: number = 2000,
+    retryNum: number = 0,
+  ) {
     expect(retryNum).to.be.lessThan(10);
 
-    cy
-      .request({
-        url: url,
-        timeout: 30000,
-        failOnStatusCode: false,
-      })
-      .then((resp) => {
-        if (resp.status === 200 && resp.body.includes(responseBodyContent) === true) {
-          cy.log(`The response body of URL: ${url}, now contains the content: ${responseBodyContent}`);
-          return
-        }
-        else {
-          cy.log('The response body of URL doesnt contain the expected content yet, retrying...')
-          cy.wait(waitInterval)
-          Common.checkResponseBodyAndStatusCode(url, responseBodyContent, waitInterval, retryNum + 1);
-        }
-      })
+    cy.request({
+      url,
+      timeout: 30000,
+      failOnStatusCode: false,
+    }).then((resp) => {
+      if (resp.status === 200 && resp.body.includes(responseBodyContent) === true) {
+        cy.log(
+          `The response body of URL: ${url}, now contains the content: ${responseBodyContent}`,
+        );
+        return;
+      }
+
+      cy.log('The response body of URL doesnt contain the expected content yet, retrying...');
+      cy.wait(waitInterval);
+      Common.checkResponseBodyAndStatusCode(url, responseBodyContent, waitInterval, retryNum + 1);
+    });
   }
 
   static createGitHubRepository(repoName: string) {
@@ -106,13 +111,13 @@ export class Common {
       method: 'POST',
       url: 'https://api.github.com/orgs/redhat-hac-qe/repos',
       headers: {
-        "Accept": "application/vnd.github+json",
-        "Authorization": `Bearer ${Cypress.env('GH_TOKEN')}`,
-        "X-GitHub-Api-Version": "2022-11-28"
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
+        'X-GitHub-Api-Version': '2022-11-28',
       },
       body: {
-        'name': repoName
-      }
+        name: repoName,
+      },
     });
   }
 
@@ -121,10 +126,10 @@ export class Common {
       method: 'DELETE',
       url: `https://api.github.com/repos/redhat-hac-qe/${repoName}`,
       headers: {
-        "Accept": "application/vnd.github+json",
-        "Authorization": `Bearer ${Cypress.env('GH_TOKEN')}`,
-        "X-GitHub-Api-Version": "2022-11-28"
-      }
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
     });
   }
 
@@ -133,42 +138,44 @@ export class Common {
       method: 'PUT',
       url: `https://api.github.com/repos/redhat-hac-qe/${toRepoName}/import`,
       headers: {
-        "Accept": "application/vnd.github+json",
-        "Authorization": `Bearer ${Cypress.env('GH_TOKEN')}`,
-        "X-GitHub-Api-Version": "2022-11-28"
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
+        'X-GitHub-Api-Version': '2022-11-28',
       },
       body: {
-        'vcs': 'git',
-        'vcs_url': fromRepoLink
-      }
+        vcs: 'git',
+        vcs_url: fromRepoLink,
+      },
     });
   }
 
   static getPRNumber(componentName: string, publicGitRepo: string) {
-    const owner = publicGitRepo.split("/")[3];
-    const repoName = publicGitRepo.split("/")[4];
+    const owner = publicGitRepo.split('/')[3];
+    const repoName = publicGitRepo.split('/')[4];
 
-    return cy.request({
-      url: `https://api.github.com/search/issues?q=${componentName}+type:pr+repo:${owner}/${repoName}`,
-      headers: {
-        "Accept": "application/vnd.github+json",
-        "Authorization": `Bearer ${Cypress.env('GH_TOKEN')}`,
-        "X-GitHub-Api-Version": "2022-11-28"
-      }
-    }).then((searchIssueResponse) => {
-      const pullNumber = searchIssueResponse.body.items[0]["number"];
-      cy.log(pullNumber);
+    return cy
+      .request({
+        url: `https://api.github.com/search/issues?q=${componentName}+type:pr+repo:${owner}/${repoName}`,
+        headers: {
+          Accept: 'application/vnd.github+json',
+          Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      })
+      .then((searchIssueResponse) => {
+        const pullNumber = searchIssueResponse.body.items[0].number;
+        cy.log(pullNumber);
 
-      cy.wrap(String(pullNumber)).as('pullNumber')
-    });
+        cy.wrap(String(pullNumber)).as('pullNumber');
+      });
   }
 
   static deleteFolder(publicGitRepo: string, folderToDelete: string) {
     const GITHUB_TOKEN: string = Cypress.env('GH_TOKEN');
-    const REPOSITORY_OWNER = publicGitRepo.split("/")[3];
-    const REPOSITORY_NAME = publicGitRepo.split("/")[4];
+    const REPOSITORY_OWNER = publicGitRepo.split('/')[3];
+    const REPOSITORY_NAME = publicGitRepo.split('/')[4];
     const TYPE = { BLOB: 'blob', TREE: 'tree' };
-    const BRANCH_NAME = "main";
+    const BRANCH_NAME = 'main';
     const COMMITS_URL = `https://api.github.com/repos/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/git/commits`;
     const REPOSITORY_TREES_URL = `https://api.github.com/repos/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/git/trees`;
     const REF_URL = `https://api.github.com/repos/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/git/refs/heads/${BRANCH_NAME}`;
@@ -180,18 +187,18 @@ export class Common {
     // Get the sha of the last commit on BRANCH_NAME
     cy.request({
       url: REF_URL,
-      headers: headers
+      headers,
     }).then((resp) => {
-      const currentCommitSha = resp.body.object['sha'];
+      const currentCommitSha = resp.body.object.sha;
 
       // Get the sha of the root tree on the commit retrieved previously
       const COMMIT_URL = `${COMMITS_URL}/${currentCommitSha}`;
 
       cy.request({
         url: COMMIT_URL,
-        headers: headers
+        headers,
       }).then((resp) => {
-        const treeSha = resp.body.tree['sha'];
+        const treeSha = resp.body.tree.sha;
 
         // Get the tree corresponding to the folder that must be deleted.
         // Uses the recursive query parameter to retrieve all files whatever the depth.
@@ -199,10 +206,10 @@ export class Common {
         // This truncated output case is NOT handled.
         cy.request({
           url: `${REPOSITORY_TREES_URL}/${BRANCH_NAME}:${folderToDelete}`,
-          headers: headers,
+          headers,
           body: {
-            recursive: true
-          }
+            recursive: true,
+          },
         }).then((resp) => {
           const oldTree = resp.body.tree;
 
@@ -211,9 +218,12 @@ export class Common {
           // The folder only exists in git if it has a file in its offspring.
           const newTree = oldTree
             .filter(({ type }) => type === TYPE.BLOB)
-            .map(({ path, mode, type }) => (
-              { path: `${folderToDelete}/${path}`, sha: null, mode, type } // If sha is null => the file gets deleted
-            ));
+            .map(({ path, mode, type }) => ({
+              path: `${folderToDelete}/${path}`,
+              sha: null,
+              mode,
+              type,
+            })); // If sha is null => the file gets deleted
 
           // Create a new tree with the file offspring of the target folder removed
           cy.request({
@@ -222,12 +232,12 @@ export class Common {
             headers: {
               Accept: 'application/vnd.github+json',
               Authorization: `Bearer ${GITHUB_TOKEN}`,
-              "X-GitHub-Api-Version": "2022-11-28",
+              'X-GitHub-Api-Version': '2022-11-28',
             },
             body: {
               base_tree: treeSha,
-              tree: newTree
-            }
+              tree: newTree,
+            },
           }).then((resp) => {
             const newTreeSha = resp.body.sha;
 
@@ -235,12 +245,12 @@ export class Common {
             cy.request({
               url: COMMITS_URL,
               method: 'POST',
-              headers: headers,
+              headers,
               body: {
-                message: 'Committing with GitHub\'s API :fire:',
+                message: "Committing with GitHub's API :fire:",
                 tree: newTreeSha,
-                parents: [currentCommitSha]
-              }
+                parents: [currentCommitSha],
+              },
             }).then((resp) => {
               const newCommitSha = resp.body.sha;
 
@@ -248,10 +258,10 @@ export class Common {
               cy.request({
                 url: REF_URL,
                 method: 'POST',
-                headers: headers,
+                headers,
                 body: {
-                  sha: newCommitSha
-                }
+                  sha: newCommitSha,
+                },
               });
             });
           });

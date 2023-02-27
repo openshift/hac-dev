@@ -1,15 +1,15 @@
 interface CommandPerfStats {
-  name: string
-  startTime: number
-  endTime?: number
+  name: string;
+  startTime: number;
+  endTime?: number;
 }
 
 interface CommandPerfGroup {
-  name: string
-  start: number
-  end?: number
-  duration?: number
-  commands?: CommandPerfStats[]
+  name: string;
+  start: number;
+  end?: number;
+  duration?: number;
+  commands?: CommandPerfStats[];
 }
 
 let commands: CommandPerfStats[];
@@ -24,7 +24,7 @@ export const initPerfMeasuring = (logFile: string) => {
   Cypress.on('command:start', (command) => {
     commands.push({
       name: command.attributes.name,
-      startTime: Date.now()
+      startTime: Date.now(),
     });
   });
 
@@ -44,22 +44,22 @@ export const initPerfMeasuring = (logFile: string) => {
 
     groups.push({
       name: groupName,
-      start: Date.now()
+      start: Date.now(),
     });
   });
 
   Cypress.Commands.add('perfGroupEnd', (groupName: string) => {
-    const group = groups.find(value => value.name === groupName);
+    const group = groups.find((value) => value.name === groupName);
     if (group) {
       group.end = Date.now();
     }
-    const groupCommands = commands.filter(value => {
-        return value.startTime >= group.start && value.endTime <= group.end;
+    const groupCommands = commands.filter((value) => {
+      return value.startTime >= group.start && value.endTime <= group.end;
     });
     group.duration = group.end - group.start;
     group.commands = Cypress._.cloneDeep(groupCommands);
 
-    cy.task('readFileIfExists', fileName).then((contents: string|null) => {
+    cy.task('readFileIfExists', fileName).then((contents: string | null) => {
       if (contents) {
         const items = JSON.parse(contents);
         if (!items.length) {
@@ -67,7 +67,7 @@ export const initPerfMeasuring = (logFile: string) => {
           temp.push(group);
           cy.writeFile(fileName, temp);
         } else {
-          items.push(group)
+          items.push(group);
           cy.writeFile(fileName, items);
         }
       } else {
@@ -75,4 +75,4 @@ export const initPerfMeasuring = (logFile: string) => {
       }
     });
   });
-}
+};

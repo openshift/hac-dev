@@ -6,7 +6,7 @@ export const overviewTabPO = {
 
 export const activityTabPO = {
   clickTab: '[data-test="details__tabItem activity"]',
-}
+};
 
 export const componentsTabPO = {
   clickTab: '[data-test="details__tabItem components"]',
@@ -16,10 +16,10 @@ export const componentsTabPO = {
 
 export const latestCommitsTabPO = {
   clickTab: '[data-testid="activity__tabItem latest-commits"]',
-}
+};
 
 export const pipelinerunsTabPO = {
-  pipelinerunsList : 'div[aria-label="Pipeline run List"]',
+  pipelinerunsList: 'div[aria-label="Pipeline run List"]',
   clickTab: '[data-testid="activity__tabItem pipelineruns"]',
 
   clickDetailsTab: '[data-test="details__tabItem detail"]',
@@ -30,7 +30,7 @@ export const pipelinerunsTabPO = {
 
   clickLogsTab: '[data-test="details__tabItem logs"]',
   downloadAllTaskLogsButton: 'Download all task logs',
-}
+};
 
 export const integrationTestsTabPO = {
   clickTab: '[data-test="details__tabItem integrationtests"]',
