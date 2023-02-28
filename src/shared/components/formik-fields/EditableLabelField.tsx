@@ -38,12 +38,19 @@ const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
     />
   );
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      setEditing(false);
+      e.preventDefault();
+    }
+  };
+
   return (
     <FormGroup fieldId={fieldId} {...props} label={label} labelIcon={editing ? null : editIcon}>
       {editing ? (
         <Flex>
           <FlexItem>
-            <InputField name={name} dataTest="editable-label-input" />
+            <InputField name={name} dataTest="editable-label-input" onKeyDown={handleKeyDown} />
           </FlexItem>
           <FlexItem>
             <ActionGroupWithIcons
