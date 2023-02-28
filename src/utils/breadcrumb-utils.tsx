@@ -30,12 +30,17 @@ export const useApplicationBreadcrumbs = (appDisplayName = null, withLink = true
       |
     </span>,
     <BreadcrumbItem key="app-link" component="div">
-      <Link
-        className="pf-c-breadcrumb__link"
-        to={`/stonesoup/workspaces/${workspace}/applications`}
-      >
-        Applications
-      </Link>{' '}
+      {applicationName ? (
+        <Link
+          data-test="applications-breadcrumb-link"
+          className="pf-c-breadcrumb__link"
+          to={`/stonesoup/workspaces/${workspace}/applications`}
+        >
+          Applications
+        </Link>
+      ) : (
+        <span>Applications</span>
+      )}
     </BreadcrumbItem>,
     ...(applicationName
       ? [
