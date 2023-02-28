@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { PipelineRunLabel } from '../consts/pipelinerun';
+import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { ComponentGroupVersionKind } from '../models';
 import { PipelineRunGroupVersionKind } from '../shared';
 import { ComponentKind, PipelineRunKind } from '../types';
@@ -24,20 +24,21 @@ export const usePipelineRun = (
 };
 
 export const useLatestPipelineRunForComponent = (
+  namespace: string,
   component: ComponentKind,
-): PipelineRunKind | undefined => {
-  const { namespace } = useWorkspaceInfo();
+): [PipelineRunKind | undefined, boolean, any] => {
   const [pipelineRuns, prLoaded, prError] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
     namespace,
     isList: true,
     selector: {
       matchLabels: {
+        [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
         [PipelineRunLabel.COMPONENT]: component.metadata.name,
       },
     },
   });
-  return React.useMemo(() => {
+  const latestRun = React.useMemo(() => {
     if (prLoaded && !prError) {
       return pipelineRuns?.sort?.(
         (a, b) =>
@@ -47,6 +48,7 @@ export const useLatestPipelineRunForComponent = (
     }
     return undefined;
   }, [pipelineRuns, prError, prLoaded]);
+  return [latestRun, prLoaded, prError];
 };
 
 export const usePipelineRunsForApplication = (

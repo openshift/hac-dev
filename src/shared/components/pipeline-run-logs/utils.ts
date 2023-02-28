@@ -135,7 +135,7 @@ export enum runStatus {
   Running = 'Running',
   'In Progress' = 'In Progress',
   FailedToStart = 'FailedToStart',
-  PipelineNotStarted = 'PipelineNotStarted',
+  PipelineNotStarted = 'Starting',
   Skipped = 'Skipped',
   Cancelled = 'Cancelled',
   Cancelling = 'Cancelling',

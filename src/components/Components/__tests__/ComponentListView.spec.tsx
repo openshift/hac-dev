@@ -55,7 +55,7 @@ jest.mock('react-router-dom', () => {
 });
 
 jest.mock('../../../hooks/usePipelineRunsForApplication', () => ({
-  useLatestPipelineRunForComponent: () => mockPipelineRuns[0],
+  useLatestPipelineRunForComponent: () => [mockPipelineRuns[0], true],
 }));
 
 jest.mock('../../../utils/component-utils', () => {

@@ -34,7 +34,7 @@ describe('ComponentListItem', () => {
   const mockLatestPipelineRunForComponent = useLatestPipelineRunForComponent as jest.Mock;
 
   beforeEach(() => {
-    mockLatestPipelineRunForComponent.mockReturnValue(mockPipelineRuns[0]);
+    mockLatestPipelineRunForComponent.mockReturnValue([mockPipelineRuns[0], true]);
     useK8sWatchResourceMock.mockReturnValue([[mockPipelineRuns[2]], true]);
   });
 
@@ -65,7 +65,7 @@ describe('ComponentListItem', () => {
   });
 
   it('should render View Build logs action item', async () => {
-    mockLatestPipelineRunForComponent.mockReturnValue(mockPipelineRuns[1]);
+    mockLatestPipelineRunForComponent.mockReturnValue([mockPipelineRuns[1], true]);
     render(
       <BrowserRouter>
         <ComponentListItem component={componentCRMocks[0]} routes={[]} />
