@@ -27,6 +27,7 @@ export interface BaseInputFieldProps extends FieldProps {
   onBlur?: (event) => void;
   autoComplete?: string;
   autoFocus?: boolean;
+  onKeyDown?: (event) => void;
 }
 
 export enum GroupTextType {

@@ -145,6 +145,29 @@ describe('EditableLabelField', () => {
     });
   });
 
+  it('should show label field with updated value and unmount editable field on input and enter press, form should not be submitted', async () => {
+    render(
+      <Wrapper initialValues={initialValues} onSubmit={jest.fn()}>
+        <EditableLabelField name={fieldName} />
+      </Wrapper>,
+    );
+    fireEvent.click(screen.getByTestId('pencil-icon'));
+    await waitFor(() => {
+      const inputField = screen.getByTestId('editable-label-input').querySelector('input');
+      fireEvent.input(inputField, { target: { value: 'new field value' } });
+      fireEvent.keyDown(inputField, { key: 'Enter', code: 'Enter', charCode: 13 });
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('editable-label-input')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('check-icon')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('close-icon')).not.toBeInTheDocument();
+      expect(screen.queryByText('field value')).not.toBeInTheDocument();
+      expect(screen.getByText('new field value')).toBeInTheDocument();
+      expect(screen.getByTestId('pencil-icon')).toBeInTheDocument();
+    });
+  });
+
   it('should set the component name field to editable mode and show the inline error message', async () => {
     render(
       <Wrapper
