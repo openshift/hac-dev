@@ -21,7 +21,7 @@ jest.mock('react-router-dom', () => {
   return {
     ...actual,
     Link: (props) => (
-      <a href={props.to} data-test={props.to}>
+      <a href={props.to} data-test={props['data-test']}>
         {props.children}
       </a>
     ),
@@ -160,5 +160,11 @@ describe('ApplicationDetails', () => {
     appDetails = screen.getByTestId('details');
     activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
     expect(activeTab).toHaveTextContent('Environments');
+  });
+
+  it('should contain applications breadcrumb link in the list view', () => {
+    watchResourceMock.mockReturnValueOnce([mockApplication, true]);
+    routerRenderer(<ApplicationDetails applicationName="test" />);
+    expect(screen.queryByTestId('applications-breadcrumb-link')).toBeInTheDocument();
   });
 });

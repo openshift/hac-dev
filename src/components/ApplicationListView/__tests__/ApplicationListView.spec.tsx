@@ -2,7 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { render, screen } from '@testing-library/react';
+import { render, screen, configure } from '@testing-library/react';
 import { ApplicationKind } from '../../../types';
 import { WorkspaceContext } from '../../../utils/workspace-context-utils';
 import ApplicationListView from '../ApplicationListView';
@@ -27,6 +27,8 @@ jest.mock('../../../utils/workspace-context-utils', () => {
     useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
   };
 });
+
+configure({ testIdAttribute: 'data-test' });
 
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
@@ -164,5 +166,12 @@ describe('Application List', () => {
     render(<ApplicationList />);
     screen.getByText('Easily onboard your applications');
     expect(screen.queryByText('Create and manage your applications.')).toBeNull();
+  });
+
+  it('should not contain applications breadcrumb link in the list view', () => {
+    useFeatureFlagMock.mockReturnValue([false]);
+    watchResourceMock.mockReturnValue([applications, true]);
+    render(<ApplicationList />);
+    expect(screen.queryByTestId('applications-breadcrumb-link')).not.toBeInTheDocument();
   });
 });
