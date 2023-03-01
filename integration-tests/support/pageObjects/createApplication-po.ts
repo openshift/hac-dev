@@ -54,7 +54,7 @@ export const ComponentsPagePO = {
   customBuildRequestedState: '[data-testid="requested-state"]',
   customBuildPendingState: '[data-testid="pending-state"]',
   customBuildReadyState: '[data-testid="ready-state"]',
-  customBuildPipelineModalCloseBtn: '[data-test="close-button custom-pipeline-modal"]'
+  customBuildPipelineModalCloseBtn: '[data-test="close-button custom-pipeline-modal"]',
 };
 
 export const applicationDetailPagePO = {
@@ -66,7 +66,7 @@ export const applicationDetailPagePO = {
   replicaLabel: 'Instances',
   route: (param: string) => `[data-test-id="${param}-route"]`,
   graphNode: 'g[data-kind="node"]',
-  pipelineStatusSuccess: 'g[class="pf-topology-pipelines__pill-status pf-m-success"]'
+  pipelineStatusSuccess: 'g[class="pf-topology-pipelines__pill-status pf-m-success"]',
 };
 
 export const componentsListPagePO = {
@@ -80,5 +80,5 @@ export const buildLogModalContentPO = {
   closeButton: '[aria-label="Close"]',
   logText: '[class="logs__content"]',
   logsTasklist: 'div[data-testid="logs-tasklist"]',
-  failedPipelineRunLogs: 'div[class="pipeline-run-logs"] [class*="pf-m-danger"]'
+  failedPipelineRunLogs: 'div[class="pipeline-run-logs"] [class*="pf-m-danger"]',
 };

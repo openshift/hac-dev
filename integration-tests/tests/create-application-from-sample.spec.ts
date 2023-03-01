@@ -13,16 +13,14 @@ describe('Create Application from Sample', { tags: ['@PR-check', '@publicRepo'] 
   const componentSamplesPage = new ComponentSamplesPage();
   const publicRepos = [
     'https://github.com/nodeshift-starters/devfile-sample.git',
-    'https://github.com/devfile-samples/devfile-sample-code-with-quarkus.git'
+    'https://github.com/devfile-samples/devfile-sample-code-with-quarkus.git',
   ];
 
   beforeEach(function () {
-    cy.intercept(
-      {
-        method: 'GET',
-        url: /^.*\/namespaces\/[A-za-z0-9-]+\/components\?limit=250.*$/,
-      }
-    ).as('componentsAPI');
+    cy.intercept({
+      method: 'GET',
+      url: /^.*\/namespaces\/[A-za-z0-9-]+\/components\?limit=250.*$/,
+    }).as('componentsAPI');
   });
 
   it('NodeJS app can be created', () => {
@@ -38,8 +36,11 @@ describe('Create Application from Sample', { tags: ['@PR-check', '@publicRepo'] 
     Applications.goToComponentsTab();
 
     cy.wait('@componentsAPI').then((xhr) => {
-      for (let item of xhr.response.body.items) {
-        if (item.spec.application == applicationName && item.spec.source.git.url == publicRepos[0]) {
+      for (const item of xhr.response.body.items) {
+        if (
+          item.spec.application === applicationName &&
+          item.spec.source.git.url === publicRepos[0]
+        ) {
           applicationDetailPage.createdComponentExists(item.spec.componentName, applicationName);
           break;
         }
@@ -60,9 +61,12 @@ describe('Create Application from Sample', { tags: ['@PR-check', '@publicRepo'] 
     Applications.goToComponentsTab();
 
     cy.wait('@componentsAPI').then((xhr) => {
-      for (let item of xhr.response.body.items) {
-        if (item.spec.application == applicationName && item.spec.source.git.url == publicRepos[1]) {
-          var quarkusComponentName = item.spec.componentName;
+      for (const item of xhr.response.body.items) {
+        if (
+          item.spec.application === applicationName &&
+          item.spec.source.git.url === publicRepos[1]
+        ) {
+          const quarkusComponentName = item.spec.componentName;
 
           //Check if component exists
           applicationDetailPage.createdComponentExists(quarkusComponentName, applicationName);

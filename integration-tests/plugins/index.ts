@@ -1,18 +1,18 @@
 import * as path from 'path';
-import * as fs from 'fs-extra';
 import * as merge from 'deepmerge';
+import * as fs from 'fs-extra';
 const registerReportPortalPlugin = require('@reportportal/agent-js-cypress/lib/plugin');
 
 function getConfigurationByFile(file: string) {
-  const pathToConfigFile = path.resolve('config', `${file}.json`)
+  const pathToConfigFile = path.resolve('config', `${file}.json`);
 
-  return fs.readJsonSync(pathToConfigFile)
+  return fs.readJsonSync(pathToConfigFile);
 }
 
 module.exports = (on, config) => {
   // optional: register cypress-grep plugin code
   // https://github.com/cypress-io/cypress-grep/tree/v2.14.0
-  require('cypress-grep/src/plugin')(config)
+  require('cypress-grep/src/plugin')(config);
   const file = config.env.configFile || 'hac-dev-default';
 
   const logOptions = {
@@ -39,14 +39,14 @@ module.exports = (on, config) => {
       if (fs.existsSync(filename)) {
         return fs.readFileSync(filename, 'utf8');
       }
-      return null
+      return null;
     },
     deleteFile(filename: string) {
       if (fs.existsSync(filename)) {
         fs.unlinkSync(filename);
       }
       return null;
-    }
+    },
   });
 
   const configFile = getConfigurationByFile(file);
@@ -58,8 +58,8 @@ module.exports = (on, config) => {
     PASSWORD: '',
     KUBECONFIG: '~/.kube/appstudio-config',
     CLEAN_NAMESPACE: 'false',
-    PR_CHECK: 'false'
-  }
+    PR_CHECK: 'false',
+  };
 
   for (const key in defaultValues) {
     if (!newConfig.env[key]) {
@@ -67,14 +67,19 @@ module.exports = (on, config) => {
     }
   }
 
-  if (newConfig.env.PR_CHECK === true && newConfig.reporterOptions.reportportalAgentJsCypressReporterOptions) {
+  if (
+    newConfig.env.PR_CHECK === true &&
+    newConfig.reporterOptions.reportportalAgentJsCypressReporterOptions
+  ) {
     newConfig.reporterOptions.reportportalAgentJsCypressReporterOptions.token = config.env.RP_TOKEN;
     newConfig.reporterOptions.reportportalAgentJsCypressReporterOptions.description = `${config.env.GH_PR_TITLE}\n${config.env.GH_PR_LINK}`;
     registerReportPortalPlugin(on, newConfig);
   } else {
-    const reporters = (newConfig.reporterOptions.reporterEnabled as string).split(',').filter((value) => {
-      return !value.includes('@reportportal/agent-js-cypress');
-    });
+    const reporters = (newConfig.reporterOptions.reporterEnabled as string)
+      .split(',')
+      .filter((value) => {
+        return !value.includes('@reportportal/agent-js-cypress');
+      });
     newConfig.reporterOptions.reporterEnabled = reporters.join(',');
   }
   return newConfig;

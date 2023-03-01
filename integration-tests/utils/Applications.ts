@@ -34,10 +34,10 @@ export class Applications {
   }
 
   static createApplication(name: string) {
-    cy.title().should('eq', 'Applications | CI/CD')
+    cy.title().should('eq', 'Applications | CI/CD');
     const createApplicationPage = new CreateApplicationPage();
     createApplicationPage.clickCreateApplication();
-    cy.title().should('eq', 'Import - Name application | CI/CD')
+    cy.title().should('eq', 'Import - Name application | CI/CD');
     cy.testA11y(`${pageTitles.createApp} page`);
     createApplicationPage.setApplicationName(name);
     createApplicationPage.clickNext();
@@ -45,12 +45,22 @@ export class Applications {
     cy.testA11y(`Select source form`);
   }
 
-  static createComponent(publicGitRepo: string, componentName: string, runtime?: string, useCustomBuildPipeline: boolean = false) {
+  static createComponent(
+    publicGitRepo: string,
+    componentName: string,
+    runtime?: string,
+    useCustomBuildPipeline: boolean = false,
+  ) {
     addComponentStep(publicGitRepo);
     reviewComponentsStep(componentName, useCustomBuildPipeline, runtime);
   }
 
-  static checkComponentInListView(componentName: string, applicationName: string, componentStatus: string, componentLabel: string) {
+  static checkComponentInListView(
+    componentName: string,
+    applicationName: string,
+    componentStatus: string,
+    componentLabel: string,
+  ) {
     this.createdComponentExists(componentName, applicationName);
     this.checkComponentStatus(componentName, componentStatus);
     this.checkComponentLabel(componentName, componentLabel);
@@ -65,18 +75,24 @@ export class Applications {
   }
 
   static checkComponentStatus(componentName: string, componentStatus: string) {
-    cy.get(componentsTabPO.componentListItem(componentName)).contains(componentStatus, { timeout: 30000 });
+    cy.get(componentsTabPO.componentListItem(componentName)).contains(componentStatus, {
+      timeout: 30000,
+    });
   }
 
   static checkComponentLabel(componentName: string, componentLabel: string) {
-    cy.get(componentsTabPO.componentListItem(componentName)).contains(componentLabel, { timeout: 15000 });
+    cy.get(componentsTabPO.componentListItem(componentName)).contains(componentLabel, {
+      timeout: 15000,
+    });
   }
 
-  static createdPipelinerunSucceeded(pipelinerunName: string, isAdvancedFlowActive: boolean = false) {
+  static createdPipelinerunSucceeded(
+    pipelinerunName: string,
+    isAdvancedFlowActive: boolean = false,
+  ) {
     PipelinerunsTabPage.doesPipelinerunExistsInListView(pipelinerunName);
     PipelinerunsTabPage.clickOnPipelinerunFromListView(pipelinerunName);
     PipelinerunsTabPage.checkPipelinerunStatus(isAdvancedFlowActive);
-
   }
 
   static getComponentListItem(application: string) {
@@ -126,7 +142,7 @@ export class Applications {
 
 function addComponentStep(publicGitRepo: string) {
   const addComponent = new AddComponentPage();
-  cy.title().should('eq', 'Import - Add components | CI/CD')
+  cy.title().should('eq', 'Import - Add components | CI/CD');
 
   // Enter git repo URL
   addComponent.setSource(publicGitRepo);
@@ -136,11 +152,14 @@ function addComponentStep(publicGitRepo: string) {
   addComponent.clickGitOptions();
 
   addComponent.clickNext();
-  cy.title().should('eq', 'Import - Configure components | CI/CD')
+  cy.title().should('eq', 'Import - Configure components | CI/CD');
 }
 
-
-function reviewComponentsStep(componentName: string, useCustomBuildPipeline: boolean, runtime?: string) {
+function reviewComponentsStep(
+  componentName: string,
+  useCustomBuildPipeline: boolean,
+  runtime?: string,
+) {
   const componentPage = new ComponentPage();
 
   // Edit component name

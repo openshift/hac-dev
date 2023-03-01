@@ -22,7 +22,9 @@ export class ApplicationDetailPage {
   }
 
   expandDetails(componentName: string) {
-    cy.get(`[aria-label="${componentName}"]`, { timeout: 60000 }).find(applicationDetailPagePO.detailsArrow).click();
+    cy.get(`[aria-label="${componentName}"]`, { timeout: 60000 })
+      .find(applicationDetailPagePO.detailsArrow)
+      .click();
   }
 
   openComponentSettings(componentName: string) {
@@ -34,7 +36,9 @@ export class ApplicationDetailPage {
   }
 
   checkBuildLog(tasklistItem: string, textToVerify: string, taskTimeout: number = 20000) {
-    cy.get('span[class="pipeline-run-logs__namespan"]').contains(tasklistItem, { timeout: taskTimeout }).click();
+    cy.get('span[class="pipeline-run-logs__namespan"]')
+      .contains(tasklistItem, { timeout: taskTimeout })
+      .click();
     cy.get(buildLogModalContentPO.logText).should('contain.text', textToVerify);
   }
 
@@ -44,19 +48,21 @@ export class ApplicationDetailPage {
   }
 
   verifyBuildLogTaskslist(tasklistItems: string[]) {
-    tasklistItems.forEach(item => {
-      cy.contains(buildLogModalContentPO.logsTasklist, item).should('be.visible')
-    })
+    tasklistItems.forEach((item) => {
+      cy.contains(buildLogModalContentPO.logsTasklist, item).should('be.visible');
+    });
   }
 
   verifyFailedLogTasksNotExists() {
-    cy.get(buildLogModalContentPO.failedPipelineRunLogs).should('not.exist')
+    cy.get(buildLogModalContentPO.failedPipelineRunLogs).should('not.exist');
   }
 
   verifyGraphNodes(nodeText: string) {
     cy.contains(applicationDetailPagePO.graphNode, nodeText).within(() => {
-      cy.get(applicationDetailPagePO.pipelineStatusSuccess, { timeout: 60000 }).scrollIntoView().should('be.visible')
-    })
+      cy.get(applicationDetailPagePO.pipelineStatusSuccess, { timeout: 60000 })
+        .scrollIntoView()
+        .should('be.visible');
+    });
   }
 
   closeBuildLog() {
