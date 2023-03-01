@@ -6,10 +6,10 @@ export const mockItems: DevfileSample[] = [
     displayName: 'Basic Node.js',
     description: 'A simple Hello World Node.js application',
     type: 'sample',
-    tags: ['NodeJS', 'Express'],
+    tags: ['Node.js', 'Express'],
     icon: 'https://nodejs.org/static/images/logos/nodejs-new-pantone-black.svg',
-    projectType: 'nodejs',
-    language: 'nodejs',
+    projectType: 'Node.js',
+    language: 'JavaScript',
     git: {
       remotes: {
         origin: 'https://github.com/nodeshift-starters/devfile-sample.git',
@@ -24,8 +24,8 @@ export const mockItems: DevfileSample[] = [
     type: 'sample',
     tags: ['Java', 'Quarkus'],
     icon: 'https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.svg',
-    projectType: 'quarkus',
-    language: 'java',
+    projectType: 'Quarkus',
+    language: 'Java',
     git: {
       remotes: {
         origin: 'https://github.com/devfile-samples/devfile-sample-code-with-quarkus.git',
@@ -39,9 +39,9 @@ export const mockItems: DevfileSample[] = [
     description: 'A simple Hello World Java Spring Boot application using Maven',
     type: 'sample',
     tags: ['Java', 'Spring'],
-    icon: 'https://spring.io/images/projects/spring-edf462fec682b9d48cf628eaf9e19521.svg',
+    icon: 'https://raw.githubusercontent.com/devfile-samples/devfile-stack-icons/main/spring.svg',
     projectType: 'springboot',
-    language: 'java',
+    language: 'Java',
     git: {
       remotes: {
         origin: 'https://github.com/devfile-samples/devfile-sample-java-springboot-basic.git',
@@ -54,13 +54,45 @@ export const mockItems: DevfileSample[] = [
     displayName: 'Basic Python',
     description: 'A simple Hello World application using Python',
     type: 'sample',
-    tags: ['Python'],
-    icon: 'https://www.python.org/static/community_logos/python-logo-generic.svg',
-    projectType: 'python',
-    language: 'python',
+    tags: ['Python', 'Pip', 'Flask'],
+    icon: 'https://raw.githubusercontent.com/devfile-samples/devfile-stack-icons/main/python.svg',
+    projectType: 'Python',
+    language: 'Python',
     git: {
       remotes: {
         origin: 'https://github.com/devfile-samples/devfile-sample-python-basic.git',
+      },
+    },
+    provider: 'Red Hat',
+  },
+  {
+    name: 'go-basic',
+    displayName: 'Basic Go',
+    description: 'A simple Hello World application using Go',
+    type: 'sample',
+    tags: ['Go'],
+    icon: 'https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg',
+    projectType: 'Go',
+    language: 'Go',
+    git: {
+      remotes: {
+        origin: 'https://github.com/devfile-samples/devfile-sample-go-basic.git',
+      },
+    },
+    provider: 'Red Hat',
+  },
+  {
+    name: 'dotnet-basic',
+    displayName: 'Basic .NET',
+    description: 'A simple application using .NET 6.0',
+    type: 'sample',
+    tags: ['.NET'],
+    icon: 'https://github.com/dotnet/brand/raw/main/logo/dotnet-logo.png',
+    projectType: 'dotnet',
+    language: '.NET',
+    git: {
+      remotes: {
+        origin: 'https://github.com/devfile-samples/devfile-sample-dotnet60-basic.git',
       },
     },
     provider: 'Red Hat',

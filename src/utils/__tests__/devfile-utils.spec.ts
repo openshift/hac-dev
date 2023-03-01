@@ -1,4 +1,4 @@
-import { mockCatalogItem, mockItems } from '../__data__/mock-devfile-data';
+import { mockItems } from '../__data__/mock-devfile-data';
 import { getDevfileSamples } from '../devfile-utils';
 
 global.fetch = jest.fn().mockImplementationOnce(() => {
@@ -14,6 +14,6 @@ describe('Devfile Utils', () => {
   it('Should convert devfile samples to catalog items', async () => {
     const result = await getDevfileSamples();
 
-    expect(result).toEqual(mockCatalogItem);
+    expect(result).toMatchSnapshot();
   });
 });

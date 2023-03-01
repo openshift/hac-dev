@@ -46,8 +46,9 @@ const SampleSection = ({ onStrategyChange }) => {
       loaded
         ? samples.filter(
             (item) =>
-              item.name.toLowerCase().includes(filter.toLowerCase()) ||
-              item.tags.some((c) => c.toLowerCase().indexOf(filter.trim().toLowerCase()) !== -1),
+              !item.attributes.deprecated &&
+              (item.name.toLowerCase().includes(filter.toLowerCase()) ||
+                item.tags.some((c) => c.toLowerCase().indexOf(filter.trim().toLowerCase()) !== -1)),
           )
         : [],
     [filter, samples, loaded],
