@@ -119,12 +119,6 @@ describe('ApplicationDetails', () => {
     expect(screen.queryByTestId('details__title').innerHTML).toBe('Test Application');
   });
 
-  it('should not display integration test tab if the mvp flag is set to true', async () => {
-    useFeatureFlagMock.mockReturnValue([true]);
-    routerRenderer(<ApplicationDetails applicationName="test" />);
-    expect(screen.queryByTestId('details__tabItem integrationtests')).not.toBeInTheDocument();
-  });
-
   it('should display the overview tab by default', async () => {
     routerRenderer(<ApplicationDetails applicationName="test" />);
     const appDetails = screen.getByTestId('details');

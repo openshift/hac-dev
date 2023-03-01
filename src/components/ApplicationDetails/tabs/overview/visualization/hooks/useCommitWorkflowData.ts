@@ -276,38 +276,34 @@ export const useCommitWorkflowData = (
             runBefore: [],
             runAfter: ['commit'],
           },
-          ...(mvpFeature
-            ? {}
-            : {
-                ...(componentIntegrationTests.length && {
-                  [`${name}-componentTests`]: {
-                    id: `${name}-component-integration-test`,
-                    data: {
-                      label: 'component integration test',
-                      workflowType: WorkflowNodeType.PIPELINE,
-                      status: integrationTestStatus,
-                      isDisabled: componentIntegrationTests.length === 0,
-                      resources: componentIntegrationTests,
-                    },
-                    runBefore: [],
-                    runAfter: [`${name}-build`],
-                  },
-                }),
-                [`${name}-applicationTests`]: {
-                  id: `${name}-application-integration-test`,
-                  data: {
-                    label: 'app integration test',
-                    workflowType: WorkflowNodeType.PIPELINE,
-                    status: integrationTestStatus,
-                    isDisabled: applicationIntegrationTests.length === 0,
-                    resources: applicationIntegrationTests,
-                  },
-                  runBefore: [],
-                  runAfter: isResourcesAvailable(componentIntegrationTests)
-                    ? getNodeNames(componentIntegrationTests)
-                    : [`${name}-build`],
-                },
-              }),
+          ...(componentIntegrationTests.length && {
+            [`${name}-componentTests`]: {
+              id: `${name}-component-integration-test`,
+              data: {
+                label: 'component integration test',
+                workflowType: WorkflowNodeType.PIPELINE,
+                status: integrationTestStatus,
+                isDisabled: componentIntegrationTests.length === 0,
+                resources: componentIntegrationTests,
+              },
+              runBefore: [],
+              runAfter: [`${name}-build`],
+            },
+          }),
+          [`${name}-applicationTests`]: {
+            id: `${name}-application-integration-test`,
+            data: {
+              label: 'app integration test',
+              workflowType: WorkflowNodeType.PIPELINE,
+              status: integrationTestStatus,
+              isDisabled: applicationIntegrationTests.length === 0,
+              resources: applicationIntegrationTests,
+            },
+            runBefore: [],
+            runAfter: isResourcesAvailable(componentIntegrationTests)
+              ? getNodeNames(componentIntegrationTests)
+              : [`${name}-build`],
+          },
           [`${name}-staticEnv`]: {
             id: `${name}-static-env`,
             data: {
@@ -319,9 +315,7 @@ export const useCommitWorkflowData = (
             },
             runBefore: [],
             runAfterResourceKey: 'spec.parentEnvironment',
-            runAfter: mvpFeature
-              ? [`${name}-build`]
-              : isResourcesAvailable(applicationIntegrationTests)
+            runAfter: isResourcesAvailable(applicationIntegrationTests)
               ? getNodeNames(applicationIntegrationTests)
               : [`${name}-application-integration-test`],
           },

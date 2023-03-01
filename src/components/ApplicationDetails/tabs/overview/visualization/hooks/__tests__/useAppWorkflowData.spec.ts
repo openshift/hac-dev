@@ -207,14 +207,14 @@ describe('useAppWorkflowData hook', () => {
     expect(testGroup.label).toBe('Tests');
   });
 
-  it('should return workflow nodes without integration tests, releases and managed environments when mvp flag is true', () => {
+  it('should return workflow nodes without releases and managed environments when mvp flag is true', () => {
     useFeatureFlagMock.mockReturnValue([true]);
 
     const { result } = renderHook(() => useAppWorkflowData('test', false));
     const [model, loaded] = result.current;
 
-    expect(model.nodes).toHaveLength(3);
-    expect(model.edges).toHaveLength(2);
+    expect(model.nodes).toHaveLength(4);
+    expect(model.edges).toHaveLength(3);
     expect(loaded).toBe(true);
   });
 });

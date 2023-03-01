@@ -106,7 +106,6 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
               </Link>
             ),
             isDisabled: false,
-            hidden: mvpFeature,
           },
           {
             key: 'create-environment',
@@ -168,17 +167,11 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             isFilled: true,
             component: <ComponentsTab applicationName={applicationName} />,
           },
-
-          ...(mvpFeature
-            ? []
-            : [
-                {
-                  key: 'integrationtests',
-                  label: 'Integration tests',
-                  component: <IntegrationTestsTab applicationName={applicationName} />,
-                },
-              ]),
-
+          {
+            key: 'integrationtests',
+            label: 'Integration tests',
+            component: <IntegrationTestsTab applicationName={applicationName} />,
+          },
           {
             key: 'environments',
             label: 'Environments',

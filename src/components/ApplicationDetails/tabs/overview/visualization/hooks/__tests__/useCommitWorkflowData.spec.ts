@@ -214,7 +214,7 @@ describe('useCommitWorkflowData hook', () => {
     expect(nodes).toHaveLength(9);
   });
 
-  it('should return commit nodes without integration tests, releases and managed environments when mvp flag is true', () => {
+  it('should return commit nodes without releases and managed environments when mvp flag is true', () => {
     useFeatureFlagMock.mockReturnValue([true]);
     useEnvironmentsMock.mockReturnValue([[sampleEnvironments[0]], true]);
 
@@ -222,15 +222,12 @@ describe('useCommitWorkflowData hook', () => {
 
     const [mvpNodes] = result.current;
     const nonMVPNodes = mvpNodes.filter((n) =>
-      [
-        WorkflowNodeType.COMPONENT_TEST,
-        WorkflowNodeType.APPLICATION_TEST,
-        WorkflowNodeType.RELEASE,
-        WorkflowNodeType.MANAGED_ENVIRONMENT,
-      ].includes(n.data.workflowType),
+      [WorkflowNodeType.RELEASE, WorkflowNodeType.MANAGED_ENVIRONMENT].includes(
+        n.data.workflowType,
+      ),
     );
 
     expect(nonMVPNodes).toHaveLength(0);
-    expect(mvpNodes).toHaveLength(3);
+    expect(mvpNodes).toHaveLength(5);
   });
 });
