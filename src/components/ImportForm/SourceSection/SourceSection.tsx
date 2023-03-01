@@ -42,6 +42,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
   const {
     values: { secret: authSecret },
     setFieldValue,
+    setFieldTouched,
   } = useFormikContext<ImportFormValues>();
 
   const [sourceUrl, setSourceUrl] = React.useState('');
@@ -139,8 +140,9 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
 
   const handleStrategyChange = React.useCallback(() => {
     setFieldValue('source.git.url', '');
+    setFieldTouched('source.git.url', false);
     onStrategyChange(ImportStrategy.SAMPLE);
-  }, [onStrategyChange, setFieldValue]);
+  }, [onStrategyChange, setFieldValue, setFieldTouched]);
 
   const description =
     'To add components to your application, provide a link to your GitHub repo or start with a code sample.';
