@@ -69,6 +69,7 @@ export interface DropdownFieldProps extends FieldProps {
   validateOnChange?: boolean;
   autocompleteFilter?: (text: string, item: object, key?: string) => boolean;
   onChange?: (value: string) => void;
+  dropdownToggle?: (onToggle: (isOpen: boolean) => void) => React.ReactElement;
 }
 
 export type FormSelectFieldOption<T = any> = {
