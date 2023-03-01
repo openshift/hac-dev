@@ -46,7 +46,9 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
 
   const DetectingRuntime = 'Detecting runtime...';
   const items = React.useMemo(() => {
-    return samples?.map((s) => ({ key: s.uid, value: s.name, icon: <img src={s.icon.url} /> }));
+    return (
+      samples?.map((s) => ({ key: s.uid, value: s.name, icon: <img src={s.icon.url} /> })) || []
+    );
   }, [samples]);
 
   const onChange = (value: string) => {
