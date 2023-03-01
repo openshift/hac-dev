@@ -114,6 +114,20 @@ describe('SourceSection', () => {
     await waitFor(() => expect(screen.getByText('Authorization')).toBeInTheDocument());
   });
 
+  it('displays error when repo is not a source repo', async () => {
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: true, serviceProvider: ServiceProviderType.GitHub },
+      true,
+    ]);
+    useBindingMock.mockReturnValue(['', true]);
+
+    const { input, user } = renderSourceSection();
+    await user.type(input, 'https://github.com/openshift/');
+
+    await waitFor(() => expect(screen.getByPlaceholderText('Enter your source')).toBeInvalid());
+    await waitFor(() => expect(screen.getByText('Not a valid source repository')).toBeVisible());
+  });
+
   it('should show Authorization if container image is not accessible', async () => {
     useAccessCheckMock.mockReturnValue([
       { isRepoAccessible: false, isGit: false, serviceProvider: ServiceProviderType.Quay },
