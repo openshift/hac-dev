@@ -14,6 +14,7 @@ import {
 } from '@patternfly/react-core';
 import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
 import { useField, useFormikContext } from 'formik';
+import gitUrlParse from 'git-url-parse';
 import { useOnMount } from '../../../hooks/useOnMount';
 import { getFieldId, InputField } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
@@ -91,6 +92,16 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
   React.useEffect(() => {
     if (accessCheckLoaded) {
       if (isRepoAccessible) {
+        try {
+          const { organization } = gitUrlParse(sourceUrl);
+          if (!organization) {
+            setValidated(ValidatedOptions.error);
+            setHelpTextInvalid('Not a valid source repository');
+            return;
+          }
+        } catch {
+          // ignore, should never happen when isRepoAccessible is true, but for tests it is not valid
+        }
         setFormValidated();
         isGit && setShowGitOptions(true);
       } else {
@@ -114,6 +125,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
     serviceProvider,
     setFieldValue,
     setFormValidated,
+    sourceUrl,
   ]);
 
   const isPrivateAuthorized =
