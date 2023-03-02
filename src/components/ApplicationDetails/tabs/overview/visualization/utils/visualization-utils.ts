@@ -21,6 +21,8 @@ import {
 const STATUS_WIDTH = 24;
 const BADGE_WIDTH = 36;
 
+const DEFAULT_CHAR_WIDTH = 8;
+
 const createGenericNode: NodeCreatorSetup = (type, width?, height?) => (name, data) => ({
   id: name,
   label: data.label,
@@ -100,12 +102,12 @@ export const getTextWidth = (text: string, font: string = '0.875rem RedHatText')
   const canvas = document.createElement('canvas');
   const context = canvas.getContext?.('2d');
   if (!context) {
-    return text.length;
+    return text.length * DEFAULT_CHAR_WIDTH;
   }
   context.font = font;
   const { width } = context.measureText(text);
 
-  return width;
+  return width || text.length * DEFAULT_CHAR_WIDTH;
 };
 
 export const getLabelWidth = (label: string): number =>
