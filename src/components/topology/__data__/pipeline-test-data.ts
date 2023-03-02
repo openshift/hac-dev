@@ -571,9 +571,9 @@ export const testPipelineRun: PipelineRunKind = {
           ],
           taskResults: [
             {
-              name: 'sum',
-              type: 'string',
-              value: '2',
+              name: 'HACBS_TEST_OUTPUT',
+              value:
+                '{"result":"FAILURE","timestamp":"1675992922","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"required_checks","successes":2,"failures":2,"warnings":0}',
             },
           ],
           taskSpec: {
@@ -641,9 +641,9 @@ export const testPipelineRun: PipelineRunKind = {
           ],
           taskResults: [
             {
-              name: 'product',
-              type: 'string',
-              value: '1',
+              name: 'HACBS_TEST_OUTPUT',
+              value:
+                '{"result":"WARNING","timestamp":"1675992922","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"required_checks","successes":2,"failures":0,"warnings":1}',
             },
           ],
           taskSpec: {
@@ -699,6 +699,13 @@ export const testPipelineRun: PipelineRunKind = {
               waiting: {
                 reason: 'PodInitializing',
               },
+            },
+          ],
+          taskResults: [
+            {
+              name: 'HACBS_TEST_OUTPUT',
+              value:
+                '{"result":"SUCCESS","timestamp":"1675992922","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"required_checks","successes":2,"failures":0,"warnings":0}',
             },
           ],
           taskSpec: {
