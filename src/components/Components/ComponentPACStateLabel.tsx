@@ -89,6 +89,20 @@ const ComponentPACStateLabel: React.FC<Props> = ({ component, onStateChange }) =
           </Label>
         </Tooltip>
       );
+
+    case PACState.error:
+      return (
+        <Tooltip content="Install the GitHub application and grant permissions to the component repository.">
+          <Label
+            color="gold"
+            onClick={customizePipeline}
+            aria-role="button"
+            style={{ cursor: 'pointer' }}
+          >
+            Install GitHub app
+          </Label>
+        </Tooltip>
+      );
     default:
       return null;
   }

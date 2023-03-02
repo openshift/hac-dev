@@ -45,14 +45,9 @@ const getConditionStatus = (condition: ResourceStatusCondition) => {
 export type ComponentListViewItemProps = {
   component: ComponentKind;
   routes: RouteKind[];
-  allComponents?: ComponentKind[];
 };
 
-export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
-  component,
-  routes,
-  allComponents,
-}) => {
+export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({ component, routes }) => {
   const [expanded, setExpanded] = React.useState(false);
   const { replicas, targetPort, resources } = component.spec;
   const name = component.metadata.name;
@@ -82,15 +77,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
                     <b>{name}</b>
                   </FlexItem>
                   <FlexItem>
-                    <ComponentPACStateLabel
-                      component={component}
-                      // onStateChange={(pacState) =>
-                      //   setComponentState((prevState) => ({
-                      //     ...prevState,
-                      //     [component.metadata.name]: pacState,
-                      //   }))
-                      // }
-                    />
+                    <ComponentPACStateLabel component={component} />
                   </FlexItem>
                 </Flex>
                 <FlexItem>
@@ -115,7 +102,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
               </DataListCell>
             ) : null,
             <DataListCell key="status" alignRight>
-              <BuildStatusColumn component={component} allComponents={allComponents} />
+              <BuildStatusColumn component={component} />
             </DataListCell>,
           ]}
         />
