@@ -116,14 +116,17 @@ describe('pipelinerun-graph-utils: ', () => {
       expect(nodes.filter((n) => n.type === NodeType.SPACER_NODE)).toHaveLength(1);
     });
 
-    it('should set test status on nodes', () => {
+    it('should set test status counts on nodes', () => {
       const { nodes } = getPipelineRunDataModel(testPipelineRun);
       const failedTestNode = nodes.find((n) => n.id === 'task1');
-      expect(failedTestNode.data.testStatus).toEqual(RunStatus.Cancelled);
+      expect(failedTestNode.data.testFailCount).toEqual(2);
+      expect(failedTestNode.data.testWarnCount).toEqual(0);
       const warningTestNode = nodes.find((n) => n.id === 'task2');
-      expect(warningTestNode.data.testStatus).toEqual(RunStatus.Cancelled);
+      expect(warningTestNode.data.testFailCount).toEqual(0);
+      expect(warningTestNode.data.testWarnCount).toEqual(1);
       const successTestNode = nodes.find((n) => n.id === 'task3');
-      expect(successTestNode.data.testStatus).toBeUndefined();
+      expect(successTestNode.data.testFailCount).toEqual(0);
+      expect(successTestNode.data.testWarnCount).toEqual(0);
     });
   });
 

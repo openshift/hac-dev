@@ -34,10 +34,18 @@ const PipelineRunNode: React.FunctionComponent<PipelineRunNodeProps> = ({
     return newData;
   }, [data]);
 
-  let status = data.status;
-  if (status === RunStatus.Succeeded && data.testStatus) {
-    status = data.testStatus;
-  }
+  const status =
+    data.status === RunStatus.Succeeded && (data.testFailCount || data.testWarnCount)
+      ? RunStatus.Cancelled
+      : data.status;
+
+  const badge =
+    data.testFailCount || data.testFailCount
+      ? `${data.testFailCount || data.testFailCount}`
+      : undefined;
+  const badgeClassName = data.testFailCount
+    ? 'pipelinerun-node__test-status-badge--failed'
+    : 'pipelinerun-node__test-status-badge--warning';
 
   const hasTaskIcon = !!(data.taskIconClass || data.taskIcon);
   const whenDecorator = data.whenStatus ? (
@@ -60,6 +68,8 @@ const PipelineRunNode: React.FunctionComponent<PipelineRunNodeProps> = ({
       contextMenuOpen={contextMenuOpen}
       {...passedData}
       status={status}
+      badge={badge}
+      badgeClassName={badgeClassName}
       {...rest}
       truncateLength={element.getData()?.label?.length}
     >

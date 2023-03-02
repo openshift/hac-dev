@@ -1,3 +1,21 @@
 .pipelinerun-node {
     cursor: default;
+  &__test-status-badge {
+    &--failed {
+      > rect {
+        fill: var(--pf-global--danger-color--100);
+      }
+      > text {
+        fill: var(--pf-global--Color--light-100);
+      }
+    }
+    &--warning {
+      > rect {
+        fill: var(--pf-global--warning-color--100);
+      }
+      > text {
+        fill: var(--pf-global--Color--dark-100);
+      }
+    }
+  }
 }

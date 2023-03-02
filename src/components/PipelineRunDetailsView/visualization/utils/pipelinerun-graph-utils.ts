@@ -133,9 +133,8 @@ export const appendStatus = (
       if (testOutput) {
         try {
           const outputValues = JSON.parse(testOutput.value);
-          if (outputValues.result === 'FAILURE' || outputValues.result === 'WARNING') {
-            mTask.testStatus = RunStatus.Cancelled;
-          }
+          mTask.testFailCount = parseInt(outputValues.failures, 10);
+          mTask.testWarnCount = parseInt(outputValues.warnings, 10);
         } catch (e) {
           // ignore
         }
@@ -176,6 +175,14 @@ export const taskWhenStatus = (task: PipelineTaskWithStatus) => {
   return getWhenStatus(task.status?.reason);
 };
 
+const getBadgeWidth = (data: PipelineRunNodeData, font: string = '0.875rem RedHatText'): number => {
+  const BADGE_PADDING = 24; // 8 before the badge and 8 on each side of the text inside the badge
+  if (!data.testFailCount && !data.testWarnCount) {
+    return 0;
+  }
+  return BADGE_PADDING + getTextWidth(`${data.testFailCount || data.testWarnCount}`, font);
+};
+
 const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind) => {
   const taskList = appendStatus(pipeline, pipelineRun);
 
@@ -188,9 +195,12 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
   const maxWidthForLevel = {};
   dag.topologicalSort((v: Vertex) => {
     if (!maxWidthForLevel[v.level]) {
-      maxWidthForLevel[v.level] = getTextWidth(v.name);
+      maxWidthForLevel[v.level] = getTextWidth(v.name) + getBadgeWidth(v.data);
     } else {
-      maxWidthForLevel[v.level] = Math.max(maxWidthForLevel[v.level], getTextWidth(v.name));
+      maxWidthForLevel[v.level] = Math.max(
+        maxWidthForLevel[v.level],
+        getTextWidth(v.name) + getBadgeWidth(v.data),
+      );
     }
   });
   dag.topologicalSort((vertex: Vertex) => {
@@ -246,7 +256,8 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
         height: DEFAULT_NODE_HEIGHT,
         runAfterTasks,
         status: vertex.data.status?.reason,
-        testStatus: vertex.data.testStatus,
+        testFailCount: vertex.data.testFailCount,
+        testWarnCount: vertex.data.testWarnCount,
         whenStatus: taskWhenStatus(vertex.data),
         task: vertex.data,
       }),
