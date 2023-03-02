@@ -33,8 +33,8 @@ const ComponentLoadingState: React.FC = () => {
           Detecting
         </Title>
         <EmptyStateBody>
-          We&apos;re scanning your GitHub repo to determine runtime and other default settings. This
-          might take some time.
+          Sit tight while we determine your application&apos;s runtime and other settings to
+          configure its build and deployment. This should only take a moment.
         </EmptyStateBody>
       </EmptyState>
     </Bullseye>
