@@ -20,6 +20,7 @@ export type PipelineRunNodeData = {
   width?: number;
   height?: number;
   status?: RunStatus;
+  testStatus?: string;
   whenStatus?: string;
 };
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   DEFAULT_WHEN_OFFSET,
   Node,
+  RunStatus,
   TaskNode,
   WhenDecorator,
   WithContextMenuProps,
@@ -33,6 +34,11 @@ const PipelineRunNode: React.FunctionComponent<PipelineRunNodeProps> = ({
     return newData;
   }, [data]);
 
+  let status = data.status;
+  if (status === RunStatus.Succeeded && data.testStatus) {
+    status = data.testStatus;
+  }
+
   const hasTaskIcon = !!(data.taskIconClass || data.taskIcon);
   const whenDecorator = data.whenStatus ? (
     <WhenDecorator
@@ -53,6 +59,7 @@ const PipelineRunNode: React.FunctionComponent<PipelineRunNodeProps> = ({
       onContextMenu={data.showContextMenu ? onContextMenu : undefined}
       contextMenuOpen={contextMenuOpen}
       {...passedData}
+      status={status}
       {...rest}
       truncateLength={element.getData()?.label?.length}
     >

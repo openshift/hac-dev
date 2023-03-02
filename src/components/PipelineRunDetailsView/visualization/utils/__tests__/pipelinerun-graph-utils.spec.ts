@@ -115,6 +115,16 @@ describe('pipelinerun-graph-utils: ', () => {
       const { nodes } = getPipelineRunDataModel(testPipelineRun);
       expect(nodes.filter((n) => n.type === NodeType.SPACER_NODE)).toHaveLength(1);
     });
+
+    it('should set test status on nodes', () => {
+      const { nodes } = getPipelineRunDataModel(testPipelineRun);
+      const failedTestNode = nodes.find((n) => n.id === 'task1');
+      expect(failedTestNode.data.testStatus).toEqual(RunStatus.Cancelled);
+      const warningTestNode = nodes.find((n) => n.id === 'task2');
+      expect(warningTestNode.data.testStatus).toEqual(RunStatus.Cancelled);
+      const successTestNode = nodes.find((n) => n.id === 'task3');
+      expect(successTestNode.data.testStatus).toBeUndefined();
+    });
   });
 
   describe('appendStatus', () => {

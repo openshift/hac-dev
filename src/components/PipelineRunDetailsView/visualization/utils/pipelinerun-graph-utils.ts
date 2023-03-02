@@ -118,6 +118,29 @@ export const appendStatus = (
     } else if (mTask.status && !mTask.status.reason) {
       mTask.status.reason = RunStatus.Pending;
     }
+
+    // Determine any task test status
+    const taskRunName =
+      pipelineRun.status.taskRuns &&
+      Object.keys(pipelineRun.status.taskRuns).find(
+        (key) => pipelineRun.status.taskRuns[key].pipelineTaskName === mTask.name,
+      );
+    const taskRun = taskRunName && pipelineRun.status.taskRuns[taskRunName];
+    if (taskRun?.status?.taskResults) {
+      const testOutput = taskRun?.status?.taskResults.find(
+        (result) => result.name === 'HACBS_TEST_OUTPUT',
+      );
+      if (testOutput) {
+        try {
+          const outputValues = JSON.parse(testOutput.value);
+          if (outputValues.result === 'FAILURE' || outputValues.result === 'WARNING') {
+            mTask.testStatus = RunStatus.Cancelled;
+          }
+        } catch (e) {
+          // ignore
+        }
+      }
+    }
     return mTask;
   });
 };
@@ -223,6 +246,7 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
         height: DEFAULT_NODE_HEIGHT,
         runAfterTasks,
         status: vertex.data.status?.reason,
+        testStatus: vertex.data.testStatus,
         whenStatus: taskWhenStatus(vertex.data),
         task: vertex.data,
       }),
