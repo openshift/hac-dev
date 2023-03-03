@@ -32,11 +32,25 @@ describe('Review form validation schema', () => {
       ],
       isDetected: true,
     };
-    await expect(reviewValidationSchema.validate(values)).rejects.toThrow('Invalid component name');
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
+    );
     values.components[0].componentStub.componentName = 'Test-';
-    await expect(reviewValidationSchema.validate(values)).rejects.toThrow('Invalid component name');
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
+    );
     values.components[0].componentStub.componentName = 'test-@!';
-    await expect(reviewValidationSchema.validate(values)).rejects.toThrow('Invalid component name');
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
+    );
+    values.components[0].componentStub.componentName = '-test';
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
+    );
+    values.components[0].componentStub.componentName = '1-test';
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
+    );
   });
 
   it('should pass when target port is not provided', async () => {
@@ -70,6 +84,40 @@ describe('Review form validation schema', () => {
       isDetected: true,
     };
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow('Must be an integer');
+  });
+
+  it('should fail when target port is in invalid range', async () => {
+    const values = {
+      components: [
+        {
+          componentStub: {
+            componentName: 'test-comp',
+            targetPort: '0',
+          },
+        },
+      ],
+      isDetected: true,
+    };
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Port must be between 1 and 65535.',
+    );
+  });
+
+  it('should fail when target port is in invalid range', async () => {
+    const values = {
+      components: [
+        {
+          componentStub: {
+            componentName: 'test-comp',
+            targetPort: '65536',
+          },
+        },
+      ],
+      isDetected: true,
+    };
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Port must be between 1 and 65535.',
+    );
   });
 
   it('should fail when resource unit is negative', async () => {

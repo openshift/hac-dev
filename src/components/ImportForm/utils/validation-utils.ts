@@ -16,7 +16,10 @@ const combineRegExps = (...regexps: RegExp[]) => {
 export const applicationValidationSchema = yup.object({
   application: yup
     .string()
-    .matches(resourceNameRegex, 'Name cannot contain spaces, uppercase or special characters.')
+    .matches(
+      resourceNameRegex,
+      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
+    )
     .required('Required'),
 });
 
@@ -57,7 +60,10 @@ export const reviewValidationSchema = yup.object({
       componentStub: yup.object({
         componentName: yup
           .string()
-          .matches(resourceNameRegex, 'Invalid component name')
+          .matches(
+            resourceNameRegex,
+            'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
+          )
           .required('Required'),
         targetPort: yup
           .number()
