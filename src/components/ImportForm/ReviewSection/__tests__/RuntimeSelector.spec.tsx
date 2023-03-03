@@ -24,23 +24,34 @@ jest.mock('formik', () => ({
 
 const useComponentDetectionMock = useComponentDetection as jest.Mock;
 const useDevfileSamplesMock = useDevfileSamples as jest.Mock;
+const detectingRuntime = 'Detecting runtime...';
 
 describe('RuntimeSelector', () => {
-  it('should show loading indicator if runtimes are not fetched', () => {
-    useDevfileSamplesMock.mockReturnValue([]);
-    useComponentDetectionMock.mockReturnValue([]);
+  it('should show Detecting runtime in the dropdown during detection phase', () => {
+    useDevfileSamplesMock.mockReturnValue([[], false]);
+    useComponentDetectionMock.mockReturnValue([[], false]);
     formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, { source: { git: {} } });
 
-    expect(screen.getByRole('progressbar')).toBeVisible();
+    expect(screen.getByText(detectingRuntime)).toBeVisible();
   });
 
-  it('should show dropdown if runtimes are fetched', () => {
-    useDevfileSamplesMock.mockReturnValue([[], true]);
-    useComponentDetectionMock.mockReturnValue([]);
-    formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, { source: { git: {} } });
+  it('should show Other when the detected runtime did not match with samples', async () => {
+    useDevfileSamplesMock.mockReturnValue([
+      [{ name: 'Basic Nodejs', attributes: { projectType: 'nodejs' }, icon: {} }],
+      true,
+    ]);
+    useComponentDetectionMock.mockReturnValue([[], false]);
+    formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
+      isDetected: true,
+      components: [
+        {
+          projectType: 'quarkus',
+        },
+      ],
+      source: { git: {} },
+    });
 
-    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
-    expect(screen.getByText('Select a runtime')).toBeVisible();
+    await act(() => expect(screen.getByText('Other')).toBeVisible());
   });
 
   it('should show correct message if runtime is automatically detected', () => {
@@ -87,8 +98,8 @@ describe('RuntimeSelector', () => {
       ],
     });
 
-    expect(screen.getByText('Select a runtime')).toBeVisible();
-    await act(async () => screen.getByText('Select a runtime').click());
+    expect(screen.getByText(detectingRuntime)).toBeVisible();
+    await act(async () => screen.getByText(detectingRuntime).click());
 
     useComponentDetectionMock.mockReturnValue([
       { node: { componentStub: { source: { source: { git: {} } } } } },
@@ -133,8 +144,8 @@ describe('RuntimeSelector', () => {
       ],
     });
 
-    expect(screen.getByText('Select a runtime')).toBeVisible();
-    await act(async () => screen.getByText('Select a runtime').click());
+    expect(screen.getByText(detectingRuntime)).toBeVisible();
+    await act(async () => screen.getByText(detectingRuntime).click());
 
     useComponentDetectionMock.mockReturnValue([
       { node: { componentStub: { source: { source: { git: {} } } } } },
@@ -183,8 +194,8 @@ describe('RuntimeSelector', () => {
       ],
     });
 
-    expect(screen.getByText('Select a runtime')).toBeVisible();
-    await act(async () => screen.getByText('Select a runtime').click());
+    expect(screen.getByText(detectingRuntime)).toBeVisible();
+    await act(async () => screen.getByText(detectingRuntime).click());
 
     useComponentDetectionMock.mockReturnValue([
       { node: { componentStub: { source: { source: { git: {} } } } } },

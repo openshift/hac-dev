@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Spinner } from '@patternfly/react-core';
+import { DropdownToggle, Spinner, Text } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
 import { DropdownField } from '../../../shared';
 import { useComponentDetection } from '../utils/cdq-utils';
@@ -44,8 +44,11 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
   const [runtimeSource, setRuntimeSource] = React.useState('');
   const [selectedRuntime, setSelectedRuntime] = React.useState(null);
 
+  const DetectingRuntime = 'Detecting runtime...';
   const items = React.useMemo(() => {
-    return samples?.map((s) => ({ key: s.uid, value: s.name, icon: <img src={s.icon.url} /> }));
+    return (
+      samples?.map((s) => ({ key: s.uid, value: s.name, icon: <img src={s.icon.url} /> })) || []
+    );
   }, [samples]);
 
   const onChange = (value: string) => {
@@ -70,13 +73,44 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     revision,
   );
 
+  const detectingRuntimeToggle = React.useCallback(
+    (onToggle) => (
+      <DropdownToggle
+        onToggle={onToggle}
+        isDisabled={detecting || !samplesLoaded}
+        data-test="dropdown-toggle"
+      >
+        {selectedRuntime?.name && selectedRuntime?.name !== DetectingRuntime ? (
+          selectedRuntime.name || 'Select a runtime'
+        ) : (
+          <Text component="p">
+            <Spinner
+              size="md"
+              isSVG
+              aria-label="detecting runtime"
+              style={{ marginRight: 'var(--pf-global--spacer--xs)' }}
+            />
+            {DetectingRuntime}
+          </Text>
+        )}
+      </DropdownToggle>
+    ),
+    [detecting, samplesLoaded, selectedRuntime],
+  );
+
   React.useEffect(() => {
-    if (isDetected && samplesLoaded && !selectedRuntime) {
+    if (
+      isDetected &&
+      samplesLoaded &&
+      (!selectedRuntime || selectedRuntime.name === DetectingRuntime)
+    ) {
       setSelectedRuntime(
         samples?.find(
           (s) => s.attributes.projectType === components[detectedComponentIndex]?.projectType,
         ) || { name: 'Other' },
       );
+    } else if (!selectedRuntime) {
+      setSelectedRuntime({ name: DetectingRuntime });
     }
   }, [components, detectedComponentIndex, isDetected, samples, samplesLoaded, selectedRuntime]);
 
@@ -110,18 +144,16 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     setFieldTouched('runtime');
   }, [setFieldTouched]);
 
-  if (!samplesLoaded || detecting) {
-    return <Spinner isSVG size="md" />;
-  }
-
   return (
     <DropdownField
       name="runtime"
       label="Runtime"
       items={items}
+      isDisabled={detecting || !samplesLoaded}
       placeholder="Select a runtime"
       value={selectedRuntime?.name}
       onChange={onChange}
+      dropdownToggle={detectingRuntimeToggle}
     />
   );
 };

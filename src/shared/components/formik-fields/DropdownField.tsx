@@ -15,6 +15,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
   fullWidth,
   validateOnChange = false,
   value,
+  isDisabled,
   ...props
 }) => {
   const [field, { touched, error }] = useField(name);
@@ -34,6 +35,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
     >
       <BasicDropdown
         {...props}
+        disabled={isDisabled}
         items={items}
         selected={value ?? field.value}
         fullWidth={fullWidth}

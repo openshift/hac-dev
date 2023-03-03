@@ -14,6 +14,7 @@ type BasicDropdownProps = {
   placeholder?: string;
   fullWidth?: boolean;
   disabled?: boolean;
+  dropdownToggle?: (onToggle: (isOpen: boolean) => void) => React.ReactElement;
 };
 
 const BasicDropdown: React.FC<BasicDropdownProps> = ({
@@ -22,6 +23,7 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
   onChange,
   placeholder,
   disabled,
+  dropdownToggle,
 }) => {
   const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
   const onToggle = (isOpen: boolean) => setDropdownOpen(isOpen);
@@ -29,6 +31,19 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
     onChange && onChange(event.currentTarget.textContent);
     setDropdownOpen(false);
   };
+
+  const dropdownToggleComponent = React.useMemo(
+    () =>
+      dropdownToggle ? (
+        dropdownToggle(onToggle)
+      ) : (
+        <DropdownToggle onToggle={onToggle} isDisabled={disabled} data-test="dropdown-toggle">
+          {selected || placeholder}
+        </DropdownToggle>
+      ),
+    [dropdownToggle, selected, placeholder, disabled],
+  );
+
   const dropdownItems = React.useMemo(
     () =>
       items.map((item) => {
@@ -44,11 +59,7 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
   return (
     <Dropdown
       onSelect={onSelect}
-      toggle={
-        <DropdownToggle onToggle={onToggle} isDisabled={disabled} data-test="dropdown-toggle">
-          {selected || placeholder}
-        </DropdownToggle>
-      }
+      toggle={dropdownToggleComponent}
       isOpen={dropdownOpen}
       dropdownItems={dropdownItems}
       autoFocus={false}

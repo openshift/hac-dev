@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, screen } from '@testing-library/react';
+import { act, configure, screen } from '@testing-library/react';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { useComponentDetection } from '../../utils/cdq-utils';
 import { useDevfileSamples } from '../../utils/useDevfileSamples';
@@ -11,6 +11,8 @@ jest.mock('../../utils/cdq-utils', () => ({ useComponentDetection: jest.fn() }))
 jest.mock('../../utils/useDevfileSamples', () => ({
   useDevfileSamples: jest.fn(() => []),
 }));
+
+configure({ testIdAttribute: 'data-test' });
 
 const useComponentDetectionMock = useComponentDetection as jest.Mock;
 const useDevfileSamplesMock = useDevfileSamples as jest.Mock;
@@ -43,6 +45,9 @@ const gitRepoComponent = {
 };
 
 describe('ReviewComponentCard', () => {
+  const {
+    componentStub: { componentName },
+  } = gitRepoComponent;
   it('should render git url if component has git repo', () => {
     useComponentDetectionMock.mockReturnValue([]);
     formikRenderer(
@@ -85,7 +90,7 @@ describe('ReviewComponentCard', () => {
       />,
       { isDetected: true, source: { git: {} } },
     );
-    await act(async () => screen.getByRole('button', { expanded: false }).click());
+    await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
 
     expect(screen.getByText('Deploy configuration')).toBeInTheDocument();
   });
@@ -100,8 +105,7 @@ describe('ReviewComponentCard', () => {
       />,
       { source: { git: {} } },
     );
-    await act(async () => screen.getByRole('button', { expanded: false }).click());
-
+    await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
     expect(screen.queryByText('Deploy configuration')).toBeInTheDocument();
   });
 
