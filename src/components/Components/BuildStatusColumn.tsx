@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 import { useLatestPipelineRunForComponent } from '../../hooks/usePipelineRunsForApplication';
-import { pipelineRunFilterReducer } from '../../shared';
+import { pipelineRunFilterReducer, runStatus } from '../../shared';
 import { ComponentKind } from '../../types';
 import { getBuildStatusIcon } from '../../utils/gitops-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { useBuildLogViewerModal } from '../LogViewer/BuildLogViewer';
 
 type BuildStatusComponentProps = {
@@ -11,14 +12,15 @@ type BuildStatusComponentProps = {
 };
 
 const BuildStatusColumn: React.FC<BuildStatusComponentProps> = ({ component }) => {
-  const pipelineRun = useLatestPipelineRunForComponent(component);
-  const status = pipelineRunFilterReducer(pipelineRun);
+  const { namespace } = useWorkspaceInfo();
+  const [pipelineRun, pipelineRunLoaded] = useLatestPipelineRunForComponent(namespace, component);
+  const status = pipelineRun ? pipelineRunFilterReducer(pipelineRun) : runStatus.PipelineNotStarted;
   const buildLogsModal = useBuildLogViewerModal(component);
   const isContainerImage = !component.spec.source?.git?.url;
 
   return (
     <Flex direction={{ default: 'column' }}>
-      {pipelineRun && (
+      {pipelineRunLoaded && (
         <FlexItem align={{ default: 'alignRight' }}>
           {getBuildStatusIcon(status)} Build {status}
         </FlexItem>
