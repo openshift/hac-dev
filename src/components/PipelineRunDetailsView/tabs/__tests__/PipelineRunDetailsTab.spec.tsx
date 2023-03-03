@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, render, screen } from '@testing-library/react';
+import { PipelineRunLabel } from '../../../../consts/pipelinerun';
 import { CustomError } from '../../../../shared/utils/error/custom-error';
 import { sampleBuildPipelines } from '../../../ApplicationDetails/tabs/overview/visualization/hooks/__data__/workflow-data';
 import { pipelineWithCommits } from '../../../Commits/__data__/pipeline-with-commits';
@@ -140,5 +141,41 @@ describe('PipelineRunDetailsTab', () => {
       wrapper: BrowserRouter,
     });
     screen.getByText('Commit');
+  });
+
+  it('should render the source Url for advanced pipelinerun', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    render(<PipelineRunDetailsTab pipelineRun={pipelineWithCommits[0]} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    screen.getByText('Source');
+  });
+
+  it('should render the source Url for simple pipelinerun', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    const simplePipelineRun = {
+      ...testPipelineRun,
+      metadata: {
+        ...testPipelineRun.metadata,
+        annotations: {
+          ...testPipelineRun.metadata.annotations,
+          [PipelineRunLabel.BUILD_SERVICE_REPO_ANNOTATION]:
+            'https://github.com/test/test-repo?rev=1e0f5587bb0a4986071ddae9a2d59834c3cf8432',
+        },
+      },
+    };
+    render(<PipelineRunDetailsTab pipelineRun={simplePipelineRun} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    screen.getByText('Source');
+  });
+
+  it('should not render the source section for a pipelinerun without any source', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+
+    render(<PipelineRunDetailsTab pipelineRun={testPipelineRun} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    expect(screen.queryByText('Source')).not.toBeInTheDocument();
   });
 });
