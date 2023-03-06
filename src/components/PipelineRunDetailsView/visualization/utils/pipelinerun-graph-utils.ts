@@ -147,7 +147,7 @@ export const appendStatus = (
 export const taskHasWhenExpression = (task: PipelineTask): boolean => task?.when?.length > 0;
 
 export const nodesHasWhenExpression = (nodes: PipelineMixedNodeModel[]): boolean =>
-  nodes.some((n) => taskHasWhenExpression(n.data.task));
+  nodes.some((n) => taskHasWhenExpression(n.data?.task));
 
 export const getWhenStatus = (status: RunStatus): string => {
   switch (status) {
@@ -317,7 +317,7 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
         ? PipelineLayout.PIPELINERUN_VISUALIZATION_SPACED
         : PipelineLayout.PIPELINERUN_VISUALIZATION,
       layers: DEFAULT_LAYERS,
-      y: 50,
+      y: finallyGroup.length ? 50 : 40,
       x: 15,
     },
     nodes: allNodes,

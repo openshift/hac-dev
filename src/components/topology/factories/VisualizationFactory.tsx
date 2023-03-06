@@ -11,7 +11,7 @@ import {
   LayoutFactory,
   ComponentFactory,
 } from '@patternfly/react-topology';
-import { DROP_SHADOW_SPACING } from '../const';
+import { DROP_SHADOW_SPACING, MIN_GRAPH_HEIGHT } from '../const';
 
 type VisualizationFactoryProps = {
   model: Model;
@@ -60,7 +60,7 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
       const horizontalMargin = 35;
 
       setMaxSize({
-        height: maxY + verticalMargin * 2,
+        height: Math.max(MIN_GRAPH_HEIGHT, maxY + verticalMargin * 2),
         width: maxX + DROP_SHADOW_SPACING + horizontalMargin * 2,
       });
     },
