@@ -35,7 +35,7 @@ describe('RuntimeSelector', () => {
     expect(screen.getByText(detectingRuntime)).toBeVisible();
   });
 
-  it('should show Other when the detected runtime did not match with samples', async () => {
+  it('should show Dockerfile when the detected runtime did not match with samples', async () => {
     useDevfileSamplesMock.mockReturnValue([
       [{ name: 'Basic Nodejs', attributes: { projectType: 'nodejs' }, icon: {} }],
       true,
@@ -51,7 +51,7 @@ describe('RuntimeSelector', () => {
       source: { git: {} },
     });
 
-    await act(() => expect(screen.getByText('Other')).toBeVisible());
+    await act(() => expect(screen.getByText('Dockerfile')).toBeVisible());
   });
 
   it('should show correct message if runtime is automatically detected', () => {

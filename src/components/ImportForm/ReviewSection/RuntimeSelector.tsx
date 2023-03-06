@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DropdownToggle, Spinner, Text } from '@patternfly/react-core';
+import { DockerIcon } from '@patternfly/react-icons/dist/esm/icons/docker-icon';
 import { useFormikContext } from 'formik';
 import { DropdownField } from '../../../shared';
 import { useComponentDetection } from '../utils/cdq-utils';
@@ -21,6 +22,13 @@ const patchSourceUrl = (stub: any, url: string) => {
       },
     },
   };
+};
+
+const dockerFileSample = {
+  key: 'docker-build',
+  value: 'Dockerfile',
+  icon: <DockerIcon color="#2496ed" />,
+  runtime: { name: 'Dockerfile' },
 };
 
 export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedComponentIndex }) => {
@@ -45,22 +53,34 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
   const [selectedRuntime, setSelectedRuntime] = React.useState(null);
 
   const DetectingRuntime = 'Detecting runtime...';
+
   const items = React.useMemo(() => {
     return (
-      samples?.map((s) => ({ key: s.uid, value: s.name, icon: <img src={s.icon.url} /> })) || []
+      [
+        ...(samples || []).map((s) => ({
+          key: s.uid,
+          value: s.name,
+          icon: <img src={s.icon.url} />,
+        })),
+        dockerFileSample,
+      ] || []
     );
   }, [samples]);
 
   const onChange = (value: string) => {
     const runtime = samples.find((s) => s.name === value);
     if (
-      (runtime.attributes?.git as any)?.remotes?.origin ===
+      (runtime?.attributes?.git as any)?.remotes?.origin ===
       selectedRuntime?.attributes?.git?.remotes?.origin
     ) {
       return;
     }
-    setSelectedRuntime(runtime);
-    setRuntimeSource((runtime.attributes?.git as any)?.remotes?.origin);
+    const runtimeSourceUrl =
+      value === dockerFileSample.value
+        ? sourceUrl
+        : (runtime?.attributes?.git as any)?.remotes?.origin;
+    setSelectedRuntime(value === dockerFileSample.value ? dockerFileSample.runtime : runtime);
+    setRuntimeSource(runtimeSourceUrl);
     setDetecting(true);
     setFieldValue('isDetected', false);
   };
@@ -107,7 +127,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       setSelectedRuntime(
         samples?.find(
           (s) => s.attributes.projectType === components[detectedComponentIndex]?.projectType,
-        ) || { name: 'Other' },
+        ) || { name: dockerFileSample.value },
       );
     } else if (!selectedRuntime) {
       setSelectedRuntime({ name: DetectingRuntime });
