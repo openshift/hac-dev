@@ -10,6 +10,8 @@ import { TableComposable, Thead, Tbody, Th, Td, Tr } from '@patternfly/react-tab
 import { TektonResultsRun } from '../../../types';
 import { handleURLs } from '../../../utils/render-utils';
 
+import './RunResultsList.scss';
+
 type Props = {
   results: TektonResultsRun[];
   status: string;
@@ -31,8 +33,8 @@ const RunResultsList: React.FC<Props> = ({ results, status }) => (
         <Tbody>
           {results.map(({ name, value }) => (
             <Tr key={`row-${name}`}>
-              <Td>{name}</Td>
-              <Td>{handleURLs(value)}</Td>
+              <Td className="run-results-list__key">{name}</Td>
+              <Td className="run-results-list__value">{handleURLs(value)}</Td>
             </Tr>
           ))}
         </Tbody>

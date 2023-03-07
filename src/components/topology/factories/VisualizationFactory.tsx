@@ -19,6 +19,7 @@ type VisualizationFactoryProps = {
   componentFactory: ComponentFactory;
   controlBar?: (controller: Controller) => React.ReactNode;
   fullHeight?: boolean;
+  children?: React.ReactElement;
 };
 
 type Size = {
@@ -32,6 +33,7 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
   componentFactory,
   controlBar,
   fullHeight = false,
+  children,
 }) => {
   const [controller, setController] = React.useState<Controller>(null);
   const [maxSize, setMaxSize] = React.useState<Size>(null);
@@ -92,6 +94,7 @@ const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
       <TopologyView controlBar={controlBar ? controlBar(controller) : undefined}>
         <VisualizationSurface />
       </TopologyView>
+      {children}
     </VisualizationProvider>
   );
 

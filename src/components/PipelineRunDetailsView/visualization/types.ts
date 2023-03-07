@@ -19,6 +19,7 @@ export type StepStatus = {
 export type PipelineRunNodeData = {
   task: PipelineTask;
   status?: runStatus;
+  namespace: string;
   testFailCount?: number;
   testWarnCount?: number;
   whenStatus?: WhenStatus;
