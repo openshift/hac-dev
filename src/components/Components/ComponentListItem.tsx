@@ -159,14 +159,24 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({ compon
             </DescriptionListGroup>
           )}
           {containerImage && (
-            <DescriptionListGroup>
-              <DescriptionListTerm>Built container image</DescriptionListTerm>
-              <DescriptionListDescription>
-                <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
-                  {containerImage}
-                </ClipboardCopy>
-              </DescriptionListDescription>
-            </DescriptionListGroup>
+            <>
+              <DescriptionListGroup>
+                <DescriptionListTerm>Built container image</DescriptionListTerm>
+                <DescriptionListDescription>
+                  <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
+                    {containerImage}
+                  </ClipboardCopy>
+                </DescriptionListDescription>
+              </DescriptionListGroup>
+              <DescriptionListGroup>
+                <DescriptionListTerm>Download SBOM</DescriptionListTerm>
+                <DescriptionListDescription>
+                  <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
+                    {`cosign download sbom ${containerImage}`}
+                  </ClipboardCopy>
+                </DescriptionListDescription>
+              </DescriptionListGroup>
+            </>
           )}
         </DescriptionList>
       </DataListContent>
