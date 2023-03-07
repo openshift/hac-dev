@@ -100,7 +100,7 @@ export const useAppWorkflowData = (
   ] = useAppStaticEnvironmentNodes(
     namespace,
     applicationName,
-    mvpFeature ? buildTasks : expanded ? applicationIntegrationTestTasks : [testsGroup?.id ?? ''],
+    expanded ? applicationIntegrationTestTasks : [testsGroup?.id ?? ''],
     expanded,
   );
 
@@ -145,8 +145,8 @@ export const useAppWorkflowData = (
     const resourceNodes: PipelineNodeModel[] = [
       ...(componentNodes?.length ? componentNodes : [componentGroup]),
       ...(buildNodes?.length ? buildNodes : [buildGroup]),
-      ...(mvpFeature ? [] : componentIntegrationTestNodes),
-      ...(mvpFeature ? [] : applicationIntegrationTestNodes),
+      ...componentIntegrationTestNodes,
+      ...applicationIntegrationTestNodes,
       ...(staticEnvironmentNodes?.length ? staticEnvironmentNodes : [staticEnvironmentGroup]),
       ...(mvpFeature ? [] : releaseNodes?.length ? releaseNodes : [releaseGroup]),
       ...(mvpFeature
@@ -161,7 +161,7 @@ export const useAppWorkflowData = (
       ...spacerNodes,
       componentGroup,
       buildGroup,
-      ...(mvpFeature ? [] : [testsGroup]),
+      testsGroup,
       staticEnvironmentGroup,
       ...(mvpFeature ? [] : [releaseGroup]),
       ...(mvpFeature ? [] : [managedEnvironmentGroup]),
@@ -173,7 +173,7 @@ export const useAppWorkflowData = (
   const nodes = [
     componentGroup,
     buildGroup,
-    ...(mvpFeature ? [] : [testsGroup]),
+    testsGroup,
     staticEnvironmentGroup,
     ...(mvpFeature ? [] : [releaseGroup]),
     ...(mvpFeature ? [] : [managedEnvironmentGroup]),
