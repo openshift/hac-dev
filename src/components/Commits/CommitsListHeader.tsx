@@ -1,5 +1,5 @@
 export const commitsTableColumnClasses = {
-  name: 'pf-m-width-25',
+  name: 'pf-m-width-25 wrap-column',
   branch: 'pf-m-width-10',
   component: 'pf-m-width-15',
   byUser: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-10',
