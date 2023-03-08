@@ -13,11 +13,11 @@ type CommitWorkflowNodeProps = {
 };
 
 const CommitWorkflowNode: React.FC<CommitWorkflowNodeProps> = ({ element }) => {
-  const { isDisabled, workflowType, status, ...data } = element.getData();
+  const { isDisabled, workflowType, status } = element.getData();
 
   return (
     <TaskNode
-      truncateLength={element.getData().label?.length}
+      truncateLength={element.getLabel()?.length}
       element={element}
       className={css('commit-node', { 'm-disabled': isDisabled })}
       taskIcon={getWorkflowNodeIcon(workflowType)}
@@ -27,7 +27,6 @@ const CommitWorkflowNode: React.FC<CommitWorkflowNodeProps> = ({ element }) => {
       statusIconSize={14}
       hover={isDisabled ? false : undefined}
       paddingY={6}
-      {...data}
     />
   );
 };

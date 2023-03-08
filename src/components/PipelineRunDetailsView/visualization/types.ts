@@ -1,6 +1,6 @@
-import { RunStatus } from '@patternfly/react-topology';
+import { RunStatus, WhenStatus } from '@patternfly/react-topology';
+import { PipelineNodeModel as PfPipelineNodeModel } from '@patternfly/react-topology/dist/esm/pipelines/types';
 import { PipelineTask } from '../../../types';
-import { NodeModel } from '../../topology/utils/create-utils';
 
 export enum PipelineRunNodeType {
   SPACER_NODE = 'spacer-node',
@@ -10,28 +10,32 @@ export enum PipelineRunNodeType {
   EDGE = 'pipelinerun-edge',
 }
 
+export type StepStatus = {
+  name: string;
+  duration: string | null;
+  status: RunStatus;
+};
+
 export type PipelineRunNodeData = {
-  id: string;
   task: PipelineTask;
-  runAfterTasks: string[];
-  label?: string;
-  selected?: boolean;
-  isDisabled?: boolean;
-  width?: number;
-  height?: number;
   status?: RunStatus;
   testFailCount?: number;
   testWarnCount?: number;
-  whenStatus?: string;
+  whenStatus?: WhenStatus;
+  steps?: StepStatus[];
+  description?: string;
 };
-
-export type PipelineRunNode = (
-  type: PipelineRunNodeType,
-  data: PipelineRunNodeData,
-) => NodeModel<PipelineRunNodeData, PipelineRunNodeType>;
 
 export type PipelineTaskWithStatus = PipelineTask & {
   status: {
     reason: RunStatus;
   };
+};
+
+export type PipelineRunNodeModel<D extends PipelineRunNodeData, T> = Omit<
+  PfPipelineNodeModel,
+  'type'
+> & {
+  data: D;
+  type: T;
 };

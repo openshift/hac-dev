@@ -13,7 +13,12 @@ import minBy from 'lodash/minBy';
 import { pipelineRunStatus } from '../../../../shared';
 import { formatPrometheusDuration } from '../../../../shared/components/timestamp/datetime';
 import { PipelineKind, PipelineTask } from '../../../../types/pipeline';
-import { PipelineRunKind } from '../../../../types/pipeline-run';
+import {
+  PipelineRunKind,
+  PLRTaskRunDataStatus,
+  PLRTaskRunStep,
+} from '../../../../types/pipeline-run';
+import { calculateDuration } from '../../../../utils/pipeline-utils';
 import {
   NODE_ICON_WIDTH,
   NODE_PADDING,
@@ -29,13 +34,31 @@ import {
 import { DEFAULT_FINALLLY_GROUP_PADDING, DEFAULT_NODE_HEIGHT } from '../../../topology/const';
 import { DAG, Vertex } from '../../../topology/dag';
 import { PipelineLayout } from '../../../topology/factories';
-import { createGenericNode } from '../../../topology/utils/create-utils';
 import {
-  PipelineRunNode,
   PipelineRunNodeData,
+  PipelineRunNodeModel,
   PipelineRunNodeType,
   PipelineTaskWithStatus,
+  StepStatus,
 } from '../types';
+
+export const terminatedReasonToRunStatus = (reason: string): RunStatus => {
+  switch (reason) {
+    case 'Started':
+      return RunStatus.Pending;
+    case 'Pending':
+      return RunStatus.Pending;
+    case 'Running':
+      return RunStatus.Running;
+    case 'TaskRunCancelled':
+      return RunStatus.Cancelled;
+    case 'Succeeded':
+    case 'Completed':
+      return RunStatus.Succeeded;
+    default:
+      return RunStatus.Failed;
+  }
+};
 
 export const extractDepsFromContextVariables = (contextVariable: string) => {
   const regex = /(?:(?:\$\(tasks.))([a-z0-9_-]+)(?:.results+)(?:[.^\w]+\))/g;
@@ -53,6 +76,29 @@ export const extractDepsFromContextVariables = (contextVariable: string) => {
     }
   }
   return deps;
+};
+
+const getMatchingStep = (stepName: string, status: PLRTaskRunDataStatus): PLRTaskRunStep => {
+  const statusSteps: PLRTaskRunStep[] = status.steps || [];
+  return statusSteps.find((statusStep) => {
+    // In rare occasions the status step name is prefixed with `step-`
+    // This is likely a bug but this workaround will be temporary as it's investigated separately
+    return statusStep.name === stepName || statusStep.name === `step-${stepName}`;
+  });
+};
+
+const getStepDuration = (matchingStep?: PLRTaskRunStep) => {
+  if (!matchingStep) return '';
+
+  if (matchingStep.terminated) {
+    return calculateDuration(matchingStep.terminated.startedAt, matchingStep.terminated.finishedAt);
+  }
+
+  if (matchingStep.running) {
+    return calculateDuration(matchingStep.running.startedAt);
+  }
+
+  return '';
 };
 
 export const getPipelineFromPipelineRun = (pipelineRun: PipelineRunKind): PipelineKind => {
@@ -75,6 +121,37 @@ export const getPipelineFromPipelineRun = (pipelineRun: PipelineRunKind): Pipeli
   };
 };
 
+export const createStepStatus = (
+  stepName: string,
+  status: PLRTaskRunDataStatus & { reason: RunStatus; duration: string },
+): StepStatus => {
+  let stepRunStatus: RunStatus = RunStatus.Pending;
+  let duration: string = null;
+
+  const matchingStep: PLRTaskRunStep = getMatchingStep(stepName, status);
+  if (!status || !status.reason) {
+    stepRunStatus = RunStatus.Cancelled;
+  } else {
+    if (!matchingStep) {
+      stepRunStatus = RunStatus.Pending;
+    } else if (matchingStep.terminated) {
+      stepRunStatus = terminatedReasonToRunStatus(matchingStep.terminated.reason);
+      duration = getStepDuration(matchingStep) || status.duration;
+    } else if (matchingStep.running) {
+      stepRunStatus = RunStatus.Running;
+      duration = getStepDuration(matchingStep);
+    } else if (matchingStep.waiting) {
+      stepRunStatus = RunStatus.Pending;
+    }
+  }
+
+  return {
+    duration,
+    name: stepName,
+    status: stepRunStatus,
+  };
+};
+
 /**
  * Appends the pipeline run status to each tasks in the pipeline.
  * @param pipeline
@@ -83,7 +160,7 @@ export const getPipelineFromPipelineRun = (pipelineRun: PipelineRunKind): Pipeli
  */
 export const appendStatus = (
   pipeline,
-  pipelineRun,
+  pipelineRun: PipelineRunKind,
   isFinallyTasks = false,
 ): PipelineTaskWithStatus[] => {
   const tasks = (isFinallyTasks ? pipeline.spec.finally : pipeline.spec.tasks) || [];
@@ -95,9 +172,9 @@ export const appendStatus = (
     if (!pipelineRun?.status?.taskRuns) {
       return merge(task, { status: { reason: overallPipelineRunStatus } });
     }
-    const mTask = merge(task, {
-      status: find(pipelineRun.status.taskRuns, { pipelineTaskName: task.name })?.status,
-    });
+    const taskStatus = find(pipelineRun.status.taskRuns, { pipelineTaskName: task.name })?.status;
+    const mTask = merge(task, { status: taskStatus });
+
     // append task duration
     if (mTask.status && mTask.status.completionTime && mTask.status.startTime) {
       const date =
@@ -140,6 +217,11 @@ export const appendStatus = (
         }
       }
     }
+
+    // Get the steps status
+    const stepList = taskStatus?.steps || mTask?.spec?.steps || mTask?.taskSpec?.steps || [];
+    mTask.steps = stepList.map((step) => createStepStatus(step.name, mTask.status));
+
     return mTask;
   });
 };
@@ -149,7 +231,7 @@ export const taskHasWhenExpression = (task: PipelineTask): boolean => task?.when
 export const nodesHasWhenExpression = (nodes: PipelineMixedNodeModel[]): boolean =>
   nodes.some((n) => taskHasWhenExpression(n.data.task));
 
-export const getWhenStatus = (status: RunStatus): string => {
+export const getWhenStatus = (status: RunStatus): WhenStatus => {
   switch (status) {
     case RunStatus.Succeeded:
     case RunStatus.Failed:
@@ -159,16 +241,11 @@ export const getWhenStatus = (status: RunStatus): string => {
     case RunStatus.Idle:
       return WhenStatus.Unmet;
     default:
-      return '';
+      return undefined;
   }
 };
 
-const createPipelineRunNode: PipelineRunNode = (
-  type: PipelineRunNodeType,
-  data: PipelineRunNodeData,
-) => createGenericNode(type, data.width, data.height)(data.id, data);
-
-export const taskWhenStatus = (task: PipelineTaskWithStatus) => {
+export const taskWhenStatus = (task: PipelineTaskWithStatus): WhenStatus | undefined => {
   if (!task.when) {
     return undefined;
   }
@@ -248,39 +325,43 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
       });
     }
 
-    nodes.push(
-      createPipelineRunNode(PipelineRunNodeType.TASK_NODE, {
-        id: vertex.name,
-        label: vertex.name,
-        width: maxWidthForLevel[vertex.level] + NODE_PADDING * 2 + NODE_ICON_WIDTH,
-        height: DEFAULT_NODE_HEIGHT,
-        runAfterTasks,
+    const node: PipelineRunNodeModel<PipelineRunNodeData, PipelineRunNodeType> = {
+      id: vertex.name,
+      type: PipelineRunNodeType.TASK_NODE,
+      label: vertex.name,
+      runAfterTasks,
+      width: maxWidthForLevel[vertex.level] + NODE_PADDING * 2 + NODE_ICON_WIDTH,
+      height: DEFAULT_NODE_HEIGHT,
+      data: {
         status: vertex.data.status?.reason,
         testFailCount: vertex.data.testFailCount,
         testWarnCount: vertex.data.testWarnCount,
         whenStatus: taskWhenStatus(vertex.data),
         task: vertex.data,
-      }),
-    );
+        steps: vertex.data.steps,
+        description: vertex.data.status?.taskSpec?.description,
+      },
+    };
+    nodes.push(node);
   });
 
   const finallyTaskList = appendStatus(pipeline, pipelineRun, true);
 
   const maxFinallyNodeName =
     finallyTaskList.sort((a, b) => b.name.length - a.name.length)[0]?.name || '';
-  const finallyNodes = finallyTaskList.map((fTask) =>
-    createPipelineRunNode(PipelineRunNodeType.FINALLY_NODE, {
-      id: fTask.name,
-      label: fTask.name,
-      width:
-        getTextWidth(maxFinallyNodeName) + NODE_PADDING * 2 + DEFAULT_FINALLLY_GROUP_PADDING * 2,
-      height: DEFAULT_NODE_HEIGHT,
-      runAfterTasks: [],
+  const finallyNodes = finallyTaskList.map((fTask) => ({
+    type: PipelineRunNodeType.FINALLY_NODE,
+    id: fTask.name,
+    label: fTask.name,
+    runAfterTasks: [],
+    width: getTextWidth(maxFinallyNodeName) + NODE_PADDING * 2 + DEFAULT_FINALLLY_GROUP_PADDING * 2,
+    height: DEFAULT_NODE_HEIGHT,
+    data: {
       status: fTask.status.reason,
       whenStatus: taskWhenStatus(fTask),
       task: fTask,
-    }),
-  );
+    },
+  }));
   const finallyGroup = finallyNodes.length
     ? [
         {

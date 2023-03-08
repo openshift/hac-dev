@@ -75,7 +75,8 @@ export const statusToRunStatus = (status: string): RunStatus => {
 export const getLinkDataForElement = (
   element: Node<PipelineNodeModel, WorkflowNodeModelData>,
 ): { tab?: string; path?: string; filter?: { name: string; value: string } } => {
-  const { workflowType, label, isDisabled, groupNode, status } = element.getData();
+  const { workflowType, isDisabled, groupNode, status } = element.getData();
+  const label = element.getLabel();
 
   switch (workflowType) {
     case WorkflowNodeType.COMPONENT:

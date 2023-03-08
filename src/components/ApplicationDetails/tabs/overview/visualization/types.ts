@@ -75,22 +75,14 @@ export type Workflow = {
 
 export type WorkflowNodeModelData = {
   application?: string;
-  label: string;
   workflowType: WorkflowNodeType;
   isDisabled?: boolean;
   groupNode?: boolean;
-  runAfterTasks?: string[];
   status?: string;
   resources?: K8sResourceCommon[];
   hidden?: boolean;
   children?: PipelineNodeModel[];
   isParallelNode?: boolean;
-  width?: number;
-};
-
-export type WorkflowNode = {
-  id: string;
-  data: WorkflowNodeModelData;
 };
 
 // Graph Models

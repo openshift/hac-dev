@@ -22,7 +22,13 @@ import {
 } from '../../../../../../types/coreBuildService';
 import { MVP_FLAG } from '../../../../../../utils/flag-utils';
 import { useWorkspaceInfo } from '../../../../../../utils/workspace-context-utils';
-import { CommitComponentResource, Workflow, WorkflowNode, WorkflowNodeType } from '../types';
+import {
+  CommitComponentResource,
+  Workflow,
+  WorkflowNodeModel,
+  WorkflowNodeModelData,
+  WorkflowNodeType,
+} from '../types';
 import {
   appendPrefixToResources,
   getLastEnvironmentsNames,
@@ -33,7 +39,7 @@ import {
 
 export const useCommitWorkflowData = (
   commit: Commit,
-): [nodes: WorkflowNode[], loaded: boolean, errros: unknown[]] => {
+): [nodes: WorkflowNodeModel<WorkflowNodeModelData>[], loaded: boolean, errros: unknown[]] => {
   const { namespace } = useWorkspaceInfo();
   const [mvpFeature] = useFeatureFlag(MVP_FLAG);
 
@@ -362,7 +368,9 @@ export const useCommitWorkflowData = (
     return workflow;
   };
 
-  const nodes: WorkflowNode[] = workflowToNodes(getCommitWorkflow(commitWorkflowData));
+  const nodes: WorkflowNodeModel<WorkflowNodeModelData>[] = workflowToNodes(
+    getCommitWorkflow(commitWorkflowData),
+  );
 
   return [nodes, allResourcesLoaded, allErrors];
 };

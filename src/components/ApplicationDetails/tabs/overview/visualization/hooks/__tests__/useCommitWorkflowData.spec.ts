@@ -154,8 +154,8 @@ describe('useCommitWorkflowData hook', () => {
     const { result } = renderHook(() => useCommitWorkflowData(commit));
     const [nodes] = result.current;
 
-    expect(nodes[0].data.label).toBe('commit');
-    expect(nodes[1].data.label).toBe('build-1-nodejs');
+    expect(nodes[0].label).toBe('commit');
+    expect(nodes[1].label).toBe('build-1-nodejs');
   });
 
   it('Non Abstract nodes should contain the child resources', () => {
@@ -199,9 +199,9 @@ describe('useCommitWorkflowData hook', () => {
       (n) => n.data.workflowType === WorkflowNodeType.MANAGED_ENVIRONMENT,
     );
 
-    expect(sourceNode.data.label).toBe('build-1-nodejs');
-    expect(environmentNode.data.label).toBe('No static environments set');
-    expect(managedEnvironmentNode.data.label).toBe('No managed environments set');
+    expect(sourceNode.label).toBe('build-1-nodejs');
+    expect(environmentNode.label).toBe('No static environments set');
+    expect(managedEnvironmentNode.label).toBe('No managed environments set');
   });
 
   it('should return all the commit workflow model', () => {
