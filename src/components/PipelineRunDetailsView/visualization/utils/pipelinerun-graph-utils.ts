@@ -42,23 +42,9 @@ import {
   StepStatus,
 } from '../types';
 
-export const terminatedReasonToRunStatus = (reason: string): RunStatus => {
-  switch (reason) {
-    case 'Started':
-      return RunStatus.Pending;
-    case 'Pending':
-      return RunStatus.Pending;
-    case 'Running':
-      return RunStatus.Running;
-    case 'TaskRunCancelled':
-      return RunStatus.Cancelled;
-    case 'Succeeded':
-    case 'Completed':
-      return RunStatus.Succeeded;
-    default:
-      return RunStatus.Failed;
-  }
-};
+enum TerminatedReasons {
+  Completed = 'Completed',
+}
 
 export const extractDepsFromContextVariables = (contextVariable: string) => {
   const regex = /(?:(?:\$\(tasks.))([a-z0-9_-]+)(?:.results+)(?:[.^\w]+\))/g;
@@ -135,7 +121,10 @@ export const createStepStatus = (
     if (!matchingStep) {
       stepRunStatus = RunStatus.Pending;
     } else if (matchingStep.terminated) {
-      stepRunStatus = terminatedReasonToRunStatus(matchingStep.terminated.reason);
+      stepRunStatus =
+        matchingStep.terminated.reason === TerminatedReasons.Completed
+          ? RunStatus.Succeeded
+          : RunStatus.Failed;
       duration = getStepDuration(matchingStep) || status.duration;
     } else if (matchingStep.running) {
       stepRunStatus = RunStatus.Running;
@@ -339,7 +328,6 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
         whenStatus: taskWhenStatus(vertex.data),
         task: vertex.data,
         steps: vertex.data.steps,
-        description: vertex.data.status?.taskSpec?.description,
       },
     };
     nodes.push(node);

@@ -23,7 +23,6 @@ export type PipelineRunNodeData = {
   testWarnCount?: number;
   whenStatus?: WhenStatus;
   steps?: StepStatus[];
-  description?: string;
 };
 
 export type PipelineTaskWithStatus = PipelineTask & {

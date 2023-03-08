@@ -46,13 +46,7 @@ const PipelineRunNode: React.FunctionComponent<PipelineRunNodeProps> = ({ elemen
       status={status}
       badge={badge}
       badgeClassName={badgeClassName}
-      toolTip={
-        <PipelineRunNodeTooltip
-          label={element.getLabel()}
-          steps={data.steps}
-          description={data.description}
-        />
-      }
+      toolTip={<PipelineRunNodeTooltip label={element.getLabel()} steps={data.steps} />}
       toolTipProps={{
         className: 'pipelinerun-node__tooltip',
         position: 'top',

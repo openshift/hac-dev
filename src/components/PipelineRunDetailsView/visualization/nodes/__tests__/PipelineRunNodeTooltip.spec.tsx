@@ -42,31 +42,13 @@ const mockSteps = [
   },
 ];
 
-const mockDescription = 'Some short descriptive text';
-
 describe('PipelineRunNodeTooltip', () => {
   it('should display the title of the task', () => {
-    render(
-      <PipelineRunNodeTooltip label="task title" steps={mockSteps} description={mockDescription} />,
-    );
+    render(<PipelineRunNodeTooltip label="task title" steps={mockSteps} />);
     expect(screen.getByText('task title')).toBeTruthy();
   });
-  it('should display the description of the task when set', () => {
-    const tip = render(
-      <PipelineRunNodeTooltip label="task title" steps={mockSteps} description={mockDescription} />,
-    );
-    let toolTip = screen.getByTestId('pipeline-run-tip');
-    expect(toolTip.querySelector('.pipelinerun-node__tooltip--description')).toBeTruthy();
-    tip.unmount();
-
-    render(<PipelineRunNodeTooltip label="task title" steps={mockSteps} />);
-    toolTip = screen.getByTestId('pipeline-run-tip');
-    expect(toolTip.querySelector('.pipelinerun-node__tooltip--description')).toBeFalsy();
-  });
   it('should display the steps when set', () => {
-    const tip = render(
-      <PipelineRunNodeTooltip label="task title" steps={mockSteps} description={mockDescription} />,
-    );
+    const tip = render(<PipelineRunNodeTooltip label="task title" steps={mockSteps} />);
     let toolTip = screen.getByTestId('pipeline-run-tip');
     expect(toolTip.querySelector('.pipelinerun-node__tooltip--step')).toBeTruthy();
     const success = toolTip.querySelectorAll('.pf-topology-pipelines__status-icon.pf-m-success');
@@ -85,7 +67,7 @@ describe('PipelineRunNodeTooltip', () => {
     expect(failed).toHaveLength(1);
     tip.unmount();
 
-    render(<PipelineRunNodeTooltip label="task title" description={mockDescription} />);
+    render(<PipelineRunNodeTooltip label="task title" />);
     toolTip = screen.getByTestId('pipeline-run-tip');
     expect(toolTip.querySelector('.pipelinerun-node__tooltip--step')).toBeFalsy();
   });
