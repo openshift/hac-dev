@@ -48,5 +48,7 @@ export type ImportFormValues = {
   namespace: string;
   secret?: string;
   isDetected?: boolean;
+  detectionFailed?: boolean;
+  initialDetectionLoaded?: boolean;
   runtime?: string;
 };

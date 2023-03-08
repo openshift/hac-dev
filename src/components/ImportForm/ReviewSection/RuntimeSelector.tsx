@@ -41,6 +41,8 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
         git: { url: sourceUrl, revision, context },
       },
       isDetected,
+      detectionFailed,
+      initialDetectionLoaded,
       components,
     },
     setFieldValue,
@@ -62,10 +64,10 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
           value: s.name,
           icon: <img src={s.icon.url} />,
         })),
-        dockerFileSample,
+        ...(!detectionFailed ? [dockerFileSample] : []),
       ] || []
     );
-  }, [samples]);
+  }, [samples, detectionFailed]);
 
   const onChange = (value: string) => {
     const runtime = samples.find((s) => s.name === value);
@@ -93,6 +95,11 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     revision,
   );
 
+  const isDetectingRuntime =
+    !initialDetectionLoaded ||
+    (runtimeSource && !detectionLoaded) ||
+    selectedRuntime?.name === DetectingRuntime;
+
   const detectingRuntimeToggle = React.useCallback(
     (onToggle) => (
       <DropdownToggle
@@ -100,9 +107,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
         isDisabled={detecting || !samplesLoaded}
         data-test="dropdown-toggle"
       >
-        {selectedRuntime?.name && selectedRuntime?.name !== DetectingRuntime ? (
-          selectedRuntime.name || 'Select a runtime'
-        ) : (
+        {isDetectingRuntime ? (
           <Text component="p">
             <Spinner
               size="md"
@@ -112,16 +117,19 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
             />
             {DetectingRuntime}
           </Text>
+        ) : (
+          selectedRuntime?.name || 'Select a runtime'
         )}
       </DropdownToggle>
     ),
-    [detecting, samplesLoaded, selectedRuntime],
+    [detecting, samplesLoaded, selectedRuntime, isDetectingRuntime],
   );
 
   React.useEffect(() => {
     if (
       isDetected &&
       samplesLoaded &&
+      !detectionFailed &&
       (!selectedRuntime || selectedRuntime.name === DetectingRuntime)
     ) {
       setSelectedRuntime(
@@ -129,10 +137,18 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
           (s) => s.attributes.projectType === components[detectedComponentIndex]?.projectType,
         ) || { name: dockerFileSample.value },
       );
-    } else if (!selectedRuntime) {
+    } else if (!selectedRuntime && !detectionFailed) {
       setSelectedRuntime({ name: DetectingRuntime });
     }
-  }, [components, detectedComponentIndex, isDetected, samples, samplesLoaded, selectedRuntime]);
+  }, [
+    components,
+    detectedComponentIndex,
+    isDetected,
+    samples,
+    samplesLoaded,
+    selectedRuntime,
+    detectionFailed,
+  ]);
 
   React.useEffect(() => {
     if (detectionError) {

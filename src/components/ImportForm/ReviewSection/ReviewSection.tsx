@@ -72,6 +72,7 @@ const ReviewSection: React.FunctionComponent = () => {
     if (unmounted) return;
 
     setFieldValue('isDetected', false);
+    setFieldValue('detectionFailed', false);
 
     if (isContainerImage) {
       const sourceItems = sourceUrl.split('/');
@@ -118,6 +119,7 @@ const ReviewSection: React.FunctionComponent = () => {
       setFieldValue('detectionFailed', true);
     }
 
+    setFieldValue('initialDetectionLoaded', detectionLoaded);
     return () => {
       unmounted = true;
     };

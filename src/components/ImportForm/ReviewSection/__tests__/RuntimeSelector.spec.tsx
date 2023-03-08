@@ -35,6 +35,27 @@ describe('RuntimeSelector', () => {
     expect(screen.getByText(detectingRuntime)).toBeVisible();
   });
 
+  it('should show Select a runtime when the initial detection failed to detect a runtime', async () => {
+    useDevfileSamplesMock.mockReturnValue([
+      [{ name: 'Basic Nodejs', attributes: { projectType: 'nodejs' }, icon: {} }],
+      true,
+    ]);
+    useComponentDetectionMock.mockReturnValue([[], false]);
+    formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
+      isDetected: true,
+      initialDetectionLoaded: true,
+      detectionFailed: true,
+      components: [
+        {
+          projectType: 'quarkus',
+        },
+      ],
+      source: { git: {} },
+    });
+
+    await act(() => expect(screen.getByText('Select a runtime')).toBeVisible());
+  });
+
   it('should show Dockerfile when the detected runtime did not match with samples', async () => {
     useDevfileSamplesMock.mockReturnValue([
       [{ name: 'Basic Nodejs', attributes: { projectType: 'nodejs' }, icon: {} }],
@@ -43,6 +64,8 @@ describe('RuntimeSelector', () => {
     useComponentDetectionMock.mockReturnValue([[], false]);
     formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
       isDetected: true,
+      initialDetectionLoaded: true,
+      detectionFailed: false,
       components: [
         {
           projectType: 'quarkus',
@@ -62,6 +85,8 @@ describe('RuntimeSelector', () => {
     useComponentDetectionMock.mockReturnValue([]);
     formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
       isDetected: true,
+      initialDetectionLoaded: true,
+      detectionFailed: false,
       components: [
         {
           projectType: 'nodejs',
@@ -91,6 +116,8 @@ describe('RuntimeSelector', () => {
     formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
       source: { git: {} },
       isDetected: false,
+      initialDetectionLoaded: true,
+      detectionFailed: false,
       components: [
         {
           projectType: 'nodejs',
@@ -137,6 +164,8 @@ describe('RuntimeSelector', () => {
     formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
       source: { git: { url: 'https://github.com/sclorg/nodejs-ex', context: '/testDirectory' } },
       isDetected: false,
+      initialDetectionLoaded: true,
+      detectionFailed: false,
       components: [
         {
           projectType: 'nodejs',
@@ -187,6 +216,8 @@ describe('RuntimeSelector', () => {
     formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
       source: { git: { url: 'https://github.com/sclorg/nodejs-ex', context: '/testDirectory' } },
       isDetected: false,
+      initialDetectionLoaded: true,
+      detectionFailed: false,
       components: [
         {
           projectType: 'nodejs',
