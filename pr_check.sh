@@ -58,43 +58,30 @@ B64_USER=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.username'| tr 
 B64_PASS=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.password' | tr -d '"')
 # These ENVs are populated in the Jenkins job by Vault secrets
 python tmp/keycloak.py $HAC_KC_SSO_URL $HAC_KC_USERNAME $HAC_KC_PASSWORD $B64_USER $B64_PASS $HAC_KC_REGISTRATION
-
-cd integration-tests
-npm install
-npm install typescript
-cd ..
-
 mkdir -p $WORKSPACE/artifacts
 
-ID="$(id -u):$(id -g)"
-COMMON_SETUP="-u $ID \
-    -v $WORKSPACE/artifacts:/e2e/cypress:Z \
+PR_TITLE=$(echo ${ghprbPullTitle} | sed -r 's/\s/_/g')
+COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z \
     -v $PWD/integration-tests:/e2e:Z \
-    -v /etc/passwd:/etc/passwd:ro \
     -w /e2e \
-    -e CYPRESS_CACHE_FOLDER=/e2e/.cache \
+    -e CYPRESS_CACHE_FOLDER=/tmp/.cache \
     -e CYPRESS_PR_CHECK=true \
     -e CYPRESS_GH_PR_LINK=${ghprbPullLink} \
     -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/stonesoup \
     -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` \
-    -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d`"
-TEST_IMAGE="quay.io/hacdev/hac-tests:latest"
+    -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` \
+    -e GH_PR_TITLE=${PR_TITLE}"
+TEST_IMAGE="quay.io/hacdev/hac-tests:e2e-runner"
 
 set +e
 TEST_RUN=0
 
 docker run ${COMMON_SETUP} \
     -e CYPRESS_GH_TOKEN=${CYPRESS_GH_TOKEN} \
+    -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \
     -e CYPRESS_QUAY_TOKEN=${CYPRESS_QUAY_TOKEN} \
     -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
-    ${TEST_IMAGE} \
-    bash -c "startcypress run -e GH_PR_TITLE='${ghprbPullTitle}'" || TEST_RUN=1
-
-docker run ${COMMON_SETUP} \
-    -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \
-    -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
-    ${TEST_IMAGE} \
-    bash -c "startcypress run -e configFile=hac-dev-experimental,GH_PR_TITLE='${ghprbPullTitle}'" || TEST_RUN=2
+    ${TEST_IMAGE} || TEST_RUN=1
 
 bonfire namespace release ${NAMESPACE}
 

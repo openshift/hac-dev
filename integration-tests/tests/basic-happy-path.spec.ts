@@ -114,7 +114,7 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
       cy.get('.component-list-item__details input')
         .invoke('val')
         .then((value) => {
-          cy.exec(`skopeo inspect --no-tags -f "Name: {{.Name}} Digest: {{.Digest}}" docker://${value}`)
+          cy.exec(`skopeo inspect -f "Name: {{.Name}} Digest: {{.Digest}}" docker://${value}`, { timeout: 300000 })
             .its('code').should('eq', 0);
         });
     });
