@@ -233,6 +233,15 @@ export const testPipelineRuns: TestPipelineRuns = {
                   reason: 'PodInitializing',
                 },
               },
+              {
+                container: 'step-do-something',
+                imageID:
+                  'docker.io/library/alpine@sha256:8914eb54f968791faf6a8638949e480fef81e697984fba772b3976835194c6d4',
+                name: 'do-something',
+                running: {
+                  startedAt: '2022-11-28T12:09:26Z',
+                },
+              },
             ],
             taskSpec: {
               results: [
@@ -245,6 +254,12 @@ export const testPipelineRuns: TestPipelineRuns = {
                 {
                   image: 'alpine',
                   name: 'generate-first',
+                  resources: {},
+                  script: 'echo -n "suffix" > /tekton/results/first\n',
+                },
+                {
+                  image: 'alpine',
+                  name: 'step-do-something',
                   resources: {},
                   script: 'echo -n "suffix" > /tekton/results/first\n',
                 },

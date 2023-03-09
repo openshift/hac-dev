@@ -1,5 +1,5 @@
 .pipelinerun-node {
-    cursor: default;
+  cursor: default;
   &__test-status-badge {
     &--failed {
       > rect {
@@ -15,6 +15,48 @@
       }
       > text {
         fill: var(--pf-global--Color--dark-100);
+      }
+    }
+  }
+  &__tooltip {
+    &.pf-c-tooltip {
+      max-width: 350px;
+    }
+    &--content {
+      color: var(--pf-global--Color--light-100);
+      display: flex;
+      flex-direction: column;
+      gap: var(--pf-global--spacer--sm);
+    }
+    &--title {
+      font-size: var(--pf-global--FontSize--sm);
+      font-weight: var(--pf-global--FontWeight--bold);
+    }
+    &--step {
+      align-items: flex-start;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: var(--pf-global--spacer--sm);
+      &-name {
+        text-align: left;
+      }
+      &-icon {
+        .pf-m-running,
+        .pf-m-in-progress,
+        .pf-m-pending,
+        .pf-m-idle {
+          color: var(--pf-global--BorderColor--100);
+        }
+        .pf-m-skipped {
+          color: var(--pf-global--secondary-color--100);
+        }
+        .pf-m-spin {
+          filter: blur(0);
+          -webkit-filter: blur(0);
+          transform-box: fill-box;
+          transform-origin: center;
+          animation: status-spin 2s infinite linear;
+        }
       }
     }
   }

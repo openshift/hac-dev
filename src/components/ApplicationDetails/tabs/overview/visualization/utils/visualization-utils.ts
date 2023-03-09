@@ -5,39 +5,22 @@ import update from 'lodash/update';
 import { EnvironmentKind } from '../../../../../../types';
 import { DEFAULT_NODE_HEIGHT } from '../../../../../topology/const';
 import { DAG } from '../../../../../topology/dag';
-import { NodeCreatorSetup } from '../../../../../topology/utils/create-utils';
-import { NodeType, NODE_WIDTH, NODE_ICON_WIDTH, NODE_PADDING } from '../const';
+import { NodeType, NODE_ICON_WIDTH, NODE_PADDING } from '../const';
 import {
   PipelineEdgeModel,
   PipelineMixedNodeModel,
   WorkflowNodeModelData,
-  WorkflowNode,
   WorkflowNodeType,
   Workflow,
   WorkflowResources,
   WorkflowResource,
+  WorkflowNodeModel,
 } from '../types';
 
 const STATUS_WIDTH = 24;
 const BADGE_WIDTH = 36;
 
 const DEFAULT_CHAR_WIDTH = 8;
-
-const createGenericNode: NodeCreatorSetup = (type, width?, height?) => (name, data) => ({
-  id: name,
-  label: data.label,
-  runAfterTasks: data.runAfterTasks || [],
-  data,
-  height: height ?? DEFAULT_NODE_HEIGHT,
-  width: width ?? NODE_WIDTH,
-  type,
-});
-// Node variations
-export const createWorkflowNode: (
-  id: string,
-  data: WorkflowNodeModelData,
-) => PipelineMixedNodeModel = (id: string, data: WorkflowNodeModelData) =>
-  createGenericNode(NodeType.WORKFLOW_NODE, data.width)(id, data);
 
 export const createSpacerNode = (node: PipelineMixedNodeModel): PipelineMixedNodeModel => ({
   id: node.id,
@@ -49,16 +32,17 @@ export const createSpacerNode = (node: PipelineMixedNodeModel): PipelineMixedNod
   },
 });
 
-export const getWorkflowNodes = (nodes: WorkflowNode[]): PipelineMixedNodeModel[] => {
-  const nodeList: PipelineMixedNodeModel[] = nodes?.map((n) => createWorkflowNode(n.id, n.data));
-  const spacerNodes: PipelineMixedNodeModel[] = getSpacerNodes(nodeList, NodeType.SPACER_NODE).map(
+export const getWorkflowNodes = (
+  nodes: WorkflowNodeModel<WorkflowNodeModelData>[],
+): PipelineMixedNodeModel[] => {
+  const spacerNodes: PipelineMixedNodeModel[] = getSpacerNodes(nodes, NodeType.SPACER_NODE).map(
     createSpacerNode,
   );
-  return [...nodeList, ...spacerNodes];
+  return [...nodes, ...spacerNodes];
 };
 
 export const getTopologyNodesEdges = (
-  workflowNodesList: WorkflowNode[],
+  workflowNodesList: WorkflowNodeModel<WorkflowNodeModelData>[],
 ): { nodes: PipelineMixedNodeModel[]; edges: PipelineEdgeModel[] } => {
   const nodes: PipelineMixedNodeModel[] = getWorkflowNodes(workflowNodesList);
   const edges: PipelineEdgeModel[] = getEdgesFromNodes(nodes, NodeType.SPACER_NODE);
@@ -66,25 +50,29 @@ export const getTopologyNodesEdges = (
   return { nodes, edges };
 };
 
-export const dagtoNodes = (dag: DAG): WorkflowNode[] => {
+export const dagtoNodes = (dag: DAG): WorkflowNodeModel<WorkflowNodeModelData>[] => {
   if (!(dag instanceof DAG)) {
     return [];
   }
-  const nodes: WorkflowNode[] =
-    Array.from(dag.vertices.values()).map((v) => ({
-      id: v.name,
-      data: {
+  const nodes: WorkflowNodeModel<WorkflowNodeModelData>[] =
+    Array.from(dag.vertices.values()).map((v) => {
+      const node: WorkflowNodeModel<WorkflowNodeModelData> = {
         id: v.name,
+        type: v.data.workflowType || WorkflowNodeType.PIPELINE,
         label: v.data.label,
         width: v.data.width,
+        height: DEFAULT_NODE_HEIGHT,
         status: v.data.status,
         runAfterTasks: v.dependancyNames,
-        workflowType: v.data.workflowType || WorkflowNodeType.PIPELINE,
-        isDisabled: (v.data.resources || []).length === 0,
-        isParallelNode: v.data.isParallelNode || false,
-        resources: v.data.resources || [],
-      },
-    })) || [];
+        data: {
+          workflowType: v.data.workflowType || WorkflowNodeType.PIPELINE,
+          isDisabled: (v.data.resources || []).length === 0,
+          isParallelNode: v.data.isParallelNode || false,
+          resources: v.data.resources || [],
+        },
+      };
+      return node;
+    }) || [];
   return nodes;
 };
 
@@ -147,7 +135,7 @@ export const appendPrefixToResources = (
     return obj;
   });
 
-export const workflowToNodes = (workflow: Workflow): WorkflowNode[] => {
+export const workflowToNodes = (workflow: Workflow): WorkflowNodeModel<WorkflowNodeModelData>[] => {
   const workflowDag = new DAG();
 
   Object.keys(workflow).map((key: string) => {
@@ -191,9 +179,9 @@ export const workflowToNodes = (workflow: Workflow): WorkflowNode[] => {
         const resourceRunAfter = runAfterResourceKey
           ? get(resource, runAfterResourceKey, runAfter)
           : runAfter;
-        let validRunAfters = runAfter;
-
-        validRunAfters = validResources.includes(removePrefixFromResourceName(resourceRunAfter))
+        const validRunAfters = validResources.includes(
+          removePrefixFromResourceName(resourceRunAfter),
+        )
           ? [resourceRunAfter]
           : runAfter;
 

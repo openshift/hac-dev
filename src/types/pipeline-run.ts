@@ -23,18 +23,20 @@ export type PLRTaskRunStep = {
   };
 };
 
+export type PLRTaskRunDataStatus = {
+  completionTime?: string;
+  conditions: Condition[];
+  /** Can be empty */
+  podName: string;
+  startTime: string;
+  steps?: PLRTaskRunStep[];
+  taskSpec?: TektonTaskSpec;
+  taskResults?: { name: string; type?: string; value: string }[];
+};
+
 export type PLRTaskRunData = {
   pipelineTaskName: string;
-  status: {
-    completionTime?: string;
-    conditions: Condition[];
-    /** Can be empty */
-    podName: string;
-    startTime: string;
-    steps?: PLRTaskRunStep[];
-    taskSpec?: TektonTaskSpec;
-    taskResults?: { name: string; type?: string; value: string }[];
-  };
+  status: PLRTaskRunDataStatus;
 };
 
 export type PLRTaskRuns = {

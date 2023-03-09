@@ -21,7 +21,8 @@ type WorkflowNodeTipContentProps = {
 };
 
 const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({ element }) => {
-  const { label, workflowType, children } = element.getData();
+  const { workflowType, children } = element.getData();
+  const label = element.getLabel();
   const { workspace } = useWorkspaceInfo();
   const { elementRef, pipelinesRef } = getLinksForElement(element, workspace);
 
