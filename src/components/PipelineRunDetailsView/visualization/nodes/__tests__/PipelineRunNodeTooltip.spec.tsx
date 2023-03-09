@@ -1,44 +1,44 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { RunStatus } from '@patternfly/react-topology';
 import { render, screen } from '@testing-library/react';
+import { runStatus } from '../../../../../utils/pipeline-utils';
 import PipelineRunNodeTooltip from '../PipelineRunNodeTooltip';
 
 const mockSteps = [
   {
     duration: '55s',
     name: 'build',
-    status: RunStatus.Succeeded,
+    status: runStatus.Succeeded,
   },
   {
     duration: '25s',
     name: 'build-2',
-    status: RunStatus.Succeeded,
+    status: runStatus.Succeeded,
   },
   {
     duration: '2s',
     name: 'mount-container',
-    status: RunStatus.Cancelled,
+    status: runStatus.Cancelled,
   },
   {
     duration: '44s',
     name: 'sbom-get',
-    status: RunStatus.Running,
+    status: runStatus.Running,
   },
   {
     duration: 'less than a sec',
     name: 'analyse-dependencies-java-sbom',
-    status: RunStatus.Skipped,
+    status: runStatus.Skipped,
   },
   {
     duration: 'less than a sec',
     name: 'merge-sboms',
-    status: RunStatus.Idle,
+    status: runStatus.Idle,
   },
   {
     duration: '14s',
     name: 'inject-sbom-and-push',
-    status: RunStatus.Failed,
+    status: runStatus.Failed,
   },
 ];
 
@@ -54,7 +54,7 @@ describe('PipelineRunNodeTooltip', () => {
     const success = toolTip.querySelectorAll('.pf-topology-pipelines__status-icon.pf-m-success');
     const cancelled = toolTip.querySelectorAll('.pf-topology-pipelines__status-icon.pf-m-warning');
     const running = toolTip.querySelectorAll(
-      '.pf-topology-pipelines__status-icon.pf-m-running.pf-m-spin',
+      '.pf-topology-pipelines__status-icon.pf-m-running.icon-spin',
     );
     const skipped = toolTip.querySelectorAll('.pf-topology-pipelines__status-icon.pf-m-skipped');
     const idle = toolTip.querySelectorAll('.pf-topology-pipelines__status-icon.pf-m-idle');

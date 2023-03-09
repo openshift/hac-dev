@@ -2,9 +2,9 @@ import * as React from 'react';
 import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
 import { useIntegrationTestScenarios } from '../../../../../../hooks/useIntegrationTestScenarios';
 import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
-import { pipelineRunStatus } from '../../../../../../shared';
 import { PipelineRunKind } from '../../../../../../types';
 import { IntegrationTestScenarioKind } from '../../../../../../types/coreBuildService';
+import { pipelineRunStatus, runStatus } from '../../../../../../utils/pipeline-utils';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import { emptyPipelineNode, resourceToPipelineNode } from '../utils/node-utils';
 import { updateParallelNodeWidths } from '../utils/visualization-utils';
@@ -67,7 +67,7 @@ export const useAppIntegrationTestNodes = (
             applicationName,
             WorkflowNodeType.COMPONENT_TEST,
             previousTasks,
-            testPipeline ? pipelineRunStatus(testPipeline) : 'Pending',
+            testPipeline ? pipelineRunStatus(testPipeline) : runStatus.Pending,
           );
         })
       : [

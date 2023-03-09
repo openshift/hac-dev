@@ -17,9 +17,10 @@ import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { PipelineRunGroupVersionKind } from '../../models';
-import { pipelineRunFilterReducer, Table } from '../../shared';
+import { Table } from '../../shared';
 import { PipelineRunKind } from '../../types';
 import { statuses } from '../../utils/commits-utils';
+import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import PipelineRunEmptyState from '../PipelineRunDetailsView/PipelineRunEmptyState';
@@ -56,7 +57,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
 
   const statusFilterObj = React.useMemo(() => {
     return pipelineRuns.reduce((acc, plr) => {
-      const stat = pipelineRunFilterReducer(plr);
+      const stat = pipelineRunStatus(plr);
       if (statuses.includes(stat)) {
         if (acc[stat] !== undefined) {
           acc[stat] = acc[stat] + 1;
@@ -77,7 +78,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
             plr.metadata.labels[PipelineRunLabel.COMPONENT]?.indexOf(
               nameFilter.trim().toLowerCase(),
             ) !== -1) &&
-          (!statusFilters.length || statusFilters.includes(pipelineRunFilterReducer(plr))),
+          (!statusFilters.length || statusFilters.includes(pipelineRunStatus(plr))),
       ),
     [nameFilter, pipelineRuns, statusFilters],
   );

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { css } from '@patternfly/react-styles';
 import { observer, Node, NodeModel, TaskNode } from '@patternfly/react-topology';
+import { runStatusToRunStatus } from '../../../../../topology/utils';
 import { WorkflowNodeModelData } from '../types';
 import { getWorkflowNodeIcon } from '../utils/node-icon-utils';
-import { statusToRunStatus } from '../utils/node-utils';
 import { getTooltipText } from '../utils/tooltip-utils';
 
 import './WorkflowNode.scss';
@@ -22,9 +22,9 @@ const CommitWorkflowNode: React.FC<CommitWorkflowNodeProps> = ({ element }) => {
       className={css('commit-node', { 'm-disabled': isDisabled })}
       taskIcon={getWorkflowNodeIcon(workflowType)}
       taskIconTooltip={getTooltipText(workflowType)}
-      status={statusToRunStatus(status)}
       showStatusState
       statusIconSize={14}
+      status={runStatusToRunStatus(status)}
       hover={isDisabled ? false : undefined}
       paddingY={6}
     />

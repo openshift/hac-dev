@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { commonFetchText, getK8sResourceURL } from '@openshift/dynamic-plugin-sdk-utils';
 import { Alert } from '@patternfly/react-core';
 import './Logs.scss';
+import { PodModel } from '../../../../models/pod';
 import { ContainerSpec, PodKind } from '../../types';
-import { LOG_SOURCE_TERMINATED, PodModel } from '../utils';
+import { LOG_SOURCE_TERMINATED } from '../utils';
 
 type LogsProps = {
   resource: PodKind;

@@ -10,9 +10,9 @@ import {
 } from '@patternfly/react-core';
 import AngleDownIcon from '@patternfly/react-icons/dist/js/icons/angle-down-icon';
 import AngleUpIcon from '@patternfly/react-icons/dist/js/icons/angle-up-icon';
-import { runStatus } from '../../shared';
 import { PipelineRunKind } from '../../types';
 import { statuses } from '../../utils/commits-utils';
+import { runStatus } from '../../utils/pipeline-utils';
 
 export type SortedPLRList = Partial<Record<runStatus, PipelineRunKind[]>>;
 

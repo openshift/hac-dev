@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
 import { useLatestPipelineRunForComponent } from '../../hooks/usePipelineRunsForApplication';
-import { pipelineRunFilterReducer, runStatus } from '../../shared';
 import { ComponentKind } from '../../types';
 import { getBuildStatusIcon } from '../../utils/gitops-utils';
+import { pipelineRunStatus, runStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { useBuildLogViewerModal } from '../LogViewer/BuildLogViewer';
 
@@ -14,7 +14,7 @@ type BuildStatusComponentProps = {
 const BuildStatusColumn: React.FC<BuildStatusComponentProps> = ({ component }) => {
   const { namespace } = useWorkspaceInfo();
   const [pipelineRun, pipelineRunLoaded] = useLatestPipelineRunForComponent(namespace, component);
-  const status = pipelineRun ? pipelineRunFilterReducer(pipelineRun) : runStatus.PipelineNotStarted;
+  const status = pipelineRun ? pipelineRunStatus(pipelineRun) : runStatus.PipelineNotStarted;
   const buildLogsModal = useBuildLogViewerModal(component);
   const isContainerImage = !component.spec.source?.git?.url;
 

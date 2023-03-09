@@ -23,9 +23,10 @@ import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { PipelineRunGroupVersionKind } from '../../models';
-import { pipelineRunFilterReducer, Table } from '../../shared';
+import { Table } from '../../shared';
 import { PipelineRunKind } from '../../types';
 import { getCommitsFromPLRs, statuses } from '../../utils/commits-utils';
+import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import CommitsEmptyState from './CommitsEmptyState';
@@ -81,7 +82,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
 
   const statusFilterObj = React.useMemo(() => {
     return commits.reduce((acc, c) => {
-      const stat = pipelineRunFilterReducer(c.pipelineRuns[0]);
+      const stat = pipelineRunStatus(c.pipelineRuns[0]);
       if (statuses.includes(stat)) {
         if (acc[stat] !== undefined) {
           acc[stat] = acc[stat] + 1;
@@ -107,7 +108,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
               .indexOf(nameFilter.trim().replace('#', '').toLowerCase()) !== -1 ||
             commit.shaTitle.toLowerCase().includes(nameFilter.trim().toLowerCase())) &&
           (!statusFilters.length ||
-            statusFilters.includes(pipelineRunFilterReducer(commit.pipelineRuns[0]))),
+            statusFilters.includes(pipelineRunStatus(commit.pipelineRuns[0]))),
       ),
     [nameFilter, commits, statusFilters],
   );

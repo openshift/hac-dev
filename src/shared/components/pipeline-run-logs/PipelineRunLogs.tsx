@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { Nav, NavItem, NavList } from '@patternfly/react-core';
 import get from 'lodash/get';
+import { ColoredStatusIcon } from '../../../components/topology/StatusIcon';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
+import { PodGroupVersionKind } from '../../../models/pod';
 import { PipelineRunKind } from '../../../types';
+import { pipelineRunStatus, runStatus, taskRunStatus } from '../../../utils/pipeline-utils';
 import { ErrorDetailsWithStaticLog } from './logs/log-snippet-types';
 import { getDownloadAllLogsCallback } from './logs/logs-utils';
 import LogsWrapperComponent from './logs/LogsWrapperComponent';
 import { getPLRLogSnippet } from './logs/pipelineRunLogSnippet';
-import { ColoredStatusIcon } from './StatusIcon';
-import { PodGroupVersionKind, pipelineRunFilterReducer, runStatus } from './utils';
 import './PipelineRunLogs.scss';
 
 interface PipelineRunLogsProps {
@@ -79,7 +80,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
     const taskRunFromYaml = get(obj, ['status', 'taskRuns'], {});
     const taskRuns = this.getSortedTaskRun(taskRunFromYaml);
     const logDetails = getPLRLogSnippet(obj) as ErrorDetailsWithStaticLog;
-    const pipelineRunStatus = pipelineRunFilterReducer(obj);
+    const pipelineStatus = pipelineRunStatus(obj);
 
     const taskCount = taskRuns.length;
     const downloadAllCallback =
@@ -102,7 +103,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
 
     const waitingForPods = !!(activeItem && !resource);
     const taskName = get(taskRunFromYaml, [activeItem, 'pipelineTaskName'], '-');
-    const pipelineRunFinished = pipelineRunStatus !== runStatus.Running;
+    const pipelineRunFinished = pipelineStatus !== runStatus.Running;
 
     return (
       <div className="pipeline-run-logs">
@@ -111,6 +112,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
             <Nav onSelect={this.onNavSelect} theme="light">
               <NavList className="pipeline-run-logs__nav">
                 {taskRuns.map((task) => {
+                  const taskRun = obj.status.taskRuns[task];
                   return (
                     <NavItem
                       key={task}
@@ -119,9 +121,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
                       className="pipeline-run-logs__navitem"
                     >
                       <span>
-                        <ColoredStatusIcon
-                          status={pipelineRunFilterReducer(get(obj, ['status', 'taskRuns', task]))}
-                        />
+                        <ColoredStatusIcon status={taskRunStatus(taskRun)} />
                         <span className="pipeline-run-logs__namespan">
                           {get(taskRunFromYaml, [task, `pipelineTaskName`], '-')}
                         </span>

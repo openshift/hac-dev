@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useReleasePlans } from '../../../../../../hooks/useReleasePlans';
 import { useReleases } from '../../../../../../hooks/useReleases';
-import { pipelineRunStatus } from '../../../../../../shared';
+import { conditionsRunStatus, runStatus } from '../../../../../../utils/pipeline-utils';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import {
   emptyPipelineNode,
@@ -45,7 +45,9 @@ export const useAppReleasePlanNodes = (
               applicationName,
               WorkflowNodeType.MANAGED_ENVIRONMENT,
               latestRelease ? [latestRelease.metadata.uid] : [notFoundPrevTask],
-              latestRelease ? pipelineRunStatus(latestRelease) : 'Pending',
+              latestRelease
+                ? conditionsRunStatus(latestRelease.status?.conditions)
+                : runStatus.Pending,
             );
           })
         : [

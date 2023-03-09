@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { EnvironmentType } from '../components/Environment/environment-utils';
-import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../shared';
 import { EnvironmentKind } from '../types';
 import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
 import { getComponentDeploymentStatus } from '../utils/environment-utils';
+import { conditionsRunStatus, pipelineRunStatusToGitOpsStatus } from '../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { useAllEnvironments } from './useAllEnvironments';
 import { useReleases } from './useReleases';
@@ -40,7 +40,7 @@ export const useAllApplicationEnvironmentsWithHealthStatus = (
         return {
           ...environment,
           healthStatus: latestRelease
-            ? pipelineRunStatusToGitOpsStatus(pipelineRunStatus(latestRelease))
+            ? pipelineRunStatusToGitOpsStatus(conditionsRunStatus(latestRelease.status?.conditions))
             : GitOpsDeploymentHealthStatus.Missing,
           lastDeploy: latestRelease?.status.completionTime,
         };

@@ -10,8 +10,8 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { pipelineRunFilterReducer, runStatus } from '../../shared';
 import { ComponentKind, PipelineRunKind } from '../../types';
+import { pipelineRunStatus, runStatus } from '../../utils/pipeline-utils';
 
 export const FAILED_STATUS_FILTER_ID = 'failed';
 export const SUCCESS_STATUS_FILTER_ID = 'success';
@@ -46,7 +46,7 @@ export const getStatusFilterIdForComponent = (component, pipelineRuns: PipelineR
         new Date(a.metadata.creationTimestamp).getTime(),
     )?.[0];
   if (latestPipelineRun) {
-    const status = pipelineRunFilterReducer(latestPipelineRun);
+    const status = pipelineRunStatus(latestPipelineRun);
     switch (status) {
       case runStatus.Succeeded:
         return SUCCESS_STATUS_FILTER_ID;

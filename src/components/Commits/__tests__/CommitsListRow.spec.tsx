@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { pipelineRunFilterReducer } from '../../../shared';
 import * as dateTime from '../../../shared/components/timestamp/datetime';
 import { getCommitsFromPLRs } from '../../../utils/commits-utils';
+import { pipelineRunStatus } from '../../../utils/pipeline-utils';
 import { pipelineWithCommits } from '../__data__/pipeline-with-commits';
 import CommitsListRow from '../CommitsListRow';
 
@@ -49,7 +49,7 @@ describe('CommitsListRow', () => {
   });
 
   it('should show plr status on the row', () => {});
-  const status = pipelineRunFilterReducer(commits[0].pipelineRuns[0]);
+  const status = pipelineRunStatus(commits[0].pipelineRuns[0]);
   render(<CommitsListRow columns={null} obj={commits[0]} />);
   screen.getByText(status);
 });

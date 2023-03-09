@@ -1,7 +1,60 @@
 import merge from 'lodash/merge';
 import { preferredNameAnnotation } from '../consts/pipeline';
 import { PipelineRunModel } from '../models';
-import { PipelineRunKind } from '../types';
+import {
+  Condition,
+  PipelineRunKind,
+  PLRTaskRunData,
+  TaskRunKind,
+  TektonResultsRun,
+} from '../types';
+import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
+
+export enum runStatus {
+  Succeeded = 'Succeeded',
+  Failed = 'Failed',
+  Running = 'Running',
+  'In Progress' = 'In Progress',
+  FailedToStart = 'FailedToStart',
+  PipelineNotStarted = 'Starting',
+  NeedsMerge = 'PR needs merge',
+  Skipped = 'Skipped',
+  Cancelled = 'Cancelled',
+  Cancelling = 'Cancelling',
+  Pending = 'Pending',
+  Idle = 'Idle',
+  Unknown = 'Unknown',
+}
+
+const statusSeverities = [
+  [runStatus.Succeeded],
+  [
+    runStatus['In Progress'],
+    runStatus.Idle,
+    runStatus.Pending,
+    runStatus.Running,
+    runStatus.PipelineNotStarted,
+    runStatus.NeedsMerge,
+    runStatus.Unknown,
+  ],
+  [runStatus.Skipped],
+  [runStatus.Cancelled, runStatus.Cancelling],
+  [runStatus.Failed, runStatus.FailedToStart],
+];
+
+export enum SucceedConditionReason {
+  PipelineRunStopped = 'StoppedRunFinally',
+  PipelineRunCancelled = 'CancelledRunFinally',
+  TaskRunCancelled = 'TaskRunCancelled',
+  Cancelled = 'Cancelled',
+  PipelineRunStopping = 'PipelineRunStopping',
+  PipelineRunPending = 'PipelineRunPending',
+  TaskRunStopping = 'TaskRunStopping',
+  CreateContainerConfigError = 'CreateContainerConfigError',
+  ExceededNodeResources = 'ExceededNodeResources',
+  ExceededResourceQuota = 'ExceededResourceQuota',
+  ConditionCheckFailed = 'ConditionCheckFailed',
+}
 
 export const getDuration = (seconds: number, long?: boolean): string => {
   if (!seconds || seconds <= 0) {
@@ -108,4 +161,155 @@ export const getPipelineRunData = (
     },
   };
   return newPipelineRun;
+};
+
+export const conditionsRunStatus = (conditions: Condition[], specStatus?: string): runStatus => {
+  if (!conditions?.length) {
+    return runStatus.Pending;
+  }
+
+  const cancelledCondition = conditions.find((c) => c.reason === 'Cancelled');
+  const succeedCondition = conditions.find((c) => c.type === 'Succeeded');
+
+  if (!succeedCondition || !succeedCondition.status) {
+    return runStatus.Pending;
+  }
+
+  const status =
+    succeedCondition.status === 'True'
+      ? runStatus.Succeeded
+      : succeedCondition.status === 'False'
+      ? runStatus.Failed
+      : runStatus.Running;
+
+  if (
+    [
+      `${SucceedConditionReason.PipelineRunStopped}`,
+      `${SucceedConditionReason.PipelineRunCancelled}`,
+    ].includes(specStatus) &&
+    !cancelledCondition
+  ) {
+    return runStatus.Cancelling;
+  }
+
+  if (!succeedCondition.reason || succeedCondition.reason === status) {
+    return status;
+  }
+
+  switch (succeedCondition.reason) {
+    case SucceedConditionReason.PipelineRunStopped:
+    case SucceedConditionReason.PipelineRunCancelled:
+    case SucceedConditionReason.TaskRunCancelled:
+    case SucceedConditionReason.Cancelled:
+      return runStatus.Cancelled;
+    case SucceedConditionReason.PipelineRunStopping:
+    case SucceedConditionReason.TaskRunStopping:
+      return runStatus.Failed;
+    case SucceedConditionReason.CreateContainerConfigError:
+    case SucceedConditionReason.ExceededNodeResources:
+    case SucceedConditionReason.ExceededResourceQuota:
+    case SucceedConditionReason.PipelineRunPending:
+      return runStatus.Pending;
+    case SucceedConditionReason.ConditionCheckFailed:
+      return runStatus.Skipped;
+    default:
+      return status;
+  }
+};
+
+export const taskResultsStatus = (taskResults: TektonResultsRun[]): runStatus => {
+  const testOutput = taskResults?.find((result) => result.name === 'HACBS_TEST_OUTPUT');
+  if (testOutput) {
+    try {
+      const outputValues = JSON.parse(testOutput.value);
+      switch (outputValues.result) {
+        case 'FAILURE':
+        case 'ERROR':
+          return runStatus.Failed;
+        case 'WARNING':
+          return runStatus.Cancelled;
+        case 'SKIPPED':
+          return runStatus.Skipped;
+        default:
+          break;
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
+  return runStatus.Succeeded;
+};
+
+export const taskRunStatus = (taskRun: TaskRunKind | PLRTaskRunData): runStatus => {
+  if (!taskRun?.status?.conditions?.length) {
+    return runStatus.Pending;
+  }
+
+  const status = conditionsRunStatus(taskRun.status.conditions);
+
+  return status === runStatus.Succeeded ? taskResultsStatus(taskRun.status.taskResults) : status;
+};
+
+const worstStatus = (status1: runStatus, status2: runStatus): runStatus => {
+  const index1 = statusSeverities.findIndex((severities) => severities.includes(status1));
+  const index2 = statusSeverities.findIndex((severities) => severities.includes(status2));
+  return index1 >= index2 ? status1 : status2;
+};
+
+export const pipelineRunStatus = (pipelineRun: PipelineRunKind): runStatus => {
+  if (!pipelineRun?.status?.conditions?.length) {
+    return runStatus.Pending;
+  }
+
+  let status = conditionsRunStatus(pipelineRun.status.conditions, pipelineRun.spec.status);
+  if (status === runStatus.Succeeded && pipelineRun.status?.taskRuns) {
+    Object.keys(pipelineRun.status?.taskRuns).forEach((taskName) => {
+      const resultStatus = taskResultsStatus(
+        pipelineRun.status.taskRuns[taskName].status?.taskResults,
+      );
+      status = worstStatus(status, resultStatus);
+    });
+  }
+  return status;
+};
+
+export const pipelineRunStatusToGitOpsStatus = (status: string): GitOpsDeploymentHealthStatus => {
+  switch (status) {
+    case 'Succeeded':
+      return GitOpsDeploymentHealthStatus.Healthy;
+    case 'Failed':
+      return GitOpsDeploymentHealthStatus.Degraded;
+    case 'Running':
+    case 'Pending':
+      return GitOpsDeploymentHealthStatus.Progressing;
+    case 'Cancelling':
+    case 'Cancelled':
+      return GitOpsDeploymentHealthStatus.Suspended;
+    case 'Skipped':
+      return GitOpsDeploymentHealthStatus.Missing;
+    default:
+      return GitOpsDeploymentHealthStatus.Unknown;
+  }
+};
+
+export const getLabelColorFromStatus = (
+  status: runStatus,
+): 'blue' | 'cyan' | 'green' | 'orange' | 'purple' | 'red' | 'grey' | 'gold' => {
+  switch (status) {
+    case runStatus.Succeeded:
+      return 'green';
+    case runStatus.Failed:
+      return 'red';
+    case runStatus['In Progress']:
+    case runStatus.Running:
+      return 'blue';
+    case runStatus.Cancelled:
+    case runStatus.Cancelling:
+      return 'gold';
+    case runStatus.Idle:
+    case runStatus.Pending:
+    case runStatus.Skipped:
+    default:
+      return null;
+  }
 };

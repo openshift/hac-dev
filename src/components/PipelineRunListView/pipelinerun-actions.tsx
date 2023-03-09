@@ -1,7 +1,7 @@
-import { pipelineRunFilterReducer } from '../../shared';
 import { Action } from '../../shared/components/action-menu/types';
 import { PipelineRunKind } from '../../types';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
+import { pipelineRunStatus, runStatus } from '../../utils/pipeline-utils';
 
 export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] => {
   return [
@@ -16,7 +16,7 @@ export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] =>
       id: 'pipelinerun-stop',
       label: 'Stop',
       tooltip: 'Let the running tasks complete, then execute finally tasks',
-      disabled: !(pipelineRunFilterReducer(pipelineRun) === 'Running'),
+      disabled: !(pipelineRunStatus(pipelineRun) === runStatus.Running),
     },
 
     {
@@ -24,7 +24,7 @@ export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] =>
       id: 'pipelinerun-cancel',
       label: 'Cancel',
       tooltip: 'Interrupt any executing non finally tasks, then execute finally tasks',
-      disabled: !(pipelineRunFilterReducer(pipelineRun) === 'Running'),
+      disabled: !(pipelineRunStatus(pipelineRun) === runStatus.Running),
     },
   ];
 };

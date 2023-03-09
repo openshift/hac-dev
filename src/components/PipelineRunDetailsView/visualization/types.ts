@@ -1,6 +1,6 @@
-import { RunStatus, WhenStatus } from '@patternfly/react-topology';
-import { PipelineNodeModel as PfPipelineNodeModel } from '@patternfly/react-topology/dist/esm/pipelines/types';
-import { PipelineTask } from '../../../types';
+import { PipelineNodeModel as PfPipelineNodeModel, WhenStatus } from '@patternfly/react-topology';
+import { PipelineTask, TaskRunStatus } from '../../../types';
+import { runStatus } from '../../../utils/pipeline-utils';
 
 export enum PipelineRunNodeType {
   SPACER_NODE = 'spacer-node',
@@ -13,22 +13,28 @@ export enum PipelineRunNodeType {
 export type StepStatus = {
   name: string;
   duration: string | null;
-  status: RunStatus;
+  status: runStatus;
 };
 
 export type PipelineRunNodeData = {
   task: PipelineTask;
-  status?: RunStatus;
+  status?: runStatus;
   testFailCount?: number;
   testWarnCount?: number;
   whenStatus?: WhenStatus;
   steps?: StepStatus[];
 };
 
+export type PipelineTaskStatus = TaskRunStatus & {
+  reason: runStatus;
+  duration?: string;
+  testFailCount?: number;
+  testWarnCount?: number;
+};
+
 export type PipelineTaskWithStatus = PipelineTask & {
-  status: {
-    reason: RunStatus;
-  };
+  status: PipelineTaskStatus;
+  steps?: StepStatus[];
 };
 
 export type PipelineRunNodeModel<D extends PipelineRunNodeData, T> = Omit<

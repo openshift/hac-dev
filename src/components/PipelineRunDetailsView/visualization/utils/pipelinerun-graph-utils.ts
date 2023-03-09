@@ -3,22 +3,26 @@ import {
   getEdgesFromNodes,
   getSpacerNodes,
   ModelKind,
-  RunStatus,
   WhenStatus,
 } from '@patternfly/react-topology';
 import { uniq } from 'lodash-es';
 import find from 'lodash/find';
 import merge from 'lodash/merge';
 import minBy from 'lodash/minBy';
-import { pipelineRunStatus } from '../../../../shared';
 import { formatPrometheusDuration } from '../../../../shared/components/timestamp/datetime';
-import { PipelineKind, PipelineTask } from '../../../../types/pipeline';
 import {
+  PipelineKind,
+  PipelineTask,
   PipelineRunKind,
   PLRTaskRunDataStatus,
   PLRTaskRunStep,
-} from '../../../../types/pipeline-run';
-import { calculateDuration } from '../../../../utils/pipeline-utils';
+} from '../../../../types';
+import {
+  calculateDuration,
+  conditionsRunStatus,
+  pipelineRunStatus,
+  runStatus,
+} from '../../../../utils/pipeline-utils';
 import {
   NODE_ICON_WIDTH,
   NODE_PADDING,
@@ -38,6 +42,7 @@ import {
   PipelineRunNodeData,
   PipelineRunNodeModel,
   PipelineRunNodeType,
+  PipelineTaskStatus,
   PipelineTaskWithStatus,
   StepStatus,
 } from '../types';
@@ -64,7 +69,7 @@ export const extractDepsFromContextVariables = (contextVariable: string) => {
   return deps;
 };
 
-const getMatchingStep = (stepName: string, status: PLRTaskRunDataStatus): PLRTaskRunStep => {
+const getMatchingStep = (stepName: string, status: PipelineTaskStatus): PLRTaskRunStep => {
   const statusSteps: PLRTaskRunStep[] = status.steps || [];
   return statusSteps.find((statusStep) => {
     // In rare occasions the status step name is prefixed with `step-`
@@ -107,30 +112,27 @@ export const getPipelineFromPipelineRun = (pipelineRun: PipelineRunKind): Pipeli
   };
 };
 
-export const createStepStatus = (
-  stepName: string,
-  status: PLRTaskRunDataStatus & { reason: RunStatus; duration: string },
-): StepStatus => {
-  let stepRunStatus: RunStatus = RunStatus.Pending;
+export const createStepStatus = (stepName: string, status: PipelineTaskStatus): StepStatus => {
+  let stepRunStatus: runStatus = runStatus.Pending;
   let duration: string = null;
 
   const matchingStep: PLRTaskRunStep = getMatchingStep(stepName, status);
   if (!status || !status.reason) {
-    stepRunStatus = RunStatus.Cancelled;
+    stepRunStatus = runStatus.Cancelled;
   } else {
     if (!matchingStep) {
-      stepRunStatus = RunStatus.Pending;
+      stepRunStatus = runStatus.Pending;
     } else if (matchingStep.terminated) {
       stepRunStatus =
         matchingStep.terminated.reason === TerminatedReasons.Completed
-          ? RunStatus.Succeeded
-          : RunStatus.Failed;
+          ? runStatus.Succeeded
+          : runStatus.Failed;
       duration = getStepDuration(matchingStep) || status.duration;
     } else if (matchingStep.running) {
-      stepRunStatus = RunStatus.Running;
+      stepRunStatus = runStatus.Running;
       duration = getStepDuration(matchingStep);
     } else if (matchingStep.waiting) {
-      stepRunStatus = RunStatus.Pending;
+      stepRunStatus = runStatus.Pending;
     }
   }
 
@@ -148,41 +150,49 @@ export const createStepStatus = (
  * @param isFinallyTasks
  */
 export const appendStatus = (
-  pipeline,
-  pipelineRun: PipelineRunKind,
+  pipeline: PipelineKind,
+  pipelineRun?: PipelineRunKind,
   isFinallyTasks = false,
 ): PipelineTaskWithStatus[] => {
   const tasks = (isFinallyTasks ? pipeline.spec.finally : pipeline.spec.tasks) || [];
   const overallPipelineRunStatus = pipelineRunStatus(pipelineRun);
+
   return tasks.map((task) => {
     if (!pipelineRun?.status) {
-      return task;
+      return merge(task, { status: { reason: runStatus.Skipped } });
     }
     if (!pipelineRun?.status?.taskRuns) {
       return merge(task, { status: { reason: overallPipelineRunStatus } });
     }
-    const taskStatus = find(pipelineRun.status.taskRuns, { pipelineTaskName: task.name })?.status;
-    const mTask = merge(task, { status: taskStatus });
 
+    const taskStatus: PLRTaskRunDataStatus = find(pipelineRun.status.taskRuns, {
+      pipelineTaskName: task.name,
+    })?.status;
+
+    const mTask: PipelineTaskWithStatus = merge(task, {
+      status: { ...taskStatus, reason: runStatus.Pending },
+    });
+
+    if (!pipelineRun?.status || !pipelineRun?.status?.taskRuns) {
+      return mTask;
+    }
     // append task duration
-    if (mTask.status && mTask.status.completionTime && mTask.status.startTime) {
+    if (mTask.status.completionTime && mTask.status.startTime) {
       const date =
         new Date(mTask.status.completionTime).getTime() -
         new Date(mTask.status.startTime).getTime();
       mTask.status.duration = formatPrometheusDuration(date);
     }
     // append task status
-    if (!mTask.status) {
+    if (!taskStatus) {
       const isSkipped = !!pipelineRun.status.skippedTasks?.find((t) => t.name === task.name);
       if (isSkipped) {
-        mTask.status = { reason: RunStatus.Skipped };
+        mTask.status.reason = runStatus.Skipped;
       } else {
-        mTask.status = { reason: RunStatus.Idle };
+        mTask.status.reason = runStatus.Idle;
       }
-    } else if (mTask.status && mTask.status.conditions) {
-      mTask.status.reason = pipelineRunStatus(mTask) || RunStatus.Pending;
-    } else if (mTask.status && !mTask.status.reason) {
-      mTask.status.reason = RunStatus.Pending;
+    } else if (mTask.status.conditions) {
+      mTask.status.reason = conditionsRunStatus(mTask.status.conditions);
     }
 
     // Determine any task test status
@@ -199,16 +209,31 @@ export const appendStatus = (
       if (testOutput) {
         try {
           const outputValues = JSON.parse(testOutput.value);
-          mTask.testFailCount = parseInt(outputValues.failures, 10);
-          mTask.testWarnCount = parseInt(outputValues.warnings, 10);
+          mTask.status.testFailCount = parseInt(outputValues.failures, 10);
+          mTask.status.testWarnCount = parseInt(outputValues.warnings, 10);
+          if (mTask.status.reason === runStatus.Succeeded) {
+            switch (outputValues.result) {
+              case 'FAILURE':
+              case 'ERROR':
+                mTask.status.reason = runStatus.Failed;
+                break;
+              case 'WARNING':
+                mTask.status.reason = runStatus.Cancelled;
+                break;
+              case 'SKIPPED':
+                mTask.status.reason = runStatus.Skipped;
+                break;
+              default:
+                break;
+            }
+          }
         } catch (e) {
           // ignore
         }
       }
     }
-
     // Get the steps status
-    const stepList = taskStatus?.steps || mTask?.spec?.steps || mTask?.taskSpec?.steps || [];
+    const stepList = taskStatus?.steps || mTask?.steps || mTask?.taskSpec?.steps || [];
     mTask.steps = stepList.map((step) => createStepStatus(step.name, mTask.status));
 
     return mTask;
@@ -220,14 +245,14 @@ export const taskHasWhenExpression = (task: PipelineTask): boolean => task?.when
 export const nodesHasWhenExpression = (nodes: PipelineMixedNodeModel[]): boolean =>
   nodes.some((n) => taskHasWhenExpression(n.data?.task));
 
-export const getWhenStatus = (status: RunStatus): WhenStatus => {
+export const getWhenStatus = (status: runStatus): WhenStatus => {
   switch (status) {
-    case RunStatus.Succeeded:
-    case RunStatus.Failed:
+    case runStatus.Succeeded:
+    case runStatus.Failed:
       return WhenStatus.Met;
-    case RunStatus.Skipped:
-    case RunStatus.InProgress:
-    case RunStatus.Idle:
+    case runStatus.Skipped:
+    case runStatus['In Progress']:
+    case runStatus.Idle:
       return WhenStatus.Unmet;
     default:
       return undefined;
@@ -238,6 +263,7 @@ export const taskWhenStatus = (task: PipelineTaskWithStatus): WhenStatus | undef
   if (!task.when) {
     return undefined;
   }
+
   return getWhenStatus(task.status?.reason);
 };
 
@@ -323,8 +349,8 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
       height: DEFAULT_NODE_HEIGHT,
       data: {
         status: vertex.data.status?.reason,
-        testFailCount: vertex.data.testFailCount,
-        testWarnCount: vertex.data.testWarnCount,
+        testFailCount: vertex.data.status.testFailCount,
+        testWarnCount: vertex.data.status.testWarnCount,
         whenStatus: taskWhenStatus(vertex.data),
         task: vertex.data,
         steps: vertex.data.steps,

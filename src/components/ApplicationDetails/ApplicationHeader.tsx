@@ -5,9 +5,10 @@ import { global_palette_blue_400 as linkColor } from '@patternfly/react-tokens/d
 import { useApplicationHealthStatus, useApplicationRoutes } from '../../hooks';
 import { useSortedComponents } from '../../hooks/useComponents';
 import ExternalLink from '../../shared/components/links/ExternalLink';
-import { StatusIconWithTextLabel } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { ApplicationKind } from '../../types';
+import { runStatus } from '../../utils/pipeline-utils';
 import { getComponentRouteWebURL } from '../../utils/route-utils';
+import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import { ApplicationThumbnail } from './ApplicationThumbnail';
 
 export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ application }) => {
@@ -47,7 +48,7 @@ export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ 
           </FlexItem>
           {healthStatusloaded && healthStatus ? (
             <FlexItem>
-              <StatusIconWithTextLabel status={healthStatus.status} />
+              <StatusIconWithTextLabel status={healthStatus.status as runStatus} />
             </FlexItem>
           ) : null}
         </Flex>

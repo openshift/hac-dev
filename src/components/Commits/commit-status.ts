@@ -2,9 +2,9 @@ import React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../models';
-import { pipelineRunFilterReducer } from '../../shared';
 import { PipelineRunKind } from '../../types';
 import { statuses } from '../../utils/commits-utils';
+import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 
 export const useCommitStatus = (
@@ -35,7 +35,7 @@ export const useCommitStatus = (
       return 'Pending';
     }
 
-    const plrStatus = pipelineRunFilterReducer(plrsForCommit[plrsForCommit.length - 1]);
+    const plrStatus = pipelineRunStatus(plrsForCommit[plrsForCommit.length - 1]);
     if (statuses.includes(plrStatus)) {
       return plrStatus;
     }

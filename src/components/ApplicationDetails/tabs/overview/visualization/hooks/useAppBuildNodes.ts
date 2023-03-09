@@ -3,12 +3,12 @@ import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
 import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../../../hooks/useComponents';
 import { PipelineRunKind } from '../../../../../../types';
+import { runStatus } from '../../../../../../utils/pipeline-utils';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import {
   emptyPipelineNode,
   getBuildNodeForComponent,
   groupToPipelineNode,
-  NEEDS_MERGE_STATUS,
   worstWorkflowStatus,
 } from '../utils/node-utils';
 import { updateParallelNodeWidths } from '../utils/visualization-utils';
@@ -85,7 +85,7 @@ export const useAppBuildNodes = (
             buildNodes,
             latestBuilds,
             components.length && buildNodes?.[0].id === 'no-builds'
-              ? NEEDS_MERGE_STATUS
+              ? runStatus.NeedsMerge
               : worstWorkflowStatus(buildNodes),
           )
         : undefined,

@@ -9,7 +9,7 @@ import {
   WithSelectionProps,
 } from '@patternfly/react-topology';
 import { observer } from 'mobx-react';
-import { PipelineRunNodeData } from '../types';
+import { runStatusToRunStatus } from '../../../topology/utils';
 import PipelineRunNodeTooltip from './PipelineRunNodeTooltip';
 
 import './PipelineRunNode.scss';
@@ -20,12 +20,13 @@ type PipelineRunNodeProps = {
   WithSelectionProps;
 
 const PipelineRunNode: React.FunctionComponent<PipelineRunNodeProps> = ({ element, ...rest }) => {
-  const data: PipelineRunNodeData = element.getData();
+  const data = element.getData();
+  const nodeStatus = runStatusToRunStatus(data.status);
 
   const status =
-    data.status === RunStatus.Succeeded && (data.testFailCount || data.testWarnCount)
+    nodeStatus === RunStatus.Succeeded && (data.testFailCount || data.testWarnCount)
       ? RunStatus.Cancelled
-      : data.status;
+      : nodeStatus;
 
   const badge =
     data.testFailCount || data.testFailCount

@@ -1,11 +1,12 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
-import { EdgeModel, PipelineNodeModel, RunStatus } from '@patternfly/react-topology';
+import { EdgeModel, PipelineNodeModel } from '@patternfly/react-topology';
 import { Commit, ComponentKind, EnvironmentKind, PipelineRunKind } from '../../../../../types';
 import {
   IntegrationTestScenarioKind,
   ReleaseKind,
   ReleasePlanKind,
 } from '../../../../../types/coreBuildService';
+import { runStatus } from '../../../../../utils/pipeline-utils';
 import { NodeType } from './const';
 
 export enum WorkflowNodeType {
@@ -45,11 +46,11 @@ export type CommitWorkflow = {
 
 export type CommitComponentResource = {
   component: ComponentKind;
-  releaseStatus: RunStatus;
-  buildPipelinestatus: RunStatus;
-  releasePlanStatus: (rp: ReleasePlanKind) => RunStatus;
-  environmentStatus: (env: EnvironmentKind) => RunStatus;
-  integrationTestStatus: (test: IntegrationTestScenarioKind) => RunStatus;
+  releaseStatus: runStatus;
+  buildPipelinestatus: runStatus;
+  releasePlanStatus: (rp: ReleasePlanKind) => runStatus;
+  environmentStatus: (env: EnvironmentKind) => runStatus;
+  integrationTestStatus: (test: IntegrationTestScenarioKind) => runStatus;
   compIntegrationTestScenarios: IntegrationTestScenarioKind[];
   compReleases: ReleaseKind[];
   compReleasePlans: ReleasePlanKind[];
@@ -61,7 +62,7 @@ export type Workflow = {
     id: string;
     isAbstractNode?: boolean;
     data: {
-      status?: RunStatus | ((s: any) => RunStatus);
+      status?: runStatus | ((s: any) => runStatus);
       label: string;
       workflowType: WorkflowNodeType;
       isDisabled: boolean;
@@ -78,7 +79,7 @@ export type WorkflowNodeModelData = {
   workflowType: WorkflowNodeType;
   isDisabled?: boolean;
   groupNode?: boolean;
-  status?: string;
+  status?: runStatus;
   resources?: K8sResourceCommon[];
   hidden?: boolean;
   children?: PipelineNodeModel[];

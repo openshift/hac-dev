@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
-import { pipelineRunFilterReducer } from '../../shared';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
-import { StatusIconWithText } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../types';
 import { createRepoBranchURL, statuses } from '../../utils/commits-utils';
+import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import { StatusIconWithText } from '../topology/StatusIcon';
 import { useCommitActions } from './commit-actions';
 import { CommitIcon } from './CommitIcon';
 import { commitsTableColumnClasses } from './CommitsListHeader';
@@ -19,7 +19,7 @@ import './CommitsListRow.scss';
 const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
   const actions = useCommitActions(obj);
   const { workspace } = useWorkspaceInfo();
-  const status = pipelineRunFilterReducer(obj.pipelineRuns[0]);
+  const status = pipelineRunStatus(obj.pipelineRuns[0]);
 
   const prNumber = obj.isPullRequest ? `#${obj.pullRequestNumber}` : '';
   return (

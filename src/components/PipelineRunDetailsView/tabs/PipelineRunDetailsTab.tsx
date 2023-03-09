@@ -14,16 +14,15 @@ import {
   Divider,
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
-import { pipelineRunFilterReducer } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { ErrorDetailsWithStaticLog } from '../../../shared/components/pipeline-run-logs/logs/log-snippet-types';
 import { getPLRLogSnippet } from '../../../shared/components/pipeline-run-logs/logs/pipelineRunLogSnippet';
-import { StatusIconWithText } from '../../../shared/components/pipeline-run-logs/StatusIcon';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../../types';
 import { getCommitShortName } from '../../../utils/commits-utils';
-import { calculateDuration } from '../../../utils/pipeline-utils';
+import { calculateDuration, pipelineRunStatus } from '../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
+import { StatusIconWithText } from '../../topology/StatusIcon';
 import MetadataList from '../MetadataList';
 import PipelineRunVisualization from '../PipelineRunVisualization';
 import RelatedPipelineRuns from '../RelatedPipelineRuns';
@@ -48,7 +47,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
     pipelineRun?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];
   const applicationName = pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION];
   const sourceUrl = getSourceUrl(pipelineRun);
-  const pipelineRunStatus = !error ? pipelineRunFilterReducer(pipelineRun) : null;
+  const pipelineStatus = !error ? pipelineRunStatus(pipelineRun) : null;
   return (
     <>
       <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
@@ -115,7 +114,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
                   <DescriptionListTerm>Status</DescriptionListTerm>
                   <DescriptionListDescription>
                     <StatusIconWithText
-                      status={pipelineRunStatus}
+                      status={pipelineStatus}
                       dataTestAttribute={'pipelinerun-details status'}
                     />
                   </DescriptionListDescription>
@@ -233,7 +232,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
               <Divider style={{ padding: 'var(--pf-global--spacer--lg) 0' }} />
               <RunResultsList
                 results={pipelineRun.status.pipelineResults}
-                status={pipelineRunStatus}
+                status={pipelineStatus}
               />
             </>
           ) : null}

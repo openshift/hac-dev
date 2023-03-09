@@ -1,14 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { pipelineRunFilterReducer } from '../../shared';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
-import { StatusIconWithText } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../types';
-import { calculateDuration } from '../../utils/pipeline-utils';
+import { calculateDuration, pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import { StatusIconWithText } from '../topology/StatusIcon';
 import { usePipelinerunActions } from './pipelinerun-actions';
 import { pipelineRunTableColumnClasses } from './PipelineRunListHeader';
 
@@ -17,7 +16,7 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
     return label && label.charAt(0).toUpperCase() + label.slice(1);
   };
 
-  const status = pipelineRunFilterReducer(obj);
+  const status = pipelineRunStatus(obj);
   const actions = usePipelinerunActions(obj);
   const { workspace } = useWorkspaceInfo();
   const applicationName = obj.metadata?.labels[PipelineRunLabel.APPLICATION];

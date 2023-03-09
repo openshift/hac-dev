@@ -4,15 +4,11 @@ import {
   k8sGetResource,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { saveAs } from 'file-saver';
+import { PodModel } from '../../../../models/pod';
 import { PLRTaskRunData, PLRTaskRuns } from '../../../../types';
 import { LineBuffer } from '../../../utils/line-buffer';
 import { ContainerSpec, ContainerStatus, PodKind } from '../../types';
-import {
-  containerToLogSourceStatus,
-  LOG_SOURCE_TERMINATED,
-  LOG_SOURCE_WAITING,
-  PodModel,
-} from '../utils';
+import { containerToLogSourceStatus, LOG_SOURCE_TERMINATED, LOG_SOURCE_WAITING } from '../utils';
 
 const getSortedContainerStatus = (
   containers: ContainerSpec[],
