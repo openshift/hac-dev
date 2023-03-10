@@ -13,7 +13,9 @@ import {
   Title,
   Divider,
   ClipboardCopy,
+  Popover,
 } from '@patternfly/react-core';
+import { QuestionCircleIcon } from '@patternfly/react-icons/dist/js/icons/question-circle-icon';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { ErrorDetailsWithStaticLog } from '../../../shared/components/pipeline-run-logs/logs/log-snippet-types';
@@ -28,6 +30,7 @@ import MetadataList from '../MetadataList';
 import PipelineRunVisualization from '../PipelineRunVisualization';
 import RelatedPipelineRuns from '../RelatedPipelineRuns';
 import { getSourceUrl } from '../utils/pipelinerun-utils';
+import { ClairScanDetailStatus } from './ClairScanDetailStatus';
 import RunResultsList from './RunResultsList';
 
 type PipelineRunDetailsTabProps = {
@@ -189,6 +192,21 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                     ) : (
                       '-'
                     )}
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+                <DescriptionListGroup>
+                  <DescriptionListTerm>
+                    Vulnerabilities scan{' '}
+                    <Popover
+                      aria-label="Vulnerability scan"
+                      headerContent="Vulnerability scan"
+                      bodyContent="Clair-scan is a task in a pipeline run that scans your components for potential vulnerabilities."
+                    >
+                      <QuestionCircleIcon />
+                    </Popover>
+                  </DescriptionListTerm>
+                  <DescriptionListDescription>
+                    <ClairScanDetailStatus pipelineRunName={pipelineRun.metadata?.name} />
                   </DescriptionListDescription>
                 </DescriptionListGroup>
                 <DescriptionListGroup>

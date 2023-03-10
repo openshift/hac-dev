@@ -1,7 +1,8 @@
 export const pipelineRunTableColumnClasses = {
   name: 'pf-m-width-20 wrap-column',
   status: 'pf-m-width-10',
-  started: 'pf-m-width-20',
+  started: 'pf-m-width-15',
+  vulnerabilities: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-15',
   type: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-10',
   duration: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-10',
   component: 'pf-m-hidden pf-m-visible-on-xl',
@@ -17,6 +18,10 @@ export const PipelineRunListHeader = () => {
     {
       title: 'Started',
       props: { className: pipelineRunTableColumnClasses.started },
+    },
+    {
+      title: 'Vulnerabilities',
+      props: { className: pipelineRunTableColumnClasses.vulnerabilities },
     },
     {
       title: 'Duration',

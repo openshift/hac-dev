@@ -3,14 +3,16 @@ import { TaskRunGroupVersionKind, TaskRunKind, TektonResourceLabel } from '../ty
 
 export const useTaskRuns = (
   namespace: string,
-  pipelineRunName: string,
+  pipelineRunName?: string,
+  taskName?: string,
 ): [TaskRunKind[], boolean, unknown] =>
   useK8sWatchResource<TaskRunKind[]>({
     groupVersionKind: TaskRunGroupVersionKind,
     namespace,
     selector: {
       matchLabels: {
-        [TektonResourceLabel.pipelinerun]: pipelineRunName,
+        ...(pipelineRunName ? { [TektonResourceLabel.pipelinerun]: pipelineRunName } : {}),
+        ...(taskName ? { [TektonResourceLabel.pipelineTask]: taskName } : {}),
       },
     },
     isList: true,
