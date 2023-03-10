@@ -114,7 +114,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
                 type="search"
                 aria-label="name filter"
                 placeholder="Filter by name..."
-                onChange={(name) => onNameInput(name)}
+                onChange={(e, name) => onNameInput(name)}
                 value={nameFilter}
                 onClear={() => setNameFilter('')}
               />

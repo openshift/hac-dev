@@ -70,7 +70,7 @@ const CatalogToolbar = React.forwardRef<HTMLInputElement, CatalogToolbarProps>(
               type="text"
               placeholder={t('Filter by keyword...')}
               value={searchKeyword}
-              onChange={onSearchKeywordChange}
+              onChange={(e, name) => onSearchKeywordChange(name)}
               onClear={() => onSearchKeywordChange('')}
               aria-label={t('Filter by keyword...')}
             />
