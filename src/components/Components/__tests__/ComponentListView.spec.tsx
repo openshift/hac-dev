@@ -111,7 +111,8 @@ describe('ComponentListViewPage', () => {
   it('should render filter toolbar and filter components based on name', () => {
     render(<ComponentListView applicationName="test-app" />);
     expect(screen.getByTestId('component-list-toolbar')).toBeInTheDocument();
-    const searchInput = screen.getByRole('textbox', { name: 'name filter' });
+    const nameSearchInput = screen.getByTestId('name-input-filter');
+    const searchInput = nameSearchInput.querySelector('.pf-c-text-input-group__text-input');
     fireEvent.change(searchInput, { target: { value: 'nodejs' } });
     const componentList = screen.getByTestId('component-list');
     const componentListItems = within(componentList).getAllByTestId('component-list-item');
@@ -206,7 +207,8 @@ describe('ComponentListViewPage', () => {
     render(<ComponentListView applicationName="test-app" />);
     expect(screen.getAllByTestId('component-list-item')).toHaveLength(2);
 
-    const textFilterInput = screen.getByRole('textbox', { name: 'name filter' });
+    const nameSearchInput = screen.getByTestId('name-input-filter');
+    const textFilterInput = nameSearchInput.querySelector('.pf-c-text-input-group__text-input');
     fireEvent.change(textFilterInput, { target: { value: 'no match' } });
 
     expect(screen.queryAllByTestId('component-list-item')).toHaveLength(0);

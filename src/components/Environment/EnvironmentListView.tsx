@@ -133,11 +133,12 @@ const EnvironmentListView: React.FC<Props> = ({
                   <ToolbarItem>
                     <SearchInput
                       name="nameInput"
+                      data-test="env-name-filter-input"
                       type="search"
                       aria-label="name filter"
                       placeholder="Filter by name..."
                       value={nameFilter}
-                      onChange={(name) => setNameFilter(name)}
+                      onChange={(e, name) => setNameFilter(name)}
                       onClear={() => unsetNameFilter()}
                     />
                   </ToolbarItem>

@@ -122,13 +122,18 @@ export const ContextSwitcher: React.FC<ContextSwitcherProps> = ({
     setActiveMenu('context-switcher-root-menu');
   };
 
-  const onDrillIn = (fromMenuId: string, toMenuId: string, pathId: string) => {
+  const onDrillIn = (
+    event: React.KeyboardEvent | React.MouseEvent,
+    fromMenuId: string,
+    toMenuId: string,
+    pathId: string,
+  ) => {
     setMenuDrilledIn([...menuDrilledIn, fromMenuId]);
     setDrilldownPath([...drilldownPath, pathId]);
     setActiveMenu(toMenuId);
   };
 
-  const onDrillOut = (toMenuId: string) => {
+  const onDrillOut = (event: React.KeyboardEvent | React.MouseEvent, toMenuId: string) => {
     const menuDrilledInSansLast = menuDrilledIn.slice(0, menuDrilledIn.length - 1);
     const pathSansLast = drilldownPath.slice(0, drilldownPath.length - 1);
     setMenuDrilledIn(menuDrilledInSansLast);

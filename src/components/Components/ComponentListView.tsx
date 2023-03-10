@@ -184,11 +184,11 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                   <ToolbarItem>
                     <SearchInput
                       name="nameInput"
-                      data-test="name-input-filter"
+                      data-testid="name-input-filter"
                       type="search"
                       aria-label="name filter"
                       placeholder="Filter by name..."
-                      onChange={setNameFilter}
+                      onChange={(e, name) => setNameFilter(name)}
                       value={nameFilter}
                       onClear={() => setNameFilter('')}
                     />

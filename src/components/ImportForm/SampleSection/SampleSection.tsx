@@ -114,7 +114,7 @@ const SampleSection = ({ onStrategyChange }) => {
                 <SearchInput
                   data-test="search-catalog"
                   value={filter}
-                  onChange={setFilter}
+                  onChange={(e, name) => setFilter(name)}
                   placeholder="Filter by keyword..."
                   onClear={() => setFilter('')}
                 />
