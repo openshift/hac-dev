@@ -1,3 +1,4 @@
+export const MIN_GRAPH_HEIGHT = 150;
 export const TOOLBAR_HEIGHT = 40;
 export const DROP_SHADOW_SPACING = 5;
 
