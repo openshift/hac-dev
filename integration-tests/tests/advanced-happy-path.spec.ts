@@ -70,7 +70,7 @@ describe('Create Components using the UI', () => {
     it('Add a component to Application', () => {
       componentName = Common.generateAppName(componentName);
 
-      Applications.createComponent(repoLink, componentName, 'Basic Go', true);
+      Applications.createComponent(repoLink, componentName, 'Go', true);
     });
   });
 

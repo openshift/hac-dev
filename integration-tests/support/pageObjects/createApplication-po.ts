@@ -17,10 +17,10 @@ export const addComponentPagePO = {
 
 export const componentSamplesPagePO = {
   grid: '.catalog-page__grid',
-  nodejs: '[data-test="sample-Basic Node.js"]',
-  python: '[data-test="sample-Basic Python"]',
-  quarkus: '[data-test="sample-Basic Quarkus"]',
-  spring: '[data-test="sample-Basic Spring Boot"]',
+  nodejs: '[data-test="sample-Node"]',
+  python: '[data-test="sample-Python"]',
+  quarkus: '[data-test="sample-Quarkus"]',
+  spring: '[data-test="sample-Spring Boot"]',
   create: '[data-test="submit-button"]',
 };
 

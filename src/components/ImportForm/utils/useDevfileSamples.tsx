@@ -10,6 +10,7 @@ type SampleAttrs = {
       [remote: string]: string;
     };
   };
+  deprecated?: boolean;
 };
 
 export const useDevfileSamples = (): [CatalogItem<SampleAttrs>[], boolean, string] => {

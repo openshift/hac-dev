@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Devfile Utils Should convert devfile samples to catalog items 1`] = `
+Array [
+  Object {
+    "attributes": Object {
+      "git": Object {
+        "remotes": Object {
+          "origin": "https://github.com/nodeshift-starters/devfile-sample.git",
+        },
+      },
+      "language": "JavaScript",
+      "projectType": "Node.js",
+    },
+    "description": "Node.js 16 application using Express 4.18.x",
+    "displayName": "Basic Node.js",
+    "icon": Object {
+      "url": "https://nodejs.org/static/images/logos/nodejs-new-pantone-black.svg",
+    },
+    "name": "Node",
+    "provider": "Red Hat",
+    "tags": Array [
+      "Node.js",
+      "Express",
+    ],
+    "type": "sample",
+    "uid": "nodejs-basic",
+  },
+  Object {
+    "attributes": Object {
+      "git": Object {
+        "remotes": Object {
+          "origin": "https://github.com/devfile-samples/devfile-sample-code-with-quarkus.git",
+        },
+      },
+      "language": "Java",
+      "projectType": "Quarkus",
+    },
+    "description": "Java Quarkus application using Maven 4.0 and OpenJDK 11",
+    "displayName": "Basic Quarkus",
+    "icon": Object {
+      "url": "https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.svg",
+    },
+    "name": "Quarkus",
+    "provider": "Red Hat",
+    "tags": Array [
+      "Java",
+      "Quarkus",
+    ],
+    "type": "sample",
+    "uid": "code-with-quarkus",
+  },
+  Object {
+    "attributes": Object {
+      "git": Object {
+        "remotes": Object {
+          "origin": "https://github.com/devfile-samples/devfile-sample-java-springboot-basic.git",
+        },
+      },
+      "language": "Java",
+      "projectType": "springboot",
+    },
+    "description": "Java Spring Boot application using Maven 4.0 and OpenJDK 11",
+    "displayName": "Basic Spring Boot",
+    "icon": Object {
+      "url": "https://raw.githubusercontent.com/devfile-samples/devfile-stack-icons/main/spring.svg",
+    },
+    "name": "Spring Boot",
+    "provider": "Red Hat",
+    "tags": Array [
+      "Java",
+      "Spring",
+    ],
+    "type": "sample",
+    "uid": "java-springboot-basic",
+  },
+  Object {
+    "attributes": Object {
+      "git": Object {
+        "remotes": Object {
+          "origin": "https://github.com/devfile-samples/devfile-sample-python-basic.git",
+        },
+      },
+      "language": "Python",
+      "projectType": "Python",
+    },
+    "description": "Python 3.9.x application with Flask",
+    "displayName": "Basic Python",
+    "icon": Object {
+      "url": "https://raw.githubusercontent.com/devfile-samples/devfile-stack-icons/main/python.svg",
+    },
+    "name": "Python",
+    "provider": "Red Hat",
+    "tags": Array [
+      "Python",
+      "Pip",
+      "Flask",
+    ],
+    "type": "sample",
+    "uid": "python-basic",
+  },
+  Object {
+    "attributes": Object {
+      "git": Object {
+        "remotes": Object {
+          "origin": "https://github.com/devfile-samples/devfile-sample-go-basic.git",
+        },
+      },
+      "language": "Go",
+      "projectType": "Go",
+    },
+    "description": "Go 1.16 application",
+    "displayName": "Basic Go",
+    "icon": Object {
+      "url": "https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg",
+    },
+    "name": "Go",
+    "provider": "Red Hat",
+    "tags": Array [
+      "Go",
+    ],
+    "type": "sample",
+    "uid": "go-basic",
+  },
+]
+`;
