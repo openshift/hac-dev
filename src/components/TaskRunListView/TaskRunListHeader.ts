@@ -1,5 +1,5 @@
 export const taskRunTableColumnClasses = {
-  name: 'pf-m-width-25',
+  name: 'pf-m-width-25 wrap-column',
   task: 'pf-m-width-25',
   started: 'pf-m-width-25',
   status: 'pf-m-width-25',

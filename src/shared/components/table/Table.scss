@@ -1,5 +1,17 @@
+@import '~@patternfly/patternfly/sass-utilities/all';
+
 .table .pf-c-window-scroller.ReactVirtualized__VirtualGrid,
 .table .pf-c-window-scroller .ReactVirtualized__VirtualGrid,
 .table .pf-c-window-scroller .ReactVirtualized__VirtualGrid__innerScrollContainer {
   overflow: visible !important;
+}
+
+@media screen and (max-width: $pf-global--breakpoint--xl) {
+  .table .pf-c-table .pf-c-table__action {
+    width: 10% !important;
+  }
+}
+
+.table .pf-c-table .wrap-column {
+  overflow-wrap: anywhere;
 }
