@@ -175,6 +175,7 @@ export const sampleBuildPipelines: PipelineRunKind[] = [
       annotations: {
         'appstudio.openshift.io/component': '1-nodejs',
         'pipelines.openshift.io/runtime': 'generic',
+        'build.appstudio.openshift.io/repo': 'https://github.com/test/test-repo',
       },
     },
     spec: {

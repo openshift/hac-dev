@@ -20,6 +20,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'results.tekton.dev/result': 'test/results/558677f8-e01c-4d15-8729-5e838bd492aa',
         'build.appstudio.redhat.com/target_branch': 'branch_1',
         'pipelinesascode.tekton.dev/sha-title': 'test-title',
+        'pipelinesascode.tekton.dev/repo-url': 'https://github.com/test/test-repo',
       },
       creationTimestamp: '2022-07-19T11:35:46Z',
       generation: 1,

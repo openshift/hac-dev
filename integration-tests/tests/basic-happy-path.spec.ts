@@ -80,7 +80,6 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
       UIhelper.verifyLabelAndValue('Pipeline', 'docker-build');
       UIhelper.verifyLabelAndValue('Application', applicationName);
       UIhelper.verifyLabelAndValue('Component', componentName);
-      UIhelper.verifyLabelAndValue('Source', '-');
       UIhelper.verifyLabelAndValue('Related pipelines', '0 pipelines');
 
       DetailsTab.waitUntilStatusIsNotRunning();

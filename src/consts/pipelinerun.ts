@@ -23,6 +23,8 @@ export enum PipelineRunLabel {
   TEST_SERVICE_EVENT_TYPE_LABEL = 'pac.test.appstudio.openshift.io/event-type',
   TEST_SERVICE_SCENARIO = 'test.appstudio.openshift.io/scenario',
   ASEB_APPLICATION = 'appstudio.application',
+
+  BUILD_SERVICE_REPO_ANNOTATION = 'build.appstudio.openshift.io/repo',
 }
 
 export enum PipelineRunType {

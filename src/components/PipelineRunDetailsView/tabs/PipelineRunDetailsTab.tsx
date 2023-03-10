@@ -27,6 +27,7 @@ import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import MetadataList from '../MetadataList';
 import PipelineRunVisualization from '../PipelineRunVisualization';
 import RelatedPipelineRuns from '../RelatedPipelineRuns';
+import { getSourceUrl } from '../utils/pipelinerun-utils';
 import RunResultsList from './RunResultsList';
 
 type PipelineRunDetailsTabProps = {
@@ -46,7 +47,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
     pipelineRun?.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] ||
     pipelineRun?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];
   const applicationName = pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION];
-
+  const sourceUrl = getSourceUrl(pipelineRun);
   const pipelineRunStatus = !error ? pipelineRunFilterReducer(pipelineRun) : null;
   return (
     <>
@@ -210,31 +211,14 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
                     </DescriptionListDescription>
                   </DescriptionListGroup>
                 )}
-
-                <DescriptionListGroup>
-                  <DescriptionListTerm>Source</DescriptionListTerm>
-                  <DescriptionListDescription>
-                    {pipelineRun.metadata?.annotations?.[
-                      PipelineRunLabel.COMMIT_FULL_REPO_URL_ANNOTATION
-                    ] ? (
-                      <ExternalLink
-                        href={
-                          pipelineRun.metadata?.annotations[
-                            PipelineRunLabel.COMMIT_FULL_REPO_URL_ANNOTATION
-                          ]
-                        }
-                      >
-                        {
-                          pipelineRun.metadata?.annotations[
-                            PipelineRunLabel.COMMIT_FULL_REPO_URL_ANNOTATION
-                          ]
-                        }
-                      </ExternalLink>
-                    ) : (
-                      '-'
-                    )}
-                  </DescriptionListDescription>
-                </DescriptionListGroup>
+                {sourceUrl && (
+                  <DescriptionListGroup>
+                    <DescriptionListTerm>Source</DescriptionListTerm>
+                    <DescriptionListDescription>
+                      <ExternalLink href={sourceUrl}>{sourceUrl}</ExternalLink>{' '}
+                    </DescriptionListDescription>
+                  </DescriptionListGroup>
+                )}
                 <DescriptionListGroup>
                   <DescriptionListTerm>Related pipelines</DescriptionListTerm>
                   <DescriptionListDescription>
