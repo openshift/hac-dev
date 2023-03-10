@@ -58,7 +58,7 @@ export const dagtoNodes = (dag: DAG): WorkflowNodeModel<WorkflowNodeModelData>[]
     Array.from(dag.vertices.values()).map((v) => {
       const node: WorkflowNodeModel<WorkflowNodeModelData> = {
         id: v.name,
-        type: v.data.workflowType || WorkflowNodeType.PIPELINE,
+        type: NodeType.WORKFLOW_NODE,
         label: v.data.label,
         width: v.data.width,
         height: DEFAULT_NODE_HEIGHT,

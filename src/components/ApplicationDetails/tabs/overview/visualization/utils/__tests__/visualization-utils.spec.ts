@@ -57,9 +57,12 @@ describe('getWorkflowNodes', () => {
     expect(nodes).toHaveLength(0);
   });
 
-  test('expect to return same number of nodes for linear workflows', () => {
+  test('expect to return same number of workload nodes for linear workflows', () => {
     const nodes = getWorkflowNodes(dagtoNodes(sampleWorkflowDag));
     expect(nodes).toHaveLength(sampleWorkflowDag.vertices.size);
+    expect(nodes.filter((n) => n.type === NodeType.WORKFLOW_NODE)).toHaveLength(
+      sampleWorkflowDag.vertices.size,
+    );
   });
 
   test('expect to contain a spacer node for parallel to parallel workflows', () => {
@@ -71,6 +74,7 @@ describe('getWorkflowNodes', () => {
     const nodes = getWorkflowNodes(dagtoNodes(sampleParallelWorkflowDag));
     expect(nodes).toHaveLength(5);
     expect(nodes.filter((n) => n.type === NodeType.SPACER_NODE)).toHaveLength(1);
+    expect(nodes.filter((n) => n.type === NodeType.WORKFLOW_NODE)).toHaveLength(4);
   });
 });
 
