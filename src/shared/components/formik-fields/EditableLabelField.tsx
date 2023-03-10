@@ -18,7 +18,7 @@ const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
   type = TextInputTypes.text,
   ...props
 }) => {
-  const [, { value, error }, { setValue }] = useField({ name, type });
+  const [, { value, error }, { setValue, setTouched }] = useField({ name, type });
   const [editing, setEditing] = React.useState(false);
   const [oldValue, setOldValue] = React.useState('');
   const fieldId = getFieldId(name, 'label-field');
@@ -26,8 +26,9 @@ const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
   React.useEffect(() => {
     if (error && !editing) {
       setEditing(true);
+      setTouched(true);
     }
-  }, [error, editing]);
+  }, [error, editing, setTouched]);
 
   const editIcon = (
     <GrayPencilAltIcon

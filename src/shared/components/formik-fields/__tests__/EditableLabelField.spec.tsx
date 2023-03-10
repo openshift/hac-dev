@@ -97,6 +97,21 @@ describe('EditableLabelField', () => {
     });
   });
 
+  it('should show the validation error message if there are any', async () => {
+    render(
+      <Wrapper
+        initialValues={{ editableLabel: '234-invalid-name' }}
+        initialErrors={{ editableLabel: 'Invalid component name provided' }}
+        onSubmit={jest.fn()}
+      >
+        <EditableLabelField name={fieldName} />
+      </Wrapper>,
+    );
+    await waitFor(() => {
+      expect(screen.queryByText('Invalid component name provided')).toBeInTheDocument();
+    });
+  });
+
   it('should show label field with updated value and unmount editable field on input followed by submit button click ', async () => {
     render(
       <Wrapper initialValues={initialValues} onSubmit={jest.fn()}>
