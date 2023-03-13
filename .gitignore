@@ -22,3 +22,5 @@ integration-tests/cypress
 
 # helper scripts
 helpers/.env
+
+config/.env.local
