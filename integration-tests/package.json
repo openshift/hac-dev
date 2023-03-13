@@ -5,26 +5,25 @@
   "private": true,
   "scripts": {
     "clean-reports": "rm -rf cypress/",
-    "cy:run": "npm-run-all clean-reports cy:run:*",
-    "cy:run:hac-dev": "cypress run",
-    "cy:run:hac-dev-experimental": "cypress run -e configFile=hac-dev-experimental",
-    "cy:open:hac-dev": "cypress open",
-    "cy:open:hac-dev-experimental": "cypress open -e configFile=hac-dev-experimental"
+    "cy:run": "cypress run -b chrome",
+    "cy:open": "cypress open"
   },
   "devDependencies": {
+    "@cypress/grep": "^3.1.4",
     "@cypress/xpath": "^2.0.3",
     "@reportportal/agent-js-cypress": "^5.1.0",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^17.0.13",
     "axe-core": "^4.4.2",
-    "cypress": "^9.6.0",
-    "cypress-grep": "^2.14.0",
-    "cypress-axe": "^0.14.0",
+    "cypress": "12.7.0",
+    "cypress-axe": "^1.4.0",
     "cypress-multi-reporters": "^1.6.0",
-    "cypress-terminal-report": "^3.5.2",
+    "cypress-terminal-report": "^5.0.2",
+    "cypress-v10-preserve-cookie": "^1.2.1",
     "deepmerge": "^4.2.2",
     "fs-extra": "^10.1.0",
     "mocha-junit-reporter": "^2.0.2",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "typescript": "^4.9.5"
   }
 }

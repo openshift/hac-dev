@@ -52,7 +52,7 @@ describe(
         cy.url().then((url) => {
           cy.contains('button', 'Sign in').wait(500).click({ force: true });
           cy.origin(
-            'https://www.github.com',
+            'https://github.com',
             { args: { user, pass, deviceId } },
             ({ user, pass, deviceId }) => {
               // bypass the device validation

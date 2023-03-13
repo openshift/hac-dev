@@ -1,10 +1,10 @@
 import { Common } from '../../utils/Common';
 import { Login } from '../../utils/Login';
+import 'cypress-v10-preserve-cookie';
 
 before(() => {
   //Clear namespace before running the tests
   Common.cleanNamespace();
-  Cypress.Cookies.debug(true);
 
   const url = new URL(Cypress.env('HAC_BASE_URL'));
   cy.setCookie('notice_gdpr_prefs', '0,1,2:', { domain: url.hostname });
@@ -33,9 +33,8 @@ beforeEach(() => {
   //Preserve cookies between tests
   cy.getCookies().then((cookies) => {
     const namesOfCookies = cookies.map((c) => c.name);
-    Cypress.Cookies.preserveOnce(...namesOfCookies);
+    cy.preserveCookieOnce(...namesOfCookies);
   });
-  Cypress.Cookies.debug(true);
 
   localStorage.setItem(
     'getting-started-modal',
