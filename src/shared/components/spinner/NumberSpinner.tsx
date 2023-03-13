@@ -23,10 +23,12 @@ const NumberSpinner: React.FC<NumberSpinnerProps> = ({
       <NumberInput
         min={min}
         value={value}
+        allowEmptyInput
         onMinus={() => changeValueBy(-1)}
         onChange={inputProps.onChange}
         onPlus={() => changeValueBy(1)}
         inputProps={{ ...inputProps }}
+        inputName={inputProps.name}
         className={className}
         minusBtnAriaLabel={t('public~Decrement')}
         plusBtnAriaLabel={t('public~Increment')}
