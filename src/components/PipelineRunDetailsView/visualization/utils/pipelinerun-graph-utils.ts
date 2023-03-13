@@ -13,10 +13,12 @@ import merge from 'lodash/merge';
 import minBy from 'lodash/minBy';
 import { formatPrometheusDuration } from '../../../../shared/components/timestamp/datetime';
 import {
+  TaskRunKind,
+  TaskRunStatus,
+  TektonResourceLabel,
   PipelineKind,
   PipelineTask,
   PipelineRunKind,
-  PLRTaskRunDataStatus,
   PLRTaskRunStep,
 } from '../../../../types';
 import {
@@ -153,7 +155,8 @@ export const createStepStatus = (stepName: string, status: PipelineTaskStatus): 
  */
 export const appendStatus = (
   pipeline: PipelineKind,
-  pipelineRun?: PipelineRunKind,
+  pipelineRun: PipelineRunKind,
+  taskRuns: TaskRunKind[],
   isFinallyTasks = false,
 ): PipelineTaskWithStatus[] => {
   const tasks = (isFinallyTasks ? pipeline.spec.finally : pipeline.spec.tasks) || [];
@@ -163,13 +166,15 @@ export const appendStatus = (
     if (!pipelineRun?.status) {
       return merge(task, { status: { reason: runStatus.Skipped } });
     }
-    if (!pipelineRun?.status?.taskRuns) {
-      return merge(task, { status: { reason: overallPipelineRunStatus } });
+    if (!taskRuns || taskRuns.length === 0) {
+      return merge({}, task, { status: { reason: overallPipelineRunStatus } });
     }
 
-    const taskStatus: PLRTaskRunDataStatus = find(pipelineRun.status.taskRuns, {
-      pipelineTaskName: task.name,
-    })?.status;
+    const taskRun = find(
+      taskRuns,
+      (tr) => tr.metadata.labels[TektonResourceLabel.pipelineTask] === task.name,
+    );
+    const taskStatus: TaskRunStatus = taskRun?.status;
 
     const mTask: PipelineTaskWithStatus = merge(task, {
       status: { ...taskStatus, reason: runStatus.Pending },
@@ -198,12 +203,6 @@ export const appendStatus = (
     }
 
     // Determine any task test status
-    const taskRunName =
-      pipelineRun.status.taskRuns &&
-      Object.keys(pipelineRun.status.taskRuns).find(
-        (key) => pipelineRun.status.taskRuns[key].pipelineTaskName === mTask.name,
-      );
-    const taskRun = taskRunName && pipelineRun.status.taskRuns[taskRunName];
     if (taskRun?.status?.taskResults) {
       const testOutput = taskRun?.status?.taskResults.find(
         (result) => result.name === 'HACBS_TEST_OUTPUT',
@@ -277,8 +276,12 @@ const getBadgeWidth = (data: PipelineRunNodeData, font: string = '0.875rem RedHa
   return BADGE_PADDING + getTextWidth(`${data.testFailCount || data.testWarnCount}`, font);
 };
 
-const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind) => {
-  const taskList = appendStatus(pipeline, pipelineRun);
+const getGraphDataModel = (
+  pipeline: PipelineKind,
+  pipelineRun?: PipelineRunKind,
+  taskRuns?: TaskRunKind[],
+) => {
+  const taskList = appendStatus(pipeline, pipelineRun, taskRuns);
 
   const dag = new DAG();
   taskList?.forEach((task: PipelineTask) => {
@@ -362,7 +365,7 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
     nodes.push(node);
   });
 
-  const finallyTaskList = appendStatus(pipeline, pipelineRun, true);
+  const finallyTaskList = appendStatus(pipeline, pipelineRun, taskRuns, true);
 
   const maxFinallyNodeName =
     finallyTaskList.sort((a, b) => b.name.length - a.name.length)[0]?.name || '';
@@ -424,11 +427,11 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
   };
 };
 
-export const getPipelineRunDataModel = (pipelineRun: PipelineRunKind) => {
+export const getPipelineRunDataModel = (pipelineRun: PipelineRunKind, taskRuns: TaskRunKind[]) => {
   if (!pipelineRun?.status?.pipelineSpec) {
     return null;
   }
-  return getGraphDataModel(getPipelineFromPipelineRun(pipelineRun), pipelineRun);
+  return getGraphDataModel(getPipelineFromPipelineRun(pipelineRun), pipelineRun, taskRuns);
 };
 
 export const isTaskRunNode = (

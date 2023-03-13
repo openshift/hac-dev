@@ -19,7 +19,7 @@ import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { ErrorDetailsWithStaticLog } from '../../../shared/components/pipeline-run-logs/logs/log-snippet-types';
 import { getPLRLogSnippet } from '../../../shared/components/pipeline-run-logs/logs/pipelineRunLogSnippet';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
-import { PipelineRunKind } from '../../../types';
+import { PipelineRunKind, TaskRunKind } from '../../../types';
 import { getCommitShortName } from '../../../utils/commits-utils';
 import { calculateDuration, pipelineRunStatus } from '../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
@@ -31,12 +31,18 @@ import { getSourceUrl } from '../utils/pipelinerun-utils';
 import RunResultsList from './RunResultsList';
 
 type PipelineRunDetailsTabProps = {
+  taskRuns: TaskRunKind[];
   pipelineRun: PipelineRunKind;
   error: unknown;
 };
-const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineRun, error }) => {
+const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
+  pipelineRun,
+  error,
+  taskRuns,
+}) => {
   const { workspace } = useWorkspaceInfo();
-  const pipelineRunFailed = (getPLRLogSnippet(pipelineRun) || {}) as ErrorDetailsWithStaticLog;
+  const pipelineRunFailed = (getPLRLogSnippet(pipelineRun, taskRuns) ||
+    {}) as ErrorDetailsWithStaticLog;
   const duration = calculateDuration(
     typeof pipelineRun.status?.startTime === 'string' ? pipelineRun.status?.startTime : '',
     typeof pipelineRun.status?.completionTime === 'string'
@@ -55,7 +61,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
       <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
         Pipeline run details
       </Title>
-      <PipelineRunVisualization pipelineRun={pipelineRun} error={error} />
+      <PipelineRunVisualization pipelineRun={pipelineRun} error={error} taskRuns={taskRuns} />
       {!error && (
         <Flex>
           <Flex flex={{ default: 'flex_3' }}>

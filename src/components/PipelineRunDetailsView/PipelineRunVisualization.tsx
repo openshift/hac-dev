@@ -8,12 +8,12 @@ import { getPipelineRunDataModel } from './visualization/utils/pipelinerun-graph
 
 import './PipelineRunVisualization.scss';
 
-const PipelineRunVisualization = ({ pipelineRun, error }) => {
+const PipelineRunVisualization = ({ pipelineRun, error, taskRuns }) => {
   const nodeRef = React.useRef<HTMLDivElement>();
 
   const model = React.useMemo(() => {
-    return getPipelineRunDataModel(pipelineRun);
-  }, [pipelineRun]);
+    return getPipelineRunDataModel(pipelineRun, taskRuns);
+  }, [pipelineRun, taskRuns]);
 
   const scrollIntoView = React.useCallback(
     (element: GraphElement) => {
