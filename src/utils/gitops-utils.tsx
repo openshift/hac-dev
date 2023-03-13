@@ -5,12 +5,12 @@ import InProgressIcon from '@patternfly/react-icons/dist/js/icons/in-progress-ic
 import NotStartedIcon from '@patternfly/react-icons/dist/js/icons/not-started-icon';
 import { global_palette_green_400 as greenColor } from '@patternfly/react-tokens/dist/js/global_palette_green_400';
 import { global_palette_red_100 as redColor } from '@patternfly/react-tokens/dist/js/global_palette_red_100';
-import { runStatus } from '../shared';
 import {
   GitOpsDeploymentKind,
   GitOpsDeploymentHealthStatus,
   GitOpsDeploymentStrategy,
 } from '../types/gitops-deployment';
+import { runStatus } from './pipeline-utils';
 
 import './gitops-utils.scss';
 

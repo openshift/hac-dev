@@ -8,12 +8,13 @@ import {
   RunStatus,
   StatusIcon as PfStatusIcon,
 } from '@patternfly/react-topology';
-import { getLabelColorFromStatus, runStatus } from './utils';
+import { getLabelColorFromStatus, runStatus } from '../../utils/pipeline-utils';
+import { runStatusToRunStatus } from './utils';
 
 import './StatusIcon.scss';
 
 type StatusIconProps = {
-  status: string;
+  status: runStatus;
   height?: number;
   width?: number;
   disableSpin?: boolean;
@@ -33,7 +34,7 @@ export const StatusIcon: React.FC<StatusIconProps> = ({ status, ...props }) => {
       </span>
     );
   }
-  return <PfStatusIcon status={status as RunStatus} {...props} />;
+  return <PfStatusIcon status={runStatusToRunStatus(status)} {...props} />;
 };
 
 export const ColoredStatusIcon: React.FC<StatusIconProps> = ({ status, ...others }) => {
@@ -42,8 +43,8 @@ export const ColoredStatusIcon: React.FC<StatusIconProps> = ({ status, ...others
       className={css(
         'status-icon',
         pipelineStyles.topologyPipelinesStatusIcon,
-        (status === RunStatus.Running || status === RunStatus.InProgress) && 'icon-spin',
-        getRunStatusModifier(status as RunStatus),
+        (status === runStatus.Running || status === runStatus['In Progress']) && 'icon-spin',
+        getRunStatusModifier(runStatusToRunStatus(status)),
       )}
     >
       <StatusIcon status={status} {...others} />
@@ -60,8 +61,8 @@ export const StatusIconWithText: React.FC<
         className={css(
           'pf-u-mr-xs status-icon',
           pipelineStyles.topologyPipelinesPillStatus,
-          (status === RunStatus.Running || status === RunStatus.InProgress) && 'icon-spin',
-          getRunStatusModifier(status as RunStatus),
+          (status === runStatus.Running || status === runStatus['In Progress']) && 'icon-spin',
+          getRunStatusModifier(runStatusToRunStatus(status)),
         )}
       >
         <StatusIcon status={status} {...others} />

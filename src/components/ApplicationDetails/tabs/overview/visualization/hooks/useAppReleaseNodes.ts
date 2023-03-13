@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useReleasePlans } from '../../../../../../hooks/useReleasePlans';
 import { useReleases } from '../../../../../../hooks/useReleases';
-import { pipelineRunStatus } from '../../../../../../shared';
 import { ReleaseKind, ReleasePlanKind } from '../../../../../../types/coreBuildService';
+import { conditionsRunStatus } from '../../../../../../utils/pipeline-utils';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import {
   emptyPipelineNode,
@@ -81,7 +81,7 @@ export const useAppReleaseNodes = (
             applicationName,
             WorkflowNodeType.RELEASE,
             previousTasks,
-            pipelineRunStatus(groupedReleases[key][0]),
+            conditionsRunStatus(groupedReleases[key][0].status?.conditions),
           );
         }
         const groupedNodes = groupedReleases[key]
@@ -92,7 +92,7 @@ export const useAppReleaseNodes = (
               applicationName,
               WorkflowNodeType.RELEASE,
               previousTasks,
-              pipelineRunStatus(release),
+              conditionsRunStatus(release.status?.conditions),
             ),
           );
         const latestRelease = groupedReleases[key].reduce(
@@ -115,7 +115,7 @@ export const useAppReleaseNodes = (
           undefined,
           groupedNodes,
           groupedReleases[key],
-          pipelineRunStatus(latestRelease),
+          conditionsRunStatus(latestRelease.status?.conditions),
         );
       });
       nodes.push(

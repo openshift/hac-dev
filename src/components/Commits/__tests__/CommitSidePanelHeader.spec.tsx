@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, configure } from '@testing-library/react';
-import { runStatus } from '../../../shared';
+import { runStatus } from '../../../utils/pipeline-utils';
 import { pipelineWithCommits } from '../__data__/pipeline-with-commits';
 import CommitSidePanelHeader, { SortedPLRList } from '../CommitSidePanelHeader';
 

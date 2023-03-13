@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { PipelineRunLabel } from '../consts/pipelinerun';
-import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../shared';
 import { EnvironmentKind } from '../types';
 import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
+import { pipelineRunStatus, pipelineRunStatusToGitOpsStatus } from '../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { useSortedEnvironments } from './useEnvironments';
 import { useSnapshotsEnvironmentBindings } from './useSnapshotsEnvironmentBindings';

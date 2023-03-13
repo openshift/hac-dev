@@ -62,13 +62,13 @@ export const dagtoNodes = (dag: DAG): WorkflowNodeModel<WorkflowNodeModelData>[]
         label: v.data.label,
         width: v.data.width,
         height: DEFAULT_NODE_HEIGHT,
-        status: v.data.status,
         runAfterTasks: v.dependancyNames,
         data: {
           workflowType: v.data.workflowType || WorkflowNodeType.PIPELINE,
           isDisabled: (v.data.resources || []).length === 0,
           isParallelNode: v.data.isParallelNode || false,
           resources: v.data.resources || [],
+          status: v.data.status,
         },
       };
       return node;

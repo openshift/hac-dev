@@ -2,14 +2,14 @@ import * as React from 'react';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { usePipelineRun } from '../../hooks/usePipelineRunsForApplication';
-import { pipelineRunFilterReducer } from '../../shared';
-import { StatusIconWithTextLabel } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
+import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
+import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import PipelineRunDetailsTab from './tabs/PipelineRunDetailsTab';
 import PipelineRunLogsTab from './tabs/PipelineRunLogsTab';
 import PipelineRunTaskRunsTab from './tabs/PipelineRunTaskRunsTab';
@@ -27,7 +27,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
   const [pipelineRun, loaded, error] = usePipelineRun(namespace, pipelineRunName);
 
   const plrStatus = React.useMemo(
-    () => loaded && pipelineRun && pipelineRunFilterReducer(pipelineRun),
+    () => loaded && pipelineRun && pipelineRunStatus(pipelineRun),
     [loaded, pipelineRun],
   );
 

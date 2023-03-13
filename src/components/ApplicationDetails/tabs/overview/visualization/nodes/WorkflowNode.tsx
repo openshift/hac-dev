@@ -2,17 +2,18 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Popover } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
-import { Node, NodeModel, observer, TaskNode, useHover } from '@patternfly/react-topology';
+import { Node, observer, PipelineNodeModel, TaskNode, useHover } from '@patternfly/react-topology';
 import { useWorkspaceInfo } from '../../../../../../utils/workspace-context-utils';
+import { runStatusToRunStatus } from '../../../../../topology/utils';
 import { WorkflowNodeModelData } from '../types';
 import { getWorkflowNodeIcon } from '../utils/node-icon-utils';
-import { statusToRunStatus, getLinksForElement } from '../utils/node-utils';
+import { getLinksForElement } from '../utils/node-utils';
 import WorkflowNodeTipContent from './WorkflowNodeTipContent';
 
 import './WorkflowNode.scss';
 
 type WorkflowNodeProps = {
-  element: Node<NodeModel, WorkflowNodeModelData>;
+  element: Node<PipelineNodeModel, WorkflowNodeModelData>;
 };
 
 const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
@@ -64,9 +65,9 @@ const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
         <TaskNode
           truncateLength={element.getLabel().length}
           element={element}
-          status={statusToRunStatus(status)}
           showStatusState
           statusIconSize={18}
+          status={runStatusToRunStatus(status)}
           hover={isDisabled ? false : undefined}
           badge={childNodes.length ? `${childNodes.length}` : undefined}
           className={css('workload-node', { 'm-disabled': isDisabled })}

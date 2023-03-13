@@ -1,8 +1,7 @@
-import { RunStatus } from '@patternfly/react-topology';
 import omit from 'lodash/omit';
 import { DataState, testPipelineRuns } from '../../../../../__data__/pipelinerun-data';
-import { SucceedConditionReason } from '../../../../../shared';
 import { PipelineRunKind } from '../../../../../types';
+import { runStatus, SucceedConditionReason } from '../../../../../utils/pipeline-utils';
 import { NodeType } from '../../../../ApplicationDetails/tabs/overview/visualization/const';
 import { testPipeline, testPipelineRun } from '../../../../topology/__data__/pipeline-test-data';
 import {
@@ -133,12 +132,12 @@ describe('pipelinerun-graph-utils: ', () => {
   describe('appendStatus', () => {
     it('should append Idle status if a taskrun status reason is missing', () => {
       const taskList = appendStatus(getPipelineFromPipelineRun(testPipelineRun), testPipelineRun);
-      expect(taskList.filter((t) => t.status.reason === RunStatus.Idle)).toHaveLength(1);
+      expect(taskList.filter((t) => t.status.reason === runStatus.Idle)).toHaveLength(1);
     });
 
     it('should append Skipped status for the skipped tasks', () => {
       const taskList = appendStatus(getPipelineFromPipelineRun(testPipelineRun), testPipelineRun);
-      expect(taskList.filter((t) => t.status.reason === RunStatus.Skipped)).toHaveLength(2);
+      expect(taskList.filter((t) => t.status.reason === runStatus.Skipped)).toHaveLength(2);
     });
 
     it('should append Skipped status for the tasks without status/reason but marked as skipped in pipelinerun status', () => {
@@ -147,7 +146,7 @@ describe('pipelinerun-graph-utils: ', () => {
         getPipelineFromPipelineRun(plrwithoutSkippedStatus),
         plrwithoutSkippedStatus,
       );
-      expect(taskList.filter((t) => t.status.reason === RunStatus.Skipped)).toHaveLength(1);
+      expect(taskList.filter((t) => t.status.reason === runStatus.Skipped)).toHaveLength(1);
     });
 
     it('should append Idle status if the taskruns are missing and overall pipelinerun status is PipelineRunPending', () => {
@@ -169,7 +168,7 @@ describe('pipelinerun-graph-utils: ', () => {
         getPipelineFromPipelineRun(pendingPipelineRun),
         pendingPipelineRun,
       );
-      expect(taskList.filter((t) => t.status.reason === RunStatus.Pending)).toHaveLength(6);
+      expect(taskList.filter((t) => t.status.reason === runStatus.Pending)).toHaveLength(6);
     });
 
     it('should append Cancelled status if the taskruns are missing and overall pipelinerun status is Cancelled', () => {
@@ -191,7 +190,7 @@ describe('pipelinerun-graph-utils: ', () => {
         getPipelineFromPipelineRun(cancelledPipelineRun),
         cancelledPipelineRun,
       );
-      expect(taskList.filter((t) => t.status.reason === RunStatus.Cancelled)).toHaveLength(6);
+      expect(taskList.filter((t) => t.status.reason === runStatus.Cancelled)).toHaveLength(6);
     });
 
     it('should append Idle status if the status is missing in pipelinerun and taskrun', () => {
@@ -220,7 +219,7 @@ describe('pipelinerun-graph-utils: ', () => {
         },
       };
       const taskList = appendStatus(getPipelineFromPipelineRun(idlePipelineRun), idlePipelineRun);
-      expect(taskList.filter((t) => t.status.reason === RunStatus.Idle)).toHaveLength(1);
+      expect(taskList.filter((t) => t.status.reason === runStatus.Idle)).toHaveLength(1);
     });
   });
 

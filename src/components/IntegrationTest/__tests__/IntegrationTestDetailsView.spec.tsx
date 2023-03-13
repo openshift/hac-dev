@@ -3,8 +3,10 @@ import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, screen } from '@testing-library/react';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
-import { IntegrationTestScenarioGroupVersionKind } from '../../../models';
-import { PipelineRunGroupVersionKind } from '../../../shared';
+import {
+  IntegrationTestScenarioGroupVersionKind,
+  PipelineRunGroupVersionKind,
+} from '../../../models';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { routerRenderer } from '../../../utils/test-utils';
 import { mockPipelineRuns } from '../../ApplicationDetails/__data__/mock-pipeline-run';

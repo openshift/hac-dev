@@ -1,9 +1,9 @@
 import React from 'react';
-import { pipelineRunFilterReducer } from '../../shared/components/pipeline-run-logs';
-import { StatusIconWithText } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { TaskRunKind } from '../../types/task-run';
+import { taskRunStatus } from '../../utils/pipeline-utils';
+import { StatusIconWithText } from '../topology/StatusIcon';
 import { taskRunTableColumnClasses } from './TaskRunListHeader';
 
 const TaskRunListRow: React.FC<RowFunctionArgs<TaskRunKind>> = ({ obj }) => (
@@ -16,10 +16,7 @@ const TaskRunListRow: React.FC<RowFunctionArgs<TaskRunKind>> = ({ obj }) => (
       <Timestamp timestamp={obj.status?.startTime} />
     </TableData>
     <TableData className={taskRunTableColumnClasses.status}>
-      <StatusIconWithText
-        dataTestAttribute="taskrun-status"
-        status={pipelineRunFilterReducer(obj)}
-      />
+      <StatusIconWithText dataTestAttribute="taskrun-status" status={taskRunStatus(obj)} />
     </TableData>
     <TableData className={taskRunTableColumnClasses.kebab}>
       <div />

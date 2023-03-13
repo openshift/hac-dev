@@ -13,9 +13,7 @@ import {
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../../models';
-import { pipelineRunFilterReducer } from '../../shared';
 import ExternalLink from '../../shared/components/links/ExternalLink';
-import { StatusIconWithTextLabel } from '../../shared/components/pipeline-run-logs/StatusIcon';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { PipelineRunKind } from '../../types';
@@ -27,9 +25,11 @@ import {
   getCommitShortName,
   statuses,
 } from '../../utils/commits-utils';
+import { pipelineRunStatus, runStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
+import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import { useCommitStatus } from './commit-status';
 import { CommitIcon } from './CommitIcon';
 import CommitSidePanel from './CommitSidePanel';
@@ -95,7 +95,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
     const runs: SortedPLRList = {};
     pipelineruns.forEach((plr) => {
       // sort plr into respective status array
-      const plrStatus = pipelineRunFilterReducer(plr);
+      const plrStatus = pipelineRunStatus(plr);
       // put task in correct status array
       statuses.forEach((status) => {
         if (plrStatus === status) {
@@ -193,7 +193,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
                     variant="plain"
                     onClick={onStatusClick}
                   >
-                    <StatusIconWithTextLabel status={commitStatus} />
+                    <StatusIconWithTextLabel status={commitStatus as runStatus} />
                   </Button>
                 </Text>
               }

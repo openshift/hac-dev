@@ -1,5 +1,5 @@
-import { RunStatus } from '@patternfly/react-topology';
 import { EnvironmentKind } from '../../../../../../../types';
+import { runStatus } from '../../../../../../../utils/pipeline-utils';
 import { DAG } from '../../../../../../topology/dag';
 import { NodeType } from '../../const';
 import {
@@ -148,7 +148,7 @@ describe('workflowToNodes', () => {
         isAbstractNode: false,
         runAfterResourceKey: 'spec.parentEnvironment',
         data: {
-          status: () => RunStatus.Succeeded,
+          status: () => runStatus.Succeeded,
           label: 'Step 2',
           workflowType: WorkflowNodeType.STATIC_ENVIRONMENT,
           isDisabled: false,

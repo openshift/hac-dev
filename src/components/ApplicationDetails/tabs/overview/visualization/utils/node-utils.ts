@@ -1,17 +1,16 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { Node, PipelineNodeModel, RunStatus } from '@patternfly/react-topology';
 import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
-import { pipelineRunFilterReducer, pipelineRunStatus, runStatus } from '../../../../../../shared';
 import { ComponentKind, PipelineRunKind } from '../../../../../../types';
 import { GitOpsDeploymentHealthStatus } from '../../../../../../types/gitops-deployment';
 import { isPACEnabled } from '../../../../../../utils/component-utils';
+import { pipelineRunStatus, runStatus } from '../../../../../../utils/pipeline-utils';
 import { DEFAULT_NODE_HEIGHT } from '../../../../../topology/const';
 import { NodeType } from '../const';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import { getNodeWidth } from './visualization-utils';
 
 const UNKNOWN_STATUS = 'unknown';
-export const NEEDS_MERGE_STATUS = 'PR needs merge';
 
 const RUN_STATUS_SEVERITIES = [
   UNKNOWN_STATUS,
@@ -22,7 +21,7 @@ const RUN_STATUS_SEVERITIES = [
   runStatus['In Progress'],
   runStatus.PipelineNotStarted,
   runStatus.Running,
-  NEEDS_MERGE_STATUS,
+  runStatus.NeedsMerge,
   runStatus.Cancelled,
   runStatus.FailedToStart,
   runStatus.Failed,
@@ -60,7 +59,7 @@ export const statusToRunStatus = (status: string): RunStatus => {
     case GitOpsDeploymentHealthStatus.Progressing:
     case runStatus['In Progress']:
       return RunStatus.Running;
-    case NEEDS_MERGE_STATUS:
+    case runStatus.NeedsMerge:
       return RunStatus.Cancelled; // to show a warning
     case RunStatus.Pending:
     case GitOpsDeploymentHealthStatus.Suspended:
@@ -85,7 +84,7 @@ export const getLinkDataForElement = (
         filter: !groupNode && !isDisabled ? { name: 'name', value: label } : undefined,
       };
     case WorkflowNodeType.BUILD:
-      if (status === NEEDS_MERGE_STATUS) {
+      if (status === runStatus.NeedsMerge) {
         return {
           tab: 'components',
           filter:
@@ -153,7 +152,7 @@ export const getLinksForElement = (
 export const getRunStatusComponent = (
   component: ComponentKind,
   pipelineRuns: PipelineRunKind[],
-) => {
+): runStatus => {
   const latestPipelineRun = pipelineRuns
     .filter((pr) => pr.metadata.labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name)
     .sort(
@@ -162,11 +161,11 @@ export const getRunStatusComponent = (
         new Date(a.metadata.creationTimestamp).getTime(),
     )?.[0];
   if (latestPipelineRun) {
-    return pipelineRunFilterReducer(latestPipelineRun);
+    return pipelineRunStatus(latestPipelineRun);
   } else if (isPACEnabled(component)) {
-    return NEEDS_MERGE_STATUS;
+    return runStatus.NeedsMerge;
   }
-  return UNKNOWN_STATUS;
+  return runStatus.Unknown;
 };
 
 export const worstWorkflowStatus = (workFlows: PipelineNodeModel[]) =>
@@ -183,7 +182,7 @@ export const resourceToPipelineNode = (
   application: string,
   workflowType: WorkflowNodeType,
   runAfterTasks: string[] = [],
-  status?: runStatus | string,
+  status?: runStatus,
   label?: string,
 ): WorkflowNodeModel<WorkflowNodeModelData> => ({
   id: resource.metadata.uid,
@@ -232,7 +231,7 @@ export const groupToPipelineNode = (
   children?: string[],
   childNodes?: WorkflowNodeModel<WorkflowNodeModelData>[],
   resources?: K8sResourceCommon[],
-  status?: runStatus | string,
+  status?: runStatus,
 ): WorkflowNodeModel<WorkflowNodeModelData> => {
   const isDisabled = !resources?.length;
   return {
@@ -287,7 +286,7 @@ export const getBuildNodeForComponent = (
       application,
       label: `Build for ${component.metadata.name}`,
       isDisabled: false,
-      status: isPACEnabled(component, true) ? NEEDS_MERGE_STATUS : runStatus.Pending,
+      status: isPACEnabled(component, true) ? runStatus.NeedsMerge : runStatus.Pending,
       workflowType: WorkflowNodeType.BUILD,
     },
   };

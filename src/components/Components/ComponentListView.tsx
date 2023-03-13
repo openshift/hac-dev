@@ -28,7 +28,7 @@ import { useComponents } from '../../hooks/useComponents';
 import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import emptyStateImgUrl from '../../imgs/Components.svg';
-import { PipelineRunGroupVersionKind } from '../../shared';
+import { PipelineRunGroupVersionKind } from '../../models';
 import { PipelineRunKind } from '../../types';
 import { useURLForComponentPRs, isPACEnabled } from '../../utils/component-utils';
 import { getGitOpsDeploymentStrategy } from '../../utils/gitops-utils';

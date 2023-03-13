@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { RunStatus } from '@patternfly/react-topology';
 import { PipelineRunEventType, PipelineRunLabel } from '../../../../../../consts/pipelinerun';
 import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../../../hooks/useComponents';
@@ -11,7 +10,6 @@ import { useReleases } from '../../../../../../hooks/useReleases';
 import { useSnapshots } from '../../../../../../hooks/useSnapshots';
 import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnapshotsEnvironmentBindings';
 import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
-import { pipelineRunStatus } from '../../../../../../shared';
 import { ComponentKind, Commit, PipelineRunKind } from '../../../../../../types';
 import {
   EnvironmentKind,
@@ -21,6 +19,11 @@ import {
   SnapshotEnvironmentBinding,
 } from '../../../../../../types/coreBuildService';
 import { MVP_FLAG } from '../../../../../../utils/flag-utils';
+import {
+  conditionsRunStatus,
+  pipelineRunStatus,
+  runStatus,
+} from '../../../../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../../../../utils/workspace-context-utils';
 import {
   CommitComponentResource,
@@ -113,7 +116,7 @@ export const useCommitWorkflowData = (
           ),
         );
 
-        const buildPipelinestatus: RunStatus = pipelineRunStatus(latestBuildPipeline) as RunStatus;
+        const buildPipelinestatus = pipelineRunStatus(latestBuildPipeline);
 
         const integrationTestPipelines: PipelineRunKind[] = testPipelines.filter(
           (tp) => tp.metadata?.labels[PipelineRunLabel.COMPONENT] === compName,
@@ -136,9 +139,9 @@ export const useCommitWorkflowData = (
           releases.filter((r) => r.spec.snapshot === currentSnapshotName),
         );
 
-        const integrationTestStatus: (test: IntegrationTestScenarioKind) => RunStatus = (
+        const integrationTestStatus: (test: IntegrationTestScenarioKind) => runStatus = (
           its: IntegrationTestScenarioKind,
-        ): RunStatus => {
+        ): runStatus => {
           const matchedTest = getLatestResource(
             integrationTestPipelines.filter(
               (tp) =>
@@ -146,20 +149,20 @@ export const useCommitWorkflowData = (
                 removePrefixFromResourceName(its.metadata.name),
             ),
           );
-          return matchedTest ? (pipelineRunStatus(matchedTest) as RunStatus) : RunStatus.Pending;
+          return matchedTest ? pipelineRunStatus(matchedTest) : runStatus.Pending;
         };
 
-        const environmentStatus: (env: EnvironmentKind) => RunStatus = (
+        const environmentStatus: (env: EnvironmentKind) => runStatus = (
           environment: EnvironmentKind,
-        ): RunStatus => {
+        ): runStatus => {
           return compSnapshots.find(
             (as) => as.spec.environment === removePrefixFromResourceName(environment.metadata.name),
           )
-            ? RunStatus.Succeeded
-            : RunStatus.Pending;
+            ? runStatus.Succeeded
+            : runStatus.Pending;
         };
 
-        const releasePlanStatus: (rp: ReleasePlanKind) => RunStatus =
+        const releasePlanStatus: (rp: ReleasePlanKind) => runStatus =
           releasePlans.length === 0
             ? undefined
             : (rp) => {
@@ -168,17 +171,15 @@ export const useCommitWorkflowData = (
                     (r) => r.spec.releasePlan === removePrefixFromResourceName(rp.metadata.name),
                   ),
                 );
-                return matchedRelease
-                  ? (pipelineRunStatus(matchedRelease) as RunStatus)
-                  : RunStatus.Pending;
+                return matchedRelease ? pipelineRunStatus(matchedRelease) : runStatus.Pending;
               };
 
-        const releaseStatus: RunStatus =
+        const releaseStatus: runStatus =
           releases.length === 0
             ? undefined
             : latestRelease && latestRelease?.status
-            ? (pipelineRunStatus(latestRelease) as RunStatus)
-            : RunStatus.Succeeded;
+            ? conditionsRunStatus(latestRelease.status.conditions)
+            : runStatus.Succeeded;
 
         acc[compName] = {
           component,
@@ -229,7 +230,7 @@ export const useCommitWorkflowData = (
         id: 'commit',
         isAbstractNode: true,
         data: {
-          status: RunStatus.Succeeded,
+          status: runStatus.Succeeded,
           label: 'commit',
           workflowType: WorkflowNodeType.COMMIT,
           isDisabled: false,

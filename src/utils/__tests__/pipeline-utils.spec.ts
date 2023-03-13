@@ -5,6 +5,10 @@ import {
   getDuration,
   getPipelineRunData,
   getRandomChars,
+  getLabelColorFromStatus,
+  pipelineRunStatus,
+  pipelineRunStatusToGitOpsStatus,
+  runStatus,
 } from '../pipeline-utils';
 
 const samplePipelineRun = testPipelineRuns[DataState.SUCCEEDED];
@@ -90,5 +94,95 @@ describe('getPipelineRunData', () => {
     const runData = getPipelineRunData(samplePipelineRun);
     expect(runData.metadata.generateName).not.toBeDefined();
     expect(runData.metadata.name).toBeDefined();
+  });
+});
+
+describe('pipelineRunStatus', () => {
+  it('should return Pending status for pipelineruns with no status or no conditions', () => {
+    expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITHOUT_CONDITIONS])).toBe(
+      'Pending',
+    );
+    expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITHOUT_CONDITION_TYPE])).toBe(
+      'Pending',
+    );
+    expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITH_EMPTY_CONDITIONS])).toBe(
+      'Pending',
+    );
+  });
+
+  it('should return Pending status for pipelinerun status  with type as "Succeeded" & Pending condition', () => {
+    expect(pipelineRunStatus(testPipelineRuns[DataState.PIPELINE_RUN_PENDING])).toBe('Pending');
+  });
+
+  it('should return Running status for pipelinerun status with type as "Succeeded" & status as "Unknown"', () => {
+    const reducerOutput = pipelineRunStatus(testPipelineRuns[DataState.RUNNING]);
+    expect(reducerOutput).toBe('Running');
+  });
+
+  it('should return Succeeded status for pipelinerun status with type as "Succeeded" & status as "True"', () => {
+    const reducerOutput = pipelineRunStatus(testPipelineRuns[DataState.SUCCEEDED]);
+    expect(reducerOutput).toBe('Succeeded');
+  });
+
+  it('should return failed status for all the failed pipelineruns"', () => {
+    expect(pipelineRunStatus(testPipelineRuns[DataState.FAILED])).toBe('Failed');
+    expect(pipelineRunStatus(testPipelineRuns[DataState.STATUS_WITH_UNKNOWN_REASON])).toBe(
+      'Failed',
+    );
+    expect(pipelineRunStatus(testPipelineRuns[DataState.PIPELINE_RUN_STOPPING])).toBe('Failed');
+    expect(pipelineRunStatus(testPipelineRuns[DataState.TASK_RUN_STOPPING])).toBe('Failed');
+  });
+
+  it('should return Cancelled status for pipelinerun status with reason as "StoppedRunFinally" and "CancelledRunFinally"', () => {
+    expect(pipelineRunStatus(testPipelineRuns[DataState.PIPELINE_RUN_STOPPED])).toBe('Cancelled');
+    expect(pipelineRunStatus(testPipelineRuns[DataState.PIPELINE_RUN_CANCELLED])).toBe('Cancelled');
+    expect(pipelineRunStatus(testPipelineRuns[DataState.TASK_RUN_CANCELLED])).toBe('Cancelled');
+  });
+
+  it('should return Cancelling status for pipelinerun which is cancelled but finishing the current execution', () => {
+    const reducerOutput = pipelineRunStatus(testPipelineRuns[DataState.PIPELINE_RUN_CANCELLING]);
+    expect(reducerOutput).toBe('Cancelling');
+  });
+
+  it('should return Skipped status for pipleinerun with reason as "ConditionCheckFailed"', () => {
+    expect(pipelineRunStatus(testPipelineRuns[DataState.SKIPPED])).toBe('Skipped');
+  });
+});
+
+describe('pipelineRunStatusToGitOpsStatus', () => {
+  it('should return the default case', () => {
+    expect(pipelineRunStatusToGitOpsStatus('-')).toBe('Unknown');
+  });
+
+  it('should return the valid gitops statuses', () => {
+    expect(pipelineRunStatusToGitOpsStatus(runStatus.Succeeded)).toBe('Healthy');
+    expect(pipelineRunStatusToGitOpsStatus(runStatus.Failed)).toBe('Degraded');
+    expect(pipelineRunStatusToGitOpsStatus(runStatus.Running)).toBe('Progressing');
+    expect(pipelineRunStatusToGitOpsStatus(runStatus.Pending)).toBe('Progressing');
+    expect(pipelineRunStatusToGitOpsStatus(runStatus.Cancelled)).toBe('Suspended');
+    expect(pipelineRunStatusToGitOpsStatus(runStatus.Cancelling)).toBe('Suspended');
+    expect(pipelineRunStatusToGitOpsStatus(runStatus.Skipped)).toBe('Missing');
+  });
+});
+
+describe('getLabelColorFromStatus', () => {
+  it('should return the null', () => {
+    expect(getLabelColorFromStatus(runStatus.Idle)).toBeNull();
+    expect(getLabelColorFromStatus(runStatus.Pending)).toBeNull();
+    expect(getLabelColorFromStatus(runStatus.Skipped)).toBeNull();
+    expect(getLabelColorFromStatus(runStatus.PipelineNotStarted)).toBeNull();
+  });
+
+  it('should return green for success', () => {
+    expect(getLabelColorFromStatus(runStatus.Succeeded)).toBe('green');
+  });
+
+  it('should return red for failed', () => {
+    expect(getLabelColorFromStatus(runStatus.Failed)).toBe('red');
+  });
+
+  it('should return gold for cancelled/cancelling status', () => {
+    expect(getLabelColorFromStatus(runStatus.Cancelled)).toBe('gold');
+    expect(getLabelColorFromStatus(runStatus.Cancelling)).toBe('gold');
   });
 });

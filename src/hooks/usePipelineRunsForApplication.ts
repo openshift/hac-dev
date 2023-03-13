@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
-import { ComponentGroupVersionKind } from '../models';
-import { PipelineRunGroupVersionKind } from '../shared';
+import { ComponentGroupVersionKind, PipelineRunGroupVersionKind } from '../models';
 import { ComponentKind, PipelineRunKind } from '../types';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
