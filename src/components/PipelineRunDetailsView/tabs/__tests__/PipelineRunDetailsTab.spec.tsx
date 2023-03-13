@@ -178,4 +178,31 @@ describe('PipelineRunDetailsTab', () => {
     });
     expect(screen.queryByText('Source')).not.toBeInTheDocument();
   });
+
+  it('should render the download SBOM section for a pipelinerun with image annotation', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    const simplePipelineRun = {
+      ...testPipelineRun,
+      metadata: {
+        ...testPipelineRun.metadata,
+        annotations: {
+          ...testPipelineRun.metadata.annotations,
+          [PipelineRunLabel.BUILD_IMAGE_ANNOTATION]: 'quay.io/test/user-workload:test-image',
+        },
+      },
+    };
+    render(<PipelineRunDetailsTab pipelineRun={simplePipelineRun} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    expect(screen.queryByText('Download SBOM')).toBeInTheDocument();
+  });
+
+  it('should not render the download SBOM section for a pipelinerun without any image annotation', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+
+    render(<PipelineRunDetailsTab pipelineRun={testPipelineRun} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    expect(screen.queryByText('Download SBOM')).not.toBeInTheDocument();
+  });
 });
