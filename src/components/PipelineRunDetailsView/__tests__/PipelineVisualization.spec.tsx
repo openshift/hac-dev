@@ -30,19 +30,20 @@ beforeEach(() => {
 
 describe('PipelineRunVisualization', () => {
   it('should not render the pipelinerun graph', () => {
-    render(<PipelineRunVisualization pipelineRun={null} error={null} />);
+    render(<PipelineRunVisualization pipelineRun={null} taskRuns={[]} error={null} />);
     expect(screen.queryByTestId('pipelinerun-graph')).not.toBeInTheDocument();
   });
 
   it('should not render the pipelinerun graph if the pipelinerun status is not available yet', () => {
     const plrWithoutStatus = { ...testPipelineRun, status: undefined };
-    render(<PipelineRunVisualization pipelineRun={plrWithoutStatus} error={null} />);
+    render(<PipelineRunVisualization pipelineRun={plrWithoutStatus} taskRuns={[]} error={null} />);
     expect(screen.queryByTestId('pipelinerun-graph')).not.toBeInTheDocument();
   });
 
   it('should surface the api error message', () => {
     render(
       <PipelineRunVisualization
+        taskRuns={[]}
         pipelineRun={null}
         error={new CustomError('Model does not exist')}
       />,
@@ -51,7 +52,7 @@ describe('PipelineRunVisualization', () => {
   });
 
   it('should render the pipelinerun graph', () => {
-    render(<PipelineRunVisualization pipelineRun={testPipelineRun} error={null} />);
+    render(<PipelineRunVisualization pipelineRun={testPipelineRun} taskRuns={[]} error={null} />);
     screen.getByTestId('pipelinerun-graph');
   });
 });

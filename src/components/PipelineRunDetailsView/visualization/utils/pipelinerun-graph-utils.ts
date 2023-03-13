@@ -164,7 +164,7 @@ export const appendStatus = (
 
   return tasks.map((task) => {
     if (!pipelineRun?.status) {
-      return merge(task, { status: { reason: runStatus.Skipped } });
+      return merge(task, { status: { reason: runStatus.Pending } });
     }
     if (!taskRuns || taskRuns.length === 0) {
       return merge({}, task, { status: { reason: overallPipelineRunStatus } });
@@ -180,9 +180,6 @@ export const appendStatus = (
       status: { ...taskStatus, reason: runStatus.Pending },
     });
 
-    if (!pipelineRun?.status || !pipelineRun?.status?.taskRuns) {
-      return mTask;
-    }
     // append task duration
     if (mTask.status.completionTime && mTask.status.startTime) {
       const date =

@@ -24,7 +24,7 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
     PipelineRunType.BUILD,
   );
   const [taskRuns, tloaded] = useTaskRuns(
-    component.metadata.namespace,
+    pipelineRun?.metadata?.namespace,
     pipelineRun?.metadata?.name,
   );
 

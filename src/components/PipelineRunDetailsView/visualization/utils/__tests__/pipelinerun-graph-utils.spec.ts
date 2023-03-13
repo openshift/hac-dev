@@ -1,7 +1,7 @@
 import { GraphElement } from '@patternfly/react-topology';
 import omit from 'lodash/omit';
 import { DataState, testPipelineRuns } from '../../../../../__data__/pipelinerun-data';
-import { PipelineRunKind } from '../../../../../types';
+import { PipelineRunKind, TaskRunKind, TektonResourceLabel } from '../../../../../types';
 import { runStatus, SucceedConditionReason } from '../../../../../utils/pipeline-utils';
 import { NodeType } from '../../../../ApplicationDetails/tabs/overview/visualization/const';
 import { testPipelineRun } from '../../../../topology/__data__/pipeline-test-data';
@@ -17,6 +17,22 @@ import {
 } from '../pipelinerun-graph-utils';
 
 describe('pipelinerun-graph-utils: ', () => {
+  const getTaskRunsFromPLR = (plr: PipelineRunKind): TaskRunKind[] =>
+    Object.keys(plr.status.taskRuns).map((trName) => ({
+      apiVersion: 'v1alpha1',
+      kind: 'TaskRun',
+      metadata: {
+        labels: {
+          [TektonResourceLabel.pipelineTask]: plr.status.taskRuns[trName].pipelineTaskName,
+        },
+        name: trName,
+      },
+      spec: {},
+      status: plr.status.taskRuns[trName].status,
+    }));
+
+  const taskRuns = getTaskRunsFromPLR(testPipelineRun);
+
   beforeEach(() => {
     const createElement = document.createElement.bind(document);
     document.createElement = (tagName) => {
@@ -78,28 +94,29 @@ describe('pipelinerun-graph-utils: ', () => {
 
   describe('getPipelineRunDataModel:', () => {
     it('should return null for invalid values ', () => {
-      expect(getPipelineRunDataModel(null)).toBe(null);
-      expect(getPipelineRunDataModel(undefined)).toBe(null);
+      expect(getPipelineRunDataModel(null, [])).toBe(null);
+      expect(getPipelineRunDataModel(undefined, [])).toBe(null);
     });
 
     it('should return null if the pipelinerun does not contain status ', () => {
-      expect(getPipelineRunDataModel(omit(testPipelineRun, 'status'))).toBe(null);
+      expect(getPipelineRunDataModel(omit(testPipelineRun, 'status'), [])).toBe(null);
     });
 
     it('should return graph, nodes and edges for a given pipeline ', () => {
-      const { graph, nodes, edges } = getPipelineRunDataModel(testPipelineRun);
+      const { graph, nodes, edges } = getPipelineRunDataModel(testPipelineRun, []);
       expect(graph).toBeDefined();
       expect(nodes).toHaveLength(7);
       expect(edges).toHaveLength(6);
     });
 
     it('should return a spacer node ', () => {
-      const { nodes } = getPipelineRunDataModel(testPipelineRun);
+      const { nodes } = getPipelineRunDataModel(testPipelineRun, []);
       expect(nodes.filter((n) => n.type === NodeType.SPACER_NODE)).toHaveLength(1);
     });
 
     it('should set test status counts on nodes', () => {
-      const { nodes } = getPipelineRunDataModel(testPipelineRun);
+      const { nodes } = getPipelineRunDataModel(testPipelineRun, taskRuns);
+
       const failedTestNode = nodes.find((n) => n.id === 'task1');
       expect(failedTestNode.data.testFailCount).toEqual(2);
       expect(failedTestNode.data.testWarnCount).toEqual(0);
@@ -114,12 +131,39 @@ describe('pipelinerun-graph-utils: ', () => {
 
   describe('appendStatus', () => {
     it('should append Idle status if a taskrun status reason is missing', () => {
-      const taskList = appendStatus(getPipelineFromPipelineRun(testPipelineRun), testPipelineRun);
-      expect(taskList.filter((t) => t.status.reason === runStatus.Idle)).toHaveLength(1);
+      const taskl = appendStatus(
+        getPipelineFromPipelineRun({ ...testPipelineRun }),
+        { ...testPipelineRun },
+        getTaskRunsFromPLR({ ...testPipelineRun }),
+      );
+
+      expect(taskl.filter((t) => t.status.reason === runStatus.Idle)).toHaveLength(1);
+    });
+
+    it('should use taskruns argument to form the task status', () => {
+      const plrWithoutTaskruns: PipelineRunKind = {
+        ...testPipelineRun,
+        status: {
+          ...testPipelineRun.status,
+          taskRuns: undefined,
+        },
+      };
+
+      const taskList = appendStatus(
+        getPipelineFromPipelineRun(testPipelineRun),
+        plrWithoutTaskruns,
+        getTaskRunsFromPLR(testPipelineRun),
+      );
+
+      expect(taskList.filter((t) => t.status.reason === runStatus.Skipped)).toHaveLength(2);
     });
 
     it('should append Skipped status for the skipped tasks', () => {
-      const taskList = appendStatus(getPipelineFromPipelineRun(testPipelineRun), testPipelineRun);
+      const taskList = appendStatus(
+        getPipelineFromPipelineRun(testPipelineRun),
+        testPipelineRun,
+        taskRuns,
+      );
       expect(taskList.filter((t) => t.status.reason === runStatus.Skipped)).toHaveLength(2);
     });
 
@@ -128,6 +172,7 @@ describe('pipelinerun-graph-utils: ', () => {
       const taskList = appendStatus(
         getPipelineFromPipelineRun(plrwithoutSkippedStatus),
         plrwithoutSkippedStatus,
+        getTaskRunsFromPLR(plrwithoutSkippedStatus),
       );
       expect(taskList.filter((t) => t.status.reason === runStatus.Skipped)).toHaveLength(1);
     });
@@ -150,6 +195,7 @@ describe('pipelinerun-graph-utils: ', () => {
       const taskList = appendStatus(
         getPipelineFromPipelineRun(pendingPipelineRun),
         pendingPipelineRun,
+        [],
       );
       expect(taskList.filter((t) => t.status.reason === runStatus.Pending)).toHaveLength(6);
     });
@@ -172,6 +218,7 @@ describe('pipelinerun-graph-utils: ', () => {
       const taskList = appendStatus(
         getPipelineFromPipelineRun(cancelledPipelineRun),
         cancelledPipelineRun,
+        [],
       );
       expect(taskList.filter((t) => t.status.reason === runStatus.Cancelled)).toHaveLength(6);
     });
@@ -201,7 +248,11 @@ describe('pipelinerun-graph-utils: ', () => {
           },
         },
       };
-      const taskList = appendStatus(getPipelineFromPipelineRun(idlePipelineRun), idlePipelineRun);
+      const taskList = appendStatus(
+        getPipelineFromPipelineRun(idlePipelineRun),
+        idlePipelineRun,
+        getTaskRunsFromPLR(idlePipelineRun),
+      );
       expect(taskList.filter((t) => t.status.reason === runStatus.Idle)).toHaveLength(1);
     });
   });
@@ -224,13 +275,13 @@ describe('pipelinerun-graph-utils: ', () => {
     it('should return false if the nodes does not contain when expressions', () => {
       const pipelineRunWithoutWhenexpression = testPipelineRuns[DataState.RUNNING];
 
-      const { nodes } = getPipelineRunDataModel(pipelineRunWithoutWhenexpression);
+      const { nodes } = getPipelineRunDataModel(pipelineRunWithoutWhenexpression, []);
       expect(nodesHasWhenExpression(nodes)).toBe(false);
     });
 
     it('should return true if the node contains when expressions', () => {
       const conditionalPipelineRun = testPipelineRuns[DataState.SKIPPED];
-      const { nodes } = getPipelineRunDataModel(conditionalPipelineRun);
+      const { nodes } = getPipelineRunDataModel(conditionalPipelineRun, []);
 
       expect(nodesHasWhenExpression(nodes)).toBe(true);
     });
