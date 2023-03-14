@@ -128,7 +128,7 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
 
     it('Validate the graph views for the created application', () => {
       Applications.goToOverviewTab();
-      applicationDetailPage.verifyGraphNodes('Components');
+      applicationDetailPage.verifyGraphNodes('Components', false);
       applicationDetailPage.verifyGraphNodes('Builds');
       applicationDetailPage.verifyGraphNodes('Static environments');
     });

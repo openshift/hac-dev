@@ -1,13 +1,10 @@
 import * as React from 'react';
-import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../../../hooks/useComponents';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import {
   emptyPipelineNode,
-  getRunStatusComponent,
   groupToPipelineNode,
   resourceToPipelineNode,
-  worstWorkflowStatus,
 } from '../utils/node-utils';
 import { updateParallelNodeWidths } from '../utils/visualization-utils';
 
@@ -24,12 +21,6 @@ export const useAppComponentsNodes = (
   errors: unknown[],
 ] => {
   const [components, componentsLoaded, componentsError] = useComponents(namespace, applicationName);
-  const [buildPipelines, buildPipelinesLoaded, buildPipelinesError] = useBuildPipelines(
-    namespace,
-    applicationName,
-  );
-  const allResourcesLoaded: boolean = componentsLoaded && buildPipelinesLoaded;
-  const allErrors: unknown[] = [componentsError, buildPipelinesError].filter((e) => !!e);
 
   const componentNodes: WorkflowNodeModel<WorkflowNodeModelData>[] = React.useMemo(() => {
     const nodes = components.length
@@ -39,7 +30,6 @@ export const useAppComponentsNodes = (
             applicationName,
             WorkflowNodeType.COMPONENT,
             previousTasks,
-            getRunStatusComponent(component, buildPipelines),
           ),
         )
       : [
@@ -53,11 +43,11 @@ export const useAppComponentsNodes = (
         ];
     updateParallelNodeWidths(nodes);
     return nodes;
-  }, [applicationName, buildPipelines, components, previousTasks]);
+  }, [applicationName, components, previousTasks]);
 
   const componentGroup: WorkflowNodeModel<WorkflowNodeModelData> = React.useMemo(
     () =>
-      allResourcesLoaded && allErrors.length === 0
+      componentsLoaded && !componentsError
         ? groupToPipelineNode(
             'components',
             applicationName,
@@ -68,12 +58,11 @@ export const useAppComponentsNodes = (
             expanded ? componentNodes?.map((c) => c.id) : undefined,
             componentNodes,
             components,
-            worstWorkflowStatus(componentNodes),
           )
         : undefined,
     [
-      allResourcesLoaded,
-      allErrors.length,
+      componentsLoaded,
+      componentsError,
       applicationName,
       components,
       previousTasks,
@@ -90,5 +79,11 @@ export const useAppComponentsNodes = (
     [componentGroup?.id, componentNodes, expanded],
   );
 
-  return [componentNodes, componentGroup, componentTasks, allResourcesLoaded, allErrors];
+  return [
+    componentNodes,
+    componentGroup,
+    componentTasks,
+    componentsLoaded,
+    componentsError ? [componentsError] : [],
+  ];
 };
