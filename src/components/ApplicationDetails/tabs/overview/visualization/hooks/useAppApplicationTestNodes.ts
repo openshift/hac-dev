@@ -6,7 +6,7 @@ import { IntegrationTestScenarioKind } from '../../../../../../types/coreBuildSe
 import { pipelineRunStatus, runStatus } from '../../../../../../utils/pipeline-utils';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import { emptyPipelineNode, resourceToPipelineNode } from '../utils/node-utils';
-import { updateParallelNodeWidths } from '../utils/visualization-utils';
+import { getLatestResource, updateParallelNodeWidths } from '../utils/visualization-utils';
 
 export const useAppApplicationTestNodes = (
   namespace: string,
@@ -46,11 +46,13 @@ export const useAppApplicationTestNodes = (
       return [];
     }
     const nodes = applicationIntegrationTests?.length
-      ? applicationIntegrationTests.map((test: IntegrationTestScenarioKind) => {
-          const testPipeline = testPipelines?.find(
-            (pipeline) =>
-              pipeline.metadata.labels[PipelineRunLabel.TEST_SERVICE_SCENARIO] ===
-              test.metadata.name,
+      ? applicationIntegrationTests.map((test) => {
+          const testPipeline = getLatestResource(
+            testPipelines?.filter(
+              (pipeline) =>
+                pipeline.metadata.labels[PipelineRunLabel.TEST_SERVICE_SCENARIO] ===
+                test.metadata.name,
+            ),
           );
           return resourceToPipelineNode(
             test,

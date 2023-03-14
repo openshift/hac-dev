@@ -7,7 +7,7 @@ import { IntegrationTestScenarioKind } from '../../../../../../types/coreBuildSe
 import { pipelineRunStatus, runStatus } from '../../../../../../utils/pipeline-utils';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import { emptyPipelineNode, resourceToPipelineNode } from '../utils/node-utils';
-import { updateParallelNodeWidths } from '../utils/visualization-utils';
+import { getLatestResource, updateParallelNodeWidths } from '../utils/visualization-utils';
 
 const matchPipelineRunToTest = (
   pipeline: PipelineRunKind,
@@ -59,8 +59,8 @@ export const useAppIntegrationTestNodes = (
     }
     const nodes = componentIntegrationTests?.length
       ? componentIntegrationTests.map((test) => {
-          const testPipeline = testPipelines?.find((pipeline) =>
-            matchPipelineRunToTest(pipeline, test),
+          const testPipeline = getLatestResource(
+            testPipelines?.filter((pipeline) => matchPipelineRunToTest(pipeline, test)),
           );
           return resourceToPipelineNode(
             test,
