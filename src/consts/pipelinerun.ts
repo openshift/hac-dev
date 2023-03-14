@@ -24,6 +24,7 @@ export enum PipelineRunLabel {
   TEST_SERVICE_SCENARIO = 'test.appstudio.openshift.io/scenario',
   ASEB_APPLICATION = 'appstudio.application',
 
+  BUILD_IMAGE_ANNOTATION = 'build.appstudio.openshift.io/image',
   BUILD_SERVICE_REPO_ANNOTATION = 'build.appstudio.openshift.io/repo',
 }
 

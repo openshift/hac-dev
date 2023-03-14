@@ -12,6 +12,7 @@ import {
   FlexItem,
   Title,
   Divider,
+  ClipboardCopy,
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
@@ -46,6 +47,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
     pipelineRun?.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] ||
     pipelineRun?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];
   const applicationName = pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION];
+  const buildImage = pipelineRun.metadata?.annotations?.[PipelineRunLabel.BUILD_IMAGE_ANNOTATION];
   const sourceUrl = getSourceUrl(pipelineRun);
   const pipelineStatus = !error ? pipelineRunStatus(pipelineRun) : null;
   return (
@@ -157,6 +159,16 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ pipelineR
                     {pipelineRun.metadata?.labels[PipelineRunLabel.PIPELINE_NAME] ?? '-'}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
+                {buildImage && (
+                  <DescriptionListGroup>
+                    <DescriptionListTerm>Download SBOM</DescriptionListTerm>
+                    <DescriptionListDescription>
+                      <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
+                        {`cosign download sbom ${buildImage}`}
+                      </ClipboardCopy>
+                    </DescriptionListDescription>
+                  </DescriptionListGroup>
+                )}
                 <DescriptionListGroup>
                   <DescriptionListTerm>Application</DescriptionListTerm>
                   <DescriptionListDescription>
