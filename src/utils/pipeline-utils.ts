@@ -26,22 +26,6 @@ export enum runStatus {
   Unknown = 'Unknown',
 }
 
-const statusSeverities = [
-  [runStatus.Succeeded],
-  [
-    runStatus['In Progress'],
-    runStatus.Idle,
-    runStatus.Pending,
-    runStatus.Running,
-    runStatus.PipelineNotStarted,
-    runStatus.NeedsMerge,
-    runStatus.Unknown,
-  ],
-  [runStatus.Skipped],
-  [runStatus.Cancelled, runStatus.Cancelling],
-  [runStatus.Failed, runStatus.FailedToStart],
-];
-
 export enum SucceedConditionReason {
   PipelineRunStopped = 'StoppedRunFinally',
   PipelineRunCancelled = 'CancelledRunFinally',
@@ -250,28 +234,8 @@ export const taskRunStatus = (taskRun: TaskRunKind | PLRTaskRunData): runStatus 
   return status === runStatus.Succeeded ? taskResultsStatus(taskRun.status.taskResults) : status;
 };
 
-const worstStatus = (status1: runStatus, status2: runStatus): runStatus => {
-  const index1 = statusSeverities.findIndex((severities) => severities.includes(status1));
-  const index2 = statusSeverities.findIndex((severities) => severities.includes(status2));
-  return index1 >= index2 ? status1 : status2;
-};
-
-export const pipelineRunStatus = (pipelineRun: PipelineRunKind): runStatus => {
-  if (!pipelineRun?.status?.conditions?.length) {
-    return runStatus.Pending;
-  }
-
-  let status = conditionsRunStatus(pipelineRun.status.conditions, pipelineRun.spec.status);
-  if (status === runStatus.Succeeded && pipelineRun.status?.taskRuns) {
-    Object.keys(pipelineRun.status?.taskRuns).forEach((taskName) => {
-      const resultStatus = taskResultsStatus(
-        pipelineRun.status.taskRuns[taskName].status?.taskResults,
-      );
-      status = worstStatus(status, resultStatus);
-    });
-  }
-  return status;
-};
+export const pipelineRunStatus = (pipelineRun: PipelineRunKind): runStatus =>
+  conditionsRunStatus(pipelineRun?.status?.conditions, pipelineRun?.spec?.status);
 
 export const pipelineRunStatusToGitOpsStatus = (status: string): GitOpsDeploymentHealthStatus => {
   switch (status) {
