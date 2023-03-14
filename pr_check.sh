@@ -83,7 +83,7 @@ docker run ${COMMON_SETUP} \
     -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
     ${TEST_IMAGE} || TEST_RUN=1
 
-bonfire namespace release ${NAMESPACE}
+bonfire namespace release -f ${NAMESPACE}
 
 # teardown_docker
 exit $TEST_RUN
