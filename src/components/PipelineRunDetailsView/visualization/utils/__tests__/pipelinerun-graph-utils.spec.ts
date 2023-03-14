@@ -1,15 +1,17 @@
+import { GraphElement } from '@patternfly/react-topology';
 import omit from 'lodash/omit';
 import { DataState, testPipelineRuns } from '../../../../../__data__/pipelinerun-data';
 import { PipelineRunKind } from '../../../../../types';
 import { runStatus, SucceedConditionReason } from '../../../../../utils/pipeline-utils';
 import { NodeType } from '../../../../ApplicationDetails/tabs/overview/visualization/const';
-import { testPipeline, testPipelineRun } from '../../../../topology/__data__/pipeline-test-data';
+import { testPipelineRun } from '../../../../topology/__data__/pipeline-test-data';
+import { PipelineRunNodeType } from '../../types';
 import {
   appendStatus,
   extractDepsFromContextVariables,
-  getPipelineDataModel,
   getPipelineFromPipelineRun,
   getPipelineRunDataModel,
+  isTaskRunNode,
   nodesHasWhenExpression,
   taskHasWhenExpression,
 } from '../pipelinerun-graph-utils';
@@ -71,25 +73,6 @@ describe('pipelinerun-graph-utils: ', () => {
       const executedPipeline = getPipelineFromPipelineRun(testPipelineRun);
       expect(executedPipeline).not.toBe(null);
       expect(executedPipeline.kind).toBe('Pipeline');
-    });
-  });
-
-  describe('getPipelineDataModel:', () => {
-    it('should return null for invalid values ', () => {
-      expect(getPipelineDataModel(null)).toBe(null);
-      expect(getPipelineDataModel(undefined)).toBe(null);
-    });
-
-    it('should return graph, nodes and edges for a given pipeline ', () => {
-      const { graph, nodes, edges } = getPipelineDataModel(testPipeline);
-      expect(graph).toBeDefined();
-      expect(nodes).toHaveLength(7);
-      expect(edges).toHaveLength(6);
-    });
-
-    it('should return a spacer node ', () => {
-      const { nodes } = getPipelineDataModel(testPipeline);
-      expect(nodes.filter((n) => n.type === NodeType.SPACER_NODE)).toHaveLength(1);
     });
   });
 
@@ -250,6 +233,22 @@ describe('pipelinerun-graph-utils: ', () => {
       const { nodes } = getPipelineRunDataModel(conditionalPipelineRun);
 
       expect(nodesHasWhenExpression(nodes)).toBe(true);
+    });
+  });
+
+  describe('isTaskRunNode', () => {
+    it('should identify task run nodes', () => {
+      const createNode = (type: PipelineRunNodeType) =>
+        ({
+          getType: () => type,
+        } as GraphElement);
+
+      expect(isTaskRunNode(createNode(PipelineRunNodeType.TASK_NODE))).toBe(true);
+      expect(isTaskRunNode(createNode(PipelineRunNodeType.FINALLY_NODE))).toBe(true);
+      expect(isTaskRunNode(createNode(PipelineRunNodeType.FINALLY_GROUP))).toBe(false);
+      expect(isTaskRunNode(createNode(PipelineRunNodeType.EDGE))).toBe(false);
+      expect(isTaskRunNode(createNode(PipelineRunNodeType.SPACER_NODE))).toBe(false);
+      expect(isTaskRunNode(createNode(PipelineRunNodeType.EDGE))).toBe(false);
     });
   });
 });

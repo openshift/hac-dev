@@ -9,6 +9,7 @@ import {
   VolumeTypePVC,
   VolumeTypeSecret,
 } from './pipeline-run';
+import { TaskKind } from '.';
 
 export type TaskRunWorkspace = {
   name: string;
@@ -27,6 +28,7 @@ export type TaskRunStatus = {
   startTime?: string;
   steps?: PLRTaskRunStep[];
   taskResults?: TektonResultsRun[];
+  taskSpec?: TaskKind['spec'];
 };
 
 export type TaskRunKind = K8sResourceCommon & {

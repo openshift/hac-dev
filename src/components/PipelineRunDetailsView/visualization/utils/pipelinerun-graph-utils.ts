@@ -1,7 +1,9 @@
 import {
   DEFAULT_LAYERS,
+  ElementModel,
   getEdgesFromNodes,
   getSpacerNodes,
+  GraphElement,
   ModelKind,
   WhenStatus,
 } from '@patternfly/react-topology';
@@ -348,6 +350,7 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
       width: maxWidthForLevel[vertex.level] + NODE_PADDING * 2 + NODE_ICON_WIDTH,
       height: DEFAULT_NODE_HEIGHT,
       data: {
+        namespace: pipelineRun.metadata.namespace,
         status: vertex.data.status?.reason,
         testFailCount: vertex.data.status.testFailCount,
         testWarnCount: vertex.data.status.testWarnCount,
@@ -371,6 +374,7 @@ const getGraphDataModel = (pipeline: PipelineKind, pipelineRun?: PipelineRunKind
     width: getTextWidth(maxFinallyNodeName) + NODE_PADDING * 2 + DEFAULT_FINALLLY_GROUP_PADDING * 2,
     height: DEFAULT_NODE_HEIGHT,
     data: {
+      namespace: pipelineRun.metadata.namespace,
       status: fTask.status.reason,
       whenStatus: taskWhenStatus(fTask),
       task: fTask,
@@ -427,9 +431,8 @@ export const getPipelineRunDataModel = (pipelineRun: PipelineRunKind) => {
   return getGraphDataModel(getPipelineFromPipelineRun(pipelineRun), pipelineRun);
 };
 
-export const getPipelineDataModel = (pipeline: PipelineKind) => {
-  if (!pipeline) {
-    return null;
-  }
-  return getGraphDataModel(pipeline);
-};
+export const isTaskRunNode = (
+  e?: GraphElement,
+): e is GraphElement<ElementModel, PipelineRunNodeData> =>
+  e?.getType() === PipelineRunNodeType.TASK_NODE ||
+  e?.getType() === PipelineRunNodeType.FINALLY_NODE;
