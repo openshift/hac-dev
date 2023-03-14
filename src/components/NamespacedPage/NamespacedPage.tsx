@@ -14,6 +14,14 @@ type NamespacedPageProps = {
 const NamespacedPage: React.FunctionComponent<NamespacedPageProps> = ({ children }) => {
   const { workspacesLoaded } = React.useContext(WorkspaceContext);
 
+  // TODO work around to https://issues.redhat.com/browse/RHCLOUD-24606
+  React.useEffect(() => {
+    const main = document.querySelector<HTMLElement>('main.pf-c-page__main');
+    if (main) {
+      main.style.position = 'relative';
+    }
+  }, []);
+
   if (!workspacesLoaded) {
     return (
       <Bullseye>
@@ -25,7 +33,9 @@ const NamespacedPage: React.FunctionComponent<NamespacedPageProps> = ({ children
   return (
     <ModalProvider>
       <AppBanner />
-      <ErrorBoundary>{children}</ErrorBoundary>
+      <div className="main-layout-container">
+        <ErrorBoundary>{children}</ErrorBoundary>
+      </div>
     </ModalProvider>
   );
 };

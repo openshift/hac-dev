@@ -42,8 +42,7 @@ const TaskRunPanel: React.FC<Props> = ({ taskRunNode, onClose }) => {
             </DrawerPanelBody>
           </Tab>
           <Tab title="Logs" eventKey="logs">
-            {/* Height hack until we can manage the layout of the main content area in consoledot */}
-            <DrawerPanelBody style={{ maxHeight: 'calc(100vh - 215px)', height: '100%' }}>
+            <DrawerPanelBody style={{ height: '100%' }}>
               <TaskRunLogs
                 taskName={taskRun.name}
                 namespace={taskRunNode.getData().namespace}
