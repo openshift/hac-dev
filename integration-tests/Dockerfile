@@ -6,7 +6,7 @@ FROM cypress/factory
 ENV OC_DOWNLOAD_URL="https://downloads-openshift-console.apps.hac-devsandbox.5unc.p1.openshiftapps.com/amd64/linux/oc.tar"
 
 RUN apt update && \
-    apt install xauth skopeo -y && \
+    apt install python3 python3-venv xauth skopeo -y && \
     curl -L -o /tmp/oc.tar ${OC_DOWNLOAD_URL} && \
     tar -xf /tmp/oc.tar -C /usr/bin
 
