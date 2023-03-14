@@ -139,7 +139,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
   );
 
   return (
-    <PageGroup data-test="details">
+    <PageGroup data-test="details" className="app-details">
       <HeadTitle>{`${headTitle} - ${activeTab?.label} | CI/CD`}</HeadTitle>
       <PageSection type="breadcrumb">
         {breadcrumbs && <BreadCrumbs data-test="details__breadcrumbs" breadcrumbs={breadcrumbs} />}
