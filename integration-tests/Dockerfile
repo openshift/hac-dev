@@ -6,9 +6,12 @@ FROM cypress/factory
 ENV OC_DOWNLOAD_URL="https://downloads-openshift-console.apps.hac-devsandbox.5unc.p1.openshiftapps.com/amd64/linux/oc.tar"
 
 RUN apt update && \
-    apt install python3 python3-venv xauth skopeo -y && \
+    apt install jq python3 python3-venv xauth skopeo -y && \
     curl -L -o /tmp/oc.tar ${OC_DOWNLOAD_URL} && \
     tar -xf /tmp/oc.tar -C /usr/bin
+
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 COPY . /tmp/e2e
 
