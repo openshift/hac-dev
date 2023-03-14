@@ -145,7 +145,8 @@ const ReviewSection: React.FunctionComponent = () => {
           <HelperTextItem>
             Review and define deployment settings and options.{' '}
             <HelpTopicLink topicId="stonesoup-import-configure-component" isInline>
-              Learn more <OpenDrawerRightIcon />
+              Learn more <span className="pf-u-screen-reader">about configuring components</span>{' '}
+              <OpenDrawerRightIcon />
             </HelpTopicLink>
           </HelperTextItem>
         </HelperText>
