@@ -139,7 +139,6 @@ const EnvironmentListView: React.FC<Props> = ({
                       placeholder="Filter by name..."
                       value={nameFilter}
                       onChange={(e, name) => setNameFilter(name)}
-                      onClear={() => unsetNameFilter()}
                     />
                   </ToolbarItem>
                 </>

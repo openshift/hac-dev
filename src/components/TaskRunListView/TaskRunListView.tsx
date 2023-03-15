@@ -87,7 +87,6 @@ const TaskRunListView: React.FC<Props> = ({ pipelineName, namespace }) => {
                 placeholder="Filter by name..."
                 onChange={(e, name) => onNameInput(name)}
                 value={nameFilter}
-                onClear={() => setNameFilter('')}
               />
             </ToolbarItem>
           </ToolbarGroup>

@@ -117,7 +117,6 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
                 placeholder="Filter by name..."
                 onChange={(e, name) => onNameInput(name)}
                 value={nameFilter}
-                onClear={() => setNameFilter('')}
               />
             </ToolbarItem>
             <ToolbarItem>

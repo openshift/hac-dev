@@ -116,7 +116,6 @@ const SampleSection = ({ onStrategyChange }) => {
                   value={filter}
                   onChange={(e, name) => setFilter(name)}
                   placeholder="Filter by keyword..."
-                  onClear={() => setFilter('')}
                 />
               </ToolbarItem>
               <ToolbarItem alignment={{ default: 'alignRight' }}>
