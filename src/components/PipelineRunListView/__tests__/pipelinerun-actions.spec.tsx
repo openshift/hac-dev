@@ -11,6 +11,10 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
+jest.mock('../../../hooks/useClairScanResults', () => ({
+  useClairScanResults: jest.fn(() => []),
+}));
+
 const patchResourceMock = k8sPatchResource as jest.Mock;
 
 const pipelineRun: PipelineRunKind = {
