@@ -1,4 +1,4 @@
-import { GraphElement } from '@patternfly/react-topology';
+import { GraphElement, Node } from '@patternfly/react-topology';
 import omit from 'lodash/omit';
 import { DataState, testPipelineRuns } from '../../../../../__data__/pipelinerun-data';
 import { PipelineRunKind, TaskRunKind, TektonResourceLabel } from '../../../../../types';
@@ -13,6 +13,7 @@ import {
   getPipelineRunDataModel,
   isTaskRunNode,
   nodesHasWhenExpression,
+  scrollNodeIntoView,
   taskHasWhenExpression,
 } from '../pipelinerun-graph-utils';
 
@@ -300,6 +301,57 @@ describe('pipelinerun-graph-utils: ', () => {
       expect(isTaskRunNode(createNode(PipelineRunNodeType.EDGE))).toBe(false);
       expect(isTaskRunNode(createNode(PipelineRunNodeType.SPACER_NODE))).toBe(false);
       expect(isTaskRunNode(createNode(PipelineRunNodeType.EDGE))).toBe(false);
+    });
+  });
+
+  describe('scrollNodeIntoView', () => {
+    const scrollIntoViewFn = jest.fn();
+    const mockNode = {
+      getId: () => 'test',
+      getBounds: jest.fn(() => ({ width: 10, height: 10, x: 200, y: 0 })),
+    } as unknown as Node;
+    const mockDOMNode = {
+      scrollIntoView: scrollIntoViewFn,
+    };
+
+    const mockScrollPane = {
+      querySelector: () => mockDOMNode,
+      scrollLeft: 0,
+      offsetWidth: 100,
+      ownerDocument: {
+        defaultView: {
+          navigator: {
+            userAgent: 'test',
+          },
+        },
+      },
+      scrollTo: jest.fn(),
+    } as unknown as HTMLElement;
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should scroll dom node into view', () => {
+      scrollNodeIntoView(mockNode, mockScrollPane);
+      expect(scrollIntoViewFn).toHaveBeenCalled();
+    });
+
+    it('should scrollTo for Firefox when target is to the right', () => {
+      // cast to any because to change the read only type
+      (mockScrollPane.ownerDocument.defaultView.navigator as any).userAgent = 'Firefox';
+
+      scrollNodeIntoView(mockNode, mockScrollPane);
+      expect(mockScrollPane.scrollTo).toHaveBeenCalledWith({ left: 110, behavior: 'smooth' });
+    });
+
+    it('should scrollTo for Firefox when target is to the left', () => {
+      // cast to any because to change the read only type
+      (mockScrollPane.ownerDocument.defaultView.navigator as any).userAgent = 'Firefox';
+
+      mockScrollPane.scrollLeft = 400;
+      scrollNodeIntoView(mockNode, mockScrollPane);
+      expect(mockScrollPane.scrollTo).toHaveBeenCalledWith({ left: 200, behavior: 'smooth' });
     });
   });
 });

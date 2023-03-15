@@ -5,6 +5,7 @@ import {
   getSpacerNodes,
   GraphElement,
   ModelKind,
+  Node,
   WhenStatus,
 } from '@patternfly/react-topology';
 import { uniq } from 'lodash-es';
@@ -431,8 +432,29 @@ export const getPipelineRunDataModel = (pipelineRun: PipelineRunKind, taskRuns: 
   return getGraphDataModel(getPipelineFromPipelineRun(pipelineRun), pipelineRun, taskRuns);
 };
 
-export const isTaskRunNode = (
-  e?: GraphElement,
-): e is GraphElement<ElementModel, PipelineRunNodeData> =>
+export const isTaskRunNode = (e?: GraphElement): e is Node<ElementModel, PipelineRunNodeData> =>
   e?.getType() === PipelineRunNodeType.TASK_NODE ||
   e?.getType() === PipelineRunNodeType.FINALLY_NODE;
+
+export const scrollNodeIntoView = (node: Node, scrollPane: HTMLElement) => {
+  const targetNode = scrollPane.querySelector(`[data-id=${node.getId()}]`);
+  if (targetNode) {
+    if (scrollPane.ownerDocument.defaultView.navigator.userAgent.search('Firefox') !== -1) {
+      // Fix for firefox which does not take into consideration the full SVG node size with #scrollIntoView
+      let left: number = null;
+      const nodeBounds = node.getBounds();
+      const scrollLeftEdge = nodeBounds.x;
+      const scrollRightEdge = nodeBounds.x + nodeBounds.width - scrollPane.offsetWidth;
+      if (scrollPane.scrollLeft < scrollRightEdge) {
+        left = scrollRightEdge;
+      } else if (scrollPane.scrollLeft > scrollLeftEdge) {
+        left = scrollLeftEdge;
+      }
+      if (left != null) {
+        scrollPane.scrollTo({ left, behavior: 'smooth' });
+      }
+    } else {
+      targetNode.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    }
+  }
+};

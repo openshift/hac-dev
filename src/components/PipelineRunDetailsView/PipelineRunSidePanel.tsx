@@ -3,44 +3,49 @@ import {
   SELECTION_STATE,
   useVisualizationController,
   useVisualizationState,
-  GraphElement,
+  Node,
 } from '@patternfly/react-topology';
 import SidePanel from '../SidePanel/SidePanel';
 import TaskRunPanel from './sidepanels/TaskRunPanel';
 import { isTaskRunNode } from './visualization/utils/pipelinerun-graph-utils';
 
 type Props = {
-  scrollIntoView?: (element: GraphElement) => void;
+  scrollIntoView?: (node: Node) => void;
 };
 
 const PipelineRunSidePanel: React.FC<Props> = ({ scrollIntoView }) => {
   const [[selectedId], setSelectedIds] = useVisualizationState<string[]>(SELECTION_STATE, []);
   const controller = useVisualizationController();
 
-  const element = React.useMemo(
-    () => (selectedId ? controller.getElementById(selectedId) : null),
-    [controller, selectedId],
-  );
+  const taskRunNode = React.useMemo(() => {
+    if (selectedId) {
+      const element = controller.getElementById(selectedId);
+      if (isTaskRunNode(element)) {
+        return element;
+      }
+    }
+    return null;
+  }, [controller, selectedId]);
 
-  const panel = isTaskRunNode(element) ? (
-    <TaskRunPanel onClose={() => setSelectedIds([])} taskRunNode={element} />
+  const panel = taskRunNode ? (
+    <TaskRunPanel onClose={() => setSelectedIds([])} taskRunNode={taskRunNode} />
   ) : null;
 
   const isExpanded = !!panel;
 
   const onExpand = React.useCallback(() => {
-    if (isExpanded && element) {
-      scrollIntoView?.(element);
+    if (isExpanded && taskRunNode) {
+      scrollIntoView?.(taskRunNode);
     }
-  }, [isExpanded, scrollIntoView, element]);
+  }, [isExpanded, scrollIntoView, taskRunNode]);
 
   React.useEffect(() => {
-    if (isExpanded && element) {
-      scrollIntoView?.(element);
+    if (isExpanded && taskRunNode) {
+      scrollIntoView?.(taskRunNode);
     }
-    // only run when the element changes
+    // only run when the node changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [element]);
+  }, [taskRunNode]);
 
   return (
     <SidePanel isExpanded={isExpanded} onExpand={onExpand} isInline>
