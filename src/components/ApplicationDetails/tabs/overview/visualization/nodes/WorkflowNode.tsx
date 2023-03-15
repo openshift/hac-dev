@@ -67,7 +67,7 @@ const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
           element={element}
           showStatusState
           statusIconSize={18}
-          status={runStatusToRunStatus(status)}
+          status={status ? runStatusToRunStatus(status) : undefined}
           hover={isDisabled ? false : undefined}
           badge={childNodes.length ? `${childNodes.length}` : undefined}
           className={css('workload-node', { 'm-disabled': isDisabled })}
