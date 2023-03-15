@@ -13,12 +13,15 @@ type StoneSoupGitHubAppDataType = {
 };
 
 export const StoneSoupGitHubAppData: { [env: string]: StoneSoupGitHubAppDataType } = {
-  dev: { url: 'https://github.com/apps/appstudio-staging-ci', name: 'appstudio-staging-ci' },
+  dev: { url: 'https://github.com/apps/rhtap-staging', name: 'rhtap-staging' },
   stage: {
-    url: 'https://github.com/apps/red-hat-appstudio-ci-cd-staging',
-    name: 'red-hat-appstudio-ci-cd-staging',
+    url: 'https://github.com/apps/rhtap-staging',
+    name: 'rhtap-staging',
   },
-  prod: { url: 'https://github.com/apps/red-hat-appstudio-ci-cd', name: 'red-hat-appstudio-ci-cd' },
+  prod: {
+    url: 'https://github.com/apps/rh-trusted-application-pipeline',
+    name: 'rh-trusted-application-pipeline',
+  },
 };
 
 export const useStoneSoupGitHubApp = (): StoneSoupGitHubAppDataType => {
