@@ -36,7 +36,7 @@ import RunResultsList from './RunResultsList';
 type PipelineRunDetailsTabProps = {
   taskRuns: TaskRunKind[];
   pipelineRun: PipelineRunKind;
-  error: unknown;
+  error?: unknown;
 };
 const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
   pipelineRun,
