@@ -1,17 +1,14 @@
 import * as React from 'react';
-import { PipelineRunKind } from '../../../types';
+import { TaskRunKind } from '../../../types';
 import TaskRunListView from '../../TaskRunListView/TaskRunListView';
 
 type PipelineRunTaskRunsTabProps = {
-  pipelineRun: PipelineRunKind;
+  taskRuns: TaskRunKind[];
+  loaded: boolean;
 };
 
-const PipelineRunTaskRunsTab: React.FC<PipelineRunTaskRunsTabProps> = ({ pipelineRun }) =>
-  pipelineRun && Object.keys(pipelineRun).length ? (
-    <TaskRunListView
-      pipelineName={pipelineRun.metadata.name}
-      namespace={pipelineRun.metadata.namespace}
-    />
-  ) : null;
+const PipelineRunTaskRunsTab: React.FC<PipelineRunTaskRunsTabProps> = ({ taskRuns, loaded }) => (
+  <TaskRunListView taskRuns={taskRuns} loaded={loaded} />
+);
 
 export default PipelineRunTaskRunsTab;

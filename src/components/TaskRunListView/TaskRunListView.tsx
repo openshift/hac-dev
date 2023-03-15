@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
   EmptyState,
@@ -13,25 +12,14 @@ import {
 } from '@patternfly/react-core';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { Table } from '../../shared';
-import { TaskRunGroupVersionKind, TaskRunKind } from '../../types';
+import { TaskRunKind } from '../../types';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import { TaskRunListHeader } from './TaskRunListHeader';
 import TaskRunListRow from './TaskRunListRow';
 
-type Props = { pipelineName: string; namespace: string };
+type Props = { taskRuns: TaskRunKind[]; loaded: boolean };
 
-const TaskRunListView: React.FC<Props> = ({ pipelineName, namespace }) => {
-  const [taskRuns, loaded] = useK8sWatchResource<TaskRunKind[]>({
-    groupVersionKind: TaskRunGroupVersionKind,
-    namespace,
-    isList: true,
-    selector: {
-      matchLabels: {
-        'tekton.dev/pipelineRun': pipelineName,
-      },
-    },
-  });
-
+const TaskRunListView: React.FC<Props> = ({ taskRuns, loaded }) => {
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
 
   const sortedTaskRuns = React.useMemo(

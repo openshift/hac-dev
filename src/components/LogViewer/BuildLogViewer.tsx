@@ -3,6 +3,7 @@ import { ModalVariant, Stack, StackItem } from '@patternfly/react-core';
 import dayjs from 'dayjs';
 import { PipelineRunType } from '../../consts/pipelinerun';
 import { useComponentPipelineRun } from '../../hooks';
+import { useTaskRuns } from '../../hooks/useTaskRuns';
 import PipelineRunLogs from '../../shared/components/pipeline-run-logs/PipelineRunLogs';
 import { EmptyBox, LoadingBox } from '../../shared/components/status-box/StatusBox';
 import { ComponentKind } from '../../types';
@@ -22,8 +23,12 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
     component.metadata.namespace,
     PipelineRunType.BUILD,
   );
+  const [taskRuns, tloaded] = useTaskRuns(
+    pipelineRun?.metadata?.namespace,
+    pipelineRun?.metadata?.name,
+  );
 
-  if (loaded && !pipelineRun) {
+  if (loaded && tloaded && !pipelineRun) {
     return <EmptyBox label="pipeline runs" />;
   }
 
@@ -45,7 +50,11 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
         )}
       </StackItem>
       <StackItem isFilled>
-        {pipelineRun ? <PipelineRunLogs obj={pipelineRun} /> : <LoadingBox />}
+        {pipelineRun && taskRuns && tloaded ? (
+          <PipelineRunLogs obj={pipelineRun} taskRuns={taskRuns} />
+        ) : (
+          <LoadingBox />
+        )}
       </StackItem>
     </Stack>
   );

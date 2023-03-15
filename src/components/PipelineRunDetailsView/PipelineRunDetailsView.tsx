@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { usePipelineRun } from '../../hooks/usePipelineRunsForApplication';
+import { useTaskRuns } from '../../hooks/useTaskRuns';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
@@ -26,14 +27,16 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
   const [pipelineRun, loaded, error] = usePipelineRun(namespace, pipelineRunName);
+  const [taskRuns, taskRunsLoaded, taskRunError] = useTaskRuns(namespace, pipelineRunName);
 
   const plrStatus = React.useMemo(
     () => loaded && pipelineRun && pipelineRunStatus(pipelineRun),
     [loaded, pipelineRun],
   );
 
-  if (error) {
-    const httpError = HttpError.fromCode((error as any).code);
+  const loadError = error || taskRunError;
+  if (loadError) {
+    const httpError = HttpError.fromCode((loadError as any).code);
     return (
       <ErrorEmptyState
         httpError={httpError}
@@ -43,7 +46,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
     );
   }
 
-  if (!loaded) {
+  if (!(loaded && taskRunsLoaded)) {
     return (
       <Bullseye>
         <Spinner />
@@ -103,7 +106,9 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
           {
             key: 'detail',
             label: 'Details',
-            component: <PipelineRunDetailsTab pipelineRun={pipelineRun} error={error} />,
+            component: (
+              <PipelineRunDetailsTab pipelineRun={pipelineRun} taskRuns={taskRuns} error={error} />
+            ),
           },
           // {
           //   key: 'yaml',
@@ -113,12 +118,12 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
           {
             key: 'taskruns',
             label: 'Task runs',
-            component: <PipelineRunTaskRunsTab pipelineRun={pipelineRun} />,
+            component: <PipelineRunTaskRunsTab taskRuns={taskRuns} loaded={taskRunsLoaded} />,
           },
           {
             key: 'logs',
             label: 'Logs',
-            component: <PipelineRunLogsTab pipelineRun={pipelineRun} />,
+            component: <PipelineRunLogsTab pipelineRun={pipelineRun} taskRuns={taskRuns} />,
           },
           // {
           //   key: 'events',
