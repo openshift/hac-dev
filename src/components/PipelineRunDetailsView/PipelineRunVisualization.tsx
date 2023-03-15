@@ -1,10 +1,13 @@
 import React from 'react';
-import { GraphElement } from '@patternfly/react-topology';
+import { Node } from '@patternfly/react-topology';
 import { layoutFactory, VisualizationFactory } from '../topology/factories';
 import GraphErrorState from '../topology/factories/GraphErrorState';
 import { pipelineRuncomponentFactory } from './factories';
 import PipelineRunSidePanel from './PipelineRunSidePanel';
-import { getPipelineRunDataModel } from './visualization/utils/pipelinerun-graph-utils';
+import {
+  getPipelineRunDataModel,
+  scrollNodeIntoView,
+} from './visualization/utils/pipelinerun-graph-utils';
 
 import './PipelineRunVisualization.scss';
 
@@ -16,10 +19,10 @@ const PipelineRunVisualization = ({ pipelineRun, error, taskRuns }) => {
   }, [pipelineRun, taskRuns]);
 
   const scrollIntoView = React.useCallback(
-    (element: GraphElement) => {
-      nodeRef.current
-        ?.querySelector(`[data-id=${element.getId()}]`)
-        ?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    (node: Node) => {
+      if (nodeRef.current) {
+        scrollNodeIntoView(node, nodeRef.current);
+      }
     },
     [nodeRef],
   );

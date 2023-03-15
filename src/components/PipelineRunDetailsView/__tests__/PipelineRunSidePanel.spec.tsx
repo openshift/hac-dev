@@ -59,14 +59,16 @@ describe('PipelineRunSidePanel', () => {
   });
 
   it('should render panel for task selection', () => {
+    const scrollIntoViewFn = jest.fn();
+    const testNode = { getType: () => PipelineRunNodeType.TASK_NODE };
     useVisualizationStateMock.mockImplementationOnce(() => [['testId'], jest.fn()]);
     useVisualizationControllerMock.mockImplementationOnce(() => ({
-      getElementById: () => ({ getType: () => PipelineRunNodeType.TASK_NODE }),
+      getElementById: () => testNode,
     }));
 
     const setPropsFn = jest.fn();
 
-    render(<PipelineRunSidePanel />, {
+    render(<PipelineRunSidePanel scrollIntoView={scrollIntoViewFn} />, {
       wrapper: ({ children }) => (
         <SidePanelContext.Provider value={{ setProps: setPropsFn, close: () => {} }}>
           {children}
@@ -79,5 +81,6 @@ describe('PipelineRunSidePanel', () => {
         isExpanded: true,
       }),
     );
+    expect(scrollIntoViewFn).toHaveBeenCalledWith(testNode);
   });
 });
