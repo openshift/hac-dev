@@ -178,7 +178,8 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
           <HelperTextItem>
             {description}{' '}
             <HelpTopicLink topicId="stonesoup-import-add-component" isInline>
-              Learn more <OpenDrawerRightIcon />
+              Learn more <span className="pf-u-screen-reader">about adding components</span>{' '}
+              <OpenDrawerRightIcon />
             </HelpTopicLink>
           </HelperTextItem>
         </HelperText>
