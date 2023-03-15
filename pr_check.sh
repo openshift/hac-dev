@@ -70,7 +70,7 @@ COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z \
     -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/stonesoup \
     -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` \
     -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` \
-    -e GH_PR_TITLE=${PR_TITLE}"
+    -e CYPRESS_GH_PR_TITLE=${PR_TITLE}"
 TEST_IMAGE="quay.io/hacdev/hac-tests:e2e-runner"
 
 set +e

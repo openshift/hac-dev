@@ -1,5 +1,6 @@
 import { defineConfig } from "cypress";
 import * as fs from 'fs-extra';
+import { globSync } from 'glob';
 const registerReportPortalPlugin = require('@reportportal/agent-js-cypress/lib/plugin');
 
 export default defineConfig({
@@ -68,6 +69,23 @@ export default defineConfig({
           }
           return null;
         },
+      });
+
+      // workaround for report portal runs not finishing
+      on('after:run', async () => {
+        if (config.env.PR_CHECK === true) {
+          let retries = 10;
+          console.log('Wait for reportportal agent to finish...');
+          while (globSync('rplaunchinprogress*.tmp').length > 0) {
+            if (retries < 1) {
+              console.log('reportportal agent timed out after 20s');
+              return;
+            }
+            retries--;
+            await new Promise(res => setTimeout(res, 2000));
+          }
+          console.log('reportportal agent finished');
+        }
       });
 
       const defaultValues: { [key: string]: string } = {
