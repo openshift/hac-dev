@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { ComponentGroupVersionKind, PipelineRunGroupVersionKind } from '../models';
-import { ComponentKind, PipelineRunKind } from '../types';
+import { ComponentKind, PipelineRunKind, TaskRunGroupVersionKind, TaskRunKind } from '../types';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
 export const usePipelineRun = (
@@ -20,6 +20,23 @@ export const usePipelineRun = (
     }
     return [pipelineRun, loaded, error];
   }, [pipelineRun, loaded, error]);
+};
+
+export const useTaskRun = (
+  namespace: string,
+  taskRunName: string,
+): [TaskRunKind, boolean, unknown] => {
+  const [taskRun, loaded, error] = useK8sWatchResource<TaskRunKind>({
+    groupVersionKind: TaskRunGroupVersionKind,
+    name: taskRunName,
+    namespace,
+  });
+  return React.useMemo(() => {
+    if (loaded && !error && taskRun.metadata.deletionTimestamp) {
+      return [null, loaded, { code: 404 }];
+    }
+    return [taskRun, loaded, error];
+  }, [taskRun, loaded, error]);
 };
 
 export const useLatestPipelineRunForComponent = (

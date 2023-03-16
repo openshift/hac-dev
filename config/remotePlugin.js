@@ -265,6 +265,34 @@ const routeExtensions = [
     },
   },
 
+  // Taskrun details page
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/taskruns/:trName',
+      exact: true,
+      component: {
+        $codeRef: 'TaskRuns',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/workspaces/:workspaceName/applications/:appName/taskruns/:trName/:activeTab',
+      exact: true,
+      component: {
+        $codeRef: 'TaskRuns',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+
   // Commits page.
   {
     type: 'core.page/route',
@@ -372,6 +400,7 @@ module.exports = {
     version: packageInfo.version,
     exposedModules: {
       PipelineRuns: resolve(__dirname, '../src/pages/PipelineRunPage'),
+      TaskRuns: resolve(__dirname, '../src/pages/TaskRunPage'),
       HACBSFlag: resolve(__dirname, '../src/hacbs/hacbsFeatureFlag'),
       EditIntegrationTest: resolve(__dirname, '../src/pages/EditIntegrationTestPage'),
       IntegrationTest: resolve(__dirname, '../src/pages/IntegrationTestPage'),
