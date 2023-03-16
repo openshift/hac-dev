@@ -111,13 +111,14 @@ export default defineConfig({
         }
       });
 
-      const defaultValues: { [key: string]: string } = {
+      const defaultValues: { [key: string]: string | boolean } = {
         HAC_BASE_URL: 'https://prod.foo.redhat.com:1337/beta/hac/stonesoup',
         USERNAME: '',
         PASSWORD: '',
         KUBECONFIG: '~/.kube/appstudio-config',
         CLEAN_NAMESPACE: 'false',
-        PR_CHECK: 'false',
+        PR_CHECK: false,
+        PERIODIC_RUN: false,
       };
 
       for (const key in defaultValues) {
