@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   DEFAULT_WHEN_OFFSET,
   Node,
-  RunStatus,
   TaskNode,
   WhenDecorator,
   WithContextMenuProps,
@@ -24,20 +23,12 @@ type PipelineRunNodeProps = {
 
 const PipelineRunNode: React.FunctionComponent<PipelineRunNodeProps> = ({ element, ...rest }) => {
   const data = element.getData();
-  const nodeStatus = runStatusToRunStatus(data.status);
-
-  const status =
-    nodeStatus === RunStatus.Succeeded && (data.testFailCount || data.testWarnCount)
-      ? RunStatus.Cancelled
-      : nodeStatus;
+  const status = runStatusToRunStatus(data.status);
 
   const badge =
-    data.testFailCount || data.testFailCount
-      ? `${data.testFailCount || data.testFailCount}`
+    data.testFailCount || data.testWarnCount
+      ? `${data.testFailCount + data.testWarnCount}`
       : undefined;
-  const badgeClassName = data.testFailCount
-    ? 'pipelinerun-node__test-status-badge--failed'
-    : 'pipelinerun-node__test-status-badge--warning';
 
   const whenDecorator = data.whenStatus ? (
     <WhenDecorator element={element} status={data.whenStatus} leftOffset={DEFAULT_WHEN_OFFSET} />
@@ -49,7 +40,7 @@ const PipelineRunNode: React.FunctionComponent<PipelineRunNodeProps> = ({ elemen
       element={element}
       status={status}
       badge={badge}
-      badgeClassName={badgeClassName}
+      badgeClassName="pipelinerun-node__test-status-badge--warning"
       toolTip={<PipelineRunNodeTooltip label={element.getLabel()} steps={data.steps} />}
       toolTipProps={{
         className: 'pipelinerun-node__tooltip',

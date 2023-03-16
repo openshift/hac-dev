@@ -22,11 +22,7 @@ import {
   PipelineRunKind,
   PLRTaskRunStep,
 } from '../../../../types';
-import {
-  conditionsRunStatus,
-  pipelineRunStatus,
-  runStatus,
-} from '../../../../utils/pipeline-utils';
+import { pipelineRunStatus, runStatus, taskRunStatus } from '../../../../utils/pipeline-utils';
 import {
   NODE_ICON_WIDTH,
   NODE_PADDING,
@@ -201,7 +197,7 @@ export const appendStatus = (
         mTask.status.reason = runStatus.Idle;
       }
     } else if (mTask.status.conditions) {
-      mTask.status.reason = conditionsRunStatus(mTask.status.conditions);
+      mTask.status.reason = taskRunStatus(taskRun);
     }
 
     // Determine any task test status
@@ -214,22 +210,6 @@ export const appendStatus = (
           const outputValues = JSON.parse(testOutput.value);
           mTask.status.testFailCount = parseInt(outputValues.failures, 10);
           mTask.status.testWarnCount = parseInt(outputValues.warnings, 10);
-          if (mTask.status.reason === runStatus.Succeeded) {
-            switch (outputValues.result) {
-              case 'FAILURE':
-              case 'ERROR':
-                mTask.status.reason = runStatus.Failed;
-                break;
-              case 'WARNING':
-                mTask.status.reason = runStatus.Cancelled;
-                break;
-              case 'SKIPPED':
-                mTask.status.reason = runStatus.Skipped;
-                break;
-              default:
-                break;
-            }
-          }
         } catch (e) {
           // ignore
         }
@@ -275,7 +255,7 @@ const getBadgeWidth = (data: PipelineRunNodeData, font: string = '0.875rem RedHa
   if (!data.testFailCount && !data.testWarnCount) {
     return 0;
   }
-  return BADGE_PADDING + getTextWidth(`${data.testFailCount || data.testWarnCount}`, font);
+  return BADGE_PADDING + getTextWidth(`${data.testFailCount + data.testWarnCount}`, font);
 };
 
 const getGraphDataModel = (
@@ -421,7 +401,7 @@ const getGraphDataModel = (
 
   return {
     graph: {
-      id: 'g1',
+      id: 'pipelinerun-vis-graph',
       type: ModelKind.graph,
       layout: hasWhenExpression
         ? PipelineLayout.PIPELINERUN_VISUALIZATION_SPACED
