@@ -61,7 +61,7 @@ export const disablePAC = (component: ComponentKind) => {
   });
 };
 
-export const startNewBuild = (component: ComponentKind) => {
+export const startNewBuild = (component: ComponentKind) =>
   k8sPatchResource({
     model: ComponentModel,
     queryOptions: {
@@ -75,7 +75,6 @@ export const startNewBuild = (component: ComponentKind) => {
       },
     ],
   });
-};
 
 const GIT_URL_PREFIX = 'https://github.com/';
 

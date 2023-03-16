@@ -11,6 +11,7 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
   k8sCreateResource: jest.fn(),
   getActiveWorkspace: jest.fn(() => 'test-ws'),
+  k8sPatchResource: jest.fn(() => Promise.resolve()),
 }));
 
 jest.mock('../../PipelineRunDetailsView/PipelineRunVisualization', () => () => <div />);
@@ -22,6 +23,20 @@ jest.mock('react-router-dom', () => {
     Link: (props) => <a href={props.to}>{props.children}</a>,
     useNavigate: jest.fn(),
     useSearchParams: () => React.useState(() => new URLSearchParams()),
+  };
+});
+
+jest.mock('../../../hooks/useComponents', () => {
+  const actual = jest.requireActual('../../../hooks/useComponents');
+  return {
+    ...actual,
+    useComponent: () => [
+      {
+        metadata: { name: 'mock-component', namespace: 'test' },
+        spec: { application: 'test-app' },
+      },
+      true,
+    ],
   };
 });
 
@@ -238,5 +253,28 @@ describe('PipelineRunDetailsView', () => {
     await waitFor(() => {
       expect(navigateMock).toHaveBeenCalledWith(`/stonesoup/pipelineruns/${newPlrName}`);
     });
+  });
+
+  it('should render start new build action', async () => {
+    const navigateMock = jest.fn();
+    useNavigateMock.mockImplementation(() => {
+      return navigateMock;
+    });
+    watchResourceMock
+      .mockReturnValueOnce([testPipelineRuns[DataState.SUCCEEDED], true])
+      .mockReturnValue([[], true]);
+
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
+
+    const startNewBuildButton = screen.queryByText('Start new build');
+    expect(startNewBuildButton).toHaveAttribute('aria-disabled', 'false');
+
+    fireEvent.click(startNewBuildButton);
+    await waitFor(() =>
+      expect(navigateMock).toHaveBeenCalledWith(
+        '/stonesoup/workspaces//applications/test-app/activity/pipelineruns?name=mock-component',
+      ),
+    );
   });
 });

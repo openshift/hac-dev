@@ -1,10 +1,13 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
+import { useComponent } from '../../hooks/useComponents';
 import { usePipelineRun } from '../../hooks/usePipelineRunsForApplication';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
+import { isPACEnabled, startNewBuild } from '../../utils/component-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
@@ -23,11 +26,17 @@ type PipelineRunDetailsViewProps = {
 export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
   pipelineRunName,
 }) => {
+  const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
   const [pipelineRun, loaded, error] = usePipelineRun(namespace, pipelineRunName);
   const [taskRuns, taskRunsLoaded, taskRunError] = useTaskRuns(namespace, pipelineRunName);
+
+  const [component] = useComponent(
+    namespace,
+    pipelineRun?.metadata?.labels?.[PipelineRunLabel.COMPONENT],
+  );
 
   const plrStatus = React.useMemo(
     () => loaded && pipelineRun && pipelineRunStatus(pipelineRun),
@@ -77,6 +86,18 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
           </>
         }
         actions={[
+          {
+            key: 'start-new-build',
+            label: 'Start new build',
+            hidden: !component || isPACEnabled(component),
+            onClick: () => {
+              startNewBuild(component).then(() =>
+                navigate(
+                  `/stonesoup/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
+                ),
+              );
+            },
+          },
           // Todo: will re enable this after finding the proper solution to rerun post mvp.
           // {
           //   key: 'rerun',

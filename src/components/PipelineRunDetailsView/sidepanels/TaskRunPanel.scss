@@ -1,4 +1,7 @@
 .task-run-panel {
+  &__head {
+    flex-shrink: 0;
+  }
   &__tabs {
     flex-grow: 1;
     display: flex;

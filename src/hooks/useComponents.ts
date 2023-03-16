@@ -6,13 +6,17 @@ import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
 export const useComponent = (
   namespace: string,
-  componentName: string,
+  componentName?: string,
 ): [ComponentKind, boolean, unknown] => {
-  const [component, componentsLoaded, error] = useK8sWatchResource<ComponentKind>({
-    groupVersionKind: ComponentGroupVersionKind,
-    namespace,
-    name: componentName,
-  });
+  const [component, componentsLoaded, error] = useK8sWatchResource<ComponentKind>(
+    componentName
+      ? {
+          groupVersionKind: ComponentGroupVersionKind,
+          namespace,
+          name: componentName,
+        }
+      : undefined,
+  );
   return React.useMemo(() => {
     if (componentsLoaded && !error && component?.metadata.deletionTimestamp) {
       return [null, componentsLoaded, { code: 404 }];

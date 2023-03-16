@@ -25,14 +25,16 @@ const TaskRunPanel: React.FC<Props> = ({ taskRunNode, onClose }) => {
   const { status } = taskRunNode.getData();
   return (
     <>
-      <DrawerHead>
-        <span>
-          {taskRun.name} <StatusIconWithTextLabel status={status} />
-        </span>
-        <DrawerActions>
-          <DrawerCloseButton onClick={onClose} />
-        </DrawerActions>
-      </DrawerHead>
+      <div className="task-run-panel__head">
+        <DrawerHead>
+          <span>
+            {taskRun.name} <StatusIconWithTextLabel status={status} />
+          </span>
+          <DrawerActions>
+            <DrawerCloseButton onClick={onClose} />
+          </DrawerActions>
+        </DrawerHead>
+      </div>
 
       <div className="task-run-panel__tabs">
         <Tabs defaultActiveKey="details" unmountOnExit className="">
