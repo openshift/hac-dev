@@ -3,7 +3,8 @@ ARG CHROME_VERSION='110.0.5481.177-1'
 
 FROM cypress/factory
 
-ENV OC_DOWNLOAD_URL="https://downloads-openshift-console.apps.hac-devsandbox.5unc.p1.openshiftapps.com/amd64/linux/oc.tar"
+ENV OC_DOWNLOAD_URL="https://downloads-openshift-console.apps.hac-devsandbox.5unc.p1.openshiftapps.com/amd64/linux/oc.tar" \
+    CYPRESS_CACHE_FOLDER="/tmp/.cache"
 
 RUN apt update && \
     apt install jq python3 python3-venv xauth skopeo -y && \
@@ -13,17 +14,19 @@ RUN apt update && \
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
-COPY . /tmp/e2e
+USER node:0
+
+COPY --chown=node:root --chmod=775 . /tmp/e2e
+RUN chmod -R 775 /tmp/e2e
 
 RUN cd /tmp/e2e && \
+    umask 0002 && \
     npm i && \
     node_modules/.bin/cypress install && \
     mkdir -p /tmp/artifacts && \
-    chmod -R a+rwx /tmp/artifacts
+    chmod -R a+rwx /tmp/artifacts ${CYPRESS_CACHE_FOLDER}
 
 WORKDIR /tmp/
-COPY --chown=0:0 entrypoint.sh /tmp/
-
-RUN chmod aug+rwx /tmp/entrypoint.sh
+COPY --chown=node:root --chmod=775 entrypoint.sh /tmp/
 
 ENTRYPOINT ["/tmp/entrypoint.sh"]

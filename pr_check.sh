@@ -63,20 +63,18 @@ mkdir -p $WORKSPACE/artifacts
 PR_TITLE=$(echo ${ghprbPullTitle} | sed -r 's/\s/_/g')
 COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z \
     -v $PWD/integration-tests:/e2e:Z \
-    -w /e2e \
-    -e CYPRESS_CACHE_FOLDER=/tmp/.cache \
     -e CYPRESS_PR_CHECK=true \
     -e CYPRESS_GH_PR_LINK=${ghprbPullLink} \
     -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/stonesoup \
     -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` \
     -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` \
     -e CYPRESS_GH_PR_TITLE=${PR_TITLE}"
-TEST_IMAGE="quay.io/hacdev/hac-tests:e2e-runner"
+TEST_IMAGE="quay.io/hacdev/hac-tests:next"
 
 set +e
 TEST_RUN=0
 
-docker run ${COMMON_SETUP} \
+podman run --userns=keep-id ${COMMON_SETUP} \
     -e CYPRESS_GH_TOKEN=${CYPRESS_GH_TOKEN} \
     -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \
     -e CYPRESS_QUAY_TOKEN=${CYPRESS_QUAY_TOKEN} \
