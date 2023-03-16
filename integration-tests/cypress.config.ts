@@ -1,6 +1,19 @@
 import { defineConfig } from "cypress";
 import * as fs from 'fs-extra';
+import * as glob from 'glob';
 const registerReportPortalPlugin = require('@reportportal/agent-js-cypress/lib/plugin');
+const { mergeLaunches } = require('@reportportal/agent-js-cypress/lib/mergeLaunches');
+
+function deleteLaunchFiles() {
+  const getLaunchTempFiles = () => {
+    return glob.sync("rplaunch*.tmp");
+  };
+  const deleteTempFile = (filename) => {
+    fs.unlinkSync(filename);
+  };
+  const files = getLaunchTempFiles();
+  files.forEach(deleteTempFile);
+}
 
 export default defineConfig({
   defaultCommandTimeout: 40000,
@@ -25,7 +38,7 @@ export default defineConfig({
       project: 'hac-dev',
       description: 'HAC dev e2e test suite',
       debug: true,
-      autoMerge: true
+      isLaunchMergeRequired: true
     }
   },
   e2e: {
@@ -68,6 +81,34 @@ export default defineConfig({
           }
           return null;
         },
+      });
+
+      // workaround for report portal runs not finishing
+      on('after:run', async () => {
+        if (config.env.PR_CHECK === true) {
+          let retries = 10;
+          console.log('Wait for reportportal agent to finish...');
+          while (glob.sync('rplaunchinprogress*.tmp').length > 0) {
+            if (retries < 1) {
+              console.log('reportportal agent timed out after 20s');
+              return;
+            }
+            retries--;
+            await new Promise(res => setTimeout(res, 2000));
+          }
+          console.log('reportportal agent finished');
+
+          if (config.reporterOptions.reportportalAgentJsCypressReporterOptions.isLaunchMergeRequired) {
+            try {
+              console.log('Merging launches...');
+              await mergeLaunches(config.reporterOptions.reportportalAgentJsCypressReporterOptions);
+              console.log('Launches successfully merged!');
+              deleteLaunchFiles();
+            } catch (mergeError: unknown) {
+              console.error(mergeError);
+            }
+          }
+        }
       });
 
       const defaultValues: { [key: string]: string } = {
