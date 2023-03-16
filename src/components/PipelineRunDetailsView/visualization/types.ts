@@ -1,5 +1,5 @@
 import { PipelineNodeModel as PfPipelineNodeModel, WhenStatus } from '@patternfly/react-topology';
-import { PipelineTask, TaskRunStatus } from '../../../types';
+import { PipelineTask, TaskRunStatus, TaskRunKind } from '../../../types';
 import { runStatus } from '../../../utils/pipeline-utils';
 
 export enum PipelineRunNodeType {
@@ -24,6 +24,7 @@ export type PipelineRunNodeData = {
   testWarnCount?: number;
   whenStatus?: WhenStatus;
   steps?: StepStatus[];
+  taskRun?: TaskRunKind;
 };
 
 export type PipelineTaskStatus = TaskRunStatus & {

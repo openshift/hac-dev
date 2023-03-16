@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   DrawerActions,
   DrawerCloseButton,
@@ -17,25 +17,25 @@ import './TaskRunPanel.scss';
 
 type Props = {
   onClose: () => void;
-  taskRunNode: GraphElement<ElementModel, PipelineRunNodeData>;
+  taskNode: GraphElement<ElementModel, PipelineRunNodeData>;
 };
 
-const TaskRunPanel: React.FC<Props> = ({ taskRunNode, onClose }) => {
-  const taskRun = taskRunNode.getData().task;
-  const { status } = taskRunNode.getData();
+const TaskRunPanel: React.FC<Props> = ({ taskNode, onClose }) => {
+  const task = taskNode.getData().task;
+  const taskRun = taskNode.getData().taskRun;
+  const { status } = taskNode.getData();
   return (
     <>
       <div className="task-run-panel__head">
         <DrawerHead>
           <span>
-            {taskRun.name} <StatusIconWithTextLabel status={status} />
+            {task.name} <StatusIconWithTextLabel status={status} />
           </span>
           <DrawerActions>
             <DrawerCloseButton onClick={onClose} />
           </DrawerActions>
         </DrawerHead>
       </div>
-
       <div className="task-run-panel__tabs">
         <Tabs defaultActiveKey="details" unmountOnExit className="">
           <Tab title="Details" eventKey="details">
@@ -46,9 +46,9 @@ const TaskRunPanel: React.FC<Props> = ({ taskRunNode, onClose }) => {
           <Tab title="Logs" eventKey="logs">
             <DrawerPanelBody style={{ height: '100%' }}>
               <TaskRunLogs
-                taskName={taskRun.name}
-                namespace={taskRunNode.getData().namespace}
-                podName={taskRun.status?.podName}
+                taskName={task.name}
+                namespace={taskNode.getData().namespace}
+                podName={taskRun?.status?.podName}
                 status={status}
               />
             </DrawerPanelBody>

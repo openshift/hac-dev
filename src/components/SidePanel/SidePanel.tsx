@@ -1,7 +1,13 @@
 import React from 'react';
 import SidePanelContext, { SidePanelProps } from './SidePanelContext';
 
-const SidePanel: React.FC<SidePanelProps> = ({ isExpanded, isInline, onExpand, children }) => {
+const SidePanel: React.FC<SidePanelProps> = ({
+  isExpanded,
+  isInline,
+  onExpand,
+  defaultSize,
+  children,
+}) => {
   const { close, setProps } = React.useContext(SidePanelContext);
 
   React.useEffect(
@@ -11,8 +17,8 @@ const SidePanel: React.FC<SidePanelProps> = ({ isExpanded, isInline, onExpand, c
   );
 
   React.useEffect(() => {
-    setProps({ isExpanded, isInline, onExpand, children });
-  }, [setProps, isExpanded, isInline, onExpand, children]);
+    setProps({ isExpanded, isInline, onExpand, defaultSize, children });
+  }, [setProps, isExpanded, isInline, onExpand, defaultSize, children]);
 
   return null;
 };

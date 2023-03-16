@@ -21,7 +21,7 @@ describe('SidePanel', () => {
     const setPropsFn = jest.fn();
     const onExpandFn = jest.fn();
     render(
-      <SidePanel isExpanded isInline onExpand={onExpandFn}>
+      <SidePanel isExpanded isInline onExpand={onExpandFn} defaultSize={500}>
         test
       </SidePanel>,
       {
@@ -37,6 +37,7 @@ describe('SidePanel', () => {
       isInline: true,
       children: 'test',
       onExpand: onExpandFn,
+      defaultSize: 500,
     });
   });
 

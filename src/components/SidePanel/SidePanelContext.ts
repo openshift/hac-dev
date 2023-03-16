@@ -5,6 +5,7 @@ export type SidePanelProps = {
   children?: React.ReactNode;
   isInline?: boolean;
   onExpand?: () => void;
+  defaultSize?: string | number;
 };
 
 export type SidePanelContextValue = {

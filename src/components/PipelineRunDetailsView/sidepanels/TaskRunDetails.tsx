@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -6,12 +6,13 @@ import {
   DescriptionListTerm,
 } from '@patternfly/react-core';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
-import { PipelineTask } from '../../../types/pipeline';
+import { TaskRunKind } from '../../../types';
 import { calculateDuration, runStatus } from '../../../utils/pipeline-utils';
+import ClairScanDescriptionListGroup from '../tabs/ClairScanDescriptionListGroup';
 import RunResultsList from '../tabs/RunResultsList';
 
 type Props = {
-  taskRun: PipelineTask;
+  taskRun?: TaskRunKind;
   status: runStatus;
 };
 
@@ -23,32 +24,32 @@ const TaskRunDetails: React.FC<Props> = ({ taskRun, status }) => (
           <DescriptionListGroup>
             <DescriptionListTerm>Started</DescriptionListTerm>
             <DescriptionListDescription>
-              <Timestamp timestamp={taskRun.status?.startTime} />
+              <Timestamp timestamp={taskRun?.status?.startTime} />
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>Duration</DescriptionListTerm>
             <DescriptionListDescription>
-              {taskRun.status?.startTime
+              {taskRun?.status?.startTime
                 ? calculateDuration(taskRun.status?.startTime, taskRun.status?.completionTime)
                 : '-'}
             </DescriptionListDescription>
           </DescriptionListGroup>
         </DescriptionList>
-
-        <DescriptionList className="pf-u-mt-sm">
+        <DescriptionList className="pf-u-mt-lg">
           <DescriptionListGroup>
             <DescriptionListTerm>Description</DescriptionListTerm>
             <DescriptionListDescription>
-              {taskRun.status?.taskSpec?.description || '-'}
+              {taskRun?.status?.taskSpec?.description || '-'}
             </DescriptionListDescription>
           </DescriptionListGroup>
+          <ClairScanDescriptionListGroup taskRuns={[taskRun]} hideIfNotFound />
         </DescriptionList>
       </>
     ) : (
       'This task was skipped.'
     )}
-    {taskRun.status?.taskResults?.length ? (
+    {taskRun?.status?.taskResults?.length ? (
       <>
         <br />
         <RunResultsList status={status} results={taskRun.status.taskResults} />
