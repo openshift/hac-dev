@@ -28,6 +28,10 @@ jest.mock('../../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
+jest.mock('../../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const useSearchParamMock = useSearchParam as jest.Mock;
 

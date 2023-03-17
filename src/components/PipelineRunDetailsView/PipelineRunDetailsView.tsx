@@ -5,11 +5,13 @@ import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useComponent } from '../../hooks/useComponents';
 import { usePipelineRun } from '../../hooks/usePipelineRunsForApplication';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
+import { ComponentModel } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { isPACEnabled, startNewBuild } from '../../utils/component-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
+import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
@@ -32,6 +34,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
 
   const [pipelineRun, loaded, error] = usePipelineRun(namespace, pipelineRunName);
   const [taskRuns, taskRunsLoaded, taskRunError] = useTaskRuns(namespace, pipelineRunName);
+  const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
 
   const [component] = useComponent(
     namespace,
@@ -90,6 +93,8 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
             key: 'start-new-build',
             label: 'Start new build',
             hidden: !component || isPACEnabled(component),
+            isDisabled: !canPatchComponent,
+            disabledTooltip: "You don't have access to start a new build",
             onClick: () => {
               startNewBuild(component).then(() =>
                 navigate(
@@ -112,6 +117,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
             label: 'Stop',
             tooltip: 'Let the running tasks complete, then execute finally tasks',
             isDisabled: !(plrStatus && plrStatus === 'Running'),
+            disabledTooltip: "You don't have access to stop a build",
             onClick: () => pipelineRunStop(pipelineRun),
           },
           {
@@ -119,6 +125,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
             label: 'Cancel',
             tooltip: 'Interrupt any executing non finally tasks, then execute finally tasks',
             isDisabled: !(plrStatus && plrStatus === 'Running'),
+            disabledTooltip: "You don't have access to cancel a build",
             onClick: () => pipelineRunCancel(pipelineRun),
           },
         ]}

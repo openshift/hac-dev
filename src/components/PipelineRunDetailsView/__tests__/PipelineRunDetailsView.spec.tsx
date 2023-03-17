@@ -40,6 +40,10 @@ jest.mock('../../../hooks/useComponents', () => {
   };
 });
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useNavigateMock = useNavigate as jest.Mock;
 const mockK8sCreate = k8sCreateResource as jest.Mock;

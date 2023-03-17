@@ -6,6 +6,7 @@ export type Action = {
   description?: string;
   cta: (() => void) | { href: string; external?: boolean };
   disabled?: boolean;
+  disabledTooltip?: string;
   tooltip?: string;
   icon?: string | React.ReactNode;
   path?: string;

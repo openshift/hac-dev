@@ -38,6 +38,11 @@ jest.mock('../../../../utils/workspace-context-utils', () => {
     useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
   };
 });
+
+jest.mock('../../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const createIntegrationTestMock = createIntegrationTest as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });

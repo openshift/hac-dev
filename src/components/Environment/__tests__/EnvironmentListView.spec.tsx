@@ -41,6 +41,10 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const environments: EnvironmentKind[] = [
   {
     kind: 'Environment',

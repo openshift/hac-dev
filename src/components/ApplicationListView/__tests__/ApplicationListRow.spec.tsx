@@ -27,6 +27,10 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const application: ApplicationKind = {
   kind: 'Application',
   apiVersion: 'appstudio.redhat.com/v1alpha1',

@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Level, LevelItem } from '@patternfly/react-core';
+import { Button, Level, LevelItem } from '@patternfly/react-core';
 import { useApplications } from '../../hooks/useApplications';
+import { ApplicationModel, ComponentModel } from '../../models';
+import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import { ContextMenuItem, ContextSwitcher } from '../ContextSwitcher';
 
 export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = ({
@@ -10,6 +13,8 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
 }) => {
   const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
+  const [canCreateApplication] = useAccessReviewForModel(ApplicationModel, 'create');
+  const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 
   const [applications] = useApplications(namespace);
 
@@ -35,12 +40,28 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
       footer={
         <Level>
           <LevelItem>
-            <Link to={`/stonesoup/workspaces/${workspace}/import`}>Create application</Link>
+            <ButtonWithAccessTooltip
+              variant="link"
+              component={(props) => (
+                <Link {...props} to={`/stonesoup/workspaces/${workspace}/import`} />
+              )}
+              isInline
+              tooltip="You don't have access to create an application"
+              isDisabled={!(canCreateApplication && canCreateComponent)}
+            >
+              Create application
+            </ButtonWithAccessTooltip>
           </LevelItem>
           <LevelItem>
-            <Link to={`/stonesoup/workspaces/${workspace}/applications`}>
+            <Button
+              variant="link"
+              component={(props) => (
+                <Link {...props} to={`/stonesoup/workspaces/${workspace}/applications`} />
+              )}
+              isInline
+            >
               View applications list
-            </Link>
+            </Button>
           </LevelItem>
         </Level>
       }

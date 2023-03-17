@@ -55,6 +55,10 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 const useParamsMock = useParams as jest.Mock;
 const useApplicationMock = useApplication as jest.Mock;
@@ -95,7 +99,7 @@ describe('ApplicationDetails', () => {
     });
   });
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
     (window.SVGElement as any).prototype.getBBox = undefined;
   });
   it('should render spinner if application data is not loaded', () => {

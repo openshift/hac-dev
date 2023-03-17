@@ -1,9 +1,13 @@
+import { PipelineRunModel } from '../../models';
 import { Action } from '../../shared/components/action-menu/types';
 import { PipelineRunKind } from '../../types';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
 import { pipelineRunStatus, runStatus } from '../../utils/pipeline-utils';
+import { useAccessReviewForModel } from '../../utils/rbac';
 
 export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] => {
+  const [canPatchPipelineRun] = useAccessReviewForModel(PipelineRunModel, 'patch');
+
   return [
     // Todo: will re enable this after finding the proper solution to rerun post mvp.
     // {
@@ -16,7 +20,8 @@ export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] =>
       id: 'pipelinerun-stop',
       label: 'Stop',
       tooltip: 'Let the running tasks complete, then execute finally tasks',
-      disabled: !(pipelineRunStatus(pipelineRun) === runStatus.Running),
+      disabled: !(pipelineRunStatus(pipelineRun) === runStatus.Running) || !canPatchPipelineRun,
+      disabledTooltip: "You don't have access to stop this pipeline",
     },
 
     {
@@ -24,7 +29,8 @@ export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] =>
       id: 'pipelinerun-cancel',
       label: 'Cancel',
       tooltip: 'Interrupt any executing non finally tasks, then execute finally tasks',
-      disabled: !(pipelineRunStatus(pipelineRun) === runStatus.Running),
+      disabled: !(pipelineRunStatus(pipelineRun) === runStatus.Running) || !canPatchPipelineRun,
+      disabledTooltip: "You don't have access to cancel this pipeline",
     },
   ];
 };

@@ -54,6 +54,10 @@ jest.mock('../../../shared/components/table', () => {
   };
 });
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const useSearchParamMock = useSearchParam as jest.Mock;
 
 const params: any = {};

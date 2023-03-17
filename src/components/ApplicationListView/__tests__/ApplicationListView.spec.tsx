@@ -39,6 +39,10 @@ jest.mock('react-router-dom', () => {
   };
 });
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const applications: ApplicationKind[] = [
   {
     kind: 'Application',

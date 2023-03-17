@@ -15,6 +15,10 @@ jest.mock('../../../hooks/useClairScanResults', () => ({
   useClairScanResults: jest.fn(() => []),
 }));
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const patchResourceMock = k8sPatchResource as jest.Mock;
 
 const pipelineRun: PipelineRunKind = {
@@ -189,7 +193,7 @@ describe('test pipelinerun stop command', () => {
     fireEvent.click(kebabButton);
 
     await waitFor(() => {
-      const stopButton = screen.getByRole('menuitem', { name: 'Stop' });
+      const stopButton = screen.getByRole('button', { name: 'Stop' });
       expect(stopButton).toBeVisible();
     });
   });
@@ -212,7 +216,7 @@ describe('test pipelinerun stop command', () => {
     fireEvent.click(kebabButton);
 
     await waitFor(() => {
-      const stopButton = screen.getByRole('menuitem', { name: 'Stop' });
+      const stopButton = screen.getByRole('button', { name: 'Stop' });
       fireEvent.click(stopButton);
       expect(patchResourceMock).toHaveBeenCalledWith(
         expect.objectContaining({

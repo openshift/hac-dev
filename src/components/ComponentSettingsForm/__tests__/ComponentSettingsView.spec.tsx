@@ -32,6 +32,10 @@ jest.mock('../../../shared/hooks/useScrollShadows', () => ({
   Shadows: () => null,
 }));
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useApplicationsMock = useApplications as jest.Mock;
 

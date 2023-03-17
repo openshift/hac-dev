@@ -28,6 +28,10 @@ jest.mock('../../../utils/component-utils', () => {
   };
 });
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('ComponentListItem', () => {

@@ -7,7 +7,6 @@ import {
   AlertActionLink,
   AlertVariant,
   Bullseye,
-  Button,
   DataList,
   EmptyStateBody,
   Label,
@@ -28,11 +27,13 @@ import { useComponents } from '../../hooks/useComponents';
 import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import emptyStateImgUrl from '../../imgs/Components.svg';
-import { PipelineRunGroupVersionKind } from '../../models';
+import { ComponentModel, PipelineRunGroupVersionKind } from '../../models';
 import { PipelineRunKind } from '../../types';
 import { useURLForComponentPRs, isPACEnabled } from '../../utils/component-utils';
 import { getGitOpsDeploymentStrategy } from '../../utils/gitops-utils';
+import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import { ComponentListItem } from './ComponentListItem';
@@ -54,6 +55,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
   const [mergeAlertHidden, setMergeAlertHidden] = React.useState<boolean>(false);
 
   const [allComponents, componentsLoaded] = useComponents(namespace, applicationName);
+  const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 
   const components = React.useMemo(
     () =>
@@ -193,7 +195,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                     />
                   </ToolbarItem>
                   <ToolbarItem>
-                    <Button
+                    <ButtonWithAccessTooltip
                       variant="secondary"
                       component={(p) => (
                         <Link
@@ -202,9 +204,11 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                           to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}
                         />
                       )}
+                      isDisabled={!canCreateComponent}
+                      tooltip="You don't have access to add a component"
                     >
                       Add component
-                    </Button>
+                    </ButtonWithAccessTooltip>
                   </ToolbarItem>
                   <ToolbarGroup alignment={{ default: 'alignRight' }}>
                     {gitOpsDeploymentLoaded ? (
@@ -247,7 +251,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                 <br />
                 To get started, add a component to your application.{' '}
               </EmptyStateBody>
-              <Button
+              <ButtonWithAccessTooltip
                 variant="primary"
                 component={(props) => (
                   <Link
@@ -255,9 +259,11 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                     to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}
                   />
                 )}
+                isDisabled={!canCreateComponent}
+                tooltip="You don't have access to add a component"
               >
                 Add component
-              </Button>
+              </ButtonWithAccessTooltip>
             </AppEmptyState>
           )}
         </>

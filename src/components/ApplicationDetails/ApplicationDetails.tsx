@@ -4,9 +4,16 @@ import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { useApplication } from '../../hooks/useApplications';
+import {
+  ApplicationModel,
+  ComponentModel,
+  EnvironmentModel,
+  IntegrationTestScenarioModel,
+} from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { MVP_FLAG } from '../../utils/flag-utils';
+import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ActivityTab } from '../Activity/ActivityTab';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
@@ -29,6 +36,13 @@ type HacbsApplicationDetailsProps = {
 
 const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicationName }) => {
   const { namespace, workspace } = useWorkspaceInfo();
+  const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
+  const [canCreateEnvironment] = useAccessReviewForModel(EnvironmentModel, 'create');
+  const [canCreateIntegrationTest] = useAccessReviewForModel(
+    IntegrationTestScenarioModel,
+    'create',
+  );
+  const [canDeleteApplication] = useAccessReviewForModel(ApplicationModel, 'delete');
 
   const navigate = useNavigate();
   const { quickStarts } = useChrome();
@@ -94,6 +108,8 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
                 Add component
               </Link>
             ),
+            isDisabled: !canCreateComponent,
+            disabledTooltip: "You don't have access to add a component",
           },
           {
             key: 'add-integration-test',
@@ -105,7 +121,8 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
                 Add integration test
               </Link>
             ),
-            isDisabled: false,
+            isDisabled: !canCreateIntegrationTest,
+            disabledTooltip: "You don't have access to add an integration test",
           },
           {
             key: 'create-environment',
@@ -116,6 +133,8 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
               </Link>
             ),
             hidden: mvpFeature,
+            isDisabled: !canCreateEnvironment,
+            disabledTooltip: "You don't have access to create an environment",
           },
           {
             key: 'application-quickstart',
@@ -144,6 +163,8 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
               ).closed.then(({ submitClicked }) => {
                 if (submitClicked) navigate('/stonesoup/workspaces');
               }),
+            isDisabled: !canDeleteApplication,
+            disabledTooltip: "You don't have access to delete this application",
           },
         ]}
         baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}`}

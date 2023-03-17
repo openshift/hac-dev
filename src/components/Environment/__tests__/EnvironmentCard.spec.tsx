@@ -29,6 +29,10 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 useFeatureFlagMock.mockReturnValue([false, () => {}]);
 

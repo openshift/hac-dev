@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateVariant,
-  Title,
-} from '@patternfly/react-core';
+import { EmptyState, EmptyStateBody, EmptyStateVariant, Title } from '@patternfly/react-core';
 import { useComponents } from '../../hooks/useComponents';
+import { ComponentModel } from '../../models';
 import { ComponentKind } from '../../types';
+import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import { ComponentProps } from '../modal/createModalLauncher';
 import CustomizePipeline from './CustomizePipelines';
 
@@ -27,6 +24,7 @@ const CustomizeAllPipelines: React.FC<Props> = ({
 }) => {
   const { workspace } = useWorkspaceInfo();
   const [components, loaded] = useComponents(namespace, applicationName);
+  const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
   const filteredComponents = React.useMemo(
     () => (loaded ? (filter ? components.filter(filter) : components) : []),
     [loaded, components, filter],
@@ -43,7 +41,7 @@ const CustomizeAllPipelines: React.FC<Props> = ({
           No components
         </Title>
         <EmptyStateBody>To get started, add a component to your application.</EmptyStateBody>
-        <Button
+        <ButtonWithAccessTooltip
           variant="primary"
           component={(props) => (
             <Link
@@ -51,9 +49,11 @@ const CustomizeAllPipelines: React.FC<Props> = ({
               to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}
             />
           )}
+          isDisabled={!canCreateComponent}
+          tooltip="You don't have access to add a component"
         >
           Add component
-        </Button>
+        </ButtonWithAccessTooltip>
       </EmptyState>
     );
   }

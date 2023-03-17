@@ -30,7 +30,9 @@ type Action = {
   key: string;
   label: React.ReactNode;
   hidden?: boolean;
+  disabledTooltip?: React.ReactNode;
 } & Omit<DropdownItemProps, 'label'>;
+
 type DetailsPageTabProps = {
   key: string;
   label: string;
@@ -82,7 +84,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
   const dropdownItems = React.useMemo(
     () =>
       actions?.reduce((acc, action) => {
-        const { type, key, label, ...props } = action;
+        const { type, key, label, isDisabled, disabledTooltip, ...props } = action;
         if (action.hidden) {
           return acc;
         }
@@ -97,11 +99,25 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
           acc.push(<DropdownGroup key={`${key}-group`} label={label} data-test={key} />);
           return acc;
         }
-        acc.push(
-          <DropdownItem key={key} data-test={key} {...props}>
-            {label}
-          </DropdownItem>,
-        );
+        if (isDisabled && disabledTooltip) {
+          acc.push(
+            <DropdownItem
+              key={key}
+              data-test={key}
+              {...props}
+              tooltip={disabledTooltip}
+              isAriaDisabled
+            >
+              {label}
+            </DropdownItem>,
+          );
+        } else {
+          acc.push(
+            <DropdownItem key={key} data-test={key} isDisabled={isDisabled} {...props}>
+              {label}
+            </DropdownItem>,
+          );
+        }
         return acc;
       }, [] as React.ReactNode[]),
     [actions],

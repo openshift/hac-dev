@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import {
   Bullseye,
-  Button,
   EmptyStateBody,
   PageSection,
   PageSectionVariants,
@@ -16,10 +15,13 @@ import { HACBS_FLAG } from '../../hacbs/hacbsFeatureFlag';
 import { useApplications } from '../../hooks/useApplications';
 import emptyStateImgUrl from '../../imgs/Application.svg';
 import imageUrl from '../../imgs/getting-started-illustration.svg';
+import { ApplicationModel, ComponentModel } from '../../models';
 import { Table } from '../../shared';
 import { ApplicationKind } from '../../types';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
+import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
 import PageLayout from '../PageLayout/PageLayout';
@@ -32,6 +34,8 @@ const ApplicationListView: React.FC = () => {
   const [hacbs] = useFeatureFlag(HACBS_FLAG);
   const { namespace, workspace } = useWorkspaceInfo();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
+  const [canCreateApplication] = useAccessReviewForModel(ApplicationModel, 'create');
+  const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 
   const [applications, loaded] = useApplications(namespace);
   applications?.sort(
@@ -84,28 +88,32 @@ const ApplicationListView: React.FC = () => {
                 <br />
                 To get started, create an application.
               </EmptyStateBody>
-              <Button
+              <ButtonWithAccessTooltip
                 variant="primary"
                 component={(props) => (
                   <Link {...props} to={`/stonesoup/workspaces/${workspace}/import`} />
                 )}
+                isDisabled={!(canCreateApplication && canCreateComponent)}
+                tooltip="You don't have access to create an application"
               >
                 Create application
-              </Button>
+              </ButtonWithAccessTooltip>
             </AppEmptyState>
           ) : (
             <>
               <Toolbar usePageInsets>
                 <ToolbarContent>
                   <ToolbarItem>
-                    <Button
+                    <ButtonWithAccessTooltip
                       variant="primary"
                       component={(props) => (
                         <Link {...props} to={`/stonesoup/workspaces/${workspace}/import`} />
                       )}
+                      isDisabled={!(canCreateApplication && canCreateComponent)}
+                      tooltip="You don't have access to create an application"
                     >
                       Create application
-                    </Button>
+                    </ButtonWithAccessTooltip>
                   </ToolbarItem>
                 </ToolbarContent>
               </Toolbar>

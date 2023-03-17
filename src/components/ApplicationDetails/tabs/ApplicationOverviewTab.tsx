@@ -4,6 +4,8 @@ import componentsIcon from '../../../imgs/illustrations/Components.svg';
 import editCodeIcon from '../../../imgs/illustrations/Edit code.svg';
 import githubAppIcon from '../../../imgs/illustrations/Github app.svg';
 import pipelineIcon from '../../../imgs/illustrations/Pipeline.svg';
+import { ComponentModel } from '../../../models';
+import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import CommitsListView from '../../Commits/CommitsListView';
 import WhatsNextSection, { WhatsNextItem } from '../../WhatsNext/WhatsNextSection';
@@ -16,6 +18,7 @@ type ApplicationOverviewTabProps = {
 const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applicationName }) => {
   const { workspace } = useWorkspaceInfo();
   const { url: githubAppURL } = useStoneSoupGitHubApp();
+  const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 
   const whatsNextItems: WhatsNextItem[] = [
     {
@@ -25,6 +28,8 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applica
       cta: {
         label: 'Add component',
         href: `/stonesoup/workspaces/${workspace}/import?application=${applicationName}`,
+        disabled: !canCreateComponent,
+        disabledTooltip: "You don't have access to add a component",
       },
       helpId: 'stonesoup-whatsnext-add-component',
     },

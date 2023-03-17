@@ -2,8 +2,10 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Bullseye, Spinner, Text, TextVariants } from '@patternfly/react-core';
 import { useIntegrationTestScenario } from '../../hooks/useIntegrationTestScenarios';
+import { IntegrationTestScenarioModel } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
+import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
@@ -26,6 +28,14 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
   const showModal = useModalLauncher();
   const navigate = useNavigate();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
+  const [canUpdateIntegrationTest] = useAccessReviewForModel(
+    IntegrationTestScenarioModel,
+    'update',
+  );
+  const [canDeleteIntegrationTest] = useAccessReviewForModel(
+    IntegrationTestScenarioModel,
+    'delete',
+  );
 
   const [integrationTest, loaded, loadErr] = useIntegrationTestScenario(
     namespace,
@@ -74,6 +84,8 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
                 Edit
               </Link>
             ),
+            isDisabled: !canUpdateIntegrationTest,
+            disabledTooltip: "You don't have access to edit this integration test",
           },
           {
             onClick: () =>
@@ -87,6 +99,8 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
               }),
             key: `delete-${integrationTest.metadata.name.toLowerCase()}`,
             label: 'Delete',
+            isDisabled: !canDeleteIntegrationTest,
+            disabledTooltip: "You don't have access to delete this integration test",
           },
         ]}
         baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/${testName}`}

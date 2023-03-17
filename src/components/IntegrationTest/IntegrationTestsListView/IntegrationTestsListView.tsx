@@ -22,9 +22,12 @@ import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useIntegrationTestScenarios } from '../../../hooks/useIntegrationTestScenarios';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import emptyStateImgUrl from '../../../imgs/Integration-test.svg';
+import { IntegrationTestScenarioModel } from '../../../models';
 import { Table } from '../../../shared';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
+import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
+import { ButtonWithAccessTooltip } from '../../ButtonWithAccessTooltip';
 import AppEmptyState from '../../EmptyState/AppEmptyState';
 import FilteredEmptyState from '../../EmptyState/FilteredEmptyState';
 import { IntegrationTestListHeader } from './IntegrationTestListHeader';
@@ -34,30 +37,39 @@ type IntegrationTestsListViewProps = {
   applicationName: string;
 };
 
-const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ handleAddTest }) => (
-  <AppEmptyState
-    data-test="integration-tests__empty"
-    emptyStateImg={emptyStateImgUrl}
-    title="Test any code changes"
-  >
-    <EmptyStateBody>
-      Integration tests run in parallel, validating each new component build with the latest version
-      of all other application components.
-      <br />
-      To add an integration test, link to a GitHub repository containing code that can test how your
-      application components work together.
-    </EmptyStateBody>
-    <EmptyStateSecondaryActions>
-      <Button
-        variant={ButtonVariant.primary}
-        onClick={handleAddTest}
-        data-test="add-integration-test"
-      >
-        Add integration test
-      </Button>
-    </EmptyStateSecondaryActions>
-  </AppEmptyState>
-);
+const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ handleAddTest }) => {
+  const [canCreateIntegrationTest] = useAccessReviewForModel(
+    IntegrationTestScenarioModel,
+    'create',
+  );
+
+  return (
+    <AppEmptyState
+      data-test="integration-tests__empty"
+      emptyStateImg={emptyStateImgUrl}
+      title="Test any code changes"
+    >
+      <EmptyStateBody>
+        Integration tests run in parallel, validating each new component build with the latest
+        version of all other application components.
+        <br />
+        To add an integration test, link to a GitHub repository containing code that can test how
+        your application components work together.
+      </EmptyStateBody>
+      <EmptyStateSecondaryActions>
+        <ButtonWithAccessTooltip
+          variant={ButtonVariant.primary}
+          onClick={handleAddTest}
+          isDisabled={!canCreateIntegrationTest}
+          tooltip="You don't have access to add an integration test"
+          data-test="add-integration-test"
+        >
+          Add integration test
+        </ButtonWithAccessTooltip>
+      </EmptyStateSecondaryActions>
+    </AppEmptyState>
+  );
+};
 
 const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ applicationName }) => {
   const { namespace, workspace } = useWorkspaceInfo();

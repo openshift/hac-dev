@@ -17,6 +17,10 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('CustomizeAllPipelines', () => {

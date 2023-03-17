@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import {
   Bullseye,
-  Button,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
@@ -21,10 +20,13 @@ import {
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons';
 import { useSearchParam } from '../../hooks/useSearchParam';
+import { EnvironmentModel } from '../../models';
 import { EnvironmentKind } from '../../types';
 import { sortEnvironmentsBasedonParent } from '../../utils/environment-utils';
 import { MVP_FLAG } from '../../utils/flag-utils';
+import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import EnvironmentCard from './EnvironmentCard';
 
@@ -54,6 +56,7 @@ const EnvironmentListView: React.FC<Props> = ({
   const { workspace } = useWorkspaceInfo();
   const [mvpFeature] = useFeatureFlag(MVP_FLAG);
   const [nameFilter, setNameFilter, unsetNameFilter] = useSearchParam('name', '');
+  const [canCreateEnvironment] = useAccessReviewForModel(EnvironmentModel, 'create');
   const filteredEnvironments = React.useMemo(() => {
     // apply name filter
     let result = nameFilter
@@ -72,7 +75,7 @@ const EnvironmentListView: React.FC<Props> = ({
     }
 
     return (
-      <Button
+      <ButtonWithAccessTooltip
         variant="secondary"
         component={(props) => (
           <Link
@@ -80,11 +83,13 @@ const EnvironmentListView: React.FC<Props> = ({
             to={`/stonesoup/workspaces/${workspace}/workspace-settings/environment/create`}
           />
         )}
+        isDisabled={!canCreateEnvironment}
+        tooltip="You don't have access to create an environment"
       >
         Create environment
-      </Button>
+      </ButtonWithAccessTooltip>
     );
-  }, [mvpFeature, workspace]);
+  }, [canCreateEnvironment, mvpFeature, workspace]);
 
   const onClearFilters = React.useCallback(() => {
     unsetNameFilter();
