@@ -7,7 +7,7 @@ import { useSortedComponents } from '../../hooks/useComponents';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
 import { runStatus } from '../../utils/pipeline-utils';
-import { getComponentRouteWebURL } from '../../utils/route-utils';
+import { getFirstComponentRouteWebURL } from '../../utils/route-utils';
 import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import { ApplicationThumbnail } from './ApplicationThumbnail';
 
@@ -17,10 +17,11 @@ export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ 
   const [components, componentsLoaded] = useSortedComponents(application.metadata.name);
 
   const [routes, loaded] = useApplicationRoutes(application.metadata.name);
+
   const selectedComponentRoute = React.useMemo(
     () =>
       loaded && routes.length > 0 && componentsLoaded && components.length > 0
-        ? getComponentRouteWebURL(routes, components[0].metadata.name)
+        ? getFirstComponentRouteWebURL(routes, components)
         : null,
     [components, componentsLoaded, loaded, routes],
   );

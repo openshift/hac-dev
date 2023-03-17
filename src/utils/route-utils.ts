@@ -1,6 +1,7 @@
 import lodashEach from 'lodash/each';
 import lodashFind from 'lodash/find';
 import lodashGet from 'lodash/get';
+import { ComponentKind } from './../types/component';
 import { RouteKind, RouteIngress } from './../types/routes';
 
 const getRouteHost = (route: RouteKind, onlyAdmitted: boolean): string => {
@@ -39,4 +40,18 @@ export const getComponentRouteWebURL = (routes: RouteKind[], component: string):
   );
 
   return componentRoute && getRouteWebURL(componentRoute);
+};
+
+export const getFirstComponentRouteWebURL = (
+  routes: RouteKind[],
+  components: ComponentKind[],
+): string => {
+  let routeWebURL;
+
+  components.some((component) => {
+    routeWebURL = getComponentRouteWebURL(routes, component.metadata.name);
+    return routeWebURL;
+  });
+
+  return routeWebURL;
 };
