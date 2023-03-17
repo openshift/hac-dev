@@ -77,6 +77,27 @@ describe('RuntimeSelector', () => {
     await act(() => expect(screen.getByText('Dockerfile')).toBeVisible());
   });
 
+  it('should show Select a runtime when an error occurs', async () => {
+    useDevfileSamplesMock.mockReturnValue([
+      [{ name: 'Basic Nodejs', attributes: { projectType: 'nodejs' }, icon: {} }],
+      true,
+    ]);
+    useComponentDetectionMock.mockReturnValue([[], false, 'error']);
+    formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
+      isDetected: true,
+      initialDetectionLoaded: true,
+      detectionFailed: true,
+      components: [
+        {
+          projectType: 'quarkus',
+        },
+      ],
+      source: { git: {} },
+    });
+
+    await act(() => expect(screen.getByText('Select a runtime')).toBeVisible());
+  });
+
   it('should show correct message if runtime is automatically detected', () => {
     useDevfileSamplesMock.mockReturnValue([
       [{ name: 'Basic Nodejs', attributes: { projectType: 'nodejs' }, icon: {} }],
