@@ -34,7 +34,7 @@ describe('component-utils', () => {
   it('should create github URL for component PRs', () => {
     useStoneSoupGitHubAppMock.mockReturnValue({
       name: 'appstudio-staging-ci',
-      url: 'https://github.com/apps/appstudio-staging-ci',
+      url: 'https://github.com/apps/appstudio-staging-ci.git',
     });
     const createComponent = (url: string, pacEnabled = true): ComponentKind =>
       ({

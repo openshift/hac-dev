@@ -83,7 +83,7 @@ export const useURLForComponentPRs = (components: ComponentKind[]): string => {
   const repos = components.reduce((acc, component) => {
     const gitURL = component.spec.source?.git?.url;
     if (gitURL && isPACEnabled(component) && gitURL.startsWith('https://github.com/')) {
-      acc = `${acc}+repo:${gitURL.replace(GIT_URL_PREFIX, '')}`;
+      acc = `${acc}+repo:${gitURL.replace(GIT_URL_PREFIX, '').replace(/.git$/i, '')}`;
     }
     return acc;
   }, '');
