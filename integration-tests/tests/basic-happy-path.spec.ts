@@ -93,7 +93,7 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
     });
   });
 
-  describe('Check Component Deployment and Build logs', () => {
+  describe('Check Component Deployment, Build logs and Application Status', () => {
     it('Verify the status code and response body of the deployment URL of each component', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
       Applications.goToComponentsTab();
@@ -126,8 +126,12 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
       applicationDetailPage.closeBuildLog();
     });
 
-    it('Validate the graph views for the created application', () => {
+    it('Validate Application Status', () => {
       Applications.goToOverviewTab();
+      Applications.verifyAppstatusIsSucceeded();
+    })
+
+    it('Validate the graph views for the created application', () => {
       applicationDetailPage.verifyGraphNodes('Components', false);
       applicationDetailPage.verifyGraphNodes('Builds');
       applicationDetailPage.verifyGraphNodes('Static environments');

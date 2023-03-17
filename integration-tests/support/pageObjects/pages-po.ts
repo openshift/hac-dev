@@ -1,3 +1,7 @@
+export const applicationsPagePO = {
+  appStatus: '[class="pf-c-label__content"]'
+};
+
 export const overviewTabPO = {
   clickTab: '[data-test="details__tabItem overview"]',
   goToComponents: '[data-test="go-to-components-tab"]',
