@@ -358,6 +358,9 @@ const getGraphDataModel = (
         whenStatus: taskWhenStatus(vertex.data),
         task: vertex.data,
         steps: vertex.data.steps,
+        taskRun: taskRuns.find(
+          (tr) => tr.metadata.labels[TektonResourceLabel.pipelineTask] === vertex.data.name,
+        ),
       },
     };
     nodes.push(node);
@@ -379,6 +382,9 @@ const getGraphDataModel = (
       status: fTask.status.reason,
       whenStatus: taskWhenStatus(fTask),
       task: fTask,
+      taskRun: taskRuns.find(
+        (tr) => tr.metadata.labels[TektonResourceLabel.pipelineTask] === fTask.name,
+      ),
     },
   }));
   const finallyGroup = finallyNodes.length
@@ -432,7 +438,7 @@ export const getPipelineRunDataModel = (pipelineRun: PipelineRunKind, taskRuns: 
   return getGraphDataModel(getPipelineFromPipelineRun(pipelineRun), pipelineRun, taskRuns);
 };
 
-export const isTaskRunNode = (e?: GraphElement): e is Node<ElementModel, PipelineRunNodeData> =>
+export const isTaskNode = (e?: GraphElement): e is Node<ElementModel, PipelineRunNodeData> =>
   e?.getType() === PipelineRunNodeType.TASK_NODE ||
   e?.getType() === PipelineRunNodeType.FINALLY_NODE;
 

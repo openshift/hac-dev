@@ -11,7 +11,16 @@ const SidePanelHost: React.FC = ({ children }) => {
     setProps({ ...propsRef.current, isExpanded: false });
   }, []);
 
-  const panelContent = <DrawerPanelContent isResizable>{props.children}</DrawerPanelContent>;
+  const panelContent = (
+    <DrawerPanelContent
+      isResizable
+      defaultSize={
+        typeof props.defaultSize === 'number' ? `${props.defaultSize}px` : props.defaultSize
+      }
+    >
+      {props.children}
+    </DrawerPanelContent>
+  );
 
   return (
     <SidePanelContext.Provider value={{ setProps, close }}>

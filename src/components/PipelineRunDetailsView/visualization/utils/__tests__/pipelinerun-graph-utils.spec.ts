@@ -11,7 +11,7 @@ import {
   extractDepsFromContextVariables,
   getPipelineFromPipelineRun,
   getPipelineRunDataModel,
-  isTaskRunNode,
+  isTaskNode,
   nodesHasWhenExpression,
   scrollNodeIntoView,
   taskHasWhenExpression,
@@ -288,19 +288,19 @@ describe('pipelinerun-graph-utils: ', () => {
     });
   });
 
-  describe('isTaskRunNode', () => {
+  describe('isTaskNode', () => {
     it('should identify task run nodes', () => {
       const createNode = (type: PipelineRunNodeType) =>
         ({
           getType: () => type,
         } as GraphElement);
 
-      expect(isTaskRunNode(createNode(PipelineRunNodeType.TASK_NODE))).toBe(true);
-      expect(isTaskRunNode(createNode(PipelineRunNodeType.FINALLY_NODE))).toBe(true);
-      expect(isTaskRunNode(createNode(PipelineRunNodeType.FINALLY_GROUP))).toBe(false);
-      expect(isTaskRunNode(createNode(PipelineRunNodeType.EDGE))).toBe(false);
-      expect(isTaskRunNode(createNode(PipelineRunNodeType.SPACER_NODE))).toBe(false);
-      expect(isTaskRunNode(createNode(PipelineRunNodeType.EDGE))).toBe(false);
+      expect(isTaskNode(createNode(PipelineRunNodeType.TASK_NODE))).toBe(true);
+      expect(isTaskNode(createNode(PipelineRunNodeType.FINALLY_NODE))).toBe(true);
+      expect(isTaskNode(createNode(PipelineRunNodeType.FINALLY_GROUP))).toBe(false);
+      expect(isTaskNode(createNode(PipelineRunNodeType.EDGE))).toBe(false);
+      expect(isTaskNode(createNode(PipelineRunNodeType.SPACER_NODE))).toBe(false);
+      expect(isTaskNode(createNode(PipelineRunNodeType.EDGE))).toBe(false);
     });
   });
 

@@ -29,7 +29,9 @@ describe('useClairScanResults', () => {
     useK8sWatchResourceMock.mockReturnValue([
       [
         {
-          metadata: { labels: { 'tekton.dev/pipelineRun': 'test' } },
+          metadata: {
+            labels: { 'tekton.dev/pipelineRun': 'test', 'tekton.dev/pipelineTask': 'clair-scan' },
+          },
           spec: { taskRef: { name: 'clair-scan' } },
           status: {
             taskResults: [

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TektonResourceLabel } from '../types';
+import { TektonResourceLabel, TaskRunKind } from '../types';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { useTaskRuns } from './useTaskRuns';
 
@@ -15,6 +15,25 @@ export type ClairScanResult = {
   };
 };
 
+export const getClairScanResults = (taskRuns: TaskRunKind[]): [ClairScanResult, TaskRunKind] => {
+  const scanTaskRun = taskRuns?.find(
+    (tr) => tr?.metadata?.labels?.[TektonResourceLabel.pipelineTask] === SCAN_TASK,
+  );
+  const scanResult = scanTaskRun?.status?.taskResults?.find(
+    (result) => result.name === SCAN_RESULT,
+  );
+
+  if (scanResult) {
+    try {
+      const resultObj: ClairScanResult = JSON.parse(scanResult.value);
+      return [resultObj, scanTaskRun];
+    } catch (e) {
+      // ignore
+    }
+  }
+  return [null, scanTaskRun];
+};
+
 export const useClairScanResults = (pipelineRun: string): [ClairScanResult, boolean] => {
   const { namespace } = useWorkspaceInfo();
   // not passing pipelinerun name here to avoid extra network calls
@@ -28,20 +47,8 @@ export const useClairScanResults = (pipelineRun: string): [ClairScanResult, bool
     const taskRunForPR = clairScanRuns.find(
       (taskRun) => taskRun.metadata?.labels?.[TektonResourceLabel.pipelinerun] === pipelineRun,
     );
-    const scanResult = taskRunForPR?.status?.taskResults?.find(
-      (result) => result.name === SCAN_RESULT,
-    );
-    if (!scanResult) {
-      return [null, loaded];
-    }
 
-    try {
-      const resultObj: ClairScanResult = JSON.parse(scanResult.value);
-      return [resultObj, loaded];
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error('Error while extracting clair scan result: ', e);
-      return [null, loaded];
-    }
+    const [resultObj] = getClairScanResults([taskRunForPR]);
+    return [resultObj, loaded];
   }, [loaded, pipelineRun, clairScanRuns]);
 };
