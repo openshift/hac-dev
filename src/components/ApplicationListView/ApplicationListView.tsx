@@ -64,7 +64,7 @@ const ApplicationListView: React.FC = () => {
       <PageLayout
         breadcrumbs={applicationBreadcrumbs}
         title="Applications"
-        description="Applications are a set of components that run together on environments."
+        description="An application is one or more components that run together on environments."
       >
         <PageSection
           padding={{ default: 'noPadding' }}
