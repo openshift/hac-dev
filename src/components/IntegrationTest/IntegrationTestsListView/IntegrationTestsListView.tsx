@@ -38,12 +38,14 @@ const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ h
   <AppEmptyState
     data-test="integration-tests__empty"
     emptyStateImg={emptyStateImgUrl}
-    title="Add an integration test to test all your components after you commit code"
+    title="Test any code changes"
   >
     <EmptyStateBody>
-      No integration tests found yet.
+      Integration tests run in parallel, validating each new component build with the latest version
+      of all other application components.
       <br />
-      To get started, create an environment or connect to a release environment.
+      To add an integration test, link to a GitHub repository containing code that can test how your
+      application components work together.
     </EmptyStateBody>
     <EmptyStateSecondaryActions>
       <Button
