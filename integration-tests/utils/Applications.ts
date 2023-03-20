@@ -9,6 +9,7 @@ import {
   overviewTabPO,
   activityTabPO,
   latestCommitsTabPO,
+  applicationsPagePO,
 } from '../support/pageObjects/pages-po';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { AddIntegrationTestPage } from '../support/pages/AddIntegrationTestPage';
@@ -84,6 +85,9 @@ export class Applications {
     cy.get(componentsTabPO.componentListItem(componentName)).contains(componentLabel, {
       timeout: 15000,
     });
+  }
+  static verifyAppstatusIsSucceeded() {
+    cy.contains(applicationsPagePO.appStatus, 'Succeeded', { timeout: 100000 }).should('be.visible')
   }
 
   static createdPipelinerunSucceeded(
