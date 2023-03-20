@@ -3,9 +3,11 @@ import { ImportFormValues } from '../../../components/ImportForm/utils/types';
 
 export type IntegrationTestFormValues = {
   name: string;
-  pipeline: string;
-  bundle: string;
+  url: string;
+  revision?: string;
+  path?: string;
   optional: boolean;
+  secret?: string;
 };
 
 export enum IntegrationTestAnnotations {

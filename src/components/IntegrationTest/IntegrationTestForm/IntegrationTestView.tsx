@@ -23,8 +23,9 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
   const initialValues = {
     integrationTest: {
       name: integrationTest?.metadata.name ?? '',
-      bundle: integrationTest?.spec.bundle ?? '',
-      pipeline: integrationTest?.spec.pipeline ?? '',
+      url: integrationTest?.spec.resolverRef?.params.url ?? '',
+      revision: integrationTest?.spec.resolverRef?.params.revision ?? '',
+      path: integrationTest?.spec.resolverRef?.params.path ?? '',
       optional:
         integrationTest?.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true' ?? false,
     },

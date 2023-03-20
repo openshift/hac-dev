@@ -12,7 +12,7 @@ export const editIntegrationTest = (
   integrationTestValues: IntegrationTestFormValues,
   dryRun?: boolean,
 ): Promise<IntegrationTestScenarioKind> => {
-  const { bundle, pipeline, optional } = integrationTestValues;
+  const { url, revision, path, optional } = integrationTestValues;
   const integrationTestResource: IntegrationTestScenarioKind = {
     ...integrationTest,
     metadata: {
@@ -21,8 +21,7 @@ export const editIntegrationTest = (
     },
     spec: {
       ...integrationTest.spec,
-      bundle,
-      pipeline,
+      resolverRef: { type: 'git', params: { url, revision, path } },
       contexts: [
         {
           description: 'Application testing',
@@ -59,7 +58,7 @@ export const createIntegrationTest = (
   namespace: string,
   dryRun?: boolean,
 ): Promise<IntegrationTestScenarioKind> => {
-  const { name, bundle, pipeline, optional } = integrationTestValues;
+  const { name, url, revision, path, optional } = integrationTestValues;
   const integrationTestResource: IntegrationTestScenarioKind = {
     apiVersion: `${IntegrationTestScenarioGroupVersionKind.group}/${IntegrationTestScenarioGroupVersionKind.version}`,
     kind: IntegrationTestScenarioGroupVersionKind.kind,
@@ -70,8 +69,7 @@ export const createIntegrationTest = (
     },
     spec: {
       application,
-      bundle,
-      pipeline,
+      resolverRef: { type: 'git', params: { url, revision, path } },
       contexts: [
         {
           description: 'Application testing',

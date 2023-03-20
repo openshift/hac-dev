@@ -1,19 +1,112 @@
 import * as React from 'react';
-import { FormSection, Text, TextContent, TextVariants } from '@patternfly/react-core';
-import { useFormikContext } from 'formik';
+import {
+  ExpandableSection,
+  FormSection,
+  Stack,
+  StackItem,
+  Text,
+  TextContent,
+  TextVariants,
+  ValidatedOptions,
+} from '@patternfly/react-core';
+import { useFormikContext, useField } from 'formik';
+import gitUrlParse from 'git-url-parse';
 import { CheckboxField, InputField } from '../../../shared';
-import { FormValues } from './types';
+import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
+import { AccessHelpText } from '../../ImportForm/SourceSection/SourceSection';
+import { useAccessCheck } from '../../ImportForm/utils/auth-utils';
+import { gitUrlRegex } from '../../ImportForm/utils/validation-utils';
+import { IntegrationTestFormValues } from './types';
 
 type Props = { isInPage?: boolean; edit?: boolean };
 
 const IntegrationTestSection: React.FC<Props> = ({ isInPage, edit }) => {
-  const { setTouched } = useFormikContext<FormValues>();
+  const [, { value: source }] = useField<string>({
+    name: 'integrationTest.url',
+    type: 'input',
+  });
 
-  // TODO: Remove when it is fixed in formik-pf
+  const [, { value: revision }] = useField<string>('integrationTest.revision');
+  const [, { value: context }] = useField<string>('integrationTest.path');
+
+  const [, { value: isValidated }] = useField<boolean>('source.isValidated');
+
+  const {
+    values: { secret: authSecret },
+    setFieldValue,
+  } = useFormikContext<IntegrationTestFormValues>();
+
+  const [sourceUrl, setSourceUrl] = React.useState('');
+  const [validated, setValidated] = React.useState(null);
+
+  const [isExpanded, setIsExpanded] = React.useState<boolean>(!!(revision || context));
+
+  const [helpText, setHelpText] = React.useState(
+    isValidated ? AccessHelpText.validated : AccessHelpText.default,
+  );
+  const [helpTextInvalid, setHelpTextInvalid] = React.useState('');
+
+  const [{ isGit, isRepoAccessible, serviceProvider }, accessCheckLoaded] = useAccessCheck(
+    isValidated ? null : sourceUrl,
+    authSecret,
+  );
+
+  const setFormValidating = React.useCallback(() => {
+    setValidated(ValidatedOptions.default);
+    setHelpText(AccessHelpText.checking);
+    setFieldValue('source.isValidated', false);
+  }, [setFieldValue]);
+
+  const setFormValidated = React.useCallback(() => {
+    setValidated(ValidatedOptions.success);
+    setHelpText(AccessHelpText.validated);
+    setFieldValue('source.isValidated', true);
+  }, [setFieldValue]);
+
+  const handleSourceChange = React.useCallback(() => {
+    const searchTerm = source;
+    const isGitUrlValid = gitUrlRegex.test(searchTerm?.trim());
+    if (!searchTerm || !isGitUrlValid) {
+      setValidated(ValidatedOptions.error);
+      setHelpTextInvalid('Invalid URL');
+      setSourceUrl(null);
+      return;
+    }
+    setFormValidating();
+    setHelpTextInvalid('');
+    setSourceUrl(searchTerm);
+  }, [source, setFormValidating]);
+
+  const debouncedHandleSourceChange = useDebounceCallback(handleSourceChange);
+
   React.useEffect(() => {
-    setTouched({});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (accessCheckLoaded) {
+      if (isRepoAccessible) {
+        try {
+          const { organization } = gitUrlParse(sourceUrl);
+          if (!organization) {
+            setValidated(ValidatedOptions.error);
+            setHelpTextInvalid('Not a valid source repository');
+            return;
+          }
+        } catch {
+          // ignore, should never happen when isRepoAccessible is true, but for tests it is not valid
+        }
+        setFormValidated();
+      } else {
+        setValidated(ValidatedOptions.error);
+        setHelpTextInvalid('Unable to access repository');
+      }
+    }
+  }, [
+    accessCheckLoaded,
+    isRepoAccessible,
+    isGit,
+    serviceProvider,
+    setFieldValue,
+    setFormValidated,
+    sourceUrl,
+  ]);
 
   return (
     <>
@@ -43,19 +136,42 @@ const IntegrationTestSection: React.FC<Props> = ({ isInPage, edit }) => {
           required
         />
         <InputField
+          name="integrationTest.url"
+          placeholder="Enter your source"
+          onChange={debouncedHandleSourceChange}
+          validated={validated}
+          helpText={helpText}
+          helpTextInvalid={helpTextInvalid}
           required
-          label="Image bundle"
-          helpText="Enter the path to the container image. It should contain a tekton pipeline that executes your test."
-          name="integrationTest.bundle"
-          data-test="container-image-input"
+          data-test="enter-source"
         />
-        <InputField
-          label="Pipeline to run"
-          name="integrationTest.pipeline"
-          helpText="The name of the pipeline to run should match the one in the bundle."
-          data-test="pipeline-name-input"
-          required
-        />
+        <ExpandableSection
+          isIndented
+          toggleText="Git options"
+          onToggle={(expanded: boolean) => {
+            setIsExpanded(expanded);
+          }}
+          isExpanded={isExpanded}
+        >
+          <Stack style={{ maxWidth: '50%' }} hasGutter>
+            <StackItem>
+              <InputField
+                name="integrationTest.revision"
+                label="Git revision"
+                helpText="Optional branch, tag or commit."
+                data-test="git-revision"
+              />
+            </StackItem>
+            <StackItem>
+              <InputField
+                name="integrationTest.context"
+                label="Context dir"
+                helpText="Optional subdirectory for the application source code."
+                data-test="context-dir"
+              />
+            </StackItem>
+          </Stack>
+        </ExpandableSection>
         <CheckboxField
           name="integrationTest.optional"
           aria-label="Mark as optional for release"

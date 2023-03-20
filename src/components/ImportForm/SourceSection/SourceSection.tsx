@@ -28,7 +28,7 @@ import { gitUrlRegex } from '../utils/validation-utils';
 import AuthOptions from './AuthOptions';
 import GitOptions from './GitOptions';
 
-enum AccessHelpText {
+export enum AccessHelpText {
   default = '',
   checking = 'Checking access...',
   validated = 'Access validated',

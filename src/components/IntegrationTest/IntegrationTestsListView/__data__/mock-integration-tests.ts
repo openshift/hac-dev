@@ -1,6 +1,7 @@
+import { IntegrationTestScenarioKind } from '../../../../types/coreBuildService';
 import { IntegrationTestLabels } from '../../IntegrationTestForm/types';
 
-export const MockIntegrationTests = [
+export const MockIntegrationTests: IntegrationTestScenarioKind[] = [
   {
     apiVersion: 'appstudio.redhat.com/v1alpha1',
     kind: 'IntegrationTestScenario',
@@ -18,6 +19,7 @@ export const MockIntegrationTests = [
     spec: {
       application: 'test-app',
       bundle: 'quay.io/test-rep/test-bundle:test-1',
+      resolverRef: { type: 'git', params: { url: 'test', revision: '1', path: '' } },
       contexts: [
         {
           description: 'Application testing 1',
@@ -39,6 +41,7 @@ export const MockIntegrationTests = [
       uid: 'ed722704-74bc-4152-b27b-bee29cc7bfd3',
     },
     spec: {
+      resolverRef: { type: 'git', params: { url: 'test', revision: '1', path: '' } },
       application: 'test-app',
       bundle: 'quay.io/test-rep/test-bundle:test-2',
       contexts: [
