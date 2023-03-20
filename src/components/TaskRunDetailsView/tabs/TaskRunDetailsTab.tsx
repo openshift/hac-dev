@@ -23,20 +23,21 @@ import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import MetadataList from '../../PipelineRunDetailsView/MetadataList';
 import { StatusIconWithText } from '../../topology/StatusIcon';
 
-type PipelineRunDetailsTabProps = {
+type TaskRunDetailsTabProps = {
   taskRun: TaskRunKind;
   error: unknown;
 };
-const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ taskRun, error }) => {
+const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error }) => {
   const { workspace } = useWorkspaceInfo();
-  const pipelineRunFailed = (getTRLogSnippet(taskRun) || {}) as ErrorDetailsWithStaticLog;
+  const taskRunFailed = (getTRLogSnippet(taskRun) || {}) as ErrorDetailsWithStaticLog;
   const duration = calculateDuration(
     typeof taskRun.status?.startTime === 'string' ? taskRun.status?.startTime : '',
     typeof taskRun.status?.completionTime === 'string' ? taskRun.status?.completionTime : '',
   );
 
   const applicationName = taskRun.metadata?.labels[PipelineRunLabel.APPLICATION];
-  const pipelineStatus = !error ? taskRunStatus(taskRun) : null;
+  const status = !error ? taskRunStatus(taskRun) : null;
+  const plrName = taskRun.metadata?.labels[TektonResourceLabel.pipelinerun];
   return (
     <>
       <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
@@ -47,7 +48,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ taskRun, 
           <Flex flex={{ default: 'flex_3' }}>
             <FlexItem>
               <DescriptionList
-                data-test="pipelinerun-details"
+                data-test="taskrun-details"
                 columnModifier={{
                   default: '1Col',
                 }}
@@ -93,26 +94,34 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ taskRun, 
           <Flex flex={{ default: 'flex_3' }}>
             <FlexItem>
               <DescriptionList
-                data-test="pipelinerun-details"
+                data-test="taskrun-details"
                 columnModifier={{
                   default: '1Col',
                 }}
               >
+                {taskRun.spec.taskRef.name && (
+                  <DescriptionListGroup>
+                    <DescriptionListTerm>Task</DescriptionListTerm>
+                    <DescriptionListDescription>
+                      {taskRun.spec.taskRef.name}
+                    </DescriptionListDescription>
+                  </DescriptionListGroup>
+                )}
                 <DescriptionListGroup>
                   <DescriptionListTerm>Status</DescriptionListTerm>
                   <DescriptionListDescription>
                     <StatusIconWithText
-                      status={pipelineStatus}
-                      dataTestAttribute={'pipelinerun-details status'}
+                      status={status}
+                      dataTestAttribute={'taskrun-details status'}
                     />
                   </DescriptionListDescription>
                 </DescriptionListGroup>
-                {Object.keys(pipelineRunFailed).length > 0 && (
+                {Object.keys(taskRunFailed).length > 0 && (
                   <>
                     <DescriptionListGroup>
                       <DescriptionListTerm>Message</DescriptionListTerm>
                       <DescriptionListDescription>
-                        {pipelineRunFailed.title ?? '-'}
+                        {taskRunFailed.title ?? '-'}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                     <DescriptionListGroup>
@@ -120,7 +129,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ taskRun, 
                       <DescriptionListDescription>
                         <CodeBlock>
                           <CodeBlockCode id="code-content">
-                            {pipelineRunFailed.staticMessage ?? '-'}
+                            {taskRunFailed.staticMessage ?? '-'}
                           </CodeBlockCode>
                         </CodeBlock>
                         <Button
@@ -129,9 +138,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ taskRun, 
                           component={(props) => (
                             <Link
                               {...props}
-                              to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${
-                                taskRun.metadata?.labels[TektonResourceLabel.pipelinerun]
-                              }/logs`}
+                              to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/taskRuns/${taskRun.metadata.name}/logs`}
                             />
                           )}
                         >
@@ -142,19 +149,25 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ taskRun, 
                   </>
                 )}
                 <DescriptionListGroup>
-                  <DescriptionListTerm>Pipeline</DescriptionListTerm>
+                  <DescriptionListTerm>Pipeline run</DescriptionListTerm>
                   <DescriptionListDescription>
-                    {taskRun.metadata?.labels[PipelineRunLabel.PIPELINE_NAME] ?? '-'}
+                    {plrName ? (
+                      <Link
+                        to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineRuns/${plrName}`}
+                      >
+                        {plrName}
+                      </Link>
+                    ) : (
+                      '-'
+                    )}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
                 <DescriptionListGroup>
                   <DescriptionListTerm>Application</DescriptionListTerm>
                   <DescriptionListDescription>
-                    {taskRun.metadata?.labels?.[PipelineRunLabel.APPLICATION] ? (
+                    {applicationName ? (
                       <Link
-                        to={`/stonesoup/workspaces/${workspace}/applications/${
-                          taskRun.metadata?.labels[PipelineRunLabel.APPLICATION]
-                        }`}
+                        to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}`}
                       >
                         {taskRun.metadata?.labels[PipelineRunLabel.APPLICATION]}
                       </Link>
@@ -167,11 +180,11 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ taskRun, 
                   <DescriptionListTerm>Component</DescriptionListTerm>
                   <DescriptionListDescription>
                     {taskRun.metadata?.labels?.[PipelineRunLabel.COMPONENT] ? (
-                      taskRun.metadata?.labels?.[PipelineRunLabel.APPLICATION] ? (
+                      applicationName ? (
                         <Link
-                          to={`/stonesoup/workspaces/${workspace}/applications/${
-                            taskRun.metadata.labels[PipelineRunLabel.APPLICATION]
-                          }/components?name=${taskRun.metadata.labels[PipelineRunLabel.COMPONENT]}`}
+                          to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/components?name=${
+                            taskRun.metadata.labels[PipelineRunLabel.COMPONENT]
+                          }`}
                         >
                           {taskRun.metadata.labels[PipelineRunLabel.COMPONENT]}
                         </Link>
@@ -192,4 +205,4 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({ taskRun, 
   );
 };
 
-export default React.memo(PipelineRunDetailsTab);
+export default React.memo(TaskRunDetailsTab);

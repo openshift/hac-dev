@@ -12,7 +12,6 @@ import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import TaskRunDetailsTab from './tabs/TaskRunDetailsTab';
 import TaskRunLogsTab from './tabs/TaskRunLogsTab';
-// import TaskRunLogsTab from './tabs/TaskRunLogsTab';
 
 type TaskRunDetailsViewProps = {
   taskRunName: string;
@@ -34,7 +33,7 @@ export const TaskRunDetailsView: React.FC<TaskRunDetailsViewProps> = ({ taskRunN
     return (
       <ErrorEmptyState
         httpError={httpError}
-        title={`Unable to load pipeline run ${taskRunName}`}
+        title={`Unable to load task run ${taskRunName}`}
         body={httpError.message}
       />
     );
@@ -52,58 +51,47 @@ export const TaskRunDetailsView: React.FC<TaskRunDetailsViewProps> = ({ taskRunN
   const plrName = taskRun.metadata?.labels[TektonResourceLabel.pipelinerun];
 
   return (
-    <>
-      <React.Fragment>
-        <DetailsPage
-          headTitle={taskRunName}
-          breadcrumbs={[
-            ...applicationBreadcrumbs,
-            {
-              path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity/pipelineruns`,
-              name: 'Pipeline runs',
-            },
-            {
-              path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${plrName}`,
-              name: plrName,
-            },
-            {
-              path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${plrName}/taskruns`,
-              name: `Task runs`,
-            },
-            {
-              path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRunName}`,
-              name: taskRunName,
-            },
-          ]}
-          title={
-            <>
-              <span className="pf-u-mr-sm">{taskRunName}</span>
-              <StatusIconWithTextLabel status={trStatus} />
-            </>
-          }
-          actions={[
-            {
-              key: 'logs',
-              label: 'View logs',
-              onClick: () => {},
-            },
-          ]}
-          baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRunName}`}
-          tabs={[
-            {
-              key: 'detail',
-              label: 'Details',
-              component: <TaskRunDetailsTab taskRun={taskRun} error={error} />,
-            },
-            {
-              key: 'logs',
-              label: 'Logs',
-              component: <TaskRunLogsTab taskRun={taskRun} />,
-            },
-          ]}
-        />
-      </React.Fragment>
-    </>
+    <DetailsPage
+      headTitle={taskRunName}
+      breadcrumbs={[
+        ...applicationBreadcrumbs,
+        {
+          path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity/pipelineruns`,
+          name: 'Pipeline runs',
+        },
+        {
+          path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${plrName}`,
+          name: plrName,
+        },
+        {
+          path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${plrName}/taskruns`,
+          name: `Task runs`,
+        },
+        {
+          path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRunName}`,
+          name: taskRunName,
+        },
+      ]}
+      title={
+        <>
+          <span className="pf-u-mr-sm">{taskRunName}</span>
+          <StatusIconWithTextLabel status={trStatus} />
+        </>
+      }
+      baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRunName}`}
+      tabs={[
+        {
+          key: 'details',
+          label: 'Details',
+          component: <TaskRunDetailsTab taskRun={taskRun} error={error} />,
+        },
+        {
+          key: 'logs',
+          label: 'Logs',
+          component: <TaskRunLogsTab taskRun={taskRun} />,
+        },
+      ]}
+    />
   );
 };
 

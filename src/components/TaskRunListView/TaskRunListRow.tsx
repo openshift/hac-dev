@@ -17,7 +17,6 @@ const TaskRunListRow: React.FC<RowFunctionArgs<TaskRunKind>> = ({ obj }) => {
       <TableData className={taskRunTableColumnClasses.name}>
         <Link
           to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/taskruns/${obj.metadata?.name}`}
-          title={obj.metadata?.name}
         >
           {obj.metadata.name}
         </Link>
