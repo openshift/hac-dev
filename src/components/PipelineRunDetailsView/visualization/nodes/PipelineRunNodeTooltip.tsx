@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { calculateDuration } from '../../../../utils/pipeline-utils';
 import { ColoredStatusIcon } from '../../../topology/StatusIcon';
 import { StepStatus } from '../types';
 
@@ -6,6 +7,22 @@ type PipelineRunNodeTooltipProps = {
   label: string;
   description?: string;
   steps?: StepStatus[];
+};
+
+const Duration: React.FC<{ startTime?: string | number; endTime?: string | number }> = ({
+  startTime,
+  endTime,
+}) => {
+  const [updatedEndTime, setEndTime] = React.useState<string | number>();
+  React.useEffect(() => {
+    if (endTime == null) {
+      const handle = setInterval(() => {
+        setEndTime(Date.now());
+      }, 1000);
+      return () => clearInterval(handle);
+    }
+  }, [endTime]);
+  return <>{startTime != null ? calculateDuration(startTime, endTime || updatedEndTime) : ''}</>;
 };
 
 const PipelineRunNodeTooltip: React.FunctionComponent<PipelineRunNodeTooltipProps> = ({
@@ -20,7 +37,9 @@ const PipelineRunNodeTooltip: React.FunctionComponent<PipelineRunNodeTooltipProp
           <ColoredStatusIcon status={step.status} />
         </div>
         <div className="pipelinerun-node__tooltip--step-name">{step.name}</div>
-        <div>{step.duration}</div>
+        <div>
+          <Duration startTime={step.startTime} endTime={step.endTime} />
+        </div>
       </div>
     ))}
   </div>

@@ -23,7 +23,6 @@ import {
   PLRTaskRunStep,
 } from '../../../../types';
 import {
-  calculateDuration,
   conditionsRunStatus,
   pipelineRunStatus,
   runStatus,
@@ -74,27 +73,22 @@ export const extractDepsFromContextVariables = (contextVariable: string) => {
   return deps;
 };
 
-const getMatchingStep = (stepName: string, status: PipelineTaskStatus): PLRTaskRunStep => {
-  const statusSteps: PLRTaskRunStep[] = status.steps || [];
-  return statusSteps.find((statusStep) => {
+const getMatchingStep = (
+  stepName: string,
+  status: PipelineTaskStatus,
+): [PLRTaskRunStep, PLRTaskRunStep] => {
+  const statusSteps: PLRTaskRunStep[] = status?.steps || [];
+  let prevStep: PLRTaskRunStep = null;
+  const result = statusSteps.find((statusStep) => {
     // In rare occasions the status step name is prefixed with `step-`
     // This is likely a bug but this workaround will be temporary as it's investigated separately
-    return statusStep.name === stepName || statusStep.name === `step-${stepName}`;
+    const found = statusStep.name === stepName || statusStep.name === `step-${stepName}`;
+    if (!found) {
+      prevStep = statusStep;
+    }
+    return found;
   });
-};
-
-const getStepDuration = (matchingStep?: PLRTaskRunStep) => {
-  if (!matchingStep) return '';
-
-  if (matchingStep.terminated) {
-    return calculateDuration(matchingStep.terminated.startedAt, matchingStep.terminated.finishedAt);
-  }
-
-  if (matchingStep.running) {
-    return calculateDuration(matchingStep.running.startedAt);
-  }
-
-  return '';
+  return [result, prevStep];
 };
 
 export const getPipelineFromPipelineRun = (pipelineRun: PipelineRunKind): PipelineKind => {
@@ -119,9 +113,10 @@ export const getPipelineFromPipelineRun = (pipelineRun: PipelineRunKind): Pipeli
 
 export const createStepStatus = (stepName: string, status: PipelineTaskStatus): StepStatus => {
   let stepRunStatus: runStatus = runStatus.Pending;
-  let duration: string = null;
+  let startTime: string;
+  let endTime: string;
 
-  const matchingStep: PLRTaskRunStep = getMatchingStep(stepName, status);
+  const [matchingStep, prevStep] = getMatchingStep(stepName, status);
   if (!status || !status.reason) {
     stepRunStatus = runStatus.Cancelled;
   } else {
@@ -132,17 +127,26 @@ export const createStepStatus = (stepName: string, status: PipelineTaskStatus): 
         matchingStep.terminated.reason === TerminatedReasons.Completed
           ? runStatus.Succeeded
           : runStatus.Failed;
-      duration = getStepDuration(matchingStep) || status.duration;
+      startTime = matchingStep.terminated.startedAt;
+      endTime = matchingStep.terminated.finishedAt;
     } else if (matchingStep.running) {
-      stepRunStatus = runStatus.Running;
-      duration = getStepDuration(matchingStep);
+      if (!prevStep) {
+        stepRunStatus = runStatus.Running;
+        startTime = matchingStep.running.startedAt;
+      } else if (prevStep.terminated) {
+        stepRunStatus = runStatus.Running;
+        startTime = prevStep.terminated.finishedAt;
+      } else {
+        stepRunStatus = runStatus.Pending;
+      }
     } else if (matchingStep.waiting) {
       stepRunStatus = runStatus.Pending;
     }
   }
 
   return {
-    duration,
+    startTime,
+    endTime,
     name: stepName,
     status: stepRunStatus,
   };

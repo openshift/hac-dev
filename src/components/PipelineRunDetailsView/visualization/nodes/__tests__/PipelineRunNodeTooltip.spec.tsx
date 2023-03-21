@@ -6,37 +6,39 @@ import PipelineRunNodeTooltip from '../PipelineRunNodeTooltip';
 
 const mockSteps = [
   {
-    duration: '55s',
+    startTime: 0,
+    endTime: 55000,
     name: 'build',
     status: runStatus.Succeeded,
   },
   {
-    duration: '25s',
+    startTime: 0,
+    endTime: 25000,
     name: 'build-2',
     status: runStatus.Succeeded,
   },
   {
-    duration: '2s',
+    startTime: 0,
+    endTime: 2000,
     name: 'mount-container',
     status: runStatus.Cancelled,
   },
   {
-    duration: '44s',
+    startTime: 0,
     name: 'sbom-get',
     status: runStatus.Running,
   },
   {
-    duration: 'less than a sec',
     name: 'analyse-dependencies-java-sbom',
     status: runStatus.Skipped,
   },
   {
-    duration: 'less than a sec',
     name: 'merge-sboms',
     status: runStatus.Idle,
   },
   {
-    duration: '14s',
+    startTime: 0,
+    endTime: 14000,
     name: 'inject-sbom-and-push',
     status: runStatus.Failed,
   },
@@ -47,6 +49,7 @@ describe('PipelineRunNodeTooltip', () => {
     render(<PipelineRunNodeTooltip label="task title" steps={mockSteps} />);
     expect(screen.getByText('task title')).toBeTruthy();
   });
+
   it('should display the steps when set', () => {
     const tip = render(<PipelineRunNodeTooltip label="task title" steps={mockSteps} />);
     let toolTip = screen.getByTestId('pipeline-run-tip');
@@ -65,6 +68,9 @@ describe('PipelineRunNodeTooltip', () => {
     expect(skipped).toHaveLength(1);
     expect(idle).toHaveLength(1);
     expect(failed).toHaveLength(1);
+
+    expect(toolTip).toHaveTextContent('55 seconds');
+
     tip.unmount();
 
     render(<PipelineRunNodeTooltip label="task title" />);
