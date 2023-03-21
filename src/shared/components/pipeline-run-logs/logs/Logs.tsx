@@ -1,11 +1,18 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { commonFetchText, getK8sResourceURL } from '@openshift/dynamic-plugin-sdk-utils';
+import {
+  commonFetchText,
+  getK8sResourceURL,
+  QueryOptions,
+  WebSocketFactory,
+} from '@openshift/dynamic-plugin-sdk-utils';
 import { Alert } from '@patternfly/react-core';
-import './Logs.scss';
+import { Base64 } from 'js-base64';
 import { PodModel } from '../../../../models/pod';
 import { ContainerSpec, PodKind } from '../../types';
 import { LOG_SOURCE_TERMINATED } from '../utils';
+
+import './Logs.scss';
 
 type LogsProps = {
   resource: PodKind;
@@ -57,8 +64,8 @@ const Logs: React.FC<LogsProps> = ({
 
   React.useEffect(() => {
     let loaded: boolean = false;
-    // let ws;
-    const urlOpts = {
+    let ws: WebSocketFactory;
+    const urlOpts: QueryOptions = {
       ns: resNamespace,
       name: resName,
       path: 'log',
@@ -67,8 +74,9 @@ const Logs: React.FC<LogsProps> = ({
         follow: 'true',
       },
     };
+    const watchURL = getK8sResourceURL(PodModel, undefined, urlOpts);
     if (resourceStatusRef.current === LOG_SOURCE_TERMINATED) {
-      commonFetchText(getK8sResourceURL(PodModel, undefined, urlOpts))
+      commonFetchText(watchURL)
         .then((res) => {
           if (loaded) return;
           appendMessage.current(res);
@@ -80,30 +88,27 @@ const Logs: React.FC<LogsProps> = ({
           onCompleteRef.current(name);
         });
     } else {
-      // no support for websockets yet
-      // const wsOpts = {
-      //   host: 'auto',
-      //   path: watchURL,
-      //   subprotocols: ['base64.binary.k8s.io'],
-      // };
-      // ws = new WSFactory(watchURL, wsOpts);
-      // ws.onmessage((msg) => {
-      //   if (loaded) return;
-      //   const message = Base64.decode(msg);
-      //   appendMessage.current(message);
-      // })
-      //   .onclose(() => {
-      //     onCompleteRef.current(name);
-      //   })
-      //   .onerror(() => {
-      //     if (loaded) return;
-      //     setError(true);
-      //     onCompleteRef.current(name);
-      //   });
+      const wsOpts = {
+        path: watchURL,
+      };
+      ws = new WebSocketFactory(watchURL, wsOpts);
+      ws.onMessage((msg) => {
+        if (loaded) return;
+        const message = Base64.decode(msg);
+        appendMessage.current(message);
+      })
+        .onClose(() => {
+          onCompleteRef.current(name);
+        })
+        .onError(() => {
+          if (loaded) return;
+          setError(true);
+          onCompleteRef.current(name);
+        });
     }
     return () => {
       loaded = true;
-      // ws && ws.destroy();
+      ws && ws.destroy();
     };
   }, [kind, name, resName, resNamespace]);
 
