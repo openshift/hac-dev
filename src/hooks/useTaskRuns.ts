@@ -5,8 +5,8 @@ export const useTaskRuns = (
   namespace: string,
   pipelineRunName?: string,
   taskName?: string,
-): [TaskRunKind[], boolean, unknown] =>
-  useK8sWatchResource<TaskRunKind[]>({
+): [TaskRunKind[], boolean, unknown] => {
+  const [taskRuns, loaded, error] = useK8sWatchResource<TaskRunKind[]>({
     groupVersionKind: TaskRunGroupVersionKind,
     namespace,
     selector: {
@@ -17,3 +17,18 @@ export const useTaskRuns = (
     },
     isList: true,
   });
+
+  const sortedTaskRuns = taskRuns?.sort((a, b) => {
+    if (a?.status?.completionTime) {
+      return b?.status?.completionTime &&
+        new Date(a?.status?.completionTime) > new Date(b?.status?.completionTime)
+        ? 1
+        : -1;
+    }
+    return b?.status?.completionTime ||
+      new Date(a?.status?.startTime) > new Date(b?.status?.startTime)
+      ? 1
+      : -1;
+  });
+  return [sortedTaskRuns, loaded, error];
+};

@@ -4,7 +4,7 @@ import get from 'lodash/get';
 import { ColoredStatusIcon } from '../../../components/topology/StatusIcon';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
 import { PodGroupVersionKind } from '../../../models/pod';
-import { PipelineRunKind, TaskRunKind, TektonResourceLabel } from '../../../types';
+import { PipelineRunKind, PipelineTask, TaskRunKind, TektonResourceLabel } from '../../../types';
 import { pipelineRunStatus, runStatus, taskRunStatus } from '../../../utils/pipeline-utils';
 import { ErrorDetailsWithStaticLog } from './logs/log-snippet-types';
 import { getDownloadAllLogsCallback } from './logs/logs-utils';
@@ -28,8 +28,11 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
   }
 
   componentDidMount() {
-    const { activeTask, taskRuns } = this.props;
-    const sortedTaskRuns = this.getSortedTaskRun(taskRuns);
+    const { activeTask, taskRuns, obj } = this.props;
+    const sortedTaskRuns = this.getSortedTaskRun(taskRuns, [
+      ...(obj?.status?.pipelineSpec?.tasks || []),
+      ...(obj?.status?.pipelineSpec?.finally || []),
+    ]);
     const activeItem = this.getActiveTaskRun(sortedTaskRuns, activeTask);
     this.setState({ activeItem });
   }
@@ -37,7 +40,10 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.obj !== nextProps.obj || this.props.taskRuns !== nextProps.taskRuns) {
       const { activeTask, taskRuns } = this.props;
-      const sortedTaskRuns = this.getSortedTaskRun(taskRuns);
+      const sortedTaskRuns = this.getSortedTaskRun(taskRuns, [
+        ...(this.props?.obj?.status?.pipelineSpec?.tasks || []),
+        ...(this.props?.obj?.status?.pipelineSpec?.finally || []),
+      ]);
       const activeItem = this.getActiveTaskRun(sortedTaskRuns, activeTask);
       this.state.navUntouched && this.setState({ activeItem });
     }
@@ -48,7 +54,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
       ? taskRuns.find((taskRun) => taskRun.includes(activeTask))
       : taskRuns[taskRuns.length - 1];
 
-  getSortedTaskRun = (tRuns: TaskRunKind[]): string[] => {
+  getSortedTaskRun = (tRuns: TaskRunKind[], tasks: PipelineTask[]): string[] => {
     const taskRuns = tRuns?.sort((a, b) => {
       if (get(a, ['status', 'completionTime'], false)) {
         return b.status?.completionTime &&
@@ -61,7 +67,17 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
         ? 1
         : -1;
     });
-    return taskRuns?.map((tr) => tr?.metadata?.name) || [];
+
+    const pipelineTaskNames = tasks?.map((t) => t?.name);
+    return (
+      taskRuns
+        ?.sort(
+          (c, d) =>
+            pipelineTaskNames?.indexOf(c?.metadata?.labels?.[TektonResourceLabel.pipelineTask]) -
+            pipelineTaskNames?.indexOf(d?.metadata?.labels?.[TektonResourceLabel.pipelineTask]),
+        )
+        ?.map((tr) => tr?.metadata?.name) || []
+    );
   };
 
   onNavSelect = (item) => {
@@ -75,11 +91,16 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
     const { obj, taskRuns: tRuns } = this.props;
     const { activeItem } = this.state;
 
-    const taskRuns = this.getSortedTaskRun(tRuns);
     const taskRunFromYaml = tRuns?.reduce((acc, value) => {
       acc[value?.metadata?.name] = value;
       return acc;
     }, {});
+
+    const taskRuns = this.getSortedTaskRun(Object.values(taskRunFromYaml), [
+      ...(obj?.status?.pipelineSpec?.tasks || []),
+      ...(obj?.status?.pipelineSpec?.finally || []),
+    ]);
+
     const logDetails = getPLRLogSnippet(obj, tRuns) as ErrorDetailsWithStaticLog;
     const pipelineStatus = pipelineRunStatus(obj);
 
