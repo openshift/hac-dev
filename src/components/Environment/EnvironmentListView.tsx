@@ -155,31 +155,18 @@ const EnvironmentListView: React.FC<Props> = ({
             <FilteredEmptyState onClearFilters={onClearFilters} />
           ) : (
             <Grid hasGutter>
-              {mvpFeature
-                ? filteredEnvironments.map((env) => (
-                    <GridItem
-                      span={12}
-                      md={6}
-                      lg={3}
-                      key={env.metadata.name}
-                      data-test="environment-card"
-                      className="environment-list-view_card"
-                    >
-                      <CardComponent environment={env} />
-                    </GridItem>
-                  ))
-                : filteredEnvironments.map((env) => (
-                    <GridItem
-                      span={12}
-                      md={6}
-                      lg={3}
-                      key={env.metadata.name}
-                      data-test="environment-card"
-                      className="environment-list-view_card"
-                    >
-                      <CardComponent environment={env} />
-                    </GridItem>
-                  ))}
+              {filteredEnvironments.map((env) => (
+                <GridItem
+                  span={12}
+                  md={6}
+                  lg={3}
+                  key={env.metadata.name}
+                  data-test="environment-card"
+                  className="environment-list-view_card"
+                >
+                  <CardComponent environment={env} />
+                </GridItem>
+              ))}
             </Grid>
           )}
         </>

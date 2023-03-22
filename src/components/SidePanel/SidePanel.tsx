@@ -6,6 +6,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
   isInline,
   onExpand,
   defaultSize,
+  minSize,
   children,
 }) => {
   const { close, setProps } = React.useContext(SidePanelContext);
@@ -17,8 +18,8 @@ const SidePanel: React.FC<SidePanelProps> = ({
   );
 
   React.useEffect(() => {
-    setProps({ isExpanded, isInline, onExpand, defaultSize, children });
-  }, [setProps, isExpanded, isInline, onExpand, defaultSize, children]);
+    setProps({ isExpanded, isInline, onExpand, defaultSize, children, minSize });
+  }, [setProps, isExpanded, isInline, onExpand, defaultSize, children, minSize]);
 
   return null;
 };

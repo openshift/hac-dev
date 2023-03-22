@@ -449,7 +449,7 @@ export const isTaskNode = (e?: GraphElement): e is Node<ElementModel, PipelineRu
   e?.getType() === PipelineRunNodeType.FINALLY_NODE;
 
 export const scrollNodeIntoView = (node: Node, scrollPane: HTMLElement) => {
-  const targetNode = scrollPane.querySelector(`[data-id=${node.getId()}]`);
+  const targetNode = scrollPane.querySelector(`[data-id="${node.getId()}"]`);
   if (targetNode) {
     if (scrollPane.ownerDocument.defaultView.navigator.userAgent.search('Firefox') !== -1) {
       // Fix for firefox which does not take into consideration the full SVG node size with #scrollIntoView

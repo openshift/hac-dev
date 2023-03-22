@@ -1,3 +1,4 @@
+import { getLatestResource } from '../components/ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
 import { PipelineRunEventType, PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { PipelineRunKind, Commit } from '../types';
 import { runStatus } from './pipeline-utils';
@@ -93,6 +94,20 @@ export const getCommitsFromPLRs = (plrList: PipelineRunKind[], limit?: number): 
     })
     .sort((a, b) => new Date(b.creationTime).getTime() - new Date(a.creationTime).getTime());
   return limit && limit < sortedCommits.length ? sortedCommits.slice(0, limit) : sortedCommits;
+};
+
+export const getLatestCommitFromPipelineRuns = (pipelineruns?: PipelineRunKind[]) => {
+  if (!pipelineruns.length) {
+    return null;
+  }
+  return createCommitObjectFromPLR(
+    getLatestResource(
+      pipelineruns?.filter(
+        (plr) =>
+          plr.metadata?.labels?.[PipelineRunLabel.COMMIT_TYPE_LABEL] === PipelineRunType.BUILD,
+      ),
+    ),
+  );
 };
 
 export const getCommitDisplayName = (commit: Commit): string => commit.sha.slice(0, 7);

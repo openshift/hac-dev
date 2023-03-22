@@ -6,6 +6,7 @@ export type SidePanelProps = {
   isInline?: boolean;
   onExpand?: () => void;
   defaultSize?: string | number;
+  minSize?: string | number;
 };
 
 export type SidePanelContextValue = {

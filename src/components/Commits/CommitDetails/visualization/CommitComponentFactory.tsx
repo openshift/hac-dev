@@ -4,15 +4,15 @@ import {
   ModelKind,
   SpacerNode,
   TaskEdge,
-  withPanZoom,
+  withSelection,
 } from '@patternfly/react-topology';
-import { NodeType } from '../../../ApplicationDetails/tabs/overview/visualization/const';
-import CommitWorkflowNode from '../../../ApplicationDetails/tabs/overview/visualization/nodes/CommitWorkflowNode';
+import { NodeType } from './commit-visualization-types';
+import CommitWorkflowNode from './CommitWorkflowNode';
 
 export const commitComponentFactory: ComponentFactory = (kind: ModelKind, type: string) => {
   switch (kind) {
     case ModelKind.graph:
-      return withPanZoom()(GraphComponent);
+      return withSelection()(GraphComponent);
     case ModelKind.edge:
       return TaskEdge;
     case ModelKind.node:

@@ -2,4 +2,43 @@
   &__value {
     overflow-wrap: anywhere;
   }
+  &.m-compressed {
+    .pf-m-grid-md.pf-c-table {
+      display: grid;
+      grid-template-columns: 1fr;
+      height: auto;
+      grid-auto-columns: max-content;
+      grid-column-gap: var(--pf-c-table-tr--responsive--GridColumnGap);
+
+      > thead {
+        display: none;
+      }
+
+      tbody:first-of-type {
+        border-top: var(--pf-c-table--tbody--responsive--border-width--base) solid var(--pf-c-table--responsive--BorderColor);
+        position: relative;
+        display: block;
+      }
+
+      tr:not(.pf-c-table__expandable-row) {
+        display: grid;
+        grid-template-columns: 1fr;
+        height: auto;
+        grid-auto-columns: max-content;
+        grid-column-gap: var(--pf-c-table-tr--responsive--GridColumnGap);
+        padding: var(--pf-c-table-tr--responsive--PaddingTop) var(--pf-c-table-tr--responsive--PaddingRight) var(--pf-c-table-tr--responsive--PaddingBottom) var(--pf-c-table-tr--responsive--PaddingLeft);
+        border-bottom: var(--pf-c-table-tr--responsive--border-width--base) solid var(--pf-c-table--responsive--BorderColor);
+
+        > * {
+          padding: var(--pf-c-table--cell--responsive--PaddingTop) var(--pf-c-table--cell--responsive--PaddingRight) var(--pf-c-table--cell--responsive--PaddingBottom) var(--pf-c-table--cell--responsive--PaddingLeft);
+        }
+
+        > *:first-child {
+          --pf-c-table--cell--responsive--PaddingTop: var(--pf-c-table--cell--first-child--responsive--PaddingTop);
+          --pf-c-table--cell--PaddingLeft: 0;
+        }
+      }
+    }
+
+  }
 }

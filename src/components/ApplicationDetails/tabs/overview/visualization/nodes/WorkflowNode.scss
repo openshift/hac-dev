@@ -1,4 +1,4 @@
-.workload-node, .commit-node {
+.workload-node {
   cursor: pointer;
   &.m-disabled {
     > .pf-topology-pipelines__pill-background {
@@ -13,7 +13,4 @@
       padding: 0;
     }
   }
-}
-.commit-node {
-  cursor: default;
 }

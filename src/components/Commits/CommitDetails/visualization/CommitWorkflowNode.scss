@@ -1,0 +1,8 @@
+.commit-node {
+  cursor: pointer;
+  &__popover {
+    .pf-c-popover__content, .pf-c-popover__body {
+      padding: 0;
+    }
+  }
+}
