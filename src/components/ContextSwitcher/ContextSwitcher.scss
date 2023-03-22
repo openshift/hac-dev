@@ -7,5 +7,10 @@
   }
   &__menu {
     --pf-c-menu--Width: 360px;
+
+  > .pf-c-menu__content {
+    min-height: 136px;
+  }
+
   }
 }
