@@ -19,8 +19,8 @@ export const StoneSoupGitHubAppData: { [env: string]: StoneSoupGitHubAppDataType
     name: 'rhtap-staging',
   },
   prod: {
-    url: 'https://github.com/apps/rh-trusted-application-pipeline',
-    name: 'rh-trusted-application-pipeline',
+    url: 'https://github.com/apps/red-hat-trusted-app-pipeline',
+    name: 'red-hat-trusted-app-pipeline',
   },
 };
 
