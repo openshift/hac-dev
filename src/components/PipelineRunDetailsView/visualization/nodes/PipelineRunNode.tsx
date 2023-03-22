@@ -8,15 +8,17 @@ import {
   WithContextMenuProps,
   WithSelectionProps,
   withSelection,
+  NodeModel,
 } from '@patternfly/react-topology';
 import { observer } from 'mobx-react';
 import { runStatusToRunStatus } from '../../../topology/utils';
+import { PipelineRunNodeData } from '../types';
 import PipelineRunNodeTooltip from './PipelineRunNodeTooltip';
 
 import './PipelineRunNode.scss';
 
 type PipelineRunNodeProps = {
-  element: Node;
+  element: Node<NodeModel, PipelineRunNodeData>;
 } & WithContextMenuProps &
   WithSelectionProps;
 

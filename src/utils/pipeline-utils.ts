@@ -71,7 +71,7 @@ export const getDuration = (seconds: number, long?: boolean): string => {
   return duration.trim();
 };
 
-export const calculateDuration = (startTime: string, endTime?: string) => {
+export const calculateDuration = (startTime: string | number, endTime?: string | number) => {
   const start = new Date(startTime).getTime();
   const end = endTime ? new Date(endTime).getTime() : new Date().getTime();
   const durationInSeconds = (end - start) / 1000;

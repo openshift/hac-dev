@@ -5,9 +5,10 @@ import { PipelineRunKind, TaskRunKind, TektonResourceLabel } from '../../../../.
 import { runStatus, SucceedConditionReason } from '../../../../../utils/pipeline-utils';
 import { NodeType } from '../../../../ApplicationDetails/tabs/overview/visualization/const';
 import { testPipelineRun } from '../../../../topology/__data__/pipeline-test-data';
-import { PipelineRunNodeType } from '../../types';
+import { PipelineRunNodeType, PipelineTaskStatus } from '../../types';
 import {
   appendStatus,
+  createStepStatus,
   extractDepsFromContextVariables,
   getPipelineFromPipelineRun,
   getPipelineRunDataModel,
@@ -354,4 +355,136 @@ describe('pipelinerun-graph-utils: ', () => {
       expect(mockScrollPane.scrollTo).toHaveBeenCalledWith({ left: 200, behavior: 'smooth' });
     });
   });
+
+  describe('createStepStatus', () => {
+    it('should return Cancelled status', () => {
+      expect(createStepStatus('step1', null)).toEqual({
+        name: 'step1',
+        status: runStatus.Cancelled,
+      });
+      expect(createStepStatus('step1', null)).toEqual({
+        name: 'step1',
+        status: runStatus.Cancelled,
+      });
+    });
+
+    it('should return Pending status', () => {
+      expect(
+        createStepStatus('step1', {
+          reason: 'test',
+          steps: [{ name: 'step1', waiting: {} }],
+        } as any as PipelineTaskStatus),
+      ).toEqual({
+        name: 'step1',
+        status: runStatus.Pending,
+      });
+
+      expect(
+        createStepStatus('step2', {
+          reason: 'test',
+          steps: [{ name: 'step1', running: {} }],
+        } as any as PipelineTaskStatus),
+      ).toEqual({
+        name: 'step2',
+        status: runStatus.Pending,
+      });
+
+      expect(
+        createStepStatus('step2', {
+          reason: 'test',
+          steps: [
+            { name: 'step1', running: { startedAt: 0 } },
+            { name: 'step2', running: { startedAt: 2 } },
+          ],
+        } as any as PipelineTaskStatus),
+      ).toEqual({
+        name: 'step2',
+        status: runStatus.Pending,
+      });
+    });
+
+    it('should return Succeeded status', () => {
+      expect(
+        createStepStatus('step1', {
+          reason: 'test',
+          steps: [
+            { name: 'step1', terminated: { reason: 'Completed', startedAt: 0, finishedAt: 2 } },
+          ],
+        } as any as PipelineTaskStatus),
+      ).toEqual({
+        name: 'step1',
+        status: runStatus.Succeeded,
+        startTime: 0,
+        endTime: 2,
+      });
+    });
+
+    it('should return Failed status', () => {
+      expect(
+        createStepStatus('step1', {
+          reason: 'test',
+          steps: [{ name: 'step1', terminated: { startedAt: 0, finishedAt: 2 } }],
+        } as any as PipelineTaskStatus),
+      ).toEqual({
+        name: 'step1',
+        status: runStatus.Failed,
+        startTime: 0,
+        endTime: 2,
+      });
+    });
+
+    it('should return Running status', () => {
+      expect(
+        createStepStatus('step1', {
+          reason: 'test',
+          steps: [{ name: 'step1', running: { startedAt: 0 } }],
+        } as any as PipelineTaskStatus),
+      ).toEqual({
+        name: 'step1',
+        status: runStatus.Running,
+        startTime: 0,
+      });
+
+      expect(
+        createStepStatus('step2', {
+          reason: 'test',
+          steps: [
+            { name: 'step1', terminated: { startedAt: 0, finishedAt: 2 } },
+            { name: 'step2', running: { startedAt: 0 } },
+          ],
+        } as any as PipelineTaskStatus),
+      ).toEqual({
+        name: 'step2',
+        status: runStatus.Running,
+        startTime: 2,
+      });
+    });
+  });
+
+  // export const createStepStatus = (stepName: string, status: PipelineTaskStatus): StepStatus => {
+  //   let stepRunStatus: runStatus = runStatus.Pending;
+  //   let startTime: string;
+  //   let endTime: string;
+
+  //   const [matchingStep, prevStep] = getMatchingStep(stepName, status);
+  //     if (matchingStep.running) {
+  //       if (!prevStep) {
+  //         stepRunStatus = runStatus.Running;
+  //         startTime = matchingStep.running.startedAt;
+  //       } else if (prevStep.terminated) {
+  //         stepRunStatus = runStatus.Running;
+  //         startTime = prevStep.terminated.finishedAt;
+  //       } else {
+  //         stepRunStatus = runStatus.Pending;
+  //       }
+  //     }
+  //   }
+
+  //   return {
+  //     startTime,
+  //     endTime,
+  //     name: stepName,
+  //     status: stepRunStatus,
+  //   };
+  // };
 });

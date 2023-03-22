@@ -12,7 +12,8 @@ export enum PipelineRunNodeType {
 
 export type StepStatus = {
   name: string;
-  duration: string | null;
+  startTime?: string | number;
+  endTime?: string | number;
   status: runStatus;
 };
 
