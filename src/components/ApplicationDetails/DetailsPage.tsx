@@ -150,7 +150,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
               {description && <Text component="p">{description}</Text>}
             </TextContent>
           </FlexItem>
-          {actions?.length && (
+          {actions?.length ? (
             <FlexItem align={{ default: 'alignRight' }}>
               <Dropdown
                 data-test="details__actions"
@@ -169,7 +169,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
                 dropdownItems={dropdownItems}
               />
             </FlexItem>
-          )}
+          ) : null}
         </Flex>
       </PageSection>
       {tabs?.length && (

@@ -18,7 +18,7 @@ const TaskRunLogs: React.FC<Props> = ({ taskName, podName, namespace, status }) 
     return <div>Waiting on task to start.</div>;
   }
   if (!podName) {
-    return <div>No logs found.</div>;
+    return <div data-test="taskrun-logs-nopod">No logs found.</div>;
   }
   return (
     <LogsWrapperComponent

@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   DrawerActions,
   DrawerCloseButton,
@@ -8,11 +9,12 @@ import {
   Tabs,
 } from '@patternfly/react-core';
 import { ElementModel, GraphElement } from '@patternfly/react-topology';
+import { PipelineRunLabel } from '../../../consts/pipelinerun';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import TaskRunLogs from '../../TaskRuns/TaskRunLogs';
 import { StatusIconWithTextLabel } from '../../topology/StatusIcon';
 import { PipelineRunNodeData } from '../visualization/types';
 import TaskRunDetails from './TaskRunDetails';
-
 import './TaskRunPanel.scss';
 
 type Props = {
@@ -24,18 +26,31 @@ const TaskRunPanel: React.FC<Props> = ({ taskNode, onClose }) => {
   const task = taskNode.getData().task;
   const taskRun = taskNode.getData().taskRun;
   const { status } = taskNode.getData();
+  const { workspace } = useWorkspaceInfo();
+  const applicationName = taskRun?.metadata?.labels[PipelineRunLabel.APPLICATION];
+
   return (
     <>
       <div className="task-run-panel__head">
         <DrawerHead>
           <span>
-            {task.name} <StatusIconWithTextLabel status={status} />
+            {applicationName ? (
+              <Link
+                to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRun.metadata.name}`}
+              >
+                {task.name}
+              </Link>
+            ) : (
+              task.name
+            )}{' '}
+            <StatusIconWithTextLabel status={status} />
           </span>
           <DrawerActions>
             <DrawerCloseButton onClick={onClose} />
           </DrawerActions>
         </DrawerHead>
       </div>
+
       <div className="task-run-panel__tabs">
         <Tabs defaultActiveKey="details" unmountOnExit className="">
           <Tab title="Details" eventKey="details">
