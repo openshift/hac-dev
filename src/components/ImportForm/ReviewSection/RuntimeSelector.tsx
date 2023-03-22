@@ -97,7 +97,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
 
   const isDetectingRuntime =
     !initialDetectionLoaded ||
-    (runtimeSource && !detectionLoaded) ||
+    (runtimeSource && !detectionLoaded && !detectionError) ||
     selectedRuntime?.name === DetectingRuntime;
 
   const detectingRuntimeToggle = React.useCallback(

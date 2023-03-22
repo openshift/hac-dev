@@ -57,7 +57,7 @@ const ReviewSection: React.FunctionComponent = () => {
   const cachedComponentsLoaded = React.useRef(false);
   const isContainerImage = containerImageRegex.test(sourceUrl);
 
-  const [detectedComponents, detectionLoaded] = useComponentDetection(
+  const [detectedComponents, detectionLoaded, detectionError] = useComponentDetection(
     !isContainerImage ? sourceUrl : null,
     application,
     secret,
@@ -89,7 +89,7 @@ const ReviewSection: React.FunctionComponent = () => {
       cachedComponentsLoaded.current = true;
     }
 
-    if (!isContainerImage && detectionLoaded) {
+    if (!isContainerImage && (detectionLoaded || detectionError)) {
       if (detectedComponents) {
         components = detectedComponents;
       }
@@ -103,7 +103,7 @@ const ReviewSection: React.FunctionComponent = () => {
       cachedComponents.current = transformedComponents;
     }
 
-    if (detectionLoaded && !components) {
+    if ((detectionLoaded || detectionError) && !components) {
       const transformedComponents = transformComponentValues({
         myComponent: {
           componentStub: {
@@ -119,7 +119,7 @@ const ReviewSection: React.FunctionComponent = () => {
       setFieldValue('detectionFailed', true);
     }
 
-    setFieldValue('initialDetectionLoaded', detectionLoaded);
+    setFieldValue('initialDetectionLoaded', detectionLoaded || detectionError);
     return () => {
       unmounted = true;
     };
@@ -127,6 +127,7 @@ const ReviewSection: React.FunctionComponent = () => {
     application,
     detectedComponents,
     detectionLoaded,
+    detectionError,
     isContainerImage,
     setFieldValue,
     sourceUrl,
