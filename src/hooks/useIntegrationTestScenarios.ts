@@ -8,26 +8,24 @@ export const useIntegrationTestScenario = (
   applicationName: string,
   testName: string,
 ): [IntegrationTestScenarioKind, boolean, unknown] => {
-  const [tests, testsLoaded, error] = useK8sWatchResource<IntegrationTestScenarioKind[]>({
+  const [test, testsLoaded, error] = useK8sWatchResource<IntegrationTestScenarioKind>({
     groupVersionKind: IntegrationTestScenarioGroupVersionKind,
     name: testName,
     namespace,
-    isList: true,
   });
 
   return React.useMemo(() => {
     if (testsLoaded && !error) {
-      const test = tests.find(
-        (t) => t.spec.application === applicationName && !t.metadata.deletionTimestamp,
-      );
-      if (!test) {
+      const integrationTest =
+        test.spec.application === applicationName && !test.metadata.deletionTimestamp ? test : null;
+      if (!integrationTest) {
         return [null, testsLoaded, { code: 404 }];
       }
-      return [test, testsLoaded, error];
+      return [integrationTest, testsLoaded, error];
     }
 
     return [null, testsLoaded, error];
-  }, [testsLoaded, tests, error, applicationName]);
+  }, [testsLoaded, test, error, applicationName]);
 };
 
 export const useIntegrationTestScenarios = (
