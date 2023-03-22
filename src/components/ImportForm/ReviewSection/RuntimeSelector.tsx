@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DropdownToggle, Spinner, Text } from '@patternfly/react-core';
+import { DropdownToggle, Spinner } from '@patternfly/react-core';
 import { DockerIcon } from '@patternfly/react-icons/dist/esm/icons/docker-icon';
 import { useFormikContext } from 'formik';
 import { DropdownField } from '../../../shared';
@@ -28,7 +28,7 @@ const dockerFileSample = {
   key: 'docker-build',
   value: 'Dockerfile',
   icon: <DockerIcon color="#2496ed" />,
-  runtime: { name: 'Dockerfile' },
+  name: 'Dockerfile',
 };
 
 export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedComponentIndex }) => {
@@ -81,7 +81,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       value === dockerFileSample.value
         ? sourceUrl
         : (runtime?.attributes?.git as any)?.remotes?.origin;
-    setSelectedRuntime(value === dockerFileSample.value ? dockerFileSample.runtime : runtime);
+    setSelectedRuntime(value === dockerFileSample.value ? dockerFileSample : runtime);
     setRuntimeSource(runtimeSourceUrl);
     setDetecting(true);
     setFieldValue('isDetected', false);
@@ -101,27 +101,31 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     selectedRuntime?.name === DetectingRuntime;
 
   const detectingRuntimeToggle = React.useCallback(
-    (onToggle) => (
-      <DropdownToggle
-        onToggle={onToggle}
-        isDisabled={detecting || !samplesLoaded}
-        data-test="dropdown-toggle"
-      >
-        {isDetectingRuntime ? (
-          <Text component="p">
-            <Spinner
-              size="md"
-              isSVG
-              aria-label="detecting runtime"
-              style={{ marginRight: 'var(--pf-global--spacer--xs)' }}
-            />
-            {DetectingRuntime}
-          </Text>
-        ) : (
-          selectedRuntime?.name || 'Select a runtime'
-        )}
-      </DropdownToggle>
-    ),
+    (onToggle) => {
+      const toggleIcon = isDetectingRuntime ? (
+        <Spinner
+          size="md"
+          isSVG
+          aria-label="detecting runtime"
+          style={{ marginRight: 'var(--pf-global--spacer--xs)' }}
+        />
+      ) : React.isValidElement(selectedRuntime?.icon) ? (
+        selectedRuntime?.icon
+      ) : (
+        <img width="24px" height="24px" src={selectedRuntime?.icon?.url} />
+      );
+
+      return (
+        <DropdownToggle
+          onToggle={onToggle}
+          isDisabled={detecting || !samplesLoaded}
+          icon={toggleIcon}
+          data-test="dropdown-toggle"
+        >
+          {isDetectingRuntime ? DetectingRuntime : selectedRuntime?.name || 'Select a runtime'}
+        </DropdownToggle>
+      );
+    },
     [detecting, samplesLoaded, selectedRuntime, isDetectingRuntime],
   );
 
@@ -135,7 +139,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       setSelectedRuntime(
         samples?.find(
           (s) => s.attributes.projectType === components[detectedComponentIndex]?.projectType,
-        ) || { name: dockerFileSample.value },
+        ) || dockerFileSample,
       );
     } else if (!selectedRuntime && !detectionFailed) {
       setSelectedRuntime({ name: DetectingRuntime });
