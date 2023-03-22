@@ -37,7 +37,7 @@ const mockIntegrationTests: IntegrationTestScenarioKind[] = [...MockIntegrationT
 const getMockedResources = (params: WatchK8sResource) => {
   if (params.groupVersionKind === IntegrationTestScenarioGroupVersionKind) {
     return [
-      mockIntegrationTests.filter((t) => !params.name || t.metadata.name === params.name),
+      mockIntegrationTests.find((t) => !params.name || t.metadata.name === params.name),
       true,
     ];
   }
