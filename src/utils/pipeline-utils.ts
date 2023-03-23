@@ -23,6 +23,8 @@ export enum runStatus {
   Cancelling = 'Cancelling',
   Pending = 'Pending',
   Idle = 'Idle',
+  TestWarning = 'Test Warnings',
+  TestFailed = 'Test Failures',
   Unknown = 'Unknown',
 }
 
@@ -209,9 +211,9 @@ export const taskResultsStatus = (taskResults: TektonResultsRun[]): runStatus =>
       switch (outputValues.result) {
         case 'FAILURE':
         case 'ERROR':
-          return runStatus.Failed;
+          return runStatus.TestFailed;
         case 'WARNING':
-          return runStatus.Cancelled;
+          return runStatus.TestWarning;
         case 'SKIPPED':
           return runStatus.Skipped;
         default:

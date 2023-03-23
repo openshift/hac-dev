@@ -18,6 +18,8 @@ export const runStatusToRunStatus = (status: runStatus): RunStatus => {
       return RunStatus.Skipped;
     case runStatus.Cancelled:
     case runStatus.Cancelling:
+    case runStatus.TestFailed:
+    case runStatus.TestWarning:
       return RunStatus.Cancelled;
     case runStatus.Pending:
       return RunStatus.Pending;
