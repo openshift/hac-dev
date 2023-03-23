@@ -1,5 +1,4 @@
 import React from 'react';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
   Button,
@@ -11,7 +10,8 @@ import {
   TextVariants,
 } from '@patternfly/react-core';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
-import { PipelineRunLabel } from '../../consts/pipelinerun';
+import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
+import { useCommitPipelineruns } from '../../hooks/useCommitPipelineruns';
 import { PipelineRunGroupVersionKind } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
@@ -28,6 +28,7 @@ import {
 import { pipelineRunStatus, runStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
+import { getLatestResource } from '../ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import { useCommitStatus } from './commit-status';
@@ -65,25 +66,25 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
     setIsExpanded(false);
   };
 
-  const [pipelineruns, loaded, loadErr] = useK8sWatchResource<PipelineRunKind[]>({
-    groupVersionKind: PipelineRunGroupVersionKind,
-    isList: true,
-    name: applicationName,
+  const [pipelineruns, loaded, loadErr] = useCommitPipelineruns(
+    applicationName,
     namespace,
-    selector: {
-      matchLabels: {
-        [PipelineRunLabel.APPLICATION]: applicationName,
-        [PipelineRunLabel.COMMIT_LABEL]: commitName,
-      },
-    },
-  });
+    commitName,
+  );
 
   const commit = React.useMemo(
     () =>
       loaded &&
       Array.isArray(pipelineruns) &&
       pipelineruns.length > 0 &&
-      createCommitObjectFromPLR(pipelineruns[0]),
+      createCommitObjectFromPLR(
+        getLatestResource(
+          pipelineruns?.filter(
+            (plr) =>
+              plr.metadata?.labels?.[PipelineRunLabel.COMMIT_TYPE_LABEL] === PipelineRunType.BUILD,
+          ),
+        ),
+      ),
     [loaded, pipelineruns],
   );
 
