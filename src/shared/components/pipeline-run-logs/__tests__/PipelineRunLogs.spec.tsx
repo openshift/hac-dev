@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { screen, render, within } from '@testing-library/react';
+import { screen, render, within, fireEvent, act } from '@testing-library/react';
 import { DataState, testPipelineRuns } from '../../../../__data__/pipelinerun-data';
 import { TektonResourceLabel } from '../../../../types';
 import { HttpError } from '../../../utils/error/http-error';
@@ -98,6 +98,39 @@ describe('PipelineRunLogs', () => {
     render(<PipelineRunLogs obj={pipelineRun} taskRuns={testTaskRuns} />);
 
     screen.getByTestId('logs-error-message');
-    screen.getByText('Logs are no longer accessible for do-something task');
+    screen.getByText('Logs are no longer accessible for finally-do-something task');
+  });
+
+  it('should render the task names in the same order when a task is clicked', () => {
+    render(<PipelineRunLogs obj={pipelineRun} taskRuns={testTaskRuns} />);
+
+    const expectTasktoBeOrdered = () => {
+      const logsContainer = within(screen.getByTestId('logs-tasklist'));
+
+      const first = logsContainer.getByText('first');
+      const second = logsContainer.getByText('second');
+      const generateSuffix = logsContainer.getByText('generate-suffix');
+      const doSomething = logsContainer.getByText('do-something');
+
+      expect(first.compareDocumentPosition(second)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+      expect(second.compareDocumentPosition(generateSuffix)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+      expect(generateSuffix.compareDocumentPosition(doSomething)).toBe(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+    };
+
+    expectTasktoBeOrdered();
+
+    fireEvent.click(screen.getByText('second'));
+
+    act(() => {
+      expectTasktoBeOrdered();
+    });
+
+    fireEvent.click(screen.getByText('do-something'));
+
+    act(() => {
+      expectTasktoBeOrdered();
+    });
   });
 });
