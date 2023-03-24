@@ -16,12 +16,12 @@ import {
 import {
   EditableLabelField,
   EnvironmentField,
-  HelpTooltipIcon,
   InputField,
   NumberSpinnerField,
   ResourceLimitField,
 } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
+import HelpPopover from '../../HelpPopover';
 import { CPUUnits, DetectedFormComponent, MemoryUnits } from '../utils/types';
 import { RuntimeSelector } from './RuntimeSelector';
 
@@ -149,7 +149,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                     label="Environment variables"
                     description="Component will have access during build and runtimes."
                     labelIcon={
-                      <HelpTooltipIcon content="Set environment variables to define the behaviour of your application environment." />
+                      <HelpPopover bodyContent="Set environment variables to define the behaviour of your application environment." />
                     }
                   />
                 </FormSection>

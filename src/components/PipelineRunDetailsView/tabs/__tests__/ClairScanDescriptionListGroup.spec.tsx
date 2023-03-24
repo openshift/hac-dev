@@ -60,7 +60,7 @@ describe('ClairScanDescriptionListGroup', () => {
   it('should render logs link', () => {
     const result = render(<ClairScanDescriptionListGroup taskRuns={[mockTaskRun]} showLogsLink />);
 
-    const logsLink = result.queryByRole('link', { name: 'See logs' });
+    const logsLink = result.queryByRole('link', { name: 'View logs' });
     expect(logsLink).toBeInTheDocument();
 
     expect(logsLink).toHaveAttribute(
