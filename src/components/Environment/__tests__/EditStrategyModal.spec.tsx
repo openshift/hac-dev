@@ -5,9 +5,13 @@ import { act, render, screen } from '@testing-library/react';
 import { EnvironmentKind } from '../../../types';
 import { EditStrategyModal } from '../EditStrategyModal';
 
-jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
-  k8sPatchResource: jest.fn(),
-}));
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
+  const actual = jest.requireActual('@openshift/dynamic-plugin-sdk-utils');
+  return {
+    ...actual,
+    k8sPatchResource: jest.fn(),
+  };
+});
 
 const patchResourceMock = k8sPatchResource as jest.Mock;
 

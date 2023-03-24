@@ -1,6 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { configure, render, screen } from '@testing-library/react';
+import { SCAN_TASK } from '../../../hooks/useClairScanResults';
 import { CustomError } from '../../../shared/utils/error/custom-error';
 import { testPipelineRun } from '../../topology/__data__/pipeline-test-data';
 import { mockPipelineRun, mockTaskRuns } from '../__data__/mockVisualizationData';
@@ -84,12 +85,33 @@ describe('PipelineRunVisualization', () => {
         error={null}
       />,
     );
-    const graph = screen.getByTestId('pipelinerun-vis-graph');
+    const sanityCheck = screen.getByTestId('sanity-optional-label-check');
 
-    const warningNodes = graph.querySelectorAll('.pipelinerun-node.pf-m-warning');
-    expect(warningNodes).toHaveLength(3);
+    const warningNodes = sanityCheck.querySelectorAll('.pipelinerun-node.pf-m-warning');
+    expect(warningNodes).toHaveLength(1);
 
-    const warningBadges = graph.querySelectorAll('.pipelinerun-node__test-status-badge--warning');
-    expect(warningBadges).toHaveLength(2);
+    const warningBadges = sanityCheck.querySelectorAll(
+      '.pipelinerun-node__test-status-badge--warning > text',
+    );
+    expect(warningBadges[0].textContent).toBe('2');
+  });
+
+  it('should render the Clair scan results correctly on the task runs', () => {
+    render(
+      <PipelineRunVisualization
+        pipelineRun={mockPipelineRun}
+        taskRuns={mockTaskRuns}
+        error={null}
+      />,
+    );
+    const clairScan = screen.getByTestId(SCAN_TASK);
+
+    const warningNodes = clairScan.querySelectorAll('.pipelinerun-node.pf-m-warning');
+    expect(warningNodes).toHaveLength(1);
+
+    const warningBadges = clairScan.querySelectorAll(
+      '.pipelinerun-node__test-status-badge--warning > text',
+    );
+    expect(warningBadges[0].textContent).toBe('4');
   });
 });

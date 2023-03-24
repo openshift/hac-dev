@@ -1,7 +1,8 @@
 import React from 'react';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { getActiveWorkspace } from '@openshift/dynamic-plugin-sdk-utils';
+import { render, screen } from '@testing-library/react';
 import { EnvironmentModel } from '../../../../models';
 import { EnvironmentKind } from '../../../../types';
 import EnvironmentCard from '../EnvironmentCard';
@@ -12,10 +13,14 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   commonFetch: jest.fn(),
+  getActiveWorkspace: jest.fn(),
 }));
 
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 useFeatureFlagMock.mockReturnValue([false, () => {}]);
+
+const getActiveWorkspaceMock = getActiveWorkspace as jest.Mock;
+getActiveWorkspaceMock.mockReturnValue('test-ws');
 
 const testEnv: EnvironmentKind = {
   apiVersion: `${EnvironmentModel.apiGroup}/${EnvironmentModel.apiVersion}`,
@@ -67,4 +72,3 @@ describe('', () => {
     expect(screen.getByText('Application Healthy')).toBeVisible();
   });
 });
-EnvironmentCard;

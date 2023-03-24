@@ -12,6 +12,7 @@ import { uniq } from 'lodash-es';
 import find from 'lodash/find';
 import merge from 'lodash/merge';
 import minBy from 'lodash/minBy';
+import { SCAN_RESULT } from '../../../../hooks/useClairScanResults';
 import { formatPrometheusDuration } from '../../../../shared/components/timestamp/datetime';
 import {
   TaskRunKind,
@@ -214,6 +215,17 @@ export const appendStatus = (
           // ignore
         }
       }
+      const scanResult = taskRun?.status?.taskResults?.find(
+        (result) => result.name === SCAN_RESULT,
+      );
+
+      if (scanResult) {
+        try {
+          mTask.status.scanResults = JSON.parse(scanResult.value);
+        } catch (e) {
+          // ignore
+        }
+      }
     }
     // Get the steps status
     const stepList = taskStatus?.steps || mTask?.steps || mTask?.taskSpec?.steps || [];
@@ -250,12 +262,21 @@ export const taskWhenStatus = (task: PipelineTaskWithStatus): WhenStatus | undef
   return getWhenStatus(task.status?.reason);
 };
 
+export const getTaskBadgeCount = (data: PipelineRunNodeData): number =>
+  (data.testFailCount ?? 0) + (data.testWarnCount ?? 0) ||
+  (data.scanResults?.vulnerabilities?.critical ?? 0) +
+    (data.scanResults?.vulnerabilities?.high ?? 0) +
+    (data.scanResults?.vulnerabilities?.medium ?? 0) +
+    (data.scanResults?.vulnerabilities?.low ?? 0);
+
 const getBadgeWidth = (data: PipelineRunNodeData, font: string = '0.875rem RedHatText'): number => {
   const BADGE_PADDING = 24; // 8 before the badge and 8 on each side of the text inside the badge
-  if (!data.testFailCount && !data.testWarnCount) {
+  const badgeCount = getTaskBadgeCount(data);
+
+  if (!badgeCount) {
     return 0;
   }
-  return BADGE_PADDING + getTextWidth(`${data.testFailCount + data.testWarnCount}`, font);
+  return BADGE_PADDING + getTextWidth(`${badgeCount}`, font);
 };
 
 const getGraphDataModel = (
@@ -339,6 +360,7 @@ const getGraphDataModel = (
         status: vertex.data.status?.reason,
         testFailCount: vertex.data.status.testFailCount,
         testWarnCount: vertex.data.status.testWarnCount,
+        scanResults: vertex.data.status.scanResults,
         whenStatus: taskWhenStatus(vertex.data),
         task: vertex.data,
         steps: vertex.data.steps,
