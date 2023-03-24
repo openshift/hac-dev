@@ -4,13 +4,12 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  Popover,
 } from '@patternfly/react-core';
-import { QuestionCircleIcon } from '@patternfly/react-icons/dist/js/icons/question-circle-icon';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { getClairScanResults } from '../../../hooks/useClairScanResults';
 import { TaskRunKind } from '../../../types';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
+import HelpPopover from '../../HelpPopover';
 import { ClairScanDetailStatus } from './ClairScanDetailStatus';
 
 type Props = {
@@ -35,26 +34,26 @@ const ClairScanDescriptionListGroup: React.FC<Props> = ({
     <DescriptionListGroup>
       <DescriptionListTerm>
         Vulnerabilities scan{' '}
-        <Popover
+        <HelpPopover
           aria-label="Vulnerability scan"
           headerContent="Vulnerability scan"
           bodyContent="Clair-scan is a task in a pipeline run that scans your components for potential vulnerabilities."
-        >
-          <QuestionCircleIcon />
-        </Popover>{' '}
-        {scanTaskRun && showLogsLink ? (
-          <Link
-            to={`/stonesoup/workspaces/${workspace}/applications/${
-              scanTaskRun.metadata.labels[PipelineRunLabel.APPLICATION]
-            }/taskruns/${scanTaskRun.metadata.name}/logs`}
-            className="pf-u-font-weight-normal"
-          >
-            See logs
-          </Link>
-        ) : null}
+        />
       </DescriptionListTerm>
       <DescriptionListDescription>
         {scanResults?.vulnerabilities ? <ClairScanDetailStatus scanResults={scanResults} /> : '-'}
+        {scanTaskRun && showLogsLink ? (
+          <div>
+            <Link
+              to={`/stonesoup/workspaces/${workspace}/applications/${
+                scanTaskRun.metadata.labels[PipelineRunLabel.APPLICATION]
+              }/taskruns/${scanTaskRun.metadata.name}/logs`}
+              className="pf-u-font-weight-normal"
+            >
+              View logs
+            </Link>
+          </div>
+        ) : null}
       </DescriptionListDescription>
     </DescriptionListGroup>
   );
