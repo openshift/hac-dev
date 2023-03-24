@@ -19,6 +19,7 @@ import {
   ResourceLimitField,
 } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
+import GitRepoLink from '../../GitLink/GitRepoLink';
 import HelpPopover from '../../HelpPopover';
 import { CPUUnits, DetectedFormComponent, MemoryUnits } from '../utils/types';
 import { RuntimeSelector } from './RuntimeSelector';
@@ -69,15 +70,18 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                   type={TextInputTypes.text}
                 />
               )}
-              <ExternalLink
-                href={
-                  component.source?.git?.url ??
-                  (component.containerImage?.includes('http')
-                    ? component.containerImage
-                    : `https://${component.containerImage}`)
-                }
-                text={component.source?.git?.url ?? component.containerImage}
-              />
+              {component.source?.git?.url ? (
+                <GitRepoLink url={component.source.git.url} />
+              ) : (
+                <ExternalLink
+                  href={
+                    component.containerImage?.includes('http')
+                      ? component.containerImage
+                      : `https://${component.containerImage}`
+                  }
+                  text={component.containerImage}
+                />
+              )}
             </FlexItem>
             {showRuntimeSelector && (
               <FlexItem>

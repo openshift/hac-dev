@@ -26,6 +26,7 @@ import { ComponentKind, RouteKind, ResourceStatusCondition } from '../../types';
 import { getConditionForResource } from '../../utils/common-utils';
 import { getComponentRouteWebURL } from '../../utils/route-utils';
 import { useComponentActions } from '../ApplicationDetails/component-actions';
+import GitRepoLink from '../GitLink/GitRepoLink';
 import BuildStatusColumn from './BuildStatusColumn';
 import ComponentPACStateLabel from './ComponentPACStateLabel';
 
@@ -88,9 +89,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
                   </FlexItem>
                 </Flex>
                 <FlexItem>
-                  <ExternalLink href={component.spec.source?.git?.url}>
-                    Git repository <ExternalLinkAltIcon />
-                  </ExternalLink>
+                  <GitRepoLink url={component.spec.source?.git?.url} />
                 </FlexItem>
                 <FlexItem>
                   {componentRouteWebURL && (

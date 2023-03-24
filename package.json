@@ -72,6 +72,7 @@
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^14.0.0",
     "@types/enzyme": "^3.10.10",
+    "@types/git-url-parse": "^9.0.1",
     "@types/history": "^4.7.9",
     "@types/jest": "^27.0.2",
     "@types/lodash-es": "4.17.x",

@@ -29,6 +29,7 @@ import { useURLForComponentPRs, enablePAC, disablePAC } from '../../utils/compon
 import { useAccessReviewForModel } from '../../utils/rbac';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import ComponentPACStateLabel from '../Components/ComponentPACStateLabel';
+import GitRepoLink from '../GitLink/GitRepoLink';
 import { ComponentProps } from '../modal/createModalLauncher';
 
 type Props = ComponentProps & {
@@ -98,10 +99,7 @@ const Row: React.FC<{
             <b>{component.metadata.name}</b>
           </div>
           <div>
-            Code repository:{' '}
-            <ExternalLink href={component.spec.source.git.url}>
-              {component.spec.source.git.url}
-            </ExternalLink>
+            Code repository: <GitRepoLink url={component.spec.source.git.url} />
           </div>
         </Td>
 

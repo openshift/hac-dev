@@ -61,9 +61,7 @@ describe('ReviewComponentCard', () => {
     );
 
     expect(
-      screen.getByText(
-        'https://github.com/devfile-samples/devfile-sample-java-springboot-basic.git',
-      ),
+      screen.getByText('devfile-samples/devfile-sample-java-springboot-basic'),
     ).toBeInTheDocument();
   });
 

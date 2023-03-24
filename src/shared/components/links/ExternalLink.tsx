@@ -11,6 +11,7 @@ type ExternalLinkProps = {
   style?: React.CSSProperties;
   showIcon?: boolean;
   variant?: ButtonProps['variant'];
+  icon?: ButtonProps['icon'];
 };
 
 const ExternalLink: React.FC<ExternalLinkProps> = ({
@@ -23,6 +24,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
   style,
   showIcon,
   variant = ButtonVariant.link,
+  icon,
 }) => (
   <Button
     component="a"
@@ -35,6 +37,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
     {...(stopPropagation ? { onClick: (e) => e.stopPropagation() } : {})}
     isInline
     variant={variant}
+    icon={icon}
   >
     {children || text}
     {showIcon ? (

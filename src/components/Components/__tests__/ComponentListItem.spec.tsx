@@ -49,7 +49,7 @@ describe('ComponentListItem', () => {
 
   it('should render git repository link of the component', () => {
     render(<ComponentListItem component={componentCRMocks[0]} routes={[]} />);
-    screen.getByText('Git repository');
+    screen.getByText('nodeshift-starters/devfile-sample');
     expect(screen.queryByText('Route')).not.toBeInTheDocument();
   });
 
