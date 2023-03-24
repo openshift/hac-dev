@@ -7,7 +7,7 @@ ENV OC_DOWNLOAD_URL="https://downloads-openshift-console.apps.hac-devsandbox.5un
     CYPRESS_CACHE_FOLDER="/tmp/.cache"
 
 RUN apt update && \
-    apt install jq python3 python3-venv xauth skopeo -y && \
+    apt install curl jq python3 python3-venv xauth skopeo -y && \
     curl -L -o /tmp/oc.tar ${OC_DOWNLOAD_URL} && \
     tar -xf /tmp/oc.tar -C /usr/bin
 
