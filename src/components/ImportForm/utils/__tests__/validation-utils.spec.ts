@@ -63,6 +63,11 @@ describe('Review form validation schema', () => {
               cpu: 1,
               memory: 512,
             },
+            source: {
+              git: {
+                dockerfileUrl: './Dockerfile',
+              },
+            },
           },
         },
       ],
@@ -137,6 +142,95 @@ describe('Review form validation schema', () => {
     };
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
       'Value must be greater than 0',
+    );
+  });
+  it('should pass when dockerfileUrl is not provided', async () => {
+    const values = {
+      components: [
+        {
+          componentStub: {
+            componentName: 'test-comp',
+            resources: {
+              cpu: 1,
+              memory: 512,
+            },
+            source: {
+              git: {
+                dockerfileUrl: undefined,
+              },
+            },
+          },
+        },
+      ],
+      isDetected: true,
+    };
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+  });
+  it('should pass when dockerfileUrl is a url', async () => {
+    const values = {
+      components: [
+        {
+          componentStub: {
+            componentName: 'test-comp',
+            resources: {
+              cpu: 1,
+              memory: 512,
+            },
+            source: {
+              git: {
+                dockerfileUrl: 'https://www.someurl.com/test',
+              },
+            },
+          },
+        },
+      ],
+      isDetected: true,
+    };
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+
+    values.components[0].componentStub.source.git.dockerfileUrl = 'http://www.someurl.com/test';
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+
+    values.components[0].componentStub.source.git.dockerfileUrl =
+      'http://www.someurl.com:9000/test';
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+
+    values.components[0].componentStub.source.git.dockerfileUrl = 'htp://test';
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Must be a valid relative file path or URL.',
+    );
+  });
+  it('should pass when dockerfileUrl is a relative pat', async () => {
+    const values = {
+      components: [
+        {
+          componentStub: {
+            componentName: 'test-comp',
+            resources: {
+              cpu: 1,
+              memory: 512,
+            },
+            source: {
+              git: {
+                dockerfileUrl: './Dockerfile',
+              },
+            },
+          },
+        },
+      ],
+      isDetected: true,
+    };
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+
+    values.components[0].componentStub.source.git.dockerfileUrl = '../Dockerfile';
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+
+    values.components[0].componentStub.source.git.dockerfileUrl = 'directory/Dockerfile';
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+
+    values.components[0].componentStub.source.git.dockerfileUrl = '/Dockerfile';
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Must be a valid relative file path or URL.',
     );
   });
 });

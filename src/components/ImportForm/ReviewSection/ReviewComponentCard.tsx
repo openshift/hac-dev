@@ -9,8 +9,6 @@ import {
   Flex,
   FlexItem,
   FormSection,
-  Grid,
-  GridItem,
   TextInputTypes,
 } from '@patternfly/react-core';
 import {
@@ -24,6 +22,8 @@ import {
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { CPUUnits, DetectedFormComponent, MemoryUnits } from '../utils/types';
 import { RuntimeSelector } from './RuntimeSelector';
+
+import './ReviewComponentCard.scss';
 
 type ReviewComponentCardProps = {
   detectedComponent: DetectedFormComponent;
@@ -60,10 +60,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
       >
         <CardTitle>
           <Flex alignItems={{ default: 'alignItemsCenter' }}>
-            <FlexItem
-              style={{ marginBottom: 'var(--pf-global--spacer--md)' }}
-              spacer={{ default: 'spacer4xl' }}
-            >
+            <FlexItem className="pf-u-mb-md" spacer={{ default: 'spacer4xl' }}>
               {editMode ? (
                 <p>{name}</p>
               ) : (
@@ -73,7 +70,6 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 />
               )}
               <ExternalLink
-                style={{ fontWeight: 'normal' }}
                 href={
                   component.source?.git?.url ??
                   (component.containerImage?.includes('http')
@@ -92,44 +88,46 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
         </CardTitle>
       </CardHeader>
       <CardExpandableContent>
-        <CardBody style={{ marginLeft: '2em', maxWidth: '70%' }}>
+        <CardBody className="review-component-card__card-body">
           <ExpandableSection
             isExpanded={expandedConfig}
             onToggle={() => setExpandedConfig((v) => !v)}
-            toggleText="Deploy configuration"
+            toggleText="Build & deploy configuration"
             isIndented
+            data-test="config-expander"
           >
             <FormSection>
-              <Grid hasGutter>
-                <GridItem sm={6} md={3} lg={3}>
+              <div className="review-component-card__configuration">
+                <InputField
+                  name={`${fieldPrefix}.source.git.dockerfileUrl`}
+                  label="Docker file path"
+                  type={TextInputTypes.text}
+                  placeholder="Dockerfile"
+                />
+                <span className="review-component-card__configuration--target-port">
                   <InputField
                     name={`${fieldPrefix}.targetPort`}
                     label="Target port"
                     type={TextInputTypes.number}
                   />
-                </GridItem>
-                <GridItem span={6} className="pf-m-hidden pf-m-visible-on-lg" />
-                <GridItem sm={12} md={12} lg={6}>
-                  <ResourceLimitField
-                    name={`${fieldPrefix}.resources.cpu`}
-                    unitName={`${fieldPrefix}.resources.cpuUnit`}
-                    label="CPU"
-                    minValue={0}
-                    unitOptions={CPUUnits}
-                    helpText="The amount of CPU the container is guaranteed"
-                  />
-                </GridItem>
-                <GridItem sm={12} md={12} lg={6}>
-                  <ResourceLimitField
-                    name={`${fieldPrefix}.resources.memory`}
-                    unitName={`${fieldPrefix}.resources.memoryUnit`}
-                    label="Memory"
-                    minValue={0}
-                    unitOptions={MemoryUnits}
-                    helpText="The amount of memory the container is guaranteed"
-                  />
-                </GridItem>
-              </Grid>
+                </span>
+                <ResourceLimitField
+                  name={`${fieldPrefix}.resources.cpu`}
+                  unitName={`${fieldPrefix}.resources.cpuUnit`}
+                  label="CPU"
+                  minValue={0}
+                  unitOptions={CPUUnits}
+                  helpText="The amount of CPU the container is guaranteed"
+                />
+                <ResourceLimitField
+                  name={`${fieldPrefix}.resources.memory`}
+                  unitName={`${fieldPrefix}.resources.memoryUnit`}
+                  label="Memory"
+                  minValue={0}
+                  unitOptions={MemoryUnits}
+                  helpText="The amount of memory the container is guaranteed"
+                />
+              </div>
               <ExpandableSection toggleText="Show advanced deployment options">
                 <FormSection>
                   <NumberSpinnerField

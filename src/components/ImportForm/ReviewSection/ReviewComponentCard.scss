@@ -1,0 +1,27 @@
+.review-component-card {
+  &__configuration {
+    display: grid;
+    grid-template-columns: auto;
+    gap: var(--pf-global--spacer--md);
+    row-gap: var(--pf-global--spacer--md);
+    &__target-port {
+      .hac-input-field {
+        max-width: 145px;
+      }
+    }
+  }
+  &__card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pf-global--spacer--md);
+    margin-left: var(--pf-global--spacer--lg);
+    max-width: 70%;
+  }
+}
+@media (min-width: 992px) {
+  .review-component-card {
+    &__configuration {
+      grid-template-columns: auto auto;
+    }
+  }
+}

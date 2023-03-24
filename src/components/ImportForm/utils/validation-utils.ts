@@ -8,6 +8,9 @@ export const containerImageRegex = /^(https:\/\/)?quay.io\/([a-z0-9-_]+\/)?[^/.]
 
 export const resourceNameRegex = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
 
+export const filePathOrURLRegex =
+  /^((^\.|^\.\.|^[\w-]+)(\/(?=[\w-])[\w-]+)*$)|(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/;
+
 const combineRegExps = (...regexps: RegExp[]) => {
   const regexStringsWithoutFlags = regexps.map((regex) => regex.source);
   return new RegExp(regexStringsWithoutFlags.join('|'));
@@ -82,6 +85,13 @@ export const reviewValidationSchema = yup.object({
           .number()
           .typeError('Must be an integer')
           .min(0, 'Value must be greater than 0'),
+        source: yup.object({
+          git: yup.object({
+            dockerfileUrl: yup
+              .string()
+              .matches(filePathOrURLRegex, 'Must be a valid relative file path or URL.'),
+          }),
+        }),
       }),
     }),
   ),
