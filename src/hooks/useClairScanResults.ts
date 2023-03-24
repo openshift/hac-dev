@@ -3,8 +3,8 @@ import { TektonResourceLabel, TaskRunKind } from '../types';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { useTaskRuns } from './useTaskRuns';
 
-const SCAN_TASK = 'clair-scan';
-const SCAN_RESULT = 'CLAIR_SCAN_RESULT';
+export const SCAN_TASK = 'clair-scan';
+export const SCAN_RESULT = 'CLAIR_SCAN_RESULT';
 
 export type ClairScanResult = {
   vulnerabilities: {

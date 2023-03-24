@@ -5,9 +5,13 @@ import { mockIntegrationTestScenariosData } from '../../../../../__data__';
 import { testPipelineRuns } from '../__data__/test-pipeline-data';
 import { useAppApplicationTestNodes } from '../useAppApplicationTestNodes';
 
-jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
-  useK8sWatchResource: jest.fn(),
-}));
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
+  const actual = jest.requireActual('@openshift/dynamic-plugin-sdk-utils');
+  return {
+    ...actual,
+    useK8sWatchResource: jest.fn(),
+  };
+});
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 

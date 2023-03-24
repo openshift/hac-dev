@@ -5,9 +5,13 @@ import '@testing-library/jest-dom';
 import { ApplicationModel } from '../../../models';
 import { DeleteResourceModal } from '../DeleteResourceModal';
 
-jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
-  k8sDeleteResource: jest.fn(),
-}));
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
+  const actual = jest.requireActual('@openshift/dynamic-plugin-sdk-utils');
+  return {
+    ...actual,
+    k8sDeleteResource: jest.fn(),
+  };
+});
 
 const k8sDeleteMock = k8sDeleteResource as jest.Mock;
 

@@ -5,13 +5,14 @@ import { PipelineRunKind, TaskRunKind, TektonResourceLabel } from '../../../../.
 import { runStatus, SucceedConditionReason } from '../../../../../utils/pipeline-utils';
 import { NodeType } from '../../../../ApplicationDetails/tabs/overview/visualization/const';
 import { testPipelineRun } from '../../../../topology/__data__/pipeline-test-data';
-import { PipelineRunNodeType, PipelineTaskStatus } from '../../types';
+import { PipelineRunNodeData, PipelineRunNodeType, PipelineTaskStatus } from '../../types';
 import {
   appendStatus,
   createStepStatus,
   extractDepsFromContextVariables,
   getPipelineFromPipelineRun,
   getPipelineRunDataModel,
+  getTaskBadgeCount,
   isTaskNode,
   nodesHasWhenExpression,
   scrollNodeIntoView,
@@ -128,6 +129,37 @@ describe('pipelinerun-graph-utils: ', () => {
       const successTestNode = nodes.find((n) => n.id === 'task3');
       expect(successTestNode.data.testFailCount).toEqual(0);
       expect(successTestNode.data.testWarnCount).toEqual(0);
+    });
+  });
+
+  describe('getTaskBadgeCount', () => {
+    it('should return the correct badge count for tasks', () => {
+      const data: PipelineRunNodeData = {
+        namespace: 'test-ns',
+        task: null,
+      };
+      expect(getTaskBadgeCount(data)).toBe(0);
+
+      data.testWarnCount = 1;
+      data.testFailCount = 0;
+      expect(getTaskBadgeCount(data)).toBe(1);
+
+      data.testFailCount = 3;
+      expect(getTaskBadgeCount(data)).toBe(4);
+
+      data.scanResults = {
+        vulnerabilities: {
+          critical: 1,
+          high: 3,
+          medium: 1,
+          low: 1,
+        },
+      };
+      expect(getTaskBadgeCount(data)).toBe(4);
+
+      data.testWarnCount = 0;
+      data.testFailCount = 0;
+      expect(getTaskBadgeCount(data)).toBe(6);
     });
   });
 
