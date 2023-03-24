@@ -34,11 +34,7 @@ const ClairScanDescriptionListGroup: React.FC<Props> = ({
     <DescriptionListGroup>
       <DescriptionListTerm>
         Vulnerabilities scan{' '}
-        <HelpPopover
-          aria-label="Vulnerability scan"
-          headerContent="Vulnerability scan"
-          bodyContent="Clair-scan is a task in a pipeline run that scans your components for potential vulnerabilities."
-        />
+        <HelpPopover bodyContent="Clair-scan is a task in a pipeline run that scans your components for potential vulnerabilities." />
       </DescriptionListTerm>
       <DescriptionListDescription>
         {scanResults?.vulnerabilities ? <ClairScanDetailStatus scanResults={scanResults} /> : '-'}
