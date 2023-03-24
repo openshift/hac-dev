@@ -8,98 +8,86 @@ import { useModalLauncher } from '../modal/ModalProvider';
 type Props = {
   component: ComponentKind;
   onStateChange?: (state: PACState) => void;
+  enableAction?: boolean;
 };
 
-const ComponentPACStateLabel: React.FC<Props> = ({ component, onStateChange }) => {
+const ComponentPACStateLabel: React.FC<Props> = ({ component, onStateChange, enableAction }) => {
   const pacState = usePACState(component);
   const showModal = useModalLauncher();
 
   React.useEffect(() => {
     onStateChange?.(pacState);
+    // omit onStateChange because we only need to notify when the state changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pacState]);
 
-  const customizePipeline = React.useCallback(
+  const customizePipeline = React.useMemo(
     () =>
-      showModal(
-        createCustomizeComponentPipelineModalLauncher(
-          component.metadata.name,
-          component.metadata.namespace,
-        ),
-      ),
-    [showModal, component.metadata.name, component.metadata.namespace],
+      enableAction
+        ? () =>
+            showModal(
+              createCustomizeComponentPipelineModalLauncher(
+                component.metadata.name,
+                component.metadata.namespace,
+              ),
+            )
+        : null,
+    [enableAction, showModal, component.metadata.name, component.metadata.namespace],
   );
 
+  const style = customizePipeline ? { cursor: 'pointer' } : undefined;
   switch (pacState) {
     case PACState.sample:
       return (
-        <Tooltip content="You cannot customize the build pipeline of a sample. Fork the sample to your own repository and create a new component.">
-          <Label>Sample</Label>
+        <Tooltip content="This component currently uses our sample build pipeline. To enable automatic rebuild on commits to your main branch and pull requests, fork this sample and upgrade to a custom build pipeline.">
+          <Label onClick={customizePipeline} aria-role="button" style={style}>
+            Sample
+          </Label>
         </Tooltip>
       );
     case PACState.disabled:
       return (
-        <Tooltip content="Currently using our default pipeline.">
-          <Label
-            color="blue"
-            onClick={customizePipeline}
-            aria-role="button"
-            style={{ cursor: 'pointer' }}
-          >
-            Default build
+        <Tooltip content="This component currently uses our default build pipeline. To enable automatic rebuild on commits to your main branch and pull requests, upgrade to a custom build pipeline.">
+          <Label color="blue" onClick={customizePipeline} aria-role="button" style={style}>
+            Default
           </Label>
         </Tooltip>
       );
     case PACState.pending:
       return (
-        <Tooltip content="No build pipeline is set for this component. Merge the pull request containing the build pipeline we have sent to your respository.">
-          <Label
-            color="gold"
-            onClick={customizePipeline}
-            aria-role="button"
-            style={{ cursor: 'pointer' }}
-          >
-            Pull request sent
+        <Tooltip content="No build pipeline is set for this component. To set a build pipeline for this component, merge the pull request containing the build pipeline we sent to your repository.">
+          <Label color="gold" onClick={customizePipeline} aria-role="button" style={style}>
+            Merge pull request
           </Label>
         </Tooltip>
       );
     case PACState.requested:
       return (
-        <Tooltip content="Currently using our default build pipeline. We've attempted to send a pull request with the default build piepline for you to customize, but it has not reached its destination yet.">
-          <Label
-            color="gold"
-            onClick={customizePipeline}
-            aria-role="button"
-            style={{ cursor: 'pointer' }}
-          >
+        <Tooltip content="We sent a pull request to your repository containing the default build pipeline for you to customize. Merge the pull request to set a build pipeline for this component.">
+          <Label color="gold" onClick={customizePipeline} aria-role="button" style={style}>
             Sending pull request
           </Label>
         </Tooltip>
       );
     case PACState.ready:
       return (
-        <Tooltip content="Currently using a custom build pipeline merged in your component's repository.">
+        <Tooltip content="This component currently uses our custom build pipeline. Commits to your main branch and pull requests will automatically rebuild.">
           <Label
             color="green"
             onClick={customizePipeline}
             aria-role="button"
             style={{ cursor: 'pointer' }}
           >
-            Custom build
+            Custom
           </Label>
         </Tooltip>
       );
 
     case PACState.error:
       return (
-        <Tooltip content="Install the GitHub application and grant permissions to the component repository.">
-          <Label
-            color="gold"
-            onClick={customizePipeline}
-            aria-role="button"
-            style={{ cursor: 'pointer' }}
-          >
-            Install GitHub app
+        <Tooltip content="No build pipeline is set for this component. We attempted to send a pull request to your repository containing the default build pipeline, but the pull request never arrived. To try again, install the GitHub application and grant permissions for this component.">
+          <Label color="red" onClick={customizePipeline} aria-role="button" style={style}>
+            Pull request failed
           </Label>
         </Tooltip>
       );

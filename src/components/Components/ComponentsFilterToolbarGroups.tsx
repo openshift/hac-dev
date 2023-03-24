@@ -16,13 +16,8 @@ import { pipelineRunStatus, runStatus } from '../../utils/pipeline-utils';
 export const FAILED_STATUS_FILTER_ID = 'failed';
 export const SUCCESS_STATUS_FILTER_ID = 'success';
 export const BUILDING_STATUS_FILTER_ID = 'building';
-export const NEEDS_MERGE_FILTER_ID = 'needs-merge';
 
 export const RunStatusFilters = [
-  {
-    id: NEEDS_MERGE_FILTER_ID,
-    label: 'Merge build PR',
-  },
   {
     id: FAILED_STATUS_FILTER_ID,
     label: 'Build failed',
@@ -78,35 +73,20 @@ const ComponentsFilterToolbarGroups: React.FC<ComponentsFilterToolbarProps> = ({
 }) => {
   const [statusFilterIsExpanded, setStatusFilterIsExpanded] = React.useState(false);
 
-  const getMergedStatusFilterIdForComponent = React.useCallback(
-    (component) => {
-      const unMerged = !pipelineRuns?.find(
-        ({ metadata: { labels } }) =>
-          labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name,
-      );
-      if (unMerged) {
-        return NEEDS_MERGE_FILTER_ID;
-      }
-      return getStatusFilterIdForComponent(component, pipelineRuns);
-    },
-    [pipelineRuns],
-  );
-
   const filterCounts = React.useMemo(() => {
     const counts = {
-      [NEEDS_MERGE_FILTER_ID]: 0,
       [FAILED_STATUS_FILTER_ID]: 0,
       [SUCCESS_STATUS_FILTER_ID]: 0,
       [BUILDING_STATUS_FILTER_ID]: 0,
     };
     components.forEach((component) => {
-      const statusId = getMergedStatusFilterIdForComponent(component);
+      const statusId = getStatusFilterIdForComponent(component, pipelineRuns);
       if (statusId) {
         counts[statusId]++;
       }
     });
     return counts;
-  }, [components, getMergedStatusFilterIdForComponent]);
+  }, [components, pipelineRuns]);
 
   return (
     <ToolbarGroup alignment={{ default: 'alignLeft' }} variant="filter-group">

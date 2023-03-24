@@ -10,6 +10,7 @@ import CustomizePipeline from '../CustomizePipelines';
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(() => [[], true]),
   k8sPatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('../../../hooks/useStoneSoupGitHubApp', () => ({
@@ -96,7 +97,7 @@ describe('CustomizePipeline', () => {
     const result = render(
       <CustomizePipeline components={[createComponent('error')]} onClose={() => {}} />,
     );
-    const button = result.getByRole('button', { name: 'Resend pull request' });
+    const button = result.getByRole('button', { name: 'Send pull request' });
     expect(button).toBeInTheDocument();
   });
 
@@ -107,7 +108,7 @@ describe('CustomizePipeline', () => {
     );
     const link = result.getByRole('link', { name: /Install GitHub Application/ });
     expect(link).toBeInTheDocument();
-    const button = result.getByRole('button', { name: 'Cancel' });
+    const button = result.getByRole('button', { name: 'Roll back to default pipeline' });
     expect(button).toBeInTheDocument();
   });
 

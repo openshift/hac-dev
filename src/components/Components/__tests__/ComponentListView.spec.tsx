@@ -6,6 +6,7 @@ import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
 import { mockRoutes } from '../../../hooks/__data__/mock-data';
 import { useApplicationRoutes } from '../../../hooks/useApplicationRoutes';
 import { useGitOpsDeploymentCR } from '../../../hooks/useGitOpsDeploymentCR';
+import { PACState } from '../../../hooks/usePACState';
 import { ComponentGroupVersionKind, PipelineRunGroupVersionKind } from '../../../models';
 import { componentCRMocks } from '../__data__/mock-data';
 import { mockPipelineRuns } from '../__data__/mock-pipeline-run';
@@ -18,7 +19,6 @@ const mockComponents = componentCRMocks.reduce((acc, mock) => {
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
-  // getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('../../../hooks/useApplicationRoutes', () => ({
@@ -66,6 +66,15 @@ jest.mock('../../../utils/component-utils', () => {
   return {
     ...actual,
     useURLForComponentPRs: jest.fn(),
+  };
+});
+
+jest.mock('../../../hooks/usePACState', () => {
+  const actual = jest.requireActual('../../../hooks/usePACState');
+  return {
+    ...actual,
+    __esModule: true,
+    default: () => PACState.pending,
   };
 });
 
@@ -188,15 +197,6 @@ describe('ComponentListViewPage', () => {
     fireEvent.click(buildingCb);
     expect(buildingCb.checked).toBe(true);
     expect(view.queryAllByTestId('component-list-item')).toHaveLength(0);
-    fireEvent.click(buildingCb);
-    expect(view.queryAllByTestId('component-list-item')).toHaveLength(2);
-
-    const needsMergeCb = view.getByLabelText(/Merge/i, {
-      selector: 'input',
-    }) as HTMLInputElement;
-    fireEvent.click(needsMergeCb);
-    expect(needsMergeCb.checked).toBe(true);
-    expect(view.queryAllByTestId('component-list-item')).toHaveLength(1);
 
     // clear the filter
     const clearFilterButton = view.getAllByRole('button', { name: 'Clear filters' })[1];
