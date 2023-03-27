@@ -9,6 +9,7 @@ export class ComponentPage extends AbstractWizardPage {
   public componentName: string;
 
   editComponentName(newName: string) {
+    cy.get(ComponentsPagePO.dropdown, { timeout: 80000 }).eq(0).should('be.enabled') // Work around for issue : HAC-3585 to reduce test flakiness
     cy.get(ComponentsPagePO.editComponentNameIcon, { timeout: 80000 }).eq(0).click();
     cy.get(ComponentsPagePO.editNameInput).clear().type(newName);
     cy.get(ComponentsPagePO.checkIcon).click();
