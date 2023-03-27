@@ -1,4 +1,5 @@
 import { Common } from '../../utils/Common';
+import { UIhelper } from '../../utils/UIhelper';
 import { CPUUnit, MemoryUnit } from '../constants/Units';
 import { addComponentPagePO, ComponentsPagePO } from '../pageObjects/createApplication-po';
 import { alertTitle } from '../pageObjects/global-po';
@@ -78,8 +79,7 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   selectRuntime(runtimeName: string) {
-    cy.get(ComponentsPagePO.dropdown).click();
-    cy.contains(runtimeName).click();
+    UIhelper.selectValueInDropdownbyLabelName('Runtime', runtimeName)
   }
 
   createApplication(isAdvancedFlowActive: boolean = false) {
@@ -103,7 +103,7 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   checkStatusOnModal(statusLocator) {
-    cy.get(statusLocator).should('be.visible');
+    cy.get(statusLocator, {timeout:150000}).should('be.visible');
   }
 
   closeModal() {

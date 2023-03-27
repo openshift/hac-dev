@@ -54,4 +54,21 @@ export class UIhelper {
 
     return cy.xpath(`//a[text()='${link}']`).click();
   }
+
+  static getTableRow(tableAriaLabel: string, uniqueRowText: string | RegExp) {
+    return cy.contains(`div[aria-label="${tableAriaLabel}"] tr[role="row"]`, uniqueRowText, { timeout: 60000 })
+  }
+
+  static verifyRowInTable(tableAriaLabel: string, uniqueRowText: string | RegExp, rowValues: string[] | RegExp[]) {
+    UIhelper.getTableRow(tableAriaLabel, uniqueRowText).within(() => {
+      rowValues.forEach((val) => {
+        cy.contains(val).should('be.visible')
+      })
+    })
+  }
+
+  static clickRowCellInTable(tableAriaLabel: string, uniqueRowText: string | RegExp, cellTextToClick: string | RegExp) {
+    UIhelper.getTableRow(tableAriaLabel, uniqueRowText).contains(cellTextToClick).click()
+  }
+
 }

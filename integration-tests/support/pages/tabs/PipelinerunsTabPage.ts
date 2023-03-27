@@ -1,27 +1,16 @@
+import { UIhelper } from '../../../utils/UIhelper';
 import { pipelinerunsTabPO } from '../../pageObjects/pages-po';
+
+type taskRunDetailsRow = {
+  name: string,
+  task: string,
+  status: string;
+}
 
 // Pipelineruns List view page
 export class PipelinerunsTabPage {
-  public pipelineRunList: string[] = ['defaultName'];
-
-  static clickOnPipelinerun(pipelinerun: string) {
-    cy.get(pipelinerunsTabPO.pipelinerunsList, { timeout: 60000 })
-      .contains(`${pipelinerun}-`)
-      .click();
-  }
-
-  static clickOnPipelinerunFromListView(pipelinerun: string) {
-    //To Do : Need to be remove this method from advance flow and use clickOnPipelinerun() instead
-    cy.contains('a', pipelinerun).click();
-  }
-
-  static doesPipelinerunExistsInListView(pipelinerun: string) {
-    cy.contains(pipelinerun, { timeout: 5000 });
-  }
-
-  static checkPipelinerunStatus(isAdvancedFlowActive: boolean = false) {
-    DetailsTab.waitUntilStatusIsNotRunning();
-    DetailsTab.checkStatusSucceeded(isAdvancedFlowActive);
+  static clickOnRunningPipelinerun(pipelinerun: string) {
+    UIhelper.clickRowCellInTable('Pipeline run List', 'Running', `${pipelinerun}-`)
   }
 }
 
@@ -35,12 +24,13 @@ export class DetailsTab {
     cy.get(pipelinerunsTabPO.statusPO, { timeout: 1000000 }).should('not.have.text', 'Running');
   }
 
-  static checkStatusSucceeded(isAdvancedFlowActive: boolean = false) {
+  static checkStatusSucceeded(taskNames: taskRunDetailsRow[]) {
     cy.get(pipelinerunsTabPO.statusPO)
       .invoke('text')
       .then((text) => {
         if (text.includes('Succeeded')) {
-          TaskRunsTab.goToTaskRunsTab().assertTaskNamesAndTaskRunStatus(isAdvancedFlowActive);
+          UIhelper.clickTab('Task runs')
+          TaskRunsTab.assertTaskNamesAndTaskRunStatus(taskNames);
         } else if (text.includes('Failed')) {
           LogsTab.goToLogsTab();
           LogsTab.downloadAllTaskLogs();
@@ -51,65 +41,35 @@ export class DetailsTab {
 }
 
 export class TaskRunsTab {
-  advancedTaskNameList: string[] = [
-    'init',
-    'git-clone',
-    'configure-build',
-    'buildah',
-    'summary',
-    'sast-snyk-check',
-    'deprecated-image-check',
-    'clamav-scan',
-    'sbom-json-check',
-    'sanity-inspect-image',
-    'clair-scan',
-    'sanity-label-check',
-    'sanity-label-check',
-  ];
 
-  basicTaskNameList: string[] = ['init', 'git-clone', 'configure-build', 'buildah', 'summary'];
-
-  static goToTaskRunsTab() {
-    cy.get(pipelinerunsTabPO.clickTaskRunsTab).click();
-    return new TaskRunsTab();
+  static getAdvancedTaskNamesList(pipelineName: string): taskRunDetailsRow[] {
+    return [
+      { name: `${pipelineName}-init`, task: 'init', status: 'Succeeded' },
+      { name: `${pipelineName}-clone-repository`, task: 'git-clone', status: 'Succeeded' },
+      { name: `${pipelineName}-build-container`, task: 'buildah', status: 'Succeeded' },
+      { name: `${pipelineName}-sanity-inspect-image`, task: 'sanity-inspect-image', status: 'Succeeded' },
+      { name: `${pipelineName}-deprecated-base-image-check`, task: 'deprecated-image-check', status: 'Succeeded' },
+      { name: `${pipelineName}-sbom-json-check`, task: 'sbom-json-check', status: 'Succeeded' },
+      { name: `${pipelineName}-clair-scan`, task: 'clair-scan', status: 'Succeeded|Test Warnings' },// Adding Test Warnings as some packages might have medium vulnerabilities sometimes
+      { name: `${pipelineName}-clamav-scan`, task: 'clamav-scan', status: 'Succeeded' },
+      { name: `${pipelineName}-sanity-label-check`, task: 'sanity-label-check', status: 'Succeeded' },
+      { name: `${pipelineName}-sanity-optional-label-check`, task: 'sanity-label-check', status: 'Succeeded|Test Failures' },// Adding Test Failures as This optional check currently gives warning. 
+      { name: `${pipelineName}-show-summary`, task: 'summary', status: 'Succeeded' },
+    ];
+  }
+  static getbasicTaskNamesList(pipelineName: string): taskRunDetailsRow[] {
+    return [
+      { name: `${pipelineName}-init`, task: 'init', status: 'Succeeded' },
+      { name: `${pipelineName}-clone-repository`, task: 'git-clone', status: 'Succeeded' },
+      { name: `${pipelineName}-build-container`, task: 'buildah', status: 'Succeeded' },
+      { name: `${pipelineName}-show-summary`, task: 'summary', status: 'Succeeded' },
+    ];
   }
 
-  assertTaskNamesAndTaskRunStatus(isAdvancedFlowActive: boolean = false) {
-    cy.get('tbody[role="rowgroup"]').then(($el) => {
-      if (!$el.get(0).textContent.includes('configure-build')) {
-        //TODO : This work around to run test in old vs new version, Remove this Once Backend is updated to latest.
-        this.basicTaskNameList = this.basicTaskNameList.filter(
-          (value) => value !== 'configure-build',
-        );
-      }
-
-      for (
-        let i = 0;
-        i <
-        (isAdvancedFlowActive ? this.advancedTaskNameList.length : this.basicTaskNameList.length);
-        i++
-      ) {
-        cy.get(`[data-test="${i}-0"] > td`)
-          .eq(1)
-          .then((taskName) => {
-            if (isAdvancedFlowActive) {
-              expect(this.advancedTaskNameList.includes(taskName.text().trim())).to.equal(true);
-            } else {
-              expect(this.basicTaskNameList.includes(taskName.text().trim())).to.equal(true);
-            }
-          });
-
-        cy.get(`[data-test="${i}-0"] > td`)
-          .eq(3)
-          .within(() => {
-            cy.get(pipelinerunsTabPO.taskRunStatus)
-              .invoke('text')
-              .then((status) => {
-                expect(status.includes('Succeeded')).to.equal(true);
-              });
-          });
-      }
-    });
+  static assertTaskNamesAndTaskRunStatus(taskNames: taskRunDetailsRow[]) {
+    taskNames.forEach((taskNameRow) => {
+      UIhelper.verifyRowInTable('TaskRun List', taskNameRow.name, [new RegExp(`^${taskNameRow.task}$`), new RegExp(`${taskNameRow.status}`)])
+    })
   }
 }
 

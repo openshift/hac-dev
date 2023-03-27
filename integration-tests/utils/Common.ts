@@ -80,6 +80,22 @@ export class Common {
     }
   }
 
+  static githubRequest(method: Cypress.HttpMethod, url: string, body?: Cypress.RequestBody) {
+    const options = {
+      method: method,
+      url: url,
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
+        'X-GitHub-Api-Version': '2022-11-28',
+      }
+    }
+    if (body) {
+      options['body'] = body
+    }
+    return cy.request(options)
+  }
+
   static checkResponseBodyAndStatusCode(
     url: string,
     responseBodyContent: string,
@@ -93,7 +109,7 @@ export class Common {
       timeout: 30000,
       failOnStatusCode: false,
     }).then((resp) => {
-      if (resp.status === 200 && resp.body.includes(responseBodyContent) === true) {
+      if (resp.status === 200 && JSON.stringify(resp.body).includes(responseBodyContent) === true) {
         cy.log(
           `The response body of URL: ${url}, now contains the content: ${responseBodyContent}`,
         );
@@ -107,69 +123,36 @@ export class Common {
   }
 
   static createGitHubRepository(repoName: string) {
-    cy.request({
-      method: 'POST',
-      url: 'https://api.github.com/orgs/redhat-hac-qe/repos',
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-      body: {
-        name: repoName,
-      },
-    });
+    const body = { name: repoName }
+    Common.githubRequest('POST', 'https://api.github.com/orgs/redhat-hac-qe/repos', body)
   }
 
   static deleteGitHubRepository(owner: string, repoName: string) {
-    cy.request({
-      method: 'DELETE',
-      url: `https://api.github.com/repos/redhat-hac-qe/${repoName}`,
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-    });
+    Common.githubRequest('DELETE', `https://api.github.com/repos/redhat-hac-qe/${repoName}`)
   }
 
   static importCodeToGitHubRepository(fromRepoLink: string, toRepoName: string) {
-    cy.request({
-      method: 'PUT',
-      url: `https://api.github.com/repos/redhat-hac-qe/${toRepoName}/import`,
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-      body: {
-        vcs: 'git',
-        vcs_url: fromRepoLink,
-      },
-    });
+    const body = {
+      vcs: 'git',
+      vcs_url: fromRepoLink,
+    }
+    Common.githubRequest('PUT', `https://api.github.com/repos/redhat-hac-qe/${toRepoName}/import`, body)
   }
 
+  //NOTE : This is currently not being used. keeping it for incase future for use case.
   static getPRNumber(componentName: string, publicGitRepo: string) {
     const owner = publicGitRepo.split('/')[3];
     const repoName = publicGitRepo.split('/')[4];
 
-    return cy
-      .request({
-        url: `https://api.github.com/search/issues?q=${componentName}+type:pr+repo:${owner}/${repoName}`,
-        headers: {
-          Accept: 'application/vnd.github+json',
-          Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      })
+    return Common.githubRequest('GET', `https://api.github.com/search/issues?q=${componentName}+type:pr+repo:${owner}/${repoName}`)
       .then((searchIssueResponse) => {
         const pullNumber = searchIssueResponse.body.items[0].number;
         cy.log(pullNumber);
-
         cy.wrap(String(pullNumber)).as('pullNumber');
       });
   }
 
+  //NOTE : This is currently not being used. keeping it for incase future for use case.
   static deleteFolder(publicGitRepo: string, folderToDelete: string) {
     const GITHUB_TOKEN: string = Cypress.env('GH_TOKEN');
     const REPOSITORY_OWNER = publicGitRepo.split('/')[3];

@@ -90,15 +90,6 @@ export class Applications {
     cy.contains(applicationsPagePO.appStatus, 'Succeeded', { timeout: 100000 }).should('be.visible')
   }
 
-  static createdPipelinerunSucceeded(
-    pipelinerunName: string,
-    isAdvancedFlowActive: boolean = false,
-  ) {
-    PipelinerunsTabPage.doesPipelinerunExistsInListView(pipelinerunName);
-    PipelinerunsTabPage.clickOnPipelinerunFromListView(pipelinerunName);
-    PipelinerunsTabPage.checkPipelinerunStatus(isAdvancedFlowActive);
-  }
-
   static getComponentListItem(application: string) {
     return cy.contains(applicationDetailPagePO.item, application, { timeout: 60000 });
   }
