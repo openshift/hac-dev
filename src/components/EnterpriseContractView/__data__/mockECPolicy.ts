@@ -15,7 +15,7 @@ export const MockECPolicy: EnterpriseContractPolicyKind = {
     sources: [
       {
         git: {
-          repository: 'https://github.com/hacbs-contract/ec-policies',
+          repository: 'https://github.com/enterprise-contract/ec-policies',
           revision: 'main',
         },
       },
