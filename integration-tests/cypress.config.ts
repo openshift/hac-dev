@@ -45,7 +45,7 @@ export default defineConfig({
     supportFile: 'support/commands/index.ts',
     specPattern: 'tests/*.spec.ts',
     testIsolation: false,
-    excludeSpecPattern: 'tests/advanced-happy-path*',
+    excludeSpecPattern: process.env.CYPRESS_PERIODIC_RUN ? '' : 'tests/advanced-happy-path*',
     setupNodeEvents(on, config) {
       require('@cypress/grep/src/plugin')(config);
 

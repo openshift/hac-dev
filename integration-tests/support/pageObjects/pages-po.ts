@@ -23,7 +23,6 @@ export const latestCommitsTabPO = {
 };
 
 export const pipelinerunsTabPO = {
-  pipelinerunsList: 'div[aria-label="Pipeline run List"]',
   clickTab: '[data-testid="activity__tabItem pipelineruns"]',
 
   clickDetailsTab: '[data-test="details__tabItem detail"]',

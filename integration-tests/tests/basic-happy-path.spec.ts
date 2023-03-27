@@ -1,7 +1,7 @@
 import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
-import { DetailsTab, PipelinerunsTabPage } from '../support/pages/tabs/PipelinerunsTabPage';
+import { DetailsTab, PipelinerunsTabPage, TaskRunsTab } from '../support/pages/tabs/PipelinerunsTabPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
@@ -74,22 +74,22 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
   describe('Explore Pipeline runs Tab', () => {
     it('Verify the Pipeline run details and Node Graph view', () => {
       Applications.goToPipelinerunsTab();
-      PipelinerunsTabPage.clickOnPipelinerun(componentName);
+      UIhelper.getTableRow('Pipeline run List', 'Running').contains(`${componentName}-`).invoke('text').then((pipelinerunName) => {
+        PipelinerunsTabPage.clickOnRunningPipelinerun(componentName);
+        UIhelper.verifyLabelAndValue('Namespace', `${Cypress.env('USERNAME').toLowerCase()}-tenant`);
+        UIhelper.verifyLabelAndValue('Pipeline', 'docker-build');
+        UIhelper.verifyLabelAndValue('Application', applicationName);
+        UIhelper.verifyLabelAndValue('Component', componentName);
+        UIhelper.verifyLabelAndValue('Related pipelines', '0 pipelines');
+        DetailsTab.waitUntilStatusIsNotRunning();
 
-      UIhelper.verifyLabelAndValue('Namespace', `${Cypress.env('USERNAME').toLowerCase()}-tenant`);
-      UIhelper.verifyLabelAndValue('Pipeline', 'docker-build');
-      UIhelper.verifyLabelAndValue('Application', applicationName);
-      UIhelper.verifyLabelAndValue('Component', componentName);
-      UIhelper.verifyLabelAndValue('Related pipelines', '0 pipelines');
+        //Verify the Pipeline run details Graph
+        piplinerunlogsTasks.forEach((item) => {
+          applicationDetailPage.verifyGraphNodes(item);
+        });
 
-      DetailsTab.waitUntilStatusIsNotRunning();
-
-      //Verify the Pipeline run details Graph
-      piplinerunlogsTasks.forEach((item) => {
-        applicationDetailPage.verifyGraphNodes(item);
-      });
-
-      DetailsTab.checkStatusSucceeded();
+        DetailsTab.checkStatusSucceeded(TaskRunsTab.getbasicTaskNamesList(pipelinerunName));
+      })
     });
   });
 
