@@ -148,7 +148,7 @@ describe('Advance Happy path', () => {
           Common.checkResponseBodyAndStatusCode(
             route,
             componentInfo.get('deploymentBodyUpdated'),
-            30000,
+            20000, 0, 20
           );
         });
 

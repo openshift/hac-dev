@@ -96,19 +96,17 @@ export class Common {
     return cy.request(options)
   }
 
-  static checkResponseBodyAndStatusCode(
-    url: string,
-    responseBodyContent: string,
-    waitInterval: number = 2000,
-    retryNum: number = 0,
-  ) {
-    expect(retryNum).to.be.lessThan(10);
-
-    cy.request({
+  static checkResponseBodyAndStatusCode(url: string, responseBodyContent: string, waitInterval: number = 2000, retryNum: number = 0, maxRetryNum: number = 10, headers?: object) {
+    expect(retryNum).to.be.lessThan(maxRetryNum);
+    const options = {
       url,
       timeout: 30000,
       failOnStatusCode: false,
-    }).then((resp) => {
+    }
+    if (headers) {
+      options['headers'] = headers
+    }
+    cy.request(options).then((resp) => {
       if (resp.status === 200 && JSON.stringify(resp.body).includes(responseBodyContent) === true) {
         cy.log(
           `The response body of URL: ${url}, now contains the content: ${responseBodyContent}`,
@@ -118,7 +116,7 @@ export class Common {
 
       cy.log('The response body of URL doesnt contain the expected content yet, retrying...');
       cy.wait(waitInterval);
-      Common.checkResponseBodyAndStatusCode(url, responseBodyContent, waitInterval, retryNum + 1);
+      Common.checkResponseBodyAndStatusCode(url, responseBodyContent, waitInterval, retryNum + 1, maxRetryNum, headers);
     });
   }
 
@@ -137,6 +135,12 @@ export class Common {
       vcs_url: fromRepoLink,
     }
     Common.githubRequest('PUT', `https://api.github.com/repos/redhat-hac-qe/${toRepoName}/import`, body)
+    const headers = {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+    }
+    Common.checkResponseBodyAndStatusCode(`https://api.github.com/repos/redhat-hac-qe/${toRepoName}/import`, '"status":"complete"', 5000, 0, 20, headers);
   }
 
   //NOTE : This is currently not being used. keeping it for incase future for use case.
