@@ -29,13 +29,14 @@ describe('TaskRunDetailsTab', () => {
     screen.getByText('Task run details');
   });
 
-  it('should render the taskrun and task name', () => {
+  it('should render the taskrun and task name and description', () => {
     watchResourceMock.mockReturnValue([[], true]);
     render(<TaskRunDetailsTab taskRun={testTaskRuns[0]} error={null} />, {
       wrapper: BrowserRouter,
     });
     screen.getByText('example');
     screen.getByText('example-task');
+    screen.getByText('Task description goes here.');
   });
 
   it('should render the plr link', () => {

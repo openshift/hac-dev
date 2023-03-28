@@ -108,6 +108,12 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
                   </DescriptionListGroup>
                 )}
                 <DescriptionListGroup>
+                  <DescriptionListTerm>Description</DescriptionListTerm>
+                  <DescriptionListDescription>
+                    {taskRun.status?.taskSpec?.description || ''}
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+                <DescriptionListGroup>
                   <DescriptionListTerm>Status</DescriptionListTerm>
                   <DescriptionListDescription>
                     <StatusIconWithText

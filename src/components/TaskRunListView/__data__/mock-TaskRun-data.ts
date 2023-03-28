@@ -103,6 +103,7 @@ export const testTaskRuns: TaskRunKind[] = [
       podName: '',
       startTime: '2022-08-15T14:14:08Z',
       taskSpec: {
+        description: 'Task description goes here.',
         params: [
           {
             name: 'appName',
