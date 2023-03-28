@@ -5,7 +5,6 @@ import {
   FormSection,
   Spinner,
   Title,
-  Bullseye,
   HelperText,
   TextContent,
   Text,
@@ -26,18 +25,16 @@ import { ReviewComponentCard } from './ReviewComponentCard';
 
 const ComponentLoadingState: React.FC = () => {
   return (
-    <Bullseye>
-      <EmptyState>
-        <EmptyStateIcon variant="container" component={Spinner} />
-        <Title size="lg" headingLevel="h4">
-          Detecting
-        </Title>
-        <EmptyStateBody>
-          Sit tight while we determine your application&apos;s runtime and other settings to
-          configure its build and deployment. This should only take a moment.
-        </EmptyStateBody>
-      </EmptyState>
-    </Bullseye>
+    <EmptyState>
+      <EmptyStateIcon variant="container" component={Spinner} />
+      <Title size="lg" headingLevel="h4">
+        Detecting
+      </Title>
+      <EmptyStateBody>
+        Sit tight while we determine your application&apos;s runtime and other settings to configure
+        its build and deployment. This should only take a moment.
+      </EmptyStateBody>
+    </EmptyState>
   );
 };
 

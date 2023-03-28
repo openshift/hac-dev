@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, configure, screen } from '@testing-library/react';
+import { act, configure, fireEvent, screen } from '@testing-library/react';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { useComponentDetection } from '../../utils/cdq-utils';
 import { useDevfileSamples } from '../../utils/useDevfileSamples';
@@ -33,6 +33,7 @@ const gitRepoComponent = {
     source: {
       git: {
         url: 'https://github.com/devfile-samples/devfile-sample-java-springboot-basic.git',
+        dockerfileUrl: './Dockerfile',
       },
     },
     envs: [
@@ -92,7 +93,33 @@ describe('ReviewComponentCard', () => {
     );
     await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
 
-    expect(screen.getByText('Deploy configuration')).toBeInTheDocument();
+    expect(screen.getByText('Build & deploy configuration')).toBeInTheDocument();
+  });
+
+  it('should show config options expanded by default', async () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+      />,
+      { isDetected: true, source: { git: {} } },
+    );
+    await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
+
+    expect(screen.getByText('Build & deploy configuration')).toBeInTheDocument();
+
+    const configExpand = screen.getByTestId('config-expander');
+    expect(configExpand).toBeInTheDocument();
+    const expandButton = configExpand.querySelector('.pf-c-expandable-section__toggle');
+    expect(expandButton).toBeInTheDocument();
+    expect(screen.queryByText('Docker file path')).toBeVisible();
+
+    await act(async () => {
+      fireEvent.click(expandButton);
+    });
+    expect(screen.queryByText('Docker file path')).not.toBeVisible();
   });
 
   it('should not hide expandable config when components are not detected', async () => {
@@ -106,7 +133,7 @@ describe('ReviewComponentCard', () => {
       { source: { git: {} } },
     );
     await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
-    expect(screen.queryByText('Deploy configuration')).toBeInTheDocument();
+    expect(screen.queryByText('Build & deploy configuration')).toBeInTheDocument();
   });
 
   it('should not show runtime selector when not specified', async () => {
