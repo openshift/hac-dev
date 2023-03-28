@@ -76,6 +76,21 @@ const ActionMenuContent: React.FC<ActionMenuContentProps> = ({ options, onClick,
               />
             );
           default:
+            if ((option as Action).disabledTooltip && (option as Action).disabled) {
+              return (
+                <ActionMenuItem
+                  key={option.id}
+                  action={
+                    {
+                      ...option,
+                      tooltip: (option as Action).disabledTooltip,
+                    } as Action
+                  }
+                  onClick={onClick}
+                  autoFocus={focusItem ? option === focusItem : undefined}
+                />
+              );
+            }
             return (
               <ActionMenuItem
                 key={option.id}

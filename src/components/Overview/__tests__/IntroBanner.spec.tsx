@@ -28,6 +28,10 @@ jest.mock('react-router-dom', () => {
   };
 });
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 const fetchMock = commonFetch as jest.Mock;

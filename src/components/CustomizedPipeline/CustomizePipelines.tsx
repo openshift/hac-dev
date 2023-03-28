@@ -20,9 +20,12 @@ import usePACState, { PACState } from '../../hooks/usePACState';
 import { useStoneSoupGitHubApp } from '../../hooks/useStoneSoupGitHubApp';
 import sendIconUrl from '../../imgs/send.svg';
 import successIconUrl from '../../imgs/success.svg';
+import { ComponentModel } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind } from '../../types';
 import { useURLForComponentPRs, enablePAC, disablePAC } from '../../utils/component-utils';
+import { useAccessReviewForModel } from '../../utils/rbac';
+import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import { ComponentProps } from '../modal/createModalLauncher';
 
 type Props = ComponentProps & {
@@ -36,6 +39,7 @@ const Row: React.FC<{
   const { url: githubAppURL } = useStoneSoupGitHubApp();
   const pacState = usePACState(component);
   const prURL = useURLForComponentPRs([component]);
+  const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
 
   React.useEffect(() => {
     onStateChange(pacState);
@@ -111,13 +115,15 @@ const Row: React.FC<{
             switch (pacState) {
               case PACState.disabled:
                 return (
-                  <Button
+                  <ButtonWithAccessTooltip
                     onClick={() => {
                       enablePAC(component);
                     }}
+                    isDisabled={!canPatchComponent}
+                    tooltip="You don't have access to send a pull request"
                   >
                     Send pull request
-                  </Button>
+                  </ButtonWithAccessTooltip>
                 );
               case PACState.requested:
                 return (
@@ -144,13 +150,15 @@ const Row: React.FC<{
 
               case PACState.error:
                 return (
-                  <Button
+                  <ButtonWithAccessTooltip
                     onClick={() => {
                       enablePAC(component);
                     }}
+                    isDisabled={!canPatchComponent}
+                    tooltip="You don't have access to resend pull requests"
                   >
                     Resend pull request
-                  </Button>
+                  </ButtonWithAccessTooltip>
                 );
               default:
                 return null;
@@ -170,7 +178,13 @@ const Row: React.FC<{
                   <ExternalLink href={githubAppURL} showIcon>
                     Install GitHub Application
                   </ExternalLink>
-                  <AlertActionLink onClick={() => disablePAC(component)}>Cancel</AlertActionLink>
+                  {canPatchComponent ? (
+                    <AlertActionLink onClick={() => disablePAC(component)}>Cancel</AlertActionLink>
+                  ) : (
+                    <Tooltip content="You don't have access to cancel">
+                      <AlertActionLink isAriaDisabled={!canPatchComponent}>Cancel</AlertActionLink>
+                    </Tooltip>
+                  )}
                 </>
               }
             >

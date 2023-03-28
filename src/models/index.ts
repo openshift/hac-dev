@@ -14,3 +14,4 @@ export * from './route';
 export * from './service-provider-integration';
 export * from './snapshot';
 export * from './snapshot-environment-binding';
+export * from './rbac';

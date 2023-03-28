@@ -10,6 +10,10 @@ jest.mock('../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 describe('PipelineRunEmptyState', () => {
   it('should render correct Link to Application Name', () => {
     render(<PipelineRunEmptyState applicationName="test" />);

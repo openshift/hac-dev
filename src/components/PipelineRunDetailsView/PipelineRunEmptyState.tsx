@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, EmptyStateBody, EmptyStateSecondaryActions } from '@patternfly/react-core';
+import { EmptyStateBody, EmptyStateSecondaryActions } from '@patternfly/react-core';
 import emptyStateImgUrl from '../../imgs/Pipeline.svg';
+import { ComponentModel } from '../../models';
+import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 
 interface PipelineRunEmptyStateProps {
@@ -11,6 +14,7 @@ interface PipelineRunEmptyStateProps {
 
 const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicationName }) => {
   const { workspace } = useWorkspaceInfo();
+  const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 
   return (
     <AppEmptyState emptyStateImg={emptyStateImgUrl} title="Keep tabs on components and activity">
@@ -20,7 +24,7 @@ const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicati
         To get started, add a component and merge its pull request for a build pipeline.
       </EmptyStateBody>
       <EmptyStateSecondaryActions>
-        <Button
+        <ButtonWithAccessTooltip
           component={(props) => (
             <Link
               {...props}
@@ -28,9 +32,11 @@ const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicati
             />
           )}
           variant="secondary"
+          isDisabled={!canCreateComponent}
+          tooltip="You don't have access to add components"
         >
           Add component
-        </Button>
+        </ButtonWithAccessTooltip>
       </EmptyStateSecondaryActions>
     </AppEmptyState>
   );

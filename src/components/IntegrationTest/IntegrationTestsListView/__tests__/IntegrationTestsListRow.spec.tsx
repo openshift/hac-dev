@@ -7,6 +7,10 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <>{props.children}</>,
 }));
 
+jest.mock('../../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 describe('IntegrationTestListRow', () => {
   it('should render integration test info', () => {
     const integrationTest = MockIntegrationTests[0];

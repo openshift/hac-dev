@@ -58,6 +58,10 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const mockNavigate = useNavigate as jest.Mock;
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 

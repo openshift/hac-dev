@@ -1,6 +1,7 @@
 import { IntegrationTestScenarioModel } from '../../../models';
 import { Action } from '../../../shared/components/action-menu/types';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
+import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { createDeleteModalLauncher } from '../../modal/DeleteResourceModal';
 import { useModalLauncher } from '../../modal/ModalProvider';
@@ -27,6 +28,15 @@ export const useIntegrationTestActions = (
 ): Action[] => {
   const showModal = useModalLauncher();
   const { workspace } = useWorkspaceInfo();
+  const [canUpdateIntegrationTest] = useAccessReviewForModel(
+    IntegrationTestScenarioModel,
+    'update',
+  );
+  const [canDeleteIntegrationTest] = useAccessReviewForModel(
+    IntegrationTestScenarioModel,
+    'delete',
+  );
+
   return [
     {
       id: `edit-${integrationTest.metadata.name.toLowerCase()}`,
@@ -34,11 +44,15 @@ export const useIntegrationTestActions = (
       cta: {
         href: `/stonesoup/workspaces/${workspace}/applications/${integrationTest.spec.application}/integrationtests/${integrationTest.metadata.name}/edit`,
       },
+      disabled: !canUpdateIntegrationTest,
+      disabledTooltip: "You don't have access to edit this integration test",
     },
     {
       cta: () => showModal(integrationTestDeleteModal(integrationTest)),
       id: `delete-${integrationTest.metadata.name.toLowerCase()}`,
       label: 'Delete',
+      disabled: !canDeleteIntegrationTest,
+      disabledTooltip: "You don't have access to delete this integration test",
     },
   ];
 };

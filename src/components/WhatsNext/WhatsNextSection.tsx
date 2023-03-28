@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Button,
   Card,
   HelperText,
   PageSection,
@@ -10,6 +9,7 @@ import {
   Title,
 } from '@patternfly/react-core';
 import { ArrowRightIcon } from '@patternfly/react-icons/dist/js/icons/arrow-right-icon';
+import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 
 import './WhatsNextSection.scss';
@@ -24,6 +24,8 @@ export type WhatsNextItem = {
     href?: string;
     external?: boolean;
     onClick?: () => void;
+    disabled?: boolean;
+    disabledTooltip?: string;
   };
 };
 
@@ -47,7 +49,7 @@ const WhatsNextSection: React.FunctionComponent<WhatsNextSectionProps> = ({ what
             <HelperText>{item.description}</HelperText>
           </SplitItem>
           <SplitItem className="whats-next-card__cta">
-            <Button
+            <ButtonWithAccessTooltip
               {...(item.cta.onClick
                 ? { onClick: item.cta.onClick }
                 : !item.cta.external
@@ -60,10 +62,12 @@ const WhatsNextSection: React.FunctionComponent<WhatsNextSectionProps> = ({ what
                     target: '_blank',
                     rel: 'noreferrer',
                   })}
+              isDisabled={item.cta.disabled}
+              tooltip={item.cta.disabledTooltip}
               variant="secondary"
             >
               {item.cta.label}
-            </Button>
+            </ButtonWithAccessTooltip>
             {item.helpId && (
               <HelpTopicLink topicId={item.helpId}>
                 Learn more <ArrowRightIcon />

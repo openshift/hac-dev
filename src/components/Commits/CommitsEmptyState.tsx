@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, EmptyStateBody, EmptyStateSecondaryActions } from '@patternfly/react-core';
+import { EmptyStateBody, EmptyStateSecondaryActions } from '@patternfly/react-core';
 import emptyStateImgUrl from '../../imgs/Commit.svg';
+import { ComponentModel } from '../../models';
+import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 
 type CommitsEmptyStateProps = {
@@ -11,6 +14,7 @@ type CommitsEmptyStateProps = {
 
 const CommitsEmptyState: React.FC<CommitsEmptyStateProps> = ({ applicationName }) => {
   const { workspace } = useWorkspaceInfo();
+  const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 
   return (
     <AppEmptyState
@@ -24,7 +28,7 @@ const CommitsEmptyState: React.FC<CommitsEmptyStateProps> = ({ applicationName }
         To get started, add a component and merge its pull request for a build pipeline.
       </EmptyStateBody>
       <EmptyStateSecondaryActions>
-        <Button
+        <ButtonWithAccessTooltip
           component={(props) => (
             <Link
               {...props}
@@ -32,9 +36,11 @@ const CommitsEmptyState: React.FC<CommitsEmptyStateProps> = ({ applicationName }
             />
           )}
           variant="secondary"
+          isDisabled={!canCreateComponent}
+          tooltip="You don't have access to add a component"
         >
           Add component
-        </Button>
+        </ButtonWithAccessTooltip>
       </EmptyStateSecondaryActions>
     </AppEmptyState>
   );

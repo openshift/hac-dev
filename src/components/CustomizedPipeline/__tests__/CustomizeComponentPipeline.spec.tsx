@@ -13,6 +13,10 @@ jest.mock('../../../hooks/useStoneSoupGitHubApp', () => ({
   useStoneSoupGitHubApp: jest.fn(() => ({ name: 'test-app', url: 'https://github.com/test-app' })),
 }));
 
+jest.mock('../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 
 const mockComponent = {

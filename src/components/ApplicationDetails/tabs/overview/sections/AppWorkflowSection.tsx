@@ -14,7 +14,10 @@ import {
   ButtonVariant,
 } from '@patternfly/react-core';
 import { useSearchParam } from '../../../../../hooks/useSearchParam';
+import { ComponentModel } from '../../../../../models';
+import { useAccessReviewForModel } from '../../../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../../../utils/workspace-context-utils';
+import { ButtonWithAccessTooltip } from '../../../../ButtonWithAccessTooltip';
 import GraphErrorState from '../../../../topology/factories/GraphErrorState';
 import { WorkflowGraph } from '../visualization';
 import { useAppWorkflowData } from '../visualization/hooks/useAppWorkflowData';
@@ -27,6 +30,7 @@ type AppWorkflowSectionProps = {
 const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName }) => {
   const [expanded, setExpanded] = useSearchParam('expanded', '');
   const { workspace } = useWorkspaceInfo();
+  const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 
   const [workflowModel, loaded, errors] = useAppWorkflowData(applicationName, expanded === 'true');
 
@@ -75,7 +79,7 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
               )}
             </GridItem>
             <GridItem>
-              <Button
+              <ButtonWithAccessTooltip
                 variant="secondary"
                 component={(props) => (
                   <Link
@@ -83,10 +87,12 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
                     to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}
                   />
                 )}
+                tooltip="You don't have access to add a component"
+                isDisabled={!canCreateComponent}
                 data-test="add-component"
               >
                 Add component
-              </Button>
+              </ButtonWithAccessTooltip>
             </GridItem>
           </>
         )}

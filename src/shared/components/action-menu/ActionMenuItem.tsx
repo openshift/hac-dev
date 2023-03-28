@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  Button,
   KEY_CODES,
   MenuItem,
   Tooltip,
   DropdownItemProps,
   MenuItemProps,
 } from '@patternfly/react-core';
-import classNames from 'classnames';
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
 import { Action } from './types';
@@ -31,7 +31,6 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
   const { label, icon, disabled, cta } = action;
   const { href, external } = cta as { href: string; external?: boolean };
   const isDisabled = !isAllowed || disabled;
-  const classes = classNames({ 'pf-m-disabled': isDisabled });
   const navigate = useNavigate();
 
   const handleClick = React.useCallback(
@@ -63,8 +62,6 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
   const props = {
     icon,
     autoFocus,
-    isDisabled,
-    className: classes,
     onClick: handleClick,
     'data-testid': label,
   };
@@ -75,7 +72,13 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
   };
 
   return (
-    <Component {...props} {...(component ? {} : extraProps)}>
+    <Component
+      {...props}
+      {...(component ? {} : extraProps)}
+      component={(compProps) => (
+        <Button {...compProps} variant="plain" isAriaDisabled={isDisabled} />
+      )}
+    >
       {label}
     </Component>
   );

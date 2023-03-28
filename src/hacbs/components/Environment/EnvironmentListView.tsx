@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { Button, EmptyStateBody, Flex, Text, Title, Tooltip } from '@patternfly/react-core';
+import { EmptyStateBody, Flex, Text, Title, Tooltip } from '@patternfly/react-core';
+import { ButtonWithAccessTooltip } from '../../../components/ButtonWithAccessTooltip';
 import AppEmptyState from '../../../components/EmptyState/AppEmptyState';
 import {
   EnvironmentType,
@@ -12,9 +13,11 @@ import { useAllApplicationEnvironmentsWithHealthStatus } from '../../../hooks/us
 import { useAllEnvironments } from '../../../hooks/useAllEnvironments';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import emptyStateImgUrl from '../../../imgs/Environment.svg';
+import { EnvironmentModel } from '../../../models';
 import { EnvironmentKind } from '../../../types';
 import { GitOpsDeploymentHealthStatus } from '../../../types/gitops-deployment';
 import { MVP_FLAG } from '../../../utils/flag-utils';
+import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import EnvironmentCard from './EnvironmentCard';
 import EnvironmentToolbarGroups from './EnvironmentToolbarGroups';
@@ -183,6 +186,7 @@ const EnvironmentListView: React.FC<Props> = ({
 }) => {
   const [mvpFeature] = useFeatureFlag(MVP_FLAG);
   const { workspace } = useWorkspaceInfo();
+  const [canCreateEnvironment] = useAccessReviewForModel(EnvironmentModel, 'create');
   const [typesFilterParam, setTypesFilterParam, unsetTypesFilter] = useSearchParam('envType', '');
   const typesFilter = React.useMemo(
     () =>
@@ -213,9 +217,10 @@ const EnvironmentListView: React.FC<Props> = ({
 
   const createEnvironmentButton = React.useMemo(() => {
     const envButton = (
-      <Button
+      <ButtonWithAccessTooltip
         variant="secondary"
-        isDisabled={mvpFeature}
+        isDisabled={mvpFeature || !canCreateEnvironment}
+        tooltip="You don't have access to create an environment"
         component={(props) => (
           <Link
             {...props}
@@ -224,7 +229,7 @@ const EnvironmentListView: React.FC<Props> = ({
         )}
       >
         Create environment
-      </Button>
+      </ButtonWithAccessTooltip>
     );
     if (mvpFeature) {
       return (
@@ -236,7 +241,7 @@ const EnvironmentListView: React.FC<Props> = ({
       );
     }
     return envButton;
-  }, [mvpFeature, workspace]);
+  }, [canCreateEnvironment, mvpFeature, workspace]);
 
   const emptyState = (
     <AppEmptyState emptyStateImg={emptyStateImgUrl} title="Manage your deployments">
