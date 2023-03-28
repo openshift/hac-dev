@@ -11,6 +11,7 @@ import {
   Flex,
   FlexItem,
   Title,
+  Divider,
 } from '@patternfly/react-core';
 import { TektonResourceLabel } from '../../../consts/pipeline';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
@@ -21,6 +22,7 @@ import { TaskRunKind } from '../../../types';
 import { calculateDuration, taskRunStatus } from '../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import MetadataList from '../../PipelineRunDetailsView/MetadataList';
+import RunResultsList from '../../PipelineRunDetailsView/tabs/RunResultsList';
 import { StatusIconWithText } from '../../topology/StatusIcon';
 
 type TaskRunDetailsTabProps = {
@@ -38,6 +40,7 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
   const applicationName = taskRun.metadata?.labels[PipelineRunLabel.APPLICATION];
   const status = !error ? taskRunStatus(taskRun) : null;
   const plrName = taskRun.metadata?.labels[TektonResourceLabel.pipelinerun];
+
   return (
     <>
       <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
@@ -110,7 +113,7 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
                 <DescriptionListGroup>
                   <DescriptionListTerm>Description</DescriptionListTerm>
                   <DescriptionListDescription>
-                    {taskRun.status?.taskSpec?.description || ''}
+                    {taskRun.status?.taskSpec?.description || '-'}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
                 <DescriptionListGroup>
@@ -205,6 +208,12 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
               </DescriptionList>
             </FlexItem>
           </Flex>
+          {taskRun.status?.taskResults ? (
+            <>
+              <Divider style={{ padding: 'var(--pf-global--spacer--lg) 0' }} />
+              <RunResultsList results={taskRun.status.taskResults} status={status} />
+            </>
+          ) : null}
         </Flex>
       )}
     </>

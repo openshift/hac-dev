@@ -26,7 +26,7 @@ describe('TaskRunDetailsTab', () => {
     render(<TaskRunDetailsTab taskRun={testTaskRuns[0]} error={null} />, {
       wrapper: BrowserRouter,
     });
-    screen.getByText('Task run details');
+    expect(screen.queryByText('Task run details')).toBeInTheDocument();
   });
 
   it('should render the taskrun and task name and description', () => {
@@ -34,9 +34,9 @@ describe('TaskRunDetailsTab', () => {
     render(<TaskRunDetailsTab taskRun={testTaskRuns[0]} error={null} />, {
       wrapper: BrowserRouter,
     });
-    screen.getByText('example');
-    screen.getByText('example-task');
-    screen.getByText('Task description goes here.');
+    expect(screen.queryByText('example')).toBeInTheDocument();
+    expect(screen.queryByText('example-task')).toBeInTheDocument();
+    expect(screen.queryByText('Task description goes here.')).toBeInTheDocument();
   });
 
   it('should render the plr link', () => {
@@ -44,7 +44,7 @@ describe('TaskRunDetailsTab', () => {
     render(<TaskRunDetailsTab taskRun={testTaskRuns[0]} error={null} />, {
       wrapper: BrowserRouter,
     });
-    expect(screen.getByRole('link', { name: /example-pipelinerun/ })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /example-pipelinerun/ })).toBeInTheDocument();
   });
 
   it('should render application link', () => {
@@ -52,7 +52,7 @@ describe('TaskRunDetailsTab', () => {
     render(<TaskRunDetailsTab taskRun={testTaskRuns[0]} error={null} />, {
       wrapper: BrowserRouter,
     });
-    expect(screen.getByRole('link', { name: /example-app/ })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /example-app/ })).toBeInTheDocument();
   });
 
   it('should render log link', () => {
@@ -60,6 +60,16 @@ describe('TaskRunDetailsTab', () => {
     render(<TaskRunDetailsTab taskRun={testTaskRuns[0]} error={null} />, {
       wrapper: BrowserRouter,
     });
-    expect(screen.getByRole('link', { name: /logs/ })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /logs/ })).toBeInTheDocument();
+  });
+
+  it('should render results', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    render(<TaskRunDetailsTab taskRun={testTaskRuns[1]} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    expect(screen.queryByText('Results')).toBeInTheDocument();
+    expect(screen.queryByText('resultName')).toBeInTheDocument();
+    expect(screen.queryByText('resultValue')).toBeInTheDocument();
   });
 });
