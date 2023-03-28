@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
+import CommitLabel from '../../shared/components/commit-label/CommitLabel';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
@@ -31,12 +31,11 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
         >
           {prNumber} {obj.shaTitle}
         </Link>
-
         {obj.shaURL && (
-          <ExternalLink href={obj.shaURL}>
+          <>
             {' '}
-            <GithubIcon />
-          </ExternalLink>
+            <CommitLabel gitProvider={obj.gitProvider} sha={obj.sha} shaURL={obj.shaURL} />
+          </>
         )}
       </TableData>
       <TableData className={commitsTableColumnClasses.branch}>
