@@ -103,6 +103,7 @@ export const testTaskRuns: TaskRunKind[] = [
       podName: '',
       startTime: '2022-08-15T14:14:08Z',
       taskSpec: {
+        description: 'Task description goes here.',
         params: [
           {
             name: 'appName',
@@ -206,14 +207,14 @@ export const testTaskRuns: TaskRunKind[] = [
       timeout: '1h0m0s',
     },
     status: {
+      taskResults: [{ name: 'resultName', value: 'resultValue' }],
       completionTime: '2022-08-15T14:14:08Z',
       conditions: [
         {
           lastTransitionTime: '2022-08-15T14:14:08Z',
-          message:
-            'invalid input params for task example-task: missing values for these params which have no default values: [appName]',
-          reason: 'TaskRunValidationFailed',
-          status: 'False',
+          message: '',
+          reason: 'Succeeded',
+          status: 'True',
           type: 'Succeeded',
         },
       ],
