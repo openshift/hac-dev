@@ -5,7 +5,7 @@ import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useComponent } from '../../hooks/useComponents';
 import { usePipelineRun } from '../../hooks/usePipelineRunsForApplication';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
-import { ComponentModel } from '../../models';
+import { ComponentModel, PipelineRunModel } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { isPACEnabled, startNewBuild } from '../../utils/component-utils';
@@ -35,6 +35,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
   const [pipelineRun, loaded, error] = usePipelineRun(namespace, pipelineRunName);
   const [taskRuns, taskRunsLoaded, taskRunError] = useTaskRuns(namespace, pipelineRunName);
   const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
+  const [canPatchPipeline] = useAccessReviewForModel(PipelineRunModel, 'patch');
 
   const [component] = useComponent(
     namespace,
@@ -116,16 +117,20 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
             key: 'stop',
             label: 'Stop',
             tooltip: 'Let the running tasks complete, then execute finally tasks',
-            isDisabled: !(plrStatus && plrStatus === 'Running'),
-            disabledTooltip: "You don't have access to stop a build",
+            isDisabled: !(plrStatus && plrStatus === 'Running') || !canPatchPipeline,
+            disabledTooltip: !canPatchPipeline
+              ? "You don't have access to stop a build"
+              : undefined,
             onClick: () => pipelineRunStop(pipelineRun),
           },
           {
             key: 'cancel',
             label: 'Cancel',
             tooltip: 'Interrupt any executing non finally tasks, then execute finally tasks',
-            isDisabled: !(plrStatus && plrStatus === 'Running'),
-            disabledTooltip: "You don't have access to cancel a build",
+            isDisabled: !(plrStatus && plrStatus === 'Running') || !canPatchPipeline,
+            disabledTooltip: !canPatchPipeline
+              ? "You don't have access to cancel a build"
+              : undefined,
             onClick: () => pipelineRunCancel(pipelineRun),
           },
         ]}

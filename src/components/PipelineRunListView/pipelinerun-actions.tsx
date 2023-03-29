@@ -21,7 +21,9 @@ export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] =>
       label: 'Stop',
       tooltip: 'Let the running tasks complete, then execute finally tasks',
       disabled: !(pipelineRunStatus(pipelineRun) === runStatus.Running) || !canPatchPipelineRun,
-      disabledTooltip: "You don't have access to stop this pipeline",
+      disabledTooltip: !canPatchPipelineRun
+        ? "You don't have access to stop this pipeline"
+        : undefined,
     },
 
     {
@@ -30,7 +32,9 @@ export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] =>
       label: 'Cancel',
       tooltip: 'Interrupt any executing non finally tasks, then execute finally tasks',
       disabled: !(pipelineRunStatus(pipelineRun) === runStatus.Running) || !canPatchPipelineRun,
-      disabledTooltip: "You don't have access to cancel this pipeline",
+      disabledTooltip: !canPatchPipelineRun
+        ? "You don't have access to cancel this pipeline"
+        : undefined,
     },
   ];
 };
