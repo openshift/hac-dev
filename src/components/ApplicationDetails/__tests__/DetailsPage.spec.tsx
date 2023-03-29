@@ -102,6 +102,71 @@ describe('DetailsPage', () => {
     expect(getByTestId('help-section')).toBeInTheDocument();
   });
 
+  it('should not perform an action when the button is disabled', async () => {
+    const componentMock = jest.fn();
+
+    const { getByTestId, getByRole } = routerRenderer(
+      <DetailsPage
+        headTitle="test"
+        title="Details"
+        baseURL="/"
+        tabs={[]}
+        actions={[
+          {
+            key: 'disabled-section',
+            label: 'Disabled Section',
+            component: componentMock,
+            isDisabled: true,
+            disabledTooltip: 'disabled link',
+          },
+        ]}
+      />,
+    );
+    const actionsMenu = getByRole('button', { name: /Actions/ });
+
+    act(() => {
+      actionsMenu.click();
+    });
+    fireEvent.click(getByTestId('disabled-section'));
+
+    await waitFor(() => {
+      expect(componentMock).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should show disabled tooltip on hovering a disabled action', async () => {
+    const componentMock = jest.fn();
+
+    const { getByTestId, getByRole } = routerRenderer(
+      <DetailsPage
+        headTitle="test"
+        title="Details"
+        baseURL="/"
+        tabs={[]}
+        actions={[
+          {
+            key: 'disabled-section',
+            label: 'Disabled Section',
+            component: componentMock,
+            isDisabled: true,
+            disabledTooltip: 'This link is disabled',
+          },
+        ]}
+      />,
+    );
+    const actionsMenu = getByRole('button', { name: /Actions/ });
+
+    act(() => {
+      actionsMenu.click();
+    });
+
+    fireEvent.mouseEnter(getByTestId('disabled-section'));
+
+    await waitFor(() => {
+      screen.getByText('This link is disabled');
+    });
+  });
+
   it('should render head title based on the tab and headTitle', async () => {
     const onTabSelect = jest.fn();
     routerRenderer(

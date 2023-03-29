@@ -84,7 +84,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
   const dropdownItems = React.useMemo(
     () =>
       actions?.reduce((acc, action) => {
-        const { type, key, label, isDisabled, disabledTooltip, ...props } = action;
+        const { type, key, label, isDisabled, disabledTooltip, component, ...props } = action;
         if (action.hidden) {
           return acc;
         }
@@ -113,7 +113,13 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
           );
         } else {
           acc.push(
-            <DropdownItem key={key} data-test={key} isDisabled={isDisabled} {...props}>
+            <DropdownItem
+              key={key}
+              data-test={key}
+              isDisabled={isDisabled}
+              component={!isDisabled ? component : 'a'}
+              {...props}
+            >
               {label}
             </DropdownItem>,
           );
