@@ -76,7 +76,16 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
       {...props}
       {...(component ? {} : extraProps)}
       component={(compProps) => (
-        <Button {...compProps} variant="plain" isAriaDisabled={isDisabled} />
+        <Button
+          {...compProps}
+          variant="plain"
+          style={{
+            color: isDisabled
+              ? 'var(--pf-global--disabled-color--100)'
+              : 'var(--pf-c-content--Color)',
+          }}
+          isAriaDisabled={isDisabled}
+        />
       )}
     >
       {label}
