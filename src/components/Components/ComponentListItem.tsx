@@ -19,7 +19,7 @@ import {
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import ExternalLinkAltIcon from '@patternfly/react-icons/dist/js/icons/external-link-alt-icon';
 import { global_palette_red_100 as redColor } from '@patternfly/react-tokens/dist/js/global_palette_red_100';
-// import { PACState } from '../../hooks/usePACState';
+import { PACState } from '../../hooks/usePACState';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind, RouteKind, ResourceStatusCondition } from '../../types';
@@ -45,9 +45,14 @@ const getConditionStatus = (condition: ResourceStatusCondition) => {
 export type ComponentListViewItemProps = {
   component: ComponentKind;
   routes: RouteKind[];
+  onStateChange?: (state: PACState) => void;
 };
 
-export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({ component, routes }) => {
+export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
+  component,
+  routes,
+  onStateChange,
+}) => {
   const [expanded, setExpanded] = React.useState(false);
   const { replicas, targetPort, resources } = component.spec;
   const name = component.metadata.name;
@@ -56,8 +61,6 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({ compon
   const containerImage = component.status?.containerImage;
   const componentRouteWebURL = routes?.length > 0 && getComponentRouteWebURL(routes, name);
   const condition = getConditionForResource<ComponentKind>(component);
-
-  // const [componnentState, setComponentState] = React.useState<{ [name: string]: PACState }>({});
 
   return (
     <DataListItem aria-label={name} isExpanded={expanded} data-testid="component-list-item">
@@ -77,7 +80,11 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({ compon
                     <b>{name}</b>
                   </FlexItem>
                   <FlexItem>
-                    <ComponentPACStateLabel component={component} />
+                    <ComponentPACStateLabel
+                      component={component}
+                      onStateChange={onStateChange}
+                      enableAction
+                    />
                   </FlexItem>
                 </Flex>
                 <FlexItem>

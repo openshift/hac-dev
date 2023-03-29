@@ -7,6 +7,7 @@ import CustomizeComponentPipeline from '../CustomizeComponentPipeline';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(() => [[], true]),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('../../../hooks/useStoneSoupGitHubApp', () => ({

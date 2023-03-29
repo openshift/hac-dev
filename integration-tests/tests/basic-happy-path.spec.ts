@@ -27,7 +27,7 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
         componentName,
         applicationName,
         'Build Running',
-        'Default build',
+        'Default',
       );
     });
   });

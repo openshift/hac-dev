@@ -88,8 +88,8 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
           {
             onClick: () =>
               showModal(createCustomizeAllPipelinesModalLauncher(applicationName, namespace)),
-            key: 'customize-build-pipelines',
-            label: 'Customize build pipelines',
+            key: 'manage-build-pipelines',
+            label: 'Manage build pipelines',
           },
           ...(!mvpFeature
             ? [

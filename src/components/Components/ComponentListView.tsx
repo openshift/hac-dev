@@ -10,6 +10,7 @@ import {
   DataList,
   EmptyStateBody,
   Label,
+  pluralize,
   SearchInput,
   Spinner,
   Text,
@@ -25,20 +26,23 @@ import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useApplicationRoutes } from '../../hooks';
 import { useComponents } from '../../hooks/useComponents';
 import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
+import { PACState } from '../../hooks/usePACState';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import emptyStateImgUrl from '../../imgs/Components.svg';
 import { ComponentModel, PipelineRunGroupVersionKind } from '../../models';
+import ExternalLink from '../../shared/components/links/ExternalLink';
 import { PipelineRunKind } from '../../types';
-import { useURLForComponentPRs, isPACEnabled } from '../../utils/component-utils';
+import { useURLForComponentPRs } from '../../utils/component-utils';
 import { getGitOpsDeploymentStrategy } from '../../utils/gitops-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
+import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
+import { useModalLauncher } from '../modal/ModalProvider';
 import { ComponentListItem } from './ComponentListItem';
 import ComponentsFilterToolbarGroups, {
-  NEEDS_MERGE_FILTER_ID,
   getStatusFilterIdForComponent,
 } from './ComponentsFilterToolbarGroups';
 
@@ -56,6 +60,8 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
 
   const [allComponents, componentsLoaded] = useComponents(namespace, applicationName);
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
+
+  const showModal = useModalLauncher();
 
   const components = React.useMemo(
     () =>
@@ -96,69 +102,26 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
     setStatusFiltersParam('');
   };
 
+  const [componentState, setComponentState] = React.useState<{ [name: string]: PACState }>({});
+
+  const pendingCount = React.useMemo(
+    () => Object.values(componentState).reduce((p, c) => (c === PACState.pending ? p + 1 : p), 0),
+    [componentState],
+  );
+
   const filteredComponents = React.useMemo(
     () =>
       components.filter((component) => {
         const compStatus = statusFilters?.length
           ? getStatusFilterIdForComponent(component, pipelineRuns)
           : '';
-        const unMerged = !pipelineRuns?.find(
-          ({ metadata: { labels } }) =>
-            labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name,
-        );
         return (
           (!nameFilter || component.metadata.name.indexOf(nameFilter) !== -1) &&
-          (!statusFilters?.length ||
-            statusFilters.includes(compStatus) ||
-            (unMerged && statusFilters.includes(NEEDS_MERGE_FILTER_ID)))
+          (!statusFilters?.length || statusFilters.includes(compStatus))
         );
       }),
     [components, statusFilters, pipelineRuns, nameFilter],
   );
-
-  const title = React.useMemo(() => {
-    const allMerged = components.every(
-      (component) =>
-        !isPACEnabled(component) ||
-        pipelineRuns.find(
-          ({ metadata: { labels } }) =>
-            labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name,
-        ),
-    );
-    return (
-      <>
-        <Title headingLevel="h3" className="pf-u-mt-lg pf-u-mb-sm">
-          Components
-        </Title>
-        <TextContent>
-          <Text component={TextVariants.p}>
-            A component is an image built from source code in a repository. One or more components
-            that run together form an application.
-          </Text>
-        </TextContent>
-        {!allMerged && !mergeAlertHidden ? (
-          <Alert
-            className="pf-u-mt-md"
-            variant={AlertVariant.warning}
-            isInline
-            title="Merge pull requests of a build pipeline to your source code"
-            actionClose={<AlertActionCloseButton onClose={() => setMergeAlertHidden(true)} />}
-            actionLinks={
-              <AlertActionLink onClick={() => window.open(prURL, '_blank')}>
-                View all pull requests
-              </AlertActionLink>
-            }
-            data-testid="components-unmerged-build-pr"
-          >
-            <p>
-              In order to trigger your builds, merge the build pipeline pull request we have sent
-              for you.
-            </p>
-          </Alert>
-        ) : null}
-      </>
-    );
-  }, [components, mergeAlertHidden, pipelineRuns, prURL]);
 
   return (
     <>
@@ -170,7 +133,50 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
         <>
           {allComponents?.length > 0 ? (
             <>
-              {title}
+              <Title headingLevel="h3" className="pf-u-mt-lg pf-u-mb-sm">
+                Components
+              </Title>
+              <TextContent>
+                <Text component={TextVariants.p}>
+                  A component is an image built from source code in a repository. One or more
+                  components that run together form an application.
+                </Text>
+              </TextContent>
+              {pendingCount > 0 && !mergeAlertHidden ? (
+                <Alert
+                  className="pf-u-mt-md"
+                  variant={AlertVariant.warning}
+                  isInline
+                  title={`${pluralize(
+                    pendingCount,
+                    'component is',
+                    'components are',
+                  )} missing a build pipeline definition`}
+                  actionClose={<AlertActionCloseButton onClose={() => setMergeAlertHidden(true)} />}
+                  actionLinks={
+                    <>
+                      <AlertActionLink
+                        onClick={() =>
+                          showModal(
+                            createCustomizeAllPipelinesModalLauncher(applicationName, namespace),
+                          )
+                        }
+                      >
+                        Manage build pipelines
+                      </AlertActionLink>
+                      <ExternalLink href={prURL} showIcon>
+                        View all pull requests in Github
+                      </ExternalLink>
+                    </>
+                  }
+                  data-testid="components-unmerged-build-pr"
+                >
+                  We sent a pull request to your repository containing the default build pipeline
+                  for you to customize. Merge the pull request to set up a build pipeline for your
+                  component.
+                </Alert>
+              ) : null}
+
               <Toolbar
                 data-testid="component-list-toolbar"
                 clearFiltersButtonText="Clear filters"
@@ -232,6 +238,12 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                         key={component.metadata.uid}
                         component={component}
                         routes={routes}
+                        onStateChange={(state) =>
+                          setComponentState((prev) => ({
+                            ...prev,
+                            [component.metadata.name]: state,
+                          }))
+                        }
                       />
                     ))}
                   </>

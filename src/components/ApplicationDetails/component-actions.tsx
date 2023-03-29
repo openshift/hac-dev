@@ -25,8 +25,8 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
             component.metadata.namespace,
           ),
         ),
-      id: 'customize-build-pipeline',
-      label: 'Customize build pipeline',
+      id: 'manage-build-pipeline',
+      label: 'Manage build pipeline',
     },
   ];
   if (!isPACEnabled(component)) {
