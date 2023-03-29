@@ -12,6 +12,7 @@
         # Substitution for alias from nginx
         uri strip_prefix /api/plugins/hac-dev
         uri strip_prefix /beta/api/plugins/hac-dev
+        uri strip_prefix /preview/api/plugins/hac-dev
         file_server * {
             root /opt/app-root/src/dist 
             browse
@@ -26,6 +27,7 @@
         # Substitution for alias from nginx
         uri strip_prefix /apps/hac-dev
         uri strip_prefix /beta/apps/hac-dev
+        uri strip_prefix /preview/apps/hac-dev
         file_server * {
             root /opt/app-root/src/dist 
             browse
@@ -33,6 +35,6 @@
     }
 
     handle / {
-        try_files {path} {path}/ /apps/chrome/index.html /beta/apps/chrome/index.html
+        try_files {path} {path}/ /apps/chrome/index.html /beta/apps/chrome/index.html /preview/chrome/index.html
     }
 }
