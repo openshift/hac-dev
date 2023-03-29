@@ -123,7 +123,7 @@ export const MockEnterpriseContractPolicies = {
         shortName: 'out_of_date_task_bundle',
         title: 'Task bundle is out of date',
         description:
-          'Check if the Tekton Bundle used for the Tasks in the Pipeline definition\nis the most recent acceptable one. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.',
+          'Check if the Tekton Bundle used for the Tasks in the Pipeline definition\nis the most recent acceptable one. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/enterprise-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.',
         warningOrFailure: 'warning',
         failureMsg: "Pipeline task '%s' uses an out of date task bundle '%s'",
         file: 'policy/pipeline/task_bundle.rego',
@@ -142,7 +142,7 @@ export const MockEnterpriseContractPolicies = {
         shortName: 'unacceptable_task_bundle',
         title: 'Task bundle is not acceptable',
         description:
-          'Check if the Tekton Bundle used for the Tasks in the Pipeline definition\nare acceptable given the tracked effective_on date. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.',
+          'Check if the Tekton Bundle used for the Tasks in the Pipeline definition\nare acceptable given the tracked effective_on date. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/enterprise-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.',
         warningOrFailure: 'failure',
         failureMsg: "Pipeline task '%s' uses an unacceptable task bundle '%s'",
         file: 'policy/pipeline/task_bundle.rego',
@@ -376,7 +376,7 @@ export const MockEnterpriseContractPolicies = {
         shortName: 'out_of_date_task_bundle',
         title: 'Task bundle is out of date',
         description:
-          'Check if the Tekton Bundle used for the Tasks in the attestation\nis the most recent acceptable one. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.',
+          'Check if the Tekton Bundle used for the Tasks in the attestation\nis the most recent acceptable one. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/enterprise-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.',
         warningOrFailure: 'warning',
         failureMsg: "Pipeline task '%s' uses an out of date task bundle '%s'",
         file: 'policy/release/attestation_task_bundle.rego',
@@ -395,7 +395,7 @@ export const MockEnterpriseContractPolicies = {
         shortName: 'unacceptable_task_bundle',
         title: 'Task bundle is not acceptable',
         description:
-          'Check if the Tekton Bundle used for the Tasks in the attestation\nare acceptable given the tracked effective_on date. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.',
+          'Check if the Tekton Bundle used for the Tasks in the attestation\nare acceptable given the tracked effective_on date. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/enterprise-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.',
         warningOrFailure: 'failure',
         failureMsg: "Pipeline task '%s' uses an unacceptable task bundle '%s'",
         file: 'policy/release/attestation_task_bundle.rego',
