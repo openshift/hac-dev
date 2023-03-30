@@ -89,7 +89,9 @@ const Row: React.FC<{
     <>
       <Tr
         data-testid={`component-row ${component.metadata.name}`}
-        style={pacState === PACState.error ? { borderBottom: 0 } : {}}
+        style={
+          pacState === PACState.error || pacState === PACState.sample ? { borderBottom: 0 } : {}
+        }
       >
         <Td>
           <div>
