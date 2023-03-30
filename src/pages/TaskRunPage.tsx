@@ -16,16 +16,14 @@ const PipelineRunPage = () => {
 
   return (
     <NamespacedPage>
-      <PageAccessCheck accessReviewResources={accessReviewResources}>
-        {name && (
-          <React.Fragment>
-            <Helmet>
-              <title>TaskRun details</title>
-            </Helmet>
-            <TaskRunView taskRunName={name} />
-          </React.Fragment>
-        )}
-      </PageAccessCheck>
+      {name && (
+        <PageAccessCheck accessReviewResources={accessReviewResources}>
+          <Helmet>
+            <title>TaskRun details</title>
+          </Helmet>
+          <TaskRunView taskRunName={name} />
+        </PageAccessCheck>
+      )}
     </NamespacedPage>
   );
 };

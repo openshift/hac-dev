@@ -6,6 +6,7 @@ import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 import { IntegrationTestScenarioModel } from '../models';
 import { AccessReviewResources } from '../types';
+import NotFoundPage from './NotFoundPage';
 
 const IntegrationTestDetailsPage = () => {
   useQuickstartCloseOnUnmount();
@@ -17,7 +18,7 @@ const IntegrationTestDetailsPage = () => {
   ];
 
   if (!appName || !testName) {
-    return <>Not found</>;
+    return <NotFoundPage />;
   }
 
   return (

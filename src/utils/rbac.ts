@@ -64,7 +64,10 @@ export const useAccessReview = (
   return [isAllowed, loaded];
 };
 
-export const useAccessReviewForModel = (model: K8sModelCommon, verb: K8sVerb) => {
+export const useAccessReviewForModel = (
+  model: K8sModelCommon,
+  verb: K8sVerb,
+): [boolean, boolean] => {
   const { namespace } = useWorkspaceInfo();
   return useAccessReview({ group: model.apiGroup, resource: model.plural, namespace, verb });
 };
@@ -77,7 +80,7 @@ export const useAccessReviews = (
 
   React.useEffect(() => {
     // wait for workspace context to load the namespace
-    if (resourceAttributesArray?.[0]?.namespace) {
+    if (resourceAttributesArray[0].namespace) {
       const allChecks = [];
       const resourceAccess = [];
       resourceAttributesArray.map((resourceAttributes) => {
@@ -117,7 +120,9 @@ export const useAccessReviews = (
   return [isAllowed, loaded];
 };
 
-export const useAccessReviewForModels = (accessReviewResources: AccessReviewResources) => {
+export const useAccessReviewForModels = (
+  accessReviewResources: AccessReviewResources,
+): [boolean, boolean] => {
   const { namespace } = useWorkspaceInfo();
 
   const resourceAttributes: AccessReviewResourceAttributesArray = accessReviewResources.map(

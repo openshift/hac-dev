@@ -2,7 +2,7 @@ import React from 'react';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { AccessReviewResources } from '../../types';
 import { useAccessReviewForModels } from '../../utils/rbac';
-import NoAccessState from '../EmptyState/NoAccessState';
+import NoAccessState from './NoAccessState';
 
 type PageAccessCheckProps = {
   accessReviewResources: AccessReviewResources;

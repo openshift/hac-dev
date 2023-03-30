@@ -6,6 +6,7 @@ import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 import { PipelineRunModel } from '../models';
 import { AccessReviewResources } from '../types';
+import NotFoundPage from './NotFoundPage';
 
 const CommitsPage = () => {
   useQuickstartCloseOnUnmount();
@@ -14,7 +15,7 @@ const CommitsPage = () => {
   const accessReviewResources: AccessReviewResources = [{ model: PipelineRunModel, verb: 'get' }];
 
   if (!appName || !commitName) {
-    return <>Not found</>;
+    return <NotFoundPage />;
   }
 
   return (

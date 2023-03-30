@@ -48,7 +48,7 @@ const ComponentSettingsPage: React.FunctionComponent = () => {
 
   return (
     <NamespacedPage>
-      <HeadTitle>{componentName} - Component Settings | CI/CD</HeadTitle>
+      <HeadTitle>{`${componentName} - Component Settings | CI/CD`}</HeadTitle>
       <PageAccessCheck accessReviewResources={accessReviewResources}>
         <ComponentSettingsView componentName={componentName} />
       </PageAccessCheck>

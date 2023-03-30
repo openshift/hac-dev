@@ -14,7 +14,7 @@ import { LockIcon } from '@patternfly/react-icons/dist/esm/icons/lock-icon';
 import { css } from '@patternfly/react-styles';
 import { HttpError } from '../../shared/utils/error/http-error';
 
-import './EmptyState.scss';
+import '../EmptyState/EmptyState.scss';
 
 type NoAccessStateProps = {
   httpError?: HttpError;
@@ -40,14 +40,17 @@ const NoAccessState: React.FC<NoAccessStateProps> = ({
     >
       <EmptyStateIcon className={css('app-empty-state__icon ')} icon={LockIcon} />
       <Title className="pf-u-mt-lg" headingLevel="h2" size="lg">
-        {title || 'Access permission Denied'}
+        {title || 'Access permissions needed'}
       </Title>
       <EmptyStateBody>
-        {body ||
-          `You don't have access to this page, ask your administrator to adjust your permissions.`}
+        {body || 'To access this page, ask your administrator to adjust your permissions.'}
       </EmptyStateBody>
       {children || (
-        <Button variant={ButtonVariant.primary} onClick={() => navigate('/stonesoup/workspaces')}>
+        <Button
+          variant={ButtonVariant.primary}
+          data-test="no-access-action"
+          onClick={() => navigate('/stonesoup/workspaces')}
+        >
           Go to applications list
         </Button>
       )}
