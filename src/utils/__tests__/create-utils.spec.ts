@@ -70,6 +70,7 @@ const mockComponentData: ComponentKind = {
     name: 'test-component',
     namespace: 'test-ns',
     annotations: {
+      'image.redhat.com/generate': 'true',
       'skip-initial-checks': 'true',
     },
   },
@@ -110,6 +111,7 @@ const mockComponentDataWithPAC = {
   metadata: {
     ...mockComponentDataWithDevfile.metadata,
     annotations: {
+      'image.redhat.com/generate': 'true',
       'appstudio.openshift.io/pac-provision': 'request',
     },
   },
