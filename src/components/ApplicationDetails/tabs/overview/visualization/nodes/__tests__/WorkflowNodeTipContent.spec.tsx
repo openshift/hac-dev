@@ -114,6 +114,7 @@ describe('WorkflowNode', () => {
 
     tipContent.unmount();
   });
+
   it('should render node tooltips', () => {
     const visualization = getController(true);
     const mockGroup = visualization.getNodeById('components');
@@ -131,5 +132,18 @@ describe('WorkflowNode', () => {
     expect(linkData.filter.name).toBe('name');
     expect(linkData.filter.value).toBe(mockElement.getLabel());
     expect(screen.queryAllByTestId('child-row')).toHaveLength(0);
+    expect(screen.queryByText('View logs')).not.toBeInTheDocument();
+  });
+
+  it('should present view logs on test node tooltip', () => {
+    const visualization = getController(true);
+    const mockGroup = visualization.getNodeById('tests');
+    const mockElement = mockGroup.getChildren()[4] as Node<NodeModel, WorkflowNodeModelData>;
+    routerRenderer(<WorkflowNodeTipContent element={mockGroup} />);
+
+    expect(
+      screen.getByText(TYPE_DESCRIPTIONS[mockElement.getData().workflowType]),
+    ).toBeInTheDocument();
+    screen.getByText('View logs');
   });
 });

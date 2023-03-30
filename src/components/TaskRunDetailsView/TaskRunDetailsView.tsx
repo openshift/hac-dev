@@ -9,6 +9,8 @@ import { taskRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
+import { SecurityEnterpriseContractTab } from '../EnterpriseContractView/SecurityEnterpriseContractTab';
+import { isResourceEnterpriseContract } from '../EnterpriseContractView/utils';
 import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import TaskRunDetailsTab from './tabs/TaskRunDetailsTab';
 import TaskRunLogsTab from './tabs/TaskRunLogsTab';
@@ -49,6 +51,7 @@ export const TaskRunDetailsView: React.FC<TaskRunDetailsViewProps> = ({ taskRunN
 
   const applicationName = taskRun.metadata?.labels[PipelineRunLabel.APPLICATION];
   const plrName = taskRun.metadata?.labels[TektonResourceLabel.pipelinerun];
+  const isEnterpriseContract = isResourceEnterpriseContract(taskRun);
 
   return (
     <DetailsPage
@@ -90,6 +93,15 @@ export const TaskRunDetailsView: React.FC<TaskRunDetailsViewProps> = ({ taskRunN
           label: 'Logs',
           component: <TaskRunLogsTab taskRun={taskRun} />,
         },
+        ...(isEnterpriseContract
+          ? [
+              {
+                key: 'security',
+                label: 'Security',
+                component: <SecurityEnterpriseContractTab pipelineRun={plrName} />,
+              },
+            ]
+          : []),
       ]}
     />
   );

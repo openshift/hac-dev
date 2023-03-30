@@ -140,7 +140,7 @@ export const getLinkDataForElement = (
 export const getLinksForElement = (
   element: Node<PipelineNodeModel, WorkflowNodeModelData>,
   workspace: string,
-): { elementRef: string; pipelinesRef: string } => {
+): { elementRef: string; pipelinesRef: string; appRef: string } => {
   const linkData = getLinkDataForElement(element, workspace);
 
   const appPath = `/stonesoup/workspaces/${workspace}/applications/${
@@ -152,6 +152,7 @@ export const getLinksForElement = (
   return {
     elementRef: linkData.path ? linkData.path : `${appPath}${tabPath}${filter}`,
     pipelinesRef: `${appPath}/activity/pipelineruns`,
+    appRef: appPath,
   };
 };
 
@@ -190,6 +191,7 @@ export const resourceToPipelineNode = (
   runAfterTasks: string[] = [],
   status?: runStatus,
   label?: string,
+  pipelineRun?: K8sResourceCommon,
 ): WorkflowNodeModel<WorkflowNodeModelData> => ({
   id: resource.metadata.uid,
   label: label || resource.metadata.name,
@@ -203,6 +205,7 @@ export const resourceToPipelineNode = (
     workflowType,
     status,
     resources: [resource],
+    pipelineRun,
   },
 });
 

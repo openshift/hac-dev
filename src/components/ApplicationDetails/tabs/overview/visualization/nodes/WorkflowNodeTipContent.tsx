@@ -24,7 +24,7 @@ const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({ element
   const { workflowType, children } = element.getData();
   const label = element.getLabel();
   const { workspace } = useWorkspaceInfo();
-  const { elementRef, pipelinesRef } = getLinksForElement(element, workspace);
+  const { elementRef, pipelinesRef, appRef } = getLinksForElement(element, workspace);
 
   const links = React.useMemo(() => {
     switch (workflowType) {
@@ -107,6 +107,15 @@ const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({ element
               <React.Fragment key={child.id}>
                 <span data-testid="child-row">{child.label}</span>
                 <span>{runStatusItem(child)}</span>
+                <span>
+                  {child.data?.pipelineRun ? (
+                    <Link
+                      to={`${appRef}/pipelineruns/${child.data?.pipelineRun?.metadata.name}/logs`}
+                    >
+                      View logs
+                    </Link>
+                  ) : null}
+                </span>
               </React.Fragment>
             ))}
         </div>

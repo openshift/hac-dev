@@ -60,6 +60,8 @@ export const useAppApplicationTestNodes = (
             WorkflowNodeType.APPLICATION_TEST,
             previousTasks,
             testPipeline ? pipelineRunStatus(testPipeline) : runStatus.Pending,
+            undefined,
+            testPipeline,
           );
         })
       : [
