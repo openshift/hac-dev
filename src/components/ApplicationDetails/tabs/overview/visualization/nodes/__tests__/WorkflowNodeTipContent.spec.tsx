@@ -35,7 +35,7 @@ const { workflowMocks, applyWorkflowMocks } = getMockWorkflows();
 
 describe('WorkflowNode', () => {
   beforeEach(() => {
-    useWorkspaceInfoMock.mockReturnValue({ namespace: 'test-ns' });
+    useWorkspaceInfoMock.mockReturnValue({ namespace: 'test-ns', workspace: 'test-ws' });
     applyWorkflowMocks(workflowMocks);
     useFeatureFlagMock.mockReturnValue([false]);
 
@@ -81,7 +81,7 @@ describe('WorkflowNode', () => {
     expect(
       screen.getByText(TYPE_DESCRIPTIONS[mockElement.getData().workflowType]),
     ).toBeInTheDocument();
-    let linkData = getLinkDataForElement(mockElement);
+    let linkData = getLinkDataForElement(mockElement, 'test-ws');
     expect(linkData.tab).toBe('components');
     expect(linkData.filter).toBeUndefined();
     expect(screen.getAllByTestId('child-row')).toHaveLength(mockComponentsData.length);
@@ -105,7 +105,7 @@ describe('WorkflowNode', () => {
     ).toBeInTheDocument();
 
     expect(screen.getByTestId('element-link')).toBeVisible();
-    linkData = getLinkDataForElement(mockElement);
+    linkData = getLinkDataForElement(mockElement, 'test-ws');
     expect(linkData.tab).toBe('integrationtests');
     expect(linkData.filter).toBeUndefined();
 
@@ -126,7 +126,7 @@ describe('WorkflowNode', () => {
     ).toBeInTheDocument();
     const link = screen.getByTestId('element-link');
     expect(link).toBeVisible();
-    const linkData = getLinkDataForElement(mockElement);
+    const linkData = getLinkDataForElement(mockElement, 'test-ws');
     expect(linkData.tab).toBe('components');
     expect(linkData.filter.name).toBe('name');
     expect(linkData.filter.value).toBe(mockElement.getLabel());
