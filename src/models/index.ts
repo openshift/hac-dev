@@ -5,6 +5,7 @@ export * from './enterprise-contract-policy';
 export * from './environment';
 export * from './integration-test-scenario';
 export * from './pipelineruns';
+export * from './taskruns';
 export * from './pipeline';
 export * from './project';
 export * from './release';

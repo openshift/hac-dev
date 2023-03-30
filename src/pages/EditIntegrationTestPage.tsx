@@ -6,8 +6,10 @@ import { Bullseye, Spinner } from '@patternfly/react-core';
 import ErrorEmptyState from '../components/EmptyState/ErrorEmptyState';
 import IntegrationTestView from '../components/IntegrationTest/IntegrationTestForm/IntegrationTestView';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
-import { IntegrationTestScenarioGroupVersionKind } from '../models';
+import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
+import { IntegrationTestScenarioGroupVersionKind, IntegrationTestScenarioModel } from '../models';
 import { HttpError } from '../shared/utils/error/http-error';
+import { AccessReviewResources } from '../types';
 import { IntegrationTestScenarioKind } from '../types/coreBuildService';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
@@ -15,6 +17,9 @@ const EditIntegrationTestPage: React.FunctionComponent = () => {
   const { name } = useParams();
 
   const { namespace } = useWorkspaceInfo();
+  const accessReviewResources: AccessReviewResources = [
+    { model: IntegrationTestScenarioModel, verb: 'update' },
+  ];
 
   const [integrationTest, loaded, loadErr] = useK8sWatchResource<IntegrationTestScenarioKind>(
     namespace
@@ -38,21 +43,25 @@ const EditIntegrationTestPage: React.FunctionComponent = () => {
     );
   }
 
+  if (!loaded) {
+    return (
+      <Bullseye>
+        <Spinner data-test="spinner" />
+      </Bullseye>
+    );
+  }
+
   return (
     <NamespacedPage>
       <Helmet>
         <title>Edit integration test</title>
       </Helmet>
-      {loaded ? (
+      <PageAccessCheck accessReviewResources={accessReviewResources}>
         <IntegrationTestView
           applicationName={integrationTest.spec.application}
           integrationTest={integrationTest}
         />
-      ) : (
-        <Bullseye>
-          <Spinner data-test="spinner" />
-        </Bullseye>
-      )}
+      </PageAccessCheck>
     </NamespacedPage>
   );
 };
