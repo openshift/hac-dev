@@ -3,6 +3,7 @@ import { UIhelper } from '../../utils/UIhelper';
 import { CPUUnit, MemoryUnit } from '../constants/Units';
 import { addComponentPagePO, ComponentsPagePO } from '../pageObjects/createApplication-po';
 import { alertTitle } from '../pageObjects/global-po';
+import { componentsTabPO } from '../pageObjects/pages-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class ComponentPage extends AbstractWizardPage {
@@ -102,9 +103,20 @@ export class ComponentPage extends AbstractWizardPage {
   selectCustomBuildPipeline() {
     cy.get(ComponentsPagePO.customBuildPipelineRadioBtn).click();
   }
+  
+  checkStatusOnModal(labelText: string) {
+    cy.contains(ComponentsPagePO.label, labelText, { timeout: 150000 }).should('be.visible')
+  }
 
-  checkStatusOnModal(statusLocator) {
-    cy.get(statusLocator, {timeout:150000}).should('be.visible');
+  verifyAndWaitForPRIsSent() {
+    this.checkStatusOnModal('Merge pull request')
+    cy.contains('a', 'Merge in GitHub').should('be.visible')
+  }
+
+  verifyAndWaitForPRMerge() {
+    this.checkStatusOnModal('Custom')
+    cy.contains('a', 'Edit pipeline in GitHub').should('be.visible')
+
   }
 
   closeModal() {

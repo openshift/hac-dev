@@ -1,4 +1,5 @@
 import { Common } from "../../../utils/Common";
+import { UIhelper } from "../../../utils/UIhelper";
 
 // Latest Commits List view page
 export class LatestCommitsTabPage {
@@ -12,7 +13,7 @@ export class LatestCommitsTabPage {
   mergePR(owner: string, repoName: string, pullNumber: number, commitTitle: string, commitMessage: string) {
     const body = { commit_title: `${commitTitle}`, commit_message: `${commitMessage}` }
     Common.githubRequest('PUT', `https://api.github.com/repos/${owner}/${repoName}/pulls/${pullNumber}/merge`, body).then((result) => {
-      cy.wrap(JSON.stringify(result.body)).as(commitTitle)
+      expect(result.body.merged).to.be.true
     });
   }
 
@@ -20,6 +21,26 @@ export class LatestCommitsTabPage {
     const owner = gitRepo.split('/')[3];
     const repoName = gitRepo.split('/')[4];
     const body = { message: `${commitMessage}`, content: `${updatedFileContentInBase64}`, sha: `${fileSHA}` }
-    Common.githubRequest('PUT', `https://api.github.com/repos/${owner}/${repoName}/contents/${filePath}`, body)
+    Common.githubRequest('PUT', `https://api.github.com/repos/${owner}/${repoName}/contents/${filePath}`, body).then((result) => {
+      cy.log(`${commitMessage}_SHA : ${result.body.commit.sha}`)
+      Cypress.env(`${commitMessage}_SHA`, result.body.commit.sha)
+    });
+  }
+
+  verifyCommitsPageTitleAndStatus(commitTitle: string) {
+    cy.contains('h2', commitTitle).contains('Succeeded')
+  }
+  verifyCommitID(sha: string, repoLink: string) {
+    cy.contains('p', 'Commit ID:')
+      .contains('a', sha).should('be.visible').should('have.attr', 'href', `${repoLink}/commit/${sha}`)
+  }
+  verifyBranch(branchName: string, repoLink: string) {
+    cy.contains('p', 'Branch:')
+      .contains('a', branchName).should('be.visible').should('have.attr', 'href', `${repoLink}/tree/main`)
+  }
+  verifyNodesOnCommitOverview(nodes: string[]) {
+    nodes.forEach((nodetext) => {
+      UIhelper.verifyGraphNodes(nodetext);
+    })
   }
 }

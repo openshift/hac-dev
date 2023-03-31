@@ -57,19 +57,6 @@ export class ApplicationDetailPage {
     cy.get(buildLogModalContentPO.failedPipelineRunLogs).should('not.exist');
   }
 
-  verifyGraphNodes(nodeText: string, success = true) {
-    cy.contains(applicationDetailPagePO.graphNode, nodeText).within(() => {
-      cy.get(
-        success
-          ? applicationDetailPagePO.pipelineStatusSuccess
-          : applicationDetailPagePO.pipelineNode,
-        { timeout: 60000 },
-      )
-        .scrollIntoView()
-        .should('be.visible');
-    });
-  }
-
   closeBuildLog() {
     cy.get(buildLogModalContentPO.closeButton).click();
     cy.get(buildLogModalContentPO.modal).should('not.exist');

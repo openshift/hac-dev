@@ -1,3 +1,5 @@
+import { UIhelperPO } from "../support/pageObjects/global-po";
+
 export class UIhelper {
   static clickTab(tabName: string) {
     return cy
@@ -71,4 +73,17 @@ export class UIhelper {
     UIhelper.getTableRow(tableAriaLabel, uniqueRowText).contains(cellTextToClick).click()
   }
 
+  static verifyGraphNodes(nodeText: string, success = true) {
+    cy.contains(UIhelperPO.graphNode, nodeText).within(() => {
+      cy.get(
+        success
+          ? UIhelperPO.pipelineStatusSuccess
+          : UIhelperPO.pipelineNode,
+        { timeout: 60000 },
+      )
+        .scrollIntoView()
+        .should('be.visible');
+    });
+  }
+  
 }

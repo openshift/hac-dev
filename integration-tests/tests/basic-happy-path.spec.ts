@@ -85,7 +85,7 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
 
         //Verify the Pipeline run details Graph
         piplinerunlogsTasks.forEach((item) => {
-          applicationDetailPage.verifyGraphNodes(item);
+          UIhelper.verifyGraphNodes(item);
         });
 
         DetailsTab.checkStatusSucceeded(TaskRunsTab.getbasicTaskNamesList(pipelinerunName));
@@ -132,9 +132,9 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
     })
 
     it('Validate the graph views for the created application', () => {
-      applicationDetailPage.verifyGraphNodes('Components', false);
-      applicationDetailPage.verifyGraphNodes('Builds');
-      applicationDetailPage.verifyGraphNodes('Static environments');
+      UIhelper.verifyGraphNodes('Components', false);
+      UIhelper.verifyGraphNodes('Builds');
+      UIhelper.verifyGraphNodes('Static environments');
     });
   });
 });
