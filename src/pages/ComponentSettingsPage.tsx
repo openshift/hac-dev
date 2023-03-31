@@ -11,14 +11,18 @@ import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import ComponentSettingsView from '../components/ComponentSettingsForm/ComponentSettingsView';
 import { HeadTitle } from '../components/HeadTitle';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
+import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import PageLayout from '../components/PageLayout/PageLayout';
+import { ComponentModel } from '../models';
 import { getQueryArgument } from '../shared/utils';
+import { AccessReviewResources } from '../types';
 import { useApplicationBreadcrumbs } from '../utils/breadcrumb-utils';
 
 const ComponentSettingsPage: React.FunctionComponent = () => {
   const componentName = getQueryArgument('componentName');
   const navigate = useNavigate();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
+  const accessReviewResources: AccessReviewResources = [{ model: ComponentModel, verb: 'update' }];
 
   const emptyState = (
     <PageLayout
@@ -44,8 +48,10 @@ const ComponentSettingsPage: React.FunctionComponent = () => {
 
   return (
     <NamespacedPage>
-      <HeadTitle>{componentName} - Component Settings | CI/CD</HeadTitle>
-      <ComponentSettingsView componentName={componentName} />
+      <HeadTitle>{`${componentName} - Component Settings | CI/CD`}</HeadTitle>
+      <PageAccessCheck accessReviewResources={accessReviewResources}>
+        <ComponentSettingsView componentName={componentName} />
+      </PageAccessCheck>
     </NamespacedPage>
   );
 };
