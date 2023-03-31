@@ -42,7 +42,7 @@ const BaseInputField: React.FC<
       {children({
         ...field,
         ...props,
-        value: field.value || '',
+        value: field.value ?? '',
         id: fieldId,
         label,
         validated: !isValid ? ValidatedOptions.error : validated,
