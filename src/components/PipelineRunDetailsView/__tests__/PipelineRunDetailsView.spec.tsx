@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource, k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { DataState, testPipelineRuns } from '../../../__data__/pipelinerun-data';
+import { useAccessReviewForModel } from '../../../utils/rbac';
 import { routerRenderer } from '../../../utils/test-utils';
 import { PipelineRunDetailsView } from '../PipelineRunDetailsView';
 
@@ -47,6 +48,7 @@ jest.mock('../../../utils/rbac', () => ({
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useNavigateMock = useNavigate as jest.Mock;
 const mockK8sCreate = k8sCreateResource as jest.Mock;
+const useAccessReviewForModelMock = useAccessReviewForModel as jest.Mock;
 
 const pipelineRunName = 'java-springboot-sample-b4trz';
 const mockPipelineRun = {
@@ -172,7 +174,7 @@ describe('PipelineRunDetailsView', () => {
     expect(screen.queryByText('Namespace')).toBeInTheDocument();
   });
 
-  it('should render Stop and Cancel button under the Actions dropdown', () => {
+  it('should render Stop and Cancel buttons under the Actions dropdown', () => {
     watchResourceMock
       .mockReturnValueOnce([testPipelineRuns[DataState.SUCCEEDED], true])
       .mockReturnValue([[], true]);
@@ -187,7 +189,7 @@ describe('PipelineRunDetailsView', () => {
     expect(screen.queryByText('Cancel')).toBeInTheDocument();
   });
 
-  it('should enable Stop and Cancel button if the pipeline is running', () => {
+  it('should enable Stop and Cancel buttons if the pipeline is running', () => {
     watchResourceMock
       .mockReturnValueOnce([testPipelineRuns[DataState.RUNNING], true])
       .mockReturnValue([[], true]);
@@ -199,7 +201,7 @@ describe('PipelineRunDetailsView', () => {
     expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'false');
   });
 
-  it('should disable Stop and Cancel button if the pipelinerun is succeeded', () => {
+  it('should disable Stop and Cancel buttons if the pipelinerun is succeeded', () => {
     watchResourceMock
       .mockReturnValueOnce([testPipelineRuns[DataState.SUCCEEDED], true])
       .mockReturnValue([[], true]);
@@ -211,7 +213,7 @@ describe('PipelineRunDetailsView', () => {
     expect(screen.queryByText('Cancel')).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should disable Stop and Cancel button if the pipelinerun is in cancelled state', () => {
+  it('should disable Stop and Cancel buttons if the pipelinerun is in cancelled state', () => {
     watchResourceMock
       .mockReturnValueOnce([testPipelineRuns[DataState.PIPELINE_RUN_CANCELLED], true])
       .mockReturnValue([[], true]);
@@ -223,7 +225,7 @@ describe('PipelineRunDetailsView', () => {
     expect(screen.queryByText('Cancel')).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should disable Stop and Cancel button if the pipelinerun is in stopped state', () => {
+  it('should disable Stop and Cancel buttons if the pipelinerun is in stopped state', () => {
     watchResourceMock
       .mockReturnValueOnce([testPipelineRuns[DataState.PIPELINE_RUN_STOPPED], true])
       .mockReturnValue([[], true]);
@@ -280,5 +282,20 @@ describe('PipelineRunDetailsView', () => {
         '/stonesoup/workspaces//applications/test-app/activity/pipelineruns?name=mock-component',
       ),
     );
+  });
+
+  it('should disable Stop and Cancel buttons if user does not have access to patch pipeline run', () => {
+    watchResourceMock
+      .mockReturnValueOnce([testPipelineRuns[DataState.RUNNING], true])
+      .mockReturnValue([[], true]);
+    useAccessReviewForModelMock
+      .mockReturnValueOnce([true, true])
+      .mockReturnValueOnce([false, true]);
+
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
+
+    expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.queryByText('Cancel')).toHaveAttribute('aria-disabled', 'true');
   });
 });
