@@ -25,9 +25,10 @@ import {
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useApplicationRoutes } from '../../hooks';
 import { useComponents } from '../../hooks/useComponents';
-import { useGitOpsDeploymentCR } from '../../hooks/useGitOpsDeploymentCR';
+import { useAllGitOpsDeploymentCRs } from '../../hooks/useGitOpsDeploymentCR';
 import { PACState } from '../../hooks/usePACState';
 import { useSearchParam } from '../../hooks/useSearchParam';
+import { useSnapshotsEnvironmentBindings } from '../../hooks/useSnapshotsEnvironmentBindings';
 import emptyStateImgUrl from '../../imgs/Components.svg';
 import { ComponentModel, PipelineRunGroupVersionKind } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
@@ -82,9 +83,26 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
     },
   });
 
-  const [gitOpsDeployment, gitOpsDeploymentLoaded] = useGitOpsDeploymentCR(
-    applicationName,
-    namespace,
+  const [snapshotEBs, snapshotLoaded] = useSnapshotsEnvironmentBindings(namespace, applicationName);
+
+  const [gitOpsDeployments, gitOpsDeploymentLoaded, gitOpsDeploymentError] =
+    useAllGitOpsDeploymentCRs(namespace);
+
+  const allLoaded = React.useMemo(
+    () => snapshotLoaded && gitOpsDeploymentLoaded && !gitOpsDeploymentError,
+    [snapshotLoaded, gitOpsDeploymentLoaded, gitOpsDeploymentError],
+  );
+
+  const allData = React.useMemo(
+    () =>
+      allLoaded &&
+      gitOpsDeployments &&
+      Array.isArray(gitOpsDeployments) &&
+      gitOpsDeployments.length > 0 &&
+      snapshotEBs &&
+      Array.isArray(snapshotEBs) &&
+      snapshotEBs.length > 0,
+    [allLoaded, gitOpsDeployments, snapshotEBs],
   );
 
   const statusFilters = React.useMemo(
@@ -217,11 +235,13 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                     </ButtonWithAccessTooltip>
                   </ToolbarItem>
                   <ToolbarGroup alignment={{ default: 'alignRight' }}>
-                    {gitOpsDeploymentLoaded ? (
-                      gitOpsDeployment ? (
+                    {!gitOpsDeploymentError && gitOpsDeploymentLoaded ? (
+                      Array.isArray(gitOpsDeployments) &&
+                      gitOpsDeployments.length > 0 &&
+                      gitOpsDeployments[0] ? (
                         <ToolbarItem>
                           Deployment strategy:{' '}
-                          <Label>{getGitOpsDeploymentStrategy(gitOpsDeployment)}</Label>
+                          <Label>{getGitOpsDeploymentStrategy(gitOpsDeployments[0])}</Label>
                         </ToolbarItem>
                       ) : null
                     ) : (
@@ -233,19 +253,57 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
               <DataList aria-label="Components" data-testid="component-list">
                 {filteredComponents?.length ? (
                   <>
-                    {filteredComponents?.map((component) => (
-                      <ComponentListItem
-                        key={component.metadata.uid}
-                        component={component}
-                        routes={routes}
-                        onStateChange={(state) =>
-                          setComponentState((prev) => ({
-                            ...prev,
-                            [component.metadata.name]: state,
-                          }))
-                        }
-                      />
-                    ))}
+                    {filteredComponents?.map((component) => {
+                      if (allData) {
+                        const gitOpsDeploymentData = snapshotEBs[0].status.gitopsDeployments.find(
+                          (deployment) => deployment.componentName === component.metadata.name,
+                        );
+                        const gitOpsDeploymentCR = gitOpsDeployments.find(
+                          (deployment) =>
+                            deployment.metadata.name === gitOpsDeploymentData.gitopsDeployment,
+                        );
+
+                        return gitOpsDeploymentCR ? (
+                          <ComponentListItem
+                            key={component.metadata.uid}
+                            component={component}
+                            routes={routes}
+                            gitOpsDeployment={gitOpsDeploymentCR}
+                            onStateChange={(state) =>
+                              setComponentState((prev) => ({
+                                ...prev,
+                                [component.metadata.name]: state,
+                              }))
+                            }
+                          />
+                        ) : (
+                          <ComponentListItem
+                            key={component.metadata.uid}
+                            component={component}
+                            routes={routes}
+                            onStateChange={(state) =>
+                              setComponentState((prev) => ({
+                                ...prev,
+                                [component.metadata.name]: state,
+                              }))
+                            }
+                          />
+                        );
+                      }
+                      return (
+                        <ComponentListItem
+                          key={component.metadata.uid}
+                          component={component}
+                          routes={routes}
+                          onStateChange={(state) =>
+                            setComponentState((prev) => ({
+                              ...prev,
+                              [component.metadata.name]: state,
+                            }))
+                          }
+                        />
+                      );
+                    })}
                   </>
                 ) : (
                   <FilteredEmptyState

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   ClipboardCopy,
   DataListAction,
@@ -20,13 +21,17 @@ import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclama
 import ExternalLinkAltIcon from '@patternfly/react-icons/dist/js/icons/external-link-alt-icon';
 import { global_palette_red_100 as redColor } from '@patternfly/react-tokens/dist/js/global_palette_red_100';
 import { PACState } from '../../hooks/usePACState';
+import { DeploymentGroupVersionKind } from '../../models/deployment';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind, RouteKind, ResourceStatusCondition } from '../../types';
+import { DeploymentKind } from '../../types/deployment';
+import { GitOpsDeploymentKind } from '../../types/gitops-deployment';
 import { getConditionForResource } from '../../utils/common-utils';
 import { getComponentRouteWebURL } from '../../utils/route-utils';
 import { useComponentActions } from '../ApplicationDetails/component-actions';
 import GitRepoLink from '../GitLink/GitRepoLink';
+import PodLogsColumn from '../PodLogs/PodLogsColumn';
 import BuildStatusColumn from './BuildStatusColumn';
 import ComponentPACStateLabel from './ComponentPACStateLabel';
 
@@ -47,12 +52,14 @@ export type ComponentListViewItemProps = {
   component: ComponentKind;
   routes: RouteKind[];
   onStateChange?: (state: PACState) => void;
+  gitOpsDeployment?: GitOpsDeploymentKind;
 };
 
 export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
   component,
   routes,
   onStateChange,
+  gitOpsDeployment,
 }) => {
   const [expanded, setExpanded] = React.useState(false);
   const { replicas, targetPort, resources } = component.spec;
@@ -62,6 +69,24 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
   const containerImage = component.status?.containerImage;
   const componentRouteWebURL = routes?.length > 0 && getComponentRouteWebURL(routes, name);
   const condition = getConditionForResource<ComponentKind>(component);
+
+  const deploymentResource = gitOpsDeployment?.status.resources.find(
+    (resource) => resource.kind === 'Deployment',
+  );
+
+  const [deployment, deploymentLoaded, deploymentLoadError] = useK8sWatchResource<DeploymentKind>({
+    groupVersionKind: DeploymentGroupVersionKind,
+    isList: false,
+    name: deploymentResource?.name,
+    namespace: deploymentResource?.namespace,
+  });
+
+  const podSelector = React.useMemo(
+    () => !deploymentLoadError && deploymentLoaded && deployment.spec.selector,
+    [deploymentLoaded, deployment, deploymentLoadError],
+  );
+
+  // const [componnentState, setComponentState] = React.useState<{ [name: string]: PACState }>({});
 
   return (
     <DataListItem aria-label={name} isExpanded={expanded} data-testid="component-list-item">
@@ -109,6 +134,8 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
             ) : null,
             <DataListCell key="status" alignRight>
               <BuildStatusColumn component={component} />
+
+              {podSelector && <PodLogsColumn component={component} podSelector={podSelector} />}
             </DataListCell>,
           ]}
         />

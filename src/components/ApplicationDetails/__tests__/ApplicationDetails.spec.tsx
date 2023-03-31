@@ -6,7 +6,7 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { screen, configure } from '@testing-library/react';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
 import { useApplication, useApplications } from '../../../hooks/useApplications';
-import { useGitOpsDeploymentCR } from '../../../hooks/useGitOpsDeploymentCR';
+import { useAllGitOpsDeploymentCRs } from '../../../hooks/useGitOpsDeploymentCR';
 import { ComponentGroupVersionKind, PipelineRunGroupVersionKind } from '../../../models';
 import { routerRenderer } from '../../../utils/test-utils';
 import { componentCRMocks } from '../../Components/__data__/mock-data';
@@ -67,7 +67,7 @@ const useApplicationsMock = useApplications as jest.Mock;
 configure({ testIdAttribute: 'data-test' });
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
-const mockGitOpsDeploymentCR = useGitOpsDeploymentCR as jest.Mock;
+const mockGitOpsDeploymentCR = useAllGitOpsDeploymentCRs as jest.Mock;
 
 const { workflowMocks, applyWorkflowMocks } = getMockWorkflows();
 

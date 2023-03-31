@@ -20,6 +20,14 @@ export enum GitOpsDeploymentSyncStatus {
   OutOfSync = 'OutOfSync',
 }
 
+export type StatusResource = {
+  group: string;
+  health?: { status: string };
+  kind?: string;
+  name?: string;
+  namespace?: string;
+};
+
 export type GitOpsDeploymentKind = {
   spec: {
     source: {
@@ -37,5 +45,6 @@ export type GitOpsDeploymentKind = {
       revision: string;
       status: GitOpsDeploymentSyncStatus;
     };
+    resources: StatusResource[];
   };
 } & K8sResourceCommon;
