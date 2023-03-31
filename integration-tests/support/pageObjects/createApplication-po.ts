@@ -52,8 +52,7 @@ export const ComponentsPagePO = {
   editNameInput: '[data-test="editable-label-input"]',
   customBuildPipelineRadioBtn: '[data-test="custom-build-pipelines"]',
   customBuildRequestedState: '[data-testid="requested-state"]',
-  customBuildPendingState: '[data-testid="pending-state"]',
-  customBuildReadyState: '[data-testid="ready-state"]',
+  label: '[class="pf-c-label__content"]',
   customBuildPipelineModalCloseBtn: '[data-test="close-button custom-pipeline-modal"]',
 };
 
@@ -65,9 +64,6 @@ export const applicationDetailPagePO = {
   cpuRamLabel: 'CPU / Memory',
   replicaLabel: 'Instances',
   route: (param: string) => `[data-test-id="${param}-route"]`,
-  graphNode: 'g[data-kind="node"]',
-  pipelineStatusSuccess: 'g[class="pf-topology-pipelines__pill-status pf-m-success"]',
-  pipelineNode: 'g[class="pf-topology__pipelines__task-node workload-node"]',
 };
 
 export const componentsListPagePO = {

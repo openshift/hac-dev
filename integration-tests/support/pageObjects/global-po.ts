@@ -47,3 +47,9 @@ export const navigation = {
 export const breadcrumb = {
   breadcrumbLink: 'nav[data-ouia-component-type="PF4/Breadcrumb"]',
 };
+
+export const UIhelperPO = {
+  graphNode: 'g[data-kind="node"]',
+  pipelineStatusSuccess: 'g[class="pf-topology-pipelines__pill-status pf-m-success"]',
+  pipelineNode: 'g[class="pf-topology__pipelines__task-node workload-node"]',
+}
