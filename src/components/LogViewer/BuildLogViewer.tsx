@@ -64,7 +64,7 @@ export const buildLogViewerLauncher = createModalLauncher(BuildLogViewer, {
   className: 'build-log-viewer',
   'data-testid': 'view-build-logs-modal',
   variant: ModalVariant.large,
-  title: 'View logs',
+  title: 'View build logs',
 });
 
 export const useBuildLogViewerModal = (component: ComponentKind) => {

@@ -6,7 +6,10 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { screen, configure } from '@testing-library/react';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
 import { useApplication, useApplications } from '../../../hooks/useApplications';
-import { useAllGitOpsDeploymentCRs } from '../../../hooks/useGitOpsDeploymentCR';
+import {
+  useGitOpsDeploymentCR,
+  useAllGitOpsDeploymentCRs,
+} from '../../../hooks/useGitOpsDeploymentCR';
 import { ComponentGroupVersionKind, PipelineRunGroupVersionKind } from '../../../models';
 import { routerRenderer } from '../../../utils/test-utils';
 import { componentCRMocks } from '../../Components/__data__/mock-data';
@@ -45,6 +48,7 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 jest.mock('../../../hooks/useGitOpsDeploymentCR', () => ({
   useGitOpsDeploymentCR: jest.fn(),
+  useAllGitOpsDeploymentCRs: jest.fn(),
 }));
 jest.mock('../../../hooks/useApplications', () => ({
   useApplication: jest.fn(),
@@ -67,7 +71,8 @@ const useApplicationsMock = useApplications as jest.Mock;
 configure({ testIdAttribute: 'data-test' });
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
-const mockGitOpsDeploymentCR = useAllGitOpsDeploymentCRs as jest.Mock;
+const mockGitOpsDeploymentCR = useGitOpsDeploymentCR as jest.Mock;
+const mockAllGitOpsDeploymentCRs = useAllGitOpsDeploymentCRs as jest.Mock;
 
 const { workflowMocks, applyWorkflowMocks } = getMockWorkflows();
 
@@ -85,6 +90,7 @@ describe('ApplicationDetails', () => {
   beforeEach(() => {
     useFeatureFlagMock.mockReturnValue([false]);
     mockGitOpsDeploymentCR.mockReturnValue([[], false]);
+    mockAllGitOpsDeploymentCRs.mockReturnValue([[], false]);
     useParamsMock.mockReturnValue({});
     useApplicationsMock.mockReturnValue([[mockApplication], true]);
     useApplicationMock.mockReturnValue([mockApplication, true]);

@@ -255,12 +255,12 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                   <>
                     {filteredComponents?.map((component) => {
                       if (allData) {
-                        const gitOpsDeploymentData = snapshotEBs[0].status.gitopsDeployments.find(
+                        const gitOpsDeploymentData = snapshotEBs[0]?.status?.gitopsDeployments.find(
                           (deployment) => deployment.componentName === component.metadata.name,
                         );
                         const gitOpsDeploymentCR = gitOpsDeployments.find(
                           (deployment) =>
-                            deployment.metadata.name === gitOpsDeploymentData.gitopsDeployment,
+                            deployment.metadata.name === gitOpsDeploymentData?.gitopsDeployment,
                         );
 
                         return gitOpsDeploymentCR ? (

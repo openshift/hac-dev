@@ -32,7 +32,7 @@ const PodLogsColumn: React.FC<PodLogsColumnProps> = ({ component, podSelector })
   }
 
   if (error) {
-    return <>{JSON.stringify(error)}</>;
+    return <>{`${error}`}</>;
   }
 
   return (
@@ -41,7 +41,7 @@ const PodLogsColumn: React.FC<PodLogsColumnProps> = ({ component, podSelector })
         <Button
           onClick={podLogsModal}
           variant="link"
-          data-testid={`view-pod-logs-${component.metadata.name}`}
+          data-test={`view-pod-logs-${component.metadata.name}`}
           isInline
         >
           View pod logs

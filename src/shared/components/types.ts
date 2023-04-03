@@ -222,6 +222,14 @@ export type PodSpec = {
 // https://github.com/kubernetes/api/blob/release-1.16/core/v1/types.go#L2411-L2432
 type PodPhase = 'Pending' | 'Running' | 'Succeeded' | 'Failed' | 'Unknown';
 
+export type PodStatusType =
+  | 'Ready'
+  | 'ContainersReady'
+  | 'PodCompleted'
+  | 'PodScheduled'
+  | 'Initialized'
+  | 'Pending';
+
 type ContainerStateValue = {
   reason?: string;
   [key: string]: any;
@@ -246,6 +254,7 @@ export type ContainerStatus = {
 
 export type PodCondition = {
   lastProbeTime?: string;
+  type: PodStatusType;
 } & K8sResourceCondition;
 
 export type PodStatus = {

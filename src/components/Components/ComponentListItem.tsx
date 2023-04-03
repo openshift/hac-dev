@@ -70,7 +70,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
   const componentRouteWebURL = routes?.length > 0 && getComponentRouteWebURL(routes, name);
   const condition = getConditionForResource<ComponentKind>(component);
 
-  const deploymentResource = gitOpsDeployment?.status.resources.find(
+  const deploymentResource = gitOpsDeployment?.status?.resources.find(
     (resource) => resource.kind === 'Deployment',
   );
 
@@ -82,11 +82,9 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
   });
 
   const podSelector = React.useMemo(
-    () => !deploymentLoadError && deploymentLoaded && deployment.spec.selector,
+    () => !deploymentLoadError && deploymentLoaded && deployment?.spec?.selector,
     [deploymentLoaded, deployment, deploymentLoadError],
   );
-
-  // const [componnentState, setComponentState] = React.useState<{ [name: string]: PACState }>({});
 
   return (
     <DataListItem aria-label={name} isExpanded={expanded} data-testid="component-list-item">

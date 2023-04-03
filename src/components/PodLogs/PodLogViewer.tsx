@@ -11,10 +11,11 @@ import { EmptyBox, LoadingBox, LoadingInline } from '../../shared/components/sta
 import { PodKind } from '../../shared/components/types';
 import { useFullscreen } from '../../shared/hooks/fullscreen';
 import { ScrollDirection, useScrollDirection } from '../../shared/hooks/scroll';
-import { calculateDuration, getPodStatus } from '../../utils/pipeline-utils';
+import { calculateDuration } from '../../utils/pipeline-utils';
 import { ComponentProps, createModalLauncher } from '../modal/createModalLauncher';
 import { useModalLauncher } from '../modal/ModalProvider';
-import { ContainerDropdown } from './ContainerDropdown';
+import { ContainerNavList } from './ContainerNavList';
+import { getPodStatus } from './utils/pod-log-utils';
 import './PodLogsViewer.scss';
 
 type PodLogViewerProps = ComponentProps & {
@@ -32,7 +33,7 @@ export const PodLogViewer: React.FC<PodLogViewerProps> = ({
   const scrollPane = React.useRef<HTMLDivElement>();
   const completedRef = React.useRef<boolean[]>([]);
   const [, setRenderToCount] = React.useState(0);
-  const [selectedContainer, setSelectedContainer] = React.useState(pod.spec.containers[0]);
+  const [selectedContainer, setSelectedContainer] = React.useState(pod?.spec?.containers[0]);
   const [isFullscreen, fullscreenRef, fullscreenToggle] = useFullscreen<HTMLDivElement>();
   const [scrollDirection, handleScrollCallback] = useScrollDirection();
   const [autoScroll, setAutoScroll] = React.useState(true);
@@ -84,9 +85,10 @@ export const PodLogViewer: React.FC<PodLogViewerProps> = ({
     saveAs(blob, `${pod.metadata.name}.log`);
   };
 
-  const divider = <FlexItem className="multi-stream-logs__divider">|</FlexItem>;
-  if (!pod) {
-    return <EmptyBox label="pipeline runs" />;
+  const divider = <FlexItem className="pod-logs__divider">|</FlexItem>;
+
+  if (!pod || !pod.spec) {
+    return <EmptyBox label="pod not found" />;
   }
 
   return (
@@ -112,80 +114,87 @@ export const PodLogViewer: React.FC<PodLogViewerProps> = ({
         </span>
       </StackItem>
       <StackItem isFilled>
-        <div ref={fullscreenRef} className="multi-stream-logs">
-          <Flex
-            className={(classNames as any)({
-              'multi-stream-logs--fullscreen': isFullscreen,
-            })}
-          >
-            <FlexItem>
-              <ContainerDropdown
-                initContainers={pod.spec.initContainers}
-                containers={containers}
-                selectedContainer={selectedContainer}
-                onChange={setSelectedContainer}
-              />
-            </FlexItem>
-            <FlexItem className="multi-stream-logs__button" align={{ default: 'alignRight' }}>
-              <Button variant="link" onClick={downloadLogs} isInline>
-                <DownloadIcon className="multi-stream-logs__icon" />
-                {t('Download')}
-              </Button>
-            </FlexItem>
-            {divider}
-            {onDownloadAll && (
-              <>
-                <FlexItem className="multi-stream-logs__button">
-                  <Button
-                    variant="link"
-                    onClick={startDownloadAll}
-                    isDisabled={downloadAllStatus}
-                    isInline
-                  >
-                    <DownloadIcon className="multi-stream-logs__icon" />
-                    {downloadAllLabel || t('Download all')}
-                    {downloadAllStatus && <LoadingInline />}
-                  </Button>
-                </FlexItem>
-                {divider}
-              </>
-            )}
-            {fullscreenToggle && (
-              <FlexItem className="multi-stream-logs__button">
-                <Button variant="link" onClick={fullscreenToggle} isInline>
-                  {isFullscreen ? (
-                    <>
-                      <CompressIcon className="multi-stream-logs__icon" />
-                      {t('Collapse')}
-                    </>
-                  ) : (
-                    <>
-                      <ExpandIcon className="multi-stream-logs__icon" />
-                      {t('Expand')}
-                    </>
-                  )}
-                </Button>
-              </FlexItem>
-            )}
-          </Flex>
+        <div className="pod-logs">
+          <div className="pod-logs__navList" data-test="pod-log-navlist">
+            <ContainerNavList
+              initContainers={pod.spec.initContainers}
+              containers={containers}
+              selectedContainer={selectedContainer}
+              onChange={setSelectedContainer}
+            />
+          </div>
           <div
-            className="multi-stream-logs__container"
+            className="pod-logs__log-container"
             onScroll={handleScrollCallback}
             data-testid="logs-task-container"
+            ref={fullscreenRef}
           >
-            <div className="multi-stream-logs__container__logs" ref={scrollPane}>
-              {pod?.spec?.containers ? (
-                <Logs
-                  resource={pod}
-                  container={selectedContainer}
-                  resourceStatus={RunStatus.Running}
-                  render={true}
-                  onComplete={handleComplete}
-                  autoScroll={true}
-                />
-              ) : (
-                <LoadingBox />
+            <Flex
+              className={(classNames as any)({
+                'pod-logs--fullscreen': isFullscreen,
+              })}
+            >
+              <FlexItem className="pod-logs__button" align={{ default: 'alignRight' }}>
+                <Button variant="link" onClick={downloadLogs} isInline>
+                  <DownloadIcon className="pod-logs__icon" />
+                  {t('Download')}
+                </Button>
+              </FlexItem>
+              {divider}
+              {onDownloadAll && (
+                <>
+                  <FlexItem className="pod-logs__button">
+                    <Button
+                      variant="link"
+                      onClick={startDownloadAll}
+                      isDisabled={downloadAllStatus}
+                      isInline
+                    >
+                      <DownloadIcon className="pod-logs__icon" />
+                      {downloadAllLabel || t('Download all')}
+                      {downloadAllStatus && <LoadingInline />}
+                    </Button>
+                  </FlexItem>
+                  {divider}
+                </>
               )}
+              {fullscreenToggle && (
+                <FlexItem className="pod-logs__button">
+                  <Button variant="link" onClick={fullscreenToggle} isInline>
+                    {isFullscreen ? (
+                      <>
+                        <CompressIcon className="pod-logs__icon" />
+                        {t('Collapse')}
+                      </>
+                    ) : (
+                      <>
+                        <ExpandIcon className="pod-logs__icon" />
+                        {t('Expand')}
+                      </>
+                    )}
+                  </Button>
+                </FlexItem>
+              )}
+            </Flex>
+            <div
+              className="pod-logs__container"
+              onScroll={handleScrollCallback}
+              data-testid="pod-logs-container"
+            >
+              <div className="pod-logs__container__logs" ref={scrollPane}>
+                {pod?.spec?.containers ? (
+                  <Logs
+                    resource={pod}
+                    container={selectedContainer}
+                    resourceStatus={RunStatus.Running}
+                    render={true}
+                    onComplete={handleComplete}
+                    autoScroll={true}
+                  />
+                ) : (
+                  <LoadingBox />
+                )}
+              </div>
             </div>
           </div>
         </div>

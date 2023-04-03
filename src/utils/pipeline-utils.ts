@@ -2,7 +2,6 @@ import merge from 'lodash/merge';
 import { preferredNameAnnotation } from '../consts/pipeline';
 import { ClairScanResult, SCAN_RESULT } from '../hooks/useClairScanResults';
 import { PipelineRunModel } from '../models';
-import { PodKind } from '../shared/components/types';
 import {
   Condition,
   PipelineRunKind,
@@ -258,16 +257,6 @@ export const taskRunStatus = (taskRun: TaskRunKind | PLRTaskRunData): runStatus 
   const status = conditionsRunStatus(taskRun.status.conditions);
 
   return status === runStatus.Succeeded ? taskResultsStatus(taskRun.status.taskResults) : status;
-};
-
-export const getPodStatus = (pod: PodKind): runStatus => {
-  if (!pod?.status?.conditions?.length) {
-    return runStatus.Pending;
-  }
-
-  const status = conditionsRunStatus(pod.status.conditions);
-
-  return status === runStatus.Succeeded ? taskResultsStatus(pod.status.taskResults) : status;
 };
 
 export const pipelineRunStatus = (pipelineRun: PipelineRunKind): runStatus =>
