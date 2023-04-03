@@ -13,7 +13,7 @@ export const HelpTopicLink: React.FC<HelpTopicLinkProps> = ({ topicId, isInline,
   } = useChrome();
 
   React.useEffect(() => {
-    enableTopics(topicId);
+    enableTopics({ names: [topicId], append: true });
 
     return () => disableTopics(topicId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
