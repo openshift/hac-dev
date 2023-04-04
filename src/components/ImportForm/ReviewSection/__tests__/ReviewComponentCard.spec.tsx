@@ -114,12 +114,12 @@ describe('ReviewComponentCard', () => {
     expect(configExpand).toBeInTheDocument();
     const expandButton = configExpand.querySelector('.pf-c-expandable-section__toggle');
     expect(expandButton).toBeInTheDocument();
-    expect(screen.queryByText('Docker file path')).toBeVisible();
+    expect(screen.queryByText('Dockerfile path')).toBeVisible();
 
     await act(async () => {
       fireEvent.click(expandButton);
     });
-    expect(screen.queryByText('Docker file path')).not.toBeVisible();
+    expect(screen.queryByText('Dockerfile path')).not.toBeVisible();
   });
 
   it('should not hide expandable config when components are not detected', async () => {

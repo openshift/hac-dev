@@ -100,9 +100,10 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
               <div className="review-component-card__configuration">
                 <InputField
                   name={`${fieldPrefix}.source.git.dockerfileUrl`}
-                  label="Docker file path"
+                  label="Dockerfile path"
                   type={TextInputTypes.text}
                   placeholder="Dockerfile"
+                  helpText="You can modify this path to point to your Dockerfile."
                 />
                 <span className="review-component-card__configuration--target-port">
                   <InputField
