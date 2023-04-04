@@ -136,6 +136,24 @@ describe('EditableLabelField', () => {
     });
   });
 
+  it('should call onEdit handler on submit ', async () => {
+    const onEdit = jest.fn();
+    render(
+      <Wrapper initialValues={initialValues} onSubmit={jest.fn()}>
+        <EditableLabelField name={fieldName} onEdit={onEdit} />
+      </Wrapper>,
+    );
+    fireEvent.click(screen.getByTestId('pencil-icon'));
+    await waitFor(() => {
+      const inputField = screen.getByTestId('editable-label-input').querySelector('input');
+      const submitButton = screen.getByTestId('check-icon');
+      fireEvent.input(inputField, { target: { value: 'new field value' } });
+      fireEvent.click(submitButton);
+    });
+
+    expect(onEdit).toHaveBeenCalled();
+  });
+
   it('should show label field with old value and unmount editable field on close button click ', async () => {
     render(
       <Wrapper initialValues={initialValues} onSubmit={jest.fn()}>

@@ -10,12 +10,14 @@ import './EditableLabelField.scss';
 type EditableLabelFieldProps = {
   name: string;
   type?: TextInputTypes;
+  onEdit?: () => void;
 } & Omit<FormGroupProps, 'fieldId'>;
 
 const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
   name,
   label,
   type = TextInputTypes.text,
+  onEdit,
   ...props
 }) => {
   const [, { value, error }, { setValue, setTouched }] = useField({ name, type });
@@ -42,6 +44,7 @@ const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       setEditing(false);
+      onEdit && onEdit();
       e.preventDefault();
     }
   };
@@ -56,7 +59,10 @@ const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
           <FlexItem>
             <ActionGroupWithIcons
               className="editable-label-field__action-group"
-              onSubmit={() => setEditing(false)}
+              onSubmit={() => {
+                setEditing(false);
+                onEdit && onEdit();
+              }}
               isDisabled={!!error}
               onClose={() => {
                 setEditing(false);

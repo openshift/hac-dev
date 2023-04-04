@@ -1,5 +1,6 @@
 import { mockDetectedComponent } from '../__data__/mock-cdq';
 import { createResourceData, transformComponentValues } from '../transform-utils';
+import { CPUUnits, DetectedFormComponent, MemoryUnits } from '../types';
 
 const mockResourceRequests = {
   requests: {
@@ -13,6 +14,32 @@ const mockResourceLimits = {
     cpu: '48m',
     memory: '516Mi',
   },
+};
+
+const mockComponent: DetectedFormComponent = {
+  componentStub: {
+    application: 'insert-application-name',
+    componentName: 'nodejs',
+    source: {
+      git: {
+        context: './',
+        url: 'https://github.com/nodeshift-starters/devfile-sample.git',
+      },
+    },
+    resources: {
+      cpu: '10',
+      cpuUnit: CPUUnits.millicores,
+      memory: '50',
+      memoryUnit: MemoryUnits.Mi,
+    },
+    replicas: 1,
+    targetPort: 8080,
+    route: undefined,
+    env: undefined,
+  },
+  devfileFound: true,
+  language: 'nodejs',
+  projectType: 'nodejs',
 };
 
 describe('Transform Utils', () => {
@@ -48,27 +75,39 @@ describe('Transform Utils', () => {
 
   it('should transform component values for submit utils', () => {
     const transformedComponentValues = transformComponentValues(mockDetectedComponent);
-    expect(transformedComponentValues).toEqual([
-      {
-        componentStub: {
-          application: 'insert-application-name',
-          componentName: 'nodejs',
-          source: {
-            git: {
-              context: './',
-              url: 'https://github.com/nodeshift-starters/devfile-sample.git',
-            },
-          },
-          resources: { cpu: '10', cpuUnit: 'millicores', memory: '50', memoryUnit: 'Mi' },
-          replicas: 1,
-          targetPort: 8080,
-          route: undefined,
-          env: undefined,
-        },
-        devfileFound: true,
-        language: 'nodejs',
-        projectType: 'nodejs',
+    expect(transformedComponentValues).toEqual([mockComponent]);
+  });
+
+  it('should modify the component name if the user has not modified the name', () => {
+    const userModifiedComponent: DetectedFormComponent = {
+      ...mockComponent,
+      componentStub: {
+        ...mockComponent.componentStub,
+        componentName: 'my-component-name',
       },
-    ]);
+    };
+
+    const transformedComponentValues = transformComponentValues(
+      mockDetectedComponent,
+      userModifiedComponent,
+    );
+    expect(transformedComponentValues[0].componentStub.componentName).toBe('nodejs');
+  });
+
+  it('should not modify the component name if the user has modified the name', () => {
+    const userModifiedComponent: DetectedFormComponent = {
+      ...mockComponent,
+      componentStub: {
+        ...mockComponent.componentStub,
+        componentName: 'my-component-name',
+      },
+      nameModified: true,
+    };
+
+    const transformedComponentValues = transformComponentValues(
+      mockDetectedComponent,
+      userModifiedComponent,
+    );
+    expect(transformedComponentValues[0].componentStub.componentName).toBe('my-component-name');
   });
 });

@@ -11,6 +11,7 @@ import {
   FormSection,
   TextInputTypes,
 } from '@patternfly/react-core';
+import { useField } from 'formik';
 import {
   EditableLabelField,
   EnvironmentField,
@@ -45,6 +46,9 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
   const fieldPrefix = `components[${detectedComponentIndex}].componentStub`;
   const [expandedComponent, setExpandedComponent] = React.useState(isExpanded);
   const [expandedConfig, setExpandedConfig] = React.useState(true);
+  const [, { value: componentValue }, { setValue: setComponentValue }] = useField(
+    `components[${detectedComponentIndex}]`,
+  );
 
   return (
     <Card isFlat isCompact isSelected={expandedComponent} isExpanded={expandedComponent}>
@@ -67,6 +71,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 <EditableLabelField
                   name={`${fieldPrefix}.componentName`}
                   type={TextInputTypes.text}
+                  onEdit={() => setComponentValue({ ...componentValue, nameModified: true })}
                 />
               )}
               <ExternalLink

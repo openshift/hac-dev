@@ -43,6 +43,7 @@ export const transformResources = (formResources: FormResources): ResourceRequir
 
 export const transformComponentValues = (
   detectedComponents: DetectedComponents,
+  originalComponent?: DetectedFormComponent,
 ): DetectedFormComponent[] => {
   return Object.values(detectedComponents).map((detectedComponent) => {
     const component = detectedComponent.componentStub;
@@ -50,6 +51,11 @@ export const transformComponentValues = (
       ...detectedComponent,
       componentStub: {
         ...component,
+        ...(originalComponent && {
+          componentName: originalComponent?.nameModified
+            ? originalComponent.componentStub.componentName
+            : component.componentName,
+        }),
         resources: createResourceData(component?.resources || {}),
         replicas: component?.replicas || 1,
         targetPort: component?.targetPort || 8080,

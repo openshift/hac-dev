@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { act, configure, fireEvent, screen } from '@testing-library/react';
+import { act, configure, fireEvent, screen, waitFor } from '@testing-library/react';
+import { useField } from 'formik';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { useComponentDetection } from '../../utils/cdq-utils';
 import { useDevfileSamples } from '../../utils/useDevfileSamples';
@@ -12,10 +13,20 @@ jest.mock('../../utils/useDevfileSamples', () => ({
   useDevfileSamples: jest.fn(() => []),
 }));
 
+jest.mock('../../utils/useDevfileSamples', () => ({
+  useDevfileSamples: jest.fn(() => []),
+}));
+
+jest.mock('formik', () => ({
+  ...(jest as any).requireActual('formik'),
+  useField: jest.fn(),
+}));
+
 configure({ testIdAttribute: 'data-test' });
 
 const useComponentDetectionMock = useComponentDetection as jest.Mock;
 const useDevfileSamplesMock = useDevfileSamples as jest.Mock;
+const useFieldMock = useField as jest.Mock;
 
 const containerImageComponent = {
   componentStub: {
@@ -46,6 +57,16 @@ const gitRepoComponent = {
 };
 
 describe('ReviewComponentCard', () => {
+  let onEditHandler;
+  beforeEach(() => {
+    onEditHandler = jest.fn();
+    useFieldMock.mockReturnValue([
+      { value: '', onChange: jest.fn() },
+      { value: '' },
+      { setValue: onEditHandler },
+    ]);
+  });
+
   const {
     componentStub: { componentName },
   } = gitRepoComponent;
@@ -144,5 +165,50 @@ describe('ReviewComponentCard', () => {
       { isDetected: true, source: { git: {} } },
     );
     expect(screen.queryByRole('button', { name: 'Select a runtime' })).not.toBeInTheDocument();
+  });
+
+  it('should not contain the edit option', async () => {
+    useComponentDetectionMock.mockReturnValue([]);
+
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+        editMode={true}
+      />,
+      { isDetected: true, source: { git: {} } },
+    );
+    await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
+
+    screen.getByText('java-springboot');
+    expect(screen.queryByTestId('pencil-icon')).not.toBeInTheDocument();
+  });
+
+  it('should contain edit option and onEdit handler should be called on submit', async () => {
+    useComponentDetectionMock.mockReturnValue([]);
+
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+        editMode={false}
+      />,
+      { isDetected: true, source: { git: {} } },
+    );
+    await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
+
+    expect(screen.getByText('Build & deploy configuration')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId('pencil-icon'));
+    await waitFor(() => {
+      const inputField = screen.getByTestId('editable-label-input').querySelector('input');
+      const submitButton = screen.getByTestId('check-icon');
+      fireEvent.input(inputField, { target: { value: 'new field value' } });
+      fireEvent.click(submitButton);
+
+      expect(onEditHandler).toHaveBeenCalled();
+    });
   });
 });
