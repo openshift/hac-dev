@@ -4,7 +4,7 @@ export const commitsTableColumnClasses = {
   component: 'pf-m-width-15',
   byUser: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-10',
   committedAt: 'pf-m-hidden pf-m-visible-on-lg pf-m-width-20',
-  status: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-15',
+  status: 'pf-m-hidden pf-m-visible-on-xl',
   kebab: 'pf-c-table__action',
 };
 

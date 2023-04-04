@@ -9,10 +9,10 @@ import {
   Text,
   TextVariants,
 } from '@patternfly/react-core';
-import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
 import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
 import { useCommitPipelineruns } from '../../hooks/useCommitPipelineruns';
 import { PipelineRunGroupVersionKind } from '../../models';
+import CommitLabel from '../../shared/components/commit-label/CommitLabel';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { HttpError } from '../../shared/utils/error/http-error';
@@ -201,15 +201,12 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
               description={
                 <>
                   <Text component="p" className="pf-u-mt-lg pf-u-mb-xs">
-                    <span className="pf-u-mr-sm">Commit ID:</span>
-                    <ExternalLink href={commit.shaURL}>
-                      {commitName}
-                      {commit.gitProvider === 'github' && (
-                        <span className="pf-u-ml-sm">
-                          <GithubIcon />
-                        </span>
-                      )}
-                    </ExternalLink>
+                    <span className="pf-u-mr-sm">Commit:</span>
+                    <CommitLabel
+                      gitProvider={commit.gitProvider}
+                      sha={commit.sha}
+                      shaURL={commit.shaURL}
+                    />
                   </Text>
                   {commit.isPullRequest ? (
                     <Text component="p" className="pf-u-mt-xs pf-u-mb-xs">
