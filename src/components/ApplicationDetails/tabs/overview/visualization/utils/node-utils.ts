@@ -76,6 +76,7 @@ export const statusToRunStatus = (status: string): RunStatus => {
 
 export const getLinkDataForElement = (
   element: Node<PipelineNodeModel, WorkflowNodeModelData>,
+  workspace: string,
 ): { tab?: string; path?: string; filter?: { name: string; value: string } } => {
   const { workflowType, isDisabled, groupNode, status } = element.getData();
   const label = element.getLabel();
@@ -105,7 +106,9 @@ export const getLinkDataForElement = (
     case WorkflowNodeType.APPLICATION_TEST:
       return !groupNode && !isDisabled
         ? {
-            path: `/stonesoup/${element.getData().application}/integrationtests/${label}`,
+            path: `/stonesoup/workspaces/${workspace}/applications/${
+              element.getData().application
+            }/integrationtests/${label}`,
           }
         : {
             tab: 'integrationtests',
@@ -138,7 +141,7 @@ export const getLinksForElement = (
   element: Node<PipelineNodeModel, WorkflowNodeModelData>,
   workspace: string,
 ): { elementRef: string; pipelinesRef: string } => {
-  const linkData = getLinkDataForElement(element);
+  const linkData = getLinkDataForElement(element, workspace);
 
   const appPath = `/stonesoup/workspaces/${workspace}/applications/${
     element.getData().application
