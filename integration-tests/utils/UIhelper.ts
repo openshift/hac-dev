@@ -1,12 +1,12 @@
-import { UIhelperPO } from "../support/pageObjects/global-po";
+import { UIhelperPO } from '../support/pageObjects/global-po';
+import { Common } from './Common';
 
 export class UIhelper {
   static clickTab(tabName: string) {
-    return cy
-      .xpath(
-        `//div[@data-ouia-component-type="PF4/Tabs"]//button[child::span[text()='${tabName}']]`,
-      )
-      .click();
+    cy.xpath(
+      `//div[@data-ouia-component-type="PF4/Tabs"]//button[child::span[text()='${tabName}']]`,
+    ).click();
+    Common.waitForLoad();
   }
 
   static inputValueInTextBoxByLabelName(label: string, value: string) {
@@ -58,32 +58,38 @@ export class UIhelper {
   }
 
   static getTableRow(tableAriaLabel: string, uniqueRowText: string | RegExp) {
-    return cy.contains(`div[aria-label="${tableAriaLabel}"] tr[role="row"]`, uniqueRowText, { timeout: 60000 })
+    return cy.contains(`div[aria-label="${tableAriaLabel}"] tr[role="row"]`, uniqueRowText, {
+      timeout: 60000,
+    });
   }
 
-  static verifyRowInTable(tableAriaLabel: string, uniqueRowText: string | RegExp, rowValues: string[] | RegExp[]) {
+  static verifyRowInTable(
+    tableAriaLabel: string,
+    uniqueRowText: string | RegExp,
+    rowValues: string[] | RegExp[],
+  ) {
     UIhelper.getTableRow(tableAriaLabel, uniqueRowText).within(() => {
       rowValues.forEach((val) => {
-        cy.contains(val).should('be.visible')
-      })
-    })
+        cy.contains(val).should('be.visible');
+      });
+    });
   }
 
-  static clickRowCellInTable(tableAriaLabel: string, uniqueRowText: string | RegExp, cellTextToClick: string | RegExp) {
-    UIhelper.getTableRow(tableAriaLabel, uniqueRowText).contains(cellTextToClick).click()
+  static clickRowCellInTable(
+    tableAriaLabel: string,
+    uniqueRowText: string | RegExp,
+    cellTextToClick: string | RegExp,
+  ) {
+    UIhelper.getTableRow(tableAriaLabel, uniqueRowText).contains(cellTextToClick).click();
   }
 
   static verifyGraphNodes(nodeText: string, success = true) {
     cy.contains(UIhelperPO.graphNode, nodeText).within(() => {
-      cy.get(
-        success
-          ? UIhelperPO.pipelineStatusSuccess
-          : UIhelperPO.pipelineNode,
-        { timeout: 60000 },
-      )
+      cy.get(success ? UIhelperPO.pipelineStatusSuccess : UIhelperPO.pipelineNode, {
+        timeout: 60000,
+      })
         .scrollIntoView()
         .should('be.visible');
     });
   }
-  
 }
