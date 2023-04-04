@@ -104,11 +104,13 @@ export const createComponent = (
         (enablePac
           ? {
               annotations: {
+                'image.redhat.com/generate': 'true',
                 [PAC_ANNOTATION]: 'request',
               },
             }
           : {
               annotations: {
+                'image.redhat.com/generate': 'true',
                 'skip-initial-checks': 'true',
               },
             })),
