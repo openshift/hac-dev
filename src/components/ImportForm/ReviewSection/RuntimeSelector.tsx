@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DropdownToggle, Spinner } from '@patternfly/react-core';
 import { DockerIcon } from '@patternfly/react-icons/dist/esm/icons/docker-icon';
+import { ImageIcon } from '@patternfly/react-icons/dist/esm/icons/image-icon';
 import { useFormikContext } from 'formik';
 import { DropdownField } from '../../../shared';
 import { useComponentDetection } from '../utils/cdq-utils';
@@ -111,8 +112,10 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
         />
       ) : React.isValidElement(selectedRuntime?.icon) ? (
         selectedRuntime?.icon
-      ) : (
+      ) : selectedRuntime?.icon?.url ? (
         <img width="24px" height="24px" src={selectedRuntime?.icon?.url} />
+      ) : (
+        <ImageIcon />
       );
 
       return (
