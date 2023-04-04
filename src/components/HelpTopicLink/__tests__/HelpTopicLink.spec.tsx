@@ -18,7 +18,7 @@ describe('HelpTopicLink', () => {
     });
 
     render(<HelpTopicLink topicId="test" />);
-    expect(enableTopics).toHaveBeenCalledWith('test');
+    expect(enableTopics).toHaveBeenCalledWith({ names: ['test'], append: true });
     cleanup();
     expect(disableTopics).toHaveBeenCalledWith('test');
   });
