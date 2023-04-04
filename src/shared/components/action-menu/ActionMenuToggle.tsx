@@ -43,7 +43,12 @@ const ActionMenuToggle: React.FC<ActionMenuToggleProps> = ({
   };
 
   const handleClickOutside = (event) => {
-    if (isOpen && !menuRef.current?.contains(event.target)) {
+    if (
+      isOpen &&
+      !menuRef.current?.contains(event.target) &&
+      !toggleRef.current?.contains(event.target) &&
+      toggleRef.current !== event.target
+    ) {
       onToggleClick(false);
     }
   };
