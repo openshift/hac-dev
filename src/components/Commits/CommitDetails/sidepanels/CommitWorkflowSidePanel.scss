@@ -1,0 +1,17 @@
+.commit-side-panel {
+  &__head {
+    &-title {
+      display: flex;
+      gap: var(--pf-global--spacer--sm);
+      .pf-c-label {
+        height: fit-content;
+      }
+      .commit-icon.commit-details__title-icon {
+        margin-right: 0;
+      }
+    }
+  }
+  &__subtext {
+    color: var(--pf-global--Color--200);
+  }
+}

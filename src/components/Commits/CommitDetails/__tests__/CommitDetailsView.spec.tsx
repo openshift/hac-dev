@@ -2,9 +2,9 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { screen } from '@testing-library/react';
-import { getCommitShortName } from '../../../utils/commits-utils';
-import { routerRenderer } from '../../../utils/test-utils';
-import { pipelineWithCommits } from '../__data__/pipeline-with-commits';
+import { getCommitShortName } from '../../../../utils/commits-utils';
+import { routerRenderer } from '../../../../utils/test-utils';
+import { pipelineWithCommits } from '../../__data__/pipeline-with-commits';
 import CommitDetailsView, { COMMITS_GS_LOCAL_STORAGE_KEY } from '../CommitDetailsView';
 
 jest.mock('react-i18next', () => ({
@@ -26,11 +26,11 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-jest.mock('../../../hooks', () => ({
+jest.mock('../../../../hooks', () => ({
   useLocalStorage: jest.fn(),
 }));
 
-jest.mock('../tabs/CommitDetails/CommitVisualization', () => () => <div />);
+jest.mock('../visualization/CommitVisualization', () => () => <div />);
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 

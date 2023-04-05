@@ -8,7 +8,7 @@ const SidePanelHost: React.FC = ({ children }) => {
   propsRef.current = props;
 
   const close = React.useCallback(() => {
-    setProps({ ...propsRef.current, isExpanded: false });
+    setProps({ ...propsRef.current, isExpanded: false, minSize: 300 });
   }, []);
 
   const panelContent = (
@@ -17,6 +17,7 @@ const SidePanelHost: React.FC = ({ children }) => {
       defaultSize={
         typeof props.defaultSize === 'number' ? `${props.defaultSize}px` : props.defaultSize
       }
+      minSize={typeof props.minSize === 'number' ? `${props.minSize}px` : props.minSize}
     >
       {props.children}
     </DrawerPanelContent>

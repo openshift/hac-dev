@@ -25,7 +25,7 @@ jest.mock('../../utils/rbac', () => ({
   useAccessReviewForModels: jest.fn(),
 }));
 
-jest.mock('../../components/Commits/CommitDetailsView', () => () => {
+jest.mock('../../components/Commits/CommitDetails/CommitDetailsView', () => () => {
   return <div data-test="commit-details-page" />;
 });
 

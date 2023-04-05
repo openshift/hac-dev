@@ -1,6 +1,11 @@
+import * as React from 'react';
+import { Flex, FlexItem, Text, TextVariants } from '@patternfly/react-core';
+import { EnvironmentKindWithHealthStatus } from '../hooks/useAllApplicationEnvironmentsWithHealthStatus';
+import { Timestamp } from '../shared/components/timestamp/Timestamp';
 import { EnvironmentKind } from '../types';
 import { SnapshotEnvironmentBinding } from '../types/coreBuildService';
 import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
+import { getGitOpsDeploymentHealthStatusIcon } from './gitops-utils';
 import { runStatus } from './pipeline-utils';
 
 export enum EnvironmentDeploymentStrategy {
@@ -125,4 +130,29 @@ export const getComponentDeploymentRunStatus = (
     default:
       return runStatus.Pending;
   }
+};
+
+export const ApplicationEnvironmentStatus: React.FC<{
+  environment: EnvironmentKindWithHealthStatus;
+}> = ({ environment }) => {
+  return (
+    <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsMd' }}>
+      <FlexItem>
+        <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
+          {getGitOpsDeploymentHealthStatusIcon(environment.healthStatus)} Application{' '}
+          {environment.healthStatus}
+        </Text>
+      </FlexItem>
+      <FlexItem>
+        <Flex spaceItems={{ default: 'spaceItemsSm' }}>
+          <Text component={TextVariants.small}>
+            <b>Last Deploy:</b>
+          </Text>
+          <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
+            <Timestamp timestamp={environment.lastDeploy} simple />
+          </Text>
+        </Flex>
+      </FlexItem>
+    </Flex>
+  );
 };

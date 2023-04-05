@@ -20,35 +20,11 @@ import {
 } from '../../../components/Environment/environment-utils';
 import { EnvironmentKindWithHealthStatus } from '../../../hooks/useAllApplicationEnvironmentsWithHealthStatus';
 import ActionMenu from '../../../shared/components/action-menu/ActionMenu';
-import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { EnvironmentKind } from '../../../types';
-import { getEnvironmentDeploymentStrategyLabel } from '../../../utils/environment-utils';
-import { getGitOpsDeploymentHealthStatusIcon } from '../../../utils/gitops-utils';
-
-const ApplicationEnvironmentStatus: React.FC<{
-  environment: EnvironmentKindWithHealthStatus;
-}> = ({ environment }) => {
-  return (
-    <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsMd' }}>
-      <FlexItem>
-        <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
-          {getGitOpsDeploymentHealthStatusIcon(environment.healthStatus)} Application{' '}
-          {environment.healthStatus}
-        </Text>
-      </FlexItem>
-      <FlexItem>
-        <Flex spaceItems={{ default: 'spaceItemsSm' }}>
-          <Text component={TextVariants.small}>
-            <b>Last Deploy:</b>
-          </Text>
-          <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
-            <Timestamp timestamp={environment.lastDeploy} simple />
-          </Text>
-        </Flex>
-      </FlexItem>
-    </Flex>
-  );
-};
+import {
+  ApplicationEnvironmentStatus,
+  getEnvironmentDeploymentStrategyLabel,
+} from '../../../utils/environment-utils';
 
 type EnvironmentCardProps = {
   environment: EnvironmentKind;

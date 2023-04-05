@@ -52,7 +52,7 @@ const TaskRunDetails: React.FC<Props> = ({ taskRun, status }) => (
     {taskRun?.status?.taskResults?.length ? (
       <>
         <br />
-        <RunResultsList status={status} results={taskRun.status.taskResults} />
+        <RunResultsList status={status} results={taskRun.status.taskResults} compressed />
       </>
     ) : null}
   </>
