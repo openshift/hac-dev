@@ -5,6 +5,7 @@ import { like, term } from '@pact-foundation/pact/src/dsl/matchers';
 import { pactWith } from 'jest-pact';
 import { ApplicationGroupVersionKind } from '../src/models';
 import { ApplicationKind } from '../src/types';
+import { matchers } from './matchers';
 import { PactUrlUtil, Kind } from './pact-test-utils';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
@@ -29,8 +30,7 @@ pactWith({ consumer: 'HACdev', provider: 'HAS' }, (provider) => {
         metadata: {
           creationTimestamp: term({
             generate: '2022-01-21T13:36:30Z',
-            matcher:
-              '^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]+)?(Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$',
+            matcher: matchers.dateAndTime,
           }),
           generation: like(1),
           name: app,
@@ -38,7 +38,7 @@ pactWith({ consumer: 'HACdev', provider: 'HAS' }, (provider) => {
           resourceVersion: like('782971836'),
           uid: term({
             generate: '00fbb7cd-fd2d-48f4-bdc5-3289f8d76c77',
-            matcher: '^([0-z]{8}-[0-z]{4}-[0-z]{4}-[0-z]{4}-[0-z]{12})$',
+            matcher: matchers.uid,
           }),
         },
         status: {
