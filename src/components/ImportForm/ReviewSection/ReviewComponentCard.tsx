@@ -119,6 +119,8 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                     name={`${fieldPrefix}.targetPort`}
                     label="Target port"
                     type={TextInputTypes.number}
+                    min={1}
+                    max={65535}
                   />
                 </span>
                 <ResourceLimitField
