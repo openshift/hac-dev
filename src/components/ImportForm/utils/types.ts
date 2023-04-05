@@ -27,6 +27,7 @@ export type DetectedFormComponent = {
   componentStub: Omit<ComponentSpecs, 'resources'> & {
     resources?: FormResources;
   };
+  nameModified?: boolean;
   language?: string;
   projectType?: string;
   devfileFound?: boolean;

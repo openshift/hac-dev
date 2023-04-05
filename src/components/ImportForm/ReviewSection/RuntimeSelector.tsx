@@ -54,7 +54,8 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
   const [detecting, setDetecting] = React.useState(false);
   const [runtimeSource, setRuntimeSource] = React.useState('');
   const [selectedRuntime, setSelectedRuntime] = React.useState(null);
-
+  const originalComponentRef = React.useRef(components?.[detectedComponentIndex]);
+  originalComponentRef.current = components?.[detectedComponentIndex];
   const DetectingRuntime = 'Detecting runtime...';
 
   const items = React.useMemo(() => {
@@ -166,7 +167,10 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       // To avoid formik validating on old values due to a formik bug - https://github.com/jaredpalmer/formik/issues/2083
       setTimeout(() => setFieldValue('isDetected', true));
       setTimeout(() => setFieldValue('detectionFailed', false));
-      const componentValues = transformComponentValues(detectedComponents)[0];
+      const componentValues = transformComponentValues(
+        detectedComponents,
+        originalComponentRef.current,
+      )[0];
       const component = patchSourceUrl(componentValues.componentStub, sourceUrl);
       setFieldValue(`${fieldPrefix}.componentStub`, component);
       setFieldValue(`${fieldPrefix}.language`, componentValues.language);
