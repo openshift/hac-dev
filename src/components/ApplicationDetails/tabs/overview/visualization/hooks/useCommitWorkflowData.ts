@@ -188,7 +188,7 @@ export const useCommitWorkflowData = (
           environmentStatus,
           buildPipelinestatus,
           integrationTestStatus,
-          compIntegrationTestScenarios: appendPrefixToResources(integrationTests, compName),
+          applicationIntegrationTests: appendPrefixToResources(integrationTests, compName),
           compReleases: appendPrefixToResources(releases, compName),
           compReleasePlans: appendPrefixToResources(releasePlans, compName),
           compEnvironments: appendPrefixToResources(
@@ -253,20 +253,10 @@ export const useCommitWorkflowData = (
           compReleases,
           compReleasePlans,
           compEnvironments,
-          compIntegrationTestScenarios,
+          applicationIntegrationTests,
         }: CommitComponentResource = value;
 
         const name = component.metadata.name;
-
-        const componentIntegrationTests = compIntegrationTestScenarios?.filter((test) => {
-          const contexts = test?.spec?.contexts;
-          return contexts?.some((c) => c.name === 'component') ?? false;
-        });
-
-        const applicationIntegrationTests = compIntegrationTestScenarios?.filter((test) => {
-          const contexts = test?.spec?.contexts;
-          return !contexts || contexts?.some((c) => c.name === 'application');
-        });
 
         workflow = {
           ...workflow,
@@ -283,20 +273,6 @@ export const useCommitWorkflowData = (
             runBefore: [],
             runAfter: ['commit'],
           },
-          ...(componentIntegrationTests.length && {
-            [`${name}-componentTests`]: {
-              id: `${name}-component-integration-test`,
-              data: {
-                label: 'component integration test',
-                workflowType: WorkflowNodeType.PIPELINE,
-                status: integrationTestStatus,
-                isDisabled: componentIntegrationTests.length === 0,
-                resources: componentIntegrationTests,
-              },
-              runBefore: [],
-              runAfter: [`${name}-build`],
-            },
-          }),
           [`${name}-applicationTests`]: {
             id: `${name}-application-integration-test`,
             data: {
@@ -307,9 +283,7 @@ export const useCommitWorkflowData = (
               resources: applicationIntegrationTests,
             },
             runBefore: [],
-            runAfter: isResourcesAvailable(componentIntegrationTests)
-              ? getNodeNames(componentIntegrationTests)
-              : [`${name}-build`],
+            runAfter: [`${name}-build`],
           },
           [`${name}-staticEnv`]: {
             id: `${name}-static-env`,

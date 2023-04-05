@@ -138,7 +138,7 @@ describe('WorkflowNode', () => {
   it('should present view logs on test node tooltip', () => {
     const visualization = getController(true);
     const mockGroup = visualization.getNodeById('tests');
-    const mockElement = mockGroup.getChildren()[4] as Node<NodeModel, WorkflowNodeModelData>;
+    const mockElement = mockGroup.getChildren()[3] as Node<NodeModel, WorkflowNodeModelData>;
     routerRenderer(<WorkflowNodeTipContent element={mockGroup} />);
 
     expect(

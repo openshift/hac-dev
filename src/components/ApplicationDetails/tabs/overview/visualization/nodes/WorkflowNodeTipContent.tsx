@@ -57,7 +57,6 @@ const WorkflowNodeTipContent: React.FC<WorkflowNodeTipContentProps> = ({ element
             View pipeline runs
           </Link>,
         ];
-      case WorkflowNodeType.COMPONENT_TEST:
       case WorkflowNodeType.APPLICATION_TEST:
         return [
           <Link key="element-link" data-testid="element-link" to={elementRef}>

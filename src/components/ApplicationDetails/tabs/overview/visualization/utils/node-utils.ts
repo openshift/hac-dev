@@ -43,7 +43,6 @@ export const TYPE_DESCRIPTIONS = {
   [WorkflowNodeType.COMPONENT]: COMPONENT_DESC,
   [WorkflowNodeType.BUILD]: BUILD_DESC,
   [WorkflowNodeType.TESTS]: TESTS_DESC,
-  [WorkflowNodeType.COMPONENT_TEST]: TESTS_DESC,
   [WorkflowNodeType.APPLICATION_TEST]: TESTS_DESC,
   [WorkflowNodeType.STATIC_ENVIRONMENT]: STATIC_ENV_DESC,
   [WorkflowNodeType.RELEASE]: RELEASE_DESC,
@@ -103,7 +102,6 @@ export const getLinkDataForElement = (
         // TODO: filter by build once the PLR tab supports filtering
       };
     case WorkflowNodeType.TESTS:
-    case WorkflowNodeType.COMPONENT_TEST:
     case WorkflowNodeType.APPLICATION_TEST:
       return !groupNode && !isDisabled
         ? {

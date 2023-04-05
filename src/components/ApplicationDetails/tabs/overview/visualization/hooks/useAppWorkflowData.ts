@@ -14,7 +14,6 @@ import { groupToPipelineNode, worstWorkflowStatus } from '../utils/node-utils';
 import { useAppApplicationTestNodes } from './useAppApplicationTestNodes';
 import { useAppBuildNodes } from './useAppBuildNodes';
 import { useAppComponentsNodes } from './useAppComponentsNodes';
-import { useAppIntegrationTestNodes } from './useAppIntegrationTestNodes';
 import { useAppReleaseNodes } from './useAppReleaseNodes';
 import { useAppReleasePlanNodes } from './useAppReleasePlanNodes';
 import { useAppStaticEnvironmentNodes } from './useAppStaticEnvironmentNodes';
@@ -33,13 +32,6 @@ export const useAppWorkflowData = (
     componentTasks,
     expanded,
   );
-  const [
-    componentIntegrationTestNodes,
-    componentIntegrationTestTasks,
-    componentIntegrationTests,
-    integrationTestsLoaded,
-    integrationTestsErrors,
-  ] = useAppIntegrationTestNodes(namespace, applicationName, buildTasks, expanded);
 
   const [
     applicationIntegrationTestNodes,
@@ -47,15 +39,10 @@ export const useAppWorkflowData = (
     applicationIntegrationTests,
     applicationTestsLoaded,
     applicationErrors,
-  ] = useAppApplicationTestNodes(
-    namespace,
-    applicationName,
-    componentIntegrationTestTasks,
-    expanded,
-  );
+  ] = useAppApplicationTestNodes(namespace, applicationName, buildTasks, expanded);
   const testsGroup = React.useMemo(
     () =>
-      integrationTestsLoaded && applicationTestsLoaded
+      applicationTestsLoaded
         ? groupToPipelineNode(
             'tests',
             applicationName,
@@ -65,29 +52,20 @@ export const useAppWorkflowData = (
             WorkflowNodeType.TESTS,
             buildTasks,
             expanded,
-            expanded
-              ? [...componentIntegrationTestTasks, ...applicationIntegrationTestTasks]
-              : undefined,
-            [...componentIntegrationTestNodes, ...applicationIntegrationTestNodes],
-            [...componentIntegrationTests, ...applicationIntegrationTests],
-            worstWorkflowStatus([
-              ...componentIntegrationTestNodes,
-              ...applicationIntegrationTestNodes,
-            ]),
+            expanded ? applicationIntegrationTestTasks : undefined,
+            applicationIntegrationTestNodes,
+            applicationIntegrationTests,
+            worstWorkflowStatus(applicationIntegrationTestNodes),
           )
         : undefined,
     [
-      integrationTestsLoaded,
       applicationTestsLoaded,
       applicationName,
       applicationIntegrationTests,
       buildTasks,
       expanded,
-      componentIntegrationTestTasks,
       applicationIntegrationTestTasks,
-      componentIntegrationTestNodes,
       applicationIntegrationTestNodes,
-      componentIntegrationTests,
     ],
   );
 
@@ -121,7 +99,6 @@ export const useAppWorkflowData = (
   const allResourcesLoaded: boolean =
     componentsLoaded &&
     buildsLoaded &&
-    integrationTestsLoaded &&
     applicationTestsLoaded &&
     staticEnvironmentsLoaded &&
     releasesLoaded &&
@@ -130,7 +107,6 @@ export const useAppWorkflowData = (
   const errors = [
     ...componentsErrors,
     ...buildsErrors,
-    ...integrationTestsErrors,
     ...applicationErrors,
     ...staticEnvironmentsErrors,
     ...releasesError,
@@ -145,7 +121,6 @@ export const useAppWorkflowData = (
     const resourceNodes: PipelineNodeModel[] = [
       ...(componentNodes?.length ? componentNodes : [componentGroup]),
       ...(buildNodes?.length ? buildNodes : [buildGroup]),
-      ...componentIntegrationTestNodes,
       ...applicationIntegrationTestNodes,
       ...(staticEnvironmentNodes?.length ? staticEnvironmentNodes : [staticEnvironmentGroup]),
       ...(mvpFeature ? [] : releaseNodes?.length ? releaseNodes : [releaseGroup]),

@@ -13,7 +13,6 @@ export enum WorkflowNodeType {
   COMPONENT,
   BUILD,
   TESTS,
-  COMPONENT_TEST,
   APPLICATION_TEST,
   STATIC_ENVIRONMENT,
   RELEASE,
@@ -51,7 +50,7 @@ export type CommitComponentResource = {
   releasePlanStatus: (rp: ReleasePlanKind) => runStatus;
   environmentStatus: (env: EnvironmentKind) => runStatus;
   integrationTestStatus: (test: IntegrationTestScenarioKind) => runStatus;
-  compIntegrationTestScenarios: IntegrationTestScenarioKind[];
+  applicationIntegrationTests: IntegrationTestScenarioKind[];
   compReleases: ReleaseKind[];
   compReleasePlans: ReleasePlanKind[];
   compEnvironments: EnvironmentKind[];

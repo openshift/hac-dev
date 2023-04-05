@@ -14,7 +14,6 @@ export const getWorkflowNodeIcon = (type: WorkflowNodeType): React.ReactNode => 
       return <ServerIcon />;
     case WorkflowNodeType.BUILD:
     case WorkflowNodeType.TESTS:
-    case WorkflowNodeType.COMPONENT_TEST:
     case WorkflowNodeType.APPLICATION_TEST:
     case WorkflowNodeType.RELEASE:
     case WorkflowNodeType.PIPELINE:
