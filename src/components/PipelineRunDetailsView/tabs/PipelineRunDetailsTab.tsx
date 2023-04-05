@@ -15,7 +15,6 @@ import {
   ClipboardCopy,
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
-import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { ErrorDetailsWithStaticLog } from '../../../shared/components/pipeline-run-logs/logs/log-snippet-types';
 import { getPLRLogSnippet } from '../../../shared/components/pipeline-run-logs/logs/pipelineRunLogSnippet';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
@@ -23,6 +22,7 @@ import { PipelineRunKind, TaskRunKind } from '../../../types';
 import { getCommitShortName } from '../../../utils/commits-utils';
 import { calculateDuration, pipelineRunStatus } from '../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
+import GitRepoLink from '../../GitLink/GitRepoLink';
 import { StatusIconWithText } from '../../topology/StatusIcon';
 import MetadataList from '../MetadataList';
 import PipelineRunVisualization from '../PipelineRunVisualization';
@@ -234,7 +234,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                   <DescriptionListGroup>
                     <DescriptionListTerm>Source</DescriptionListTerm>
                     <DescriptionListDescription>
-                      <ExternalLink href={sourceUrl}>{sourceUrl}</ExternalLink>{' '}
+                      <GitRepoLink url={sourceUrl} />
                     </DescriptionListDescription>
                   </DescriptionListGroup>
                 )}
