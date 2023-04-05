@@ -63,8 +63,8 @@ export class LatestCommitsTabPage {
   }
 
   verifyCommitID(sha: string, repoLink: string) {
-    cy.contains('p', 'Commit ID:')
-      .contains('a', sha)
+    cy.contains('p', 'Commit:')
+      .contains('a', sha.slice(0, 6))
       .should('be.visible')
       .should('have.attr', 'href', `${repoLink}/commit/${sha}`);
   }
