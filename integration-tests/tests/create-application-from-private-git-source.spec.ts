@@ -15,7 +15,7 @@ describe(
     const applicationName = Common.generateAppName();
     const privateRepo = 'https://github.com/hac-test/private-repo-check';
     const componentName = `py-${applicationName}`;
-    const username = 'hac-test';
+    const username = Cypress.env('GH_USERNAME');
     const token = Cypress.env('GH_TOKEN');
 
     before(function () {

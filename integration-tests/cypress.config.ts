@@ -1,4 +1,4 @@
-import { defineConfig } from "cypress";
+import { defineConfig } from 'cypress';
 import * as fs from 'fs-extra';
 import * as glob from 'glob';
 const registerReportPortalPlugin = require('@reportportal/agent-js-cypress/lib/plugin');
@@ -6,7 +6,7 @@ const { mergeLaunches } = require('@reportportal/agent-js-cypress/lib/mergeLaunc
 
 function deleteLaunchFiles() {
   const getLaunchTempFiles = () => {
-    return glob.sync("rplaunch*.tmp");
+    return glob.sync('rplaunch*.tmp');
   };
   const deleteTempFile = (filename) => {
     fs.unlinkSync(filename);
@@ -29,7 +29,7 @@ export default defineConfig({
   reporterOptions: {
     reporterEnabled: 'spec, mocha-junit-reporter, @reportportal/agent-js-cypress',
     mochaJunitReporterReporterOptions: {
-      mochaFile: 'cypress/junit-[hash].xml'
+      mochaFile: 'cypress/junit-[hash].xml',
     },
     reportportalAgentJsCypressReporterOptions: {
       endpoint: 'https://reportportal-appstudio-qe.apps.ocp-c1.prod.psi.redhat.com/api/v1',
@@ -38,8 +38,8 @@ export default defineConfig({
       project: 'hac-dev',
       description: 'HAC dev e2e test suite',
       debug: true,
-      isLaunchMergeRequired: true
-    }
+      isLaunchMergeRequired: true,
+    },
   },
   e2e: {
     supportFile: 'support/commands/index.ts',
@@ -94,11 +94,13 @@ export default defineConfig({
               return;
             }
             retries--;
-            await new Promise(res => setTimeout(res, 2000));
+            await new Promise((res) => setTimeout(res, 2000));
           }
           console.log('reportportal agent finished');
 
-          if (config.reporterOptions.reportportalAgentJsCypressReporterOptions.isLaunchMergeRequired) {
+          if (
+            config.reporterOptions.reportportalAgentJsCypressReporterOptions.isLaunchMergeRequired
+          ) {
             try {
               console.log('Merging launches...');
               await mergeLaunches(config.reporterOptions.reportportalAgentJsCypressReporterOptions);
@@ -115,6 +117,7 @@ export default defineConfig({
         HAC_BASE_URL: 'https://prod.foo.redhat.com:1337/beta/hac/stonesoup',
         USERNAME: '',
         PASSWORD: '',
+        GH_USERNAME: 'hac-test',
         KUBECONFIG: '~/.kube/appstudio-config',
         CLEAN_NAMESPACE: 'false',
         PR_CHECK: false,
@@ -131,7 +134,8 @@ export default defineConfig({
         config.env.PR_CHECK === true &&
         config.reporterOptions.reportportalAgentJsCypressReporterOptions
       ) {
-        config.reporterOptions.reportportalAgentJsCypressReporterOptions.token = config.env.RP_TOKEN;
+        config.reporterOptions.reportportalAgentJsCypressReporterOptions.token =
+          config.env.RP_TOKEN;
         config.reporterOptions.reportportalAgentJsCypressReporterOptions.description = `${config.env.GH_PR_TITLE}\n${config.env.GH_PR_LINK}`;
         registerReportPortalPlugin(on, config);
       } else {
@@ -144,5 +148,5 @@ export default defineConfig({
       }
       return config;
     },
-  }
+  },
 });

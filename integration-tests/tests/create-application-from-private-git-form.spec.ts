@@ -18,7 +18,7 @@ describe(
     const privateRepo = 'https://github.com/hac-test/private-repo-check';
     const componentName = `py-${applicationName}`;
 
-    const user = 'hac-test';
+    const user = Cypress.env('GH_USERNAME');
     const pass = Cypress.env('GH_PASSWORD');
     const deviceId = '2e478c118996feb7e058965e62fef9fe';
 
