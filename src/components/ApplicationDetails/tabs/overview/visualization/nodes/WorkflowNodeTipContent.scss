@@ -12,7 +12,7 @@
   &-status {
     &-area {
       display: grid;
-      grid-template-columns: auto auto;
+      grid-template-columns: auto auto auto;
       column-gap: var(--pf-global--spacer--md);
       row-gap: var(--pf-global--spacer--sm);
       .pf-topology-pipelines__status-icon.pf-m-spin {

@@ -15,6 +15,8 @@ import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import DetailsPage from '../ApplicationDetails/DetailsPage';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
+import { SecurityEnterpriseContractTab } from '../EnterpriseContractView/SecurityEnterpriseContractTab';
+import { isResourceEnterpriseContract } from '../EnterpriseContractView/utils';
 import SidePanelHost from '../SidePanel/SidePanelHost';
 import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import PipelineRunDetailsTab from './tabs/PipelineRunDetailsTab';
@@ -66,6 +68,8 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
       </Bullseye>
     );
   }
+
+  const isEnterpriseContract = isResourceEnterpriseContract(pipelineRun);
 
   const applicationName = pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION];
   return (
@@ -158,6 +162,17 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
             label: 'Logs',
             component: <PipelineRunLogsTab pipelineRun={pipelineRun} taskRuns={taskRuns} />,
           },
+          ...(isEnterpriseContract
+            ? [
+                {
+                  key: 'security',
+                  label: 'Security',
+                  component: (
+                    <SecurityEnterpriseContractTab pipelineRun={pipelineRun.metadata.name} />
+                  ),
+                },
+              ]
+            : []),
           // {
           //   key: 'events',
           //   label: 'Events',
