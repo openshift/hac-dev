@@ -63,17 +63,19 @@ export class LatestCommitsTabPage {
   }
 
   verifyCommitID(sha: string, repoLink: string) {
-    cy.contains('p', 'Commit:')
-      .contains('a', sha.slice(0, 6))
-      .should('be.visible')
-      .should('have.attr', 'href', `${repoLink}/commit/${sha}`);
+    UIhelper.verifyLabelAndValue('Commit', sha.slice(0, 6)).should(
+      'have.attr',
+      'href',
+      `${repoLink}/commit/${sha}`,
+    );
   }
 
   verifyBranch(branchName: string, repoLink: string) {
-    cy.contains('p', 'Branch:')
-      .contains('a', branchName)
-      .should('be.visible')
-      .should('have.attr', 'href', `${repoLink}/tree/main`);
+    UIhelper.verifyLabelAndValue('Branch', branchName).should(
+      'have.attr',
+      'href',
+      `${repoLink}/tree/${branchName}`,
+    );
   }
 
   verifyNodesOnCommitOverview(nodes: string[]) {
