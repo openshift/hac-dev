@@ -176,8 +176,8 @@ describe('useAppWorkflowData hook', () => {
     const { result } = renderHook(() => useAppWorkflowData('test', true));
     const [model] = result.current;
 
-    expect(model.nodes).toHaveLength(13);
-    expect(model.edges).toHaveLength(6);
+    expect(model.nodes).toHaveLength(12);
+    expect(model.edges).toHaveLength(5);
     expect(
       model.nodes.filter((n) => n.data.workflowType === WorkflowNodeType.COMPONENT),
     ).toHaveLength(2);

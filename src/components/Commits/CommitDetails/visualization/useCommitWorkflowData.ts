@@ -155,13 +155,8 @@ export const useCommitWorkflowData = (
         (tp) => tp.metadata?.labels[PipelineRunLabel.COMPONENT] === compName,
       );
 
-      const componentIntegrationTests = integrationTests?.filter((test) => {
-        const contexts = test?.spec?.contexts;
-        return contexts?.some((c) => c.name === 'component') ?? false;
-      });
-
-      const compTestNodes: CommitWorkflowNodeModel[] = componentIntegrationTests.length
-        ? componentIntegrationTests.map((test) => {
+      const appTestNodes: CommitWorkflowNodeModel[] = integrationTests.length
+        ? integrationTests.map((test) => {
             const testName = test.metadata.name;
             const matchedTest = getLatestResource(
               integrationTestPipelines.filter(
@@ -180,57 +175,6 @@ export const useCommitWorkflowData = (
               runAfterTasks: [buildNode.id],
               data: {
                 status: matchedTest ? pipelineRunStatus(matchedTest) : runStatus.Pending,
-                workflowType: CommitWorkflowNodeType.COMPONENT_TEST,
-                resource: matchedTest,
-                application: commit.application,
-              },
-            };
-            return testNode;
-          })
-        : [
-            {
-              id: `${name}-component-integration-test`,
-              label: 'No component integration test set',
-              type: NodeType.WORKFLOW_NODE,
-              width: getLabelWidth('No component integration test set'),
-              height: DEFAULT_NODE_HEIGHT,
-              runAfterTasks: [buildNode.id],
-              data: {
-                status: runStatus.Pending,
-                workflowType: CommitWorkflowNodeType.COMPONENT_TEST,
-                application: commit.application,
-              },
-            },
-          ];
-      nodes.push(...compTestNodes);
-      const compTestNodesWidth = compTestNodes.reduce((max, node) => Math.max(max, node.width), 0);
-      compTestNodes.forEach((n) => (n.width = compTestNodesWidth));
-      const compNodeIds = compTestNodes.length ? compTestNodes.map((n) => n.id) : [buildNode.id];
-
-      const applicationIntegrationTests = integrationTests?.filter((test) => {
-        const contexts = test?.spec?.contexts;
-        return !contexts || contexts?.some((c) => c.name === 'application');
-      });
-
-      const appTestNodes: CommitWorkflowNodeModel[] = applicationIntegrationTests
-        ? applicationIntegrationTests.map((test) => {
-            const testName = test.metadata.name;
-            const matchedTest = getLatestResource(
-              integrationTestPipelines.filter(
-                (tp) =>
-                  tp.metadata.labels?.[PipelineRunLabel.TEST_SERVICE_SCENARIO] ===
-                  test.metadata.name,
-              ),
-            );
-            const testNode: CommitWorkflowNodeModel = {
-              id: addPrefixToResourceName(compName, test.metadata.name),
-              label: testName,
-              type: NodeType.WORKFLOW_NODE,
-              width: getLabelWidth(testName),
-              height: DEFAULT_NODE_HEIGHT,
-              runAfterTasks: compNodeIds,
-              data: {
-                status: matchedTest ? pipelineRunStatus(matchedTest) : runStatus.Pending,
                 workflowType: CommitWorkflowNodeType.APPLICATION_TEST,
                 resource: matchedTest,
                 application: commit.application,
@@ -245,7 +189,7 @@ export const useCommitWorkflowData = (
               type: NodeType.WORKFLOW_NODE,
               width: getLabelWidth('No app integration test set'),
               height: DEFAULT_NODE_HEIGHT,
-              runAfterTasks: compNodeIds,
+              runAfterTasks: [buildNode.id],
               data: {
                 status: runStatus.Pending,
                 workflowType: CommitWorkflowNodeType.APPLICATION_TEST,
@@ -256,7 +200,7 @@ export const useCommitWorkflowData = (
       nodes.push(...appTestNodes);
       const appTestNodesWidth = appTestNodes.reduce((max, node) => Math.max(max, node.width), 0);
       appTestNodes.forEach((n) => (n.width = appTestNodesWidth));
-      const appNodeIds = appTestNodes.length ? appTestNodes.map((n) => n.id) : compNodeIds;
+      const appNodeIds = appTestNodes.length ? appTestNodes.map((n) => n.id) : [buildNode.id];
 
       const currentSnapshotName = getLatestResource(
         snapshots.filter(
@@ -320,7 +264,7 @@ export const useCommitWorkflowData = (
               type: NodeType.WORKFLOW_NODE,
               width: getLabelWidth('No static environments set'),
               height: DEFAULT_NODE_HEIGHT,
-              runAfterTasks: compNodeIds,
+              runAfterTasks: appNodeIds,
               data: {
                 status: runStatus.Pending,
                 workflowType: CommitWorkflowNodeType.STATIC_ENVIRONMENT,

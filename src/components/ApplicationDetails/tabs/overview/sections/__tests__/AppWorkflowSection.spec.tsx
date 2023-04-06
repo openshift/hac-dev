@@ -153,7 +153,7 @@ describe('useAppWorkflowData hook', () => {
     const nodes = graph.querySelectorAll('[data-kind="node"]');
     expect(nodes).toHaveLength(28);
     const workFlowNodes = graph.querySelectorAll('[data-type="workflow-node"]');
-    expect(workFlowNodes).toHaveLength(16);
+    expect(workFlowNodes).toHaveLength(15);
   });
   it('should navigate to the correct tab on a node click', async () => {
     act(() => {

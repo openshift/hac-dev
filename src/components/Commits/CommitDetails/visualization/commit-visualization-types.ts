@@ -10,7 +10,6 @@ export enum NodeType {
 
 export enum CommitWorkflowNodeType {
   BUILD,
-  COMPONENT_TEST,
   APPLICATION_TEST,
   STATIC_ENVIRONMENT,
   RELEASE,

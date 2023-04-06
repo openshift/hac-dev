@@ -31,22 +31,12 @@ export const useAppApplicationTestNodes = (
   const allLoaded = testsLoaded && testPipelinesLoaded;
   const allErrors = [testsError, testPipelinesError].filter((e) => !!e);
 
-  const applicationIntegrationTests = React.useMemo(() => {
-    if (!allLoaded) {
-      return [];
-    }
-    return integrationTests?.filter((test) => {
-      const contexts = test?.spec?.contexts;
-      return !contexts || contexts?.some((c) => c.name === 'application');
-    });
-  }, [allLoaded, integrationTests]);
-
   const applicationTestNodes = React.useMemo(() => {
     if (!allLoaded || allErrors.length > 0) {
       return [];
     }
-    const nodes = applicationIntegrationTests?.length
-      ? applicationIntegrationTests.map((test) => {
+    const nodes = integrationTests?.length
+      ? integrationTests.map((test) => {
           const testPipeline = getLatestResource(
             testPipelines?.filter(
               (pipeline) =>
@@ -78,7 +68,7 @@ export const useAppApplicationTestNodes = (
   }, [
     allLoaded,
     allErrors.length,
-    applicationIntegrationTests,
+    integrationTests,
     applicationName,
     previousTasks,
     testPipelines,
@@ -92,7 +82,7 @@ export const useAppApplicationTestNodes = (
   return [
     applicationTestNodes,
     applicationIntegrationTestTasks,
-    applicationIntegrationTests,
+    integrationTests,
     allLoaded,
     allErrors,
   ];

@@ -17,7 +17,6 @@ export const getCommitWorkflowNodeIcon = (type: CommitWorkflowNodeType): React.R
     case CommitWorkflowNodeType.MANAGED_ENVIRONMENT:
       return <ServerIcon />;
     case CommitWorkflowNodeType.BUILD:
-    case CommitWorkflowNodeType.COMPONENT_TEST:
     case CommitWorkflowNodeType.APPLICATION_TEST:
     case CommitWorkflowNodeType.RELEASE:
     default:
@@ -30,7 +29,6 @@ export const getCommitWorkflowTooltipText = (type: CommitWorkflowNodeType): stri
     case CommitWorkflowNodeType.COMMIT:
       return 'Source';
     case CommitWorkflowNodeType.APPLICATION_TEST:
-    case CommitWorkflowNodeType.COMPONENT_TEST:
       return 'Integration test';
     case CommitWorkflowNodeType.STATIC_ENVIRONMENT:
     case CommitWorkflowNodeType.MANAGED_ENVIRONMENT:

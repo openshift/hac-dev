@@ -24,8 +24,6 @@ const CommitWorkflowSidePanel: React.FC<Props> = ({ workflowNode, onClose }) => 
       return <CommitSidePanel workflowNode={workflowNode} onClose={onClose} />;
     case CommitWorkflowNodeType.BUILD:
       return <BuildSidePanel workflowNode={workflowNode} onClose={onClose} />;
-    case CommitWorkflowNodeType.COMPONENT_TEST:
-      return <IntegrationTestSidePanel workflowNode={workflowNode} onClose={onClose} />;
     case CommitWorkflowNodeType.APPLICATION_TEST:
       return <IntegrationTestSidePanel workflowNode={workflowNode} onClose={onClose} />;
     case CommitWorkflowNodeType.STATIC_ENVIRONMENT:
