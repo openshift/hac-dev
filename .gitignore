@@ -24,3 +24,6 @@ integration-tests/cypress
 helpers/.env
 
 config/.env.local
+
+# Generated pacts
+pact

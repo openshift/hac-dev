@@ -9,7 +9,7 @@
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config config/prod.webpack.config.js --env analyze=true",
     "build": "NODE_ENV=production webpack --config config/prod.webpack.config.js",
-    "coverage": "jest --coverage --runInBand --detectOpenHandles --forceExit",
+    "coverage": "jest --coverage --runInBand --detectOpenHandles --forceExit --testPathIgnorePatterns=/pact-tests",
     "deploy": "npm-run-all build lint test",
     "lint": "npm-run-all lint:*",
     "lint:ts": "eslint . --ext .js,.jsx,.ts,.tsx --color",
@@ -22,7 +22,8 @@
     "start:prod:beta": "ENVIRONMENT=prod npm run start:beta",
     "test": "jest",
     "verify": "if test \"$IS_PR\" = \"true\" ; then npm run build; else npm-run-all build lint coverage; fi",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "pact": "rm -rf pact/pacts && jest --runInBand --roots=\"./pact-tests\" "
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",
@@ -64,7 +65,9 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "node-gyp": "^9.3.1",
     "@openshift/dynamic-plugin-sdk-webpack": "1.0.0-alpha3",
+    "@pact-foundation/pact": "^11.0.2",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^1.2.1",
     "@redhat-cloud-services/frontend-components-config": "^4.6.14",
     "@testing-library/jest-dom": "^5.15.1",
@@ -97,6 +100,7 @@
     "identity-obj-proxy": "3.0.0",
     "jest": "27.0.5",
     "lint-staged": "^13.2.0",
+    "jest-pact": "^0.10.3",
     "npm-run-all": "4.1.5",
     "prop-types": "15.7.2",
     "stylelint": "13.13.1",
@@ -105,7 +109,8 @@
     "ts-jest": "^27.0.7",
     "typescript": "^4.4.4",
     "unleash-proxy-client": "^2.3.0",
-    "webpack-bundle-analyzer": "4.4.2"
+    "webpack-bundle-analyzer": "4.4.2",
+    "whatwg-fetch": "^3.6.2"
   },
   "insights": {
     "appname": "hac-dev"
