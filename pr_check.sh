@@ -58,6 +58,8 @@ python tmp/keycloak.py $HAC_KC_SSO_URL $HAC_KC_USERNAME $HAC_KC_PASSWORD $B64_US
 mkdir -p $WORKSPACE/artifacts
 
 PR_TITLE=$(echo ${ghprbPullTitle} | sed -r 's/\s/_/g')
+GH_COMMENTBODY=$(echo ${ghprbCommentBody} | sed -r 's/\s/_/g')
+
 COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z \
     -v $PWD/integration-tests:/e2e:Z \
     -e CYPRESS_PR_CHECK=true \
@@ -65,7 +67,8 @@ COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z \
     -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/stonesoup \
     -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` \
     -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` \
-    -e CYPRESS_GH_PR_TITLE=${PR_TITLE}"
+    -e CYPRESS_GH_PR_TITLE=${PR_TITLE} \
+    -e GH_COMMENTBODY=${GH_COMMENTBODY}"
 TEST_IMAGE="quay.io/hacdev/hac-tests:next"
 
 set +e
