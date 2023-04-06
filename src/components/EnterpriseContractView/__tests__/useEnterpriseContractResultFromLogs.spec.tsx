@@ -54,7 +54,7 @@ describe('useEnterpriseContractResultFromLogs', () => {
       name: 'pod-acdf',
       path: 'log',
       queryParams: {
-        container: 'step-validate',
+        container: 'step-report',
         follow: 'true',
       },
     };

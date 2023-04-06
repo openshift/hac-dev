@@ -27,7 +27,7 @@ export const useEnterpriseContractResultFromLogs = (
           name: podName,
           path: 'log',
           queryParams: {
-            container: 'step-validate',
+            container: 'step-report',
             follow: 'true',
           },
         }
