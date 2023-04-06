@@ -15,7 +15,7 @@ const WorkspaceSettings: React.FC = () => {
         GettingStartedWithEnvironments,
         GettingStartedWithUsers,
         <>
-          Enterprise Contract | An Enterprise Contract (EC) is a set of release policies applied to
+          Enterprise Contract | Enterprise Contract (EC) is a set of release policies applied to
           your release target, also known as a managed environment. All your builds are checked
           against these release policies so that you know if you need to make changes to your
           application before releasing it to the customers.
