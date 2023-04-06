@@ -200,9 +200,11 @@ describe('Advance Happy path', () => {
         repoLink,
       ); // Commit SHA was stored in dynamic env at latestCommitsTabPage.editFile()
       latestCommitsTabPage.verifyBranch('main', repoLink);
+      UIhelper.verifyLabelAndValue('By', gitHubUser);
+      UIhelper.verifyLabelAndValue('Status', 'Succeeded');
       latestCommitsTabPage.verifyNodesOnCommitOverview([
         'commit',
-        `build-${componentName}`,
+        `${componentName}-build`,
         'development',
       ]);
     });
@@ -246,7 +248,7 @@ describe('Advance Happy path', () => {
       latestCommitsTabPage.verifyBranch('main', repoLink);
       latestCommitsTabPage.verifyNodesOnCommitOverview([
         'commit',
-        `build-${componentName}`,
+        `${componentName}-build`,
         'development',
       ]);
     });
