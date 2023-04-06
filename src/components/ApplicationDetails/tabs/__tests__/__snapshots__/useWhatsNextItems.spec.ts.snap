@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`useWhatsNextItems should return a list of whats next items 1`] = `
+Array [
+  Object {
+    "cta": Object {
+      "disabled": false,
+      "disabledTooltip": "You don't have access to add a component",
+      "href": "/stonesoup/workspaces/undefined/import?application=test-application",
+      "label": "Add component",
+    },
+    "description": "Grow your application by adding components.",
+    "helpId": "stonesoup-whatsnext-add-component",
+    "icon": "test-file-stub",
+    "title": "Add a component",
+  },
+  Object {
+    "cta": Object {
+      "external": true,
+      "href": "https://github.com/test-app",
+      "label": "Start the flow",
+    },
+    "description": "Install the GitHub app to monitor your work from a commit to deployment.",
+    "helpId": "stonesoup-whatsnext-install-github-app",
+    "icon": "test-file-stub",
+    "title": "Install our GitHub app",
+  },
+  Object {
+    "cta": Object {
+      "href": "/stonesoup/workspaces/undefined/applications/test-application/activity",
+      "label": "View build activity",
+    },
+    "description": "Make a change to your source code to automatically trigger a new build.",
+    "helpId": "stonesoup-whatsnext-make-code-change",
+    "icon": "test-file-stub",
+    "title": "Make a code change",
+  },
+  Object {
+    "cta": Object {
+      "label": "Manage build pipelines",
+      "onClick": [Function],
+    },
+    "description": "Add some automation by upgrading your default build pipelines to custom build pipelines.",
+    "helpId": "stonesoup-whatsnext-customize-build-pipeline",
+    "icon": "test-file-stub",
+    "title": "Manage build pipelines",
+  },
+]
+`;
