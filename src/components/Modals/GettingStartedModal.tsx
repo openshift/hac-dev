@@ -128,11 +128,11 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
           <Alert
             variant="success"
             isInline
-            title="This workspace validates releases with an enterprise contract"
+            title="This workspace validates releases with an Enterprise Contract"
             data-test="onboarding-modal-level1alert"
             actionLinks={
               <AlertActionLink href={enterpriseContractPolicy[0]?.spec.sources[0].git.repository}>
-                {"View my org's enterprise contracts"}
+                {"View my org's Enterprise Contracts"}
               </AlertActionLink>
             }
           />
