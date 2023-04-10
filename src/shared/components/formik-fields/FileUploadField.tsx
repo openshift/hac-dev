@@ -3,9 +3,15 @@ import { FileUpload } from '@patternfly/react-core';
 import BaseInputField from './BaseInputField';
 import { BaseInputFieldProps } from './field-types';
 
-const FileUploadField: React.FunctionComponent<
-  Omit<BaseInputFieldProps, 'onChange'> & React.ComponentProps<typeof FileUpload>
-> = ({ onChange, ...baseProps }) => {
+const renderFunction = (
+  {
+    onChange,
+    type,
+    ...baseProps
+  }: Omit<BaseInputFieldProps, 'onChange' | 'type'> &
+    Omit<React.ComponentProps<typeof FileUpload>, 'validated'>,
+  ref: React.Ref<HTMLInputElement>,
+) => {
   const onChangeHandle = (
     valueData: string | File,
     filenameData: string,
@@ -18,9 +24,13 @@ const FileUploadField: React.FunctionComponent<
   };
   return (
     <BaseInputField {...baseProps}>
-      {(props) => <FileUpload {...props} onChange={onChangeHandle} id={baseProps.id} />}
+      {(props) => (
+        <FileUpload ref={ref} {...props} onChange={onChangeHandle} id={baseProps.id} type={type} />
+      )}
     </BaseInputField>
   );
 };
+
+const FileUploadField = React.forwardRef(renderFunction);
 
 export default FileUploadField;

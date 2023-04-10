@@ -1,10 +1,7 @@
 import * as React from 'react';
 import {
-  ExpandableSection,
   Form,
   FormSection,
-  Label,
-  LabelGroup,
   PageSection,
   PageSectionVariants,
   Text,
@@ -14,18 +11,35 @@ import { FormikProps } from 'formik';
 import { isEmpty } from 'lodash-es';
 import { DropdownField, FormFooter, InputField } from '../../../shared';
 import PageLayout from '../../PageLayout/PageLayout';
-import { EnvironmentDeploymentStrategy } from '../environment-utils';
-import { ParentEnvironmentField } from './ParentEnvironmentField';
+import {
+  EnvironmentDeploymentStrategy,
+  EnvironmentType,
+  environmentTypeItems,
+} from '../environment-utils';
 import './CreateEnvironmentForm.scss';
+import KubeconfigUploadField from './KubeconfigUploadField';
 
 export type CreateEnvironmentFormValues = {
   name: string;
   deploymentStrategy: string;
   parentEnvironment?: string;
-  location: string;
+  clusterType: string;
+  environmentType?: EnvironmentType;
+  kubeconfig: string;
+  targetNamespace: string;
 };
 
 type CreateEnvironmentFormProps = FormikProps<CreateEnvironmentFormValues>;
+
+const deploymentStrategyItems = Object.entries(EnvironmentDeploymentStrategy).map(([key]) => ({
+  key,
+  value: key,
+}));
+
+const clusterTypeItems = [
+  { key: 'openshift', value: 'OpenShift' },
+  { key: 'nonOpenshift', value: 'Non-OpenShift' },
+];
 
 const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
   dirty,
@@ -35,15 +49,6 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
   handleSubmit,
   handleReset,
 }) => {
-  const dropdownItems = React.useMemo(
-    () =>
-      Object.entries(EnvironmentDeploymentStrategy).map(([key]) => ({
-        key,
-        value: key,
-      })),
-    [],
-  );
-
   const footer = (
     <FormFooter
       submitLabel="Create environment"
@@ -55,13 +60,14 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
     />
   );
   return (
-    <PageLayout title="Create environment" footer={footer}>
+    <PageLayout
+      title="Create environment"
+      description="Bring your managed workload clusters to create environments and deploy applications created using Red Hat Trusted Application Pipeline."
+      footer={footer}
+    >
       <PageSection variant={PageSectionVariants.light} isFilled isWidthLimited>
         <Form onSubmit={handleSubmit} className="hacDev-create-environment-form">
-          <FormSection title="Define environment">
-            <Text component={TextVariants.small}>
-              This environment will only be available within this workspace.
-            </Text>
+          <FormSection>
             <InputField
               aria-label="Environment Name"
               label="Environment Name"
@@ -71,29 +77,41 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
             <DropdownField
               label="Deployment strategy"
               name="deploymentStrategy"
-              items={dropdownItems}
-              helpText="Whether your application is manually or automatically deployed or promoted to this environment."
+              items={deploymentStrategyItems}
+              helpText="Set whether application component updates will need to be manually or automatically promoted to this environment, and if changes will be manually or automatically deployed."
+              validateOnChange
+              isDisabled
             />
-            <ParentEnvironmentField />
           </FormSection>
 
-          <FormSection title="Select compute">
+          <FormSection title="Cluster information">
             <Text component={TextVariants.small}>
-              Select a pool of compute where applications that reach this environment will run.
+              What cluster would you like to use for creating this environment?
             </Text>
             <DropdownField
-              label="Location"
-              name="location"
-              items={[{ key: 'developmentSandbox', value: 'Development Sandbox' }]}
-              helpText="All public clouds, restricted quota, for testing purposes"
-              disabled
+              label="Select Cluster"
+              name="environmentType"
+              items={environmentTypeItems}
+              placeholder="Select"
+              validateOnChange
+              required
             />
-            <ExpandableSection toggleText="View location details" isIndented>
-              <LabelGroup>
-                <Label>country=usa</Label>
-                <Label>cloud=aws</Label>
-              </LabelGroup>
-            </ExpandableSection>
+            <DropdownField
+              label="Cluster type"
+              name="clusterType"
+              items={clusterTypeItems}
+              placeholder="Select"
+              validateOnChange
+              required
+            />
+            <KubeconfigUploadField name="kubeconfig" />
+            <InputField
+              label="Target namespace on the selected cluster"
+              aria-label="Target namespace on the selected cluster"
+              name="targetNamespace"
+              helpText="Enter the namespace name on this cluster that you would like to use to deploy your workloads. Each namespace can be associated with a unique environment in Red Hat Trusted Application Pipeline."
+              required
+            />
           </FormSection>
         </Form>
       </PageSection>

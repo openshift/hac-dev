@@ -40,7 +40,7 @@ export const useEnterpriseContractResultFromLogs = (
       commonFetchText(getK8sResourceURL(PodModel, undefined, ecResultOpts))
         .then((res) => {
           if (unmount) return;
-          const json = YAML.load(res, 'utf8');
+          const json = YAML.load(res) as EnterpriseContractResult;
           setEcJson(json);
           setEcLoaded(true);
         })
