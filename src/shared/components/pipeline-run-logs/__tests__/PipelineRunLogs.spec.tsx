@@ -34,6 +34,10 @@ describe('PipelineRunLogs', () => {
 
   beforeEach(() => {
     watchResourceMock.mockReturnValue([{ metadata: { name: 'test-pod' } }, true]);
+    (window.HTMLSpanElement as any).prototype.scrollIntoView = () => {};
+  });
+  afterEach(() => {
+    (window.HTMLSpanElement as any).prototype.scrollIntoView = undefined;
   });
 
   it('should render task list and log window', () => {
