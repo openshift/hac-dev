@@ -131,7 +131,7 @@ const SampleSection = ({ onStrategyChange }) => {
             <div>
               <Gallery className="hac-catalog" hasGutter>
                 {filteredSamples.map((sample) => (
-                  <GalleryItem key={sample.uid}>
+                  <GalleryItem key={sample.uid} onClick={() => handleSelect(sample)}>
                     <CatalogTile
                       className="hac-catalog__tile"
                       id={sample.uid}
@@ -144,7 +144,6 @@ const SampleSection = ({ onStrategyChange }) => {
                         </Badge>
                       ))}
                       {...getIconProps(sample)}
-                      onClick={() => handleSelect(sample)}
                       footer={
                         <Button
                           variant="link"
@@ -163,7 +162,7 @@ const SampleSection = ({ onStrategyChange }) => {
                                 (sample.attributes.git as { remotes: { [key: string]: string } })
                                   .remotes.origin
                               }
-                              target={'_blank'}
+                              target="_blank"
                               rel="noreferrer"
                             />
                           )}
