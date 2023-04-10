@@ -27,7 +27,7 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
       <TableData className={commitsTableColumnClasses.name}>
         <CommitIcon isPR={obj.isPullRequest} className="sha-title-icon" />
         <Link
-          to={`/stonesoup/workspaces/${workspace}/applications/${obj.application}/commit/${obj.sha}`}
+          to={`/application-pipeline/workspaces/${workspace}/applications/${obj.application}/commit/${obj.sha}`}
         >
           {prNumber} {obj.shaTitle}
         </Link>

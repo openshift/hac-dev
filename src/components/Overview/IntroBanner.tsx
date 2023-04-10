@@ -88,7 +88,7 @@ const IntroBanner: React.FC = () => {
                 <ButtonWithAccessTooltip
                   className="intro-banner__cta"
                   component={(props) => (
-                    <Link {...props} to={`/stonesoup/workspaces/${workspace}/import`} />
+                    <Link {...props} to={`/application-pipeline/workspaces/${workspace}/import`} />
                   )}
                   variant="primary"
                   data-test="create-application"
@@ -101,7 +101,7 @@ const IntroBanner: React.FC = () => {
                 {applicationsLoaded && applications?.length > 0 ? (
                   <Button
                     className="intro-banner__cta"
-                    component={(props) => <Link {...props} to="/stonesoup/workspaces" />}
+                    component={(props) => <Link {...props} to="/application-pipeline/workspaces" />}
                     variant="primary"
                     data-test="view-my-applications"
                     isLarge

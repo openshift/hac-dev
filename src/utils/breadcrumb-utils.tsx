@@ -20,7 +20,7 @@ export const useApplicationBreadcrumbs = (appDisplayName = null, withLink = true
     <BreadcrumbItem key="workspace-link" to="#" component="div">
       <Link
         className="pf-c-breadcrumb__link"
-        to={`/stonesoup/workspaces/${workspace}/applications`}
+        to={`/application-pipeline/workspaces/${workspace}/applications`}
       >
         {workspace}
       </Link>
@@ -34,7 +34,7 @@ export const useApplicationBreadcrumbs = (appDisplayName = null, withLink = true
         <Link
           data-test="applications-breadcrumb-link"
           className="pf-c-breadcrumb__link"
-          to={`/stonesoup/workspaces/${workspace}/applications`}
+          to={`/application-pipeline/workspaces/${workspace}/applications`}
         >
           Applications
         </Link>
@@ -46,7 +46,7 @@ export const useApplicationBreadcrumbs = (appDisplayName = null, withLink = true
       ? [
           {
             path: withLink
-              ? `/stonesoup/workspaces/${workspace}/applications/${applicationName}`
+              ? `/application-pipeline/workspaces/${workspace}/applications/${applicationName}`
               : '',
             name: appDisplayName || applicationName,
           },

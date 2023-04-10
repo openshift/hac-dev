@@ -21,7 +21,7 @@ const CreateEnvironment: React.FC = () => {
     (values: CreateEnvironmentFormValues, actions) => {
       createEnvironment(values, namespace, true)
         .then(() => createEnvironment(values, namespace))
-        .then(() => navigate(`/stonesoup/environments/workspaces/${workspace}`))
+        .then(() => navigate(`/application-pipeline/environments/workspaces/${workspace}`))
         .catch((error) => {
           // eslint-disable-next-line no-console
           console.warn('Error while submitting import form:', error);

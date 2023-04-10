@@ -31,7 +31,10 @@ export const NotFoundEmptyState: React.FC<{ className?: string }> = ({ className
       <EmptyStateBody>
         {`Looks like that page doesn't exist. Let's get you back to your applications list.`}
       </EmptyStateBody>
-      <Button variant={ButtonVariant.primary} onClick={() => navigate('/stonesoup/workspaces')}>
+      <Button
+        variant={ButtonVariant.primary}
+        onClick={() => navigate('/application-pipeline/workspaces')}
+      >
         Go to applications list
       </Button>
     </EmptyState>

@@ -17,7 +17,7 @@ export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicatio
     (newTab: string) => {
       if (activeTab !== newTab) {
         navigate(
-          `/stonesoup/workspaces/${workspace}/applications/${applicationName}/${parentTab}/${newTab}`,
+          `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/${parentTab}/${newTab}`,
         );
       }
     },

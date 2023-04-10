@@ -41,7 +41,7 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
   actions.push(
     {
       cta: {
-        href: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/component-settings?componentName=${name}`,
+        href: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/component-settings?componentName=${name}`,
       },
       id: 'component-settings',
       label: 'Edit component settings',

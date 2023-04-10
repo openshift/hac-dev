@@ -7,12 +7,14 @@ enum ConsoleDotEnvironments {
   prod = 'prod',
 }
 
-type StoneSoupGitHubAppDataType = {
+type ApplicationPipelineGitHubAppDataType = {
   url: string;
   name: string;
 };
 
-export const StoneSoupGitHubAppData: { [env: string]: StoneSoupGitHubAppDataType } = {
+export const ApplicationPipelineGitHubAppData: {
+  [env: string]: ApplicationPipelineGitHubAppDataType;
+} = {
   dev: { url: 'https://github.com/apps/rhtap-staging', name: 'rhtap-staging' },
   stage: {
     url: 'https://github.com/apps/rhtap-staging',
@@ -24,18 +26,18 @@ export const StoneSoupGitHubAppData: { [env: string]: StoneSoupGitHubAppDataType
   },
 };
 
-export const useStoneSoupGitHubApp = (): StoneSoupGitHubAppDataType => {
+export const useApplicationPipelineGitHubApp = (): ApplicationPipelineGitHubAppDataType => {
   const { getEnvironment } = useChrome();
 
   const environment = getEnvironment();
 
   switch (environment) {
     case ConsoleDotEnvironments.prod:
-      return StoneSoupGitHubAppData.prod;
+      return ApplicationPipelineGitHubAppData.prod;
     case ConsoleDotEnvironments.dev:
     case ConsoleDotEnvironments.stage:
-      return StoneSoupGitHubAppData.stage;
+      return ApplicationPipelineGitHubAppData.stage;
     default:
-      return StoneSoupGitHubAppData.dev;
+      return ApplicationPipelineGitHubAppData.dev;
   }
 };

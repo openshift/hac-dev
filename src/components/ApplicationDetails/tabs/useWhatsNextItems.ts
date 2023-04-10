@@ -1,4 +1,4 @@
-import { useStoneSoupGitHubApp } from '../../../hooks/useStoneSoupGitHubApp';
+import { useApplicationPipelineGitHubApp } from '../../../hooks/useApplicationPipelineGitHubApp';
 import componentsIcon from '../../../imgs/illustrations/Components.svg';
 import editCodeIcon from '../../../imgs/illustrations/Edit code.svg';
 import githubAppIcon from '../../../imgs/illustrations/Github app.svg';
@@ -13,7 +13,7 @@ import { WhatsNextItem } from '../../WhatsNext/WhatsNextSection';
 export const useWhatsNextItems = (applicationName: string) => {
   const showModal = useModalLauncher();
   const { workspace, namespace } = useWorkspaceInfo();
-  const { url: githubAppURL } = useStoneSoupGitHubApp();
+  const { url: githubAppURL } = useApplicationPipelineGitHubApp();
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 
   const whatsNextItems: WhatsNextItem[] = [
@@ -23,7 +23,7 @@ export const useWhatsNextItems = (applicationName: string) => {
       icon: componentsIcon,
       cta: {
         label: 'Add component',
-        href: `/stonesoup/workspaces/${workspace}/import?application=${applicationName}`,
+        href: `/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`,
         disabled: !canCreateComponent,
         disabledTooltip: "You don't have access to add a component",
       },
@@ -46,7 +46,7 @@ export const useWhatsNextItems = (applicationName: string) => {
       icon: editCodeIcon,
       cta: {
         label: 'View build activity',
-        href: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity`,
+        href: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/activity`,
       },
       helpId: 'stonesoup-whatsnext-make-code-change',
     },

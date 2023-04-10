@@ -53,7 +53,7 @@ const BuildSidePanel: React.FC<PipelineSidePanelBodyProps> = ({ workflowNode, on
         <DrawerHead data-testid="build-side-panel-head">
           <span className="commit-side-panel__head-title">
             <Link
-              to={`/stonesoup/workspaces/${workspace}/applications/${workflowData.application}/pipelineruns/${pipelineRun.metadata.name}`}
+              to={`/application-pipeline/workspaces/${workspace}/applications/${workflowData.application}/pipelineruns/${pipelineRun.metadata.name}`}
             >
               {pipelineRun.metadata.name}
             </Link>
@@ -107,7 +107,7 @@ const BuildSidePanel: React.FC<PipelineSidePanelBodyProps> = ({ workflowNode, on
                 {pipelineRun.metadata?.labels?.[PipelineRunLabel.COMPONENT] ? (
                   pipelineRun.metadata?.labels?.[PipelineRunLabel.APPLICATION] ? (
                     <Link
-                      to={`/stonesoup/workspaces/${workspace}/applications/${
+                      to={`/application-pipeline/workspaces/${workspace}/applications/${
                         pipelineRun.metadata.labels[PipelineRunLabel.APPLICATION]
                       }/components?name=${pipelineRun.metadata.labels[PipelineRunLabel.COMPONENT]}`}
                     >
@@ -125,7 +125,7 @@ const BuildSidePanel: React.FC<PipelineSidePanelBodyProps> = ({ workflowNode, on
             <DescriptionListGroup>
               <DescriptionListDescription>
                 <Link
-                  to={`/stonesoup/workspaces/${workspace}/applications/${workflowData.application}/pipelineruns/${pipelineRun.metadata.name}/logs`}
+                  to={`/application-pipeline/workspaces/${workspace}/applications/${workflowData.application}/pipelineruns/${pipelineRun.metadata.name}/logs`}
                 >
                   View logs
                 </Link>

@@ -150,7 +150,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                           component={(props) => (
                             <Link
                               {...props}
-                              to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${pipelineRun.metadata?.name}/logs`}
+                              to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${pipelineRun.metadata?.name}/logs`}
                             />
                           )}
                         >
@@ -181,7 +181,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                   <DescriptionListDescription>
                     {pipelineRun.metadata?.labels?.[PipelineRunLabel.APPLICATION] ? (
                       <Link
-                        to={`/stonesoup/workspaces/${workspace}/applications/${
+                        to={`/application-pipeline/workspaces/${workspace}/applications/${
                           pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION]
                         }`}
                       >
@@ -199,7 +199,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                     {pipelineRun.metadata?.labels?.[PipelineRunLabel.COMPONENT] ? (
                       pipelineRun.metadata?.labels?.[PipelineRunLabel.APPLICATION] ? (
                         <Link
-                          to={`/stonesoup/workspaces/${workspace}/applications/${
+                          to={`/application-pipeline/workspaces/${workspace}/applications/${
                             pipelineRun.metadata.labels[PipelineRunLabel.APPLICATION]
                           }/components?name=${
                             pipelineRun.metadata.labels[PipelineRunLabel.COMPONENT]
@@ -221,7 +221,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                     <DescriptionListTerm>Commit</DescriptionListTerm>
                     <DescriptionListDescription>
                       <Link
-                        to={`/stonesoup/workspaces/${workspace}/applications/${
+                        to={`/application-pipeline/workspaces/${workspace}/applications/${
                           pipelineRun.metadata.labels[PipelineRunLabel.APPLICATION]
                         }/commit/${sha}`}
                       >

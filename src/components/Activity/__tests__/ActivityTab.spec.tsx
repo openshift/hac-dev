@@ -54,7 +54,7 @@ describe('Activity Tab', () => {
       fireEvent.click(plrTab);
     });
     expect(navigateMock).toHaveBeenCalledWith(
-      '/stonesoup/workspaces/test-ws/applications/abcd/undefined/pipelineruns',
+      '/application-pipeline/workspaces/test-ws/applications/abcd/undefined/pipelineruns',
     );
   });
   it('should display the correct tab', async () => {

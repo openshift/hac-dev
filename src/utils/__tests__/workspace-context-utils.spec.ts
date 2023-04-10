@@ -81,7 +81,7 @@ describe('getHomeWorkspace', () => {
     expect(getHomeWorkspace(undefined)).toBeUndefined();
   });
 
-  it('should return home worksapce', () => {
+  it('should return home workspace', () => {
     expect(getHomeWorkspace(mockWorkspaces).metadata.name).toBe('workspace-one');
     expect(getHomeWorkspace(mockWorkspaces).status.type).toBe('home');
   });
@@ -92,7 +92,7 @@ describe('useActiveWorkspace', () => {
   beforeEach(() => {
     Object.defineProperty(window, 'location', {
       value: {
-        pathname: '/stonesoup/workspaces/test-ws/applications',
+        pathname: '/application-pipeline/workspaces/test-ws/applications',
       },
       writable: true,
     });
@@ -158,7 +158,7 @@ describe('useActiveWorkspace', () => {
   });
 
   it('should should select the workspace from url', async () => {
-    window.location.pathname = '/stonesoup/workspaces/workspace-two/applications';
+    window.location.pathname = '/application-pipeline/workspaces/workspace-two/applications';
     const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
     await waitForNextUpdate();
 
@@ -170,7 +170,7 @@ describe('useActiveWorkspace', () => {
       ...mockWorkspaces,
       { metadata: { name: 'test-ws' } },
     ]);
-    window.location.pathname = '/stonesoup/workspaces/workspace-invalid/applications';
+    window.location.pathname = '/application-pipeline/workspaces/workspace-invalid/applications';
     const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
 
     await waitForNextUpdate();
@@ -189,7 +189,7 @@ describe('useActiveWorkspace', () => {
   });
 
   it('should should not navigate to the selected workspace route if the user is in non workspace pages', async () => {
-    window.location.pathname = '/stonesoup/overview';
+    window.location.pathname = '/application-pipeline/overview';
     getActiveWorkspaceMock.mockReturnValue('');
     renderHook(() => useActiveWorkspace());
 
@@ -203,7 +203,9 @@ describe('useActiveWorkspace', () => {
     renderHook(() => useActiveWorkspace());
 
     await waitFor(() => {
-      expect(navigateMock).toHaveBeenCalledWith(`/stonesoup/workspaces/workspace-one/applications`);
+      expect(navigateMock).toHaveBeenCalledWith(
+        `/application-pipeline/workspaces/workspace-one/applications`,
+      );
     });
   });
 });

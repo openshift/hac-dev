@@ -60,11 +60,11 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
         breadcrumbs={[
           ...applicationBreadcrumbs,
           {
-            path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
+            path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
             name: 'Integration tests',
           },
           {
-            path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/${testName}`,
+            path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/integrationtests/${testName}`,
             name: integrationTest.metadata.name,
           },
         ]}
@@ -79,7 +79,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
             label: 'Edit',
             component: (
               <Link
-                to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/${testName}/edit`}
+                to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/integrationtests/${testName}/edit`}
               >
                 Edit
               </Link>
@@ -94,7 +94,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
               ).closed.then(({ submitClicked }) => {
                 if (submitClicked)
                   navigate(
-                    `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
+                    `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
                   );
               }),
             key: `delete-${integrationTest.metadata.name.toLowerCase()}`,
@@ -103,7 +103,7 @@ const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
             disabledTooltip: "You don't have access to delete this integration test",
           },
         ]}
-        baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/${testName}`}
+        baseURL={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/integrationtests/${testName}`}
         tabs={[
           {
             key: 'overview',

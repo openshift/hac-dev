@@ -39,7 +39,7 @@ const SecurityTabEmptyState: React.FC<Omit<EmptyStateProps, 'children'>> = ({ ..
           variant={ButtonVariant.primary}
           onClick={() =>
             navigate(
-              `/stonesoup/workspaces/${workspaceName}/applications/${appName}/pipelineruns/${plrName}`,
+              `/application-pipeline/workspaces/${workspaceName}/applications/${appName}/pipelineruns/${plrName}`,
             )
           }
         >

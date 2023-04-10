@@ -265,7 +265,7 @@ describe('PipelineRunDetailsView', () => {
 
     fireEvent.click(screen.queryByRole('menuitem', { name: 'Rerun' }));
     await waitFor(() => {
-      expect(navigateMock).toHaveBeenCalledWith(`/stonesoup/pipelineruns/${newPlrName}`);
+      expect(navigateMock).toHaveBeenCalledWith(`/application-pipeline/pipelineruns/${newPlrName}`);
     });
   });
 
@@ -287,7 +287,7 @@ describe('PipelineRunDetailsView', () => {
     fireEvent.click(startNewBuildButton);
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith(
-        '/stonesoup/workspaces//applications/test-app/activity/pipelineruns?name=mock-component',
+        '/application-pipeline/workspaces//applications/test-app/activity/pipelineruns?name=mock-component',
       ),
     );
   });

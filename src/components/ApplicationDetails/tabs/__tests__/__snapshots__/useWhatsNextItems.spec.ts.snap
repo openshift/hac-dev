@@ -6,7 +6,7 @@ Array [
     "cta": Object {
       "disabled": false,
       "disabledTooltip": "You don't have access to add a component",
-      "href": "/stonesoup/workspaces/undefined/import?application=test-application",
+      "href": "/application-pipeline/workspaces/undefined/import?application=test-application",
       "label": "Add component",
     },
     "description": "Grow your application by adding components.",
@@ -27,7 +27,7 @@ Array [
   },
   Object {
     "cta": Object {
-      "href": "/stonesoup/workspaces/undefined/applications/test-application/activity",
+      "href": "/application-pipeline/workspaces/undefined/applications/test-application/activity",
       "label": "View build activity",
     },
     "description": "Make a change to your source code to automatically trigger a new build.",

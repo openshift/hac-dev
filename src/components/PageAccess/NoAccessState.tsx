@@ -49,7 +49,7 @@ const NoAccessState: React.FC<NoAccessStateProps> = ({
         <Button
           variant={ButtonVariant.primary}
           data-test="no-access-action"
-          onClick={() => navigate('/stonesoup/workspaces')}
+          onClick={() => navigate('/application-pipeline/workspaces')}
         >
           Go to applications list
         </Button>

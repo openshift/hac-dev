@@ -72,11 +72,11 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
         breadcrumbs={[
           ...applicationBreadcrumbs,
           {
-            path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity/latest-commits`,
+            path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/activity/latest-commits`,
             name: 'commits',
           },
           {
-            path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/commit/${commitName}`,
+            path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/commit/${commitName}`,
             name: commitDisplayName,
           },
         ]}
@@ -96,7 +96,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
             onClick: () => window.open(commit.shaURL),
           },
         ]}
-        baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/commit/${commitName}`}
+        baseURL={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/commit/${commitName}`}
         tabs={[
           {
             key: 'details',

@@ -80,11 +80,11 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
         breadcrumbs={[
           ...applicationBreadcrumbs,
           {
-            path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity/pipelineruns`,
+            path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/activity/pipelineruns`,
             name: 'Pipeline runs',
           },
           {
-            path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${pipelineRunName}`,
+            path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${pipelineRunName}`,
             name: pipelineRunName,
           },
         ]}
@@ -104,7 +104,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
             onClick: () => {
               startNewBuild(component).then(() =>
                 navigate(
-                  `/stonesoup/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
+                  `/application-pipeline/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
                 ),
               );
             },
@@ -115,7 +115,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
           //   label: 'Rerun',
           //   onClick: () =>
           //     pipelineRunRerun(pipelineRun).then((data) => {
-          //       navigate(`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${data.metadata.name}`);
+          //       navigate(`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${data.metadata.name}`);
           //     }),
           // },
           {
@@ -139,7 +139,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
             onClick: () => pipelineRunCancel(pipelineRun),
           },
         ]}
-        baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${pipelineRunName}`}
+        baseURL={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${pipelineRunName}`}
         tabs={[
           {
             key: 'detail',

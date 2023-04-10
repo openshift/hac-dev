@@ -105,7 +105,7 @@ export const getLinkDataForElement = (
     case WorkflowNodeType.APPLICATION_TEST:
       return !groupNode && !isDisabled
         ? {
-            path: `/stonesoup/workspaces/${workspace}/applications/${
+            path: `/application-pipeline/workspaces/${workspace}/applications/${
               element.getData().application
             }/integrationtests/${label}`,
           }
@@ -142,7 +142,7 @@ export const getLinksForElement = (
 ): { elementRef: string; pipelinesRef: string; appRef: string } => {
   const linkData = getLinkDataForElement(element, workspace);
 
-  const appPath = `/stonesoup/workspaces/${workspace}/applications/${
+  const appPath = `/application-pipeline/workspaces/${workspace}/applications/${
     element.getData().application
   }`;
   const tabPath = linkData.tab ? `/${linkData.tab}` : '';

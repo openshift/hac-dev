@@ -22,7 +22,7 @@ describe('IntegrationTestOverviewTab', () => {
       'https://quay.io/test-rep/test-bundle:test-1',
     ); // image bundle
     expect(screen.getAllByRole('link')[1].getAttribute('href')).toBe(
-      '/stonesoup/workspaces/test-ws/applications/test-app',
+      '/application-pipeline/workspaces/test-ws/applications/test-app',
     ); // application link
   });
 
@@ -36,7 +36,7 @@ describe('IntegrationTestOverviewTab', () => {
       'https://quay.io/test-rep/test-bundle:test-2',
     ); // image bundle
     expect(screen.getAllByRole('link')[1].getAttribute('href')).toBe(
-      '/stonesoup/workspaces/test-ws/applications/test-app',
+      '/application-pipeline/workspaces/test-ws/applications/test-app',
     ); // application link
   });
 

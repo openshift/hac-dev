@@ -36,7 +36,7 @@ const TaskRunPanel: React.FC<Props> = ({ taskNode, onClose }) => {
           <span>
             {applicationName ? (
               <Link
-                to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRun.metadata.name}`}
+                to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRun.metadata.name}`}
               >
                 {task.name}
               </Link>

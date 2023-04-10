@@ -59,19 +59,19 @@ export const TaskRunDetailsView: React.FC<TaskRunDetailsViewProps> = ({ taskRunN
       breadcrumbs={[
         ...applicationBreadcrumbs,
         {
-          path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity/pipelineruns`,
+          path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/activity/pipelineruns`,
           name: 'Pipeline runs',
         },
         {
-          path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${plrName}`,
+          path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${plrName}`,
           name: plrName,
         },
         {
-          path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${plrName}/taskruns`,
+          path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${plrName}/taskruns`,
           name: `Task runs`,
         },
         {
-          path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRunName}`,
+          path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRunName}`,
           name: taskRunName,
         },
       ]}
@@ -81,7 +81,7 @@ export const TaskRunDetailsView: React.FC<TaskRunDetailsViewProps> = ({ taskRunN
           <StatusIconWithTextLabel status={trStatus} />
         </>
       }
-      baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRunName}`}
+      baseURL={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRunName}`}
       tabs={[
         {
           key: 'details',

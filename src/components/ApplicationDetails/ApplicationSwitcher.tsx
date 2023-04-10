@@ -28,7 +28,7 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
 
   const onSelect = (item: ContextMenuItem) => {
     selectedItem.key !== item.key &&
-      navigate(`/stonesoup/workspaces/${workspace}/applications/${item.key}`);
+      navigate(`/application-pipeline/workspaces/${workspace}/applications/${item.key}`);
   };
 
   return menuItems.length > 1 ? (
@@ -43,7 +43,7 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
             <ButtonWithAccessTooltip
               variant="link"
               component={(props) => (
-                <Link {...props} to={`/stonesoup/workspaces/${workspace}/import`} />
+                <Link {...props} to={`/application-pipeline/workspaces/${workspace}/import`} />
               )}
               isInline
               tooltip="You don't have access to create an application"
@@ -56,7 +56,10 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
             <Button
               variant="link"
               component={(props) => (
-                <Link {...props} to={`/stonesoup/workspaces/${workspace}/applications`} />
+                <Link
+                  {...props}
+                  to={`/application-pipeline/workspaces/${workspace}/applications`}
+                />
               )}
               isInline
             >

@@ -62,7 +62,7 @@ const IntegrationTestSidePanel: React.FC<IntegrationTestSidePanelBodyProps> = ({
           <span className="commit-side-panel__head-title">
             {integrationTestPipeline ? (
               <Link
-                to={`/stonesoup/workspaces/${workspace}/applications/${
+                to={`/application-pipeline/workspaces/${workspace}/applications/${
                   workflowData.application
                 }/integrationtests/${workflowNode.getLabel()}`}
               >
@@ -123,7 +123,7 @@ const IntegrationTestSidePanel: React.FC<IntegrationTestSidePanelBodyProps> = ({
                 {integrationTestPipeline?.metadata?.labels?.[PipelineRunLabel.COMPONENT] ? (
                   integrationTestPipeline?.metadata?.labels?.[PipelineRunLabel.APPLICATION] ? (
                     <Link
-                      to={`/stonesoup/workspaces/${workspace}/applications/${
+                      to={`/application-pipeline/workspaces/${workspace}/applications/${
                         integrationTestPipeline.metadata.labels[PipelineRunLabel.APPLICATION]
                       }/components?name=${
                         integrationTestPipeline.metadata.labels[PipelineRunLabel.COMPONENT]
@@ -170,7 +170,7 @@ const IntegrationTestSidePanel: React.FC<IntegrationTestSidePanelBodyProps> = ({
                       component={(props) => (
                         <Link
                           {...props}
-                          to={`/stonesoup/workspaces/${workspace}/applications/${workflowData.application}/pipelineruns/${integrationTestPipeline.metadata?.name}/logs`}
+                          to={`/application-pipeline/workspaces/${workspace}/applications/${workflowData.application}/pipelineruns/${integrationTestPipeline.metadata?.name}/logs`}
                         />
                       )}
                     >

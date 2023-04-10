@@ -88,7 +88,7 @@ describe('CommitsListView', () => {
     const addButton = screen.queryByText('Add component');
     expect(addButton).toBeInTheDocument();
     expect(addButton.closest('a').href).toContain(
-      `http://localhost/stonesoup/workspaces/test-ws/import?application=purple-mermaid-app`,
+      `http://localhost/application-pipeline/workspaces/test-ws/import?application=purple-mermaid-app`,
     );
   });
 
@@ -123,7 +123,7 @@ describe('CommitsListView', () => {
     render(<CommitsListView applicationName="purple-mermaid-app" recentOnly />);
     fireEvent.click(screen.getByText('View More'));
     expect(navigate).toHaveBeenCalledWith(
-      `/stonesoup/workspaces/test-ws/applications/purple-mermaid-app/activity/latest-commits`,
+      `/application-pipeline/workspaces/test-ws/applications/purple-mermaid-app/activity/latest-commits`,
     );
   });
 

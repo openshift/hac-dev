@@ -84,7 +84,7 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
                 component={(props) => (
                   <Link
                     {...props}
-                    to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}
+                    to={`/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`}
                   />
                 )}
                 tooltip="You don't have access to add a component"

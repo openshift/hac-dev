@@ -46,7 +46,7 @@ const RelatedPipelineRuns = ({ pipelineRun }) => {
           : filteredRelatedPipelineruns?.map((relatedPipelineRun: PipelineRunKind) => (
               <div key={relatedPipelineRun?.metadata?.uid}>
                 <Link
-                  to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${relatedPipelineRun.metadata?.name}`}
+                  to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${relatedPipelineRun.metadata?.name}`}
                   title={relatedPipelineRun.metadata?.name}
                 >
                   {relatedPipelineRun.metadata?.name}

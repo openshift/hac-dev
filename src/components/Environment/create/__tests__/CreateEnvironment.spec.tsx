@@ -158,7 +158,9 @@ describe('CreateEnvironment', () => {
     const submitButton = screen.getByRole('button', { name: 'Create environment' });
     fireEvent.click(submitButton);
     await waitFor(() =>
-      expect(navigateMock).toHaveBeenCalledWith('/stonesoup/environments/workspaces/test-ws'),
+      expect(navigateMock).toHaveBeenCalledWith(
+        '/application-pipeline/environments/workspaces/test-ws',
+      ),
     );
   });
 
@@ -166,6 +168,8 @@ describe('CreateEnvironment', () => {
     render(<CreateEnvironment />);
     const cancelButton = screen.getByText('Cancel');
     fireEvent.click(cancelButton);
-    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/environments/workspaces/test-ws');
+    expect(navigateMock).toHaveBeenCalledWith(
+      '/application-pipeline/environments/workspaces/test-ws',
+    );
   });
 });

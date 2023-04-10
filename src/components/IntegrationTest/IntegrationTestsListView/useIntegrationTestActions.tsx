@@ -42,7 +42,7 @@ export const useIntegrationTestActions = (
       id: `edit-${integrationTest.metadata.name.toLowerCase()}`,
       label: 'Edit',
       cta: {
-        href: `/stonesoup/workspaces/${workspace}/applications/${integrationTest.spec.application}/integrationtests/${integrationTest.metadata.name}/edit`,
+        href: `/application-pipeline/workspaces/${workspace}/applications/${integrationTest.spec.application}/integrationtests/${integrationTest.metadata.name}/edit`,
       },
       disabled: !canUpdateIntegrationTest,
       disabledTooltip: "You don't have access to edit this integration test",

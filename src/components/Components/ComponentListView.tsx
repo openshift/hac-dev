@@ -225,7 +225,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                         <Link
                           {...p}
                           data-test="add-component-button"
-                          to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}
+                          to={`/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`}
                         />
                       )}
                       isDisabled={!canCreateComponent}
@@ -326,7 +326,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                 component={(props) => (
                   <Link
                     {...props}
-                    to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}
+                    to={`/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`}
                   />
                 )}
                 isDisabled={!canCreateComponent}
