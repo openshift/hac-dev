@@ -1,6 +1,7 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
-import { PipelineRunLabel } from '../../consts/pipelinerun';
+
+const ENTERPRISE_CONTRACT_LABEL = 'build.appstudio.redhat.com/pipeline';
 
 export const isResourceEnterpriseContract = (resource: K8sResourceCommon): boolean => {
-  return resource.metadata?.labels[PipelineRunLabel.PIPELINE_NAME] === 'enterprise-contract';
+  return resource?.metadata?.labels[ENTERPRISE_CONTRACT_LABEL] === 'enterprise-contract';
 };
