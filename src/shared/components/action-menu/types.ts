@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { AnalyticsButtonProperties } from '../../../utils/analytics';
 
 export type Action = {
   id: string;
@@ -10,6 +11,7 @@ export type Action = {
   tooltip?: string;
   icon?: string | React.ReactNode;
   path?: string;
+  analytics?: AnalyticsButtonProperties;
 };
 
 /** ActionGroup contributes an action group that can also be a submenu */

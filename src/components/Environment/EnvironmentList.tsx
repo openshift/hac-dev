@@ -72,6 +72,10 @@ const EnvironmentList: React.FC<EnvironmentListProps> = ({
         )}
         isDisabled={!canCreateEnvironment}
         tooltip="You don't have access to create an environment"
+        analytics={{
+          link_name: 'create-environment',
+          workspace,
+        }}
       >
         Create environment
       </ButtonWithAccessTooltip>

@@ -11,6 +11,7 @@ import {
   IntegrationTestScenarioModel,
 } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';
+import { useTrackEvent, TrackEvents } from '../../utils/analytics';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { MVP_FLAG } from '../../utils/flag-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
@@ -35,6 +36,7 @@ type HacbsApplicationDetailsProps = {
 };
 
 const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicationName }) => {
+  const track = useTrackEvent();
   const { namespace, workspace } = useWorkspaceInfo();
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
   const [canCreateEnvironment] = useAccessReviewForModel(EnvironmentModel, 'create');
@@ -86,8 +88,15 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
         title={<ApplicationHeader application={application} />}
         actions={[
           {
-            onClick: () =>
-              showModal(createCustomizeAllPipelinesModalLauncher(applicationName, namespace)),
+            onClick: () => {
+              track(TrackEvents.ButtonClicked, {
+                link_name: 'manage-build-pipelines',
+                link_location: 'application-actions',
+                app_name: applicationName,
+                workspace,
+              });
+              showModal(createCustomizeAllPipelinesModalLauncher(applicationName, namespace));
+            },
             key: 'manage-build-pipelines',
             label: 'Manage build pipelines',
           },
@@ -106,6 +115,14 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             component: (
               <Link
                 to={`/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`}
+                onClick={() => {
+                  track(TrackEvents.ButtonClicked, {
+                    link_name: 'add-component',
+                    link_location: 'application-details-actions',
+                    app_name: applicationName,
+                    workspace,
+                  });
+                }}
               >
                 Add component
               </Link>
@@ -119,6 +136,14 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             component: (
               <Link
                 to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/integrationtests/add`}
+                onClick={() => {
+                  track(TrackEvents.ButtonClicked, {
+                    link_name: 'add-integration-test',
+                    link_location: 'application-details-actions',
+                    app_name: applicationName,
+                    workspace,
+                  });
+                }}
               >
                 Add integration test
               </Link>
@@ -132,6 +157,14 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             component: (
               <Link
                 to={`/application-pipeline/workspaces/${workspace}/workspace-settings/environment/create`}
+                onClick={() => {
+                  track(TrackEvents.ButtonClicked, {
+                    link_name: 'add-environment',
+                    link_location: 'application-details-actions',
+                    app_name: applicationName,
+                    workspace,
+                  });
+                }}
               >
                 Create environment
               </Link>

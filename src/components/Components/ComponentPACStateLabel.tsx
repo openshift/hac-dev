@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Label, Tooltip } from '@patternfly/react-core';
 import usePACState, { PACState } from '../../hooks/usePACState';
 import { ComponentKind } from '../../types';
+import { useTrackEvent, TrackEvents } from '../../utils/analytics';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { createCustomizeComponentPipelineModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../modal/ModalProvider';
 
@@ -12,6 +14,8 @@ type Props = {
 };
 
 const ComponentPACStateLabel: React.FC<Props> = ({ component, onStateChange, enableAction }) => {
+  const { workspace } = useWorkspaceInfo();
+  const track = useTrackEvent();
   const pacState = usePACState(component);
   const showModal = useModalLauncher();
 
@@ -24,15 +28,31 @@ const ComponentPACStateLabel: React.FC<Props> = ({ component, onStateChange, ena
   const customizePipeline = React.useMemo(
     () =>
       enableAction
-        ? () =>
+        ? () => {
+            track(TrackEvents.ButtonClicked, {
+              link_name: 'manage-build-pipeline',
+              link_location: 'component-list-label',
+              component_name: component.metadata.name,
+              app_name: component.spec.application,
+              workspace,
+            });
             showModal(
               createCustomizeComponentPipelineModalLauncher(
                 component.metadata.name,
                 component.metadata.namespace,
               ),
-            )
+            );
+          }
         : null,
-    [enableAction, showModal, component.metadata.name, component.metadata.namespace],
+    [
+      enableAction,
+      showModal,
+      component.metadata.name,
+      component.metadata.namespace,
+      component.spec.application,
+      workspace,
+      track,
+    ],
   );
 
   const style = customizePipeline ? { cursor: 'pointer' } : undefined;

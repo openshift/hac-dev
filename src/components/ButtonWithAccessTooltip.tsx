@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { Button, ButtonProps, Tooltip } from '@patternfly/react-core';
+import { Tooltip } from '@patternfly/react-core';
+import AnalyticsButton from './AnalyticsButton/AnalyticsButton';
 
-export const ButtonWithAccessTooltip: React.FC<ButtonProps & { tooltip: React.ReactNode }> = ({
-  isDisabled,
-  tooltip,
-  ...props
-}) => {
+export const ButtonWithAccessTooltip: React.FC<
+  React.ComponentProps<typeof AnalyticsButton> & { tooltip: React.ReactNode }
+> = ({ isDisabled, tooltip, ...props }) => {
   if (isDisabled) {
     return (
       <Tooltip content={tooltip}>
-        <Button {...props} component={undefined} isAriaDisabled />
+        <AnalyticsButton {...props} component={undefined} isAriaDisabled />
       </Tooltip>
     );
   }
-  return <Button {...props} />;
+  return <AnalyticsButton {...props} />;
 };

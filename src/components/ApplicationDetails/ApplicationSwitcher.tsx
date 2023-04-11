@@ -48,6 +48,10 @@ export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = (
               isInline
               tooltip="You don't have access to create an application"
               isDisabled={!(canCreateApplication && canCreateComponent)}
+              analytics={{
+                link_name: 'create-application',
+                workspace,
+              }}
             >
               Create application
             </ButtonWithAccessTooltip>

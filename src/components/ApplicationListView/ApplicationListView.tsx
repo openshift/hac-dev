@@ -95,6 +95,10 @@ const ApplicationListView: React.FC = () => {
                 )}
                 isDisabled={!(canCreateApplication && canCreateComponent)}
                 tooltip="You don't have access to create an application"
+                analytics={{
+                  link_name: 'create-application',
+                  workspace,
+                }}
               >
                 Create application
               </ButtonWithAccessTooltip>
@@ -114,6 +118,10 @@ const ApplicationListView: React.FC = () => {
                       )}
                       isDisabled={!(canCreateApplication && canCreateComponent)}
                       tooltip="You don't have access to create an application"
+                      analytics={{
+                        link_name: 'create-application',
+                        workspace,
+                      }}
                     >
                       Create application
                     </ButtonWithAccessTooltip>

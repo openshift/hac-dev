@@ -46,6 +46,13 @@ export const useIntegrationTestActions = (
       },
       disabled: !canUpdateIntegrationTest,
       disabledTooltip: "You don't have access to edit this integration test",
+      analytics: {
+        link_name: 'edit-integration-test',
+        link_location: 'integration-test-actions',
+        integration_test_name: integrationTest.metadata.name,
+        app_name: integrationTest.spec.application,
+        workspace,
+      },
     },
     {
       cta: () => showModal(integrationTestDeleteModal(integrationTest)),

@@ -36,6 +36,7 @@ export type DetectedFormComponent = {
 export type ImportFormValues = {
   application: string;
   inAppContext?: boolean;
+  detectedComponents?: DetectedFormComponent[];
   components?: DetectedFormComponent[];
   pipelinesascode?: 'manual' | 'automatic';
   source: {
@@ -52,4 +53,5 @@ export type ImportFormValues = {
   detectionFailed?: boolean;
   initialDetectionLoaded?: boolean;
   runtime?: string;
+  sample?: string;
 };

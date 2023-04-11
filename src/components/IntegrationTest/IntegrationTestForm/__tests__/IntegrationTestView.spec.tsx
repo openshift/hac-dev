@@ -9,6 +9,8 @@ import { MockIntegrationTests } from '../../IntegrationTestsListView/__data__/mo
 import IntegrationTestView from '../IntegrationTestView';
 import { createIntegrationTest } from '../utils/create-utils';
 
+jest.mock('../../../../utils/analytics');
+
 const navigateMock = jest.fn();
 
 jest.mock('react-router-dom', () => ({
@@ -124,11 +126,12 @@ describe('IntegrationTestView', () => {
   });
 
   it('should navigate to the integration test tab on submit', async () => {
-    createIntegrationTestMock.mockImplementation(() => {
-      return new Promise<void>((resolve) => {
-        resolve();
-      });
-    });
+    createIntegrationTestMock.mockImplementation(() =>
+      Promise.resolve({
+        metadata: {},
+        spec: {},
+      }),
+    );
     const wrapper = namespaceRenderer(
       <IntegrationTestViewWrapper>
         <IntegrationTestView applicationName="test-app" />

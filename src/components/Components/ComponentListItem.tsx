@@ -29,6 +29,7 @@ import { DeploymentKind } from '../../types/deployment';
 import { GitOpsDeploymentKind } from '../../types/gitops-deployment';
 import { getConditionForResource } from '../../utils/common-utils';
 import { getComponentRouteWebURL } from '../../utils/route-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { useComponentActions } from '../ApplicationDetails/component-actions';
 import GitRepoLink from '../GitLink/GitRepoLink';
 import PodLogsColumn from '../PodLogs/PodLogsColumn';
@@ -61,6 +62,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
   onStateChange,
   gitOpsDeployment,
 }) => {
+  const { workspace } = useWorkspaceInfo();
   const [expanded, setExpanded] = React.useState(false);
   const { replicas, targetPort, resources } = component.spec;
   const name = component.metadata.name;
@@ -120,7 +122,15 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
                 </FlexItem>
                 <FlexItem>
                   {componentRouteWebURL && (
-                    <ExternalLink href={componentRouteWebURL}>
+                    <ExternalLink
+                      href={componentRouteWebURL}
+                      analytics={{
+                        link_name: 'component-route',
+                        component_name: component.metadata.name,
+                        app_name: component.spec.application,
+                        workspace,
+                      }}
+                    >
                       Route <ExternalLinkAltIcon />
                     </ExternalLink>
                   )}

@@ -1,41 +1,59 @@
 import * as React from 'react';
-import { Modal, ModalProps } from '@patternfly/react-core';
+import { Modal, ModalProps as PFModalProps } from '@patternfly/react-core';
 
-type ModalComponentProps = Omit<ModalProps, 'children' | 'isOpen' | 'appendTo'> & {
-  ref?: React.LegacyRef<Modal>;
+export type ModalProps = Omit<PFModalProps, 'children' | 'ref'>;
+
+type ModalComponentProps = Omit<ModalProps, 'isOpen' | 'appendTo'> & {
+  'data-testid': string;
 };
 
-type OnModalClose<D = {}> = (obj?: D) => void;
+type OnModalClose<D = unknown> = (obj?: D) => void;
 
-export type ComponentProps = {
-  onClose?: (obj?: object) => void;
+export type ComponentProps<D = unknown> = {
+  onClose?: (obj?: D) => void;
 };
 
-export type ModalLauncher<OBJ = {}> = (onClose: OnModalClose<OBJ>) => React.ReactElement;
+export type RawComponentProps<D = unknown> = ComponentProps<D> & { modalProps?: ModalProps };
 
-export const createModalLauncher =
-  <P extends ComponentProps, OBJ extends {}>(
-    Component: React.ComponentType<P>,
-    modalProps: ModalComponentProps & {
-      'data-testid': string;
-    },
+export type ModalLauncher<Result = {}> = (onClose: OnModalClose<Result>) => React.ReactElement;
+
+export const createRawModalLauncher =
+  <D extends unknown, P extends ComponentProps<D>>(
+    Component: React.ComponentType<P & { modalProps?: ModalProps }>,
+    modalProps?: ModalComponentProps,
   ) =>
-  (componentProps?: P): ModalLauncher<OBJ> =>
-  (onClose) => {
-    const handleClose = (obj?: OBJ) => {
-      componentProps?.onClose && componentProps.onClose();
-      onClose(obj);
+  (componentProps?: P): ModalLauncher<D> =>
+  (onModalClose) => {
+    const { onClose, ...restModalProps } = modalProps;
+    const handleClose = (obj?: D) => {
+      onClose?.();
+      onModalClose(obj);
     };
 
     return (
-      <Modal
-        aria-label="modal"
-        {...modalProps}
-        isOpen
+      <Component
+        {...componentProps}
+        modalProps={{
+          'aria-label': 'modal',
+          ...restModalProps,
+          isOpen: true,
+          onClose: handleClose,
+          appendTo: () => document.querySelector('#hacDev-modal-container'),
+        }}
         onClose={handleClose}
-        appendTo={() => document.querySelector('#hacDev-modal-container')}
-      >
-        <Component {...componentProps} onClose={handleClose} />
-      </Modal>
+      />
     );
   };
+
+export const createModalLauncher = <D extends unknown, P extends ComponentProps<D>>(
+  Component: React.ComponentType<P>,
+  inModalProps: ModalComponentProps,
+) =>
+  createRawModalLauncher(
+    ({ modalProps, ...props }: P & { modalProps?: ModalProps }) => (
+      <Modal {...modalProps}>
+        <Component {...(props as any)} />
+      </Modal>
+    ),
+    inModalProps,
+  );

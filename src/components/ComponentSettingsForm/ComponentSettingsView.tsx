@@ -4,6 +4,7 @@ import { Bullseye, Spinner } from '@patternfly/react-core';
 import { Formik } from 'formik';
 import { useComponent } from '../../hooks/useComponents';
 import { HttpError } from '../../shared/utils/error/http-error';
+import { useTrackEvent, TrackEvents } from '../../utils/analytics';
 import { createComponent } from '../../utils/create-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
@@ -18,6 +19,7 @@ type ComponentSettingsViewProps = {
 const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps> = ({
   componentName,
 }) => {
+  const track = useTrackEvent();
   const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
 
@@ -65,6 +67,13 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       resources: componentValues.resources && transformResources(componentValues.resources),
     };
 
+    track(TrackEvents.ButtonClicked, {
+      link_name: 'edit-component-submit',
+      component_name: component.metadata.name,
+      app_name: applicationName,
+      workspace,
+    });
+
     return createComponent(
       transformedComponentValues,
       applicationName,
@@ -75,6 +84,11 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       'update',
     )
       .then(() => {
+        track('Component Edited', {
+          app_name: component.spec.application,
+          component_name: component.metadata.name,
+          workspace,
+        });
         navigate(
           `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components`,
         );
@@ -90,7 +104,15 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
   return (
     <Formik
       onSubmit={handleSubmit}
-      onReset={() => navigate(-1)}
+      onReset={() => {
+        track(TrackEvents.ButtonClicked, {
+          link_name: 'edit-component-leave',
+          app_name: component.spec.application,
+          component_name: component.metadata.name,
+          workspace,
+        });
+        navigate(-1);
+      }}
       initialValues={initialValues}
       validationSchema={reviewValidationSchema}
     >

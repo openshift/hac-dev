@@ -39,13 +39,25 @@ const mockComponent = {
 describe('CustomizeAllPipelines', () => {
   it('should render nothing while loading', () => {
     useK8sWatchResourceMock.mockReturnValueOnce([{}, false]);
-    const result = render(<CustomizeComponentPipeline name="my-component" namespace="test" />);
+    const result = render(
+      <CustomizeComponentPipeline
+        name="my-component"
+        namespace="test"
+        modalProps={{ isOpen: true }}
+      />,
+    );
     expect(result.baseElement.textContent).toBe('');
   });
 
   it('should render modal with components table', () => {
     useK8sWatchResourceMock.mockReturnValueOnce([mockComponent, true]);
-    const result = render(<CustomizeComponentPipeline name="my-component" namespace="test" />);
+    const result = render(
+      <CustomizeComponentPipeline
+        name="my-component"
+        namespace="test"
+        modalProps={{ isOpen: true }}
+      />,
+    );
     expect(result.getByTestId('component-row', { exact: false })).toBeInTheDocument();
   });
 });

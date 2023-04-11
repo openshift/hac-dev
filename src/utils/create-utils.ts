@@ -137,7 +137,7 @@ export const createComponent = (
   }
 
   return verb === 'create'
-    ? k8sCreateResource({
+    ? k8sCreateResource<ComponentKind>({
         model: ComponentModel,
         queryOptions: {
           name,
@@ -146,7 +146,7 @@ export const createComponent = (
         },
         resource,
       })
-    : k8sUpdateResource({ model: ComponentModel, resource });
+    : k8sUpdateResource<ComponentKind>({ model: ComponentModel, resource });
 };
 
 /**

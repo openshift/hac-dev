@@ -90,6 +90,12 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
                 tooltip="You don't have access to add a component"
                 isDisabled={!canCreateComponent}
                 data-test="add-component"
+                analytics={{
+                  link_name: 'add-component',
+                  link_location: 'lifecycle-visualization',
+                  app_name: applicationName,
+                  workspace,
+                }}
               >
                 Add component
               </ButtonWithAccessTooltip>
