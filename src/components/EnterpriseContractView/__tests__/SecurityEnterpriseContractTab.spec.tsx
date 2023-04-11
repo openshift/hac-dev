@@ -27,9 +27,11 @@ describe('SecurityEnterpriseContractTab', () => {
   it('should filter out results based on the name input field', () => {
     routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy" />);
     screen.getByText('Missing CVE scan results');
-    fireEvent.input(screen.getByPlaceholderText('Search...'), { target: { value: 'No tasks' } });
+    fireEvent.input(screen.getByPlaceholderText('Filter by rule...'), {
+      target: { value: 'No tasks' },
+    });
     expect(screen.queryByText('Missing CVE scan results')).not.toBeInTheDocument();
-    fireEvent.input(screen.getByPlaceholderText('Search...'), { target: { value: '' } });
+    fireEvent.input(screen.getByPlaceholderText('Filter by rule...'), { target: { value: '' } });
     screen.getByText('Missing CVE scan results');
   });
 
@@ -50,7 +52,9 @@ describe('SecurityEnterpriseContractTab', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Status filter menu' }));
     fireEvent.click(screen.getByLabelText('Failed'));
     screen.getByText('Missing CVE scan results');
-    fireEvent.input(screen.getByPlaceholderText('Search...'), { target: { value: 'No tasks' } });
+    fireEvent.input(screen.getByPlaceholderText('Filter by rule...'), {
+      target: { value: 'No tasks' },
+    });
     expect(screen.queryByText('Missing CVE scan results')).not.toBeInTheDocument();
     screen.getByText('No results found');
     fireEvent.click(screen.getAllByText('Clear all filters')[1]);
