@@ -1,6 +1,6 @@
 import { ModalVariant } from '@patternfly/react-core';
 import { ComponentKind } from '../../types';
-import { createModalLauncher } from '../modal/createModalLauncher';
+import { createRawModalLauncher } from '../modal/createModalLauncher';
 import CustomizeAllPipelines from './CustomizeAllPipelines';
 import CustomizeComponentPipeline from './CustomizeComponentPipeline';
 
@@ -10,14 +10,15 @@ export const createCustomizeAllPipelinesModalLauncher = (
   filter?: (component: ComponentKind) => boolean,
   onClose?: () => void,
 ) =>
-  createModalLauncher(CustomizeAllPipelines, {
+  createRawModalLauncher(CustomizeAllPipelines, {
     'data-testid': 'customized-all-pipelines-modal',
     variant: ModalVariant.large,
     hasNoBodyWrapper: true,
-  })({ applicationName, namespace, filter, onClose });
+    onClose,
+  })({ applicationName, namespace, filter });
 
 export const createCustomizeComponentPipelineModalLauncher = (name: string, namespace: string) =>
-  createModalLauncher(CustomizeComponentPipeline, {
+  createRawModalLauncher(CustomizeComponentPipeline, {
     'data-testid': 'customized-pipelines-modal',
     variant: ModalVariant.large,
     hasNoBodyWrapper: true,

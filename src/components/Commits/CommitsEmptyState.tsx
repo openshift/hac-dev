@@ -38,6 +38,12 @@ const CommitsEmptyState: React.FC<CommitsEmptyStateProps> = ({ applicationName }
           variant="secondary"
           isDisabled={!canCreateComponent}
           tooltip="You don't have access to add a component"
+          analytics={{
+            link_name: 'add-component',
+            link_location: 'commits-empty-state',
+            app_name: applicationName,
+            workspace,
+          }}
         >
           Add component
         </ButtonWithAccessTooltip>

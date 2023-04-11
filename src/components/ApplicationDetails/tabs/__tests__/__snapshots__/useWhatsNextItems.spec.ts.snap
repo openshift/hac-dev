@@ -4,6 +4,12 @@ exports[`useWhatsNextItems should return a list of whats next items 1`] = `
 Array [
   Object {
     "cta": Object {
+      "analytics": Object {
+        "app_name": "test-application",
+        "link_location": "whats-next",
+        "link_name": "add-component",
+        "workspace": undefined,
+      },
       "disabled": false,
       "disabledTooltip": "You don't have access to add a component",
       "href": "/application-pipeline/workspaces/undefined/import?application=test-application",
@@ -16,6 +22,12 @@ Array [
   },
   Object {
     "cta": Object {
+      "analytics": Object {
+        "app_name": "test-application",
+        "link_location": "whats-next",
+        "link_name": "install-github-app",
+        "workspace": undefined,
+      },
       "external": true,
       "href": "https://github.com/test-app",
       "label": "Start the flow",
@@ -27,6 +39,12 @@ Array [
   },
   Object {
     "cta": Object {
+      "analytics": Object {
+        "app_name": "test-application",
+        "link_location": "whats-next",
+        "link_name": "view-build-activity",
+        "workspace": undefined,
+      },
       "href": "/application-pipeline/workspaces/undefined/applications/test-application/activity",
       "label": "View build activity",
     },
@@ -37,6 +55,12 @@ Array [
   },
   Object {
     "cta": Object {
+      "analytics": Object {
+        "app_name": "test-application",
+        "link_location": "whats-next",
+        "link_name": "manage-build-pipelines",
+        "workspace": undefined,
+      },
       "label": "Manage build pipelines",
       "onClick": [Function],
     },

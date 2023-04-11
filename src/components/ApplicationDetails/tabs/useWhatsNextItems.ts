@@ -26,6 +26,12 @@ export const useWhatsNextItems = (applicationName: string) => {
         href: `/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`,
         disabled: !canCreateComponent,
         disabledTooltip: "You don't have access to add a component",
+        analytics: {
+          link_name: 'add-component',
+          link_location: 'whats-next',
+          app_name: applicationName,
+          workspace,
+        },
       },
       helpId: 'stonesoup-whatsnext-add-component',
     },
@@ -37,6 +43,12 @@ export const useWhatsNextItems = (applicationName: string) => {
         label: 'Start the flow',
         href: githubAppURL,
         external: true,
+        analytics: {
+          link_name: 'install-github-app',
+          link_location: 'whats-next',
+          app_name: applicationName,
+          workspace,
+        },
       },
       helpId: 'stonesoup-whatsnext-install-github-app',
     },
@@ -47,6 +59,12 @@ export const useWhatsNextItems = (applicationName: string) => {
       cta: {
         label: 'View build activity',
         href: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/activity`,
+        analytics: {
+          link_name: 'view-build-activity',
+          link_location: 'whats-next',
+          app_name: applicationName,
+          workspace,
+        },
       },
       helpId: 'stonesoup-whatsnext-make-code-change',
     },
@@ -59,6 +77,12 @@ export const useWhatsNextItems = (applicationName: string) => {
         label: 'Manage build pipelines',
         onClick: () =>
           showModal(createCustomizeAllPipelinesModalLauncher(applicationName, namespace)),
+        analytics: {
+          link_name: 'manage-build-pipelines',
+          link_location: 'whats-next',
+          app_name: applicationName,
+          workspace,
+        },
       },
       helpId: 'stonesoup-whatsnext-customize-build-pipeline',
     },

@@ -6,6 +6,8 @@ import { createApplication } from '../../../utils/create-utils';
 import ImportForm from '../ImportForm';
 import { useImportSteps } from '../utils/useImportSteps';
 
+jest.mock('../../../utils/analytics');
+
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
 }));

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   Alert,
-  AlertActionLink,
   AlertVariant,
   Button,
   ButtonVariant,
@@ -9,13 +8,14 @@ import {
   DropdownItem,
   DropdownPosition,
   KebabToggle,
+  Modal,
   ModalBoxBody,
   ModalBoxFooter,
+  ModalBoxHeader,
   pluralize,
   Text,
   TextContent,
   TextVariants,
-  Tooltip,
 } from '@patternfly/react-core';
 import { Tbody, Thead, Th, Tr, Td, TableComposable } from '@patternfly/react-table';
 import { useApplicationPipelineGitHubApp } from '../../hooks/useApplicationPipelineGitHubApp';
@@ -25,14 +25,17 @@ import successIconUrl from '../../imgs/success.svg';
 import { ComponentModel } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind } from '../../types';
+import { useTrackEvent, TrackEvents } from '../../utils/analytics';
 import { useURLForComponentPRs, enablePAC, disablePAC } from '../../utils/component-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import AnalyticsButton from '../AnalyticsButton/AnalyticsButton';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import ComponentPACStateLabel from '../Components/ComponentPACStateLabel';
 import GitRepoLink from '../GitLink/GitRepoLink';
-import { ComponentProps } from '../modal/createModalLauncher';
+import { RawComponentProps } from '../modal/createModalLauncher';
 
-type Props = ComponentProps & {
+type Props = RawComponentProps & {
   components: ComponentKind[];
 };
 
@@ -41,6 +44,8 @@ const ComponentKebab: React.FC<{
   component: ComponentKind;
   canPatchComponent?: boolean;
 }> = ({ component, state, canPatchComponent }) => {
+  const { workspace } = useWorkspaceInfo();
+  const track = useTrackEvent();
   const [isOpen, setOpen] = React.useState(false);
   return (
     <Dropdown
@@ -53,7 +58,22 @@ const ComponentKebab: React.FC<{
         <DropdownItem
           key="roll-back"
           isDisabled={![PACState.error, PACState.pending, PACState.ready].includes(state)}
-          onClick={() => disablePAC(component)}
+          onClick={() => {
+            track(TrackEvents.ButtonClicked, {
+              link_name: 'disable-pac',
+              link_location: 'manage-builds-pipelines-action',
+              component_name: component.metadata.name,
+              app_name: component.spec.application,
+              workspace,
+            });
+            disablePAC(component).then(() => {
+              track('Disable PAC', {
+                component_name: component.metadata.name,
+                app_name: component.spec.application,
+                workspace,
+              });
+            });
+          }}
           tooltip={canPatchComponent ? undefined : "You don't have access to roll back"}
           isAriaDisabled={!canPatchComponent}
         >
@@ -68,6 +88,8 @@ const Row: React.FC<{
   component: ComponentKind;
   onStateChange: (state: PACState) => void;
 }> = ({ component, onStateChange }) => {
+  const { workspace } = useWorkspaceInfo();
+  const track = useTrackEvent();
   const { url: githubAppURL } = useApplicationPipelineGitHubApp();
   const [pacState, setPacState] = React.useState<PACState>(PACState.loading);
   const onComponentStateChange = React.useCallback(
@@ -119,10 +141,23 @@ const Row: React.FC<{
                 return (
                   <ButtonWithAccessTooltip
                     onClick={() => {
-                      enablePAC(component);
+                      enablePAC(component).then(() => {
+                        track('Enable PAC', {
+                          component_name: component.metadata.name,
+                          app_name: component.spec.application,
+                          workspace,
+                        });
+                      });
                     }}
                     isDisabled={!canPatchComponent}
                     tooltip="You don't have access to send a pull request"
+                    analytics={{
+                      link_name: 'send-pull-request',
+                      link_location: 'manage-builds-pipelines',
+                      component_name: component.metadata.name,
+                      app_name: component.spec.application,
+                      workspace,
+                    }}
                   >
                     Send pull request
                   </ButtonWithAccessTooltip>
@@ -135,7 +170,20 @@ const Row: React.FC<{
                 );
               case PACState.pending:
                 return (
-                  <ExternalLink variant={ButtonVariant.secondary} href={prURL} showIcon>
+                  <ExternalLink
+                    variant={ButtonVariant.secondary}
+                    href={prURL}
+                    showIcon
+                    analytics={{
+                      link_name: 'merge-pull-request',
+                      link_location: 'manage-builds-pipelines',
+                      component_name: component.metadata.name,
+                      app_name: component.spec.application,
+                      git_url: component.spec.source.git.url,
+                      url: prURL,
+                      workspace,
+                    }}
+                  >
                     Merge in GitHub
                   </ExternalLink>
                 );
@@ -145,6 +193,14 @@ const Row: React.FC<{
                     variant={ButtonVariant.secondary}
                     href={component.spec.source.git.url}
                     showIcon
+                    analytics={{
+                      link_name: 'edit-pipeline-in-github',
+                      link_location: 'manage-builds-pipelines',
+                      component_name: component.metadata.name,
+                      app_name: component.spec.application,
+                      git_url: component.spec.source.git.url,
+                      workspace,
+                    }}
                   >
                     Edit pipeline in GitHub
                   </ExternalLink>
@@ -155,6 +211,14 @@ const Row: React.FC<{
                     variant={ButtonVariant.secondary}
                     href={`${component.spec.source.git.url.replace(/\.git$/i, '')}/fork`}
                     showIcon
+                    analytics={{
+                      link_name: 'fork-sample',
+                      link_location: 'manage-builds-pipelines',
+                      component_name: component.metadata.name,
+                      app_name: component.spec.application,
+                      git_url: component.spec.source.git.url,
+                      workspace,
+                    }}
                   >
                     Fork sample
                   </ExternalLink>
@@ -192,20 +256,42 @@ const Row: React.FC<{
               title="Pull request failed to reach its destination"
               actionLinks={
                 <>
-                  <ExternalLink href={githubAppURL} showIcon>
+                  <ExternalLink
+                    href={githubAppURL}
+                    showIcon
+                    analytics={{
+                      link_name: 'install-github-app',
+                      link_location: 'manage-builds-pipelines',
+                      component_name: component.metadata.name,
+                      app_name: component.spec.application,
+                      workspace,
+                    }}
+                  >
                     Install GitHub Application
                   </ExternalLink>
-                  {canPatchComponent ? (
-                    <AlertActionLink onClick={() => disablePAC(component)}>
-                      Roll back to default pipeline
-                    </AlertActionLink>
-                  ) : (
-                    <Tooltip content="You don't have access to roll back">
-                      <AlertActionLink isAriaDisabled={!canPatchComponent}>
-                        Roll back to default pipeline
-                      </AlertActionLink>
-                    </Tooltip>
-                  )}
+                  <ButtonWithAccessTooltip
+                    variant={ButtonVariant.link}
+                    onClick={() =>
+                      disablePAC(component).then(() => {
+                        track('Disable PAC', {
+                          component_name: component.metadata.name,
+                          app_name: component.spec.application,
+                          workspace,
+                        });
+                      })
+                    }
+                    isAriaDisabled={!canPatchComponent}
+                    tooltip="You don't have access to roll back"
+                    analytics={{
+                      link_name: 'disable-pac',
+                      link_location: 'manage-builds-pipelines-alert',
+                      component_name: component.metadata.name,
+                      app_name: component.spec.application,
+                      workspace,
+                    }}
+                  >
+                    Roll back to default pipeline
+                  </ButtonWithAccessTooltip>
                 </>
               }
             >
@@ -220,7 +306,9 @@ const Row: React.FC<{
   );
 };
 
-const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
+const CustomizePipeline: React.FC<Props> = ({ components, onClose, modalProps }) => {
+  const track = useTrackEvent();
+  const { workspace } = useWorkspaceInfo();
   const { url: githubAppURL } = useApplicationPipelineGitHubApp();
   const sortedComponents = React.useMemo(
     () => [...components].sort((a, b) => a.metadata.name.localeCompare(b.metadata.name)),
@@ -252,8 +340,20 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
     [componentState],
   );
 
+  const applicationName = components[0].spec.application;
+
+  const trackedOnClose = React.useCallback(() => {
+    track(TrackEvents.ButtonClicked, {
+      link_name: 'manage-build-pipelines-close',
+      app_name: applicationName,
+      workspace,
+    });
+    onClose();
+  }, [onClose, applicationName, workspace, track]);
+
   return (
-    <>
+    <Modal {...modalProps} onClose={trackedOnClose}>
+      <ModalBoxHeader />
       <ModalBoxBody>
         <TextContent
           className="pf-u-text-align-center pf-u-pt-lg"
@@ -274,7 +374,15 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
             your repositories.
           </Text>
           <Text component={TextVariants.p}>
-            <ExternalLink href={githubAppURL} showIcon>
+            <ExternalLink
+              href={githubAppURL}
+              showIcon
+              analytics={{
+                link_name: 'install-github-app',
+                link_location: 'manage-builds-pipelines',
+                workspace,
+              }}
+            >
               Install GitHub application
             </ExternalLink>
           </Text>
@@ -316,15 +424,15 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
         ) : undefined}
       </ModalBoxBody>
       <ModalBoxFooter>
-        <Button
+        <AnalyticsButton
           variant={ButtonVariant.secondary}
-          onClick={onClose}
+          onClick={trackedOnClose}
           data-test="close-button custom-pipeline-modal"
         >
           Close
-        </Button>
+        </AnalyticsButton>
       </ModalBoxFooter>
-    </>
+    </Modal>
   );
 };
 

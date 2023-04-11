@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { Button, ButtonProps, ButtonVariant } from '@patternfly/react-core';
+import { ButtonProps, ButtonVariant } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
+import AnalyticsButton from '../../../components/AnalyticsButton/AnalyticsButton';
+import { AnalyticsButtonProperties } from '../../../utils/analytics';
 
 type ExternalLinkProps = {
   href: string;
@@ -12,6 +14,8 @@ type ExternalLinkProps = {
   showIcon?: boolean;
   variant?: ButtonProps['variant'];
   icon?: ButtonProps['icon'];
+  onClick?: ButtonProps['onClick'];
+  analytics?: AnalyticsButtonProperties;
 };
 
 const ExternalLink: React.FC<ExternalLinkProps> = ({
@@ -25,8 +29,9 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
   showIcon,
   variant = ButtonVariant.link,
   icon,
+  onClick,
 }) => (
-  <Button
+  <AnalyticsButton
     component="a"
     style={style}
     className={additionalClassName}
@@ -34,10 +39,15 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
     target="_blank"
     rel="noopener noreferrer"
     data-test-id={dataTestID}
-    {...(stopPropagation ? { onClick: (e) => e.stopPropagation() } : {})}
     isInline
     variant={variant}
     icon={icon}
+    onClick={(e) => {
+      if (stopPropagation) {
+        e.stopPropagation();
+      }
+      onClick?.(e);
+    }}
   >
     {children || text}
     {showIcon ? (
@@ -46,7 +56,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
         <ExternalLinkAltIcon />
       </>
     ) : null}
-  </Button>
+  </AnalyticsButton>
 );
 
 export default ExternalLink;

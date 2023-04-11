@@ -27,6 +27,13 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
         ),
       id: 'manage-build-pipeline',
       label: 'Manage build pipeline',
+      analytics: {
+        link_name: 'manage-build-pipeline',
+        link_location: 'component-list',
+        component_name: name,
+        app_name: applicationName,
+        workspace,
+      },
     },
   ];
   if (!isPACEnabled(component)) {
@@ -36,6 +43,13 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
       label: 'Start new build',
       disabled: !canPatchComponent,
       disabledTooltip: "You don't have access to start a new build",
+      analytics: {
+        link_name: 'start-new-build',
+        link_location: 'component-actions',
+        component_name: name,
+        app_name: applicationName,
+        workspace,
+      },
     });
   }
   actions.push(
@@ -47,6 +61,13 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
       label: 'Edit component settings',
       disabled: !canUpdateComponent,
       disabledTooltip: "You don't have access to edit component settings",
+      analytics: {
+        link_name: 'edit-component',
+        link_location: 'component-actions',
+        component_name: name,
+        app_name: applicationName,
+        workspace,
+      },
     },
     {
       cta: () => showModal(componentDeleteModal(component)),

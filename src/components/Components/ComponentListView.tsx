@@ -230,6 +230,11 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                       )}
                       isDisabled={!canCreateComponent}
                       tooltip="You don't have access to add a component"
+                      analytics={{
+                        link_name: 'add-component',
+                        app_name: applicationName,
+                        workspace,
+                      }}
                     >
                       Add component
                     </ButtonWithAccessTooltip>
@@ -331,6 +336,12 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                 )}
                 isDisabled={!canCreateComponent}
                 tooltip="You don't have access to add a component"
+                analytics={{
+                  link_name: 'add-component',
+                  link_location: 'components-list-empty-state',
+                  app_name: applicationName,
+                  workspace,
+                }}
               >
                 Add component
               </ButtonWithAccessTooltip>

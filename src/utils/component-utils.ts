@@ -28,7 +28,7 @@ export const isPACEnabled = (component: ComponentKind, done?: boolean) => {
   return done ? value === PACProvision.done : !!value;
 };
 
-export const enablePAC = (component: ComponentKind) => {
+export const enablePAC = (component: ComponentKind) =>
   k8sPatchResource({
     model: ComponentModel,
     queryOptions: {
@@ -43,9 +43,8 @@ export const enablePAC = (component: ComponentKind) => {
       },
     ],
   });
-};
 
-export const disablePAC = (component: ComponentKind) => {
+export const disablePAC = (component: ComponentKind) =>
   k8sPatchResource({
     model: ComponentModel,
     queryOptions: {
@@ -59,7 +58,6 @@ export const disablePAC = (component: ComponentKind) => {
       },
     ],
   });
-};
 
 export const startNewBuild = (component: ComponentKind) =>
   k8sPatchResource({

@@ -58,11 +58,13 @@ const SampleSection = ({ onStrategyChange }) => {
     (item) => {
       setSelected((prevState) => {
         if (prevState?.name === item.name) {
+          setFieldValue('sample', undefined);
           setFieldValue('source.git.url', undefined);
           return undefined;
         }
         const newSourceUrl = item?.attributes?.git?.remotes?.origin;
 
+        setFieldValue('sample', item.name);
         setFieldValue('source.git.url', newSourceUrl);
         return item;
       });

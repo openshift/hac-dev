@@ -7,9 +7,11 @@ import { ComponentKind } from '../../../types';
 import { PAC_ANNOTATION, SAMPLE_ANNOTATION } from '../../../utils/component-utils';
 import CustomizePipeline from '../CustomizePipelines';
 
+jest.mock('../../../utils/analytics');
+
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(() => [[], true]),
-  k8sPatchResource: jest.fn(),
+  k8sPatchResource: jest.fn(() => Promise.resolve()),
   getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
@@ -57,7 +59,11 @@ describe('CustomizePipeline', () => {
 
   it('should render opt in', () => {
     const result = render(
-      <CustomizePipeline components={[createComponent()]} onClose={() => {}} />,
+      <CustomizePipeline
+        components={[createComponent()]}
+        onClose={() => {}}
+        modalProps={{ isOpen: true }}
+      />,
     );
     const button = result.queryByRole('button', { name: 'Send pull request' });
     expect(button).toBeInTheDocument();
@@ -71,7 +77,11 @@ describe('CustomizePipeline', () => {
 
   it('should render sending pull request', () => {
     const result = render(
-      <CustomizePipeline components={[createComponent('request')]} onClose={() => {}} />,
+      <CustomizePipeline
+        components={[createComponent('request')]}
+        onClose={() => {}}
+        modalProps={{ isOpen: true }}
+      />,
     );
     const button = result.getByRole('button', { name: /Sending pull request/ });
     expect(button).toBeInTheDocument();
@@ -80,7 +90,11 @@ describe('CustomizePipeline', () => {
   it('should render pull request sent', () => {
     useK8sWatchResourceMock.mockReturnValue([[], true]);
     const result = render(
-      <CustomizePipeline components={[createComponent('done')]} onClose={() => {}} />,
+      <CustomizePipeline
+        components={[createComponent('done')]}
+        onClose={() => {}}
+        modalProps={{ isOpen: true }}
+      />,
     );
     const button = result.queryByRole('link', { name: 'Merge in GitHub' });
     expect(button).toBeInTheDocument();
@@ -89,7 +103,11 @@ describe('CustomizePipeline', () => {
   it('should render pull request merged', () => {
     useK8sWatchResourceMock.mockReturnValue([[{}], true]);
     const result = render(
-      <CustomizePipeline components={[createComponent('done')]} onClose={() => {}} />,
+      <CustomizePipeline
+        components={[createComponent('done')]}
+        onClose={() => {}}
+        modalProps={{ isOpen: true }}
+      />,
     );
     const button = result.queryByRole('link', { name: 'Edit pipeline in GitHub' });
     expect(button).toBeInTheDocument();
@@ -98,7 +116,11 @@ describe('CustomizePipeline', () => {
   it('should render resend pull request', () => {
     useK8sWatchResourceMock.mockReturnValue([[{}], true]);
     const result = render(
-      <CustomizePipeline components={[createComponent('error')]} onClose={() => {}} />,
+      <CustomizePipeline
+        components={[createComponent('error')]}
+        onClose={() => {}}
+        modalProps={{ isOpen: true }}
+      />,
     );
     const button = result.getByRole('button', { name: 'Send pull request' });
     expect(button).toBeInTheDocument();
@@ -107,7 +129,11 @@ describe('CustomizePipeline', () => {
   it('should render install GitHub app alert', () => {
     useK8sWatchResourceMock.mockReturnValue([[{}], true]);
     const result = render(
-      <CustomizePipeline components={[createComponent('error')]} onClose={() => {}} />,
+      <CustomizePipeline
+        components={[createComponent('error')]}
+        onClose={() => {}}
+        modalProps={{ isOpen: true }}
+      />,
     );
     const link = result.getByRole('link', { name: /Install GitHub Application/ });
     expect(link).toBeInTheDocument();
@@ -118,7 +144,11 @@ describe('CustomizePipeline', () => {
   it('should display upgrade status message', () => {
     expect(
       render(
-        <CustomizePipeline components={[createComponent('request')]} onClose={() => {}} />,
+        <CustomizePipeline
+          components={[createComponent('request')]}
+          onClose={() => {}}
+          modalProps={{ isOpen: true }}
+        />,
       ).queryByText('0 of 1 component upgraded to custom build'),
     ).toBeInTheDocument();
   });
@@ -126,7 +156,11 @@ describe('CustomizePipeline', () => {
   it('should display upgrade status message for a single component', () => {
     expect(
       render(
-        <CustomizePipeline components={[createComponent('request')]} onClose={() => {}} />,
+        <CustomizePipeline
+          components={[createComponent('request')]}
+          onClose={() => {}}
+          modalProps={{ isOpen: true }}
+        />,
       ).queryByText('0 of 1 component upgraded to custom build'),
     ).toBeInTheDocument();
   });
@@ -137,6 +171,7 @@ describe('CustomizePipeline', () => {
         <CustomizePipeline
           components={[createComponent(), createComponent(), createComponent(null, true)]}
           onClose={() => {}}
+          modalProps={{ isOpen: true }}
         />,
       ).queryByText('0 of 2 components upgraded to custom build'),
     ).toBeInTheDocument();
@@ -146,7 +181,11 @@ describe('CustomizePipeline', () => {
     useK8sWatchResourceMock.mockReturnValue([[{}], true]);
     expect(
       render(
-        <CustomizePipeline components={[createComponent('done')]} onClose={() => {}} />,
+        <CustomizePipeline
+          components={[createComponent('done')]}
+          onClose={() => {}}
+          modalProps={{ isOpen: true }}
+        />,
       ).queryByText('1 of 1 component upgraded to custom build'),
     ).toBeInTheDocument();
   });

@@ -5,6 +5,8 @@ import { EnvironmentModel, SecretModel } from '../../../../models';
 import CreateEnvironment from '../CreateEnvironment';
 import '@testing-library/jest-dom';
 
+jest.mock('../../../../utils/analytics');
+
 jest.mock('../../../../hooks/useEnvironments', () => ({
   useSortedEnvironments: () => [
     {

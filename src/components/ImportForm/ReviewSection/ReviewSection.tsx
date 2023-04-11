@@ -96,6 +96,8 @@ const ReviewSection: React.FunctionComponent = () => {
     if (components) {
       const transformedComponents = transformComponentValues(components);
       setFieldValue('isDetected', true);
+
+      setFieldValue('detectedComponents', transformedComponents);
       setFieldValue('components', transformedComponents);
       cachedComponents.current = transformedComponents;
     }
@@ -110,6 +112,8 @@ const ReviewSection: React.FunctionComponent = () => {
           },
         },
       });
+
+      setFieldValue('detectedComponents', undefined);
       setFieldValue('components', transformedComponents);
       cachedComponents.current = transformedComponents;
       setFieldValue('isDetected', false);

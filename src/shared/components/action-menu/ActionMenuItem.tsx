@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Button,
   KEY_CODES,
   MenuItem,
   Tooltip,
@@ -10,6 +9,7 @@ import {
 } from '@patternfly/react-core';
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
+import AnalyticsButton from '../../../components/AnalyticsButton/AnalyticsButton';
 import { Action } from './types';
 
 export type ActionMenuItemProps = {
@@ -76,7 +76,7 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
       {...props}
       {...(component ? {} : extraProps)}
       component={(compProps) => (
-        <Button
+        <AnalyticsButton
           {...compProps}
           variant="plain"
           style={{
@@ -85,6 +85,7 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
               : 'var(--pf-c-content--Color)',
           }}
           isAriaDisabled={isDisabled}
+          analytics={action.analytics}
         />
       )}
     >

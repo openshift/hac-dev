@@ -95,6 +95,9 @@ const IntroBanner: React.FC = () => {
                   isDisabled={!(canCreateApplication && canCreateComponent)}
                   tooltip="You don't have access to create an application"
                   isLarge
+                  analytics={{
+                    link_name: 'create-application',
+                  }}
                 >
                   + Create an application
                 </ButtonWithAccessTooltip>

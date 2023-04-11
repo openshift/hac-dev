@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import { ApplicationKind } from '../../../types';
 import { SAMPLE_ANNOTATION } from '../../../utils/component-utils';
 import { createApplication, createComponent } from '../../../utils/create-utils';
 import { detectComponents } from './cdq-utils';
@@ -60,8 +61,7 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
   }
 
   if (shouldCreateApplication) {
-    const applicationData = await createApplication(application, namespace, true);
-    applicationName = applicationData.metadata.name;
+    await createApplication(application, namespace, true);
   }
 
   await createComponents(
@@ -74,8 +74,9 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
     componentAnnotations,
   );
 
+  let applicationData: ApplicationKind;
   if (shouldCreateApplication) {
-    const applicationData = await createApplication(application, namespace);
+    applicationData = await createApplication(application, namespace);
     applicationName = applicationData.metadata.name;
   }
 
@@ -89,7 +90,12 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
     componentAnnotations,
   );
 
-  return { applicationName, componentNames: createdComponents.map((c) => c.metadata.name) };
+  return {
+    applicationName,
+    application: applicationData,
+    components: createdComponents,
+    componentNames: createdComponents.map((c) => c.metadata.name),
+  };
 };
 
 export const checkApplicationName = async (

@@ -34,6 +34,12 @@ const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicati
           variant="secondary"
           isDisabled={!canCreateComponent}
           tooltip="You don't have access to add components"
+          analytics={{
+            link_name: 'add-component',
+            link_location: 'pipeline-run-empty-state',
+            app_name: applicationName,
+            workspace,
+          }}
         >
           Add component
         </ButtonWithAccessTooltip>

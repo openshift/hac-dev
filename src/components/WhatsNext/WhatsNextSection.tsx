@@ -26,6 +26,7 @@ export type WhatsNextItem = {
     onClick?: () => void;
     disabled?: boolean;
     disabledTooltip?: string;
+    analytics?: React.ComponentProps<typeof ButtonWithAccessTooltip>['analytics'];
   };
 };
 
@@ -65,6 +66,7 @@ const WhatsNextSection: React.FunctionComponent<WhatsNextSectionProps> = ({ what
               isDisabled={item.cta.disabled}
               tooltip={item.cta.disabledTooltip}
               variant="secondary"
+              analytics={item.cta.analytics}
             >
               {item.cta.label}
             </ButtonWithAccessTooltip>
