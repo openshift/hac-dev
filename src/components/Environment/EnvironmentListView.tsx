@@ -1,177 +1,203 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import {
-  Bullseye,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStateVariant,
-  Grid,
-  GridItem,
-  Spinner,
-  Title,
-  PageSection,
-  PageSectionVariants,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
-  SearchInput,
-} from '@patternfly/react-core';
-import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons';
+import { useAllApplicationEnvironmentsWithHealthStatus } from '../../hooks/useAllApplicationEnvironmentsWithHealthStatus';
+import { useAllEnvironments } from '../../hooks/useAllEnvironments';
 import { useSearchParam } from '../../hooks/useSearchParam';
-import { EnvironmentModel } from '../../models';
 import { EnvironmentKind } from '../../types';
-import { sortEnvironmentsBasedonParent } from '../../utils/environment-utils';
-import { MVP_FLAG } from '../../utils/flag-utils';
-import { useAccessReviewForModel } from '../../utils/rbac';
-import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
-import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
-import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
-import EnvironmentCard from './EnvironmentCard';
+import { GitOpsDeploymentHealthStatus } from '../../types/gitops-deployment';
+import { EnvironmentType, getEnvironmentType } from './environment-utils';
+import EnvironmentList from './EnvironmentList';
+import EnvironmentToolbarGroups from './EnvironmentToolbarGroups';
 
-import './EnvironmentListView.scss';
+type EnvironmentListViewProps = {
+  applicationName?: string;
+  validTypes?: EnvironmentType[];
+  preFilter?: (environment: EnvironmentKind) => boolean;
+  filter?: (environment: EnvironmentKind) => boolean;
+  typesFilter: EnvironmentType[];
+  setTypesFilter: (types: string[] | null) => void;
+  unsetTypesFilter: () => void;
+};
+
+const DEFAULT_VALID_TYPES = Object.keys(EnvironmentType).map((t) => EnvironmentType[t]);
+
+const ApplicationEnvironmentListView: React.FC<EnvironmentListViewProps> = ({
+  applicationName,
+  preFilter,
+  validTypes,
+  typesFilter,
+  setTypesFilter,
+  unsetTypesFilter,
+}) => {
+  const [allEnvironments, environmentsLoaded] =
+    useAllApplicationEnvironmentsWithHealthStatus(applicationName);
+  const environments = React.useMemo(
+    () => (preFilter ? allEnvironments.filter(preFilter) : allEnvironments),
+    [preFilter, allEnvironments],
+  );
+  const [statusFilterParam, setStatusFilterParam, unsetStatusFilter] = useSearchParam(
+    'envStatus',
+    '',
+  );
+  const statusFilter = React.useMemo(
+    () =>
+      statusFilterParam.length
+        ? statusFilterParam.split(',').map((s) => GitOpsDeploymentHealthStatus[s])
+        : [],
+    [statusFilterParam],
+  );
+
+  const setStatusFilter = React.useCallback(
+    (value: string[]) => setStatusFilterParam(value.join(',')),
+    [setStatusFilterParam],
+  );
+
+  const envStatusCounts = React.useMemo(() => {
+    const counts: { [key: string]: number } = {};
+    if (applicationName && environmentsLoaded) {
+      allEnvironments?.forEach((env) => {
+        if (!counts[env.healthStatus]) {
+          counts[env.healthStatus] = 0;
+        }
+        counts[env.healthStatus] += 1;
+      });
+    }
+    return counts;
+  }, [applicationName, allEnvironments, environmentsLoaded]);
+
+  const filter = (env: EnvironmentKind) => {
+    const type = getEnvironmentType(env);
+    const envWithStatus = allEnvironments
+      ? allEnvironments.find((e) => e.metadata.name === env.metadata.name)
+      : undefined;
+    return (
+      (typesFilter.length ? typesFilter.includes(type) : true) &&
+      (!environmentsLoaded ||
+        !statusFilter.length ||
+        statusFilter.includes(envWithStatus.healthStatus))
+    );
+  };
+
+  return (
+    <EnvironmentList
+      environments={environments}
+      environmentsLoaded={environmentsLoaded}
+      ToolbarGroups={
+        <EnvironmentToolbarGroups
+          environments={environments}
+          showStatusFilter
+          envStatusCounts={envStatusCounts}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          unsetStatusFilter={unsetStatusFilter}
+          validTypes={validTypes}
+          typesFilter={typesFilter}
+          setTypesFilter={setTypesFilter}
+          unsetTypesFilter={unsetTypesFilter}
+        />
+      }
+      filter={filter}
+      onClearAllFilters={() => {
+        setStatusFilter([]);
+        setTypesFilter([]);
+      }}
+      readOnly={true}
+    />
+  );
+};
+
+const AllEnvironmentsListView: React.FC<EnvironmentListViewProps> = ({
+  validTypes,
+  preFilter,
+  typesFilter,
+  setTypesFilter,
+  unsetTypesFilter,
+}) => {
+  const [allEnvironments, environmentsLoaded] = useAllEnvironments();
+  const filter = (env: EnvironmentKind) => {
+    const type = getEnvironmentType(env);
+    return typesFilter.length ? typesFilter.includes(type) : true;
+  };
+
+  const environments = React.useMemo(
+    () => (preFilter ? allEnvironments.filter(preFilter) : allEnvironments),
+    [preFilter, allEnvironments],
+  );
+
+  const ToolbarGroups = React.useMemo(
+    () => (
+      <EnvironmentToolbarGroups
+        environments={environments}
+        validTypes={validTypes}
+        typesFilter={typesFilter}
+        setTypesFilter={setTypesFilter}
+        unsetTypesFilter={unsetTypesFilter}
+      />
+    ),
+    [environments, setTypesFilter, typesFilter, unsetTypesFilter, validTypes],
+  );
+
+  return (
+    <EnvironmentList
+      environments={environments}
+      environmentsLoaded={environmentsLoaded}
+      ToolbarGroups={ToolbarGroups}
+      filter={filter}
+      onClearAllFilters={() => setTypesFilter([])}
+    />
+  );
+};
 
 type Props = {
-  environments: EnvironmentKind[];
-  environmentsLoaded: boolean;
-  description?: React.ReactNode;
-  filter?: (environment: EnvironmentKind) => boolean;
-  ToolbarGroups?: React.ReactNode;
-  CardComponent?: React.ComponentType<{ environment: EnvironmentKind }>;
-  onClearAllFilters?: () => void;
-  emptyStateContent?: React.ReactNode;
+  applicationName?: string;
+  validTypes?: EnvironmentType[];
 };
 
 const EnvironmentListView: React.FC<Props> = ({
-  environments,
-  environmentsLoaded,
-  description = null,
-  ToolbarGroups = null,
-  filter,
-  CardComponent = EnvironmentCard,
-  onClearAllFilters,
-  emptyStateContent,
+  applicationName,
+  validTypes = DEFAULT_VALID_TYPES,
 }) => {
-  const { workspace } = useWorkspaceInfo();
-  const [mvpFeature] = useFeatureFlag(MVP_FLAG);
-  const [nameFilter, setNameFilter, unsetNameFilter] = useSearchParam('name', '');
-  const [canCreateEnvironment] = useAccessReviewForModel(EnvironmentModel, 'create');
-  const filteredEnvironments = React.useMemo(() => {
-    // apply name filter
-    let result = nameFilter
-      ? environments.filter(({ metadata: { name } }) => name.indexOf(nameFilter) !== -1)
-      : environments;
+  const [typesFilterParam, setTypesFilterParam, unsetTypesFilter] = useSearchParam('envType', '');
+  const typesFilter = React.useMemo(
+    () =>
+      typesFilterParam.length
+        ? typesFilterParam
+            .split(',')
+            .filter((v) => !validTypes.includes[v])
+            .map((t) => EnvironmentType[t])
+        : [],
+    [typesFilterParam, validTypes],
+  );
 
-    // apply filter if present
-    result = filter ? result.filter(filter) : result;
+  const setTypesFilter = React.useCallback(
+    (value: string[]) => setTypesFilterParam(value.join(',')),
+    [setTypesFilterParam],
+  );
 
-    return sortEnvironmentsBasedonParent(result);
-  }, [environments, filter, nameFilter]);
+  const preFilter = React.useCallback(
+    (env: EnvironmentKind) => validTypes.includes(getEnvironmentType(env)),
+    [validTypes],
+  );
 
-  const createEnvironmentButton = React.useMemo(() => {
-    if (mvpFeature) {
-      return null;
-    }
-
+  if (applicationName) {
     return (
-      <ButtonWithAccessTooltip
-        variant="secondary"
-        component={(props) => (
-          <Link
-            {...props}
-            to={`/stonesoup/workspaces/${workspace}/workspace-settings/environment/create`}
-          />
-        )}
-        isDisabled={!canCreateEnvironment}
-        tooltip="You don't have access to create an environment"
-      >
-        Create environment
-      </ButtonWithAccessTooltip>
-    );
-  }, [canCreateEnvironment, mvpFeature, workspace]);
-
-  const onClearFilters = React.useCallback(() => {
-    unsetNameFilter();
-    onClearAllFilters?.();
-  }, [unsetNameFilter, onClearAllFilters]);
-
-  if (!environmentsLoaded) {
-    return (
-      <PageSection variant={PageSectionVariants.light} isFilled>
-        <Bullseye>
-          <Spinner />
-        </Bullseye>
-      </PageSection>
+      <ApplicationEnvironmentListView
+        applicationName={applicationName}
+        preFilter={preFilter}
+        validTypes={validTypes}
+        typesFilter={typesFilter}
+        setTypesFilter={setTypesFilter}
+        unsetTypesFilter={unsetTypesFilter}
+      />
     );
   }
-
   return (
-    <>
-      {environments.length === 0 ? (
-        emptyStateContent ?? (
-          <EmptyState variant={EmptyStateVariant.large}>
-            <EmptyStateIcon icon={CubesIcon} />
-            <Title headingLevel="h4" size="lg">
-              No Environments
-            </Title>
-            {!mvpFeature ? (
-              <EmptyStateBody>To get started, create an environment.</EmptyStateBody>
-            ) : null}
-            {createEnvironmentButton ? (
-              <div className="pf-u-mt-xl">{createEnvironmentButton}</div>
-            ) : null}
-          </EmptyState>
-        )
-      ) : (
-        <>
-          {description}
-          <Toolbar
-            collapseListedFiltersBreakpoint="xl"
-            clearAllFilters={onClearAllFilters}
-            clearFiltersButtonText="Clear filters"
-          >
-            <ToolbarContent className="pf-u-pl-0">
-              {!mvpFeature && environments.length > 0 ? (
-                <>
-                  {ToolbarGroups}
-                  <ToolbarItem>
-                    <SearchInput
-                      name="nameInput"
-                      data-test="env-name-filter-input"
-                      type="search"
-                      aria-label="name filter"
-                      placeholder="Filter by name..."
-                      value={nameFilter}
-                      onChange={(e, name) => setNameFilter(name)}
-                    />
-                  </ToolbarItem>
-                </>
-              ) : null}
-              <ToolbarItem>{createEnvironmentButton}</ToolbarItem>
-            </ToolbarContent>
-          </Toolbar>
-          {!mvpFeature && filteredEnvironments.length === 0 ? (
-            <FilteredEmptyState onClearFilters={onClearFilters} />
-          ) : (
-            <Grid hasGutter>
-              {filteredEnvironments.map((env) => (
-                <GridItem
-                  span={12}
-                  md={6}
-                  lg={3}
-                  key={env.metadata.name}
-                  data-test="environment-card"
-                  className="environment-list-view_card"
-                >
-                  <CardComponent environment={env} />
-                </GridItem>
-              ))}
-            </Grid>
-          )}
-        </>
-      )}
-    </>
+    <AllEnvironmentsListView
+      preFilter={preFilter}
+      validTypes={validTypes}
+      typesFilter={typesFilter}
+      setTypesFilter={setTypesFilter}
+      unsetTypesFilter={unsetTypesFilter}
+    />
   );
 };
 

@@ -118,7 +118,7 @@ export const getLinkDataForElement = (
         filter:
           !groupNode && !isDisabled
             ? { name: 'name', value: label }
-            : { name: 'envType', value: 'static' },
+            : { name: 'envType', value: 'default,static' },
       };
     case WorkflowNodeType.MANAGED_ENVIRONMENT:
     case WorkflowNodeType.RELEASE:

@@ -68,7 +68,7 @@ const EnvironmentSidePanel: React.FC<EnvironmentSidePanelBodyProps> = ({
                   color={
                     environmentType === EnvironmentType.managed
                       ? 'green'
-                      : environmentType === EnvironmentType.ephemeral
+                      : environmentType === EnvironmentType.static
                       ? 'gold'
                       : 'cyan'
                   }

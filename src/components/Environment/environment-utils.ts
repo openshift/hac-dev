@@ -14,9 +14,9 @@ export enum EnvironmentFormDropdownType {
 }
 
 export enum EnvironmentType {
+  default = 'default',
   static = 'static',
   managed = 'managed',
-  ephemeral = 'ephemeral',
 }
 
 export const environmentFormSchema = yup.object({
@@ -29,18 +29,18 @@ export const environmentFormSchema = yup.object({
 export const getEnvironmentType = (env: EnvironmentKind): EnvironmentType =>
   env.spec?.tags?.includes(EnvironmentType.managed)
     ? EnvironmentType.managed
-    : env.spec?.tags?.includes(EnvironmentType.ephemeral)
-    ? EnvironmentType.ephemeral
-    : EnvironmentType.static;
+    : env.spec?.tags?.includes(EnvironmentType.static)
+    ? EnvironmentType.static
+    : EnvironmentType.default;
 
 export const getEnvironmentTypeLabel = (type: EnvironmentType) => {
   switch (type) {
     case EnvironmentType.managed:
-      return 'Managed';
-    case EnvironmentType.ephemeral:
-      return 'Ephemeral';
-    default:
+      return 'Self Managed';
+    case EnvironmentType.static:
       return 'Static';
+    default:
+      return 'Default';
   }
 };
 

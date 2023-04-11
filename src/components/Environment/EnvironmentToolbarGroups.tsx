@@ -9,13 +9,9 @@ import {
   ToolbarGroup,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
-import {
-  EnvironmentType,
-  getEnvironmentType,
-  getEnvironmentTypeLabel,
-} from '../../../components/Environment/environment-utils';
-import { EnvironmentKind } from '../../../types';
-import { GitOpsDeploymentHealthStatus } from '../../../types/gitops-deployment';
+import { EnvironmentKind } from '../../types';
+import { GitOpsDeploymentHealthStatus } from '../../types/gitops-deployment';
+import { EnvironmentType, getEnvironmentType, getEnvironmentTypeLabel } from './environment-utils';
 
 export type EnvironmentToolbarGroupsProps = {
   environments: EnvironmentKind[];
