@@ -196,7 +196,7 @@ export const resourceToPipelineNode = (
   label: label || resource.metadata.name,
   type: NodeType.WORKFLOW_NODE,
   height: DEFAULT_NODE_HEIGHT,
-  width: getNodeWidth(resource.metadata.name, status),
+  width: getNodeWidth(label || resource.metadata.name, status),
   runAfterTasks,
   data: {
     application,
