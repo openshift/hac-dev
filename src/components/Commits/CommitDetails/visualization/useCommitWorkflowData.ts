@@ -27,7 +27,6 @@ import {
 import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
 import {
   getLabelWidth,
-  getLastEnvironmentsNames,
   getLatestResource,
 } from '../../../ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
 import { DEFAULT_NODE_HEIGHT } from '../../../topology/const';
@@ -282,9 +281,12 @@ export const useCommitWorkflowData = (
 
       if (!mvpFeature) {
         const lastStaticEnvNodeIds = environments.length
-          ? getLastEnvironmentsNames(environments).map((envName) =>
-              addPrefixToResourceName(compName, envName),
-            )
+          ? staticEnvNodes.reduce((acc, env) => {
+              if (!staticEnvNodes.find((node) => node.runAfterTasks?.includes(env.id))) {
+                acc.push(env.id);
+              }
+              return acc;
+            }, [])
           : [`${name}-static-env`];
         const latestRelease: ReleaseKind = getLatestResource(
           releases.filter((r) => r.spec.snapshot === currentSnapshotName),

@@ -2,7 +2,7 @@ import React from 'react';
 import { Node } from '@patternfly/react-topology';
 import { layoutFactory, VisualizationFactory } from '../topology/factories';
 import GraphErrorState from '../topology/factories/GraphErrorState';
-import { pipelineRuncomponentFactory } from './factories';
+import { pipelineRunComponentFactory } from './factories';
 import PipelineRunSidePanel from './PipelineRunSidePanel';
 import {
   getPipelineRunDataModel,
@@ -36,7 +36,7 @@ const PipelineRunVisualization = ({ pipelineRun, error, taskRuns }) => {
   return (
     <div ref={nodeRef} className="pipelinerun-graph" data-test="pipelinerun-graph">
       <VisualizationFactory
-        componentFactory={pipelineRuncomponentFactory}
+        componentFactory={pipelineRunComponentFactory}
         layoutFactory={layoutFactory}
         model={model}
       >

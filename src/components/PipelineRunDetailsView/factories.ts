@@ -9,7 +9,7 @@ import {
 import PipelineRunNode from './visualization/nodes/PipelineRunNode';
 import { PipelineRunNodeType } from './visualization/types';
 
-export const pipelineRuncomponentFactory: ComponentFactory = (kind: ModelKind, type: string) => {
+export const pipelineRunComponentFactory: ComponentFactory = (kind: ModelKind, type: string) => {
   if (kind === ModelKind.graph) {
     return GraphComponent;
   }

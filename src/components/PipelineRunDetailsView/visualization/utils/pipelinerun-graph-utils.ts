@@ -27,15 +27,13 @@ import { pipelineRunStatus, runStatus, taskRunStatus } from '../../../../utils/p
 import {
   NODE_ICON_WIDTH,
   NODE_PADDING,
+  NodeType,
 } from '../../../ApplicationDetails/tabs/overview/visualization/const';
 import {
   PipelineEdgeModel,
   PipelineMixedNodeModel,
 } from '../../../ApplicationDetails/tabs/overview/visualization/types';
-import {
-  createSpacerNode,
-  getTextWidth,
-} from '../../../ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
+import { getTextWidth } from '../../../ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
 import { DEFAULT_FINALLLY_GROUP_PADDING, DEFAULT_NODE_HEIGHT } from '../../../topology/const';
 import { DAG, Vertex } from '../../../topology/dag';
 import { PipelineLayout } from '../../../topology/factories';
@@ -278,6 +276,16 @@ const getBadgeWidth = (data: PipelineRunNodeData, font: string = '0.875rem RedHa
   }
   return BADGE_PADDING + getTextWidth(`${badgeCount}`, font);
 };
+
+const createSpacerNode = (node: PipelineMixedNodeModel): PipelineMixedNodeModel => ({
+  id: node.id,
+  type: NodeType.SPACER_NODE,
+  height: 1,
+  width: 1,
+  data: {
+    ...node,
+  },
+});
 
 const getGraphDataModel = (
   pipeline: PipelineKind,

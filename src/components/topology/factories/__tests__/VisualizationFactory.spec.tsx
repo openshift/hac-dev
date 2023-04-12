@@ -2,7 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { TopologyView } from '@patternfly/react-topology';
 import { render, waitFor, screen } from '@testing-library/react';
-import { pipelineRuncomponentFactory } from '../../../PipelineRunDetailsView/factories';
+import { pipelineRunComponentFactory } from '../../../PipelineRunDetailsView/factories';
 import { layoutFactory } from '../layoutFactory';
 import VisualizationFactory from '../VisualizationFactory';
 
@@ -25,7 +25,7 @@ describe('VisualizationFactory', () => {
       <VisualizationFactory
         model={{ graph: { id: 'g1', type: 'graph' } }}
         layoutFactory={layoutFactory}
-        componentFactory={pipelineRuncomponentFactory}
+        componentFactory={pipelineRunComponentFactory}
       />,
     );
     expect(topologyViewMock).toHaveBeenCalledTimes(1);
@@ -43,7 +43,7 @@ describe('VisualizationFactory', () => {
       <VisualizationFactory
         model={{ graph: { id: 'g1', type: 'graph' } }}
         layoutFactory={layoutFactory}
-        componentFactory={pipelineRuncomponentFactory}
+        componentFactory={pipelineRunComponentFactory}
         controlBar={mockControlBar}
       />,
     );
@@ -63,7 +63,7 @@ describe('VisualizationFactory', () => {
       <VisualizationFactory
         model={{ graph: { id: 'g1', type: 'graph' } }}
         layoutFactory={layoutFactory}
-        componentFactory={pipelineRuncomponentFactory}
+        componentFactory={pipelineRunComponentFactory}
         controlBar={mockControlBar}
       />,
     );
@@ -76,7 +76,7 @@ describe('VisualizationFactory', () => {
       <VisualizationFactory
         model={{ graph: { id: 'g1', type: 'graph' } }}
         layoutFactory={layoutFactory}
-        componentFactory={pipelineRuncomponentFactory}
+        componentFactory={pipelineRunComponentFactory}
         controlBar={mockControlBar}
         fullHeight
       />,
