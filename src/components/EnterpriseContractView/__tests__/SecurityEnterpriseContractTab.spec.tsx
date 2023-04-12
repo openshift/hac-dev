@@ -19,6 +19,13 @@ describe('SecurityEnterpriseContractTab', () => {
 
   afterEach(() => {});
 
+  it('should render empty state for security tab when pods are missing', () => {
+    mockUseEnterpriseContractResults.mockReturnValue([undefined, true]);
+
+    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy" />);
+    screen.getByTestId('security-tab-empty-state');
+  });
+
   it('should render component security tab', () => {
     routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy" />);
     screen.getByText('Missing CVE scan results');
