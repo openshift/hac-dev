@@ -8,6 +8,7 @@ import {
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { Alert } from '@patternfly/react-core';
 import { Base64 } from 'js-base64';
+import { throttle } from 'lodash-es';
 import { PodModel } from '../../../../models/pod';
 import { ContainerSpec, PodKind } from '../../types';
 import { LOG_SOURCE_TERMINATED } from '../utils';
@@ -46,16 +47,24 @@ const Logs: React.FC<LogsProps> = ({
 
   const appendMessage = React.useRef<(blockContent) => void>();
 
+  const safeScroll = throttle(
+    () =>
+      requestAnimationFrame(() => {
+        scrollToRef.current.scrollIntoView({ behavior: 'smooth' });
+      }),
+    300,
+  );
+
   appendMessage.current = React.useCallback(
     (blockContent: string) => {
       if (contentRef.current && blockContent) {
         contentRef.current.innerText += blockContent;
       }
       if (scrollToRef.current && blockContent && render && autoScroll) {
-        scrollToRef.current.scrollIntoView({ behavior: 'smooth' });
+        safeScroll();
       }
     },
-    [autoScroll, render],
+    [autoScroll, render, safeScroll],
   );
 
   if (resourceStatusRef.current !== resourceStatus) {
@@ -114,9 +123,9 @@ const Logs: React.FC<LogsProps> = ({
 
   React.useEffect(() => {
     if (scrollToRef.current && render && autoScroll) {
-      scrollToRef.current.scrollIntoView({ behavior: 'smooth' });
+      safeScroll();
     }
-  }, [autoScroll, render]);
+  }, [autoScroll, render, safeScroll]);
 
   return (
     <div className="logs" style={{ display: render ? '' : 'none' }}>
