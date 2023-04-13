@@ -7,6 +7,7 @@ import {
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { getClairScanResults } from '../../../hooks/useClairScanResults';
+import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { TaskRunKind } from '../../../types';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import HelpPopover from '../../HelpPopover';
@@ -34,7 +35,20 @@ const ClairScanDescriptionListGroup: React.FC<Props> = ({
     <DescriptionListGroup>
       <DescriptionListTerm>
         Vulnerabilities scan{' '}
-        <HelpPopover bodyContent="Clair-scan is a task in a pipeline run that scans your components for potential vulnerabilities." />
+        <HelpPopover
+          bodyContent={
+            <>
+              Clair-scan is a task in a pipeline run that scans your components for potential
+              vulnerabilities.{' '}
+              <ExternalLink
+                href="https://www.redhat.com/en/topics/containers/what-is-clair"
+                showIcon
+              >
+                Read more about Clair
+              </ExternalLink>
+            </>
+          }
+        />
       </DescriptionListTerm>
       <DescriptionListDescription>
         {scanResults?.vulnerabilities ? <ClairScanDetailStatus scanResults={scanResults} /> : '-'}
