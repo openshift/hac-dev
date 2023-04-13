@@ -38,6 +38,7 @@ export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicatio
         onSelect={(_, k: string) => {
           setActiveTab(k);
         }}
+        data-testid="activities-tabs-id"
         unmountOnExit
       >
         <Tab

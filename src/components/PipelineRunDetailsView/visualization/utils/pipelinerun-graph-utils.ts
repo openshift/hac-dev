@@ -4,14 +4,12 @@ import {
   getEdgesFromNodes,
   getSpacerNodes,
   GraphElement,
+  GraphModel,
   ModelKind,
   Node,
   WhenStatus,
 } from '@patternfly/react-topology';
-import { uniq } from 'lodash-es';
-import find from 'lodash/find';
-import merge from 'lodash/merge';
-import minBy from 'lodash/minBy';
+import { PipelineNodeModel } from '@patternfly/react-topology/src/pipelines/types';
 import { SCAN_RESULT } from '../../../../hooks/useClairScanResults';
 import { formatPrometheusDuration } from '../../../../shared/components/timestamp/datetime';
 import {
@@ -24,18 +22,16 @@ import {
   PLRTaskRunStep,
 } from '../../../../types';
 import { pipelineRunStatus, runStatus, taskRunStatus } from '../../../../utils/pipeline-utils';
-import {
-  NODE_ICON_WIDTH,
-  NODE_PADDING,
-  NodeType,
-} from '../../../ApplicationDetails/tabs/overview/visualization/const';
+import { NodeType } from '../../../ApplicationDetails/tabs/overview/visualization/const';
 import {
   PipelineEdgeModel,
   PipelineMixedNodeModel,
 } from '../../../ApplicationDetails/tabs/overview/visualization/types';
-import { getTextWidth } from '../../../ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
+import {
+  getLabelWidth,
+  getTextWidth,
+} from '../../../ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
 import { DEFAULT_FINALLLY_GROUP_PADDING, DEFAULT_NODE_HEIGHT } from '../../../topology/const';
-import { DAG, Vertex } from '../../../topology/dag';
 import { PipelineLayout } from '../../../topology/factories';
 import {
   PipelineRunNodeData,
@@ -151,6 +147,7 @@ export const createStepStatus = (stepName: string, status: PipelineTaskStatus): 
  * Appends the pipeline run status to each tasks in the pipeline.
  * @param pipeline
  * @param pipelineRun
+ * @param taskRuns
  * @param isFinallyTasks
  */
 export const appendStatus = (
@@ -164,21 +161,21 @@ export const appendStatus = (
 
   return tasks.map((task) => {
     if (!pipelineRun?.status) {
-      return merge(task, { status: { reason: runStatus.Pending } });
+      return { ...task, status: { reason: runStatus.Pending } };
     }
     if (!taskRuns || taskRuns.length === 0) {
-      return merge({}, task, { status: { reason: overallPipelineRunStatus } });
+      return { ...task, status: { reason: overallPipelineRunStatus } };
     }
 
-    const taskRun = find(
-      taskRuns,
+    const taskRun = taskRuns.find(
       (tr) => tr.metadata.labels[TektonResourceLabel.pipelineTask] === task.name,
     );
     const taskStatus: TaskRunStatus = taskRun?.status;
 
-    const mTask: PipelineTaskWithStatus = merge(task, {
+    const mTask: PipelineTaskWithStatus = {
+      ...task,
       status: { ...taskStatus, reason: runStatus.Pending },
-    });
+    };
 
     // append task duration
     if (mTask.status.completionTime && mTask.status.startTime) {
@@ -277,107 +274,118 @@ const getBadgeWidth = (data: PipelineRunNodeData, font: string = '0.875rem RedHa
   return BADGE_PADDING + getTextWidth(`${badgeCount}`, font);
 };
 
-const createSpacerNode = (node: PipelineMixedNodeModel): PipelineMixedNodeModel => ({
-  id: node.id,
-  type: NodeType.SPACER_NODE,
-  height: 1,
-  width: 1,
-  data: {
-    ...node,
-  },
-});
+const getNodeLevel = (
+  node: PipelineRunNodeModel<PipelineRunNodeData, PipelineRunNodeType>,
+  allNodes: PipelineRunNodeModel<PipelineRunNodeData, PipelineRunNodeType>[],
+) => {
+  const children = allNodes.filter((n) => n.runAfterTasks?.includes(node.label));
+  if (!children.length) {
+    return 0;
+  }
+  const maxChildLevel = children.reduce(
+    (maxLevel, child) => Math.max(getNodeLevel(child, allNodes), maxLevel),
+    0,
+  );
+
+  return maxChildLevel + 1;
+};
+
+const hasParentDep = (
+  dep: string,
+  otherDeps: string[],
+  nodes: PipelineRunNodeModel<PipelineRunNodeData, PipelineRunNodeType>[],
+): boolean => {
+  if (!otherDeps?.length) {
+    return false;
+  }
+
+  for (const otherDep of otherDeps) {
+    if (otherDep === dep) {
+      continue;
+    }
+    const depNode = nodes.find((n) => n.id === otherDep);
+    if (depNode.runAfterTasks?.includes(dep) || hasParentDep(dep, depNode.runAfterTasks, nodes)) {
+      return true;
+    }
+  }
+  return false;
+};
 
 const getGraphDataModel = (
   pipeline: PipelineKind,
   pipelineRun?: PipelineRunKind,
   taskRuns?: TaskRunKind[],
-) => {
+): {
+  graph: GraphModel;
+  nodes: (PipelineRunNodeModel<PipelineRunNodeData, PipelineRunNodeType> | PipelineNodeModel)[];
+  edges: PipelineEdgeModel[];
+} => {
   const taskList = appendStatus(pipeline, pipelineRun, taskRuns);
 
-  const dag = new DAG();
-  taskList?.forEach((task: PipelineTask) => {
-    dag.addEdges(task.name, task, '', task.runAfter || []);
-  });
-
-  const nodes = [];
-  const maxWidthForLevel = {};
-  dag.topologicalSort((v: Vertex) => {
-    if (!maxWidthForLevel[v.level]) {
-      maxWidthForLevel[v.level] = getTextWidth(v.name) + getBadgeWidth(v.data);
-    } else {
-      maxWidthForLevel[v.level] = Math.max(
-        maxWidthForLevel[v.level],
-        getTextWidth(v.name) + getBadgeWidth(v.data),
-      );
-    }
-  });
-  dag.topologicalSort((vertex: Vertex) => {
-    const runAfterTasks = [];
-    const task = vertex.data;
-    const depsFromContextVariables = [];
-    if (task.params) {
-      task.params.map((p) => {
-        if (Array.isArray(p.value)) {
-          p.value.forEach((paramValue) => {
-            depsFromContextVariables.push(...extractDepsFromContextVariables(paramValue));
-          });
-        } else {
-          depsFromContextVariables.push(...extractDepsFromContextVariables(p.value));
-        }
-      });
-    }
-    if (task?.when) {
-      task.when.map(({ input, values }) => {
-        depsFromContextVariables.push(...extractDepsFromContextVariables(input));
-        values.forEach((whenValue) => {
-          depsFromContextVariables.push(...extractDepsFromContextVariables(whenValue));
+  const nodes: PipelineRunNodeModel<PipelineRunNodeData, PipelineRunNodeType>[] = taskList.map(
+    (task) => {
+      const runAfterTasks = [...(task.runAfter || [])];
+      if (task.params) {
+        task.params.map((p) => {
+          if (Array.isArray(p.value)) {
+            p.value.forEach((paramValue) => {
+              runAfterTasks.push(...extractDepsFromContextVariables(paramValue));
+            });
+          } else {
+            runAfterTasks.push(...extractDepsFromContextVariables(p.value));
+          }
         });
-      });
-    }
-    const dependancies = uniq([...vertex.dependancyNames]);
-    if (dependancies) {
-      dependancies.forEach((dep) => {
-        const depObj = dag.vertices.get(dep);
-        if (depObj.level - vertex.level <= 1 || vertex.data.runAfter?.includes(depObj.name)) {
-          runAfterTasks.push(dep);
-        }
-      });
-    }
-    if (depsFromContextVariables.length > 0) {
-      const v = depsFromContextVariables.map((d) => {
-        return dag.vertices.get(d);
-      });
-      const minLevelDep = minBy(v, (d) => d.level);
-      const nearestDeps = v.filter((v1) => v1.level === minLevelDep.level);
-      nearestDeps.forEach((nd) => {
-        if (nd.level - vertex.level <= 1 || vertex.dependancyNames.length === 0) {
-          runAfterTasks.push(nd.name);
-        }
-      });
-    }
+      }
+      if (task?.when) {
+        task.when.forEach(({ input, values }) => {
+          runAfterTasks.push(...extractDepsFromContextVariables(input));
+          values.forEach((whenValue) => {
+            runAfterTasks.push(...extractDepsFromContextVariables(whenValue));
+          });
+        });
+      }
 
-    const node: PipelineRunNodeModel<PipelineRunNodeData, PipelineRunNodeType> = {
-      id: vertex.name,
-      type: PipelineRunNodeType.TASK_NODE,
-      label: vertex.name,
-      runAfterTasks,
-      width: maxWidthForLevel[vertex.level] + NODE_PADDING * 2 + NODE_ICON_WIDTH,
-      height: DEFAULT_NODE_HEIGHT,
-      data: {
-        namespace: pipelineRun.metadata.namespace,
-        status: vertex.data.status?.reason,
-        testFailCount: vertex.data.status.testFailCount,
-        testWarnCount: vertex.data.status.testWarnCount,
-        scanResults: vertex.data.status.scanResults,
-        whenStatus: taskWhenStatus(vertex.data),
-        task: vertex.data,
-        steps: vertex.data.steps,
-        taskRun: taskRuns.find(
-          (tr) => tr.metadata.labels[TektonResourceLabel.pipelineTask] === vertex.data.name,
-        ),
-      },
-    };
-    nodes.push(node);
+      return {
+        id: task.name,
+        type: PipelineRunNodeType.TASK_NODE,
+        label: task.name,
+        runAfterTasks,
+        height: DEFAULT_NODE_HEIGHT,
+        data: {
+          namespace: pipelineRun.metadata.namespace,
+          status: task.status?.reason,
+          testFailCount: task.status.testFailCount,
+          testWarnCount: task.status.testWarnCount,
+          scanResults: task.status.scanResults,
+          whenStatus: taskWhenStatus(task),
+          task,
+          steps: task.steps,
+          taskRun: taskRuns.find(
+            (tr) => tr.metadata.labels[TektonResourceLabel.pipelineTask] === task.name,
+          ),
+        },
+      };
+    },
+  );
+
+  // Remove extraneous dependencies
+  nodes.forEach(
+    (taskNode) =>
+      (taskNode.runAfterTasks = taskNode.runAfterTasks.filter(
+        (dep) => !hasParentDep(dep, taskNode.runAfterTasks, nodes),
+      )),
+  );
+
+  // Set the level and width of each node
+  nodes.forEach((taskNode) => {
+    taskNode.data.level = getNodeLevel(taskNode, nodes);
+    taskNode.width = getLabelWidth(taskNode.label) + getBadgeWidth(taskNode.data);
+  });
+
+  // Set the width of nodes to the max width for it's level
+  nodes.forEach((taskNode) => {
+    const levelNodes = nodes.filter((n) => n.data.level === taskNode.data.level);
+    taskNode.width = levelNodes.reduce((maxWidth, n) => Math.max(n.width, maxWidth), 0);
   });
 
   const finallyTaskList = appendStatus(pipeline, pipelineRun, taskRuns, true);
@@ -389,7 +397,7 @@ const getGraphDataModel = (
     id: fTask.name,
     label: fTask.name,
     runAfterTasks: [],
-    width: getTextWidth(maxFinallyNodeName) + NODE_PADDING * 2 + DEFAULT_FINALLLY_GROUP_PADDING * 2,
+    width: getLabelWidth(maxFinallyNodeName),
     height: DEFAULT_NODE_HEIGHT,
     data: {
       namespace: pipelineRun.metadata.namespace,
@@ -414,9 +422,9 @@ const getGraphDataModel = (
     : [];
   const spacerNodes: PipelineMixedNodeModel[] = getSpacerNodes(
     [...nodes, ...finallyNodes],
-    PipelineRunNodeType.SPACER_NODE,
+    NodeType.SPACER_NODE,
     [PipelineRunNodeType.FINALLY_NODE],
-  ).map(createSpacerNode);
+  );
 
   const edges: PipelineEdgeModel[] = getEdgesFromNodes(
     [...nodes, ...spacerNodes, ...finallyNodes],

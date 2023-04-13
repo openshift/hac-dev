@@ -158,6 +158,13 @@ describe('ApplicationDetails', () => {
     expect(activeTab).toHaveTextContent('Components');
     detailsPage.unmount();
 
+    useParamsMock.mockReturnValue({ activeTab: 'integrationtests' });
+    detailsPage = routerRenderer(<ApplicationDetails applicationName="test" />);
+    appDetails = screen.getByTestId('details');
+    activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    expect(activeTab).toHaveTextContent('Integration tests');
+    detailsPage.unmount();
+
     useParamsMock.mockReturnValue({ activeTab: 'environments' });
     routerRenderer(<ApplicationDetails applicationName="test" />);
     appDetails = screen.getByTestId('details');

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useK8sWatchResource, k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { configure, fireEvent, screen, waitFor } from '@testing-library/react';
 import { DataState, testPipelineRuns } from '../../../__data__/pipelinerun-data';
 import { useAccessReviewForModel } from '../../../utils/rbac';
 import { routerRenderer } from '../../../utils/test-utils';
@@ -24,6 +24,7 @@ jest.mock('react-router-dom', () => {
     Link: (props) => <a href={props.to}>{props.children}</a>,
     useNavigate: jest.fn(),
     useSearchParams: () => React.useState(() => new URLSearchParams()),
+    useParams: jest.fn(),
   };
 });
 
@@ -49,6 +50,7 @@ const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useNavigateMock = useNavigate as jest.Mock;
 const mockK8sCreate = k8sCreateResource as jest.Mock;
 const useAccessReviewForModelMock = useAccessReviewForModel as jest.Mock;
+const useParamsMock = useParams as jest.Mock;
 
 const pipelineRunName = 'java-springboot-sample-b4trz';
 const mockPipelineRun = {
@@ -135,7 +137,13 @@ const mockPipelineRun = {
   },
 };
 
+configure({ testIdAttribute: 'data-test' });
+
 describe('PipelineRunDetailsView', () => {
+  beforeEach(() => {
+    useParamsMock.mockReturnValue({});
+  });
+
   it('should render spinner if pipelinerun data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
     routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
@@ -297,5 +305,32 @@ describe('PipelineRunDetailsView', () => {
 
     expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'true');
     expect(screen.queryByText('Cancel')).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should display the correct tab', async () => {
+    useParamsMock.mockReturnValue({ activeTab: 'detail' });
+    watchResourceMock.mockReturnValueOnce([mockPipelineRun, true]).mockReturnValue([[], true]);
+    let detailsPage = routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+
+    let appDetails = screen.getByTestId('details');
+    let activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    expect(activeTab).toHaveTextContent('Details');
+    detailsPage.unmount();
+
+    useParamsMock.mockReturnValue({ activeTab: 'taskruns' });
+    watchResourceMock.mockReturnValueOnce([mockPipelineRun, true]).mockReturnValue([[], true]);
+    detailsPage = routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    appDetails = detailsPage.getByTestId('details');
+    activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    expect(activeTab).toHaveTextContent('Task runs');
+    detailsPage.unmount();
+
+    useParamsMock.mockReturnValue({ activeTab: 'logs' });
+    watchResourceMock.mockReturnValueOnce([mockPipelineRun, true]).mockReturnValue([[], true]);
+    detailsPage = routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    appDetails = detailsPage.getByTestId('details');
+    activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    expect(activeTab).toHaveTextContent('Logs');
+    detailsPage.unmount();
   });
 });
