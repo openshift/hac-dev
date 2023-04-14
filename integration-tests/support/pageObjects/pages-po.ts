@@ -1,5 +1,5 @@
 export const applicationsPagePO = {
-  appStatus: '[class="pf-c-label__content"]'
+  appStatus: '[class="pf-c-label__content"]',
 };
 
 export const overviewTabPO = {
@@ -57,9 +57,5 @@ export const createBuildStepPO = {
 
 export const addIntegrationTestStepPO = {
   displayNameInput: '[data-test="display-name-input"]',
-  containerImageInput: '[data-test="container-image-input"]',
-  pipelineNameInput: '[data-test="pipeline-name-input"]',
   optionalreleaseCheckbox: '[data-test="optional-release-checkbox"]',
-  next: 'button[type=submit]',
-  add: '[data-test="submit-button"]',
 };
