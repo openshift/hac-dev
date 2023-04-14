@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
-import { DownloadIcon, CompressIcon, ExpandIcon } from '@patternfly/react-icons/dist/js/icons';
+import {
+  DownloadIcon,
+  CompressIcon,
+  ExpandIcon,
+  OutlinedPlayCircleIcon,
+} from '@patternfly/react-icons/dist/js/icons';
 import classNames from 'classnames';
 import { saveAs } from 'file-saver';
 import { useFullscreen } from '../../../hooks/fullscreen';
@@ -11,6 +16,7 @@ import { PodKind } from '../../types';
 import { containerToLogSourceStatus, LOG_SOURCE_WAITING } from '../utils';
 import Logs from './Logs';
 import { getRenderContainers } from './logs-utils';
+
 import './MultiStreamLogs.scss';
 
 type MultiStreamLogsProps = {
@@ -36,11 +42,15 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
   const [renderToCount, setRenderToCount] = React.useState(0);
   const [isFullscreen, fullscreenRef, fullscreenToggle] = useFullscreen<HTMLDivElement>();
   const [scrollDirection, handleScrollCallback] = useScrollDirection();
-  const [autoScroll, setAutoScroll] = React.useState(true);
   const { containers, stillFetching } = getRenderContainers(resource);
   const [downloadAllStatus, setDownloadAllStatus] = React.useState(false);
   const dataRef = React.useRef(null);
   dataRef.current = containers;
+  const logViewerRef = React.useRef<HTMLDivElement>();
+
+  const handleClick = React.useCallback(() => {
+    logViewerRef.current.scrollTop = logViewerRef.current.scrollHeight;
+  }, []);
 
   const loadingContainers = resource?.metadata?.name !== resourceName;
 
@@ -55,15 +65,9 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
     }
   }, []);
 
-  React.useEffect(() => {
-    if (!scrollDirection) return;
-    if (scrollDirection === ScrollDirection.scrollingUp && autoScroll === true) {
-      setAutoScroll(false);
-    }
-    if (scrollDirection === ScrollDirection.scrolledToBottom && autoScroll === false) {
-      setAutoScroll(true);
-    }
-  }, [autoScroll, scrollDirection]);
+  const autoScroll =
+    scrollDirection == null || scrollDirection === ScrollDirection.scrolledToBottom;
+
   const startDownloadAll = () => {
     setDownloadAllStatus(true);
     onDownloadAll()
@@ -148,6 +152,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
         className="multi-stream-logs__container"
         onScroll={handleScrollCallback}
         data-testid="logs-task-container"
+        ref={logViewerRef}
       >
         <div className="multi-stream-logs__container__logs" ref={scrollPane}>
           {resource === null && errorMessage && (
@@ -174,6 +179,13 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
               );
             })}
         </div>
+      </div>
+      <div>
+        {autoScroll ? null : (
+          <Button data-testid="resume-log-stream" isBlock onClick={handleClick}>
+            <OutlinedPlayCircleIcon /> Resume log stream
+          </Button>
+        )}
       </div>
     </div>
   );
