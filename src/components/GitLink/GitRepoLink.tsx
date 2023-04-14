@@ -1,20 +1,44 @@
 import * as React from 'react';
 import { Tooltip, TooltipPosition } from '@patternfly/react-core';
+import { CodeBranchIcon } from '@patternfly/react-icons/dist/js/icons/code-branch-icon';
 import gitUrlParse from 'git-url-parse';
 import ExternalLink from '../../shared/components/links/ExternalLink';
-import { getGitIcon } from '../../utils/git-utils';
+import { getGitIcon, getGitPath } from '../../utils/git-utils';
 
 type Props = {
   url: string;
+  revision?: string;
+  context?: string;
 };
 
-const GitRepoLink: React.FC<Props> = ({ url }) => {
+const GitRepoLink: React.FC<Props> = ({ url, revision, context }) => {
   const parsed = gitUrlParse(url);
   const icon = getGitIcon(parsed.source);
+  const path = context?.replace(/^\.?\/?/g, '');
+  const fullUrl = `https://${parsed.source}/${parsed.owner}/${parsed.name}${getGitPath(
+    parsed.source,
+    revision,
+    path,
+  )}`;
+
+  // omit the main and master branch to reduce visual clutter
+  const rev = revision === 'main' || revision === 'master' ? '' : revision;
+
   return (
-    <Tooltip content={url} position={TooltipPosition.bottom}>
-      <ExternalLink href={url} icon={icon}>
+    <Tooltip content={fullUrl} position={TooltipPosition.bottom}>
+      <ExternalLink href={fullUrl} icon={icon}>
         {parsed.owner}/{parsed.name}
+        {rev ? (
+          <>
+            {' '}
+            (<CodeBranchIcon />
+            {rev} {path ? ` / ${path}` : ''})
+          </>
+        ) : path ? (
+          ` (${path})`
+        ) : (
+          ''
+        )}
       </ExternalLink>
     </Tooltip>
   );

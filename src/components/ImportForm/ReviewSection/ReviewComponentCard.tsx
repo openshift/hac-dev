@@ -76,7 +76,11 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 />
               )}
               {component.source?.git?.url ? (
-                <GitRepoLink url={component.source.git.url} />
+                <GitRepoLink
+                  url={component.source.git.url}
+                  revision={component.source.git.revision}
+                  context={component.source.git.context}
+                />
               ) : (
                 <ExternalLink
                   href={
