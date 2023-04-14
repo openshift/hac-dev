@@ -1,3 +1,5 @@
+import { NavItem } from '../support/constants/PageTitle';
+import { actions } from '../support/pageObjects/global-po';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { ComponentSamplesPage } from '../support/pages/ComponentSamplesPage';
@@ -84,6 +86,11 @@ describe('Create Application from Sample', { tags: ['@PR-check', '@publicRepo'] 
   });
 
   it('Delete application with existing component', () => {
-    Applications.deleteApplication(applicationName);
+    Common.navigateTo(NavItem.applications);
+    Applications.openKebabMenu(applicationName);
+    cy.get(actions.deleteItem).click();
+    cy.get(actions.deleteModalInput).clear().type(applicationName);
+    cy.get(actions.deleteModalButton).click();
+    cy.get(`[data-id="${applicationName}"]`).should('not.exist');
   });
 });

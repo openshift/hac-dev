@@ -24,7 +24,6 @@ describe(
     });
 
     after(function () {
-      Common.openApplicationURL(applicationName);
       Applications.deleteApplication(applicationName);
     });
 
