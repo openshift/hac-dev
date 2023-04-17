@@ -49,7 +49,7 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
           </span>
         )}
       </StackItem>
-      <StackItem isFilled>
+      <StackItem isFilled className="build-log-viewer__body">
         {pipelineRun && taskRuns && tloaded ? (
           <PipelineRunLogs obj={pipelineRun} taskRuns={taskRuns} />
         ) : (

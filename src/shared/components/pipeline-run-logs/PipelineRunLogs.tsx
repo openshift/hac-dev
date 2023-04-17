@@ -128,6 +128,12 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
       taskRunFromYaml?.[activeItem]?.metadata?.labels?.[TektonResourceLabel.pipelineTask] || '-';
     const pipelineRunFinished = pipelineStatus !== runStatus.Running;
 
+    const selectedItemRef = (item: HTMLSpanElement) => {
+      if (item?.scrollIntoView) {
+        item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    };
+
     return (
       <div className="pipeline-run-logs">
         <div className="pipeline-run-logs__tasklist" data-testid="logs-tasklist">
@@ -143,7 +149,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
                       isActive={activeItem === task}
                       className="pipeline-run-logs__navitem"
                     >
-                      <span>
+                      <span ref={activeItem === task ? selectedItemRef : undefined}>
                         <ColoredStatusIcon status={taskRunStatus(taskRun)} />
                         <span className="pipeline-run-logs__namespan">
                           {taskRunFromYaml[task]?.metadata?.labels?.[
