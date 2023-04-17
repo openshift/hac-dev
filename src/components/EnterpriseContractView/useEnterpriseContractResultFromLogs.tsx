@@ -46,7 +46,7 @@ export const useEnterpriseContractResultFromLogs = (
         })
         .catch((err) => {
           if (unmount) return;
-          setEcLoaded(false);
+          setEcLoaded(true);
           // eslint-disable-next-line no-console
           console.warn('Error while fetching Enterprise Contract result from logs', err);
         });

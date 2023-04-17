@@ -18,6 +18,7 @@ import {
 import { useSearchParam } from '../../hooks/useSearchParam';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
+import SecurityTabEmptyState from '../EmptyState/SecurityTabEmptyState';
 import { EnterpriseContractTable } from './EnterpriseContractTable/EnterpriseContractTable';
 import { ENTERPRISE_CONTRACT_STATUS } from './types';
 import { useEnterpriseContractResults } from './useEnterpriseContractResultFromLogs';
@@ -50,7 +51,7 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
       [ENTERPRISE_CONTRACT_STATUS.violations]: 0,
     };
     return ecResultLoaded
-      ? ecResult.reduce((acc, ec) => {
+      ? ecResult?.reduce((acc, ec) => {
           if (acc[ec.status]) {
             acc[ec.status] += 1;
           } else {
@@ -77,7 +78,7 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
 
   const componentFilterObj = React.useMemo(() => {
     return ecResultLoaded
-      ? ecResult.reduce((acc, ec) => {
+      ? ecResult?.reduce((acc, ec) => {
           if (acc[ec.component]) {
             acc[ec.component] += 1;
           } else {
@@ -116,7 +117,7 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
   // filter data in table
   const filteredECResult = React.useMemo(() => {
     return ecResultLoaded && ecResult
-      ? ecResult.filter((rule) => {
+      ? ecResult?.filter((rule) => {
           return (
             (!nameFilter || rule.title.toLowerCase().indexOf(nameFilter.toLowerCase()) !== -1) &&
             (!statusFilters.length || statusFilters.includes(rule.status)) &&
@@ -132,6 +133,8 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
         <Spinner />
       </Bullseye>
     );
+  } else if (ecResultLoaded && !filteredECResult) {
+    return <SecurityTabEmptyState />;
   }
 
   return (

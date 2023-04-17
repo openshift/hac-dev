@@ -84,6 +84,19 @@ describe('useEnterpriseContractResultFromLogs', () => {
     expect(loaded).toBe(true);
     expect(ecResult.findIndex((ec) => ec.name === 'devfile-sample-1jik')).toEqual(-1);
   });
+
+  it('should return handle api errors', async () => {
+    mockCommmonFetchText.mockRejectedValue(new Error('Api error'));
+
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useEnterpriseContractResultFromLogs('dummy-abcd'),
+    );
+    await waitForNextUpdate();
+    const [ecResult, loaded] = result.current;
+    expect(mockCommmonFetchText).toHaveBeenCalled();
+    expect(loaded).toBe(true);
+    expect(ecResult).toBeUndefined();
+  });
 });
 
 describe('mapEnterpriseContractResultData', () => {
