@@ -142,7 +142,7 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
           Enterprise Contract is a set of tools for verifying the provenance of application
           snapshots and validating them against a clearly defined policy.
           <br />
-          Enterprise Contract policy is defined using the rego policy langauage and is described in{' '}
+          Enterprise Contract policy is defined using the Rego policy language and is described in{' '}
           <ExternalLink
             href="https://enterprise-contract.github.io/ec-policies/release_policy.html"
             showIcon
@@ -247,7 +247,7 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
                 data-test="rule-input-filter"
                 type="search"
                 aria-label="rule filter"
-                placeholder="Search..."
+                placeholder="Filter by rule..."
                 onChange={(e, name) => setNameFilter(name)}
                 value={nameFilter}
               />
