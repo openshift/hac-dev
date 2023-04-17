@@ -106,7 +106,7 @@ const ReviewSection: React.FunctionComponent = () => {
           componentStub: {
             componentName: 'my-component',
             application,
-            source: { git: { url: sourceUrl } },
+            source: { git: { url: sourceUrl, revision, context } },
           },
         },
       });
@@ -128,6 +128,8 @@ const ReviewSection: React.FunctionComponent = () => {
     isContainerImage,
     setFieldValue,
     sourceUrl,
+    revision,
+    context,
   ]);
 
   if (!cachedComponentsLoaded.current) {

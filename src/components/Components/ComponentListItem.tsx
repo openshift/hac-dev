@@ -112,7 +112,11 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
                   </FlexItem>
                 </Flex>
                 <FlexItem>
-                  <GitRepoLink url={component.spec.source?.git?.url} />
+                  <GitRepoLink
+                    url={component.spec.source?.git?.url}
+                    revision={component.spec.source?.git?.revision}
+                    context={component.spec.source?.git?.context}
+                  />
                 </FlexItem>
                 <FlexItem>
                   {componentRouteWebURL && (

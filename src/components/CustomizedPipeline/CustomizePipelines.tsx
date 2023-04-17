@@ -99,7 +99,12 @@ const Row: React.FC<{
             <b>{component.metadata.name}</b>
           </div>
           <div>
-            Code repository: <GitRepoLink url={component.spec.source.git.url} />
+            Code repository:{' '}
+            <GitRepoLink
+              url={component.spec.source.git.url}
+              revision={component.spec.source.git.revision}
+              context={component.spec.source.git.context}
+            />
           </div>
         </Td>
 
