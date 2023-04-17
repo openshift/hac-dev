@@ -38,7 +38,11 @@ export const useAppStaticEnvironmentNodes = (
 
   const staticEnvironments = React.useMemo(
     () =>
-      allLoaded ? environments.filter((e) => getEnvironmentType(e) === EnvironmentType.static) : [],
+      allLoaded
+        ? environments.filter((e) =>
+            [EnvironmentType.default, EnvironmentType.static].includes(getEnvironmentType(e)),
+          )
+        : [],
     [allLoaded, environments],
   );
   const allErrors = [environmentsError, snapshotsError].filter((e) => !!e);

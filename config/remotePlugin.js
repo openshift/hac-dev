@@ -19,6 +19,16 @@ const navExtensions = [
       required: ['SIGNUP'],
     },
   },
+  {
+    type: 'core.navigation/href',
+    properties: {
+      href: '/stonesoup/environments',
+      name: 'Environments',
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
 ];
 
 const flagExtensions = [
@@ -73,14 +83,32 @@ const routeExtensions = [
       },
     },
   },
+
+  // Main nav routes
   // sets workspace context for the below route
+  // For `/workspaces` route redirect to applications page with workspace context added (default).
+  // For any other route append workspace context at the end.
+  // we need to do this to make sure navigation highlights selected nav item correctly
   {
     type: 'core.page/route',
     properties: {
       path: '/stonesoup/workspaces',
       exact: true,
       component: {
-        $codeRef: 'WorkspacePage',
+        $codeRef: 'WorkspacedPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/environments',
+      exact: true,
+      component: {
+        $codeRef: 'WorkspacedPage',
       },
     },
     flags: {
@@ -99,10 +127,25 @@ const routeExtensions = [
       },
     },
   },
+  // If user is not signed up, take user to overview page even for applications and environments nav item.
+  // Remove this once we have navigation filtering based on feature flags.
   {
     type: 'core.page/route',
     properties: {
       path: '/stonesoup/workspaces',
+      exact: true,
+      component: {
+        $codeRef: 'OverviewPage',
+      },
+    },
+    flags: {
+      disallowed: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/stonesoup/environments',
       exact: true,
       component: {
         $codeRef: 'OverviewPage',
@@ -337,39 +380,24 @@ const routeExtensions = [
     },
   },
 
-  // Workspace settings
+  // Environments page
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/workspaces/:workspaceName/workspace-settings',
+      path: '/stonesoup/environments/workspaces/:workspaceName',
       exact: true,
       component: {
-        $codeRef: 'WorkspaceSettings',
+        $codeRef: 'EnvironmentsListPage',
       },
     },
     flags: {
       required: ['SIGNUP'],
-      disallowed: ['MVP'],
     },
   },
   {
     type: 'core.page/route',
     properties: {
-      path: '/stonesoup/workspaces/:workspaceName/workspace-settings/:activeTab',
-      exact: true,
-      component: {
-        $codeRef: 'WorkspaceSettings',
-      },
-    },
-    flags: {
-      required: ['SIGNUP'],
-      disallowed: ['MVP'],
-    },
-  },
-  {
-    type: 'core.page/route',
-    properties: {
-      path: '/stonesoup/workspaces/:workspaceName/workspace-settings/environment/create',
+      path: '/stonesoup/environments/workspaces/:workspaceName/create',
       exact: true,
       component: {
         $codeRef: 'CreateEnvironment',
@@ -379,6 +407,8 @@ const routeExtensions = [
       required: ['SIGNUP'],
     },
   },
+
+  // 404 route
   {
     type: 'core.page/route',
     properties: {
@@ -410,10 +440,10 @@ module.exports = {
       ApplicationDetails: resolve(__dirname, '../src/pages/ApplicationDetailsPage'),
       Import: resolve(__dirname, '../src/pages/ImportPage'),
       ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
-      WorkspaceSettings: resolve(__dirname, '../src/pages/WorkspaceSettingsPage'),
+      EnvironmentsListPage: resolve(__dirname, '../src/pages/EnvironmentsListPage'),
       CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
       WorkspaceContext: resolve(__dirname, '../src/utils/workspace-context-utils'),
-      WorkspacePage: resolve(__dirname, '../src/pages/WorkspacePage'),
+      WorkspacedPage: resolve(__dirname, '../src/pages/WorkspacedPage'),
       OverviewPage: resolve(__dirname, '../src/pages/OverviewPage'),
       FlagUtils: resolve(__dirname, '../src/utils/flag-utils'),
       Redirect: resolve(__dirname, '../src/pages/RedirectPage'),

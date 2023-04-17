@@ -9,17 +9,15 @@ describe('utils#getEnvironmentType', () => {
     expect(getEnvironmentType({ spec: { tags: ['foo', 'static'] } } as EnvironmentKind)).toBe(
       EnvironmentType.static,
     );
-    expect(getEnvironmentType({ spec: { tags: ['foo', 'ephemeral'] } } as EnvironmentKind)).toBe(
-      EnvironmentType.ephemeral,
-    );
-    expect(getEnvironmentType({} as EnvironmentKind)).toBe(EnvironmentType.static);
+
+    expect(getEnvironmentType({} as EnvironmentKind)).toBe(EnvironmentType.default);
   });
 });
 
 describe('utils#getEnvironmentTypeLabel', () => {
   it('should convert type to label', () => {
-    expect(getEnvironmentTypeLabel(EnvironmentType.ephemeral)).toBe('Ephemeral');
-    expect(getEnvironmentTypeLabel(EnvironmentType.managed)).toBe('Managed');
+    expect(getEnvironmentTypeLabel(EnvironmentType.default)).toBe('Default');
+    expect(getEnvironmentTypeLabel(EnvironmentType.managed)).toBe('Self Managed');
     expect(getEnvironmentTypeLabel(EnvironmentType.static)).toBe('Static');
   });
 });
