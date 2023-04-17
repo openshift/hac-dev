@@ -24,3 +24,15 @@ export const useGitOpsDeploymentCR = (
 
   return [gitOpsDeployment, loaded, `${error}`];
 };
+
+export const useAllGitOpsDeploymentCRs = (
+  namespace: string,
+): [GitOpsDeploymentKind[], boolean, string] => {
+  const [gitOpsDeployments, loaded, error] = useK8sWatchResource<GitOpsDeploymentKind[]>({
+    groupVersionKind: GitOpsDeploymentGroupVersionKind,
+    namespace,
+    isList: true,
+  });
+
+  return [gitOpsDeployments, loaded, `${error}`];
+};

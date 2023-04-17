@@ -33,7 +33,7 @@ describe('BuildStatusColumn', () => {
       </BrowserRouter>,
     );
     await waitFor(() => screen.getByText('Build Succeeded'));
-    await waitFor(() => screen.getByText('View logs'));
+    await waitFor(() => screen.getByText('View build logs'));
   });
   it('should render failures', async () => {
     useK8sWatchResourceMock.mockReturnValue([[mockPipelineRuns[2]], true]);
@@ -43,7 +43,7 @@ describe('BuildStatusColumn', () => {
       </BrowserRouter>,
     );
     await waitFor(() => screen.getByText('Build Failed'));
-    await waitFor(() => screen.getByText('View logs'));
+    await waitFor(() => screen.getByText('View build logs'));
   });
 
   it('should not render merge status if the pipelineruns is still loading', async () => {
@@ -63,7 +63,7 @@ describe('BuildStatusColumn', () => {
         <BuildStatusColumn component={componentCRMocks[0]} />
       </BrowserRouter>,
     );
-    expect(screen.queryByText('View logs')).not.toBeInTheDocument();
+    expect(screen.queryByText('View build logs')).not.toBeInTheDocument();
   });
 
   it('should render View Build logs action item for components without PAC annotation', async () => {
@@ -73,6 +73,6 @@ describe('BuildStatusColumn', () => {
         <BuildStatusColumn component={componentCRMocks[0]} />
       </BrowserRouter>,
     );
-    await waitFor(() => screen.getByText('View logs'));
+    await waitFor(() => screen.getByText('View build logs'));
   });
 });

@@ -33,7 +33,7 @@ const BuildStatusColumn: React.FC<BuildStatusComponentProps> = ({ component }) =
             data-testid={`view-build-logs-${component.metadata.name}`}
             isInline
           >
-            View logs
+            View build logs
           </Button>
         </FlexItem>
       )}

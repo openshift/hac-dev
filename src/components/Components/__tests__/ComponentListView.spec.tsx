@@ -5,7 +5,7 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
 import { mockRoutes } from '../../../hooks/__data__/mock-data';
 import { useApplicationRoutes } from '../../../hooks/useApplicationRoutes';
-import { useGitOpsDeploymentCR } from '../../../hooks/useGitOpsDeploymentCR';
+import { useAllGitOpsDeploymentCRs } from '../../../hooks/useGitOpsDeploymentCR';
 import { PACState } from '../../../hooks/usePACState';
 import { ComponentGroupVersionKind, PipelineRunGroupVersionKind } from '../../../models';
 import { componentCRMocks } from '../__data__/mock-data';
@@ -26,7 +26,7 @@ jest.mock('../../../hooks/useApplicationRoutes', () => ({
 }));
 
 jest.mock('../../../hooks/useGitOpsDeploymentCR', () => ({
-  useGitOpsDeploymentCR: jest.fn(),
+  useAllGitOpsDeploymentCRs: jest.fn(),
 }));
 
 jest.mock('react-i18next', () => ({
@@ -80,7 +80,7 @@ jest.mock('../../../hooks/usePACState', () => {
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const applicationRoutesMock = useApplicationRoutes as jest.Mock;
-const gitOpsDeploymentMock = useGitOpsDeploymentCR as jest.Mock;
+const gitOpsDeploymentMock = useAllGitOpsDeploymentCRs as jest.Mock;
 
 const getMockedResources = (kind: WatchK8sResource) => {
   if (!kind) {
@@ -146,7 +146,7 @@ describe('ComponentListViewPage', () => {
 
   it('should render deployment strategy if gitOpsDeployment CR is loaded', () => {
     gitOpsDeploymentMock.mockReturnValue([
-      { spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } },
+      [{ spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } }],
       true,
     ]);
     render(<ComponentListView applicationName="test-app" />);
@@ -154,7 +154,7 @@ describe('ComponentListViewPage', () => {
   });
   it('should show a warning when showMergeStatus is set', () => {
     gitOpsDeploymentMock.mockReturnValue([
-      { spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } },
+      [{ spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } }],
       true,
     ]);
     render(<ComponentListView applicationName="test-app" />);
@@ -162,7 +162,7 @@ describe('ComponentListViewPage', () => {
   });
   it('should filter components by type', async () => {
     gitOpsDeploymentMock.mockReturnValue([
-      { spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } },
+      [{ spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } }],
       true,
     ]);
     const view = render(<ComponentListView applicationName="test-app" />);
@@ -205,7 +205,7 @@ describe('ComponentListViewPage', () => {
   });
   it('should clear filters from empty state', () => {
     gitOpsDeploymentMock.mockReturnValue([
-      { spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } },
+      [{ spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } }],
       true,
     ]);
     render(<ComponentListView applicationName="test-app" />);

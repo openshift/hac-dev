@@ -65,7 +65,7 @@ describe('ComponentListItem', () => {
       </BrowserRouter>,
     );
     await waitFor(() => screen.getByText('Build Succeeded'));
-    await waitFor(() => screen.getByText('View logs'));
+    await waitFor(() => screen.getByText('View build logs'));
   });
 
   it('should render View Build logs action item', async () => {
@@ -76,7 +76,7 @@ describe('ComponentListItem', () => {
       </BrowserRouter>,
     );
     await waitFor(() => screen.getByText('Build Failed'));
-    await waitFor(() => screen.getByText('View logs'));
+    await waitFor(() => screen.getByText('View build logs'));
   });
 
   it('should render Delete action item', async () => {
