@@ -11,7 +11,7 @@ import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { routerRenderer } from '../../../utils/test-utils';
 import { mockPipelineRuns } from '../../ApplicationDetails/__data__/mock-pipeline-run';
 import IntegrationTestDetailsView from '../IntegrationTestDetailsView';
-import { MockIntegrationTests } from '../IntegrationTestsListView/__data__/mock-integration-tests';
+import { MockIntegrationTestsWithGit } from '../IntegrationTestsListView/__data__/mock-integration-tests';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
@@ -36,7 +36,7 @@ const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
-const mockIntegrationTests: IntegrationTestScenarioKind[] = [...MockIntegrationTests];
+const mockIntegrationTests: IntegrationTestScenarioKind[] = [...MockIntegrationTestsWithGit];
 
 const getMockedResources = (params: WatchK8sResource) => {
   if (params.groupVersionKind === IntegrationTestScenarioGroupVersionKind) {

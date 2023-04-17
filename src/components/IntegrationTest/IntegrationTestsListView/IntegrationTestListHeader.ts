@@ -13,7 +13,7 @@ export const IntegrationTestListHeader = () => {
       props: { className: integrationListTableColumnClasses.name },
     },
     {
-      title: 'Container image',
+      title: 'Github URL',
       props: { className: integrationListTableColumnClasses.containerImage },
     },
     {
@@ -21,7 +21,7 @@ export const IntegrationTestListHeader = () => {
       props: { className: integrationListTableColumnClasses.mandatory },
     },
     {
-      title: 'Pipelines',
+      title: 'Revision',
       props: { className: integrationListTableColumnClasses.pipeline },
     },
     {

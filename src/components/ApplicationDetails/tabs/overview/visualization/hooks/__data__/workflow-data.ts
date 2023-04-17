@@ -747,7 +747,6 @@ export const sampleIntegrationTestScenarios: IntegrationTestScenarioKind[] = [
     },
     spec: {
       application: 'frontend-app',
-      bundle: 'quay.io/kpavic/test-bundle:pipeline',
       contexts: [
         {
           description: 'Runs only during application testing',
@@ -765,7 +764,7 @@ export const sampleIntegrationTestScenarios: IntegrationTestScenarioKind[] = [
           value: ['test'],
         },
       ],
-      pipeline: 'demo-pipeline',
+      resolverRef: null,
     },
   },
   {
@@ -777,7 +776,6 @@ export const sampleIntegrationTestScenarios: IntegrationTestScenarioKind[] = [
     },
     spec: {
       application: 'frontend-app',
-      bundle: 'quay.io/kpavic/test-bundle:pipeline',
       contexts: [
         {
           description: 'Runs only during application testing',
@@ -795,7 +793,7 @@ export const sampleIntegrationTestScenarios: IntegrationTestScenarioKind[] = [
           value: ['test'],
         },
       ],
-      pipeline: 'demo-pipeline',
+      resolverRef: null,
     },
   },
 ];

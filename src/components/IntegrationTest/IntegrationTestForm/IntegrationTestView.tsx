@@ -6,7 +6,11 @@ import { useTrackEvent, TrackEvents } from '../../../utils/analytics';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import IntegrationTestForm from './IntegrationTestForm';
 import { IntegrationTestLabels } from './types';
-import { editIntegrationTest, createIntegrationTest } from './utils/create-utils';
+import {
+  editIntegrationTest,
+  createIntegrationTest,
+  ResolverRefParams,
+} from './utils/create-utils';
 import { integrationTestValidationSchema } from './utils/validation-utils';
 
 type IntegrationTestViewProps = {
@@ -22,11 +26,24 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
   const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
 
+  const url = integrationTest?.spec.resolverRef?.params?.find(
+    (param) => param.name === ResolverRefParams.URL,
+  );
+
+  const revision = integrationTest?.spec.resolverRef?.params?.find(
+    (param) => param.name === ResolverRefParams.REVISION,
+  );
+
+  const path = integrationTest?.spec.resolverRef?.params?.find(
+    (param) => param.name === ResolverRefParams.PATH,
+  );
+
   const initialValues = {
     integrationTest: {
       name: integrationTest?.metadata.name ?? '',
-      bundle: integrationTest?.spec.bundle ?? '',
-      pipeline: integrationTest?.spec.pipeline ?? '',
+      url: url?.value ?? '',
+      revision: revision?.value ?? '',
+      path: path?.value ?? '',
       optional:
         integrationTest?.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true' ?? false,
     },

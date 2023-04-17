@@ -5,13 +5,22 @@ export type IntegrationTestScenarioKind = K8sResourceCommon & {
   spec: IntegrationTestScenarioSpec;
 };
 
+export type ResolverParam = {
+  name: string;
+  value: string;
+};
+
 export type IntegrationTestScenarioSpec = {
   application: string;
-  bundle: string;
-  pipeline: string;
   contexts?: Context[];
   environment?: Environment;
   params?: Param[];
+  resolverRef?: {
+    resolver: string;
+    params: ResolverParam[];
+  };
+  pipeline?: string;
+  bundle?: string;
 };
 
 export type Context = {

@@ -1,15 +1,20 @@
 import * as React from 'react';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useApplications } from '../../../../hooks/useApplications';
 import { namespaceRenderer } from '../../../../utils/test-utils';
 import { WorkspaceContext } from '../../../../utils/workspace-context-utils';
 import { mockApplication } from '../../../ApplicationDetails/__data__/mock-data';
-import { MockIntegrationTests } from '../../IntegrationTestsListView/__data__/mock-integration-tests';
+import { useAccessCheck } from '../../../ImportForm/utils/auth-utils';
+import { MockIntegrationTestsWithGit } from '../../IntegrationTestsListView/__data__/mock-integration-tests';
 import IntegrationTestView from '../IntegrationTestView';
 import { createIntegrationTest } from '../utils/create-utils';
 
 jest.mock('../../../../utils/analytics');
+jest.mock('@openshift/dynamic-plugin-sdk-utils');
+
+const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 const navigateMock = jest.fn();
 
@@ -21,13 +26,21 @@ jest.mock('react-router-dom', () => ({
   })),
 }));
 
+jest.mock('../../../ImportForm/utils/auth-utils', () => ({
+  useAccessCheck: jest.fn(),
+}));
+
 jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
-jest.mock('../utils/create-utils.ts', () => ({
-  createIntegrationTest: jest.fn(),
-}));
+jest.mock('../utils/create-utils.ts', () => {
+  const actual = jest.requireActual('../utils/create-utils.ts');
+  return {
+    ...actual,
+    createIntegrationTest: jest.fn(),
+  };
+});
 
 jest.mock('../../../../hooks/useApplications', () => ({
   useApplications: jest.fn(),
@@ -46,6 +59,7 @@ jest.mock('../../../../utils/rbac', () => ({
 }));
 
 const createIntegrationTestMock = createIntegrationTest as jest.Mock;
+const useAccessCheckMock = useAccessCheck as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
@@ -85,15 +99,20 @@ const useApplicationsMock = useApplications as jest.Mock;
 describe('IntegrationTestView', () => {
   beforeEach(() => {
     useApplicationsMock.mockReturnValue([[mockApplication], true]);
+    watchResourceMock.mockReturnValueOnce([[], true]);
+    useAccessCheckMock.mockReturnValue([{}, false]);
   });
   const fillIntegrationTestForm = (wrapper: RenderResult) => {
     fireEvent.input(wrapper.getByLabelText(/Integration test name/), {
       target: { value: 'new-test-name' },
     });
-    fireEvent.input(wrapper.getByLabelText(/Image bundle/), {
+    fireEvent.input(wrapper.getByLabelText(/GitHub URL/), {
       target: { value: 'quay.io/kpavic/test-bundle:pipeline' },
     });
-    fireEvent.input(wrapper.getByLabelText(/Pipeline to run/), {
+    fireEvent.input(wrapper.getByLabelText(/Revision/), {
+      target: { value: 'new-test-pipeline' },
+    });
+    fireEvent.input(wrapper.getByLabelText(/Path in repository/), {
       target: { value: 'new-test-pipeline' },
     });
   };
@@ -106,8 +125,9 @@ describe('IntegrationTestView', () => {
     await expect(wrapper).toBeTruthy();
 
     wrapper.getByLabelText(/Integration test name/);
-    wrapper.getByLabelText(/Image bundle/);
-    wrapper.getByLabelText(/Pipeline to run/);
+    wrapper.getByLabelText(/GitHub URL/);
+    wrapper.getByLabelText(/Revision/);
+    wrapper.getByLabelText(/Path in repository/);
     wrapper.getByRole('button', { name: 'Add integration test' });
   });
 
@@ -155,7 +175,7 @@ describe('IntegrationTestView', () => {
   });
 
   it('should init values from provided integration test', async () => {
-    const integrationTest = MockIntegrationTests[0];
+    const integrationTest = MockIntegrationTestsWithGit[1];
     const wrapper = render(
       <IntegrationTestViewWrapper>
         <IntegrationTestView applicationName="test-app" integrationTest={integrationTest} />,
@@ -163,18 +183,18 @@ describe('IntegrationTestView', () => {
     );
 
     expect((await wrapper.getByLabelText(/Integration test name/)).getAttribute('value')).toBe(
-      integrationTest.metadata.name,
+      'test-app-test-2',
     );
-    expect((await wrapper.getByLabelText(/Image bundle/)).getAttribute('value')).toBe(
-      integrationTest.spec.bundle,
-    );
-    expect((await wrapper.getByLabelText(/Pipeline to run/)).getAttribute('value')).toBe(
-      integrationTest.spec.pipeline,
+    expect((await wrapper.getByLabelText(/GitHub URL/)).getAttribute('value')).toEqual('test-url2');
+    expect((await wrapper.getByLabelText(/Revision/)).getAttribute('value')).toEqual('main2');
+
+    expect((await wrapper.getByLabelText(/Path in repository/)).getAttribute('value')).toEqual(
+      'test-path2',
     );
   });
 
   it('should be in edit mode', async () => {
-    const integrationTest = MockIntegrationTests[0];
+    const integrationTest = MockIntegrationTestsWithGit[1];
     const wrapper = render(
       <IntegrationTestViewWrapper>
         <IntegrationTestView applicationName="test-app" integrationTest={integrationTest} />

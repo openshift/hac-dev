@@ -17,7 +17,7 @@ import GitOptions from './GitOptions';
 
 import './SourceSection.scss';
 
-enum AccessHelpText {
+export enum AccessHelpText {
   default = '',
   checking = 'Checking access...',
   validated = 'Access validated',
