@@ -8,6 +8,7 @@ import { ApplicationModel } from '../models';
 import { AccessReviewResources } from '../types';
 
 const ApplicationsPage = () => {
+  console.log('I am from applications page!');
   useQuickstartCloseOnUnmount();
   const accessReviewResources: AccessReviewResources = [
     { model: ApplicationModel, verb: 'list' },
