@@ -15,19 +15,18 @@ import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import MetadataList from '../../PipelineRunDetailsView/MetadataList';
 import { IntegrationTestLabels } from '../IntegrationTestForm/types';
+import { getLabelForParam, getURLForParam } from '../IntegrationTestForm/utils/create-utils';
 
 interface IntegrationTestOverviewTabProps {
   integrationTest: IntegrationTestScenarioKind;
 }
+
 const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
   integrationTest,
 }) => {
   const { workspace } = useWorkspaceInfo();
   const optionalReleaseLabel =
     integrationTest.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true';
-  const quayImageLink = /(http(s?)):\/\//i.test(integrationTest.spec.bundle)
-    ? integrationTest.spec.bundle
-    : `https://${integrationTest.spec.bundle}`;
 
   return (
     <>
@@ -85,18 +84,34 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
                 default: '1Col',
               }}
             >
-              <DescriptionListGroup>
-                <DescriptionListTerm>Image bundle</DescriptionListTerm>
-                <DescriptionListDescription>
-                  <ExternalLink href={quayImageLink}>{integrationTest.spec.bundle}</ExternalLink>
-                </DescriptionListDescription>
-              </DescriptionListGroup>
-              <DescriptionListGroup>
-                <DescriptionListTerm>Pipeline to run</DescriptionListTerm>
-                <DescriptionListDescription>
-                  {integrationTest.spec.pipeline}
-                </DescriptionListDescription>
-              </DescriptionListGroup>
+              {integrationTest.spec.resolverRef && (
+                <>
+                  <DescriptionListGroup>
+                    <DescriptionListTerm>Type</DescriptionListTerm>
+                    <DescriptionListDescription>
+                      {integrationTest.spec.resolverRef.resolver}
+                    </DescriptionListDescription>
+                  </DescriptionListGroup>
+                  {integrationTest.spec.resolverRef.params.map((param) => {
+                    const paramLink = getURLForParam(
+                      integrationTest.spec.resolverRef.params,
+                      param.name,
+                    );
+                    return (
+                      <DescriptionListGroup key={param.name}>
+                        <DescriptionListTerm>{getLabelForParam(param.name)}</DescriptionListTerm>
+                        <DescriptionListDescription>
+                          {paramLink ? (
+                            <ExternalLink href={paramLink}>{param.value}</ExternalLink>
+                          ) : (
+                            param.value
+                          )}
+                        </DescriptionListDescription>
+                      </DescriptionListGroup>
+                    );
+                  })}
+                </>
+              )}
               <DescriptionListGroup>
                 <DescriptionListTerm>Optional for release</DescriptionListTerm>
                 <DescriptionListDescription>

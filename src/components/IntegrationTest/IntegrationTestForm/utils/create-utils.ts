@@ -4,15 +4,21 @@ import {
   IntegrationTestScenarioGroupVersionKind,
   IntegrationTestScenarioModel,
 } from '../../../../models';
-import { IntegrationTestScenarioKind } from '../../../../types/coreBuildService';
+import { IntegrationTestScenarioKind, ResolverParam } from '../../../../types/coreBuildService';
 import { FormValues, IntegrationTestFormValues, IntegrationTestLabels } from '../types';
+
+export enum ResolverRefParams {
+  URL = 'url',
+  PATH = 'pathInRepo',
+  REVISION = 'revision',
+}
 
 export const editIntegrationTest = (
   integrationTest: IntegrationTestScenarioKind,
   integrationTestValues: IntegrationTestFormValues,
   dryRun?: boolean,
 ): Promise<IntegrationTestScenarioKind> => {
-  const { bundle, pipeline, optional } = integrationTestValues;
+  const { url, revision, path, optional } = integrationTestValues;
   const integrationTestResource: IntegrationTestScenarioKind = {
     ...integrationTest,
     metadata: {
@@ -21,8 +27,14 @@ export const editIntegrationTest = (
     },
     spec: {
       ...integrationTest.spec,
-      bundle,
-      pipeline,
+      resolverRef: {
+        resolver: 'git',
+        params: [
+          { name: ResolverRefParams.URL, value: url },
+          { name: ResolverRefParams.REVISION, value: revision },
+          { name: ResolverRefParams.PATH, value: path },
+        ],
+      },
       contexts: [
         {
           description: 'Application testing',
@@ -59,7 +71,7 @@ export const createIntegrationTest = (
   namespace: string,
   dryRun?: boolean,
 ): Promise<IntegrationTestScenarioKind> => {
-  const { name, bundle, pipeline, optional } = integrationTestValues;
+  const { name, url, revision, path, optional } = integrationTestValues;
   const integrationTestResource: IntegrationTestScenarioKind = {
     apiVersion: `${IntegrationTestScenarioGroupVersionKind.group}/${IntegrationTestScenarioGroupVersionKind.version}`,
     kind: IntegrationTestScenarioGroupVersionKind.kind,
@@ -70,8 +82,14 @@ export const createIntegrationTest = (
     },
     spec: {
       application,
-      bundle,
-      pipeline,
+      resolverRef: {
+        resolver: 'git',
+        params: [
+          { name: ResolverRefParams.URL, value: url },
+          { name: ResolverRefParams.REVISION, value: revision },
+          { name: ResolverRefParams.PATH, value: path },
+        ],
+      },
       contexts: [
         {
           description: 'Application testing',
@@ -105,4 +123,41 @@ export const createAppIntegrationTest = async (
     }
     throw e;
   }
+};
+
+const getGitHubLink = (url: string): string => {
+  const httpURL = url ? (/(http(s?)):\/\//i.test(url) ? url : `https://${url}`) : null;
+  const gitIndex = httpURL?.indexOf('.git');
+  return gitIndex > 1 ? httpURL.substring(0, gitIndex) : httpURL;
+};
+
+export const getURLForParam = (params: ResolverParam[], paramName: string): string => {
+  const url = params.find((param) => param.name === ResolverRefParams.URL);
+
+  const resolverParam =
+    paramName === ResolverRefParams.URL ? url : params.find((param) => param.name === paramName);
+
+  const checkedURL = getGitHubLink(url.value);
+
+  if (paramName === ResolverRefParams.URL) {
+    return checkedURL;
+  }
+  if (paramName === ResolverRefParams.PATH) {
+    const branch = params.find((param) => param.name === ResolverRefParams.REVISION);
+    return `${checkedURL}/tree/${branch.value}/${resolverParam.value}`;
+  }
+  if (paramName === ResolverRefParams.REVISION) {
+    return `${checkedURL}/tree/${resolverParam.value}`;
+  }
+  return null;
+};
+
+export const getLabelForParam = (paramName: string): string => {
+  if (paramName === ResolverRefParams.URL) {
+    return 'GitHub URL';
+  }
+  if (paramName === ResolverRefParams.PATH) {
+    return 'Path in repository';
+  }
+  return `${paramName.charAt(0).toUpperCase()}${paramName.slice(1)}`;
 };
