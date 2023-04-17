@@ -48,7 +48,8 @@ bonfire deploy \
         --clowd-env ${ENV_NAME} \
         --set-template-ref ${COMPONENT}=${GIT_COMMIT} \
         --set-image-tag ${IMAGE}=${IMAGE_TAG} \
-        --namespace ${NAMESPACE}
+        --namespace ${NAMESPACE} \
+        --timeout 900
 
 # Call the keycloak API and add a user
 B64_USER=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.username'| tr -d '"')
