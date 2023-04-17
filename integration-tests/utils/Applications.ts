@@ -12,12 +12,10 @@ import {
   applicationsPagePO,
 } from '../support/pageObjects/pages-po';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
-import { AddIntegrationTestPage } from '../support/pages/AddIntegrationTestPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
 import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
 import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
 import { OverviewTabPage } from '../support/pages/tabs/OverviewTabPage';
-import { PipelinerunsTabPage } from '../support/pages/tabs/PipelinerunsTabPage';
 import { Common } from './Common';
 
 export class Applications {
@@ -87,7 +85,9 @@ export class Applications {
     });
   }
   static verifyAppstatusIsSucceeded() {
-    cy.contains(applicationsPagePO.appStatus, 'Succeeded', { timeout: 100000 }).should('be.visible')
+    cy.contains(applicationsPagePO.appStatus, 'Succeeded', { timeout: 100000 }).should(
+      'be.visible',
+    );
   }
 
   static getComponentListItem(application: string) {
@@ -174,24 +174,4 @@ function reviewComponentsStep(
   }
 
   componentPage.createApplication(useCustomBuildPipeline);
-}
-
-export function addIntegrationTestStep(displayName: string, optionalForRelease: boolean = false) {
-  const addIntegrationTestPage = new AddIntegrationTestPage();
-  const containerImage = 'quay.io/kpavic/test-bundle:pipeline';
-  const pipelineName = 'demo-pipeline';
-
-  addIntegrationTestPage.enterDisplayName(displayName);
-  addIntegrationTestPage.enterContainerImage(containerImage);
-  addIntegrationTestPage.enterPipelineName(pipelineName);
-
-  if (optionalForRelease) {
-    addIntegrationTestPage.markOptionalForRelease();
-  }
-
-  cy.get('body').then((body) => {
-    body.find('button[type="submit"]').length > 0
-      ? addIntegrationTestPage.clickNext()
-      : addIntegrationTestPage.clickAdd();
-  });
 }

@@ -11,7 +11,9 @@ export class UIhelper {
 
   static inputValueInTextBoxByLabelName(label: string, value: string) {
     return cy
-      .xpath(`//div[@class="pf-c-form__group" and descendant::*[text()='${label}']]//input`)
+      .xpath(
+        `//div[contains(@class,"pf-c-form__group") and descendant::*[text()='${label}']]//input`,
+      )
       .clear()
       .type(value);
   }
