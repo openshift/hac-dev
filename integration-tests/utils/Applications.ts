@@ -20,15 +20,26 @@ import { Common } from './Common';
 
 export class Applications {
   static deleteApplication(applicationName: string) {
-    Common.navigateTo(NavItem.applications);
-    this.openKebabMenu(applicationName);
-    cy.get(actions.deleteItem).click();
-    cy.get(actions.deleteModalInput).clear().type(applicationName);
-    cy.get(actions.deleteModalButton).click();
-    cy.get(`[data-id="${applicationName}"]`).should('not.exist');
+    cy.getCookie('cs_jwt')
+      .should('exist')
+      .then((cookie) => {
+        const token = cookie.value;
+        const namespace = `${Cypress.env('USERNAME').toLowerCase()}-tenant`;
+        const request = {
+          method: 'DELETE',
+          url: `${Common.getOrigin()}/api/k8s/apis/appstudio.redhat.com/v1alpha1/namespaces/${namespace}/applications/${applicationName}`,
+          headers: {
+            authorization: `Bearer ${token}`,
+            accept: 'application/json',
+          },
+          failOnStatusCode: false,
+        };
+
+        cy.request(request);
+      });
   }
 
-  private static openKebabMenu(applicationName: string) {
+  static openKebabMenu(applicationName: string) {
     cy.get(`[data-id="${applicationName}"]`).find(actions.kebabButton).click();
   }
 

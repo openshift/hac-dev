@@ -24,8 +24,6 @@ describe('Create Component from Public Git Source', { tags: ['@PR-check', '@publ
   });
 
   after(() => {
-    //Open components page
-    Common.openApplicationURL(applicationName);
     Applications.deleteApplication(applicationName);
   });
 
