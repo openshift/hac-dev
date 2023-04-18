@@ -1,15 +1,32 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { configure, render, screen } from '@testing-library/react';
+import { act, configure, fireEvent, render, screen } from '@testing-library/react';
 import { SCAN_TASK } from '../../../hooks/useClairScanResults';
 import { CustomError } from '../../../shared/utils/error/custom-error';
+import { routerRenderer } from '../../../utils/test-utils';
+import SidePanelHost from '../../SidePanel/SidePanelHost';
 import { testPipelineRun } from '../../topology/__data__/pipeline-test-data';
 import { mockPipelineRun, mockTaskRuns } from '../__data__/mockVisualizationData';
 import PipelineRunVisualization from '../PipelineRunVisualization';
+import { scrollNodeIntoView } from '../visualization/utils/pipelinerun-graph-utils';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
   getActiveWorkspace: jest.fn(() => 'test-ws'),
+}));
+
+jest.mock('../visualization/utils/pipelinerun-graph-utils', () => {
+  const actual = jest.requireActual('../visualization/utils/pipelinerun-graph-utils');
+  return {
+    ...actual,
+    scrollNodeIntoView: jest.fn(),
+  };
+});
+
+const scrollNodeIntoViewMock = scrollNodeIntoView as jest.Mock;
+
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 configure({ testIdAttribute: 'data-test' });
@@ -31,6 +48,7 @@ beforeEach(() => {
     x: 100,
     y: 100,
   });
+  scrollNodeIntoViewMock.mockReturnValue(null);
 });
 afterEach(() => {
   (window.SVGElement as any).prototype.getBBox = undefined;
@@ -113,5 +131,26 @@ describe('PipelineRunVisualization', () => {
       '.pipelinerun-node__test-status-badge--warning > text',
     );
     expect(warningBadges[0].textContent).toBe('4');
+  });
+
+  it('should show the side panel on node selection', async () => {
+    routerRenderer(
+      <SidePanelHost>
+        <PipelineRunVisualization
+          pipelineRun={mockPipelineRun}
+          taskRuns={mockTaskRuns}
+          error={null}
+        />
+      </SidePanelHost>,
+    );
+    const clairScanNode = screen.getByTestId(SCAN_TASK);
+    const clickable = clairScanNode.querySelector('.pf-topology-pipelines__pill');
+    expect(clickable).toBeVisible();
+    await act(async () => {
+      fireEvent.click(clickable);
+    });
+    const taskSidePanelHeader = screen.getByTestId('task-run-panel-head-id');
+    expect(taskSidePanelHeader).toBeVisible();
+    expect(taskSidePanelHeader.querySelector('a').textContent).toContain('clair-scan');
   });
 });

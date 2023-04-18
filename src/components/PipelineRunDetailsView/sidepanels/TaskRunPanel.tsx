@@ -32,7 +32,7 @@ const TaskRunPanel: React.FC<Props> = ({ taskNode, onClose }) => {
   return (
     <>
       <div className="task-run-panel__head">
-        <DrawerHead>
+        <DrawerHead data-id="task-run-panel-head-id">
           <span>
             {applicationName ? (
               <Link

@@ -13,11 +13,7 @@ import {
   resourceToPipelineNode,
   worstWorkflowStatus,
 } from '../utils/node-utils';
-import {
-  getLastEnvironments,
-  getLatestResource,
-  updateParallelNodeWidths,
-} from '../utils/visualization-utils';
+import { getLatestResource, updateParallelNodeWidths } from '../utils/visualization-utils';
 
 export const useAppStaticEnvironmentNodes = (
   namespace: string,
@@ -27,7 +23,7 @@ export const useAppStaticEnvironmentNodes = (
 ): [
   nodes: WorkflowNodeModel<WorkflowNodeModelData>[],
   group: WorkflowNodeModel<WorkflowNodeModelData>,
-  tasks: string[],
+  lastEnvs: string[],
   loaded: boolean,
   errors: unknown[],
 ] => {
@@ -117,10 +113,16 @@ export const useAppStaticEnvironmentNodes = (
     ],
   );
 
-  const lastStaticEnv = React.useMemo(
-    () => getLastEnvironments(staticEnvironments),
-    [staticEnvironments],
+  const lastStaticEnvs = React.useMemo(
+    () =>
+      staticEnvironmentNodes.reduce((acc, env) => {
+        if (!staticEnvironmentNodes.find((node) => node.runAfterTasks?.includes(env.id))) {
+          acc.push(env.id);
+        }
+        return acc;
+      }, []),
+    [staticEnvironmentNodes],
   );
 
-  return [staticEnvironmentNodes, staticEnvironmentGroup, lastStaticEnv, allLoaded, allErrors];
+  return [staticEnvironmentNodes, staticEnvironmentGroup, lastStaticEnvs, allLoaded, allErrors];
 };

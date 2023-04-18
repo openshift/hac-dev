@@ -75,6 +75,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
   return (
     <SidePanelHost>
       <DetailsPage
+        data-testid="pipelinerun-details-test-id"
         headTitle={pipelineRunName}
         breadcrumbs={[
           ...applicationBreadcrumbs,
@@ -147,11 +148,6 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
               <PipelineRunDetailsTab pipelineRun={pipelineRun} taskRuns={taskRuns} error={error} />
             ),
           },
-          // {
-          //   key: 'yaml',
-          //   label: 'YAML',
-          //   component: <PipelineRunYamlTab pipelineRun={pipelineRun} />,
-          // },
           {
             key: 'taskruns',
             label: 'Task runs',
@@ -173,11 +169,6 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
                 },
               ]
             : []),
-          // {
-          //   key: 'events',
-          //   label: 'Events',
-          //   component: <PipelineRunEventsTab pipelineRun={pipelineRun} />,
-          // },
         ]}
       />
     </SidePanelHost>
