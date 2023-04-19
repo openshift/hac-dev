@@ -33,6 +33,8 @@ export const pipelinerunsTabPO = {
 
   clickLogsTab: '[data-test="details__tabItem logs"]',
   downloadAllTaskLogsButton: 'Download all task logs',
+  relatedPipelinePopup: 'div[class="pf-c-popover__content"]',
+  relatedPipelineCloseBtn: 'button[aria-label="Close"]',
 };
 
 export const integrationTestsTabPO = {

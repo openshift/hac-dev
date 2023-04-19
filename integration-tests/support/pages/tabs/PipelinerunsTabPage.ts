@@ -2,7 +2,7 @@ import { UIhelper } from '../../../utils/UIhelper';
 import { pipelinerunsTabPO } from '../../pageObjects/pages-po';
 
 type taskRunDetailsRow = {
-  name: string;
+  name: string | RegExp;
   task: string;
   status: string;
 };
@@ -11,6 +11,13 @@ type taskRunDetailsRow = {
 export class PipelinerunsTabPage {
   static clickOnRunningPipelinerun(pipelinerun: string) {
     UIhelper.clickRowCellInTable('Pipeline run List', 'Running', `${pipelinerun}-`);
+  }
+
+  static verifyRelatedPipelines(pipelineName: string) {
+    cy.contains(pipelinerunsTabPO.relatedPipelinePopup, 'Related pipelines').within(() => {
+      cy.contains(pipelineName).scrollIntoView().should('be.visible');
+      cy.get(pipelinerunsTabPO.relatedPipelineCloseBtn).click().should('not.exist');
+    });
   }
 }
 
@@ -21,7 +28,9 @@ export class DetailsTab {
   }
 
   static waitUntilStatusIsNotRunning() {
-    cy.get(pipelinerunsTabPO.statusPO, { timeout: 1000000 }).should('not.have.text', 'Running');
+    cy.get(pipelinerunsTabPO.statusPO, { timeout: 1000000 })
+      .should('not.have.text', 'Pending')
+      .and('not.have.text', 'Running');
   }
 
   static checkStatusSucceeded(taskNames: taskRunDetailsRow[]) {

@@ -51,5 +51,5 @@ export const breadcrumb = {
 export const UIhelperPO = {
   graphNode: 'g[data-kind="node"]',
   pipelineStatusSuccess: 'g[class="pf-topology-pipelines__pill-status pf-m-success"]',
-  pipelineNode: 'g[class="pf-topology__pipelines__task-node workload-node"]',
-}
+  pipelineNode: 'g[class^="pf-topology__pipelines__task-node"]',
+};
