@@ -2,15 +2,22 @@ import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 
 export type EnvironmentKind = K8sResourceCommon & {
   spec: {
-    displayName: string;
-    clusterCredentials?: {
-      apiServerURL: string;
-      credentials?: string;
+    configuration?: {
+      env: { name: string; value: string }[];
     };
-    deploymentStrategy?: string;
+    deploymentStrategy: string;
+    displayName: string;
     parentEnvironment?: string;
-    type?: string;
     tags?: string[];
+    type?: string;
+    unstableConfigurationFields?: {
+      kubernetesCredentials?: {
+        allowInsecureSkipTLSVerify: boolean;
+        apiURL: string;
+        clusterCredentialsSecret: string;
+        targetNamespace: string;
+      };
+    };
   };
   status?: {};
 };

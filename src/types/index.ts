@@ -14,3 +14,4 @@ export * from './service-provider-integration';
 export * from './task';
 export * from './task-run';
 export * from './rbac';
+export * from './secret';
