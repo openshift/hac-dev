@@ -141,7 +141,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
             <Nav onSelect={this.onNavSelect} theme="light">
               <NavList className="pipeline-run-logs__nav">
                 {taskRuns.map((task) => {
-                  const taskRun = obj.status.taskRuns[task];
+                  const taskRun = taskRunFromYaml?.[task];
                   return (
                     <NavItem
                       key={task}
