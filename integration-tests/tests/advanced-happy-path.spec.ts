@@ -53,6 +53,8 @@ describe('Advance Happy path', () => {
     ['pipelineToRunEdit', 'integration-pipeline-pass'],
   ]);
 
+  const integrationTestTaskNames = ['task-success', 'task-success-2', 'task-skipped'];
+
   before(() => {
     Common.createGitHubRepository(repoName);
     Common.importCodeToGitHubRepository(sourceCodeRepoLink, repoName);
@@ -195,7 +197,7 @@ describe('Advance Happy path', () => {
     });
   });
 
-  describe('Add a new commit and verify changes in the Route', () => {
+  describe('Add a new commit and verify Build Pipeline run', () => {
     it('Add a new commit with changes to a file', () => {
       latestCommitsTabPage.editFile(
         repoLink,
@@ -220,9 +222,75 @@ describe('Advance Happy path', () => {
           );
         });
     });
+  });
 
-    it('Verify that the component deployment reflects latest changes', () => {
+  describe('Verify Integration Test Pipeline Runs on Activity Tab', () => {
+    it('Verify Integration Test pipeline run Details', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
+      UIhelper.verifyRowInTable('Pipeline run List', `${applicationName}-`, [/^Test$/]);
+      UIhelper.clickRowCellInTable(
+        'Pipeline run List',
+        `${applicationName}-`,
+        `${applicationName}-`,
+      );
+      DetailsTab.waitUntilStatusIsNotRunning();
+      UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+      UIhelper.verifyLabelAndValue('Pipeline', integrationTestDetails.get('pipelineToRunEdit'));
+      UIhelper.verifyLabelAndValue('Related pipelines', '1 pipeline').click();
+      PipelinerunsTabPage.verifyRelatedPipelines(componentInfo.get('secondPipelineRunName'));
+    });
+
+    it('Verify Integration Test pipeline run graph', () => {
+      UIhelper.verifyGraphNodes(integrationTestTaskNames[0]);
+      UIhelper.verifyGraphNodes(integrationTestTaskNames[1]);
+      UIhelper.verifyGraphNodes(integrationTestTaskNames[2], false);
+    });
+
+    it('Verify Integration Test pipeline runs Task runs & Logs Tab', () => {
+      UIhelper.clickTab('Task runs');
+      TaskRunsTab.assertTaskNamesAndTaskRunStatus([
+        {
+          name: new RegExp(`${applicationName}-.*-${integrationTestTaskNames[0]}`),
+          task: 'test-output',
+          status: 'Succeeded',
+        },
+        {
+          name: new RegExp(`${applicationName}-.*-${integrationTestTaskNames[1]}`),
+          task: 'test-output',
+          status: 'Succeeded',
+        },
+      ]);
+      UIhelper.clickTab('Logs');
+      applicationDetailPage.verifyBuildLogTaskslist(integrationTestTaskNames);
+    });
+  });
+
+  describe('Verify Integration Test Details on Integration tests Tab', () => {
+    it('Verify Integration Tests Overview page', () => {
+      Applications.clickBreadcrumbLink(applicationName);
+      UIhelper.clickTab('Integration tests');
+      UIhelper.clickLink(integrationTestDetails.get('integrationTestName'));
+      UIhelper.verifyLabelAndValue('Name', integrationTestDetails.get('integrationTestName'));
+      UIhelper.verifyLabelAndValue('Image bundle', integrationTestDetails.get('imageBundleEdit'));
+      UIhelper.verifyLabelAndValue(
+        'Pipeline to run',
+        integrationTestDetails.get('pipelineToRunEdit'),
+      );
+      UIhelper.verifyLabelAndValue('Optional for release', 'Mandatory');
+    });
+
+    it('Verify Integration Tests Pipeline runs page', () => {
+      UIhelper.clickTab('Pipeline runs');
+      UIhelper.verifyRowInTable('Pipeline run List', `${applicationName}-`, [
+        /Succeeded/,
+        /^Test$/,
+      ]);
+    });
+  });
+
+  describe('Verify new commit updates in Components Tab', () => {
+    it('Verify that the component deployment reflects latest changes', () => {
+      Applications.clickBreadcrumbLink(applicationName);
       Applications.goToComponentsTab();
 
       applicationDetailPage.expandDetails(componentName);
@@ -281,11 +349,22 @@ describe('Advance Happy path', () => {
 
     it('verify the Commit Pipeline runs Tab', () => {
       UIhelper.clickTab('Pipeline runs');
+      UIhelper.verifyRowInTable('Pipelinerun List', `${applicationName}-`, ['Succeeded', 'Test']);
       UIhelper.verifyRowInTable('Pipelinerun List', componentInfo.get('secondPipelineRunName'), [
         'Succeeded',
         'Build',
       ]);
-      Applications.clickBreadcrumbLink('commits');
+    });
+  });
+
+  describe('Verify application Lifecycle nodes on Overview page', () => {
+    it('check Lifecycle Nodes', () => {
+      Applications.clickBreadcrumbLink(applicationName);
+      Common.waitForLoad();
+      UIhelper.verifyGraphNodes('Components', false);
+      UIhelper.verifyGraphNodes('Builds');
+      UIhelper.verifyGraphNodes('Tests');
+      UIhelper.verifyGraphNodes('Static environments');
     });
   });
 

@@ -112,6 +112,7 @@ export class Applications {
 
   static clickBreadcrumbLink(link: string) {
     cy.get(breadcrumb.breadcrumbLink).contains(link).click();
+    Common.waitForLoad();
   }
 
   static goToOverviewTab() {
