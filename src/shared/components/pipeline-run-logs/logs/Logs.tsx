@@ -35,27 +35,46 @@ const Logs: React.FC<LogsProps> = ({
 }) => {
   const { t } = useTranslation();
   const { name } = container;
-  const { kind, metadata = {} } = resource;
+  const { kind, metadata = {} } = resource || {};
   const { name: resName, namespace: resNamespace } = metadata;
   const scrollToRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
   const [error, setError] = React.useState<boolean>(false);
   const resourceStatusRef = React.useRef<string>(resourceStatus);
+  const blockContentRef = React.useRef<string>('');
+  const rafRef = React.useRef(null);
+  const autoScrollRef = React.useRef<boolean>(autoScroll);
+  autoScrollRef.current = autoScroll;
+
   const onCompleteRef = React.useRef<(name) => void>();
   onCompleteRef.current = onComplete;
 
   const appendMessage = React.useRef<(blockContent) => void>();
 
+  const safeScroll = React.useCallback(() => {
+    if (!rafRef.current) {
+      rafRef.current = requestAnimationFrame(() => {
+        if (contentRef.current) contentRef.current.textContent += blockContentRef.current;
+
+        if (autoScrollRef.current && scrollToRef.current && scrollToRef.current.scrollIntoView) {
+          scrollToRef.current.scrollIntoView({ behavior: 'instant' as ScrollBehavior }); // Todo: remove type casting when typescript fixes this issue - https://github.com/microsoft/TypeScript/issues/47441
+        }
+        blockContentRef.current = '';
+        rafRef.current = null;
+      });
+    }
+  }, []);
+
   appendMessage.current = React.useCallback(
     (blockContent: string) => {
       if (contentRef.current && blockContent) {
-        contentRef.current.innerText += blockContent;
+        blockContentRef.current += blockContent;
       }
       if (scrollToRef.current && blockContent && render && autoScroll) {
-        scrollToRef.current.scrollIntoView({ behavior: 'smooth' });
+        safeScroll();
       }
     },
-    [autoScroll, render],
+    [autoScroll, render, safeScroll],
   );
 
   if (resourceStatusRef.current !== resourceStatus) {
@@ -114,16 +133,17 @@ const Logs: React.FC<LogsProps> = ({
 
   React.useEffect(() => {
     if (scrollToRef.current && render && autoScroll) {
-      scrollToRef.current.scrollIntoView({ behavior: 'smooth' });
+      safeScroll();
     }
-  }, [autoScroll, render]);
+  }, [autoScroll, render, safeScroll]);
 
   return (
-    <div className="logs" style={{ display: render ? '' : 'none' }}>
+    <div className="logs" data-testid="logs-container" style={{ display: render ? '' : 'none' }}>
       <p className="logs__name">{name}</p>
       {error ||
         (!resource && errorMessage && (
           <Alert
+            data-testid="error-message"
             variant="danger"
             isInline
             title={
@@ -134,7 +154,7 @@ const Logs: React.FC<LogsProps> = ({
           />
         ))}
       <div>
-        <div className="logs__content" ref={contentRef} />
+        <div className="logs__content" data-testid="logs-content" ref={contentRef} />
         <div ref={scrollToRef} />
       </div>
     </div>
