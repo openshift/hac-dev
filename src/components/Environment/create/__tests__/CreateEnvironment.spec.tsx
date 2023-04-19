@@ -138,6 +138,7 @@ describe('CreateEnvironment', () => {
             displayName: 'Env 1',
             tags: ['managed'],
             unstableConfigurationFields: {
+              clusterType: 'OpenShift',
               kubernetesCredentials: {
                 allowInsecureSkipTLSVerify: true,
                 apiURL: 'https://api.example.com:6443',

@@ -12,6 +12,7 @@ import { isEmpty } from 'lodash-es';
 import { DropdownField, FormFooter, InputField } from '../../../shared';
 import PageLayout from '../../PageLayout/PageLayout';
 import {
+  clusterTypeItems,
   EnvironmentDeploymentStrategy,
   EnvironmentType,
   environmentTypeItems,
@@ -35,11 +36,6 @@ const deploymentStrategyItems = Object.entries(EnvironmentDeploymentStrategy).ma
   key,
   value: key,
 }));
-
-const clusterTypeItems = [
-  { key: 'openshift', value: 'OpenShift' },
-  { key: 'nonOpenshift', value: 'Non-OpenShift' },
-];
 
 const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
   dirty,

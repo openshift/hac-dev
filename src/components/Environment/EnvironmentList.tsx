@@ -24,6 +24,7 @@ import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import EnvironmentCard from './EnvironmentCard';
+import EnvironmentsInfoAlert from './EnvironmentsInfoAlert';
 
 import './EnvironmentList.scss';
 
@@ -105,6 +106,7 @@ const EnvironmentList: React.FC<EnvironmentListProps> = ({
 
   return (
     <>
+      <EnvironmentsInfoAlert />
       <Toolbar
         collapseListedFiltersBreakpoint="xl"
         clearAllFilters={onClearAllFilters}

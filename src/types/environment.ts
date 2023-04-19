@@ -11,6 +11,7 @@ export type EnvironmentKind = K8sResourceCommon & {
     tags?: string[];
     type?: string;
     unstableConfigurationFields?: {
+      clusterType?: string;
       kubernetesCredentials?: {
         allowInsecureSkipTLSVerify: boolean;
         apiURL: string;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import '@testing-library/jest-dom';
-import { getActiveWorkspace } from '@openshift/dynamic-plugin-sdk-utils';
+import { getActiveWorkspace, useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen } from '@testing-library/react';
 import { EnvironmentModel } from '../../../models';
 import { EnvironmentKind } from '../../../types';
@@ -20,11 +20,26 @@ jest.mock('../../../utils/rbac', () => ({
   useAccessReviewForModel: jest.fn(() => [true, true]),
 }));
 
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  useK8sWatchResource: jest.fn(() => [[], true]),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
+}));
+
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
+  return {
+    ...actual,
+    Link: (props) => <a href={props.to}>{props.children}</a>,
+  };
+});
+
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 useFeatureFlagMock.mockReturnValue([false, () => {}]);
 
 const getActiveWorkspaceMock = getActiveWorkspace as jest.Mock;
 getActiveWorkspaceMock.mockReturnValue('test-ws');
+
+const useK8sWatchMock = useK8sWatchResource as jest.Mock;
 
 const testEnv: EnvironmentKind = {
   apiVersion: `${EnvironmentModel.apiGroup}/${EnvironmentModel.apiVersion}`,
@@ -74,5 +89,19 @@ describe('', () => {
     render(<EnvironmentCard environment={env} />);
     expect(screen.getByText('Manual')).toBeVisible();
     expect(screen.getByText('Healthy')).toBeVisible();
+  });
+
+  it('should render Application count', () => {
+    const env = {
+      ...testEnv,
+      spec: {
+        ...testEnv.spec,
+        displayName: undefined,
+      },
+    };
+    useK8sWatchMock.mockReturnValue([[{ metadata: { name: 'test-app' } }], true]);
+    render(<EnvironmentCard environment={env} />);
+    expect(screen.getByText('Applications Deployed')).toBeVisible();
+    expect(screen.getByText('1 application')).toBeVisible();
   });
 });

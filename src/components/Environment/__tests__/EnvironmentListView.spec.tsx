@@ -12,7 +12,7 @@ import EnvironmentListView from '../EnvironmentListView';
 mockLocation();
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
-  useK8sWatchResource: jest.fn(),
+  useK8sWatchResource: jest.fn(() => [[], true]),
   getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
