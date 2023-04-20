@@ -10,7 +10,7 @@ export class ComponentPage extends AbstractWizardPage {
   public componentName: string;
 
   editComponentName(newName: string) {
-    cy.get(ComponentsPagePO.dropdown, { timeout: 80000 }).eq(0).should('be.enabled') // Work around for issue : HAC-3585 to reduce test flakiness
+    cy.get(ComponentsPagePO.dropdown, { timeout: 80000 }).eq(0).should('be.enabled'); // Work around for issue : HAC-3585 to reduce test flakiness
     cy.get(ComponentsPagePO.editComponentNameIcon, { timeout: 80000 }).eq(0).click();
     cy.get(ComponentsPagePO.editNameInput).clear().type(newName);
     cy.get(ComponentsPagePO.checkIcon).click();
@@ -81,7 +81,7 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   selectRuntime(runtimeName: string) {
-    UIhelper.selectValueInDropdownbyLabelName('Runtime', runtimeName)
+    UIhelper.selectValueInDropdownbyLabelName('Runtime', runtimeName);
   }
 
   createApplication(isAdvancedFlowActive: boolean = false) {
@@ -103,23 +103,26 @@ export class ComponentPage extends AbstractWizardPage {
   selectCustomBuildPipeline() {
     cy.get(ComponentsPagePO.customBuildPipelineRadioBtn).click();
   }
-  
+
   checkStatusOnModal(labelText: string) {
-    cy.contains(ComponentsPagePO.label, labelText, { timeout: 150000 }).should('be.visible')
+    cy.contains(ComponentsPagePO.label, labelText, { timeout: 150000 }).should('be.visible');
   }
 
   verifyAndWaitForPRIsSent() {
-    this.checkStatusOnModal('Merge pull request')
-    cy.contains('a', 'Merge in GitHub').should('be.visible')
+    this.checkStatusOnModal('Merge pull request');
+    cy.contains('a', 'Merge in GitHub').should('be.visible');
   }
 
   verifyAndWaitForPRMerge() {
-    this.checkStatusOnModal('Custom')
-    cy.contains('a', 'Edit pipeline in GitHub').should('be.visible')
-
+    this.checkStatusOnModal('Custom');
+    cy.contains('a', 'Edit pipeline in GitHub').should('be.visible');
   }
 
   closeModal() {
     cy.get(ComponentsPagePO.customBuildPipelineModalCloseBtn).click();
+  }
+
+  verifyComponentGHReferenceAndLink(linkText: string, link: string) {
+    cy.contains('a', linkText).should('be.visible').and('have.attr', 'href', link);
   }
 }
