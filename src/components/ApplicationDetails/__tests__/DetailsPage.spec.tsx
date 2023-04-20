@@ -1,6 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { act, configure, fireEvent, screen, waitFor } from '@testing-library/react';
+import { FULL_APPLICATION_TITLE } from '../../..//consts/labels';
 import { routerRenderer } from '../../../utils/test-utils';
 import DetailsPage from '../DetailsPage';
 
@@ -182,6 +183,8 @@ describe('DetailsPage', () => {
       />,
     );
 
-    await waitFor(() => expect(document.title).toEqual('tab-title - Tab 1 | CI/CD'));
+    await waitFor(() =>
+      expect(document.title).toEqual(`tab-title - Tab 1 | ${FULL_APPLICATION_TITLE}`),
+    );
   });
 });

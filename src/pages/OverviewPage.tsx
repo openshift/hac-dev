@@ -10,7 +10,7 @@ const OverviewPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Overview Page | {FULL_APPLICATION_TITLE}</title>
+        <title>Overview | {FULL_APPLICATION_TITLE}</title>
       </Helmet>
       <IntroBanner />
       <InfoBanner />
