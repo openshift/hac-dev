@@ -1,8 +1,14 @@
-import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
+import * as React from 'react';
+import { k8sCreateResource, useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import YAML from 'js-yaml';
 import * as yup from 'yup';
-import { EnvironmentGroupVersionKind, EnvironmentModel, SecretModel } from '../../models';
-import { EnvironmentKind, SecretKind } from '../../types';
+import {
+  EnvironmentGroupVersionKind,
+  EnvironmentModel,
+  GitOpsDeploymentManagedEnvironmentGroupVersionKind,
+  SecretModel,
+} from '../../models';
+import { GitOpsDeploymentManagedEnvironmentKind, EnvironmentKind, SecretKind } from '../../types';
 import { ReleasePlanKind } from '../../types/coreBuildService';
 import { resourceNameRegex } from '../ImportForm/utils/validation-utils';
 import { CreateEnvironmentFormValues } from './create/CreateEnvironmentForm';
@@ -23,6 +29,11 @@ export enum EnvironmentType {
   managed = 'managed',
 }
 
+export enum ClusterType {
+  kubernetes = 'Kubernetes',
+  openshift = 'OpenShift',
+}
+
 export type KubeConfig = {
   clusters: {
     cluster: {
@@ -33,6 +44,11 @@ export type KubeConfig = {
 
 export const environmentTypeItems = [
   { key: EnvironmentType.managed, value: 'I would like to bring my own cluster' },
+];
+
+export const clusterTypeItems = [
+  { key: ClusterType.openshift, value: 'OpenShift' },
+  { key: ClusterType.kubernetes, value: 'Non-OpenShift' },
 ];
 
 export const environmentFormSchema = yup.object({
@@ -123,6 +139,7 @@ export const createEnvironment = async (
   const secret = await createCredentialsSecret(values.kubeconfig, namespace, dryRun);
   const kubeconfig = YAML.load(values.kubeconfig) as KubeConfig;
   const envType = environmentTypeItems.find((e) => e.value === values.environmentType);
+  const clusterType = clusterTypeItems.find((e) => e.value === values.clusterType);
   const resource: EnvironmentKind = {
     apiVersion: `${EnvironmentModel.apiGroup}/${EnvironmentModel.apiVersion}`,
     kind: EnvironmentModel.kind,
@@ -132,6 +149,7 @@ export const createEnvironment = async (
       deploymentStrategy: EnvironmentDeploymentStrategy[values.deploymentStrategy],
       tags: [envType.key],
       unstableConfigurationFields: {
+        clusterType: clusterType.key,
         kubernetesCredentials: {
           allowInsecureSkipTLSVerify: true,
           apiURL: kubeconfig.clusters[0].cluster.server,
@@ -146,4 +164,24 @@ export const createEnvironment = async (
     resource,
     ...(dryRun && { queryOptions: { queryParams: { dryRun: 'All' } } }),
   });
+};
+
+export const useEnvConnectionStatus = (environment: EnvironmentKind) => {
+  const [managedEnvs] = useK8sWatchResource<GitOpsDeploymentManagedEnvironmentKind[]>({
+    groupVersionKind: GitOpsDeploymentManagedEnvironmentGroupVersionKind,
+    isList: true,
+    namespace: environment.metadata.namespace,
+  });
+
+  return React.useMemo(() => {
+    const managedEnv = managedEnvs?.find((e) =>
+      e.metadata.ownerReferences?.some(
+        (r) => r.kind === 'Environment' && r.name === environment.metadata.name,
+      ),
+    );
+
+    return managedEnv?.status?.conditions?.find(
+      (s) => s.type === 'ConnectionInitializationSucceeded',
+    );
+  }, [environment.metadata.name, managedEnvs]);
 };

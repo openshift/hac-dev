@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import {
   CardHeader,
   Card,
@@ -13,15 +14,24 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  pluralize,
 } from '@patternfly/react-core';
 import { useEnvironmentActions } from '../../components/Environment/environment-actions';
 import { EnvironmentKindWithHealthStatus } from '../../hooks/useAllApplicationEnvironmentsWithHealthStatus';
+import { useApplications } from '../../hooks/useApplications';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { EnvironmentKind } from '../../types';
 import { getEnvironmentDeploymentStrategyLabel } from '../../utils/environment-utils';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
-import { EnvironmentType, getEnvironmentType, getEnvironmentTypeLabel } from './environment-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import { EnvConnectionStatus } from './EnvConnectionStatus';
+import {
+  ClusterType,
+  EnvironmentType,
+  getEnvironmentType,
+  getEnvironmentTypeLabel,
+} from './environment-utils';
 
 const ApplicationEnvironmentStatus: React.FC<{
   environment: EnvironmentKindWithHealthStatus;
@@ -59,6 +69,8 @@ type EnvironmentCardProps = {
 const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment, readOnly }) => {
   const actions = useEnvironmentActions(environment);
   const type = getEnvironmentType(environment);
+  const { namespace, workspace } = useWorkspaceInfo();
+  const [applications, appsLoaded] = useApplications(namespace);
 
   return (
     <Card isFlat>
@@ -69,6 +81,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment, readOnly
               {environment.spec?.displayName ?? environment.metadata.name}
             </Text>
           </TextContent>
+          <EnvConnectionStatus environment={environment} />
         </CardTitle>
         {!readOnly && actions?.length ? (
           <CardActions>
@@ -76,10 +89,11 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment, readOnly
           </CardActions>
         ) : null}
       </CardHeader>
+
       <CardBody>
         <DescriptionList>
           <DescriptionListGroup>
-            <DescriptionListTerm>Type</DescriptionListTerm>
+            <DescriptionListTerm className="pf-u-default-color-300">Type</DescriptionListTerm>
             <DescriptionListDescription>
               <Label
                 color={
@@ -94,15 +108,35 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment, readOnly
               </Label>
             </DescriptionListDescription>
           </DescriptionListGroup>
+
           <DescriptionListGroup>
             <DescriptionListTerm>Deployment strategy</DescriptionListTerm>
             <DescriptionListDescription>
-              <Label>{getEnvironmentDeploymentStrategyLabel(environment)}</Label>
+              {getEnvironmentDeploymentStrategyLabel(environment)}
             </DescriptionListDescription>
           </DescriptionListGroup>
+
+          <DescriptionListGroup>
+            <DescriptionListTerm>Cluster type</DescriptionListTerm>
+            <DescriptionListDescription>
+              {environment.spec.unstableConfigurationFields?.clusterType || ClusterType.openshift}
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+
           <ApplicationEnvironmentStatus
             environment={environment as EnvironmentKindWithHealthStatus}
           />
+
+          {appsLoaded && applications?.length > 0 && (
+            <DescriptionListGroup>
+              <DescriptionListTerm>Applications Deployed</DescriptionListTerm>
+              <DescriptionListDescription>
+                <Link to={`/stonesoup/workspaces/${workspace}/applications`}>
+                  {pluralize(applications.length, 'application')}
+                </Link>
+              </DescriptionListDescription>
+            </DescriptionListGroup>
+          )}
         </DescriptionList>
       </CardBody>
     </Card>

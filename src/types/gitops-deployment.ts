@@ -48,3 +48,19 @@ export type GitOpsDeploymentKind = {
     resources: StatusResource[];
   };
 } & K8sResourceCommon;
+
+export type GitOpsDeploymentManagedEnvironmentKind = {
+  spec: {
+    allowInsecureSkipTLSVerify: boolean;
+    apiURL: string;
+    credentialsSecret: string;
+  };
+  status: {
+    conditions: {
+      type: string;
+      status: string;
+      reason: string;
+      message?: string;
+    }[];
+  };
+} & K8sResourceCommon;

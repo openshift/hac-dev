@@ -15,3 +15,4 @@ export * from './task';
 export * from './task-run';
 export * from './rbac';
 export * from './secret';
+export * from './gitops-deployment';
