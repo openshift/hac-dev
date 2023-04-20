@@ -15,6 +15,7 @@ import {
 import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
 import { useField, useFormikContext } from 'formik';
 import gitUrlParse from 'git-url-parse';
+import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
 import { useOnMount } from '../../../hooks/useOnMount';
 import { getFieldId, InputField } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
@@ -171,7 +172,7 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
 
   return (
     <>
-      <HeadTitle>Import - Add components | CI/CD</HeadTitle>
+      <HeadTitle>Import - Add components | {FULL_APPLICATION_TITLE}</HeadTitle>
       <TextContent>
         <Text component="h2">Add components to your application</Text>
         <HelperText>

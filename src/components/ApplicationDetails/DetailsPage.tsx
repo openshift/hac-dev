@@ -20,6 +20,7 @@ import {
 } from '@patternfly/react-core';
 import { CaretDownIcon } from '@patternfly/react-icons/dist/esm/icons/caret-down-icon';
 import cx from 'classnames';
+import { FULL_APPLICATION_TITLE } from '../../consts/labels';
 import BreadCrumbs from '../../shared/components/breadcrumbs/BreadCrumbs';
 import { HeadTitle } from '../HeadTitle';
 
@@ -162,7 +163,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
 
   return (
     <PageGroup data-test="details" className="app-details">
-      <HeadTitle>{`${headTitle} - ${activeTab?.label} | CI/CD`}</HeadTitle>
+      <HeadTitle>{`${headTitle} - ${activeTab?.label} | ${FULL_APPLICATION_TITLE}`}</HeadTitle>
       <PageSection type="breadcrumb">
         {breadcrumbs && <BreadCrumbs data-test="details__breadcrumbs" breadcrumbs={breadcrumbs} />}
         <Flex style={{ paddingTop: 'var(--pf-global--spacer--lg)' }}>

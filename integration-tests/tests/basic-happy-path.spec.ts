@@ -1,10 +1,15 @@
 import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
-import { DetailsTab, PipelinerunsTabPage, TaskRunsTab } from '../support/pages/tabs/PipelinerunsTabPage';
+import {
+  DetailsTab,
+  PipelinerunsTabPage,
+  TaskRunsTab,
+} from '../support/pages/tabs/PipelinerunsTabPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
+import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
 
 describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
   const applicationName = Common.generateAppName();
@@ -35,7 +40,7 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
   describe('Try to add a new component using the "Overview" tab', () => {
     it("Use 'Components' tabs to start adding a new component", () => {
       Applications.goToOverviewTab().addComponent();
-      cy.title().should('eq', 'Import - Add components | CI/CD');
+      cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
     });
 
     it('Verify we are on "Add Component" wizard, and then hit Cancel', () => {
@@ -48,7 +53,7 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
   describe('Try to add a new component using the "Components" tab', () => {
     it("Use HACBS 'Components' tabs to start adding a new component", () => {
       Applications.goToComponentsTab().clickAddComponent();
-      cy.title().should('eq', 'Import - Add components | CI/CD');
+      cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
     });
 
     it('Verify we are on "Add Component" wizard, and then hit Cancel', () => {
@@ -61,7 +66,7 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
   describe('Try to add a new component using the "Actions" dropdown', () => {
     it("Click 'Actions' dropdown to add a component", () => {
       Applications.clickActionsDropdown('Add component');
-      cy.title().should('eq', 'Import - Add components | CI/CD');
+      cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
     });
 
     it('Verify we are on "Add Component" wizard, and then hit Cancel', () => {
@@ -74,22 +79,28 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
   describe('Explore Pipeline runs Tab', () => {
     it('Verify the Pipeline run details and Node Graph view', () => {
       Applications.goToPipelinerunsTab();
-      UIhelper.getTableRow('Pipeline run List', 'Running').contains(`${componentName}-`).invoke('text').then((pipelinerunName) => {
-        PipelinerunsTabPage.clickOnRunningPipelinerun(componentName);
-        UIhelper.verifyLabelAndValue('Namespace', `${Cypress.env('USERNAME').toLowerCase()}-tenant`);
-        UIhelper.verifyLabelAndValue('Pipeline', 'docker-build');
-        UIhelper.verifyLabelAndValue('Application', applicationName);
-        UIhelper.verifyLabelAndValue('Component', componentName);
-        UIhelper.verifyLabelAndValue('Related pipelines', '0 pipelines');
-        DetailsTab.waitUntilStatusIsNotRunning();
+      UIhelper.getTableRow('Pipeline run List', 'Running')
+        .contains(`${componentName}-`)
+        .invoke('text')
+        .then((pipelinerunName) => {
+          PipelinerunsTabPage.clickOnRunningPipelinerun(componentName);
+          UIhelper.verifyLabelAndValue(
+            'Namespace',
+            `${Cypress.env('USERNAME').toLowerCase()}-tenant`,
+          );
+          UIhelper.verifyLabelAndValue('Pipeline', 'docker-build');
+          UIhelper.verifyLabelAndValue('Application', applicationName);
+          UIhelper.verifyLabelAndValue('Component', componentName);
+          UIhelper.verifyLabelAndValue('Related pipelines', '0 pipelines');
+          DetailsTab.waitUntilStatusIsNotRunning();
 
-        //Verify the Pipeline run details Graph
-        piplinerunlogsTasks.forEach((item) => {
-          UIhelper.verifyGraphNodes(item);
+          //Verify the Pipeline run details Graph
+          piplinerunlogsTasks.forEach((item) => {
+            UIhelper.verifyGraphNodes(item);
+          });
+
+          DetailsTab.checkStatusSucceeded(TaskRunsTab.getbasicTaskNamesList(pipelinerunName));
         });
-
-        DetailsTab.checkStatusSucceeded(TaskRunsTab.getbasicTaskNamesList(pipelinerunName));
-      })
     });
   });
 
@@ -113,8 +124,11 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
       cy.get('.component-list-item__details input')
         .invoke('val')
         .then((value) => {
-          cy.exec(`skopeo inspect -f "Name: {{.Name}} Digest: {{.Digest}}" docker://${value}`, { timeout: 300000 })
-            .its('code').should('eq', 0);
+          cy.exec(`skopeo inspect -f "Name: {{.Name}} Digest: {{.Digest}}" docker://${value}`, {
+            timeout: 300000,
+          })
+            .its('code')
+            .should('eq', 0);
         });
     });
 
@@ -129,7 +143,7 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
     it('Validate Application Status', () => {
       Applications.goToOverviewTab();
       Applications.verifyAppstatusIsSucceeded();
-    })
+    });
 
     it('Validate the graph views for the created application', () => {
       UIhelper.verifyGraphNodes('Components', false);
