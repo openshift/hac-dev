@@ -28,7 +28,7 @@ const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicati
           component={(props) => (
             <Link
               {...props}
-              to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}
+              to={`/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`}
             />
           )}
           variant="secondary"

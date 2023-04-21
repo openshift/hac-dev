@@ -212,7 +212,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
                   variant="secondary"
                   onClick={() =>
                     navigate(
-                      `/stonesoup/workspaces/${workspace}/applications/${applicationName}/activity/latest-commits`,
+                      `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/activity/latest-commits`,
                     )
                   }
                 >

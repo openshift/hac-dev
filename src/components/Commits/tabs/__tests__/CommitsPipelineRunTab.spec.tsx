@@ -65,7 +65,7 @@ describe('Commit Pipelinerun List', () => {
     const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
     expect(button.closest('a').href).toContain(
-      `http://localhost/stonesoup/workspaces/test-ws/import?application=my-test-app`,
+      `http://localhost/application-pipeline/workspaces/test-ws/import?application=my-test-app`,
     );
   });
 

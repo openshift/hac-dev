@@ -167,7 +167,7 @@ describe('useAppWorkflowData hook', () => {
 
     fireEvent.click(clickable);
     expect(mockNavigate).toHaveBeenCalledWith(
-      '/stonesoup/workspaces/test-ws/applications/test-dev-samples/components',
+      '/application-pipeline/workspaces/test-ws/applications/test-dev-samples/components',
     );
   });
   it('should navigate to the correct tab on a group node click', async () => {
@@ -182,7 +182,7 @@ describe('useAppWorkflowData hook', () => {
 
     fireEvent.click(clickable);
     expect(mockNavigate).toHaveBeenCalledWith(
-      '/stonesoup/workspaces/test-ws/applications/test-dev-samples/components',
+      '/application-pipeline/workspaces/test-ws/applications/test-dev-samples/components',
     );
   });
   it('should navigate to the correct tab on a node click', async () => {
@@ -198,7 +198,7 @@ describe('useAppWorkflowData hook', () => {
 
     fireEvent.click(clickable);
     expect(mockNavigate).toHaveBeenCalledWith(
-      `/stonesoup/workspaces/test-ws/applications/test-dev-samples/components?name=${mockComponentsData[0].metadata.name}`,
+      `/application-pipeline/workspaces/test-ws/applications/test-dev-samples/components?name=${mockComponentsData[0].metadata.name}`,
     );
   });
 });

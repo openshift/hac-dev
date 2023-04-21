@@ -61,7 +61,7 @@ const ManagedEnvironmentSidePanel: React.FC<ManagedEnvironmentSidePanelBodyProps
             <DescriptionListGroup>
               <DescriptionListDescription>
                 <Link
-                  to={`/stonesoup/workspaces/${workspace}/applications/${workflowData.application}/environments`}
+                  to={`/application-pipeline/workspaces/${workspace}/applications/${workflowData.application}/environments`}
                 >
                   View environments
                 </Link>

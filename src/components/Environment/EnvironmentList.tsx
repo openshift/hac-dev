@@ -65,7 +65,10 @@ const EnvironmentList: React.FC<EnvironmentListProps> = ({
     return (
       <ButtonWithAccessTooltip
         component={(props) => (
-          <Link {...props} to={`/stonesoup/environments/workspaces/${workspace}/create`} />
+          <Link
+            {...props}
+            to={`/application-pipeline/environments/workspaces/${workspace}/create`}
+          />
         )}
         isDisabled={!canCreateEnvironment}
         tooltip="You don't have access to create an environment"

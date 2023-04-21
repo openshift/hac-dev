@@ -22,7 +22,7 @@ const IntegrationTestListRow: React.FC<RowFunctionArgs<IntegrationTestScenarioKi
         data-test="integration-tests__row-name"
       >
         <Link
-          to={`/stonesoup/workspaces/${workspace}/applications/${obj.spec.application}/integrationtests/${obj.metadata.name}`}
+          to={`/application-pipeline/workspaces/${workspace}/applications/${obj.spec.application}/integrationtests/${obj.metadata.name}`}
         >
           {obj.metadata.name}
         </Link>

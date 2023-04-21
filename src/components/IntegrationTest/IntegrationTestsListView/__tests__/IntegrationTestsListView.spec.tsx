@@ -80,7 +80,7 @@ describe('IntegrationTestsListView', () => {
 
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith(
-        '/stonesoup/workspaces/test-ws/applications/test-app/integrationtests/add',
+        '/application-pipeline/workspaces/test-ws/applications/test-app/integrationtests/add',
       ),
     );
   });

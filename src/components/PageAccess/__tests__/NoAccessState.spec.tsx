@@ -42,7 +42,7 @@ describe('NoAccessState', () => {
     render(<NoAccessState />);
     fireEvent.click(screen.queryByTestId('no-access-action'));
     await waitFor(() => {
-      expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspaces');
+      expect(navigateMock).toHaveBeenCalledWith('/application-pipeline/workspaces');
     });
   });
 

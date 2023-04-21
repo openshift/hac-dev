@@ -147,7 +147,7 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
                           component={(props) => (
                             <Link
                               {...props}
-                              to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/taskRuns/${taskRun.metadata.name}/logs`}
+                              to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/taskRuns/${taskRun.metadata.name}/logs`}
                             />
                           )}
                         >
@@ -162,7 +162,7 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
                   <DescriptionListDescription>
                     {plrName ? (
                       <Link
-                        to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineRuns/${plrName}`}
+                        to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/pipelineRuns/${plrName}`}
                       >
                         {plrName}
                       </Link>
@@ -176,7 +176,7 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
                   <DescriptionListDescription>
                     {applicationName ? (
                       <Link
-                        to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}`}
+                        to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}`}
                       >
                         {taskRun.metadata?.labels[PipelineRunLabel.APPLICATION]}
                       </Link>
@@ -191,7 +191,7 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
                     {taskRun.metadata?.labels?.[PipelineRunLabel.COMPONENT] ? (
                       applicationName ? (
                         <Link
-                          to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/components?name=${
+                          to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components?name=${
                             taskRun.metadata.labels[PipelineRunLabel.COMPONENT]
                           }`}
                         >

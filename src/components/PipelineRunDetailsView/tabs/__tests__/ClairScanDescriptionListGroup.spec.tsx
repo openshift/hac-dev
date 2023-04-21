@@ -65,7 +65,7 @@ describe('ClairScanDescriptionListGroup', () => {
 
     expect(logsLink).toHaveAttribute(
       'href',
-      '/stonesoup/workspaces/test-ws/applications/test-app/taskruns/test-tr/logs',
+      '/application-pipeline/workspaces/test-ws/applications/test-app/taskruns/test-tr/logs',
     );
   });
 });

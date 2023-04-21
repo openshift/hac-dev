@@ -45,7 +45,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
       return createResources(values, strategy)
         .then(({ applicationName: appName, componentNames }) => {
           const doNavigate = () =>
-            navigate(`/stonesoup/workspaces/${workspace}/applications/${appName}`);
+            navigate(`/application-pipeline/workspaces/${workspace}/applications/${appName}`);
           if (values.pipelinesascode === 'automatic') {
             showModal(
               createCustomizeAllPipelinesModalLauncher(

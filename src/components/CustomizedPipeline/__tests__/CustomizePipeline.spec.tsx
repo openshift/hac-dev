@@ -13,8 +13,11 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
-jest.mock('../../../hooks/useStoneSoupGitHubApp', () => ({
-  useStoneSoupGitHubApp: jest.fn(() => ({ name: 'test-app', url: 'https://github.com/test-app' })),
+jest.mock('../../../hooks/useApplicationPipelineGitHubApp', () => ({
+  useApplicationPipelineGitHubApp: jest.fn(() => ({
+    name: 'test-app',
+    url: 'https://github.com/test-app',
+  })),
 }));
 
 jest.mock('../../../utils/rbac', () => ({

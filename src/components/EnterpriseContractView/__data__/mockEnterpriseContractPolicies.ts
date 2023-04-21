@@ -30,7 +30,7 @@ export const MockEnterpriseContractPolicies = {
           fullName: 'policy.pipeline.required_tasks',
           title: 'Required tasks',
           description:
-            'Stonesoup expects that certain tests are going to be run during image builds.\nThis package includes some rules to confirm that the pipeline definition\nincludes the Tekton tasks to run those required tests.',
+            'Application pipline expects that certain tests are going to be run during image builds.\nThis package includes some rules to confirm that the pipeline definition\nincludes the Tekton tasks to run those required tests.',
         },
         shortName: 'required_tasks',
         title: 'Pipeline does not include all required check tasks',

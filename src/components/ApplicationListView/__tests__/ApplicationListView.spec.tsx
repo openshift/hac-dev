@@ -139,7 +139,9 @@ describe('Application List', () => {
     screen.getByText('Create and manage your applications');
     const button = screen.getByText('Create application');
     expect(button).toBeInTheDocument();
-    expect(button.closest('a').href).toBe('http://localhost/stonesoup/workspaces/test-ws/import');
+    expect(button.closest('a').href).toBe(
+      'http://localhost/application-pipeline/workspaces/test-ws/import',
+    );
   });
 
   it('should render empty state with no card', () => {

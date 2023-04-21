@@ -40,7 +40,7 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
       breadcrumbs={[
         ...applicationBreadcrumbs,
         {
-          path: `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
+          path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
           name: 'Integration tests',
         },
         { path: '#', name: title },

@@ -83,7 +83,9 @@ describe('ImportForm', () => {
     await waitFor(() => {
       wizardProps.onSubmit({ ...wizardProps.initialValues, application: 'my-app' }, {} as any);
     });
-    expect(navigateMock).toHaveBeenCalledWith('/stonesoup/workspaces/test-ws/applications/my-app');
+    expect(navigateMock).toHaveBeenCalledWith(
+      '/application-pipeline/workspaces/test-ws/applications/my-app',
+    );
   });
 
   it('should warn the users about the errors on form submit', async () => {

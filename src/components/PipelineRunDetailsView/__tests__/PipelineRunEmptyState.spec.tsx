@@ -18,7 +18,7 @@ describe('PipelineRunEmptyState', () => {
   it('should render correct Link to Application Name', () => {
     render(<PipelineRunEmptyState applicationName="test" />);
     expect(screen.getByRole('link').getAttribute('href')).toBe(
-      '/stonesoup/workspaces/test-ws/import?application=test',
+      '/application-pipeline/workspaces/test-ws/import?application=test',
     );
     screen.getByText('Add component');
   });

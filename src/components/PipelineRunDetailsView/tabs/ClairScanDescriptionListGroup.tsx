@@ -55,7 +55,7 @@ const ClairScanDescriptionListGroup: React.FC<Props> = ({
         {scanTaskRun && showLogsLink ? (
           <div>
             <Link
-              to={`/stonesoup/workspaces/${workspace}/applications/${
+              to={`/application-pipeline/workspaces/${workspace}/applications/${
                 scanTaskRun.metadata.labels[PipelineRunLabel.APPLICATION]
               }/taskruns/${scanTaskRun.metadata.name}/logs`}
               className="pf-u-font-weight-normal"

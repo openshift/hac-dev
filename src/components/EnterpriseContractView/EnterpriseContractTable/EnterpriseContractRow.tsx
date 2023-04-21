@@ -84,7 +84,9 @@ export const EnterpriseContractRow: React.FC<EnterpriseContractRowType> = ({ dat
         <Td>{getRuleStatus(data.status)}</Td>
         <Td>{data.timestamp ? <Timestamp timestamp={data.timestamp} /> : '-'}</Td>
         <Td>
-          <Link to={`/stonesoup/workspaces/${workspace}/applications/${appName}/components`}>
+          <Link
+            to={`/application-pipeline/workspaces/${workspace}/applications/${appName}/components`}
+          >
             {data.component}
           </Link>
         </Td>

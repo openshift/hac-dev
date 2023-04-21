@@ -44,12 +44,12 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
             navigate(-1);
           } else {
             navigate(
-              `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/${integrationTest.metadata.name}`,
+              `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/integrationtests/${integrationTest.metadata.name}`,
             );
           }
         } else {
           navigate(
-            `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
+            `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/integrationtests`,
           );
         }
       })

@@ -104,7 +104,9 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             key: 'add-component',
             label: 'Add component',
             component: (
-              <Link to={`/stonesoup/workspaces/${workspace}/import?application=${applicationName}`}>
+              <Link
+                to={`/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`}
+              >
                 Add component
               </Link>
             ),
@@ -116,7 +118,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             label: 'Add integration test',
             component: (
               <Link
-                to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/add`}
+                to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/integrationtests/add`}
               >
                 Add integration test
               </Link>
@@ -128,7 +130,9 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             key: 'create-environment',
             label: 'Create environment',
             component: (
-              <Link to={`/stonesoup/workspaces/${workspace}/workspace-settings/environment/create`}>
+              <Link
+                to={`/application-pipeline/workspaces/${workspace}/workspace-settings/environment/create`}
+              >
                 Create environment
               </Link>
             ),
@@ -161,13 +165,13 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
               showModal<{ submitClicked: boolean }>(
                 applicationDeleteModal(application),
               ).closed.then(({ submitClicked }) => {
-                if (submitClicked) navigate('/stonesoup/workspaces');
+                if (submitClicked) navigate('/application-pipeline/workspaces');
               }),
             isDisabled: !canDeleteApplication,
             disabledTooltip: "You don't have access to delete this application",
           },
         ]}
-        baseURL={`/stonesoup/workspaces/${workspace}/applications/${applicationName}`}
+        baseURL={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}`}
         tabs={[
           {
             key: 'overview',

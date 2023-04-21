@@ -14,7 +14,7 @@ export const WorkspaceSwitcher: React.FC<{ selectedWorkspace?: string }> = () =>
   const selectedItem = workspaces.find((item) => item.metadata.name === workspace) || workspaces[0];
 
   const onSelect = (item: ContextMenuItem) => {
-    navigate(`/stonesoup/workspaces/${item.name}/applications`);
+    navigate(`/application-pipeline/workspaces/${item.name}/applications`);
     setWorkspace(item.name);
   };
 

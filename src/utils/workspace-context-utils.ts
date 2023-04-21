@@ -96,9 +96,9 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
         setWorkspace(ws);
         setWorkspaces(allWorkspaces);
         setWorkspacesLoaded(true);
-        const wsBasePath = generatePath('/stonesoup/workspaces/:ws', { ws });
+        const wsBasePath = generatePath('/application-pipeline/workspaces/:ws', { ws });
 
-        window.location.pathname.includes('/stonesoup/workspaces') &&
+        window.location.pathname.includes('/application-pipeline/workspaces') &&
           !window.location.pathname.includes(wsBasePath) &&
           navigate(`${wsBasePath}/applications`);
       }

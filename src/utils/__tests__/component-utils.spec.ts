@@ -1,13 +1,13 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { useStoneSoupGitHubApp } from '../../hooks/useStoneSoupGitHubApp';
+import { useApplicationPipelineGitHubApp } from '../../hooks/useApplicationPipelineGitHubApp';
 import { ComponentKind } from '../../types';
 import { isPACEnabled, PAC_ANNOTATION, useURLForComponentPRs } from '../component-utils';
 
-jest.mock('../../hooks/useStoneSoupGitHubApp', () => ({
-  useStoneSoupGitHubApp: jest.fn(),
+jest.mock('../../hooks/useApplicationPipelineGitHubApp', () => ({
+  useApplicationPipelineGitHubApp: jest.fn(),
 }));
 
-const useStoneSoupGitHubAppMock = useStoneSoupGitHubApp as jest.Mock;
+const useApplicationPipelineGitHubAppMock = useApplicationPipelineGitHubApp as jest.Mock;
 
 describe('component-utils', () => {
   it('should detect pac enabled state', () => {
@@ -32,7 +32,7 @@ describe('component-utils', () => {
   });
 
   it('should create github URL for component PRs', () => {
-    useStoneSoupGitHubAppMock.mockReturnValue({
+    useApplicationPipelineGitHubAppMock.mockReturnValue({
       name: 'appstudio-staging-ci',
       url: 'https://github.com/apps/appstudio-staging-ci.git',
     });

@@ -26,7 +26,7 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
     <>
       <TableData className={pipelineRunTableColumnClasses.name}>
         <Link
-          to={`/stonesoup/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${obj.metadata?.name}`}
+          to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${obj.metadata?.name}`}
           title={obj.metadata?.name}
         >
           {obj.metadata?.name}
@@ -58,7 +58,7 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
         {obj.metadata?.labels[PipelineRunLabel.COMPONENT] ? (
           obj.metadata?.labels[PipelineRunLabel.APPLICATION] ? (
             <Link
-              to={`/stonesoup/workspaces/${workspace}/applications/${
+              to={`/application-pipeline/workspaces/${workspace}/applications/${
                 obj.metadata?.labels[PipelineRunLabel.APPLICATION]
               }/components`}
             >

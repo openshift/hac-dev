@@ -36,7 +36,7 @@ const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj })
     <>
       <TableData className={applicationTableColumnClasses.name} data-testid="app-row-test-id">
         <Link
-          to={`/stonesoup/workspaces/${workspace}/applications/${obj.metadata.name}`}
+          to={`/application-pipeline/workspaces/${workspace}/applications/${obj.metadata.name}`}
           title={displayName}
         >
           {displayName}

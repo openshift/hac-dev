@@ -56,7 +56,7 @@ const ReleaseSidePanel: React.FC<ReleaseSidePanelBodyProps> = ({ workflowNode, o
             <DescriptionListGroup>
               <DescriptionListDescription>
                 <Link
-                  to={`/stonesoup/workspaces/${workspace}/applications/${workflowData.application}/activity/pipelineruns`}
+                  to={`/application-pipeline/workspaces/${workspace}/applications/${workflowData.application}/activity/pipelineruns`}
                 >
                   View pipeline runs
                 </Link>

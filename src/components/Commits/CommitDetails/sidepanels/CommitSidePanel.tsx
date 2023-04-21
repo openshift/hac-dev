@@ -97,7 +97,7 @@ const CommitSidePanel: React.FC<CommitSidePanelBodyProps> = ({ workflowNode, onC
                 return (
                   <React.Fragment key={component}>
                     <Link
-                      to={`/stonesoup/workspaces/${workspace}/applications/${workflowData.application}/components?name=${component}`}
+                      to={`/application-pipeline/workspaces/${workspace}/applications/${workflowData.application}/components?name=${component}`}
                     >
                       {component}
                     </Link>

@@ -18,8 +18,8 @@ import {
   Tooltip,
 } from '@patternfly/react-core';
 import { Tbody, Thead, Th, Tr, Td, TableComposable } from '@patternfly/react-table';
+import { useApplicationPipelineGitHubApp } from '../../hooks/useApplicationPipelineGitHubApp';
 import { PACState } from '../../hooks/usePACState';
-import { useStoneSoupGitHubApp } from '../../hooks/useStoneSoupGitHubApp';
 import sendIconUrl from '../../imgs/send.svg';
 import successIconUrl from '../../imgs/success.svg';
 import { ComponentModel } from '../../models';
@@ -68,7 +68,7 @@ const Row: React.FC<{
   component: ComponentKind;
   onStateChange: (state: PACState) => void;
 }> = ({ component, onStateChange }) => {
-  const { url: githubAppURL } = useStoneSoupGitHubApp();
+  const { url: githubAppURL } = useApplicationPipelineGitHubApp();
   const [pacState, setPacState] = React.useState<PACState>(PACState.loading);
   const onComponentStateChange = React.useCallback(
     (state) => {
@@ -221,7 +221,7 @@ const Row: React.FC<{
 };
 
 const CustomizePipeline: React.FC<Props> = ({ components, onClose }) => {
-  const { url: githubAppURL } = useStoneSoupGitHubApp();
+  const { url: githubAppURL } = useApplicationPipelineGitHubApp();
   const sortedComponents = React.useMemo(
     () => [...components].sort((a, b) => a.metadata.name.localeCompare(b.metadata.name)),
     [components],

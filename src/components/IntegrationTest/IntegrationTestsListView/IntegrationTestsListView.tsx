@@ -101,7 +101,7 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
 
   const handleAddTest = React.useCallback(() => {
     navigate(
-      `/stonesoup/workspaces/${workspace}/applications/${applicationName}/integrationtests/add`,
+      `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/integrationtests/add`,
     );
   }, [navigate, applicationName, workspace]);
 

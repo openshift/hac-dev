@@ -107,7 +107,7 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
                 <DescriptionListTerm>Application</DescriptionListTerm>
                 <DescriptionListDescription>
                   <Link
-                    to={`/stonesoup/workspaces/${workspace}/applications/${integrationTest.spec.application}`}
+                    to={`/application-pipeline/workspaces/${workspace}/applications/${integrationTest.spec.application}`}
                   >
                     {integrationTest.spec.application}
                   </Link>
