@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { useNavigate, useParams } from 'react-router-dom';
 import { act, fireEvent, screen } from '@testing-library/react';
 import { routerRenderer } from '../../../utils/test-utils';
-import { ActivityTab } from '../ActivityTab';
+import { ACTIVITY_SECONDARY_TAB_KEY, ActivityTab } from '../ActivityTab';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: () => [[], false],
@@ -70,6 +70,17 @@ describe('Activity Tab', () => {
     tabs = activitiesPage.getByTestId('activities-tabs-id');
     activeTab = tabs.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
     expect(activeTab).toHaveTextContent('Latest commits');
+    activitiesPage.unmount();
+  });
+
+  it('should read from localstorage and display the last used tab', async () => {
+    localStorage.setItem(ACTIVITY_SECONDARY_TAB_KEY, 'pipelineruns');
+
+    useParamsMock.mockReturnValue({ activeTab: 'activity', activity: null });
+    const activitiesPage = routerRenderer(<ActivityTab applicationName="abcd" />);
+    const tabs = activitiesPage.getByTestId('activities-tabs-id');
+    const activeTab = tabs.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    expect(activeTab).toHaveTextContent('Pipeline runs');
     activitiesPage.unmount();
   });
 });

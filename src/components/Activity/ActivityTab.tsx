@@ -1,28 +1,41 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Tab, Tabs, TabTitleText, Title } from '@patternfly/react-core';
+import { useLocalStorage } from '../../hooks';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import PipelineRunsTab from '../ApplicationDetails/tabs/PipelineRunsTab';
 import CommitsListView from '../Commits/CommitsListView';
 
 import './ActivityTab.scss';
 
+export const ACTIVITY_SECONDARY_TAB_KEY = 'activity-secondary-tab';
+
 export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicationName }) => {
   const params = useParams();
   const { workspace } = useWorkspaceInfo();
   const { activeTab: parentTab, activity: activeTab } = params;
+  const [lastSelectedTab, setLocalStorageItem] = useLocalStorage<string>(
+    ACTIVITY_SECONDARY_TAB_KEY,
+  );
+  const currentTab = activeTab || lastSelectedTab || 'latest-commits';
 
   const navigate = useNavigate();
   const setActiveTab = React.useCallback(
     (newTab: string) => {
-      if (activeTab !== newTab) {
+      if (currentTab !== newTab) {
         navigate(
           `/stonesoup/workspaces/${workspace}/applications/${applicationName}/${parentTab}/${newTab}`,
         );
       }
     },
-    [applicationName, activeTab, navigate, parentTab, workspace],
+    [applicationName, currentTab, navigate, parentTab, workspace],
   );
+
+  React.useEffect(() => {
+    if (activeTab !== lastSelectedTab) {
+      setLocalStorageItem(currentTab);
+    }
+  }, [activeTab, lastSelectedTab, currentTab, setLocalStorageItem]);
 
   return (
     <>
@@ -34,7 +47,7 @@ export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicatio
           width: 'fit-content',
           marginBottom: 'var(--pf-global--spacer--md)',
         }}
-        activeKey={activeTab || 'latest-commits'}
+        activeKey={currentTab}
         onSelect={(_, k: string) => {
           setActiveTab(k);
         }}
