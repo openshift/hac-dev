@@ -3,7 +3,7 @@ import * as fs from 'fs-extra';
 import * as glob from 'glob';
 const registerReportPortalPlugin = require('@reportportal/agent-js-cypress/lib/plugin');
 const { mergeLaunches } = require('@reportportal/agent-js-cypress/lib/mergeLaunches');
-
+const { beforeRunHook, afterRunHook } = require('cypress-mochawesome-reporter/lib');
 function deleteLaunchFiles() {
   const getLaunchTempFiles = () => {
     return glob.sync('rplaunch*.tmp');
@@ -27,7 +27,8 @@ export default defineConfig({
   viewportHeight: 1080,
   reporter: 'cypress-multi-reporters',
   reporterOptions: {
-    reporterEnabled: 'spec, mocha-junit-reporter, @reportportal/agent-js-cypress',
+    reporterEnabled:
+      'cypress-mochawesome-reporter, spec, mocha-junit-reporter, @reportportal/agent-js-cypress',
     mochaJunitReporterReporterOptions: {
       mochaFile: 'cypress/junit-[hash].xml',
     },
@@ -40,6 +41,11 @@ export default defineConfig({
       debug: true,
       isLaunchMergeRequired: true,
     },
+    cypressMochawesomeReporterReporterOptions: {
+      charts: true,
+      embeddedScreenshots: true,
+      ignoreVideos: true,
+    },
   },
   e2e: {
     supportFile: 'support/commands/index.ts',
@@ -50,6 +56,7 @@ export default defineConfig({
         ? 'tests/*-private-git-*' // TODO: remove once https://issues.redhat.com/browse/RHTAPBUGS-111 is resolved
         : 'tests/{advanced-happy-path*,*-private-git-*}',
     setupNodeEvents(on, config) {
+      require('cypress-mochawesome-reporter/plugin')(on);
       require('@cypress/grep/src/plugin')(config);
 
       const logOptions = {
@@ -114,6 +121,8 @@ export default defineConfig({
             }
           }
         }
+        // cypress-mochawesome-reporter
+        await afterRunHook();
       });
 
       const defaultValues: { [key: string]: string | boolean } = {
