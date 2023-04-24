@@ -83,17 +83,18 @@ describe('Create Component from Public Git Source', { tags: ['@PR-check', '@publ
       applicationDetailPage.checkReplica(replicaCount);
     });
 
-    it('Change Resources Value', () => {
-      applicationDetailPage.openComponentSettings(componentPage.componentName);
-      componentPage.setRam(2, MemoryUnit.gigabyte);
-      componentPage.setCpuByButton(cpuCount, cpuUnit);
-      componentPage.saveChanges();
-    });
+    // Skipping due to : https://issues.redhat.com/browse/HAC-3184
+    // it('Change Resources Value', () => {
+    //   applicationDetailPage.openComponentSettings(componentPage.componentName);
+    //   componentPage.setRam(2, MemoryUnit.gigabyte);
+    //   componentPage.setCpuByButton(cpuCount, cpuUnit);
+    //   componentPage.saveChanges();
+    // });
 
-    it('Check updated resources values', () => {
-      Applications.goToComponentsTab();
-      applicationDetailPage.expandDetails(componentPage.componentName);
-      applicationDetailPage.checkCpuAndMemory(cpuCount, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
-    });
+    // it('Check updated resources values', () => {
+    //   Applications.goToComponentsTab();
+    //   applicationDetailPage.expandDetails(componentPage.componentName);
+    //   applicationDetailPage.checkCpuAndMemory(cpuCount, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
+    // });
   });
 });
