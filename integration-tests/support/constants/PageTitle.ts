@@ -11,3 +11,5 @@ export enum NavItem {
   applications = 'Applications',
   settings = 'Settings',
 }
+
+export const FULL_APPLICATION_TITLE = 'Red Hat Trusted Application Pipeline';

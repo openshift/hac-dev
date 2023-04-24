@@ -13,6 +13,7 @@ import { HeadTitle } from '../components/HeadTitle';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import PageLayout from '../components/PageLayout/PageLayout';
+import { FULL_APPLICATION_TITLE } from '../consts/labels';
 import { ComponentModel } from '../models';
 import { getQueryArgument } from '../shared/utils';
 import { AccessReviewResources } from '../types';
@@ -48,7 +49,7 @@ const ComponentSettingsPage: React.FunctionComponent = () => {
 
   return (
     <NamespacedPage>
-      <HeadTitle>{`${componentName} - Component Settings | CI/CD`}</HeadTitle>
+      <HeadTitle>{`${componentName} - Component Settings | ${FULL_APPLICATION_TITLE}`}</HeadTitle>
       <PageAccessCheck accessReviewResources={accessReviewResources}>
         <ComponentSettingsView componentName={componentName} />
       </PageAccessCheck>

@@ -13,6 +13,7 @@ import {
   Title,
   Text,
 } from '@patternfly/react-core';
+import { FULL_APPLICATION_TITLE } from '../../consts/labels';
 import { ApplicationGroupVersionKind, ApplicationModel, ComponentModel } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
@@ -49,7 +50,7 @@ const IntroBanner: React.FC = () => {
         <Card className="intro-banner__content" isLarge>
           <CardTitle>
             <Title headingLevel="h1" size="2xl">
-              Get started with CI/CD
+              Get started with {FULL_APPLICATION_TITLE}
             </Title>
           </CardTitle>
           <CardBody>

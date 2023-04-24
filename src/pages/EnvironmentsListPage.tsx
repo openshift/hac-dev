@@ -7,6 +7,7 @@ import { HelpTopicLink } from '../components/HelpTopicLink/HelpTopicLink';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import PageLayout from '../components/PageLayout/PageLayout';
+import { FULL_APPLICATION_TITLE } from '../consts/labels';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 import { EnvironmentModel } from '../models';
 import { AccessReviewResources } from '../types';
@@ -22,7 +23,7 @@ const EnvironmentsListPage: React.FC = () => {
     <NamespacedPage>
       <PageAccessCheck accessReviewResources={accessReviewResources}>
         <Helmet>
-          <title>Environments page</title>
+          <title>Environments | {FULL_APPLICATION_TITLE}</title>
         </Helmet>
         <PageLayout
           title="Environments"

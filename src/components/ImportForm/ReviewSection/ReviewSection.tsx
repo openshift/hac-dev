@@ -14,6 +14,7 @@ import {
 } from '@patternfly/react-core';
 import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
 import { useFormikContext } from 'formik';
+import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
 import { RadioButtonField } from '../../../shared';
 import { HeadTitle } from '../../HeadTitle';
 import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
@@ -142,7 +143,7 @@ const ReviewSection: React.FunctionComponent = () => {
 
   return (
     <>
-      <HeadTitle>Import - Configure components | CI/CD</HeadTitle>
+      <HeadTitle>Import - Configure components | {FULL_APPLICATION_TITLE}</HeadTitle>
       <TextContent>
         <Text component="h2">Configure your components for deployment</Text>
         <HelperText>

@@ -3,6 +3,7 @@ import ApplicationListView from '../components/ApplicationListView/ApplicationLi
 import { HeadTitle } from '../components/HeadTitle';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
+import { FULL_APPLICATION_TITLE } from '../consts/labels';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 import { ApplicationModel } from '../models';
 import { AccessReviewResources } from '../types';
@@ -16,7 +17,7 @@ const ApplicationsPage = () => {
 
   return (
     <NamespacedPage>
-      <HeadTitle>Applications | CI/CD</HeadTitle>
+      <HeadTitle>Applications | {FULL_APPLICATION_TITLE}</HeadTitle>
       <PageAccessCheck accessReviewResources={accessReviewResources}>
         <ApplicationListView />
       </PageAccessCheck>

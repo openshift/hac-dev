@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TextContent, Text, HelperText, FormSection } from '@patternfly/react-core';
 import { useField } from 'formik';
+import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
 import { InputField } from '../../../shared';
 import { HeadTitle } from '../../HeadTitle';
 import { useValidApplicationName } from '../utils/useValidApplicationName';
@@ -23,7 +24,7 @@ const ApplicationSection: React.FunctionComponent = () => {
 
   return (
     <>
-      <HeadTitle>Import - Name application | CI/CD</HeadTitle>
+      <HeadTitle>Import - Name application | {FULL_APPLICATION_TITLE}</HeadTitle>
       <TextContent>
         <Text component="h2">Name your application</Text>
         <HelperText>

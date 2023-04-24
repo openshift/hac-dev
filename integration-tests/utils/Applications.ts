@@ -17,6 +17,7 @@ import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
 import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
 import { OverviewTabPage } from '../support/pages/tabs/OverviewTabPage';
 import { Common } from './Common';
+import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
 
 export class Applications {
   static deleteApplication(applicationName: string) {
@@ -44,10 +45,10 @@ export class Applications {
   }
 
   static createApplication(name: string) {
-    cy.title().should('eq', 'Applications | CI/CD');
+    cy.title().should('eq', `Applications | ${FULL_APPLICATION_TITLE}`);
     const createApplicationPage = new CreateApplicationPage();
     createApplicationPage.clickCreateApplication();
-    cy.title().should('eq', 'Import - Name application | CI/CD');
+    cy.title().should('eq', `Import - Name application | ${FULL_APPLICATION_TITLE}`);
     cy.testA11y(`${pageTitles.createApp} page`);
     createApplicationPage.setApplicationName(name);
     createApplicationPage.clickNext();
@@ -149,7 +150,7 @@ export class Applications {
 
 function addComponentStep(publicGitRepo: string) {
   const addComponent = new AddComponentPage();
-  cy.title().should('eq', 'Import - Add components | CI/CD');
+  cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
 
   // Enter git repo URL
   addComponent.setSource(publicGitRepo);
@@ -159,7 +160,7 @@ function addComponentStep(publicGitRepo: string) {
   addComponent.clickGitOptions();
 
   addComponent.clickNext();
-  cy.title().should('eq', 'Import - Configure components | CI/CD');
+  cy.title().should('eq', `Import - Configure components | ${FULL_APPLICATION_TITLE}`);
 }
 
 function reviewComponentsStep(

@@ -21,6 +21,7 @@ import {
 } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import { useFormikContext } from 'formik';
+import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
 import { getIconProps } from '../../../shared/components/catalog/utils/catalog-utils';
 import { skeletonTileSelector } from '../../../shared/components/catalog/utils/skeleton-catalog';
 import { CatalogItem } from '../../../shared/components/catalog/utils/types';
@@ -79,7 +80,7 @@ const SampleSection = ({ onStrategyChange }) => {
 
   return (
     <>
-      <HeadTitle>Import - Select sample | CI/CD</HeadTitle>
+      <HeadTitle>Import - Select sample | {FULL_APPLICATION_TITLE}</HeadTitle>
       <PageSection variant="light">
         <TextContent>
           <Text component={TextVariants.h2}>Select a sample</Text>
