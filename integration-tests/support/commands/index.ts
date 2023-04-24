@@ -1,6 +1,7 @@
 // Include the cypress customized commands related files
 import './hooks';
 import './a11y';
+import 'cypress-mochawesome-reporter/register';
 import { Result } from 'axe-core';
 import { initPerfMeasuring } from './perf';
 const registerCypressGrep = require('@cypress/grep');
