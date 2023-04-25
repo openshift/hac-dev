@@ -85,6 +85,7 @@ export const mapEnterpriseContractResultData = (
         timestamp: v.metadata.effective_on,
         component: compResult.name,
         msg: v.msg,
+        collection: v.metadata.collections,
       };
       acc.push(rule);
     });
@@ -96,6 +97,7 @@ export const mapEnterpriseContractResultData = (
         timestamp: v.metadata.effective_on,
         component: compResult.name,
         msg: v.msg,
+        collection: v.metadata.collections,
       };
       acc.push(rule);
     });
@@ -105,6 +107,7 @@ export const mapEnterpriseContractResultData = (
         description: v.metadata.description,
         status: ENTERPRISE_CONTRACT_STATUS.successes,
         component: compResult.name,
+        collection: v.metadata.collections,
       };
       acc.push(rule);
     });
