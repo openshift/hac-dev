@@ -739,6 +739,62 @@ export const testPipelineRun: PipelineRunKind = {
           },
         },
       },
+      'sum-and-multiply-pipeline-8mhx4-show-sbom': {
+        pipelineTaskName: 'show-sbom',
+        status: {
+          completionTime: '2023-04-19T15:59:43Z',
+          conditions: [
+            {
+              lastTransitionTime: '2023-04-19T15:59:43Z',
+              message: 'All Steps have completed executing',
+              reason: 'Succeeded',
+              status: 'True',
+              type: 'Succeeded',
+            },
+          ],
+          podName: 'devfile-sample-code-with-quarkus-rk47-8mhx4-show-sbom-pod',
+          startTime: '2023-04-19T15:59:36Z',
+          steps: [
+            {
+              container: 'step-show-sbom',
+              imageID:
+                'quay.io/redhat-appstudio/cosign@sha256:18b3716a6225727877475e1ab4f2493915e72cffd2ce431e9901d2ed2e4b2c0b',
+              name: 'show-sbom',
+              terminated: {
+                containerID:
+                  'cri-o://a9acbd8efec47ecf32181806df7179a1030ceb3842c21ca4ddfcfba0f46ef0c6',
+                exitCode: 0,
+                finishedAt: '2023-04-19T15:59:42Z',
+                reason: 'Completed',
+                startedAt: '2023-04-19T15:59:41Z',
+              },
+            },
+          ],
+          taskSpec: {
+            description:
+              'Shows the Software Bill of Materials (SBOM) generated for the built image in CyloneDX JSON format.',
+            params: [
+              {
+                description: 'Fully qualified image name to show SBOM for.',
+                name: 'IMAGE_URL',
+                type: 'string',
+              },
+            ],
+            steps: [
+              {
+                args: [
+                  '-c',
+                  'cosign download sbom quay.io/redhat-user-workloads/mdsaud-tenant/my-app-2/devfile-sample-code-with-quarkus-rk47:build-ba219-1681919770 2>/dev/null',
+                ],
+                command: ['sh'],
+                image: 'quay.io/redhat-appstudio/cosign:v1.13.1',
+                name: 'show-sbom',
+                resources: {},
+              },
+            ],
+          },
+        },
+      },
     },
   },
 };

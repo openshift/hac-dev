@@ -7,6 +7,7 @@ import {
   PipelineRunKind,
   PLRTaskRunData,
   TaskRunKind,
+  TektonResourceLabel,
   TektonResultsRun,
 } from '../types';
 import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
@@ -302,3 +303,8 @@ export const getLabelColorFromStatus = (
       return null;
   }
 };
+
+const SBOM_TASK = 'show-sbom';
+
+export const getSbomTaskRun = (taskruns: TaskRunKind[]) =>
+  taskruns.find((tr) => tr?.metadata?.labels?.[TektonResourceLabel.pipelineTask] === SBOM_TASK);
