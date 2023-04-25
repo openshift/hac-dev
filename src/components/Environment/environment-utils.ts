@@ -10,7 +10,7 @@ import {
 } from '../../models';
 import { GitOpsDeploymentManagedEnvironmentKind, EnvironmentKind, SecretKind } from '../../types';
 import { ReleasePlanKind } from '../../types/coreBuildService';
-import { resourceNameRegex } from '../ImportForm/utils/validation-utils';
+import { dnsSubDomainRegex, resourceNameRegex } from '../ImportForm/utils/validation-utils';
 import { CreateEnvironmentFormValues } from './create/CreateEnvironmentForm';
 
 export enum EnvironmentDeploymentStrategy {
@@ -46,9 +46,14 @@ export const environmentTypeItems = [
   { key: EnvironmentType.managed, value: 'I would like to bring my own cluster' },
 ];
 
+export const clusterTypeValues = {
+  [ClusterType.openshift]: 'OpenShift',
+  [ClusterType.kubernetes]: 'Non-OpenShift',
+};
+
 export const clusterTypeItems = [
-  { key: ClusterType.openshift, value: 'OpenShift' },
-  { key: ClusterType.kubernetes, value: 'Non-OpenShift' },
+  { key: ClusterType.openshift, value: clusterTypeValues[ClusterType.openshift] },
+  { key: ClusterType.kubernetes, value: clusterTypeValues[ClusterType.kubernetes] },
 ];
 
 export const environmentFormSchema = yup.object({
@@ -56,6 +61,15 @@ export const environmentFormSchema = yup.object({
   deploymentStrategy: yup.string().required('Required'),
   environmentType: yup.string().required('Required'),
   clusterType: yup.string().required('Required'),
+  ingressDomain: yup
+    .string()
+    .matches(dnsSubDomainRegex, 'Must be a valid DNS domain name.')
+    .test(
+      'ingress-domain-required',
+      'Ingress domain is required for non-OpenShift clusters.',
+      (value, options) =>
+        !!value || options.parent?.clusterType !== clusterTypeValues[ClusterType.kubernetes],
+    ),
   kubeconfig: yup
     .string()
     .required('Required')
@@ -138,8 +152,8 @@ export const createEnvironment = async (
 ) => {
   const secret = await createCredentialsSecret(values.kubeconfig, namespace, dryRun);
   const kubeconfig = YAML.load(values.kubeconfig) as KubeConfig;
-  const envType = environmentTypeItems.find((e) => e.value === values.environmentType);
-  const clusterType = clusterTypeItems.find((e) => e.value === values.clusterType);
+  const envType = environmentTypeItems.find((e) => e.value === values.environmentType)?.key;
+  const clusterType = clusterTypeItems.find((e) => e.value === values.clusterType)?.key;
   const resource: EnvironmentKind = {
     apiVersion: `${EnvironmentModel.apiGroup}/${EnvironmentModel.apiVersion}`,
     kind: EnvironmentModel.kind,
@@ -147,14 +161,15 @@ export const createEnvironment = async (
     spec: {
       displayName: values.name,
       deploymentStrategy: EnvironmentDeploymentStrategy[values.deploymentStrategy],
-      tags: [envType.key],
+      tags: [envType],
       unstableConfigurationFields: {
-        clusterType: clusterType.key,
+        clusterType,
         kubernetesCredentials: {
           allowInsecureSkipTLSVerify: true,
           apiURL: kubeconfig.clusters[0].cluster.server,
           clusterCredentialsSecret: secret.metadata.name,
           targetNamespace: values.targetNamespace,
+          ingressDomain: clusterType === ClusterType.kubernetes ? values.ingressDomain : undefined,
         },
       },
     },
