@@ -1,7 +1,13 @@
+{
+    {$CADDY_TLS_MODE}
+    auto_https disable_redirects
+}
+
 :9000 {
     metrics /metrics
 }
 :8000 {
+    {$CADDY_TLS_CERT}
     log
 
     # Setup the regex for a plugins match
