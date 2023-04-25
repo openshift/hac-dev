@@ -289,7 +289,7 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
               <Text component={TextVariants.h3}>Results summary</Text>
             </TextContent>
           </FlexItem>
-          <Flex spaceItems={{ default: 'spaceItemsXl' }}>
+          <Flex data-testid="result-summary" spaceItems={{ default: 'spaceItemsXl' }}>
             <FlexItem spacer={{ default: 'spacerXl' }}>
               <span style={{ marginRight: 'var(--pf-global--spacer--sm)' }}>
                 {getRuleStatus(ENTERPRISE_CONTRACT_STATUS.violations)}

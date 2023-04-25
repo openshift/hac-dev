@@ -40,7 +40,7 @@ describe('EnterpriseContractRow', () => {
     expect(screen.queryByText('Failure Message')).not.toBeInTheDocument();
   });
 
-  it('should render Failed rule and failure message in expanded section', () => {
+  it('should render Failed rule and failure message in table', () => {
     render(
       <EnterpriseContractRow
         rowIndex={1}
@@ -51,6 +51,7 @@ describe('EnterpriseContractRow', () => {
           description: 'dummy description',
           msg: 'Fail',
           timestamp: '2022-01-01T00:00:00Z',
+          collection: ['abcd', 'efg'],
         }}
       />,
     );
@@ -58,7 +59,9 @@ describe('EnterpriseContractRow', () => {
     screen.getByText('component-1');
     screen.getByText('Failed');
     fireEvent.click(screen.getByTestId('ec-expand-row'));
-    screen.getByText('Failure Message');
+    screen.getByText('Effective from');
+    screen.getByText('Collection');
+    screen.getByText('abcd, efg');
     screen.getByText('Rule Description');
     screen.getByText('dummy description');
     screen.getAllByText('Fail');

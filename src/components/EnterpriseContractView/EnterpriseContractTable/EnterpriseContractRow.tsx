@@ -36,7 +36,7 @@ export const EnterpriseContractRow: React.FC<EnterpriseContractRowType> = ({ dat
           }}
         />
         <Td>{data.title ?? '-'}</Td>
-        <Td>{getRuleStatus(data.status)}</Td>
+        <Td data-testid="rule-status">{getRuleStatus(data.status)}</Td>
         <Td>{data.msg ? <Truncate content={data.msg} /> : '-'}</Td>
         <Td>
           <Link

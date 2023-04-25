@@ -180,6 +180,7 @@ export const mockEnterpriseContractUIData = [
     timestamp: '2022-01-01T00:00:00Z',
     component: 'devfile-sample-python-basic-aw05',
     msg: 'CVE scan results not found',
+    collection: ['minimal'],
   },
   {
     title: 'No tasks run',
@@ -187,5 +188,6 @@ export const mockEnterpriseContractUIData = [
       'This policy enforces that at least one Task is present in the PipelineRun attestation.',
     status: 'Success',
     component: 'devfile-sample-python-basic-aw05',
+    collection: ['minimal'],
   },
 ];
