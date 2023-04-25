@@ -35,7 +35,7 @@ export const EnterpriseContractRow: React.FC<EnterpriseContractRowType> = ({ dat
             onToggle: () => setRowExpanded((e) => !e),
           }}
         />
-        <Td>{data.title}</Td>
+        <Td>{data.title ?? '-'}</Td>
         <Td>{getRuleStatus(data.status)}</Td>
         <Td>{data.msg ? <Truncate content={data.msg} /> : '-'}</Td>
         <Td>
@@ -57,7 +57,7 @@ export const EnterpriseContractRow: React.FC<EnterpriseContractRowType> = ({ dat
             >
               <DescriptionListGroup>
                 <DescriptionListTerm>Rule Description</DescriptionListTerm>
-                <DescriptionListDescription>{data.description}</DescriptionListDescription>
+                <DescriptionListDescription>{data.description ?? '-'}</DescriptionListDescription>
               </DescriptionListGroup>
               {data.collection && data.collection?.length ? (
                 <DescriptionListGroup>
