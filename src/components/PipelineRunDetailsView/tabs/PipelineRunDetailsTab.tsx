@@ -15,12 +15,17 @@ import {
   ClipboardCopy,
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
+import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { ErrorDetailsWithStaticLog } from '../../../shared/components/pipeline-run-logs/logs/log-snippet-types';
 import { getPLRLogSnippet } from '../../../shared/components/pipeline-run-logs/logs/pipelineRunLogSnippet';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind, TaskRunKind } from '../../../types';
 import { getCommitShortName } from '../../../utils/commits-utils';
-import { calculateDuration, pipelineRunStatus } from '../../../utils/pipeline-utils';
+import {
+  calculateDuration,
+  getSbomTaskRun,
+  pipelineRunStatus,
+} from '../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import GitRepoLink from '../../GitLink/GitRepoLink';
 import { StatusIconWithText } from '../../topology/StatusIcon';
@@ -57,6 +62,8 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
   const buildImage = pipelineRun.metadata?.annotations?.[PipelineRunLabel.BUILD_IMAGE_ANNOTATION];
   const sourceUrl = getSourceUrl(pipelineRun);
   const pipelineStatus = !error ? pipelineRunStatus(pipelineRun) : null;
+  const sbomTaskRun = React.useMemo(() => getSbomTaskRun(taskRuns), [taskRuns]);
+
   return (
     <>
       <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
@@ -173,6 +180,23 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                       <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
                         {`cosign download sbom ${buildImage}`}
                       </ClipboardCopy>
+                      <ExternalLink href="https://docs.sigstore.dev/cosign/installation" showIcon>
+                        Install Cosign
+                      </ExternalLink>
+                    </DescriptionListDescription>
+                  </DescriptionListGroup>
+                )}
+                {sbomTaskRun && (
+                  <DescriptionListGroup>
+                    <DescriptionListTerm>SBOM</DescriptionListTerm>
+                    <DescriptionListDescription>
+                      <Link
+                        to={`/stonesoup/workspaces/${workspace}/applications/${
+                          sbomTaskRun.metadata.labels[PipelineRunLabel.APPLICATION]
+                        }/taskruns/${sbomTaskRun.metadata.name}/logs`}
+                      >
+                        View SBOM
+                      </Link>
                     </DescriptionListDescription>
                   </DescriptionListGroup>
                 )}

@@ -45,6 +45,7 @@ const getTaskRunsFromPLR = (plr: PipelineRunKind): TaskRunKind[] =>
     metadata: {
       labels: {
         [TektonResourceLabel.pipelineTask]: plr.status.taskRuns[trName].pipelineTaskName,
+        [PipelineRunLabel.APPLICATION]: 'my-app',
       },
       name: trName,
     },
@@ -316,5 +317,34 @@ describe('PipelineRunDetailsTab', () => {
       },
     );
     expect(screen.queryByText('Download SBOM')).not.toBeInTheDocument();
+  });
+
+  it('should render the view SBOM logs section for a pipelinerun with show-sbom task', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    const simplePipelineRun = {
+      ...testPipelineRun,
+      metadata: {
+        ...testPipelineRun.metadata,
+        annotations: {
+          ...testPipelineRun.metadata.annotations,
+          [PipelineRunLabel.BUILD_IMAGE_ANNOTATION]: 'quay.io/test/user-workload:test-image',
+        },
+      },
+    };
+    render(
+      <PipelineRunDetailsTab
+        pipelineRun={simplePipelineRun}
+        taskRuns={getTaskRunsFromPLR(simplePipelineRun)}
+        error={null}
+      />,
+      {
+        wrapper: BrowserRouter,
+      },
+    );
+    expect(screen.getByText('View SBOM')).toBeInTheDocument();
+    expect(screen.getByText('View SBOM')).toHaveProperty(
+      'href',
+      'http://localhost/stonesoup/workspaces/test-ws/applications/my-app/taskruns/sum-and-multiply-pipeline-8mhx4-show-sbom/logs',
+    );
   });
 });
