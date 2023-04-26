@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Bullseye,
+  Button,
   Flex,
   FlexItem,
   SearchInput,
@@ -18,15 +19,12 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { useSearchParam } from '../../hooks/useSearchParam';
-import ExternalLink from '../../shared/components/links/ExternalLink';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import SecurityTabEmptyState from '../EmptyState/SecurityTabEmptyState';
 import { EnterpriseContractTable } from './EnterpriseContractTable/EnterpriseContractTable';
 import { ENTERPRISE_CONTRACT_STATUS } from './types';
 import { useEnterpriseContractResults } from './useEnterpriseContractResultFromLogs';
 import { getRuleStatus } from './utils';
-
-import './SecurityEnterpriseContractTab.scss';
 
 const getResultsSummary = (ECs, ecLoaded) => {
   const statusFilter = {
@@ -161,22 +159,36 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
           Enterprise Contract is a set of tools for verifying the provenance of application
           snapshots and validating them against a clearly defined policy.
           <br />
-          Enterprise Contract policy is defined using the Rego policy language and is described in{' '}
-          <ExternalLink
-            href="https://enterprise-contract.github.io/ec-policies/release_policy.html"
-            showIcon
-            additionalClassName="security-enterprise-contract-tab__icon"
+          The Enterprise Contract policy is defined using the{' '}
+          <Button
+            variant="link"
+            isInline
+            component={(props) => (
+              <a
+                {...props}
+                href="https://www.openpolicyagent.org/docs/latest/policy-language/"
+                target="_blank"
+                rel="noreferrer"
+              />
+            )}
           >
-            Release Policy
-          </ExternalLink>{' '}
-          and{' '}
-          <ExternalLink
-            href="https://enterprise-contract.github.io/ec-policies/pipeline_policy.html"
-            showIcon
-            additionalClassName="security-enterprise-contract-tab__icon"
+            rego policy language
+          </Button>{' '}
+          and is described here in{' '}
+          <Button
+            variant="link"
+            isInline
+            component={(props) => (
+              <a
+                {...props}
+                href="https://enterprisecontract.dev/docs/ec-policies/index.html"
+                target="_blank"
+                rel="noreferrer"
+              />
+            )}
           >
-            Pipeline Policy
-          </ExternalLink>
+            Enterprise Contract Policies
+          </Button>
           .
         </Text>
       </TextContent>

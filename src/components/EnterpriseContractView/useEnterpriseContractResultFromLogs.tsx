@@ -59,7 +59,7 @@ export const useEnterpriseContractResultFromLogs = (
   const ecResult = React.useMemo(() => {
     // filter out components for which ec didn't execute because invalid image URL
     return ecLoaded && ecJson
-      ? ecJson.components.filter((comp: ComponentEnterpriseContractResult) => {
+      ? ecJson.components?.filter((comp: ComponentEnterpriseContractResult) => {
           return !(
             comp.violations &&
             comp.violations?.length === 1 &&
