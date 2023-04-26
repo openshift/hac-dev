@@ -31,12 +31,12 @@ const NamespacedPage: React.FunctionComponent<NamespacedPageProps> = ({ children
   }
 
   return (
-    <ModalProvider>
-      <AppBanner />
-      <div className="main-layout-container">
-        <ErrorBoundary>{children}</ErrorBoundary>
-      </div>
-    </ModalProvider>
+    <ErrorBoundary>
+      <ModalProvider>
+        <AppBanner />
+        <div className="main-layout-container">{children}</div>
+      </ModalProvider>
+    </ErrorBoundary>
   );
 };
 
