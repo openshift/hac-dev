@@ -33,8 +33,8 @@ import MetadataList from '../MetadataList';
 import PipelineRunVisualization from '../PipelineRunVisualization';
 import RelatedPipelineRuns from '../RelatedPipelineRuns';
 import { getSourceUrl } from '../utils/pipelinerun-utils';
-import ClairScanDescriptionListGroup from './ClairScanDescriptionListGroup';
 import RunResultsList from './RunResultsList';
+import ScanDescriptionListGroup from './ScanDescriptionListGroup';
 
 type PipelineRunDetailsTabProps = {
   taskRuns: TaskRunKind[];
@@ -216,7 +216,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                     )}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
-                <ClairScanDescriptionListGroup taskRuns={taskRuns} showLogsLink />
+                <ScanDescriptionListGroup taskRuns={taskRuns} showLogsLink />
                 <DescriptionListGroup>
                   <DescriptionListTerm>Component</DescriptionListTerm>
                   <DescriptionListDescription>

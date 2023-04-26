@@ -1,0 +1,29 @@
+.scan-description-list {
+  &__popover {
+    .pf-c-popover__content, .pf-c-popover__body {
+      padding: 0;
+    }
+  }
+  &__tooltip {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pf-global--spacer--md);
+    text-align: left;
+    padding: var(--pf-global--spacer--md);
+
+    &-title {
+      font-size: var(--pf-global--icon--FontSize--md);
+    }
+
+    &-task {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      column-gap: var(--pf-global--spacer--md);
+      row-gap: var(--pf-global--spacer--sm);
+    }
+
+    &-link {
+      height: fit-content;
+    }
+  }
+}

@@ -8,8 +8,8 @@ import {
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { TaskRunKind } from '../../../types';
 import { calculateDuration, runStatus } from '../../../utils/pipeline-utils';
-import ClairScanDescriptionListGroup from '../tabs/ClairScanDescriptionListGroup';
 import RunResultsList from '../tabs/RunResultsList';
+import ScanDescriptionListGroup from '../tabs/ScanDescriptionListGroup';
 
 type Props = {
   taskRun?: TaskRunKind;
@@ -43,7 +43,7 @@ const TaskRunDetails: React.FC<Props> = ({ taskRun, status }) => (
               {taskRun?.status?.taskSpec?.description || '-'}
             </DescriptionListDescription>
           </DescriptionListGroup>
-          <ClairScanDescriptionListGroup taskRuns={[taskRun]} hideIfNotFound />
+          <ScanDescriptionListGroup taskRuns={[taskRun]} hideIfNotFound />
         </DescriptionList>
       </>
     ) : (

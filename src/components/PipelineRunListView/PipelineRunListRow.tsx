@@ -8,9 +8,9 @@ import { PipelineRunKind } from '../../types';
 import { calculateDuration, pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { StatusIconWithText } from '../topology/StatusIcon';
-import { ClairScanStatus } from './ClairScanStatus';
 import { usePipelinerunActions } from './pipelinerun-actions';
 import { pipelineRunTableColumnClasses } from './PipelineRunListHeader';
+import { ScanStatus } from './ScanStatus';
 
 const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) => {
   const capitalize = (label: string) => {
@@ -38,7 +38,7 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
         />
       </TableData>
       <TableData className={pipelineRunTableColumnClasses.vulnerabilities}>
-        <ClairScanStatus pipelineRunName={obj.metadata?.name} />
+        <ScanStatus pipelineRunName={obj.metadata?.name} />
       </TableData>
       <TableData className={pipelineRunTableColumnClasses.duration}>
         {status !== 'Pending'

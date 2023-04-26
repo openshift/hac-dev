@@ -23,6 +23,7 @@ import { calculateDuration, taskRunStatus } from '../../../utils/pipeline-utils'
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import MetadataList from '../../PipelineRunDetailsView/MetadataList';
 import RunResultsList from '../../PipelineRunDetailsView/tabs/RunResultsList';
+import ScanDescriptionListGroup from '../../PipelineRunDetailsView/tabs/ScanDescriptionListGroup';
 import { StatusIconWithText } from '../../topology/StatusIcon';
 
 type TaskRunDetailsTabProps = {
@@ -125,6 +126,7 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
                     />
                   </DescriptionListDescription>
                 </DescriptionListGroup>
+                <ScanDescriptionListGroup taskRuns={[taskRun]} hideIfNotFound />
                 {Object.keys(taskRunFailed).length > 0 && (
                   <>
                     <DescriptionListGroup>

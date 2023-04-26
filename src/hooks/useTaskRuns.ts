@@ -9,12 +9,15 @@ export const useTaskRuns = (
   const [taskRuns, loaded, error] = useK8sWatchResource<TaskRunKind[]>({
     groupVersionKind: TaskRunGroupVersionKind,
     namespace,
-    selector: {
-      matchLabels: {
-        ...(pipelineRunName ? { [TektonResourceLabel.pipelinerun]: pipelineRunName } : {}),
-        ...(taskName ? { [TektonResourceLabel.pipelineTask]: taskName } : {}),
-      },
-    },
+    selector:
+      pipelineRunName || taskName
+        ? {
+            matchLabels: {
+              ...(pipelineRunName ? { [TektonResourceLabel.pipelinerun]: pipelineRunName } : {}),
+              ...(taskName ? { [TektonResourceLabel.pipelineTask]: taskName } : {}),
+            },
+          }
+        : undefined,
     isList: true,
   });
 

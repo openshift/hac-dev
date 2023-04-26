@@ -1,5 +1,5 @@
 import { PipelineNodeModel as PfPipelineNodeModel, WhenStatus } from '@patternfly/react-topology';
-import { ClairScanResult } from '../../../hooks/useClairScanResults';
+import { ScanResults } from '../../../hooks/useScanResults';
 import { PipelineTask, TaskRunStatus, TaskRunKind } from '../../../types';
 import { runStatus } from '../../../utils/pipeline-utils';
 
@@ -24,7 +24,7 @@ export type PipelineRunNodeData = {
   namespace: string;
   testFailCount?: number;
   testWarnCount?: number;
-  scanResults?: ClairScanResult;
+  scanResults?: ScanResults;
   whenStatus?: WhenStatus;
   steps?: StepStatus[];
   taskRun?: TaskRunKind;
@@ -35,7 +35,7 @@ export type PipelineTaskStatus = TaskRunStatus & {
   duration?: string;
   testFailCount?: number;
   testWarnCount?: number;
-  scanResults?: ClairScanResult;
+  scanResults?: ScanResults;
 };
 
 export type PipelineTaskWithStatus = PipelineTask & {

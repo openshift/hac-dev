@@ -23,7 +23,7 @@ import { Timestamp } from '../../../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../../../types';
 import { calculateDuration } from '../../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
-import ClairScanDescriptionListGroup from '../../../PipelineRunDetailsView/tabs/ClairScanDescriptionListGroup';
+import ScanDescriptionListGroup from '../../../PipelineRunDetailsView/tabs/ScanDescriptionListGroup';
 import { StatusIconWithTextLabel } from '../../../topology/StatusIcon';
 import { CommitWorkflowNodeModelData } from '../visualization/commit-visualization-types';
 
@@ -139,7 +139,9 @@ const IntegrationTestSidePanel: React.FC<IntegrationTestSidePanelBodyProps> = ({
                 )}
               </DescriptionListDescription>
             </DescriptionListGroup>
-            <ClairScanDescriptionListGroup taskRuns={taskRuns} hideIfNotFound />
+            {integrationTestPipeline ? (
+              <ScanDescriptionListGroup taskRuns={taskRuns} hideIfNotFound showLogsLink />
+            ) : null}
           </DescriptionList>
           {Object.keys(pipelineRunFailed).length > 0 && (
             <DescriptionList
