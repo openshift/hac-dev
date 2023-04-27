@@ -156,7 +156,7 @@ export const mockTestPipelinesData = [
                   exitCode: 0,
                   finishedAt: '2022-11-09T17:33:44Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1668015224\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1668015224\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2022-11-09T17:33:44Z',
                 },
@@ -164,7 +164,7 @@ export const mockTestPipelinesData = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 value:
                   '{"result":"SKIPPED","timestamp":"1668015224","failures":[],"successes":0}\n',
               },
@@ -181,7 +181,7 @@ export const mockTestPipelinesData = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                 },
               ],
               steps: [
@@ -190,7 +190,7 @@ export const mockTestPipelinesData = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee $(results.HACBS_TEST_OUTPUT.path)\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${TEST_OUTPUT}" | tee $(results.TEST_OUTPUT.path)\n',
                 },
               ],
             },
@@ -223,7 +223,7 @@ export const mockTestPipelinesData = [
                   exitCode: 0,
                   finishedAt: '2022-11-09T17:33:45Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668015224\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668015224\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2022-11-09T17:33:44Z',
                 },
@@ -231,7 +231,7 @@ export const mockTestPipelinesData = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 value:
                   '{"result":"SUCCESS","timestamp":"1668015224","failures":[],"successes":0}\n',
               },
@@ -248,7 +248,7 @@ export const mockTestPipelinesData = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                 },
               ],
               steps: [
@@ -257,7 +257,7 @@ export const mockTestPipelinesData = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee $(results.HACBS_TEST_OUTPUT.path)\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${TEST_OUTPUT}" | tee $(results.TEST_OUTPUT.path)\n',
                 },
               ],
             },
@@ -290,7 +290,7 @@ export const mockTestPipelinesData = [
                   exitCode: 0,
                   finishedAt: '2022-11-09T17:33:43Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668015223\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668015223\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2022-11-09T17:33:43Z',
                 },
@@ -298,7 +298,7 @@ export const mockTestPipelinesData = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 value:
                   '{"result":"SUCCESS","timestamp":"1668015223","failures":[],"successes":0}\n',
               },
@@ -315,7 +315,7 @@ export const mockTestPipelinesData = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                 },
               ],
               steps: [
@@ -324,7 +324,7 @@ export const mockTestPipelinesData = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee $(results.HACBS_TEST_OUTPUT.path)\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${TEST_OUTPUT}" | tee $(results.TEST_OUTPUT.path)\n',
                 },
               ],
             },
@@ -490,7 +490,7 @@ export const mockTestPipelinesData = [
                   exitCode: 0,
                   finishedAt: '2022-11-09T17:33:45Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1668015225\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1668015225\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2022-11-09T17:33:45Z',
                 },
@@ -498,7 +498,7 @@ export const mockTestPipelinesData = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 value:
                   '{"result":"SKIPPED","timestamp":"1668015225","failures":[],"successes":0}\n',
               },
@@ -515,7 +515,7 @@ export const mockTestPipelinesData = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                 },
               ],
               steps: [
@@ -524,7 +524,7 @@ export const mockTestPipelinesData = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee $(results.HACBS_TEST_OUTPUT.path)\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${TEST_OUTPUT}" | tee $(results.TEST_OUTPUT.path)\n',
                 },
               ],
             },
@@ -557,7 +557,7 @@ export const mockTestPipelinesData = [
                   exitCode: 0,
                   finishedAt: '2022-11-09T17:33:45Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668015224\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668015224\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2022-11-09T17:33:44Z',
                 },
@@ -565,7 +565,7 @@ export const mockTestPipelinesData = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 value:
                   '{"result":"SUCCESS","timestamp":"1668015224","failures":[],"successes":0}\n',
               },
@@ -582,7 +582,7 @@ export const mockTestPipelinesData = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                 },
               ],
               steps: [
@@ -591,7 +591,7 @@ export const mockTestPipelinesData = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee $(results.HACBS_TEST_OUTPUT.path)\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${TEST_OUTPUT}" | tee $(results.TEST_OUTPUT.path)\n',
                 },
               ],
             },
@@ -624,7 +624,7 @@ export const mockTestPipelinesData = [
                   exitCode: 0,
                   finishedAt: '2022-11-09T17:33:45Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668015225\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668015225\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2022-11-09T17:33:45Z',
                 },
@@ -632,7 +632,7 @@ export const mockTestPipelinesData = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 value:
                   '{"result":"SUCCESS","timestamp":"1668015225","failures":[],"successes":0}\n',
               },
@@ -649,7 +649,7 @@ export const mockTestPipelinesData = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                 },
               ],
               steps: [
@@ -658,7 +658,7 @@ export const mockTestPipelinesData = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee $(results.HACBS_TEST_OUTPUT.path)\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${TEST_OUTPUT}" | tee $(results.TEST_OUTPUT.path)\n',
                 },
               ],
             },
@@ -824,7 +824,7 @@ export const mockTestPipelinesData = [
                   exitCode: 0,
                   finishedAt: '2022-11-09T17:33:44Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1668015224\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1668015224\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2022-11-09T17:33:44Z',
                 },
@@ -832,7 +832,7 @@ export const mockTestPipelinesData = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 value:
                   '{"result":"SKIPPED","timestamp":"1668015224","failures":[],"successes":0}\n',
               },
@@ -849,7 +849,7 @@ export const mockTestPipelinesData = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                 },
               ],
               steps: [
@@ -858,7 +858,7 @@ export const mockTestPipelinesData = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee $(results.HACBS_TEST_OUTPUT.path)\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${TEST_OUTPUT}" | tee $(results.TEST_OUTPUT.path)\n',
                 },
               ],
             },
@@ -891,7 +891,7 @@ export const mockTestPipelinesData = [
                   exitCode: 0,
                   finishedAt: '2022-11-09T17:33:45Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668015224\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668015224\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2022-11-09T17:33:44Z',
                 },
@@ -899,7 +899,7 @@ export const mockTestPipelinesData = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 value:
                   '{"result":"SUCCESS","timestamp":"1668015224","failures":[],"successes":0}\n',
               },
@@ -916,7 +916,7 @@ export const mockTestPipelinesData = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                 },
               ],
               steps: [
@@ -925,7 +925,7 @@ export const mockTestPipelinesData = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee $(results.HACBS_TEST_OUTPUT.path)\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${TEST_OUTPUT}" | tee $(results.TEST_OUTPUT.path)\n',
                 },
               ],
             },
@@ -958,7 +958,7 @@ export const mockTestPipelinesData = [
                   exitCode: 0,
                   finishedAt: '2022-11-09T17:33:43Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668015223\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668015223\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2022-11-09T17:33:43Z',
                 },
@@ -966,7 +966,7 @@ export const mockTestPipelinesData = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 value:
                   '{"result":"SUCCESS","timestamp":"1668015223","failures":[],"successes":0}\n',
               },
@@ -983,7 +983,7 @@ export const mockTestPipelinesData = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                 },
               ],
               steps: [
@@ -992,7 +992,7 @@ export const mockTestPipelinesData = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee $(results.HACBS_TEST_OUTPUT.path)\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT $(params.RESULT) --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: [], successes: 0}\')\necho "${TEST_OUTPUT}" | tee $(results.TEST_OUTPUT.path)\n',
                 },
               ],
             },

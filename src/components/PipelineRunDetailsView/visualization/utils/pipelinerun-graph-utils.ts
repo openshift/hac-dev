@@ -199,7 +199,7 @@ export const appendStatus = (
     // Determine any task test status
     if (taskRun?.status?.taskResults) {
       const testOutput = taskRun?.status?.taskResults.find(
-        (result) => result.name === 'HACBS_TEST_OUTPUT',
+        (result) => result.name === 'HACBS_TEST_OUTPUT' || result.name === 'TEST_OUTPUT',
       );
       if (testOutput) {
         try {

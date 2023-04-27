@@ -468,7 +468,7 @@ export const MockEnterpriseContractPolicies = {
         shortName: 'test_data_missing',
         title: 'No test data found',
         description:
-          'None of the tasks in the pipeline included a HACBS_TEST_OUTPUT\ntask result, which is where Enterprise Contract expects to find\ntest result data.',
+          'None of the tasks in the pipeline included a TEST_OUTPUT\ntask result, which is where Enterprise Contract expects to find\ntest result data.',
         warningOrFailure: 'failure',
         failureMsg: 'No test data found',
         file: 'policy/release/test.rego',
@@ -487,7 +487,7 @@ export const MockEnterpriseContractPolicies = {
         shortName: 'test_results_missing',
         title: 'Test data is missing the results key',
         description:
-          "Each test result is expected to have a 'results' key. In at least\none of the HACBS_TEST_OUTPUT task results this key was not present.",
+          "Each test result is expected to have a 'results' key. In at least\none of the TEST_OUTPUT task results this key was not present.",
         warningOrFailure: 'failure',
         failureMsg: 'Found tests without results',
         file: 'policy/release/test.rego',

@@ -95,7 +95,7 @@ describe('PipelineRunVisualization', () => {
     expect(finallyNodes).toHaveLength(1);
   });
 
-  it('should render the HACBS_TEST_OUTPUT correctly on the task runs', () => {
+  it('should render the TEST_OUTPUT correctly on the task runs', () => {
     render(
       <PipelineRunVisualization
         pipelineRun={mockPipelineRun}

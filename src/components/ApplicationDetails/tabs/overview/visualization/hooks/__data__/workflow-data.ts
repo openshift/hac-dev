@@ -381,7 +381,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
                   exitCode: 0,
                   finishedAt: '2022-11-19T11:41:14Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1668858074\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1668858074\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2022-11-19T11:41:14Z',
                 },
@@ -389,7 +389,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 value:
                   '{"result":"SKIPPED","timestamp":"1668858074","failures":[],"successes":0}\n',
               },
@@ -406,7 +406,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                 },
               ],
               steps: [
@@ -446,7 +446,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
                   exitCode: 0,
                   finishedAt: '2022-11-19T11:41:12Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668858072\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668858072\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2022-11-19T11:41:12Z',
                 },
@@ -454,7 +454,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 value:
                   '{"result":"SUCCESS","timestamp":"1668858072","failures":[],"successes":0}\n',
               },
@@ -471,7 +471,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                 },
               ],
               steps: [
@@ -511,7 +511,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
                   exitCode: 0,
                   finishedAt: '2022-11-19T11:41:12Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668858072\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1668858072\\",\\"failures\\":[],\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2022-11-19T11:41:12Z',
                 },
@@ -519,7 +519,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 value:
                   '{"result":"SUCCESS","timestamp":"1668858072","failures":[],"successes":0}\n',
               },
@@ -536,7 +536,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                 },
               ],
               steps: [

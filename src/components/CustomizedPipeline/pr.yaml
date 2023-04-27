@@ -1854,7 +1854,7 @@ status:
               type: string
           results:
             - description: Test output
-              name: HACBS_TEST_OUTPUT
+              name: TEST_OUTPUT
               type: string
           steps:
             - image: 'quay.io/redhat-appstudio/hacbs-test:feature-sast'
@@ -1894,7 +1894,7 @@ status:
                 if [[ "$SNYK_EXIT_CODE" -eq 0 ]] || [[ "$SNYK_EXIT_CODE" -eq 1
                 ]]; then
                   cat sast_snyk_check_out.json
-                  HACBS_TEST_OUTPUT=
+                  TEST_OUTPUT=
                   parse_hacbs_test_output sast-snyk-check sarif sast_snyk_check_out.json  || true
 
                 # When the test is skipped, the "SNYK_EXIT_CODE" is 3 and it can
@@ -1908,8 +1908,8 @@ status:
                   cat stdout.txt
                 fi
 
-                echo "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee
-                /tekton/results/HACBS_TEST_OUTPUT
+                echo "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee
+                /tekton/results/TEST_OUTPUT
               volumeMounts:
                 - mountPath: /etc/secrets
                   name: snyk-secret
