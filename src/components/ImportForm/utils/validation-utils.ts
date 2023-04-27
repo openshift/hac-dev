@@ -11,6 +11,8 @@ export const resourceNameRegex = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
 export const filePathOrURLRegex =
   /^((^\.|^\.\.|^[\w-]+)(\/(?=[\w-])[\w-]+)*$)|(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/;
 
+export const dnsSubDomainRegex = /[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?/;
+
 const combineRegExps = (...regexps: RegExp[]) => {
   const regexStringsWithoutFlags = regexps.map((regex) => regex.source);
   return new RegExp(regexStringsWithoutFlags.join('|'));

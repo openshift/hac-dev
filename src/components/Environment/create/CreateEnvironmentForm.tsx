@@ -18,6 +18,7 @@ import {
   environmentTypeItems,
 } from '../environment-utils';
 import './CreateEnvironmentForm.scss';
+import IngressDomainField from './IngressDomainField';
 import KubeconfigUploadField from './KubeconfigUploadField';
 
 export type CreateEnvironmentFormValues = {
@@ -28,6 +29,7 @@ export type CreateEnvironmentFormValues = {
   environmentType?: EnvironmentType;
   kubeconfig: string;
   targetNamespace: string;
+  ingressDomain: string;
 };
 
 type CreateEnvironmentFormProps = FormikProps<CreateEnvironmentFormValues>;
@@ -44,6 +46,7 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
   isSubmitting,
   handleSubmit,
   handleReset,
+  values,
 }) => {
   const footer = (
     <FormFooter
@@ -100,6 +103,7 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
               validateOnChange
               required
             />
+            <IngressDomainField clusterType={values.clusterType} />
             <KubeconfigUploadField name="kubeconfig" />
             <InputField
               label="Target namespace on the selected cluster"

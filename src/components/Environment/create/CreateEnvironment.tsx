@@ -17,6 +17,7 @@ const CreateEnvironment: React.FC = () => {
     clusterType: '',
     kubeconfig: '',
     targetNamespace: '',
+    ingressDomain: '',
   };
 
   const handleSubmit = React.useCallback(

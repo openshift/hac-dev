@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { EnvironmentModel, SecretModel } from '../../../../models';
 import CreateEnvironment from '../CreateEnvironment';
 import '@testing-library/jest-dom';
@@ -86,7 +86,7 @@ describe('CreateEnvironment', () => {
     expect(screen.getByText('Cluster information')).toBeVisible();
   });
 
-  it('submit button should be disabled untill all the required fields are filled', () => {
+  it('submit button should be disabled until all the required fields are filled', () => {
     render(<CreateEnvironment />);
     const submitButton = screen.getByRole('button', { name: 'Create environment' });
     expect(submitButton).toBeDisabled();
@@ -146,6 +146,80 @@ describe('CreateEnvironment', () => {
                 apiURL: 'https://api.example.com:6443',
                 clusterCredentialsSecret: 'cluster-cred-secret',
                 targetNamespace: 'test-ns',
+              },
+            },
+          },
+        },
+      }),
+    );
+  });
+
+  it('should require ingress domain for Non-OpenShift clusters', async () => {
+    render(<CreateEnvironment />);
+    fillEnvironmentForm();
+    const submitButton = screen.getByRole('button', { name: 'Create environment' });
+    expect(submitButton).toBeEnabled();
+
+    expect(screen.queryByLabelText('IngressDomain')).toBeFalsy();
+
+    fireEvent.click(screen.getAllByRole('button', { name: 'OpenShift' })[0]);
+
+    await act(async () => screen.getByText('Non-OpenShift').click());
+
+    expect(screen.getByLabelText('Ingress domain')).toBeVisible();
+    expect(submitButton).not.toBeEnabled();
+
+    await act(async () => {
+      fireEvent.input(screen.getByLabelText('Ingress domain'), {
+        target: { value: '127.0.0.1.nip.io' },
+      });
+    });
+
+    expect(submitButton).toBeEnabled();
+
+    mockK8sCreate.mockResolvedValue({ metadata: { name: 'cluster-cred-secret' } });
+
+    fireEvent.click(submitButton);
+
+    await waitFor(() =>
+      expect(mockK8sCreate).toHaveBeenCalledWith({
+        model: SecretModel,
+        resource: {
+          apiVersion: 'v1',
+          kind: 'Secret',
+          type: 'managed-gitops.redhat.com/managed-environment',
+          metadata: {
+            generateName: 'env-cluster-credentials-',
+            namespace: 'test-ns',
+          },
+          stringData: {
+            kubeconfig: mockKubeconfig,
+          },
+        },
+      }),
+    );
+    await waitFor(() =>
+      expect(mockK8sCreate).toHaveBeenCalledWith({
+        model: EnvironmentModel,
+        resource: {
+          apiVersion: 'appstudio.redhat.com/v1alpha1',
+          kind: 'Environment',
+          metadata: {
+            name: 'env-1',
+            namespace: 'test-ns',
+          },
+          spec: {
+            deploymentStrategy: 'AppStudioAutomated',
+            displayName: 'Env 1',
+            tags: ['managed'],
+            unstableConfigurationFields: {
+              clusterType: 'Kubernetes',
+              kubernetesCredentials: {
+                allowInsecureSkipTLSVerify: true,
+                apiURL: 'https://api.example.com:6443',
+                clusterCredentialsSecret: 'cluster-cred-secret',
+                targetNamespace: 'test-ns',
+                ingressDomain: '127.0.0.1.nip.io',
               },
             },
           },
