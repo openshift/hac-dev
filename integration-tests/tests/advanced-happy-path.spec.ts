@@ -18,7 +18,7 @@ describe('Advanced Happy path', () => {
   const componentPage = new ComponentPage();
   const latestCommitsTabPage = new LatestCommitsTabPage();
   const integrationTestsTabPage = new IntegrationTestsTabPage();
-  const sourceCodeRepoLink = 'https://github.com/devfile-samples/devfile-sample-go-basic';
+  const sourceCodeRepoLink = 'https://github.com/hac-test/devfile-sample-go-basic';
   const repoName = Common.generateAppName('devfile-sample-go-basic');
   const repoOwner = 'redhat-hac-qe';
   const repoLink = `https://github.com/${repoOwner}/${repoName}`;
@@ -50,7 +50,7 @@ describe('Advanced Happy path', () => {
     Common.importCodeToGitHubRepository(sourceCodeRepoLink, repoName);
     Common.githubRequest(
       'GET',
-      `https://api.github.com/repos/devfile-samples/devfile-sample-go-basic/contents/${componentInfo.filePath}`,
+      `https://api.github.com/repos/hac-test/devfile-sample-go-basic/contents/${componentInfo.filePath}`,
     ).then((response) => {
       componentInfo.goFileSHAOriginal = response.body.sha;
       componentInfo.goFileBase64Original = response.body.content;
@@ -68,7 +68,10 @@ describe('Advanced Happy path', () => {
     });
 
     it('Add a component to Application', () => {
-      Applications.createComponent(repoLink, componentName, 'Go', true);
+      Applications.createComponent(repoLink, componentName, 'Go', true, {
+        varName: 'TEST_ENV_VAR',
+        value: 'Test go app',
+      });
     });
   });
 
@@ -302,6 +305,13 @@ describe('Advanced Happy path', () => {
         });
 
       Applications.checkComponentStatus(componentName, 'Build Succeeded');
+    });
+
+    it('Verify view pod logs', () => {
+      applicationDetailPage.openPodLogs(componentName);
+      cy.contains('Pod status: Running').should('be.visible');
+      applicationDetailPage.checkPodLog('my-go', 'TEST_ENV_VAR : Test go app');
+      applicationDetailPage.closeBuildLog();
     });
   });
 

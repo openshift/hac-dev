@@ -42,8 +42,20 @@ export class ApplicationDetailPage {
     cy.get(buildLogModalContentPO.logText).should('contain.text', textToVerify);
   }
 
+  checkPodLog(podName: string, textToVerify: string) {
+    cy.get(buildLogModalContentPO.podLogNavList).contains('a', podName).click();
+    cy.get(buildLogModalContentPO.logText).should('contain.text', textToVerify);
+  }
+
   openBuildLog(componentName: string) {
     cy.get(applicationDetailPagePO.componentBuildLog(componentName), { timeout: 60000 }).click();
+    cy.get(buildLogModalContentPO.modal).should('exist');
+  }
+
+  openPodLogs(componentName: string) {
+    cy.get(applicationDetailPagePO.componentPodLog(componentName), { timeout: 60000 })
+      .should('have.have.text', 'View pod logs')
+      .click();
     cy.get(buildLogModalContentPO.modal).should('exist');
   }
 

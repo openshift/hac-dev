@@ -34,7 +34,7 @@ describe('Create Application from Sample', { tags: ['@PR-check', '@publicRepo'] 
     componentSamplesPage.selectNodeJSSample();
 
     // Create sample component
-    componentPage.createApplication();
+    componentPage.clickCreateApplication();
     Applications.goToComponentsTab();
 
     cy.wait('@componentsAPI').then((xhr) => {
@@ -59,7 +59,7 @@ describe('Create Application from Sample', { tags: ['@PR-check', '@publicRepo'] 
     componentSamplesPage.selectQuarkusSample();
 
     // Create sample component
-    componentPage.createApplication();
+    componentPage.clickCreateApplication();
     Applications.goToComponentsTab();
 
     cy.wait('@componentsAPI').then((xhr) => {

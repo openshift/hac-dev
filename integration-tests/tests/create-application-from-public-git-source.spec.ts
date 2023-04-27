@@ -62,7 +62,7 @@ describe('Create Component from Public Git Source', { tags: ['@PR-check', '@publ
     });
 
     it('Click Create Application and validate Components', () => {
-      componentPage.createApplication();
+      componentPage.clickCreateApplication();
       Applications.goToComponentsTab();
       applicationDetailPage.createdComponentExists(componentPage.componentName, applicationName);
       componentPage.verifyComponentGHReferenceAndLink(
