@@ -33,10 +33,11 @@ export const useAllApplicationEnvironmentsWithHealthStatus = (
     }
 
     return environments.map((environment) => {
-      if (environment.spec.tags?.includes(EnvironmentType.managed)) {
-        const latestRelease = releases
-          .filter((release) => release.spec.releasePlan === environment.metadata.name)
-          .sort((a, b) => (a.status.startTime > b.status.startTime ? -1 : 1))[0];
+      const latestRelease = releases
+        .filter((release) => release.spec.releasePlan === environment.metadata.name)
+        .sort((a, b) => (a.status.startTime > b.status.startTime ? -1 : 1))[0];
+
+      if (latestRelease && environment.spec.tags?.includes(EnvironmentType.managed)) {
         return {
           ...environment,
           healthStatus: latestRelease
