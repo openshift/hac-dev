@@ -19,6 +19,7 @@ const TextColumnField: React.FC<TextColumnFieldProps> = (props) => {
     onChange,
     children,
     dndEnabled = false,
+    noFooter = false,
   } = props;
   const [field, { touched, error }] = useField<string[]>(name);
   const rowValues = field.value ?? [];
@@ -66,7 +67,7 @@ const TextColumnField: React.FC<TextColumnFieldProps> = (props) => {
                 })}
               </>
             )}
-            {!isReadOnly && (
+            {!isReadOnly && !noFooter && (
               <MultiColumnFieldFooter
                 addLabel={addLabel}
                 onAdd={() => {

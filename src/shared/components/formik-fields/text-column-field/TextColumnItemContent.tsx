@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   Flex,
   FlexItem,
@@ -60,8 +59,6 @@ const TextColumnItemContent: React.FC<TextColumntItemContentProps> = ({
   dragRef,
   opacity,
 }) => {
-  const { t } = useTranslation();
-
   const mergeNewValue: MergeNewValueUtil = (newValue) => {
     const values: string[] = [...rowValues];
     values[idx] = newValue;
@@ -87,9 +84,9 @@ const TextColumnItemContent: React.FC<TextColumntItemContentProps> = ({
         </FlexItem>
         {!isReadOnly && (
           <FlexItem>
-            <Tooltip content={tooltip || t('console-shared~Remove')}>
+            <Tooltip content={tooltip || 'Remove'}>
               <Button
-                aria-label={tooltip || t('console-shared~Remove')}
+                aria-label={tooltip || 'Remove'}
                 variant={ButtonVariant.plain}
                 type={ButtonType.button}
                 isInline

@@ -26,6 +26,7 @@ export type TextColumnFieldProps = FieldProps & {
   onChange?: OnChangeHandler;
   dndEnabled?: boolean;
   children?: TextColumnFieldChildProps;
+  noFooter?: boolean;
 };
 
 export type TextColumnItemProps = TextColumnFieldProps & {

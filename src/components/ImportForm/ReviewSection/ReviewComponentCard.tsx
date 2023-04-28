@@ -25,6 +25,7 @@ import {
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import GitRepoLink from '../../GitLink/GitRepoLink';
 import HelpPopover from '../../HelpPopover';
+import SecretSection from '../SecretSection/SecretSection';
 import { CPUUnits, DetectedFormComponent, MemoryUnits } from '../utils/types';
 import { RuntimeSelector } from './RuntimeSelector';
 
@@ -182,6 +183,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 <HelpPopover bodyContent="We use these default values to deploy this component. You can customize the values for each of your environments later by editing the component settings." />
               }
             />
+            <SecretSection />
           </FormSection>
         </CardBody>
       </CardExpandableContent>

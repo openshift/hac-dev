@@ -33,6 +33,14 @@ export type DetectedFormComponent = {
   devfileFound?: boolean;
   defaultBuildPipeline?: boolean;
 };
+export type ImportSecret = {
+  secretName: string;
+  keyValues: {
+    key: string;
+    value: string;
+    disabled?: boolean;
+  }[];
+};
 
 export type ImportFormValues = {
   application: string;
@@ -55,4 +63,7 @@ export type ImportFormValues = {
   initialDetectionLoaded?: boolean;
   runtime?: string;
   sample?: string;
+  secrets?: ImportSecret[];
+  newSecrets?: string[];
+  partnerTaskSecrets?: string[];
 };

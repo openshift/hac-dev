@@ -100,3 +100,26 @@ export const reviewValidationSchema = yup.object({
   }),
   isDetected: yup.boolean().isTrue().required('Required'),
 });
+
+export const SecretFromSchema = yup.object({
+  secretName: yup
+    .string()
+    .required('Required')
+    .matches(
+      resourceNameRegex,
+      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
+    )
+    .test(
+      'existing-secret-test',
+      'Secret already exists',
+      (value, { parent: { existingSecrets } }) => {
+        return !existingSecrets.includes(value);
+      },
+    ),
+  keyValues: yup.array().of(
+    yup.object({
+      key: yup.string().required('Required'),
+      value: yup.string().required('Required'),
+    }),
+  ),
+});
