@@ -77,8 +77,8 @@ export const EnterpriseContractTable: React.FC<EnterpriseContractTableProps> = (
           <Th width={10} sort={getSortParams(2)}>
             Status
           </Th>
-          <Th width={20}>Message</Th>
-          <Th width={30} sort={getSortParams(4)}>
+          <Th width={30}>Message</Th>
+          <Th width={20} sort={getSortParams(4)}>
             Component
           </Th>
         </Tr>
