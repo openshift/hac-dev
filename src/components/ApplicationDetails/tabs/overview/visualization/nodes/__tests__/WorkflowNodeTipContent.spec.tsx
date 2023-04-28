@@ -119,6 +119,11 @@ describe('WorkflowNode', () => {
     const visualization = getController(true);
     const mockGroup = visualization.getNodeById('components');
     const mockElement = mockGroup.getChildren()[0] as Node<NodeModel, WorkflowNodeModelData>;
+    const mockBuildGroup = visualization.getNodeById('builds');
+    const mockBuildElement = mockBuildGroup.getChildren()[1] as Node<
+      NodeModel,
+      WorkflowNodeModelData
+    >;
 
     routerRenderer(<WorkflowNodeTipContent element={mockElement} />);
 
@@ -131,6 +136,10 @@ describe('WorkflowNode', () => {
     expect(linkData.tab).toBe('components');
     expect(linkData.filter.name).toBe('name');
     expect(linkData.filter.value).toBe(mockElement.getLabel());
+    const buildLinkData = getLinkDataForElement(mockBuildElement, 'test-ws');
+    expect(buildLinkData.tab).toBe('activity/pipelineruns');
+    expect(buildLinkData.filter.name).toBe('name');
+    expect(buildLinkData.filter.value).toBe(mockBuildElement.getData().resources[0].metadata.name);
     expect(screen.queryAllByTestId('child-row')).toHaveLength(0);
     expect(screen.queryByText('View logs')).not.toBeInTheDocument();
   });
