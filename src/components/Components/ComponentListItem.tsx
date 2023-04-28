@@ -70,7 +70,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
   const componentRouteWebURL = routes?.length > 0 && getComponentRouteWebURL(routes, name);
   const condition = getConditionForResource<ComponentKind>(component);
 
-  const deploymentResource = gitOpsDeployment?.status?.resources.find(
+  const deploymentResource = gitOpsDeployment?.status?.resources?.find(
     (resource) => resource.kind === 'Deployment',
   );
 
