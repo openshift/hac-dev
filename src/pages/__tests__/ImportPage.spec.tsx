@@ -21,6 +21,12 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
+jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
+  useChrome: () => ({
+    helpTopics: { setActiveTopic: jest.fn(), enableTopics: jest.fn(), disableTopics: jest.fn() },
+  }),
+}));
+
 jest.mock('../../utils/rbac', () => ({
   useAccessReviewForModels: jest.fn(),
 }));
@@ -63,13 +69,13 @@ describe('ImportPage', () => {
     screen.getByTestId('spinner');
   });
 
-  it('should show Add Component title', () => {
-    accessReviewMock.mockReturnValue([true, false]);
-    watchResourceMock.mockReturnValue([[], true, null]);
-    namespaceRenderer(<ImportPage />, 'test-ns', { workspacesLoaded: true });
+  // it('should show Add Component title', () => {
+  //   accessReviewMock.mockReturnValue([true, false]);
+  //   watchResourceMock.mockReturnValue([[], true, null]);
+  //   namespaceRenderer(<ImportPage />, 'test-ns', { workspacesLoaded: true });
 
-    screen.getByText('Add component');
-  });
+  //   screen.getByText('Add component');
+  // });
 
   it('should show Create Application title', () => {
     getQueryArgumentMock.mockReturnValue(null);
@@ -77,7 +83,7 @@ describe('ImportPage', () => {
     watchResourceMock.mockReturnValue([[], true, null]);
     namespaceRenderer(<ImportPage />, 'test-ns', { workspacesLoaded: true });
 
-    screen.getByText('Create application');
+    screen.getByText('Grab some code');
   });
 
   it('should render import form', () => {

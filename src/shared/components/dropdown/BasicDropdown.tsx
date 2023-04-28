@@ -1,5 +1,11 @@
 import React from 'react';
-import { Dropdown, DropdownToggle, DropdownItem, DropdownItemProps } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownItemProps,
+  Badge,
+} from '@patternfly/react-core';
 import './BasicDropdown.scss';
 
 export type DropdownItemObject = {
@@ -10,6 +16,7 @@ export type DropdownItemObject = {
 type BasicDropdownProps = {
   items: DropdownItemObject[];
   selected?: string;
+  recommended?: string;
   onChange?: (selection: string) => void;
   placeholder?: string;
   fullWidth?: boolean;
@@ -20,6 +27,7 @@ type BasicDropdownProps = {
 const BasicDropdown: React.FC<BasicDropdownProps> = ({
   items,
   selected,
+  recommended,
   onChange,
   placeholder,
   disabled,
@@ -38,10 +46,14 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
         dropdownToggle(onToggle)
       ) : (
         <DropdownToggle onToggle={onToggle} isDisabled={disabled} data-test="dropdown-toggle">
-          {selected || placeholder}
+          {(
+            <>
+              {selected}&nbsp;{selected === recommended && <Badge isRead>Recommended</Badge>}
+            </>
+          ) || placeholder}
         </DropdownToggle>
       ),
-    [dropdownToggle, selected, placeholder, disabled],
+    [dropdownToggle, disabled, selected, recommended, placeholder],
   );
 
   const dropdownItems = React.useMemo(
@@ -50,11 +62,11 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
         const { key, value, ...props } = item;
         return (
           <DropdownItem key={key} {...props}>
-            {value}
+            {value}&nbsp;{value === recommended && <Badge isRead>Recommended</Badge>}
           </DropdownItem>
         );
       }),
-    [items],
+    [items, recommended],
   );
   return (
     <Dropdown

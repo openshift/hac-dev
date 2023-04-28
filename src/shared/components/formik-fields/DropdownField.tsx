@@ -7,10 +7,12 @@ import { getFieldId } from './field-utils';
 
 const DropdownField: React.FC<DropdownFieldProps> = ({
   label,
+  labelIcon,
   helpText,
   required,
   items,
   name,
+  recommended,
   onChange,
   fullWidth,
   validateOnChange = false,
@@ -28,6 +30,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
     <FormGroup
       fieldId={fieldId}
       label={label}
+      labelIcon={labelIcon}
       helperText={helpText}
       helperTextInvalid={errorMessage}
       validated={isValid ? 'default' : 'error'}
@@ -38,6 +41,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
         disabled={isDisabled}
         items={items}
         selected={value ?? field.value}
+        recommended={recommended}
         fullWidth={fullWidth}
         aria-describedby={helpText ? `${fieldId}-helper` : undefined}
         onChange={(val: string) => {

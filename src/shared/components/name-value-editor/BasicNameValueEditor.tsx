@@ -183,6 +183,7 @@ const BasicNameValueEditor: React.FC<NameValueEditorProps> = ({
               onClick={onAppend}
               type="button"
               variant="link"
+              isInline
             >
               <PlusCircleIcon
                 data-test-id="pairs-list__add-icon"

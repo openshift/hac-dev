@@ -55,6 +55,10 @@ export interface CheckboxFieldProps extends FieldProps {
   onChange?: (val: boolean) => void;
 }
 
+export interface SwitchFieldProps extends CheckboxFieldProps {
+  labelOff?: string;
+}
+
 export interface SearchInputFieldProps extends BaseInputFieldProps {
   onSearch: (searchTerm: string) => void;
 }
@@ -63,6 +67,7 @@ export interface DropdownFieldProps extends FieldProps {
   value?: string;
   items: DropdownItemObject[];
   selectedKey?: string;
+  recommended?: string;
   title?: React.ReactNode;
   fullWidth?: boolean;
   disabled?: boolean;

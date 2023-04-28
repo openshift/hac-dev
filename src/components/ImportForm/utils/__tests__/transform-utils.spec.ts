@@ -40,6 +40,7 @@ const mockComponent: DetectedFormComponent = {
   devfileFound: true,
   language: 'nodejs',
   projectType: 'nodejs',
+  defaultBuildPipeline: true,
 };
 
 describe('Transform Utils', () => {

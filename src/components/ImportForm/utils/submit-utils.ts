@@ -12,7 +12,6 @@ export const createComponents = async (
   namespace: string,
   secret?: string,
   dryRun?: boolean,
-  enablePac?: boolean,
   annotations?: { [key: string]: string },
 ) => {
   const createComponentPromises = components.map((component) => {
@@ -23,6 +22,8 @@ export const createComponents = async (
       replicas: componentData.replicas && Number(componentData.replicas),
       targetPort: componentData.targetPort && Number(componentData.targetPort),
     };
+    const enablePac = !component.defaultBuildPipeline;
+
     return createComponent(
       componentValues,
       application,
@@ -40,8 +41,7 @@ export const createComponents = async (
 };
 
 export const createResources = async (formValues: ImportFormValues, strategy: ImportStrategy) => {
-  const { source, application, inAppContext, components, secret, namespace, pipelinesascode } =
-    formValues;
+  const { source, application, inAppContext, components, secret, namespace } = formValues;
   const shouldCreateApplication = !inAppContext;
   let applicationName = application;
   let detectedComponents = components;
@@ -70,7 +70,6 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
     namespace,
     secret,
     true,
-    pipelinesascode === 'automatic',
     componentAnnotations,
   );
 
@@ -86,7 +85,6 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
     namespace,
     secret,
     false,
-    pipelinesascode === 'automatic',
     componentAnnotations,
   );
 
