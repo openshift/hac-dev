@@ -2064,7 +2064,7 @@ export const mockPipelineRun = {
                   exitCode: 0,
                   finishedAt: '2023-03-16T01:01:04Z',
                   message:
-                    '[{"key":"BASE_IMAGE","value":"docker.io/library/openjdk@sha256:e81b7f317654b0f26d3993e014b04bcb29250339b11b9de41e130feecd4cd43c","type":1},{"key":"BASE_IMAGE_REPOSITORY","value":"library/openjdk","type":1},{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928464\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+                    '[{"key":"BASE_IMAGE","value":"docker.io/library/openjdk@sha256:e81b7f317654b0f26d3993e014b04bcb29250339b11b9de41e130feecd4cd43c","type":1},{"key":"BASE_IMAGE_REPOSITORY","value":"library/openjdk","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928464\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-16T01:01:02Z',
                 },
@@ -2083,7 +2083,7 @@ export const mockPipelineRun = {
                 value: 'library/openjdk',
               },
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value:
                   '{"result":"SUCCESS","timestamp":"1678928464","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"default","successes":1,"failures":0,"warnings":0}\n',
@@ -2121,7 +2121,7 @@ export const mockPipelineRun = {
                 },
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -2148,7 +2148,7 @@ export const mockPipelineRun = {
                   name: 'inspect-image',
                   resources: {},
                   script:
-                    '#!/usr/bin/env bash\nsource /utils.sh\nIMAGE_INSPECT=image_inspect.json\nBASE_IMAGE_INSPECT=base_image_inspect.json\nRAW_IMAGE_INSPECT=raw_image_inspect.json\n\nIMAGE_URL="${IMAGE_URL}@${IMAGE_DIGEST}"\n# Given a tag and a the digest in the IMAGE_URL we opt to use the digest alone\n# this is because containers/image currently doesn\'t support image references\n# that contain both. See https://github.com/containers/image/issues/1736\nif [[ "${IMAGE_URL}" == *":"*"@"* ]]; then\n  IMAGE_URL="${IMAGE_URL/:*@/@}"\nfi\necho "Inspecting manifest for source image ${IMAGE_URL}"\nskopeo inspect --no-tags docker://"${IMAGE_URL}" > $IMAGE_INSPECT 2> stderr.txt || true\nskopeo inspect --no-tags --raw docker://"${IMAGE_URL}" > $RAW_IMAGE_INSPECT 2>> stderr.txt || true\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "skopeo inspect fails, the sanity-inspect-image test meets the following error:"\n  cat stderr.txt\n  HACBS_TEST_OUTPUT="$(make_result_json -r ERROR -t \'skopeo inspect meets errors\')"\n  echo "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n  exit 0\nfi\necho "Getting base image manifest for source image ${IMAGE_URL}"\nBASE_IMAGE_NAME="$(jq -r ".annotations.\\"org.opencontainers.image.base.name\\"" $RAW_IMAGE_INSPECT)"\nBASE_IMAGE_DIGEST="$(jq -r ".annotations.\\"org.opencontainers.image.base.digest\\"" $RAW_IMAGE_INSPECT)"\nif [ $BASE_IMAGE_NAME == \'null\' ]; then\n  echo "Cannot get base image info from \'annotations\'"\n  echo "Trying to get base image info from \'Labels\'"\n  BASE_IMAGE_NAME="$(jq -r ".Labels.\\"org.opencontainers.image.base.name\\"" $IMAGE_INSPECT)"\n  BASE_IMAGE_DIGEST="$(jq -r ".annotations.\\"org.opencontainers.image.base.digest\\"" $IMAGE_INSPECT)"\n  if [ "$BASE_IMAGE_NAME" == \'null\' ]; then\n    echo "Cannot get base image info from \'Labels\', please check the source image ${IMAGE_URL}"\n    exit 0\n  fi\nfi\nif [ -z "$BASE_IMAGE_NAME" ]; then\n  echo "Source image ${IMAGE_URL} is built from scratch, so there is no base image"\n  exit 0\nfi\nBASE_IMAGE="${BASE_IMAGE_NAME%:*}@$BASE_IMAGE_DIGEST"\necho "The base image is $BASE_IMAGE, get its manifest now"\nskopeo inspect --no-tags docker://$BASE_IMAGE  > $BASE_IMAGE_INSPECT || true\necho -n "$BASE_IMAGE" | tee /tekton/results/BASE_IMAGE\n\nBASE_IMAGE_REPOSITORY="$(jq -r \'.Name | sub("[^/]+/"; "") | sub("[:@].*"; "")\' "$BASE_IMAGE_INSPECT")"\necho -n "$BASE_IMAGE_REPOSITORY" | tee /tekton/results/BASE_IMAGE_REPOSITORY\n\nHACBS_TEST_OUTPUT="$(make_result_json -r SUCCESS -s 1)"\necho "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    '#!/usr/bin/env bash\nsource /utils.sh\nIMAGE_INSPECT=image_inspect.json\nBASE_IMAGE_INSPECT=base_image_inspect.json\nRAW_IMAGE_INSPECT=raw_image_inspect.json\n\nIMAGE_URL="${IMAGE_URL}@${IMAGE_DIGEST}"\n# Given a tag and a the digest in the IMAGE_URL we opt to use the digest alone\n# this is because containers/image currently doesn\'t support image references\n# that contain both. See https://github.com/containers/image/issues/1736\nif [[ "${IMAGE_URL}" == *":"*"@"* ]]; then\n  IMAGE_URL="${IMAGE_URL/:*@/@}"\nfi\necho "Inspecting manifest for source image ${IMAGE_URL}"\nskopeo inspect --no-tags docker://"${IMAGE_URL}" > $IMAGE_INSPECT 2> stderr.txt || true\nskopeo inspect --no-tags --raw docker://"${IMAGE_URL}" > $RAW_IMAGE_INSPECT 2>> stderr.txt || true\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "skopeo inspect fails, the sanity-inspect-image test meets the following error:"\n  cat stderr.txt\n  TEST_OUTPUT="$(make_result_json -r ERROR -t \'skopeo inspect meets errors\')"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\necho "Getting base image manifest for source image ${IMAGE_URL}"\nBASE_IMAGE_NAME="$(jq -r ".annotations.\\"org.opencontainers.image.base.name\\"" $RAW_IMAGE_INSPECT)"\nBASE_IMAGE_DIGEST="$(jq -r ".annotations.\\"org.opencontainers.image.base.digest\\"" $RAW_IMAGE_INSPECT)"\nif [ $BASE_IMAGE_NAME == \'null\' ]; then\n  echo "Cannot get base image info from \'annotations\'"\n  echo "Trying to get base image info from \'Labels\'"\n  BASE_IMAGE_NAME="$(jq -r ".Labels.\\"org.opencontainers.image.base.name\\"" $IMAGE_INSPECT)"\n  BASE_IMAGE_DIGEST="$(jq -r ".annotations.\\"org.opencontainers.image.base.digest\\"" $IMAGE_INSPECT)"\n  if [ "$BASE_IMAGE_NAME" == \'null\' ]; then\n    echo "Cannot get base image info from \'Labels\', please check the source image ${IMAGE_URL}"\n    exit 0\n  fi\nfi\nif [ -z "$BASE_IMAGE_NAME" ]; then\n  echo "Source image ${IMAGE_URL} is built from scratch, so there is no base image"\n  exit 0\nfi\nBASE_IMAGE="${BASE_IMAGE_NAME%:*}@$BASE_IMAGE_DIGEST"\necho "The base image is $BASE_IMAGE, get its manifest now"\nskopeo inspect --no-tags docker://$BASE_IMAGE  > $BASE_IMAGE_INSPECT || true\necho -n "$BASE_IMAGE" | tee /tekton/results/BASE_IMAGE\n\nBASE_IMAGE_REPOSITORY="$(jq -r \'.Name | sub("[^/]+/"; "") | sub("[:@].*"; "")\' "$BASE_IMAGE_INSPECT")"\necho -n "$BASE_IMAGE_REPOSITORY" | tee /tekton/results/BASE_IMAGE_REPOSITORY\n\nTEST_OUTPUT="$(make_result_json -r SUCCESS -s 1)"\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                   securityContext: {
                     capabilities: {
                       add: ['SETFCAP'],
@@ -2239,7 +2239,7 @@ export const mockPipelineRun = {
                   exitCode: 0,
                   finishedAt: '2023-03-16T01:01:47Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"FAILURE\\",\\"timestamp\\":\\"1678928507\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"required_checks\\",\\"successes\\":8,\\"failures\\":13,\\"warnings\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"FAILURE\\",\\"timestamp\\":\\"1678928507\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"required_checks\\",\\"successes\\":8,\\"failures\\":13,\\"warnings\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-16T01:01:46Z',
                 },
@@ -2247,7 +2247,7 @@ export const mockPipelineRun = {
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value:
                   '{"result":"FAILURE","timestamp":"1678928507","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"required_checks","successes":8,"failures":13,"warnings":0}\n',
@@ -2271,7 +2271,7 @@ export const mockPipelineRun = {
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -2292,7 +2292,7 @@ export const mockPipelineRun = {
                   name: 'basic-sanity-checks-required-labels',
                   resources: {},
                   script:
-                    '#!/usr/bin/env bash\n\n. /utils.sh\nif [ ! -s ../sanity-inspect-image/image_inspect.json ]; then\n  echo "File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check HACBS_TEST_OUTPUT of task sanity-inspect-image"\n  HACBS_TEST_OUTPUT="$(make_result_json -r ERROR -t \'File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check HACBS_TEST_OUTPUT of task sanity-inspect-image!\')"\n  echo "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n  exit 0\nfi\n\nCONFTEST_OPTIONS=""\nif [ -s "../sanity-inspect-image/base_image_inspect.json" ]; then\n  CONFTEST_OPTIONS="-d=../sanity-inspect-image/base_image_inspect.json"\nfi\n\necho "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n/usr/bin/conftest test --no-fail ../sanity-inspect-image/image_inspect.json "${CONFTEST_OPTIONS}" \\\n--policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n--output=json 2> stderr.txt | tee sanity_label_check_output.json\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "The sanity-label-check test meets the following error:"\n  cat stderr.txt\nfi\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\n\nHACBS_TEST_OUTPUT=\nparse_hacbs_test_output sanity-label-check conftest sanity_label_check_output.json || true\n\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    '#!/usr/bin/env bash\n\n. /utils.sh\nif [ ! -s ../sanity-inspect-image/image_inspect.json ]; then\n  echo "File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check TEST_OUTPUT of task sanity-inspect-image"\n  TEST_OUTPUT="$(make_result_json -r ERROR -t \'File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check TEST_OUTPUT of task sanity-inspect-image!\')"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\nCONFTEST_OPTIONS=""\nif [ -s "../sanity-inspect-image/base_image_inspect.json" ]; then\n  CONFTEST_OPTIONS="-d=../sanity-inspect-image/base_image_inspect.json"\nfi\n\necho "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n/usr/bin/conftest test --no-fail ../sanity-inspect-image/image_inspect.json "${CONFTEST_OPTIONS}" \\\n--policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n--output=json 2> stderr.txt | tee sanity_label_check_output.json\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "The sanity-label-check test meets the following error:"\n  cat stderr.txt\nfi\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\n\nTEST_OUTPUT=\nparse_hacbs_test_output sanity-label-check conftest sanity_label_check_output.json || true\n\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
                   securityContext: {
                     capabilities: {
                       add: ['SETFCAP'],
@@ -2373,7 +2373,7 @@ export const mockPipelineRun = {
                   exitCode: 0,
                   finishedAt: '2023-03-16T01:01:48Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"FAILURE\\",\\"timestamp\\":\\"1678928508\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"optional_checks\\",\\"successes\\":5,\\"failures\\":2,\\"warnings\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"FAILURE\\",\\"timestamp\\":\\"1678928508\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"optional_checks\\",\\"successes\\":5,\\"failures\\":2,\\"warnings\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-16T01:01:47Z',
                 },
@@ -2381,7 +2381,7 @@ export const mockPipelineRun = {
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value:
                   '{"result":"FAILURE","timestamp":"1678928508","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"optional_checks","successes":5,"failures":2,"warnings":0}\n',
@@ -2405,7 +2405,7 @@ export const mockPipelineRun = {
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -2426,7 +2426,7 @@ export const mockPipelineRun = {
                   name: 'basic-sanity-checks-required-labels',
                   resources: {},
                   script:
-                    '#!/usr/bin/env bash\n\n. /utils.sh\nif [ ! -s ../sanity-inspect-image/image_inspect.json ]; then\n  echo "File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check HACBS_TEST_OUTPUT of task sanity-inspect-image"\n  HACBS_TEST_OUTPUT="$(make_result_json -r ERROR -t \'File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check HACBS_TEST_OUTPUT of task sanity-inspect-image!\')"\n  echo "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n  exit 0\nfi\n\nCONFTEST_OPTIONS=""\nif [ -s "../sanity-inspect-image/base_image_inspect.json" ]; then\n  CONFTEST_OPTIONS="-d=../sanity-inspect-image/base_image_inspect.json"\nfi\n\necho "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n/usr/bin/conftest test --no-fail ../sanity-inspect-image/image_inspect.json "${CONFTEST_OPTIONS}" \\\n--policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n--output=json 2> stderr.txt | tee sanity_label_check_output.json\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "The sanity-label-check test meets the following error:"\n  cat stderr.txt\nfi\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\n\nHACBS_TEST_OUTPUT=\nparse_hacbs_test_output sanity-label-check conftest sanity_label_check_output.json || true\n\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    '#!/usr/bin/env bash\n\n. /utils.sh\nif [ ! -s ../sanity-inspect-image/image_inspect.json ]; then\n  echo "File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check TEST_OUTPUT of task sanity-inspect-image"\n  TEST_OUTPUT="$(make_result_json -r ERROR -t \'File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check TEST_OUTPUT of task sanity-inspect-image!\')"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\nCONFTEST_OPTIONS=""\nif [ -s "../sanity-inspect-image/base_image_inspect.json" ]; then\n  CONFTEST_OPTIONS="-d=../sanity-inspect-image/base_image_inspect.json"\nfi\n\necho "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n/usr/bin/conftest test --no-fail ../sanity-inspect-image/image_inspect.json "${CONFTEST_OPTIONS}" \\\n--policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n--output=json 2> stderr.txt | tee sanity_label_check_output.json\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "The sanity-label-check test meets the following error:"\n  cat stderr.txt\nfi\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\n\nTEST_OUTPUT=\nparse_hacbs_test_output sanity-label-check conftest sanity_label_check_output.json || true\n\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
                   securityContext: {
                     capabilities: {
                       add: ['SETFCAP'],
@@ -2522,7 +2522,7 @@ export const mockPipelineRun = {
                   exitCode: 0,
                   finishedAt: '2023-03-16T01:00:56Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"ERROR\\",\\"timestamp\\":\\"1678928456\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"required_checks\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1},{"key":"PYXIS_HTTP_CODE","value":"404 docker.io library/openjdk\\n404 quay.io devfile/maven\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"ERROR\\",\\"timestamp\\":\\"1678928456\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"required_checks\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1},{"key":"PYXIS_HTTP_CODE","value":"404 docker.io library/openjdk\\n404 quay.io devfile/maven\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-16T01:00:56Z',
                 },
@@ -2535,7 +2535,7 @@ export const mockPipelineRun = {
                 value: '404 docker.io library/openjdk\n404 quay.io devfile/maven\n',
               },
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value:
                   '{"result":"ERROR","timestamp":"1678928456","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"required_checks","successes":0,"failures":0,"warnings":0}\n',
@@ -2569,7 +2569,7 @@ export const mockPipelineRun = {
                 },
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -2605,7 +2605,7 @@ export const mockPipelineRun = {
                   name: 'run-conftest',
                   resources: {},
                   script:
-                    '#!/usr/bin/env sh\nsource /utils.sh\n\nsuccess_counter=0\nfailure_counter=0\nerror_counter=0\nif [ ! -f /tekton/results/PYXIS_HTTP_CODE ]; then\n  error_counter=$((error_counter++))\nfi\nwhile IFS= read -r line\ndo\n  IFS=:\' \' read -r http_code IMAGE_REGISTRY IMAGE_REPOSITORY <<< $line; echo "[$http_code] [$IMAGE_REGISTRY] [$IMAGE_REPOSITORY]"\n  export IMAGE_REPO_PATH=/workspace/sanity-ws/${IMAGE_REPOSITORY}\n  if [ "$http_code" == "200" ];\n  then\n    echo "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n    /usr/bin/conftest test --no-fail ${IMAGE_REPO_PATH}/repository_data.json \\\n    --policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n    --output=json 2> ${IMAGE_REPO_PATH}/stderr.txt | tee ${IMAGE_REPO_PATH}/deprecated_image_check_output.json\n\n    failure_counter=$((failure_counter+$(jq -r \'.[].failures|length\' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)))\n    success_counter=$((success_counter+$(jq -r \'.[].successes\' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)))\n\n  elif [ "$http_code" == "404" ];\n  then\n    echo "Registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY} not found in Pyxis" >> /workspace/sanity-ws/stderr.txt\n    cat /workspace/sanity-ws/stderr.txt\n  else\n    echo "Unexpected error (HTTP code $http_code) occured for registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY}" >> /workspace/sanity-ws/stderr.txt\n    cat /workspace/sanity-ws/stderr.txt\n    error_counter=$((error_counter++))\n    exit 0\n  fi\ndone < /tekton/results/PYXIS_HTTP_CODE\n\nHACBS_ERROR_OUTPUT=$(make_result_json -r ERROR -n "$POLICY_NAMESPACE")\nif [[ "$error_counter" == 0 && "$success_counter" > 0 ]];\nthen\n  if [[ "${failure_counter}" -gt 0 ]]; then RES="FAILURE"; else RES="SUCCESS"; fi\n  HACBS_TEST_OUTPUT=$(make_result_json \\\n    -r "${RES}" -n "$POLICY_NAMESPACE" \\\n    -s "${success_counter}" -f "${failure_counter}")\nfi\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    '#!/usr/bin/env sh\nsource /utils.sh\n\nsuccess_counter=0\nfailure_counter=0\nerror_counter=0\nif [ ! -f /tekton/results/PYXIS_HTTP_CODE ]; then\n  error_counter=$((error_counter++))\nfi\nwhile IFS= read -r line\ndo\n  IFS=:\' \' read -r http_code IMAGE_REGISTRY IMAGE_REPOSITORY <<< $line; echo "[$http_code] [$IMAGE_REGISTRY] [$IMAGE_REPOSITORY]"\n  export IMAGE_REPO_PATH=/workspace/sanity-ws/${IMAGE_REPOSITORY}\n  if [ "$http_code" == "200" ];\n  then\n    echo "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n    /usr/bin/conftest test --no-fail ${IMAGE_REPO_PATH}/repository_data.json \\\n    --policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n    --output=json 2> ${IMAGE_REPO_PATH}/stderr.txt | tee ${IMAGE_REPO_PATH}/deprecated_image_check_output.json\n\n    failure_counter=$((failure_counter+$(jq -r \'.[].failures|length\' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)))\n    success_counter=$((success_counter+$(jq -r \'.[].successes\' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)))\n\n  elif [ "$http_code" == "404" ];\n  then\n    echo "Registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY} not found in Pyxis" >> /workspace/sanity-ws/stderr.txt\n    cat /workspace/sanity-ws/stderr.txt\n  else\n    echo "Unexpected error (HTTP code $http_code) occured for registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY}" >> /workspace/sanity-ws/stderr.txt\n    cat /workspace/sanity-ws/stderr.txt\n    error_counter=$((error_counter++))\n    exit 0\n  fi\ndone < /tekton/results/PYXIS_HTTP_CODE\n\nHACBS_ERROR_OUTPUT=$(make_result_json -r ERROR -n "$POLICY_NAMESPACE")\nif [[ "$error_counter" == 0 && "$success_counter" > 0 ]];\nthen\n  if [[ "${failure_counter}" -gt 0 ]]; then RES="FAILURE"; else RES="SUCCESS"; fi\n  TEST_OUTPUT=$(make_result_json \\\n    -r "${RES}" -n "$POLICY_NAMESPACE" \\\n    -s "${success_counter}" -f "${failure_counter}")\nfi\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
               ],
               workspaces: [
@@ -2715,7 +2715,7 @@ export const mockPipelineRun = {
                   exitCode: 0,
                   finishedAt: '2023-03-16T01:01:11Z',
                   message:
-                    '[{"key":"CLAIR_SCAN_RESULT","value":"{\\"vulnerabilities\\":{\\"critical\\":1,\\"high\\":1,\\"medium\\":1,\\"low\\":1}}\\n","type":1},{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928471\\",\\"note\\":\\"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+                    '[{"key":"CLAIR_SCAN_RESULT","value":"{\\"vulnerabilities\\":{\\"critical\\":1,\\"high\\":1,\\"medium\\":1,\\"low\\":1}}\\n","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928471\\",\\"note\\":\\"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-16T01:01:11Z',
                 },
@@ -2728,7 +2728,7 @@ export const mockPipelineRun = {
                 value: '{"vulnerabilities":{"critical":1,"high":1,"medium":1,"low":1}}\n',
               },
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value:
                   '{"result":"SUCCESS","timestamp":"1678928471","note":"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair","namespace":"default","successes":0,"failures":0,"warnings":0}\n',
@@ -2756,7 +2756,7 @@ export const mockPipelineRun = {
               results: [
                 {
                   description: 'test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
                 {
@@ -2809,7 +2809,7 @@ export const mockPipelineRun = {
                   name: 'test-format-result',
                   resources: {},
                   script:
-                    '#!/usr/bin/env bash\n. /utils.sh\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]] || [[ "$(jq \'.[] | has("failures")\' /tekton/home/clair-vulnerabilities.json)" == "false" ]]; then\n  HACBS_TEST_OUTPUT=$(make_result_json -r "ERROR" -t "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again")\n  echo "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again"\n  echo "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  \'{vulnerabilities:{\n      critical: (.[] | .failures | map(select(.metadata.details.name=="clair_critical_vulnerabilities")) | length),\n      high: (.[] | .failures | map(select(.metadata.details.name=="clair_high_vulnerabilities")) | length),\n      medium: (.[] | .failures | map(select(.metadata.details.name=="clair_medium_vulnerabilities")) | length),\n      low: (.[] | .failures | map(select(.metadata.details.name=="clair_low_vulnerabilities")) | length)\n    }}\' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/CLAIR_SCAN_RESULT\n\nHACBS_TEST_OUTPUT=$(make_result_json -r "SUCCESS" -t "Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair")\necho "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    '#!/usr/bin/env bash\n. /utils.sh\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]] || [[ "$(jq \'.[] | has("failures")\' /tekton/home/clair-vulnerabilities.json)" == "false" ]]; then\n  TEST_OUTPUT=$(make_result_json -r "ERROR" -t "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again")\n  echo "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  \'{vulnerabilities:{\n      critical: (.[] | .failures | map(select(.metadata.details.name=="clair_critical_vulnerabilities")) | length),\n      high: (.[] | .failures | map(select(.metadata.details.name=="clair_high_vulnerabilities")) | length),\n      medium: (.[] | .failures | map(select(.metadata.details.name=="clair_medium_vulnerabilities")) | length),\n      low: (.[] | .failures | map(select(.metadata.details.name=="clair_low_vulnerabilities")) | length)\n    }}\' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/CLAIR_SCAN_RESULT\n\nTEST_OUTPUT=$(make_result_json -r "SUCCESS" -t "Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair")\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
               ],
             },
@@ -2973,7 +2973,7 @@ export const mockPipelineRun = {
                   exitCode: 0,
                   finishedAt: '2023-03-16T01:03:36Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928616\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928616\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-16T01:03:36Z',
                 },
@@ -2981,7 +2981,7 @@ export const mockPipelineRun = {
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value:
                   '{"result":"SUCCESS","timestamp":"1678928616","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"default","successes":1,"failures":0,"warnings":0}\n',
@@ -3008,7 +3008,7 @@ export const mockPipelineRun = {
               results: [
                 {
                   description: 'test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -3097,7 +3097,7 @@ export const mockPipelineRun = {
                   name: 'store-hacbs-test-output-result',
                   resources: {},
                   script:
-                    '#!/usr/bin/env bash\nsource /utils.sh\n\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\nif [ -f /tekton/home/clamscan-result.json ];\nthen\n  cat /tekton/home/clamscan-result.json\n  INFECTED_FILES=$(jq -r \'.infected_files\' /tekton/home/clamscan-result.json || true )\n  if [ -z "${INFECTED_FILES}" ]; then\n    echo "Failed to get number of infected files"\n  else\n    if [[ "${INFECTED_FILES}" -gt 0 ]]; then RES="FAILURE"; else RES="SUCCESS"; fi\n    HACBS_TEST_OUTPUT=$(make_result_json -r "${RES}" -s 1 -f "${INFECTED_FILES}")\n  fi\nfi\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    '#!/usr/bin/env bash\nsource /utils.sh\n\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\nif [ -f /tekton/home/clamscan-result.json ];\nthen\n  cat /tekton/home/clamscan-result.json\n  INFECTED_FILES=$(jq -r \'.infected_files\' /tekton/home/clamscan-result.json || true )\n  if [ -z "${INFECTED_FILES}" ]; then\n    echo "Failed to get number of infected files"\n  else\n    if [[ "${INFECTED_FILES}" -gt 0 ]]; then RES="FAILURE"; else RES="SUCCESS"; fi\n    TEST_OUTPUT=$(make_result_json -r "${RES}" -s 1 -f "${INFECTED_FILES}")\n  fi\nfi\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
               ],
               volumes: [
@@ -3190,7 +3190,7 @@ export const mockPipelineRun = {
                   exitCode: 0,
                   finishedAt: '2023-03-16T01:00:38Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928438\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928438\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-16T01:00:26Z',
                 },
@@ -3198,7 +3198,7 @@ export const mockPipelineRun = {
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value:
                   '{"result":"SUCCESS","timestamp":"1678928438","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"default","successes":1,"failures":0,"warnings":0}\n',
@@ -3222,7 +3222,7 @@ export const mockPipelineRun = {
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -3245,7 +3245,7 @@ export const mockPipelineRun = {
                   name: 'sbom-json-check',
                   resources: {},
                   script:
-                    '#!/usr/bin/env bash\nsource /utils.sh\n\nmkdir /manifests/ && cd /manifests/\n\nimage_with_digest="${IMAGE_URL}@${IMAGE_DIGEST}"\n\nif ! oc image extract "${image_with_digest}" --path \'/root/buildinfo/content_manifests/*:/manifests/\'; then\n  echo "Failed to extract manifests from image ${image_with_digest}"\nfi\n\ntouch fail_result.txt\nif [ -f "sbom-cyclonedx.json" ]\nthen\n  result=$(echo -n $(cyclonedx-linux-x64 validate --input-file sbom-cyclonedx.json))\n  if [[ ! $result =~ "BOM validated successfully" ]]\n  then\n    echo "sbom-cyclonedx.json: $result" > fail_result.txt\n  fi\nelse\n  echo "cannot access \'sbom-cyclonedx.json\': No such file or directory" > fail_result.txt\nfi\n\nFAIL_RESULTS="$(cat fail_result.txt)"\nif [[ -z $FAIL_RESULTS ]]\nthen\n  HACBS_TEST_OUTPUT=$(make_result_json -r "SUCCESS" -s 1)\nelse\n  echo "Fail to verify sbom-cyclonedx.json for image $IMAGE_URL with reason: $FAIL_RESULTS"\n  HACBS_ERROR_OUTPUT=$(make_result_json -r "FAILURE" -f 1)\nfi\n\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    '#!/usr/bin/env bash\nsource /utils.sh\n\nmkdir /manifests/ && cd /manifests/\n\nimage_with_digest="${IMAGE_URL}@${IMAGE_DIGEST}"\n\nif ! oc image extract "${image_with_digest}" --path \'/root/buildinfo/content_manifests/*:/manifests/\'; then\n  echo "Failed to extract manifests from image ${image_with_digest}"\nfi\n\ntouch fail_result.txt\nif [ -f "sbom-cyclonedx.json" ]\nthen\n  result=$(echo -n $(cyclonedx-linux-x64 validate --input-file sbom-cyclonedx.json))\n  if [[ ! $result =~ "BOM validated successfully" ]]\n  then\n    echo "sbom-cyclonedx.json: $result" > fail_result.txt\n  fi\nelse\n  echo "cannot access \'sbom-cyclonedx.json\': No such file or directory" > fail_result.txt\nfi\n\nFAIL_RESULTS="$(cat fail_result.txt)"\nif [[ -z $FAIL_RESULTS ]]\nthen\n  TEST_OUTPUT=$(make_result_json -r "SUCCESS" -s 1)\nelse\n  echo "Fail to verify sbom-cyclonedx.json for image $IMAGE_URL with reason: $FAIL_RESULTS"\n  HACBS_ERROR_OUTPUT=$(make_result_json -r "FAILURE" -f 1)\nfi\n\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
                   securityContext: {
                     capabilities: {
                       add: ['SETFCAP'],
@@ -3637,7 +3637,7 @@ export const mockPipelineRun = {
                 exitCode: 0,
                 finishedAt: '2023-03-16T01:00:56Z',
                 message:
-                  '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"ERROR\\",\\"timestamp\\":\\"1678928456\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"required_checks\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1},{"key":"PYXIS_HTTP_CODE","value":"404 docker.io library/openjdk\\n404 quay.io devfile/maven\\n","type":1}]',
+                  '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"ERROR\\",\\"timestamp\\":\\"1678928456\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"required_checks\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1},{"key":"PYXIS_HTTP_CODE","value":"404 docker.io library/openjdk\\n404 quay.io devfile/maven\\n","type":1}]',
                 reason: 'Completed',
                 startedAt: '2023-03-16T01:00:56Z',
               },
@@ -3650,7 +3650,7 @@ export const mockPipelineRun = {
               value: '404 docker.io library/openjdk\n404 quay.io devfile/maven\n',
             },
             {
-              name: 'HACBS_TEST_OUTPUT',
+              name: 'TEST_OUTPUT',
               type: 'string',
               value:
                 '{"result":"ERROR","timestamp":"1678928456","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"required_checks","successes":0,"failures":0,"warnings":0}\n',
@@ -3684,7 +3684,7 @@ export const mockPipelineRun = {
               },
               {
                 description: 'Test output',
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
               },
             ],
@@ -3720,7 +3720,7 @@ export const mockPipelineRun = {
                 name: 'run-conftest',
                 resources: {},
                 script:
-                  '#!/usr/bin/env sh\nsource /utils.sh\n\nsuccess_counter=0\nfailure_counter=0\nerror_counter=0\nif [ ! -f /tekton/results/PYXIS_HTTP_CODE ]; then\n  error_counter=$((error_counter++))\nfi\nwhile IFS= read -r line\ndo\n  IFS=:\' \' read -r http_code IMAGE_REGISTRY IMAGE_REPOSITORY <<< $line; echo "[$http_code] [$IMAGE_REGISTRY] [$IMAGE_REPOSITORY]"\n  export IMAGE_REPO_PATH=/workspace/sanity-ws/${IMAGE_REPOSITORY}\n  if [ "$http_code" == "200" ];\n  then\n    echo "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n    /usr/bin/conftest test --no-fail ${IMAGE_REPO_PATH}/repository_data.json \\\n    --policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n    --output=json 2> ${IMAGE_REPO_PATH}/stderr.txt | tee ${IMAGE_REPO_PATH}/deprecated_image_check_output.json\n\n    failure_counter=$((failure_counter+$(jq -r \'.[].failures|length\' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)))\n    success_counter=$((success_counter+$(jq -r \'.[].successes\' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)))\n\n  elif [ "$http_code" == "404" ];\n  then\n    echo "Registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY} not found in Pyxis" >> /workspace/sanity-ws/stderr.txt\n    cat /workspace/sanity-ws/stderr.txt\n  else\n    echo "Unexpected error (HTTP code $http_code) occured for registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY}" >> /workspace/sanity-ws/stderr.txt\n    cat /workspace/sanity-ws/stderr.txt\n    error_counter=$((error_counter++))\n    exit 0\n  fi\ndone < /tekton/results/PYXIS_HTTP_CODE\n\nHACBS_ERROR_OUTPUT=$(make_result_json -r ERROR -n "$POLICY_NAMESPACE")\nif [[ "$error_counter" == 0 && "$success_counter" > 0 ]];\nthen\n  if [[ "${failure_counter}" -gt 0 ]]; then RES="FAILURE"; else RES="SUCCESS"; fi\n  HACBS_TEST_OUTPUT=$(make_result_json \\\n    -r "${RES}" -n "$POLICY_NAMESPACE" \\\n    -s "${success_counter}" -f "${failure_counter}")\nfi\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                  '#!/usr/bin/env sh\nsource /utils.sh\n\nsuccess_counter=0\nfailure_counter=0\nerror_counter=0\nif [ ! -f /tekton/results/PYXIS_HTTP_CODE ]; then\n  error_counter=$((error_counter++))\nfi\nwhile IFS= read -r line\ndo\n  IFS=:\' \' read -r http_code IMAGE_REGISTRY IMAGE_REPOSITORY <<< $line; echo "[$http_code] [$IMAGE_REGISTRY] [$IMAGE_REPOSITORY]"\n  export IMAGE_REPO_PATH=/workspace/sanity-ws/${IMAGE_REPOSITORY}\n  if [ "$http_code" == "200" ];\n  then\n    echo "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n    /usr/bin/conftest test --no-fail ${IMAGE_REPO_PATH}/repository_data.json \\\n    --policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n    --output=json 2> ${IMAGE_REPO_PATH}/stderr.txt | tee ${IMAGE_REPO_PATH}/deprecated_image_check_output.json\n\n    failure_counter=$((failure_counter+$(jq -r \'.[].failures|length\' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)))\n    success_counter=$((success_counter+$(jq -r \'.[].successes\' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)))\n\n  elif [ "$http_code" == "404" ];\n  then\n    echo "Registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY} not found in Pyxis" >> /workspace/sanity-ws/stderr.txt\n    cat /workspace/sanity-ws/stderr.txt\n  else\n    echo "Unexpected error (HTTP code $http_code) occured for registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY}" >> /workspace/sanity-ws/stderr.txt\n    cat /workspace/sanity-ws/stderr.txt\n    error_counter=$((error_counter++))\n    exit 0\n  fi\ndone < /tekton/results/PYXIS_HTTP_CODE\n\nHACBS_ERROR_OUTPUT=$(make_result_json -r ERROR -n "$POLICY_NAMESPACE")\nif [[ "$error_counter" == 0 && "$success_counter" > 0 ]];\nthen\n  if [[ "${failure_counter}" -gt 0 ]]; then RES="FAILURE"; else RES="SUCCESS"; fi\n  TEST_OUTPUT=$(make_result_json \\\n    -r "${RES}" -n "$POLICY_NAMESPACE" \\\n    -s "${success_counter}" -f "${failure_counter}")\nfi\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
               },
             ],
             workspaces: [
@@ -3765,7 +3765,7 @@ export const mockPipelineRun = {
                 exitCode: 0,
                 finishedAt: '2023-03-16T01:01:04Z',
                 message:
-                  '[{"key":"BASE_IMAGE","value":"docker.io/library/openjdk@sha256:e81b7f317654b0f26d3993e014b04bcb29250339b11b9de41e130feecd4cd43c","type":1},{"key":"BASE_IMAGE_REPOSITORY","value":"library/openjdk","type":1},{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928464\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+                  '[{"key":"BASE_IMAGE","value":"docker.io/library/openjdk@sha256:e81b7f317654b0f26d3993e014b04bcb29250339b11b9de41e130feecd4cd43c","type":1},{"key":"BASE_IMAGE_REPOSITORY","value":"library/openjdk","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928464\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
                 reason: 'Completed',
                 startedAt: '2023-03-16T01:01:02Z',
               },
@@ -3784,7 +3784,7 @@ export const mockPipelineRun = {
               value: 'library/openjdk',
             },
             {
-              name: 'HACBS_TEST_OUTPUT',
+              name: 'TEST_OUTPUT',
               type: 'string',
               value:
                 '{"result":"SUCCESS","timestamp":"1678928464","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"default","successes":1,"failures":0,"warnings":0}\n',
@@ -3822,7 +3822,7 @@ export const mockPipelineRun = {
               },
               {
                 description: 'Test output',
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
               },
             ],
@@ -3849,7 +3849,7 @@ export const mockPipelineRun = {
                 name: 'inspect-image',
                 resources: {},
                 script:
-                  '#!/usr/bin/env bash\nsource /utils.sh\nIMAGE_INSPECT=image_inspect.json\nBASE_IMAGE_INSPECT=base_image_inspect.json\nRAW_IMAGE_INSPECT=raw_image_inspect.json\n\nIMAGE_URL="${IMAGE_URL}@${IMAGE_DIGEST}"\n# Given a tag and a the digest in the IMAGE_URL we opt to use the digest alone\n# this is because containers/image currently doesn\'t support image references\n# that contain both. See https://github.com/containers/image/issues/1736\nif [[ "${IMAGE_URL}" == *":"*"@"* ]]; then\n  IMAGE_URL="${IMAGE_URL/:*@/@}"\nfi\necho "Inspecting manifest for source image ${IMAGE_URL}"\nskopeo inspect --no-tags docker://"${IMAGE_URL}" > $IMAGE_INSPECT 2> stderr.txt || true\nskopeo inspect --no-tags --raw docker://"${IMAGE_URL}" > $RAW_IMAGE_INSPECT 2>> stderr.txt || true\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "skopeo inspect fails, the sanity-inspect-image test meets the following error:"\n  cat stderr.txt\n  HACBS_TEST_OUTPUT="$(make_result_json -r ERROR -t \'skopeo inspect meets errors\')"\n  echo "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n  exit 0\nfi\necho "Getting base image manifest for source image ${IMAGE_URL}"\nBASE_IMAGE_NAME="$(jq -r ".annotations.\\"org.opencontainers.image.base.name\\"" $RAW_IMAGE_INSPECT)"\nBASE_IMAGE_DIGEST="$(jq -r ".annotations.\\"org.opencontainers.image.base.digest\\"" $RAW_IMAGE_INSPECT)"\nif [ $BASE_IMAGE_NAME == \'null\' ]; then\n  echo "Cannot get base image info from \'annotations\'"\n  echo "Trying to get base image info from \'Labels\'"\n  BASE_IMAGE_NAME="$(jq -r ".Labels.\\"org.opencontainers.image.base.name\\"" $IMAGE_INSPECT)"\n  BASE_IMAGE_DIGEST="$(jq -r ".annotations.\\"org.opencontainers.image.base.digest\\"" $IMAGE_INSPECT)"\n  if [ "$BASE_IMAGE_NAME" == \'null\' ]; then\n    echo "Cannot get base image info from \'Labels\', please check the source image ${IMAGE_URL}"\n    exit 0\n  fi\nfi\nif [ -z "$BASE_IMAGE_NAME" ]; then\n  echo "Source image ${IMAGE_URL} is built from scratch, so there is no base image"\n  exit 0\nfi\nBASE_IMAGE="${BASE_IMAGE_NAME%:*}@$BASE_IMAGE_DIGEST"\necho "The base image is $BASE_IMAGE, get its manifest now"\nskopeo inspect --no-tags docker://$BASE_IMAGE  > $BASE_IMAGE_INSPECT || true\necho -n "$BASE_IMAGE" | tee /tekton/results/BASE_IMAGE\n\nBASE_IMAGE_REPOSITORY="$(jq -r \'.Name | sub("[^/]+/"; "") | sub("[:@].*"; "")\' "$BASE_IMAGE_INSPECT")"\necho -n "$BASE_IMAGE_REPOSITORY" | tee /tekton/results/BASE_IMAGE_REPOSITORY\n\nHACBS_TEST_OUTPUT="$(make_result_json -r SUCCESS -s 1)"\necho "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                  '#!/usr/bin/env bash\nsource /utils.sh\nIMAGE_INSPECT=image_inspect.json\nBASE_IMAGE_INSPECT=base_image_inspect.json\nRAW_IMAGE_INSPECT=raw_image_inspect.json\n\nIMAGE_URL="${IMAGE_URL}@${IMAGE_DIGEST}"\n# Given a tag and a the digest in the IMAGE_URL we opt to use the digest alone\n# this is because containers/image currently doesn\'t support image references\n# that contain both. See https://github.com/containers/image/issues/1736\nif [[ "${IMAGE_URL}" == *":"*"@"* ]]; then\n  IMAGE_URL="${IMAGE_URL/:*@/@}"\nfi\necho "Inspecting manifest for source image ${IMAGE_URL}"\nskopeo inspect --no-tags docker://"${IMAGE_URL}" > $IMAGE_INSPECT 2> stderr.txt || true\nskopeo inspect --no-tags --raw docker://"${IMAGE_URL}" > $RAW_IMAGE_INSPECT 2>> stderr.txt || true\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "skopeo inspect fails, the sanity-inspect-image test meets the following error:"\n  cat stderr.txt\n  TEST_OUTPUT="$(make_result_json -r ERROR -t \'skopeo inspect meets errors\')"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\necho "Getting base image manifest for source image ${IMAGE_URL}"\nBASE_IMAGE_NAME="$(jq -r ".annotations.\\"org.opencontainers.image.base.name\\"" $RAW_IMAGE_INSPECT)"\nBASE_IMAGE_DIGEST="$(jq -r ".annotations.\\"org.opencontainers.image.base.digest\\"" $RAW_IMAGE_INSPECT)"\nif [ $BASE_IMAGE_NAME == \'null\' ]; then\n  echo "Cannot get base image info from \'annotations\'"\n  echo "Trying to get base image info from \'Labels\'"\n  BASE_IMAGE_NAME="$(jq -r ".Labels.\\"org.opencontainers.image.base.name\\"" $IMAGE_INSPECT)"\n  BASE_IMAGE_DIGEST="$(jq -r ".annotations.\\"org.opencontainers.image.base.digest\\"" $IMAGE_INSPECT)"\n  if [ "$BASE_IMAGE_NAME" == \'null\' ]; then\n    echo "Cannot get base image info from \'Labels\', please check the source image ${IMAGE_URL}"\n    exit 0\n  fi\nfi\nif [ -z "$BASE_IMAGE_NAME" ]; then\n  echo "Source image ${IMAGE_URL} is built from scratch, so there is no base image"\n  exit 0\nfi\nBASE_IMAGE="${BASE_IMAGE_NAME%:*}@$BASE_IMAGE_DIGEST"\necho "The base image is $BASE_IMAGE, get its manifest now"\nskopeo inspect --no-tags docker://$BASE_IMAGE  > $BASE_IMAGE_INSPECT || true\necho -n "$BASE_IMAGE" | tee /tekton/results/BASE_IMAGE\n\nBASE_IMAGE_REPOSITORY="$(jq -r \'.Name | sub("[^/]+/"; "") | sub("[:@].*"; "")\' "$BASE_IMAGE_INSPECT")"\necho -n "$BASE_IMAGE_REPOSITORY" | tee /tekton/results/BASE_IMAGE_REPOSITORY\n\nTEST_OUTPUT="$(make_result_json -r SUCCESS -s 1)"\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 securityContext: {
                   capabilities: {
                     add: ['SETFCAP'],
@@ -3944,7 +3944,7 @@ export const mockPipelineRun = {
                 exitCode: 0,
                 finishedAt: '2023-03-16T01:01:11Z',
                 message:
-                  '[{"key":"CLAIR_SCAN_RESULT","value":"{\\"vulnerabilities\\":{\\"critical\\":1,\\"high\\":1,\\"medium\\":1,\\"low\\":1}}\\n","type":1},{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928471\\",\\"note\\":\\"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+                  '[{"key":"CLAIR_SCAN_RESULT","value":"{\\"vulnerabilities\\":{\\"critical\\":1,\\"high\\":1,\\"medium\\":1,\\"low\\":1}}\\n","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928471\\",\\"note\\":\\"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
                 reason: 'Completed',
                 startedAt: '2023-03-16T01:01:11Z',
               },
@@ -3957,7 +3957,7 @@ export const mockPipelineRun = {
               value: '{"vulnerabilities":{"critical":1,"high":1,"medium":1,"low":1}}\n',
             },
             {
-              name: 'HACBS_TEST_OUTPUT',
+              name: 'TEST_OUTPUT',
               type: 'string',
               value:
                 '{"result":"SUCCESS","timestamp":"1678928471","note":"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair","namespace":"default","successes":0,"failures":0,"warnings":0}\n',
@@ -3985,7 +3985,7 @@ export const mockPipelineRun = {
             results: [
               {
                 description: 'test output',
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
               },
               {
@@ -4038,7 +4038,7 @@ export const mockPipelineRun = {
                 name: 'test-format-result',
                 resources: {},
                 script:
-                  '#!/usr/bin/env bash\n. /utils.sh\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]] || [[ "$(jq \'.[] | has("failures")\' /tekton/home/clair-vulnerabilities.json)" == "false" ]]; then\n  HACBS_TEST_OUTPUT=$(make_result_json -r "ERROR" -t "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again")\n  echo "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again"\n  echo "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  \'{vulnerabilities:{\n      critical: (.[] | .failures | map(select(.metadata.details.name=="clair_critical_vulnerabilities")) | length),\n      high: (.[] | .failures | map(select(.metadata.details.name=="clair_high_vulnerabilities")) | length),\n      medium: (.[] | .failures | map(select(.metadata.details.name=="clair_medium_vulnerabilities")) | length),\n      low: (.[] | .failures | map(select(.metadata.details.name=="clair_low_vulnerabilities")) | length)\n    }}\' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/CLAIR_SCAN_RESULT\n\nHACBS_TEST_OUTPUT=$(make_result_json -r "SUCCESS" -t "Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair")\necho "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                  '#!/usr/bin/env bash\n. /utils.sh\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]] || [[ "$(jq \'.[] | has("failures")\' /tekton/home/clair-vulnerabilities.json)" == "false" ]]; then\n  TEST_OUTPUT=$(make_result_json -r "ERROR" -t "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again")\n  echo "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  \'{vulnerabilities:{\n      critical: (.[] | .failures | map(select(.metadata.details.name=="clair_critical_vulnerabilities")) | length),\n      high: (.[] | .failures | map(select(.metadata.details.name=="clair_high_vulnerabilities")) | length),\n      medium: (.[] | .failures | map(select(.metadata.details.name=="clair_medium_vulnerabilities")) | length),\n      low: (.[] | .failures | map(select(.metadata.details.name=="clair_low_vulnerabilities")) | length)\n    }}\' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/CLAIR_SCAN_RESULT\n\nTEST_OUTPUT=$(make_result_json -r "SUCCESS" -t "Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair")\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
               },
             ],
           },
@@ -4078,7 +4078,7 @@ export const mockPipelineRun = {
                 exitCode: 0,
                 finishedAt: '2023-03-16T01:01:48Z',
                 message:
-                  '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"FAILURE\\",\\"timestamp\\":\\"1678928508\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"optional_checks\\",\\"successes\\":5,\\"failures\\":2,\\"warnings\\":0}\\n","type":1}]',
+                  '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"FAILURE\\",\\"timestamp\\":\\"1678928508\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"optional_checks\\",\\"successes\\":5,\\"failures\\":2,\\"warnings\\":0}\\n","type":1}]',
                 reason: 'Completed',
                 startedAt: '2023-03-16T01:01:47Z',
               },
@@ -4086,7 +4086,7 @@ export const mockPipelineRun = {
           ],
           taskResults: [
             {
-              name: 'HACBS_TEST_OUTPUT',
+              name: 'TEST_OUTPUT',
               type: 'string',
               value:
                 '{"result":"FAILURE","timestamp":"1678928508","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"optional_checks","successes":5,"failures":2,"warnings":0}\n',
@@ -4110,7 +4110,7 @@ export const mockPipelineRun = {
             results: [
               {
                 description: 'Test output',
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
               },
             ],
@@ -4131,7 +4131,7 @@ export const mockPipelineRun = {
                 name: 'basic-sanity-checks-required-labels',
                 resources: {},
                 script:
-                  '#!/usr/bin/env bash\n\n. /utils.sh\nif [ ! -s ../sanity-inspect-image/image_inspect.json ]; then\n  echo "File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check HACBS_TEST_OUTPUT of task sanity-inspect-image"\n  HACBS_TEST_OUTPUT="$(make_result_json -r ERROR -t \'File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check HACBS_TEST_OUTPUT of task sanity-inspect-image!\')"\n  echo "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n  exit 0\nfi\n\nCONFTEST_OPTIONS=""\nif [ -s "../sanity-inspect-image/base_image_inspect.json" ]; then\n  CONFTEST_OPTIONS="-d=../sanity-inspect-image/base_image_inspect.json"\nfi\n\necho "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n/usr/bin/conftest test --no-fail ../sanity-inspect-image/image_inspect.json "${CONFTEST_OPTIONS}" \\\n--policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n--output=json 2> stderr.txt | tee sanity_label_check_output.json\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "The sanity-label-check test meets the following error:"\n  cat stderr.txt\nfi\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\n\nHACBS_TEST_OUTPUT=\nparse_hacbs_test_output sanity-label-check conftest sanity_label_check_output.json || true\n\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                  '#!/usr/bin/env bash\n\n. /utils.sh\nif [ ! -s ../sanity-inspect-image/image_inspect.json ]; then\n  echo "File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check TEST_OUTPUT of task sanity-inspect-image"\n  TEST_OUTPUT="$(make_result_json -r ERROR -t \'File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check TEST_OUTPUT of task sanity-inspect-image!\')"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\nCONFTEST_OPTIONS=""\nif [ -s "../sanity-inspect-image/base_image_inspect.json" ]; then\n  CONFTEST_OPTIONS="-d=../sanity-inspect-image/base_image_inspect.json"\nfi\n\necho "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n/usr/bin/conftest test --no-fail ../sanity-inspect-image/image_inspect.json "${CONFTEST_OPTIONS}" \\\n--policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n--output=json 2> stderr.txt | tee sanity_label_check_output.json\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "The sanity-label-check test meets the following error:"\n  cat stderr.txt\nfi\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\n\nTEST_OUTPUT=\nparse_hacbs_test_output sanity-label-check conftest sanity_label_check_output.json || true\n\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
                 securityContext: {
                   capabilities: {
                     add: ['SETFCAP'],
@@ -4182,7 +4182,7 @@ export const mockPipelineRun = {
                 exitCode: 0,
                 finishedAt: '2023-03-16T01:01:47Z',
                 message:
-                  '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"FAILURE\\",\\"timestamp\\":\\"1678928507\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"required_checks\\",\\"successes\\":8,\\"failures\\":13,\\"warnings\\":0}\\n","type":1}]',
+                  '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"FAILURE\\",\\"timestamp\\":\\"1678928507\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"required_checks\\",\\"successes\\":8,\\"failures\\":13,\\"warnings\\":0}\\n","type":1}]',
                 reason: 'Completed',
                 startedAt: '2023-03-16T01:01:46Z',
               },
@@ -4190,7 +4190,7 @@ export const mockPipelineRun = {
           ],
           taskResults: [
             {
-              name: 'HACBS_TEST_OUTPUT',
+              name: 'TEST_OUTPUT',
               type: 'string',
               value:
                 '{"result":"FAILURE","timestamp":"1678928507","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"required_checks","successes":8,"failures":13,"warnings":0}\n',
@@ -4214,7 +4214,7 @@ export const mockPipelineRun = {
             results: [
               {
                 description: 'Test output',
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
               },
             ],
@@ -4235,7 +4235,7 @@ export const mockPipelineRun = {
                 name: 'basic-sanity-checks-required-labels',
                 resources: {},
                 script:
-                  '#!/usr/bin/env bash\n\n. /utils.sh\nif [ ! -s ../sanity-inspect-image/image_inspect.json ]; then\n  echo "File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check HACBS_TEST_OUTPUT of task sanity-inspect-image"\n  HACBS_TEST_OUTPUT="$(make_result_json -r ERROR -t \'File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check HACBS_TEST_OUTPUT of task sanity-inspect-image!\')"\n  echo "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n  exit 0\nfi\n\nCONFTEST_OPTIONS=""\nif [ -s "../sanity-inspect-image/base_image_inspect.json" ]; then\n  CONFTEST_OPTIONS="-d=../sanity-inspect-image/base_image_inspect.json"\nfi\n\necho "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n/usr/bin/conftest test --no-fail ../sanity-inspect-image/image_inspect.json "${CONFTEST_OPTIONS}" \\\n--policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n--output=json 2> stderr.txt | tee sanity_label_check_output.json\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "The sanity-label-check test meets the following error:"\n  cat stderr.txt\nfi\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\n\nHACBS_TEST_OUTPUT=\nparse_hacbs_test_output sanity-label-check conftest sanity_label_check_output.json || true\n\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                  '#!/usr/bin/env bash\n\n. /utils.sh\nif [ ! -s ../sanity-inspect-image/image_inspect.json ]; then\n  echo "File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check TEST_OUTPUT of task sanity-inspect-image"\n  TEST_OUTPUT="$(make_result_json -r ERROR -t \'File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check TEST_OUTPUT of task sanity-inspect-image!\')"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\nCONFTEST_OPTIONS=""\nif [ -s "../sanity-inspect-image/base_image_inspect.json" ]; then\n  CONFTEST_OPTIONS="-d=../sanity-inspect-image/base_image_inspect.json"\nfi\n\necho "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n/usr/bin/conftest test --no-fail ../sanity-inspect-image/image_inspect.json "${CONFTEST_OPTIONS}" \\\n--policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n--output=json 2> stderr.txt | tee sanity_label_check_output.json\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "The sanity-label-check test meets the following error:"\n  cat stderr.txt\nfi\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\n\nTEST_OUTPUT=\nparse_hacbs_test_output sanity-label-check conftest sanity_label_check_output.json || true\n\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
                 securityContext: {
                   capabilities: {
                     add: ['SETFCAP'],
@@ -4474,7 +4474,7 @@ export const mockPipelineRun = {
                 exitCode: 0,
                 finishedAt: '2023-03-16T01:03:36Z',
                 message:
-                  '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928616\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+                  '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928616\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
                 reason: 'Completed',
                 startedAt: '2023-03-16T01:03:36Z',
               },
@@ -4482,7 +4482,7 @@ export const mockPipelineRun = {
           ],
           taskResults: [
             {
-              name: 'HACBS_TEST_OUTPUT',
+              name: 'TEST_OUTPUT',
               type: 'string',
               value:
                 '{"result":"SUCCESS","timestamp":"1678928616","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"default","successes":1,"failures":0,"warnings":0}\n',
@@ -4509,7 +4509,7 @@ export const mockPipelineRun = {
             results: [
               {
                 description: 'test output',
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
               },
             ],
@@ -4598,7 +4598,7 @@ export const mockPipelineRun = {
                 name: 'store-hacbs-test-output-result',
                 resources: {},
                 script:
-                  '#!/usr/bin/env bash\nsource /utils.sh\n\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\nif [ -f /tekton/home/clamscan-result.json ];\nthen\n  cat /tekton/home/clamscan-result.json\n  INFECTED_FILES=$(jq -r \'.infected_files\' /tekton/home/clamscan-result.json || true )\n  if [ -z "${INFECTED_FILES}" ]; then\n    echo "Failed to get number of infected files"\n  else\n    if [[ "${INFECTED_FILES}" -gt 0 ]]; then RES="FAILURE"; else RES="SUCCESS"; fi\n    HACBS_TEST_OUTPUT=$(make_result_json -r "${RES}" -s 1 -f "${INFECTED_FILES}")\n  fi\nfi\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                  '#!/usr/bin/env bash\nsource /utils.sh\n\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\nif [ -f /tekton/home/clamscan-result.json ];\nthen\n  cat /tekton/home/clamscan-result.json\n  INFECTED_FILES=$(jq -r \'.infected_files\' /tekton/home/clamscan-result.json || true )\n  if [ -z "${INFECTED_FILES}" ]; then\n    echo "Failed to get number of infected files"\n  else\n    if [[ "${INFECTED_FILES}" -gt 0 ]]; then RES="FAILURE"; else RES="SUCCESS"; fi\n    TEST_OUTPUT=$(make_result_json -r "${RES}" -s 1 -f "${INFECTED_FILES}")\n  fi\nfi\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
               },
             ],
             volumes: [
@@ -5137,7 +5137,7 @@ export const mockPipelineRun = {
                 exitCode: 0,
                 finishedAt: '2023-03-16T01:00:38Z',
                 message:
-                  '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928438\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+                  '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928438\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
                 reason: 'Completed',
                 startedAt: '2023-03-16T01:00:26Z',
               },
@@ -5145,7 +5145,7 @@ export const mockPipelineRun = {
           ],
           taskResults: [
             {
-              name: 'HACBS_TEST_OUTPUT',
+              name: 'TEST_OUTPUT',
               type: 'string',
               value:
                 '{"result":"SUCCESS","timestamp":"1678928438","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"default","successes":1,"failures":0,"warnings":0}\n',
@@ -5169,7 +5169,7 @@ export const mockPipelineRun = {
             results: [
               {
                 description: 'Test output',
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
               },
             ],
@@ -5192,7 +5192,7 @@ export const mockPipelineRun = {
                 name: 'sbom-json-check',
                 resources: {},
                 script:
-                  '#!/usr/bin/env bash\nsource /utils.sh\n\nmkdir /manifests/ && cd /manifests/\n\nimage_with_digest="${IMAGE_URL}@${IMAGE_DIGEST}"\n\nif ! oc image extract "${image_with_digest}" --path \'/root/buildinfo/content_manifests/*:/manifests/\'; then\n  echo "Failed to extract manifests from image ${image_with_digest}"\nfi\n\ntouch fail_result.txt\nif [ -f "sbom-cyclonedx.json" ]\nthen\n  result=$(echo -n $(cyclonedx-linux-x64 validate --input-file sbom-cyclonedx.json))\n  if [[ ! $result =~ "BOM validated successfully" ]]\n  then\n    echo "sbom-cyclonedx.json: $result" > fail_result.txt\n  fi\nelse\n  echo "cannot access \'sbom-cyclonedx.json\': No such file or directory" > fail_result.txt\nfi\n\nFAIL_RESULTS="$(cat fail_result.txt)"\nif [[ -z $FAIL_RESULTS ]]\nthen\n  HACBS_TEST_OUTPUT=$(make_result_json -r "SUCCESS" -s 1)\nelse\n  echo "Fail to verify sbom-cyclonedx.json for image $IMAGE_URL with reason: $FAIL_RESULTS"\n  HACBS_ERROR_OUTPUT=$(make_result_json -r "FAILURE" -f 1)\nfi\n\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                  '#!/usr/bin/env bash\nsource /utils.sh\n\nmkdir /manifests/ && cd /manifests/\n\nimage_with_digest="${IMAGE_URL}@${IMAGE_DIGEST}"\n\nif ! oc image extract "${image_with_digest}" --path \'/root/buildinfo/content_manifests/*:/manifests/\'; then\n  echo "Failed to extract manifests from image ${image_with_digest}"\nfi\n\ntouch fail_result.txt\nif [ -f "sbom-cyclonedx.json" ]\nthen\n  result=$(echo -n $(cyclonedx-linux-x64 validate --input-file sbom-cyclonedx.json))\n  if [[ ! $result =~ "BOM validated successfully" ]]\n  then\n    echo "sbom-cyclonedx.json: $result" > fail_result.txt\n  fi\nelse\n  echo "cannot access \'sbom-cyclonedx.json\': No such file or directory" > fail_result.txt\nfi\n\nFAIL_RESULTS="$(cat fail_result.txt)"\nif [[ -z $FAIL_RESULTS ]]\nthen\n  TEST_OUTPUT=$(make_result_json -r "SUCCESS" -s 1)\nelse\n  echo "Fail to verify sbom-cyclonedx.json for image $IMAGE_URL with reason: $FAIL_RESULTS"\n  HACBS_ERROR_OUTPUT=$(make_result_json -r "FAILURE" -f 1)\nfi\n\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
                 securityContext: {
                   capabilities: {
                     add: ['SETFCAP'],
@@ -5735,7 +5735,7 @@ export const mockTaskRuns = [
             exitCode: 0,
             finishedAt: '2023-03-16T01:00:56Z',
             message:
-              '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"ERROR\\",\\"timestamp\\":\\"1678928456\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"required_checks\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1},{"key":"PYXIS_HTTP_CODE","value":"404 docker.io library/openjdk\\n404 quay.io devfile/maven\\n","type":1}]',
+              '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"ERROR\\",\\"timestamp\\":\\"1678928456\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"required_checks\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1},{"key":"PYXIS_HTTP_CODE","value":"404 docker.io library/openjdk\\n404 quay.io devfile/maven\\n","type":1}]',
             reason: 'Completed',
             startedAt: '2023-03-16T01:00:56Z',
           },
@@ -5748,7 +5748,7 @@ export const mockTaskRuns = [
           value: '404 docker.io library/openjdk\n404 quay.io devfile/maven\n',
         },
         {
-          name: 'HACBS_TEST_OUTPUT',
+          name: 'TEST_OUTPUT',
           type: 'string',
           value:
             '{"result":"ERROR","timestamp":"1678928456","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"required_checks","successes":0,"failures":0,"warnings":0}\n',
@@ -5782,7 +5782,7 @@ export const mockTaskRuns = [
           },
           {
             description: 'Test output',
-            name: 'HACBS_TEST_OUTPUT',
+            name: 'TEST_OUTPUT',
             type: 'string',
           },
         ],
@@ -5818,7 +5818,7 @@ export const mockTaskRuns = [
             name: 'run-conftest',
             resources: {},
             script:
-              '#!/usr/bin/env sh\nsource /utils.sh\n\nsuccess_counter=0\nfailure_counter=0\nerror_counter=0\nif [ ! -f /tekton/results/PYXIS_HTTP_CODE ]; then\n  error_counter=$((error_counter++))\nfi\nwhile IFS= read -r line\ndo\n  IFS=:\' \' read -r http_code IMAGE_REGISTRY IMAGE_REPOSITORY <<< $line; echo "[$http_code] [$IMAGE_REGISTRY] [$IMAGE_REPOSITORY]"\n  export IMAGE_REPO_PATH=/workspace/sanity-ws/${IMAGE_REPOSITORY}\n  if [ "$http_code" == "200" ];\n  then\n    echo "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n    /usr/bin/conftest test --no-fail ${IMAGE_REPO_PATH}/repository_data.json \\\n    --policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n    --output=json 2> ${IMAGE_REPO_PATH}/stderr.txt | tee ${IMAGE_REPO_PATH}/deprecated_image_check_output.json\n\n    failure_counter=$((failure_counter+$(jq -r \'.[].failures|length\' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)))\n    success_counter=$((success_counter+$(jq -r \'.[].successes\' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)))\n\n  elif [ "$http_code" == "404" ];\n  then\n    echo "Registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY} not found in Pyxis" >> /workspace/sanity-ws/stderr.txt\n    cat /workspace/sanity-ws/stderr.txt\n  else\n    echo "Unexpected error (HTTP code $http_code) occured for registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY}" >> /workspace/sanity-ws/stderr.txt\n    cat /workspace/sanity-ws/stderr.txt\n    error_counter=$((error_counter++))\n    exit 0\n  fi\ndone < /tekton/results/PYXIS_HTTP_CODE\n\nHACBS_ERROR_OUTPUT=$(make_result_json -r ERROR -n "$POLICY_NAMESPACE")\nif [[ "$error_counter" == 0 && "$success_counter" > 0 ]];\nthen\n  if [[ "${failure_counter}" -gt 0 ]]; then RES="FAILURE"; else RES="SUCCESS"; fi\n  HACBS_TEST_OUTPUT=$(make_result_json \\\n    -r "${RES}" -n "$POLICY_NAMESPACE" \\\n    -s "${success_counter}" -f "${failure_counter}")\nfi\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+              '#!/usr/bin/env sh\nsource /utils.sh\n\nsuccess_counter=0\nfailure_counter=0\nerror_counter=0\nif [ ! -f /tekton/results/PYXIS_HTTP_CODE ]; then\n  error_counter=$((error_counter++))\nfi\nwhile IFS= read -r line\ndo\n  IFS=:\' \' read -r http_code IMAGE_REGISTRY IMAGE_REPOSITORY <<< $line; echo "[$http_code] [$IMAGE_REGISTRY] [$IMAGE_REPOSITORY]"\n  export IMAGE_REPO_PATH=/workspace/sanity-ws/${IMAGE_REPOSITORY}\n  if [ "$http_code" == "200" ];\n  then\n    echo "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n    /usr/bin/conftest test --no-fail ${IMAGE_REPO_PATH}/repository_data.json \\\n    --policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n    --output=json 2> ${IMAGE_REPO_PATH}/stderr.txt | tee ${IMAGE_REPO_PATH}/deprecated_image_check_output.json\n\n    failure_counter=$((failure_counter+$(jq -r \'.[].failures|length\' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)))\n    success_counter=$((success_counter+$(jq -r \'.[].successes\' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)))\n\n  elif [ "$http_code" == "404" ];\n  then\n    echo "Registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY} not found in Pyxis" >> /workspace/sanity-ws/stderr.txt\n    cat /workspace/sanity-ws/stderr.txt\n  else\n    echo "Unexpected error (HTTP code $http_code) occured for registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY}" >> /workspace/sanity-ws/stderr.txt\n    cat /workspace/sanity-ws/stderr.txt\n    error_counter=$((error_counter++))\n    exit 0\n  fi\ndone < /tekton/results/PYXIS_HTTP_CODE\n\nHACBS_ERROR_OUTPUT=$(make_result_json -r ERROR -n "$POLICY_NAMESPACE")\nif [[ "$error_counter" == 0 && "$success_counter" > 0 ]];\nthen\n  if [[ "${failure_counter}" -gt 0 ]]; then RES="FAILURE"; else RES="SUCCESS"; fi\n  TEST_OUTPUT=$(make_result_json \\\n    -r "${RES}" -n "$POLICY_NAMESPACE" \\\n    -s "${success_counter}" -f "${failure_counter}")\nfi\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
           },
         ],
         workspaces: [
@@ -5958,7 +5958,7 @@ export const mockTaskRuns = [
             exitCode: 0,
             finishedAt: '2023-03-16T01:01:04Z',
             message:
-              '[{"key":"BASE_IMAGE","value":"docker.io/library/openjdk@sha256:e81b7f317654b0f26d3993e014b04bcb29250339b11b9de41e130feecd4cd43c","type":1},{"key":"BASE_IMAGE_REPOSITORY","value":"library/openjdk","type":1},{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928464\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+              '[{"key":"BASE_IMAGE","value":"docker.io/library/openjdk@sha256:e81b7f317654b0f26d3993e014b04bcb29250339b11b9de41e130feecd4cd43c","type":1},{"key":"BASE_IMAGE_REPOSITORY","value":"library/openjdk","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928464\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
             reason: 'Completed',
             startedAt: '2023-03-16T01:01:02Z',
           },
@@ -5977,7 +5977,7 @@ export const mockTaskRuns = [
           value: 'library/openjdk',
         },
         {
-          name: 'HACBS_TEST_OUTPUT',
+          name: 'TEST_OUTPUT',
           type: 'string',
           value:
             '{"result":"SUCCESS","timestamp":"1678928464","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"default","successes":1,"failures":0,"warnings":0}\n',
@@ -6015,7 +6015,7 @@ export const mockTaskRuns = [
           },
           {
             description: 'Test output',
-            name: 'HACBS_TEST_OUTPUT',
+            name: 'TEST_OUTPUT',
             type: 'string',
           },
         ],
@@ -6041,7 +6041,7 @@ export const mockTaskRuns = [
             name: 'inspect-image',
             resources: {},
             script:
-              '#!/usr/bin/env bash\nsource /utils.sh\nIMAGE_INSPECT=image_inspect.json\nBASE_IMAGE_INSPECT=base_image_inspect.json\nRAW_IMAGE_INSPECT=raw_image_inspect.json\n\nIMAGE_URL="${IMAGE_URL}@${IMAGE_DIGEST}"\n# Given a tag and a the digest in the IMAGE_URL we opt to use the digest alone\n# this is because containers/image currently doesn\'t support image references\n# that contain both. See https://github.com/containers/image/issues/1736\nif [[ "${IMAGE_URL}" == *":"*"@"* ]]; then\n  IMAGE_URL="${IMAGE_URL/:*@/@}"\nfi\necho "Inspecting manifest for source image ${IMAGE_URL}"\nskopeo inspect --no-tags docker://"${IMAGE_URL}" > $IMAGE_INSPECT 2> stderr.txt || true\nskopeo inspect --no-tags --raw docker://"${IMAGE_URL}" > $RAW_IMAGE_INSPECT 2>> stderr.txt || true\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "skopeo inspect fails, the sanity-inspect-image test meets the following error:"\n  cat stderr.txt\n  HACBS_TEST_OUTPUT="$(make_result_json -r ERROR -t \'skopeo inspect meets errors\')"\n  echo "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n  exit 0\nfi\necho "Getting base image manifest for source image ${IMAGE_URL}"\nBASE_IMAGE_NAME="$(jq -r ".annotations.\\"org.opencontainers.image.base.name\\"" $RAW_IMAGE_INSPECT)"\nBASE_IMAGE_DIGEST="$(jq -r ".annotations.\\"org.opencontainers.image.base.digest\\"" $RAW_IMAGE_INSPECT)"\nif [ $BASE_IMAGE_NAME == \'null\' ]; then\n  echo "Cannot get base image info from \'annotations\'"\n  echo "Trying to get base image info from \'Labels\'"\n  BASE_IMAGE_NAME="$(jq -r ".Labels.\\"org.opencontainers.image.base.name\\"" $IMAGE_INSPECT)"\n  BASE_IMAGE_DIGEST="$(jq -r ".annotations.\\"org.opencontainers.image.base.digest\\"" $IMAGE_INSPECT)"\n  if [ "$BASE_IMAGE_NAME" == \'null\' ]; then\n    echo "Cannot get base image info from \'Labels\', please check the source image ${IMAGE_URL}"\n    exit 0\n  fi\nfi\nif [ -z "$BASE_IMAGE_NAME" ]; then\n  echo "Source image ${IMAGE_URL} is built from scratch, so there is no base image"\n  exit 0\nfi\nBASE_IMAGE="${BASE_IMAGE_NAME%:*}@$BASE_IMAGE_DIGEST"\necho "The base image is $BASE_IMAGE, get its manifest now"\nskopeo inspect --no-tags docker://$BASE_IMAGE  > $BASE_IMAGE_INSPECT || true\necho -n "$BASE_IMAGE" | tee /tekton/results/BASE_IMAGE\n\nBASE_IMAGE_REPOSITORY="$(jq -r \'.Name | sub("[^/]+/"; "") | sub("[:@].*"; "")\' "$BASE_IMAGE_INSPECT")"\necho -n "$BASE_IMAGE_REPOSITORY" | tee /tekton/results/BASE_IMAGE_REPOSITORY\n\nHACBS_TEST_OUTPUT="$(make_result_json -r SUCCESS -s 1)"\necho "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+              '#!/usr/bin/env bash\nsource /utils.sh\nIMAGE_INSPECT=image_inspect.json\nBASE_IMAGE_INSPECT=base_image_inspect.json\nRAW_IMAGE_INSPECT=raw_image_inspect.json\n\nIMAGE_URL="${IMAGE_URL}@${IMAGE_DIGEST}"\n# Given a tag and a the digest in the IMAGE_URL we opt to use the digest alone\n# this is because containers/image currently doesn\'t support image references\n# that contain both. See https://github.com/containers/image/issues/1736\nif [[ "${IMAGE_URL}" == *":"*"@"* ]]; then\n  IMAGE_URL="${IMAGE_URL/:*@/@}"\nfi\necho "Inspecting manifest for source image ${IMAGE_URL}"\nskopeo inspect --no-tags docker://"${IMAGE_URL}" > $IMAGE_INSPECT 2> stderr.txt || true\nskopeo inspect --no-tags --raw docker://"${IMAGE_URL}" > $RAW_IMAGE_INSPECT 2>> stderr.txt || true\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "skopeo inspect fails, the sanity-inspect-image test meets the following error:"\n  cat stderr.txt\n  TEST_OUTPUT="$(make_result_json -r ERROR -t \'skopeo inspect meets errors\')"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\necho "Getting base image manifest for source image ${IMAGE_URL}"\nBASE_IMAGE_NAME="$(jq -r ".annotations.\\"org.opencontainers.image.base.name\\"" $RAW_IMAGE_INSPECT)"\nBASE_IMAGE_DIGEST="$(jq -r ".annotations.\\"org.opencontainers.image.base.digest\\"" $RAW_IMAGE_INSPECT)"\nif [ $BASE_IMAGE_NAME == \'null\' ]; then\n  echo "Cannot get base image info from \'annotations\'"\n  echo "Trying to get base image info from \'Labels\'"\n  BASE_IMAGE_NAME="$(jq -r ".Labels.\\"org.opencontainers.image.base.name\\"" $IMAGE_INSPECT)"\n  BASE_IMAGE_DIGEST="$(jq -r ".annotations.\\"org.opencontainers.image.base.digest\\"" $IMAGE_INSPECT)"\n  if [ "$BASE_IMAGE_NAME" == \'null\' ]; then\n    echo "Cannot get base image info from \'Labels\', please check the source image ${IMAGE_URL}"\n    exit 0\n  fi\nfi\nif [ -z "$BASE_IMAGE_NAME" ]; then\n  echo "Source image ${IMAGE_URL} is built from scratch, so there is no base image"\n  exit 0\nfi\nBASE_IMAGE="${BASE_IMAGE_NAME%:*}@$BASE_IMAGE_DIGEST"\necho "The base image is $BASE_IMAGE, get its manifest now"\nskopeo inspect --no-tags docker://$BASE_IMAGE  > $BASE_IMAGE_INSPECT || true\necho -n "$BASE_IMAGE" | tee /tekton/results/BASE_IMAGE\n\nBASE_IMAGE_REPOSITORY="$(jq -r \'.Name | sub("[^/]+/"; "") | sub("[:@].*"; "")\' "$BASE_IMAGE_INSPECT")"\necho -n "$BASE_IMAGE_REPOSITORY" | tee /tekton/results/BASE_IMAGE_REPOSITORY\n\nTEST_OUTPUT="$(make_result_json -r SUCCESS -s 1)"\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
             securityContext: {
               capabilities: {
                 add: ['SETFCAP'],
@@ -6221,7 +6221,7 @@ export const mockTaskRuns = [
             exitCode: 0,
             finishedAt: '2023-03-16T01:01:11Z',
             message:
-              '[{"key":"CLAIR_SCAN_RESULT","value":"{\\"vulnerabilities\\":{\\"critical\\":1,\\"high\\":1,\\"medium\\":1,\\"low\\":1}}\\n","type":1},{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928471\\",\\"note\\":\\"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+              '[{"key":"CLAIR_SCAN_RESULT","value":"{\\"vulnerabilities\\":{\\"critical\\":1,\\"high\\":1,\\"medium\\":1,\\"low\\":1}}\\n","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928471\\",\\"note\\":\\"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
             reason: 'Completed',
             startedAt: '2023-03-16T01:01:11Z',
           },
@@ -6234,7 +6234,7 @@ export const mockTaskRuns = [
           value: '{"vulnerabilities":{"critical":1,"high":1,"medium":1,"low":1}}\n',
         },
         {
-          name: 'HACBS_TEST_OUTPUT',
+          name: 'TEST_OUTPUT',
           type: 'string',
           value:
             '{"result":"SUCCESS","timestamp":"1678928471","note":"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair","namespace":"default","successes":0,"failures":0,"warnings":0}\n',
@@ -6262,7 +6262,7 @@ export const mockTaskRuns = [
         results: [
           {
             description: 'test output',
-            name: 'HACBS_TEST_OUTPUT',
+            name: 'TEST_OUTPUT',
             type: 'string',
           },
           {
@@ -6314,7 +6314,7 @@ export const mockTaskRuns = [
             name: 'test-format-result',
             resources: {},
             script:
-              '#!/usr/bin/env bash\n. /utils.sh\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]] || [[ "$(jq \'.[] | has("failures")\' /tekton/home/clair-vulnerabilities.json)" == "false" ]]; then\n  HACBS_TEST_OUTPUT=$(make_result_json -r "ERROR" -t "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again")\n  echo "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again"\n  echo "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  \'{vulnerabilities:{\n      critical: (.[] | .failures | map(select(.metadata.details.name=="clair_critical_vulnerabilities")) | length),\n      high: (.[] | .failures | map(select(.metadata.details.name=="clair_high_vulnerabilities")) | length),\n      medium: (.[] | .failures | map(select(.metadata.details.name=="clair_medium_vulnerabilities")) | length),\n      low: (.[] | .failures | map(select(.metadata.details.name=="clair_low_vulnerabilities")) | length)\n    }}\' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/CLAIR_SCAN_RESULT\n\nHACBS_TEST_OUTPUT=$(make_result_json -r "SUCCESS" -t "Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair")\necho "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+              '#!/usr/bin/env bash\n. /utils.sh\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]] || [[ "$(jq \'.[] | has("failures")\' /tekton/home/clair-vulnerabilities.json)" == "false" ]]; then\n  TEST_OUTPUT=$(make_result_json -r "ERROR" -t "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again")\n  echo "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  \'{vulnerabilities:{\n      critical: (.[] | .failures | map(select(.metadata.details.name=="clair_critical_vulnerabilities")) | length),\n      high: (.[] | .failures | map(select(.metadata.details.name=="clair_high_vulnerabilities")) | length),\n      medium: (.[] | .failures | map(select(.metadata.details.name=="clair_medium_vulnerabilities")) | length),\n      low: (.[] | .failures | map(select(.metadata.details.name=="clair_low_vulnerabilities")) | length)\n    }}\' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/CLAIR_SCAN_RESULT\n\nTEST_OUTPUT=$(make_result_json -r "SUCCESS" -t "Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair")\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
           },
         ],
       },
@@ -6440,7 +6440,7 @@ export const mockTaskRuns = [
             exitCode: 0,
             finishedAt: '2023-03-16T01:01:48Z',
             message:
-              '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"FAILURE\\",\\"timestamp\\":\\"1678928508\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"optional_checks\\",\\"successes\\":5,\\"failures\\":2,\\"warnings\\":0}\\n","type":1}]',
+              '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"FAILURE\\",\\"timestamp\\":\\"1678928508\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"optional_checks\\",\\"successes\\":5,\\"failures\\":2,\\"warnings\\":0}\\n","type":1}]',
             reason: 'Completed',
             startedAt: '2023-03-16T01:01:47Z',
           },
@@ -6448,7 +6448,7 @@ export const mockTaskRuns = [
       ],
       taskResults: [
         {
-          name: 'HACBS_TEST_OUTPUT',
+          name: 'TEST_OUTPUT',
           type: 'string',
           value:
             '{"result":"FAILURE","timestamp":"1678928508","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"optional_checks","successes":5,"failures":2,"warnings":0}\n',
@@ -6472,7 +6472,7 @@ export const mockTaskRuns = [
         results: [
           {
             description: 'Test output',
-            name: 'HACBS_TEST_OUTPUT',
+            name: 'TEST_OUTPUT',
             type: 'string',
           },
         ],
@@ -6493,7 +6493,7 @@ export const mockTaskRuns = [
             name: 'basic-sanity-checks-required-labels',
             resources: {},
             script:
-              '#!/usr/bin/env bash\n\n. /utils.sh\nif [ ! -s ../sanity-inspect-image/image_inspect.json ]; then\n  echo "File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check HACBS_TEST_OUTPUT of task sanity-inspect-image"\n  HACBS_TEST_OUTPUT="$(make_result_json -r ERROR -t \'File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check HACBS_TEST_OUTPUT of task sanity-inspect-image!\')"\n  echo "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n  exit 0\nfi\n\nCONFTEST_OPTIONS=""\nif [ -s "../sanity-inspect-image/base_image_inspect.json" ]; then\n  CONFTEST_OPTIONS="-d=../sanity-inspect-image/base_image_inspect.json"\nfi\n\necho "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n/usr/bin/conftest test --no-fail ../sanity-inspect-image/image_inspect.json "${CONFTEST_OPTIONS}" \\\n--policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n--output=json 2> stderr.txt | tee sanity_label_check_output.json\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "The sanity-label-check test meets the following error:"\n  cat stderr.txt\nfi\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\n\nHACBS_TEST_OUTPUT=\nparse_hacbs_test_output sanity-label-check conftest sanity_label_check_output.json || true\n\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+              '#!/usr/bin/env bash\n\n. /utils.sh\nif [ ! -s ../sanity-inspect-image/image_inspect.json ]; then\n  echo "File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check TEST_OUTPUT of task sanity-inspect-image"\n  TEST_OUTPUT="$(make_result_json -r ERROR -t \'File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check TEST_OUTPUT of task sanity-inspect-image!\')"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\nCONFTEST_OPTIONS=""\nif [ -s "../sanity-inspect-image/base_image_inspect.json" ]; then\n  CONFTEST_OPTIONS="-d=../sanity-inspect-image/base_image_inspect.json"\nfi\n\necho "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n/usr/bin/conftest test --no-fail ../sanity-inspect-image/image_inspect.json "${CONFTEST_OPTIONS}" \\\n--policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n--output=json 2> stderr.txt | tee sanity_label_check_output.json\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "The sanity-label-check test meets the following error:"\n  cat stderr.txt\nfi\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\n\nTEST_OUTPUT=\nparse_hacbs_test_output sanity-label-check conftest sanity_label_check_output.json || true\n\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
             securityContext: {
               capabilities: {
                 add: ['SETFCAP'],
@@ -6624,7 +6624,7 @@ export const mockTaskRuns = [
             exitCode: 0,
             finishedAt: '2023-03-16T01:01:47Z',
             message:
-              '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"FAILURE\\",\\"timestamp\\":\\"1678928507\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"required_checks\\",\\"successes\\":8,\\"failures\\":13,\\"warnings\\":0}\\n","type":1}]',
+              '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"FAILURE\\",\\"timestamp\\":\\"1678928507\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"required_checks\\",\\"successes\\":8,\\"failures\\":13,\\"warnings\\":0}\\n","type":1}]',
             reason: 'Completed',
             startedAt: '2023-03-16T01:01:46Z',
           },
@@ -6632,7 +6632,7 @@ export const mockTaskRuns = [
       ],
       taskResults: [
         {
-          name: 'HACBS_TEST_OUTPUT',
+          name: 'TEST_OUTPUT',
           type: 'string',
           value:
             '{"result":"FAILURE","timestamp":"1678928507","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"required_checks","successes":8,"failures":13,"warnings":0}\n',
@@ -6656,7 +6656,7 @@ export const mockTaskRuns = [
         results: [
           {
             description: 'Test output',
-            name: 'HACBS_TEST_OUTPUT',
+            name: 'TEST_OUTPUT',
             type: 'string',
           },
         ],
@@ -6677,7 +6677,7 @@ export const mockTaskRuns = [
             name: 'basic-sanity-checks-required-labels',
             resources: {},
             script:
-              '#!/usr/bin/env bash\n\n. /utils.sh\nif [ ! -s ../sanity-inspect-image/image_inspect.json ]; then\n  echo "File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check HACBS_TEST_OUTPUT of task sanity-inspect-image"\n  HACBS_TEST_OUTPUT="$(make_result_json -r ERROR -t \'File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check HACBS_TEST_OUTPUT of task sanity-inspect-image!\')"\n  echo "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n  exit 0\nfi\n\nCONFTEST_OPTIONS=""\nif [ -s "../sanity-inspect-image/base_image_inspect.json" ]; then\n  CONFTEST_OPTIONS="-d=../sanity-inspect-image/base_image_inspect.json"\nfi\n\necho "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n/usr/bin/conftest test --no-fail ../sanity-inspect-image/image_inspect.json "${CONFTEST_OPTIONS}" \\\n--policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n--output=json 2> stderr.txt | tee sanity_label_check_output.json\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "The sanity-label-check test meets the following error:"\n  cat stderr.txt\nfi\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\n\nHACBS_TEST_OUTPUT=\nparse_hacbs_test_output sanity-label-check conftest sanity_label_check_output.json || true\n\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+              '#!/usr/bin/env bash\n\n. /utils.sh\nif [ ! -s ../sanity-inspect-image/image_inspect.json ]; then\n  echo "File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check TEST_OUTPUT of task sanity-inspect-image"\n  TEST_OUTPUT="$(make_result_json -r ERROR -t \'File ../sanity-inspect-image/image_inspect.json is not generated correctly, please check TEST_OUTPUT of task sanity-inspect-image!\')"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\nCONFTEST_OPTIONS=""\nif [ -s "../sanity-inspect-image/base_image_inspect.json" ]; then\n  CONFTEST_OPTIONS="-d=../sanity-inspect-image/base_image_inspect.json"\nfi\n\necho "Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace"\n/usr/bin/conftest test --no-fail ../sanity-inspect-image/image_inspect.json "${CONFTEST_OPTIONS}" \\\n--policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n--output=json 2> stderr.txt | tee sanity_label_check_output.json\n\nif [ ! -z $(cat stderr.txt) ]; then\n  echo "The sanity-label-check test meets the following error:"\n  cat stderr.txt\nfi\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\n\nTEST_OUTPUT=\nparse_hacbs_test_output sanity-label-check conftest sanity_label_check_output.json || true\n\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
             securityContext: {
               capabilities: {
                 add: ['SETFCAP'],
@@ -7102,7 +7102,7 @@ export const mockTaskRuns = [
             exitCode: 0,
             finishedAt: '2023-03-16T01:03:36Z',
             message:
-              '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928616\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+              '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928616\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
             reason: 'Completed',
             startedAt: '2023-03-16T01:03:36Z',
           },
@@ -7110,7 +7110,7 @@ export const mockTaskRuns = [
       ],
       taskResults: [
         {
-          name: 'HACBS_TEST_OUTPUT',
+          name: 'TEST_OUTPUT',
           type: 'string',
           value:
             '{"result":"SUCCESS","timestamp":"1678928616","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"default","successes":1,"failures":0,"warnings":0}\n',
@@ -7137,7 +7137,7 @@ export const mockTaskRuns = [
         results: [
           {
             description: 'test output',
-            name: 'HACBS_TEST_OUTPUT',
+            name: 'TEST_OUTPUT',
             type: 'string',
           },
         ],
@@ -7225,7 +7225,7 @@ export const mockTaskRuns = [
             name: 'store-hacbs-test-output-result',
             resources: {},
             script:
-              '#!/usr/bin/env bash\nsource /utils.sh\n\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\nif [ -f /tekton/home/clamscan-result.json ];\nthen\n  cat /tekton/home/clamscan-result.json\n  INFECTED_FILES=$(jq -r \'.infected_files\' /tekton/home/clamscan-result.json || true )\n  if [ -z "${INFECTED_FILES}" ]; then\n    echo "Failed to get number of infected files"\n  else\n    if [[ "${INFECTED_FILES}" -gt 0 ]]; then RES="FAILURE"; else RES="SUCCESS"; fi\n    HACBS_TEST_OUTPUT=$(make_result_json -r "${RES}" -s 1 -f "${INFECTED_FILES}")\n  fi\nfi\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+              '#!/usr/bin/env bash\nsource /utils.sh\n\nHACBS_ERROR_OUTPUT=$(make_result_json -r "ERROR")\nif [ -f /tekton/home/clamscan-result.json ];\nthen\n  cat /tekton/home/clamscan-result.json\n  INFECTED_FILES=$(jq -r \'.infected_files\' /tekton/home/clamscan-result.json || true )\n  if [ -z "${INFECTED_FILES}" ]; then\n    echo "Failed to get number of infected files"\n  else\n    if [[ "${INFECTED_FILES}" -gt 0 ]]; then RES="FAILURE"; else RES="SUCCESS"; fi\n    TEST_OUTPUT=$(make_result_json -r "${RES}" -s 1 -f "${INFECTED_FILES}")\n  fi\nfi\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
           },
         ],
         volumes: [
@@ -8043,7 +8043,7 @@ export const mockTaskRuns = [
             exitCode: 0,
             finishedAt: '2023-03-16T01:00:38Z',
             message:
-              '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928438\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+              '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928438\\",\\"note\\":\\"For more details please visit the logs in workspace of Tekton tasks.\\",\\"namespace\\":\\"default\\",\\"successes\\":1,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
             reason: 'Completed',
             startedAt: '2023-03-16T01:00:26Z',
           },
@@ -8051,7 +8051,7 @@ export const mockTaskRuns = [
       ],
       taskResults: [
         {
-          name: 'HACBS_TEST_OUTPUT',
+          name: 'TEST_OUTPUT',
           type: 'string',
           value:
             '{"result":"SUCCESS","timestamp":"1678928438","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"default","successes":1,"failures":0,"warnings":0}\n',
@@ -8075,7 +8075,7 @@ export const mockTaskRuns = [
         results: [
           {
             description: 'Test output',
-            name: 'HACBS_TEST_OUTPUT',
+            name: 'TEST_OUTPUT',
             type: 'string',
           },
         ],
@@ -8097,7 +8097,7 @@ export const mockTaskRuns = [
             name: 'sbom-json-check',
             resources: {},
             script:
-              '#!/usr/bin/env bash\nsource /utils.sh\n\nmkdir /manifests/ && cd /manifests/\n\nimage_with_digest="${IMAGE_URL}@${IMAGE_DIGEST}"\n\nif ! oc image extract "${image_with_digest}" --path \'/root/buildinfo/content_manifests/*:/manifests/\'; then\n  echo "Failed to extract manifests from image ${image_with_digest}"\nfi\n\ntouch fail_result.txt\nif [ -f "sbom-cyclonedx.json" ]\nthen\n  result=$(echo -n $(cyclonedx-linux-x64 validate --input-file sbom-cyclonedx.json))\n  if [[ ! $result =~ "BOM validated successfully" ]]\n  then\n    echo "sbom-cyclonedx.json: $result" > fail_result.txt\n  fi\nelse\n  echo "cannot access \'sbom-cyclonedx.json\': No such file or directory" > fail_result.txt\nfi\n\nFAIL_RESULTS="$(cat fail_result.txt)"\nif [[ -z $FAIL_RESULTS ]]\nthen\n  HACBS_TEST_OUTPUT=$(make_result_json -r "SUCCESS" -s 1)\nelse\n  echo "Fail to verify sbom-cyclonedx.json for image $IMAGE_URL with reason: $FAIL_RESULTS"\n  HACBS_ERROR_OUTPUT=$(make_result_json -r "FAILURE" -f 1)\nfi\n\necho "${HACBS_TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+              '#!/usr/bin/env bash\nsource /utils.sh\n\nmkdir /manifests/ && cd /manifests/\n\nimage_with_digest="${IMAGE_URL}@${IMAGE_DIGEST}"\n\nif ! oc image extract "${image_with_digest}" --path \'/root/buildinfo/content_manifests/*:/manifests/\'; then\n  echo "Failed to extract manifests from image ${image_with_digest}"\nfi\n\ntouch fail_result.txt\nif [ -f "sbom-cyclonedx.json" ]\nthen\n  result=$(echo -n $(cyclonedx-linux-x64 validate --input-file sbom-cyclonedx.json))\n  if [[ ! $result =~ "BOM validated successfully" ]]\n  then\n    echo "sbom-cyclonedx.json: $result" > fail_result.txt\n  fi\nelse\n  echo "cannot access \'sbom-cyclonedx.json\': No such file or directory" > fail_result.txt\nfi\n\nFAIL_RESULTS="$(cat fail_result.txt)"\nif [[ -z $FAIL_RESULTS ]]\nthen\n  TEST_OUTPUT=$(make_result_json -r "SUCCESS" -s 1)\nelse\n  echo "Fail to verify sbom-cyclonedx.json for image $IMAGE_URL with reason: $FAIL_RESULTS"\n  HACBS_ERROR_OUTPUT=$(make_result_json -r "FAILURE" -f 1)\nfi\n\necho "${TEST_OUTPUT:-${HACBS_ERROR_OUTPUT}}" | tee /tekton/results/TEST_OUTPUT\n',
             securityContext: {
               capabilities: {
                 add: ['SETFCAP'],

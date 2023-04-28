@@ -139,7 +139,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                   exitCode: 0,
                   finishedAt: '2023-03-07T10:11:46Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1678183906\\",\\"failures\\":0,\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1678183906\\",\\"failures\\":0,\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-07T10:11:46Z',
                 },
@@ -147,7 +147,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value: '{"result":"SUCCESS","timestamp":"1678183906","failures":0,"successes":0}\n',
               },
@@ -164,7 +164,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -174,7 +174,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SKIPPED --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SKIPPED --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
               ],
             },
@@ -207,7 +207,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                   exitCode: 0,
                   finishedAt: '2023-03-07T10:11:44Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678183904\\",\\"failures\\":0,\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678183904\\",\\"failures\\":0,\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-07T10:11:44Z',
                 },
@@ -215,7 +215,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value: '{"result":"SUCCESS","timestamp":"1678183904","failures":0,"successes":0}\n',
               },
@@ -232,7 +232,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -242,7 +242,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SUCCESS --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SUCCESS --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
               ],
             },
@@ -275,7 +275,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                   exitCode: 0,
                   finishedAt: '2023-03-07T10:11:43Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678183903\\",\\"failures\\":0,\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678183903\\",\\"failures\\":0,\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-07T10:11:43Z',
                 },
@@ -283,7 +283,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value: '{"result":"SUCCESS","timestamp":"1678183903","failures":0,"successes":0}\n',
               },
@@ -300,7 +300,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -310,7 +310,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SUCCESS --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SUCCESS --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
               ],
             },
@@ -499,7 +499,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                   exitCode: 0,
                   finishedAt: '2023-03-10T13:49:42Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1678456182\\",\\"failures\\":0,\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SKIPPED\\",\\"timestamp\\":\\"1678456182\\",\\"failures\\":0,\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-10T13:49:42Z',
                 },
@@ -507,7 +507,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value: '{"result":"SKIPPED","timestamp":"1678456182","failures":0,"successes":0}\n',
               },
@@ -524,7 +524,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -534,7 +534,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SKIPPED --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SKIPPED --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
               ],
             },
@@ -567,7 +567,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                   exitCode: 0,
                   finishedAt: '2023-03-10T13:49:44Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678456184\\",\\"failures\\":0,\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678456184\\",\\"failures\\":0,\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-10T13:49:44Z',
                 },
@@ -575,7 +575,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value: '{"result":"SUCCESS","timestamp":"1678456184","failures":0,"successes":0}\n',
               },
@@ -592,7 +592,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -602,7 +602,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SUCCESS --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SUCCESS --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
               ],
             },
@@ -635,7 +635,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                   exitCode: 0,
                   finishedAt: '2023-03-10T13:49:44Z',
                   message:
-                    '[{"key":"HACBS_TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678456184\\",\\"failures\\":0,\\"successes\\":0}\\n","type":1}]',
+                    '[{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678456184\\",\\"failures\\":0,\\"successes\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-10T13:49:44Z',
                 },
@@ -643,7 +643,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
             ],
             taskResults: [
               {
-                name: 'HACBS_TEST_OUTPUT',
+                name: 'TEST_OUTPUT',
                 type: 'string',
                 value: '{"result":"SUCCESS","timestamp":"1678456184","failures":0,"successes":0}\n',
               },
@@ -660,7 +660,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
               results: [
                 {
                   description: 'Test output',
-                  name: 'HACBS_TEST_OUTPUT',
+                  name: 'TEST_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -670,7 +670,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                   name: '',
                   resources: {},
                   script:
-                    'HACBS_TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SUCCESS --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${HACBS_TEST_OUTPUT}" | tee /tekton/results/HACBS_TEST_OUTPUT\n',
+                    'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SUCCESS --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
               ],
             },

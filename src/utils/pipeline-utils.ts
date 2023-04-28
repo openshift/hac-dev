@@ -214,7 +214,9 @@ export const conditionsRunStatus = (conditions: Condition[], specStatus?: string
 };
 
 export const taskResultsStatus = (taskResults: TektonResultsRun[]): runStatus => {
-  const testOutput = taskResults?.find((result) => result.name === 'HACBS_TEST_OUTPUT');
+  const testOutput = taskResults?.find(
+    (result) => result.name === 'HACBS_TEST_OUTPUT' || result.name === 'TEST_OUTPUT',
+  );
   if (testOutput) {
     try {
       const outputValues = JSON.parse(testOutput.value);

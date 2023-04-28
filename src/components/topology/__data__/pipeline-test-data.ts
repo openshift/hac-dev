@@ -571,7 +571,7 @@ export const testPipelineRun: PipelineRunKind = {
           ],
           taskResults: [
             {
-              name: 'HACBS_TEST_OUTPUT',
+              name: 'TEST_OUTPUT',
               value:
                 '{"result":"FAILURE","timestamp":"1675992922","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"required_checks","successes":2,"failures":2,"warnings":0}',
             },
@@ -641,7 +641,7 @@ export const testPipelineRun: PipelineRunKind = {
           ],
           taskResults: [
             {
-              name: 'HACBS_TEST_OUTPUT',
+              name: 'TEST_OUTPUT',
               value:
                 '{"result":"WARNING","timestamp":"1675992922","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"required_checks","successes":2,"failures":0,"warnings":1}',
             },
@@ -703,7 +703,7 @@ export const testPipelineRun: PipelineRunKind = {
           ],
           taskResults: [
             {
-              name: 'HACBS_TEST_OUTPUT',
+              name: 'TEST_OUTPUT',
               value:
                 '{"result":"SUCCESS","timestamp":"1675992922","note":"For more details please visit the logs in workspace of Tekton tasks.","namespace":"required_checks","successes":2,"failures":0,"warnings":0}',
             },
