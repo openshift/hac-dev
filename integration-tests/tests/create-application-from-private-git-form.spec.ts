@@ -84,7 +84,7 @@ describe(
         cy.get('form').submit();
 
         componentPage.editComponentName(componentName);
-        componentPage.createApplication();
+        componentPage.clickCreateApplication();
         Applications.goToComponentsTab();
         applicationDetailPage.createdComponentExists(componentName, applicationName);
       });

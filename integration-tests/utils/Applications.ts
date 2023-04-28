@@ -1,4 +1,4 @@
-import { NavItem, pageTitles } from '../support/constants/PageTitle';
+import { pageTitles } from '../support/constants/PageTitle';
 import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { actions, breadcrumb } from '../support/pageObjects/global-po';
 import {
@@ -61,9 +61,10 @@ export class Applications {
     componentName: string,
     runtime?: string,
     useCustomBuildPipeline: boolean = false,
+    envVar?: { varName: string; value: string },
   ) {
-    addComponentStep(publicGitRepo);
-    reviewComponentsStep(componentName, useCustomBuildPipeline, runtime);
+    this.addComponentStep(publicGitRepo);
+    this.configureComponentsStep(componentName, useCustomBuildPipeline, runtime, envVar);
   }
 
   static checkComponentInListView(
@@ -146,45 +147,45 @@ export class Applications {
   static goToIntegrationTestsTab() {
     cy.get(integrationTestsTabPO.clickTab).click();
   }
-}
 
-function addComponentStep(publicGitRepo: string) {
-  const addComponent = new AddComponentPage();
-  cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
+  static addComponentStep(publicGitRepo: string) {
+    const addComponent = new AddComponentPage();
+    cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
 
-  // Enter git repo URL
-  addComponent.setSource(publicGitRepo);
-  // Check if the source is validated
-  addComponent.waitRepoValidated();
-  // Setup Git Options
-  addComponent.clickGitOptions();
+    // Enter git repo URL
+    addComponent.setSource(publicGitRepo);
+    // Check if the source is validated
+    addComponent.waitRepoValidated();
+    // Setup Git Options
+    addComponent.clickGitOptions();
 
-  addComponent.clickNext();
-  cy.title().should('eq', `Import - Configure components | ${FULL_APPLICATION_TITLE}`);
-}
-
-function reviewComponentsStep(
-  componentName: string,
-  useCustomBuildPipeline: boolean,
-  runtime?: string,
-) {
-  const componentPage = new ComponentPage();
-
-  // Edit component name
-  componentPage.editComponentName(`${componentName}-temp`);
-  cy.contains('div', `${componentName}-temp`).should('be.visible');
-
-  // Switch back to orginal name
-  componentPage.editComponentName(componentName);
-  cy.contains('div', componentName).should('be.visible');
-
-  if (runtime) {
-    componentPage.selectRuntime(runtime);
+    addComponent.clickNext();
+    cy.title().should('eq', `Import - Configure components | ${FULL_APPLICATION_TITLE}`);
   }
 
-  if (useCustomBuildPipeline) {
-    componentPage.selectCustomBuildPipeline();
-  }
+  static configureComponentsStep(
+    componentName: string,
+    useCustomBuildPipeline: boolean,
+    runtime?: string,
+    envVar?: { varName: string; value: string },
+  ) {
+    const componentPage = new ComponentPage();
+    componentPage.editComponentName(componentName);
 
-  componentPage.createApplication(useCustomBuildPipeline);
+    if (runtime) {
+      componentPage.selectRuntime(runtime);
+    }
+
+    if (envVar) {
+      componentPage.expandDetails(componentName);
+      componentPage.showAdvancedOptions();
+      componentPage.addEnvVar(envVar.varName, envVar.value);
+    }
+
+    if (useCustomBuildPipeline) {
+      componentPage.selectCustomBuildPipeline();
+    }
+
+    componentPage.clickCreateApplication();
+  }
 }

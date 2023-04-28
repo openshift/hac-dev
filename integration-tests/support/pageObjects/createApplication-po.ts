@@ -7,7 +7,8 @@ export const addComponentPagePO = {
   contextDir: '[data-test="context-dir"]',
   next: 'button[type=submit]',
   cancel: 'button[type=reset]',
-  toggleButton: (param: string) => `[data-test="${param}-toggle-button"]`,
+  componentCard: '[data-ouia-component-type="PF4/Card"]',
+  toggleButton: '[id^="toggle"]',
   username: '[data-testid="auth-username"]',
   token: '[data-testid="auth-token"]',
   authenticateButton: '[data-testid="authenticate-token"]',
@@ -59,6 +60,7 @@ export const ComponentsPagePO = {
 export const applicationDetailPagePO = {
   item: '[data-testid="component-list-item-name"] > b',
   componentBuildLog: (param: string) => `[data-testid="view-build-logs-${param}"]`,
+  componentPodLog: (param: string) => `[data-test="view-pod-logs-${param}"]`,
   componentSettings: '[data-testid="Edit component settings"]',
   detailsArrow: '[aria-label="Details"]',
   cpuRamLabel: 'CPU / Memory',
@@ -78,4 +80,5 @@ export const buildLogModalContentPO = {
   logText: '[class="logs__content"]',
   logsTasklist: 'div[data-testid="logs-tasklist"]',
   failedPipelineRunLogs: 'div[class="pipeline-run-logs"] [class*="pf-m-danger"]',
+  podLogNavList: '[data-ouia-component-type="PF4/Nav"]',
 };

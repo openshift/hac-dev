@@ -14,6 +14,7 @@ export class ComponentPage extends AbstractWizardPage {
     cy.get(ComponentsPagePO.editComponentNameIcon, { timeout: 80000 }).eq(0).click();
     cy.get(ComponentsPagePO.editNameInput).clear().type(newName);
     cy.get(ComponentsPagePO.checkIcon).click();
+    cy.contains('div', newName).should('be.visible');
   }
 
   saveChanges() {
@@ -84,11 +85,8 @@ export class ComponentPage extends AbstractWizardPage {
     UIhelper.selectValueInDropdownbyLabelName('Runtime', runtimeName);
   }
 
-  createApplication(isAdvancedFlowActive: boolean = false) {
-    isAdvancedFlowActive
-      ? cy.get(ComponentsPagePO.create).click().click()
-      : cy.get(ComponentsPagePO.create).click({ force: true });
-    cy.get(ComponentsPagePO.create).should('be.disabled');
+  clickCreateApplication() {
+    cy.get(ComponentsPagePO.create).invoke('click').should('be.disabled');
     Common.waitForLoad();
   }
 
@@ -97,7 +95,9 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   expandDetails(componentName: string) {
-    cy.get(addComponentPagePO.toggleButton(componentName)).click();
+    cy.contains(addComponentPagePO.componentCard, componentName)
+      .find(addComponentPagePO.toggleButton)
+      .click();
   }
 
   selectCustomBuildPipeline() {

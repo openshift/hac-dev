@@ -38,7 +38,7 @@ describe(
 
       it('Create Application', () => {
         componentPage.editComponentName(componentName);
-        componentPage.createApplication();
+        componentPage.clickCreateApplication();
         Applications.goToComponentsTab();
         applicationDetailPage.createdComponentExists(componentName, applicationName);
       });
