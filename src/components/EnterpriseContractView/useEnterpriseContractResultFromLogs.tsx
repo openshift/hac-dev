@@ -59,7 +59,7 @@ export const useEnterpriseContractResultFromLogs = (
   const ecResult = React.useMemo(() => {
     // filter out components for which ec didn't execute because invalid image URL
     return ecLoaded && ecJson
-      ? ecJson.components.filter((comp: ComponentEnterpriseContractResult) => {
+      ? ecJson.components?.filter((comp: ComponentEnterpriseContractResult) => {
           return !(
             comp.violations &&
             comp.violations?.length === 1 &&
@@ -79,32 +79,35 @@ export const mapEnterpriseContractResultData = (
   return ecResult.reduce((acc, compResult) => {
     compResult?.violations?.forEach((v) => {
       const rule: UIEnterpriseContractData = {
-        title: v.metadata.title,
-        description: v.metadata.description,
+        title: v.metadata?.title,
+        description: v.metadata?.description,
         status: ENTERPRISE_CONTRACT_STATUS.violations,
-        timestamp: v.metadata.effective_on,
+        timestamp: v.metadata?.effective_on,
         component: compResult.name,
         msg: v.msg,
+        collection: v.metadata?.collections,
       };
       acc.push(rule);
     });
     compResult?.warnings?.forEach((v) => {
       const rule: UIEnterpriseContractData = {
-        title: v.metadata.title,
-        description: v.metadata.description,
+        title: v.metadata?.title,
+        description: v.metadata?.description,
         status: ENTERPRISE_CONTRACT_STATUS.warnings,
-        timestamp: v.metadata.effective_on,
+        timestamp: v.metadata?.effective_on,
         component: compResult.name,
         msg: v.msg,
+        collection: v.metadata?.collections,
       };
       acc.push(rule);
     });
     compResult?.successes?.forEach((v) => {
       const rule: UIEnterpriseContractData = {
-        title: v.metadata.title,
-        description: v.metadata.description,
+        title: v.metadata?.title,
+        description: v.metadata?.description,
         status: ENTERPRISE_CONTRACT_STATUS.successes,
         component: compResult.name,
+        collection: v.metadata?.collections,
       };
       acc.push(rule);
     });

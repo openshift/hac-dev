@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {
   Bullseye,
+  Button,
+  Flex,
+  FlexItem,
   SearchInput,
   Select,
   SelectOption,
@@ -16,12 +19,30 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { useSearchParam } from '../../hooks/useSearchParam';
-import ExternalLink from '../../shared/components/links/ExternalLink';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import SecurityTabEmptyState from '../EmptyState/SecurityTabEmptyState';
 import { EnterpriseContractTable } from './EnterpriseContractTable/EnterpriseContractTable';
 import { ENTERPRISE_CONTRACT_STATUS } from './types';
 import { useEnterpriseContractResults } from './useEnterpriseContractResultFromLogs';
+import { getRuleStatus } from './utils';
+
+const getResultsSummary = (ECs, ecLoaded) => {
+  const statusFilter = {
+    [ENTERPRISE_CONTRACT_STATUS.successes]: 0,
+    [ENTERPRISE_CONTRACT_STATUS.warnings]: 0,
+    [ENTERPRISE_CONTRACT_STATUS.violations]: 0,
+  };
+  return ecLoaded && ECs
+    ? ECs?.reduce((acc, ec) => {
+        if (acc[ec.status]) {
+          acc[ec.status] += 1;
+        } else {
+          acc[ec.status] = 1;
+        }
+        return acc;
+      }, statusFilter)
+    : statusFilter;
+};
 
 export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = ({
   pipelineRun,
@@ -44,23 +65,10 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
     [setStatusFiltersParam],
   );
 
-  const statusFilterObj = React.useMemo(() => {
-    const statusFilter = {
-      [ENTERPRISE_CONTRACT_STATUS.successes]: 0,
-      [ENTERPRISE_CONTRACT_STATUS.warnings]: 0,
-      [ENTERPRISE_CONTRACT_STATUS.violations]: 0,
-    };
-    return ecResultLoaded
-      ? ecResult?.reduce((acc, ec) => {
-          if (acc[ec.status]) {
-            acc[ec.status] += 1;
-          } else {
-            acc[ec.status] = 1;
-          }
-          return acc;
-        }, {})
-      : statusFilter;
-  }, [ecResult, ecResultLoaded]);
+  const statusFilterObj = React.useMemo(
+    () => getResultsSummary(ecResult, ecResultLoaded),
+    [ecResult, ecResultLoaded],
+  );
 
   // Component filter
   const [componentFilterExpanded, setComponentFilterExpanded] = React.useState<boolean>(false);
@@ -127,6 +135,12 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
       : undefined;
   }, [componentFilters, ecResult, ecResultLoaded, nameFilter, statusFilters]);
 
+  // result summary
+  const resultSummary = React.useMemo(
+    () => getResultsSummary(filteredECResult, ecResultLoaded),
+    [filteredECResult, ecResultLoaded],
+  );
+
   if (!ecResultLoaded && !filteredECResult) {
     return (
       <Bullseye>
@@ -145,119 +159,170 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
           Enterprise Contract is a set of tools for verifying the provenance of application
           snapshots and validating them against a clearly defined policy.
           <br />
-          Enterprise Contract policy is defined using the Rego policy language and is described in{' '}
-          <ExternalLink
-            href="https://enterprise-contract.github.io/ec-policies/release_policy.html"
-            showIcon
+          The Enterprise Contract policy is defined using the{' '}
+          <Button
+            variant="link"
+            isInline
+            component={(props) => (
+              <a
+                {...props}
+                href="https://www.openpolicyagent.org/docs/latest/policy-language/"
+                target="_blank"
+                rel="noreferrer"
+              />
+            )}
           >
-            Release Policy
-          </ExternalLink>{' '}
-          and{' '}
-          <ExternalLink
-            href="https://enterprise-contract.github.io/ec-policies/pipeline_policy.html"
-            showIcon
+            rego policy language
+          </Button>{' '}
+          and is described here in{' '}
+          <Button
+            variant="link"
+            isInline
+            component={(props) => (
+              <a
+                {...props}
+                href="https://enterprisecontract.dev/docs/ec-policies/index.html"
+                target="_blank"
+                rel="noreferrer"
+              />
+            )}
           >
-            Pipeline Policy
-          </ExternalLink>
+            Enterprise Contract Policies
+          </Button>
           .
         </Text>
       </TextContent>
-      <TextContent style={{ marginTop: 'var(--pf-global--spacer--xl)' }}>
-        <Text component={TextVariants.h3}>Results</Text>
-      </TextContent>
-      <Toolbar clearAllFilters={onClearAllFilters}>
-        <ToolbarContent style={{ padding: 0 }}>
-          <ToolbarGroup alignment={{ default: 'alignLeft' }}>
-            <ToolbarItem>
-              <ToolbarFilter
-                chips={componentFilters}
-                categoryName="Component"
-                deleteChip={onDeleteChip}
-                deleteChipGroup={onDeleteChipComponentGroup}
-              >
-                <Select
-                  placeholderText="Component"
-                  toggleAriaLabel="Component filter menu"
-                  aria-label="Component"
-                  data-testid="component-filter-menu"
-                  variant={SelectVariant.checkbox}
-                  isOpen={componentFilterExpanded}
-                  onToggle={setComponentFilterExpanded}
-                  onSelect={(event, selection) => {
-                    const checked = (event.target as HTMLInputElement).checked;
-                    setComponentFilters(
-                      checked
-                        ? [...componentFilters, String(selection)]
-                        : componentFilters.filter((value) => value !== selection),
-                    );
-                  }}
-                  selections={componentFilters}
-                  isGrouped
-                >
-                  {Object.keys(componentFilterObj).map((filter) => (
-                    <SelectOption
-                      key={filter}
-                      value={filter}
-                      isChecked={componentFilters.includes(filter)}
-                      itemCount={componentFilterObj[filter] ?? 0}
+      <Flex style={{ marginTop: 'var(--pf-global--spacer--xl)' }}>
+        <FlexItem style={{ marginRight: 'var(--pf-global--spacer--2xl)' }}>
+          <TextContent>
+            <Text component={TextVariants.h3}>Results</Text>
+          </TextContent>
+          <Toolbar clearAllFilters={onClearAllFilters}>
+            <ToolbarContent style={{ padding: 0 }}>
+              <ToolbarGroup alignment={{ default: 'alignLeft' }}>
+                <ToolbarItem>
+                  <ToolbarFilter
+                    chips={componentFilters}
+                    categoryName="Component"
+                    deleteChip={onDeleteChip}
+                    deleteChipGroup={onDeleteChipComponentGroup}
+                  >
+                    <Select
+                      placeholderText="Component"
+                      toggleAriaLabel="Component filter menu"
+                      aria-label="Component"
+                      data-testid="component-filter-menu"
+                      variant={SelectVariant.checkbox}
+                      isOpen={componentFilterExpanded}
+                      onToggle={setComponentFilterExpanded}
+                      onSelect={(event, selection) => {
+                        const checked = (event.target as HTMLInputElement).checked;
+                        setComponentFilters(
+                          checked
+                            ? [...componentFilters, String(selection)]
+                            : componentFilters.filter((value) => value !== selection),
+                        );
+                      }}
+                      selections={componentFilters}
+                      isGrouped
                     >
-                      {filter}
-                    </SelectOption>
-                  ))}
-                </Select>
-              </ToolbarFilter>
-            </ToolbarItem>
-            <ToolbarItem>
-              <ToolbarFilter chips={statusFilters} categoryName="Status" deleteChip={onDeleteChip}>
-                <Select
-                  placeholderText="Status"
-                  aria-label="Status"
-                  toggleAriaLabel="Status filter menu"
-                  data-testid="status-filter-menu"
-                  variant={SelectVariant.checkbox}
-                  isOpen={statusFilterExpanded}
-                  onToggle={setStatusFilterExpanded}
-                  onSelect={(event, selection) => {
-                    const checked = (event.target as HTMLInputElement).checked;
-                    setStatusFilters(
-                      checked
-                        ? [...statusFilters, String(selection)]
-                        : statusFilters.filter((value) => value !== selection),
-                    );
-                  }}
-                  selections={statusFilters}
-                  isGrouped
-                >
-                  {Object.keys(statusFilterObj).map((filter) => (
-                    <SelectOption
-                      key={filter}
-                      value={filter}
-                      aria-label={filter}
-                      data-testid={`status-filter-${filter}`}
-                      isChecked={statusFilters.includes(filter)}
-                      itemCount={statusFilterObj[filter] ?? 0}
+                      {Object.keys(componentFilterObj).map((filter) => (
+                        <SelectOption
+                          key={filter}
+                          value={filter}
+                          isChecked={componentFilters.includes(filter)}
+                          itemCount={componentFilterObj[filter] ?? 0}
+                        >
+                          {filter}
+                        </SelectOption>
+                      ))}
+                    </Select>
+                  </ToolbarFilter>
+                </ToolbarItem>
+                <ToolbarItem>
+                  <ToolbarFilter
+                    chips={statusFilters}
+                    categoryName="Status"
+                    deleteChip={onDeleteChip}
+                  >
+                    <Select
+                      placeholderText="Status"
+                      aria-label="Status"
+                      toggleAriaLabel="Status filter menu"
+                      data-testid="status-filter-menu"
+                      variant={SelectVariant.checkbox}
+                      isOpen={statusFilterExpanded}
+                      onToggle={setStatusFilterExpanded}
+                      onSelect={(event, selection) => {
+                        const checked = (event.target as HTMLInputElement).checked;
+                        setStatusFilters(
+                          checked
+                            ? [...statusFilters, String(selection)]
+                            : statusFilters.filter((value) => value !== selection),
+                        );
+                      }}
+                      selections={statusFilters}
+                      isGrouped
                     >
-                      {filter}
-                    </SelectOption>
-                  ))}
-                </Select>
-              </ToolbarFilter>
-            </ToolbarItem>
+                      {Object.keys(statusFilterObj).map((filter) => (
+                        <SelectOption
+                          key={filter}
+                          value={filter}
+                          aria-label={filter}
+                          data-testid={`status-filter-${filter}`}
+                          isChecked={statusFilters.includes(filter)}
+                          itemCount={statusFilterObj[filter] ?? 0}
+                        >
+                          {filter}
+                        </SelectOption>
+                      ))}
+                    </Select>
+                  </ToolbarFilter>
+                </ToolbarItem>
 
-            <ToolbarItem className="pf-u-ml-0">
-              <SearchInput
-                name="nameInput"
-                data-test="rule-input-filter"
-                type="search"
-                aria-label="rule filter"
-                placeholder="Filter by rule..."
-                onChange={(e, name) => setNameFilter(name)}
-                value={nameFilter}
-              />
-            </ToolbarItem>
-          </ToolbarGroup>
-        </ToolbarContent>
-      </Toolbar>
+                <ToolbarItem className="pf-u-ml-0">
+                  <SearchInput
+                    name="nameInput"
+                    data-test="rule-input-filter"
+                    type="search"
+                    aria-label="rule filter"
+                    placeholder="Filter by rule..."
+                    onChange={(e, name) => setNameFilter(name)}
+                    value={nameFilter}
+                  />
+                </ToolbarItem>
+              </ToolbarGroup>
+            </ToolbarContent>
+          </Toolbar>
+        </FlexItem>
+        <Flex direction={{ default: 'column' }}>
+          <FlexItem>
+            <TextContent>
+              <Text component={TextVariants.h3}>Results summary</Text>
+            </TextContent>
+          </FlexItem>
+          <Flex data-testid="result-summary" spaceItems={{ default: 'spaceItemsXl' }}>
+            <FlexItem spacer={{ default: 'spacerXl' }}>
+              <span style={{ marginRight: 'var(--pf-global--spacer--sm)' }}>
+                {getRuleStatus(ENTERPRISE_CONTRACT_STATUS.violations)}
+              </span>
+              <b>{resultSummary[ENTERPRISE_CONTRACT_STATUS.violations]}</b>
+            </FlexItem>
+            <FlexItem>
+              <span style={{ marginRight: 'var(--pf-global--spacer--sm)' }}>
+                {getRuleStatus(ENTERPRISE_CONTRACT_STATUS.warnings)}
+              </span>
+              <b>{resultSummary[ENTERPRISE_CONTRACT_STATUS.warnings]}</b>
+            </FlexItem>
+            <FlexItem>
+              <span style={{ marginRight: 'var(--pf-global--spacer--sm)' }}>
+                {getRuleStatus(ENTERPRISE_CONTRACT_STATUS.successes)}
+              </span>
+              <b>{resultSummary[ENTERPRISE_CONTRACT_STATUS.successes]}</b>
+            </FlexItem>
+          </Flex>
+        </Flex>
+      </Flex>
       {ecResultLoaded && filteredECResult.length > 0 ? (
         <EnterpriseContractTable ecResult={filteredECResult} />
       ) : (

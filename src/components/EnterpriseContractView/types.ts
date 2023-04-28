@@ -67,4 +67,5 @@ export type UIEnterpriseContractData = {
   timestamp?: string;
   component: string;
   msg?: string;
+  collection?: string[];
 };
