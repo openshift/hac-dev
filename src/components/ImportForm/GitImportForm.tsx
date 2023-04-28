@@ -100,7 +100,7 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
           });
 
           const doNavigate = () =>
-            navigate(`/stonesoup/workspaces/${workspace}/applications/${appName}`);
+            navigate(`/application-pipeline/workspaces/${workspace}/applications/${appName}`);
 
           if (pacComponentNames.length > 0) {
             showModal(

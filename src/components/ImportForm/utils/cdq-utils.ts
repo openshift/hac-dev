@@ -19,7 +19,6 @@ import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
  */
 export const useComponentDetection = (
   source: string,
-  application: string,
   secret?: string,
   context?: string,
   ref?: string,
@@ -54,9 +53,9 @@ export const useComponentDetection = (
     setCdqName(null);
     setCreateError(null);
     if (source) {
-      debouncedCreateCDQ(application, source, namespace, secret, context, ref);
+      debouncedCreateCDQ(source, namespace, secret, context, ref);
     }
-  }, [debouncedCreateCDQ, source, namespace, secret, application, context, ref]);
+  }, [debouncedCreateCDQ, source, namespace, secret, context, ref]);
 
   React.useEffect(() => {
     return () => {
@@ -125,20 +124,12 @@ const CDQ_POLL_INTERVAL = 500;
  */
 export const detectComponents = async (
   source: string,
-  application: string,
   namespace: string,
   secret?: string,
   context?: string,
   ref?: string,
 ) => {
-  let cdq = await createComponentDetectionQuery(
-    application,
-    source,
-    namespace,
-    secret,
-    context,
-    ref,
-  );
+  let cdq = await createComponentDetectionQuery(source, namespace, secret, context, ref);
   try {
     while (!cdq.status?.conditions?.find((c) => c.type === 'Completed' && c.status === 'True')) {
       await new Promise((r) => setTimeout(r, CDQ_POLL_INTERVAL));

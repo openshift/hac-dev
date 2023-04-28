@@ -19,7 +19,6 @@ import {
 import { ComponentKind } from '../../types';
 import { useTrackEvent, TrackEvents } from '../../utils/analytics';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
-import { HeadTitle } from '../HeadTitle';
 import SampleSection from './SampleSection/SampleSection';
 import { createResources } from './utils/submit-utils';
 import { ImportFormValues, ImportStrategy } from './utils/types';
@@ -81,7 +80,7 @@ const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({
             });
           });
 
-          navigate(`/stonesoup/workspaces/${workspace}/applications/${appName}`);
+          navigate(`/application-pipeline/workspaces/${workspace}/applications/${appName}`);
           setSubmitting(false);
         })
         .catch((error) => {
@@ -96,7 +95,6 @@ const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({
 
   return (
     <PageSection variant={PageSectionVariants.light} padding={{ default: 'noPadding' }}>
-      <HeadTitle>Import - Select sample | CI/CD</HeadTitle>
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
           <Text component={TextVariants.h2}>Select a sample</Text>

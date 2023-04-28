@@ -1,112 +1,56 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { render, waitFor } from '@testing-library/react';
-import { FormikWizard } from 'formik-pf';
-import { createApplication } from '../../../utils/create-utils';
+import { render, screen, configure, waitFor } from '@testing-library/react';
 import ImportForm from '../ImportForm';
-import { useImportSteps } from '../utils/useImportSteps';
+import { useValidApplicationName } from '../utils/useValidApplicationName';
+import '@testing-library/jest-dom';
 
-jest.mock('../../../utils/analytics');
-
-jest.mock('react-router-dom', () => ({
-  useNavigate: jest.fn(),
+jest.mock('../utils/useValidApplicationName', () => ({
+  useValidApplicationName: jest.fn(),
 }));
 
-jest.mock('formik-pf', () => ({
-  FormikWizard: jest.fn(() => null),
-}));
+jest.mock('../GitImportForm', () => (props) => {
+  return (
+    <div data-test="git-import-form">
+      <button onClick={() => props.setReviewMode(true)} data-test="submit-button">
+        Submit
+      </button>
+    </div>
+  );
+});
 
-jest.mock('../utils/useImportSteps', () => ({
-  useImportSteps: jest.fn(),
-}));
+jest.mock('../SampleImportForm', () => () => {
+  return <div data-test="sample-import-form" />;
+});
 
-jest.mock('../../../utils/create-utils', () => ({
-  createApplication: jest.fn(),
-}));
+const useValidApplicationNameMock = useValidApplicationName as jest.Mock;
 
-jest.mock('../../../utils/workspace-context-utils', () => ({
-  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
-}));
-
-const useNavigateMock = useNavigate as jest.Mock;
-const FormikWizardMock = FormikWizard as jest.Mock;
-const useImportStepsMock = useImportSteps as jest.Mock;
-const createApplicationMock = createApplication as jest.Mock;
+configure({ testIdAttribute: 'data-test' });
 
 describe('ImportForm', () => {
-  let navigateMock;
-
-  beforeEach(() => {
-    navigateMock = jest.fn();
-    useNavigateMock.mockImplementation(() => navigateMock);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should handle form reset', () => {
+  it('should show the spinner when app name recommendation is not loaded', () => {
+    useValidApplicationNameMock.mockReturnValue(['', false]);
     render(<ImportForm />);
-    const wizardProps = FormikWizardMock.mock.calls[0][0] as React.ComponentProps<
-      typeof FormikWizard
-    >;
-
-    expect(wizardProps.onReset).not.toBeNull();
-
-    // navigate back in history when reset is clicked
-    wizardProps.onReset({}, {} as any);
-    expect(navigateMock).toHaveBeenCalledWith(-1);
+    screen.getByRole('progressbar');
   });
 
-  it('should not set inAppContext if application name is not passed', () => {
+  it('should render the git and sample import forms', () => {
+    useValidApplicationNameMock.mockReturnValue(['my-app-1', true]);
+    render(<ImportForm applicationName="my-app" />);
+    screen.getByTestId('git-import-form');
+    screen.getByTestId('sample-import-form');
+  });
+
+  it('should render only git import form if user goes from source to review step', async () => {
+    useValidApplicationNameMock.mockReturnValue(['my-app-1', true]);
     render(<ImportForm />);
-    const wizardProps = FormikWizardMock.mock.calls[0][0] as React.ComponentProps<
-      typeof FormikWizard
-    >;
-    expect(wizardProps.initialValues.inAppContext).toBe(false);
-  });
 
-  it('should set inAppContext if application name is passed', () => {
-    render(<ImportForm applicationName="new-app" />);
-    const wizardProps = FormikWizardMock.mock.calls[0][0] as React.ComponentProps<
-      typeof FormikWizard
-    >;
-    expect(wizardProps.initialValues.inAppContext).toBe(true);
-  });
+    screen.getByTestId('git-import-form');
+    screen.getByTestId('sample-import-form');
 
-  it('should navigate to application page on form submit', async () => {
-    createApplicationMock.mockResolvedValue({ metadata: { name: 'my-app' } });
-    render(<ImportForm />);
-    const wizardProps = FormikWizardMock.mock.calls[0][0] as React.ComponentProps<
-      typeof FormikWizard
-    >;
-    // navigate to application page when an application has been created
-    expect(useImportStepsMock).toHaveBeenCalledTimes(1);
-    await waitFor(() => {
-      wizardProps.onSubmit({ ...wizardProps.initialValues, application: 'my-app' }, {} as any);
-    });
-    expect(navigateMock).toHaveBeenCalledWith(
-      '/application-pipeline/workspaces/test-ws/applications/my-app',
-    );
-  });
+    const submitButton = screen.getByTestId('submit-button');
 
-  it('should warn the users about the errors on form submit', async () => {
-    const helpers = {
-      setSubmitting: jest.fn(),
-      setStatus: jest.fn(),
-    };
-    createApplicationMock.mockRejectedValue({ code: 409, message: 'App already exist!' });
-    render(<ImportForm />);
-    const wizardProps = FormikWizardMock.mock.calls[0][0] as React.ComponentProps<
-      typeof FormikWizard
-    >;
-    expect(useImportStepsMock).toHaveBeenCalledTimes(1);
-    await waitFor(() => {
-      wizardProps.onSubmit({ ...wizardProps.initialValues, application: 'my-app' }, helpers as any);
-    });
-    expect(helpers.setSubmitting).toHaveBeenCalledWith(false);
-    expect(helpers.setStatus).toHaveBeenCalledWith({
-      submitError: 'App already exist!',
-    });
+    await waitFor(() => submitButton.click());
+    screen.getByTestId('git-import-form');
+    expect(screen.queryByTestId('sample-import-form')).not.toBeInTheDocument();
   });
 });

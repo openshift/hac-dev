@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, configure, fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, configure, screen } from '@testing-library/react';
 import { useField } from 'formik';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { useComponentDetection } from '../../utils/cdq-utils';
@@ -100,22 +100,7 @@ describe('ReviewComponentCard', () => {
     expect(screen.getByText('quay.io/sbudhwar/demo:latest')).toBeInTheDocument();
   });
 
-  it('should show expandable config when components are detected', async () => {
-    useComponentDetectionMock.mockReturnValue([]);
-    formikRenderer(
-      <ReviewComponentCard
-        detectedComponent={gitRepoComponent}
-        detectedComponentIndex={0}
-        showRuntimeSelector
-      />,
-      { isDetected: true, source: { git: {} } },
-    );
-    await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
-
-    expect(screen.getByText('Build & deploy configuration')).toBeInTheDocument();
-  });
-
-  it('should show config options expanded by default', async () => {
+  it('should show build and deploy config options when components are detected', async () => {
     useComponentDetectionMock.mockReturnValue([]);
     formikRenderer(
       <ReviewComponentCard
@@ -129,16 +114,9 @@ describe('ReviewComponentCard', () => {
 
     expect(screen.getByText('Build & deploy configuration')).toBeInTheDocument();
 
-    const configExpand = screen.getByTestId('config-expander');
-    expect(configExpand).toBeInTheDocument();
-    const expandButton = configExpand.querySelector('.pf-c-expandable-section__toggle');
-    expect(expandButton).toBeInTheDocument();
-    expect(screen.queryByText('Dockerfile path')).toBeVisible();
-
-    await act(async () => {
-      fireEvent.click(expandButton);
-    });
-    expect(screen.queryByText('Dockerfile path')).not.toBeVisible();
+    expect(screen.queryByText('Dockerfile')).toBeVisible();
+    expect(screen.queryByText('Target port')).toBeVisible();
+    expect(screen.queryByText('Instances')).toBeVisible();
   });
 
   it('should not hide expandable config when components are not detected', async () => {
@@ -165,7 +143,7 @@ describe('ReviewComponentCard', () => {
     expect(screen.queryByRole('button', { name: 'Select a runtime' })).not.toBeInTheDocument();
   });
 
-  it('should not contain the edit option', async () => {
+  it('should show input field for component name by default', async () => {
     useComponentDetectionMock.mockReturnValue([]);
 
     formikRenderer(
@@ -173,17 +151,13 @@ describe('ReviewComponentCard', () => {
         detectedComponent={gitRepoComponent}
         detectedComponentIndex={0}
         showRuntimeSelector
-        editMode={true}
       />,
       { isDetected: true, source: { git: {} } },
     );
-    await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
-
-    screen.getByText('java-springboot');
-    expect(screen.queryByTestId('pencil-icon')).not.toBeInTheDocument();
+    screen.getByLabelText('Component name');
   });
 
-  it('should contain edit option and onEdit handler should be called on submit', async () => {
+  it('should show disabled input field for component name if in edit mode', async () => {
     useComponentDetectionMock.mockReturnValue([]);
 
     formikRenderer(
@@ -191,22 +165,10 @@ describe('ReviewComponentCard', () => {
         detectedComponent={gitRepoComponent}
         detectedComponentIndex={0}
         showRuntimeSelector
-        editMode={false}
+        editMode
       />,
       { isDetected: true, source: { git: {} } },
     );
-    await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
-
-    expect(screen.getByText('Build & deploy configuration')).toBeInTheDocument();
-
-    fireEvent.click(screen.getByTestId('pencil-icon'));
-    await waitFor(() => {
-      const inputField = screen.getByTestId('editable-label-input').querySelector('input');
-      const submitButton = screen.getByTestId('check-icon');
-      fireEvent.input(inputField, { target: { value: 'new field value' } });
-      fireEvent.click(submitButton);
-
-      expect(onEditHandler).toHaveBeenCalled();
-    });
+    expect(screen.getByLabelText('Component name')).toBeDisabled();
   });
 });

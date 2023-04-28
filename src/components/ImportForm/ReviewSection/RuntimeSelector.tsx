@@ -38,7 +38,6 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
   const {
     values: {
       secret,
-      application,
       source: {
         git: { url: sourceUrl, revision, context },
       },
@@ -74,17 +73,17 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
   }, [samples, detectionFailed]);
 
   const onChange = (value: string) => {
-    const runtime = samples.find((s) => s.name === value);
+    const runtime = samples.find((s) => value.includes(s.name));
+
     if (
       (runtime?.attributes?.git as any)?.remotes?.origin ===
       selectedRuntime?.attributes?.git?.remotes?.origin
     ) {
       return;
     }
-    const runtimeSourceUrl =
-      value === dockerFileSample.value
-        ? sourceUrl
-        : (runtime?.attributes?.git as any)?.remotes?.origin;
+    const runtimeSourceUrl = value.includes(dockerFileSample.value)
+      ? sourceUrl
+      : (runtime?.attributes?.git as any)?.remotes?.origin;
     setSelectedRuntime(value === dockerFileSample.value ? dockerFileSample : runtime);
     setRuntimeSource(runtimeSourceUrl);
     setDetecting(true);
@@ -93,7 +92,6 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
 
   const [detectedComponents, detectionLoaded, detectionError] = useComponentDetection(
     runtimeSource,
-    application,
     secret,
     sourceUrl !== runtimeSource ? undefined : context,
     revision,
@@ -128,16 +126,20 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
           icon={toggleIcon}
           data-test="dropdown-toggle"
         >
-          {isDetectingRuntime
-            ? DetectingRuntime
-            : (
+          {isDetectingRuntime ? (
+            DetectingRuntime
+          ) : selectedRuntime?.name ? (
+            <>
+              {selectedRuntime?.name}
+              {selectedRuntime?.name === recommendedRuntime?.name && (
                 <>
-                  {selectedRuntime?.name}{' '}
-                  {selectedRuntime?.name === recommendedRuntime?.name && (
-                    <Badge isRead>Recommended</Badge>
-                  )}
+                  &nbsp;<Badge isRead>Recommended</Badge>
                 </>
-              ) || 'Select a runtime'}
+              )}
+            </>
+          ) : (
+            'Select a runtime'
+          )}
         </DropdownToggle>
       );
     },

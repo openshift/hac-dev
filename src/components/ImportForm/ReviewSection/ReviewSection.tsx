@@ -17,6 +17,7 @@ import { useFormikContext } from 'formik';
 import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
 import { HeadTitle } from '../../HeadTitle';
 import ApplicationSection from '../ApplicationSection/ApplicationSection';
+import GitImportErrors from '../GitImportErrors';
 import { useComponentDetection } from '../utils/cdq-utils';
 import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues } from '../utils/types';
@@ -55,7 +56,6 @@ const ReviewSection: React.FunctionComponent = () => {
 
   const [detectedComponents, detectionLoaded, detectionError] = useComponentDetection(
     !isContainerImage ? sourceUrl : null,
-    application,
     secret,
     context,
     revision,
@@ -182,6 +182,7 @@ const ReviewSection: React.FunctionComponent = () => {
                 />
               ))}
             </FormSection>
+            <GitImportErrors />
           </FlexItem>
         </Flex>
       </Flex>

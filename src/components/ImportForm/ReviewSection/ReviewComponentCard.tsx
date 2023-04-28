@@ -91,7 +91,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
               )}
             </FlexItem>
             {showRuntimeSelector && (
-              <FlexItem flex={{ default: 'flex_1' }}>
+              <FlexItem flex={{ default: 'flex_2' }}>
                 <RuntimeSelector detectedComponentIndex={detectedComponentIndex} />
                 <HelperText style={{ fontWeight: 100 }}>
                   <HelperTextItem variant="indeterminate">

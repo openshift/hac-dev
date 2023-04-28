@@ -40,20 +40,32 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
     setDropdownOpen(false);
   };
 
+  const recommendedBadge = React.useMemo(
+    () => (
+      <>
+        &nbsp;<Badge isRead>Recommended</Badge>
+      </>
+    ),
+    [],
+  );
+
   const dropdownToggleComponent = React.useMemo(
     () =>
       dropdownToggle ? (
         dropdownToggle(onToggle)
       ) : (
         <DropdownToggle onToggle={onToggle} isDisabled={disabled} data-test="dropdown-toggle">
-          {(
+          {selected ? (
             <>
-              {selected}&nbsp;{selected === recommended && <Badge isRead>Recommended</Badge>}
+              {selected}
+              {selected === recommended && recommendedBadge}
             </>
-          ) || placeholder}
+          ) : (
+            placeholder
+          )}
         </DropdownToggle>
       ),
-    [dropdownToggle, disabled, selected, recommended, placeholder],
+    [dropdownToggle, disabled, selected, recommended, recommendedBadge, placeholder],
   );
 
   const dropdownItems = React.useMemo(
@@ -62,11 +74,12 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
         const { key, value, ...props } = item;
         return (
           <DropdownItem key={key} {...props}>
-            {value}&nbsp;{value === recommended && <Badge isRead>Recommended</Badge>}
+            {value}
+            {value === recommended && recommendedBadge}
           </DropdownItem>
         );
       }),
-    [items, recommended],
+    [items, recommended, recommendedBadge],
   );
   return (
     <Dropdown

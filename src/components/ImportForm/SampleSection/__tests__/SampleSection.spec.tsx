@@ -21,7 +21,7 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
-const onStrategyChangeMock = jest.fn();
+const onSampleImportMock = jest.fn();
 
 const useFormikContextMock = useFormikContext as jest.Mock;
 
@@ -34,8 +34,7 @@ describe('SampleSection', () => {
       setFieldValue: jest.fn(),
     });
     useDevfileSamplesMock.mockReturnValue([[], false, null]);
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
-    await screen.getByText('Select a sample');
+    render(<SampleSection onSampleImport={onSampleImportMock} />);
     await screen.getByRole('progressbar');
   });
 
@@ -45,7 +44,7 @@ describe('SampleSection', () => {
       setFieldValue: jest.fn(),
     });
     useDevfileSamplesMock.mockReturnValue([[], true, null]);
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+    render(<SampleSection onSampleImport={onSampleImportMock} />);
     await waitFor(() => {
       screen.getByText('No Catalog items found');
     });
@@ -57,13 +56,13 @@ describe('SampleSection', () => {
       setFieldValue: jest.fn(),
     });
     useDevfileSamplesMock.mockReturnValue([[mockCatalogItem[0]], true, null]);
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+    render(<SampleSection onSampleImport={onSampleImportMock} />);
     await waitFor(() => {
       screen.getByText('Basic Node.js');
     });
   });
 
-  it('sets source after a sample is selected', async () => {
+  it('should call onSampleImport when user clicks on CTA', async () => {
     const setFieldValue = jest.fn();
     useFormikContextMock.mockReturnValue({
       values: { source: { git: { url: 'https://github.com/repo' } }, application: 'test-app' },
@@ -72,35 +71,15 @@ describe('SampleSection', () => {
     });
     useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
 
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+    render(<SampleSection onSampleImport={onSampleImportMock} />);
 
-    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
+    await waitFor(() => fireEvent.click(screen.getByTestId('import-sample-Basic Node.js')));
 
     await waitFor(() => {
-      expect(setFieldValue).toHaveBeenLastCalledWith(
-        'source.git.url',
+      expect(onSampleImportMock).toHaveBeenLastCalledWith(
         'https://github.com/nodeshift-starters/devfile-sample.git',
+        'Basic Node.js',
       );
-    });
-  });
-
-  it('unsets source after a selected sample is deselected', async () => {
-    const setFieldValue = jest.fn();
-    useFormikContextMock.mockReturnValue({
-      values: { source: { git: { url: 'https://github.com/repo' } }, application: 'test-app' },
-      setFieldValue,
-      setStatus: jest.fn(),
-    });
-    useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
-
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
-
-    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
-
-    await waitFor(() => fireEvent.click(screen.getByText('Basic Node.js')));
-
-    await waitFor(() => {
-      expect(setFieldValue).toHaveBeenLastCalledWith('source.git.url', undefined);
     });
   });
 
@@ -113,7 +92,7 @@ describe('SampleSection', () => {
     });
     useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
 
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+    render(<SampleSection onSampleImport={onSampleImportMock} />);
 
     await waitFor(() =>
       fireEvent.input(screen.getByPlaceholderText('Filter by keyword...'), {
@@ -138,7 +117,7 @@ describe('SampleSection', () => {
     });
     useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
 
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+    render(<SampleSection onSampleImport={onSampleImportMock} />);
 
     await waitFor(() => screen.getByText('Basic Node.js'));
     await waitFor(() => screen.getByText('Basic Quarkus'));
@@ -162,7 +141,7 @@ describe('SampleSection', () => {
     });
     useDevfileSamplesMock.mockReturnValue([mockCatalogItem, true, null]);
 
-    render(<SampleSection onStrategyChange={onStrategyChangeMock} />);
+    render(<SampleSection onSampleImport={onSampleImportMock} />);
 
     await waitFor(() => screen.getByText('Basic Node.js'));
     await waitFor(() => screen.getByText('Basic Quarkus'));

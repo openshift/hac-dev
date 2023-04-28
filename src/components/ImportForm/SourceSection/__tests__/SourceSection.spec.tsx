@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../../../types';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { useAccessCheck, useAccessTokenBinding } from '../../utils/auth-utils';
 import { ImportFormValues } from '../../utils/types';
-import { SourceSection } from '../SourceSection';
+import SourceSection from '../SourceSection';
 
 import '@testing-library/jest-dom';
 
@@ -28,17 +28,11 @@ jest.mock('../../../../shared/hooks', () => ({
 const useAccessCheckMock = useAccessCheck as jest.Mock;
 const useBindingMock = useAccessTokenBinding as jest.Mock;
 
-const renderSourceSection = (
-  showSamples = true,
-  formikData?: Omit<ImportFormValues, 'application' | 'namespace'>,
-) => {
+const renderSourceSection = (formikData?: Omit<ImportFormValues, 'application' | 'namespace'>) => {
   const onClick = jest.fn();
   const data = formikData || { source: { git: { url: '' } } };
 
-  const utils = formikRenderer(
-    <SourceSection onStrategyChange={showSamples ? onClick : undefined} />,
-    data,
-  );
+  const utils = formikRenderer(<SourceSection />, data);
   const user = userEvent.setup();
 
   return { input: utils.getByPlaceholderText('Enter your source'), ...utils, onClick, user };
@@ -47,28 +41,11 @@ const renderSourceSection = (
 afterEach(jest.resetAllMocks);
 
 describe('SourceSection', () => {
-  it('renders input field and sample button', () => {
+  it('renders input field', () => {
     useAccessCheckMock.mockReturnValue([{}, false]);
     renderSourceSection();
 
     expect(screen.getByPlaceholderText('Enter your source')).toBeInTheDocument();
-    expect(screen.queryByTestId('start-with-sample-button')).toBeInTheDocument();
-  });
-
-  it('hides sample button', () => {
-    useAccessCheckMock.mockReturnValue([{}, false]);
-    renderSourceSection(false);
-
-    expect(screen.queryByTestId('start-with-sample-button')).toBeNull();
-  });
-
-  it('fires callback on sample button click', () => {
-    useAccessCheckMock.mockReturnValue([{}, false]);
-
-    const { onClick } = renderSourceSection();
-
-    fireEvent.click(screen.getByTestId('start-with-sample-button'));
-    expect(onClick).toHaveBeenCalled();
   });
 
   it('displays error when repo is not accessible', async () => {
@@ -167,11 +144,17 @@ describe('SourceSection', () => {
 
     await user.type(input, 'https://github.com/example/repo');
 
-    await waitFor(() => expect(screen.queryByText('Git options')).toBeInTheDocument());
+    await waitFor(() => {
+      expect(screen.queryByText('Git reference')).toBeInTheDocument();
+      expect(screen.queryByText('Context dir')).toBeInTheDocument();
+    });
 
     await user.type(input, 'dummy text');
 
-    await waitFor(() => expect(screen.queryByText('Git options')).toBeNull());
+    await waitFor(() => {
+      expect(screen.queryByText('Git reference')).toBeNull();
+      expect(screen.queryByText('Context dir')).toBeNull();
+    });
   });
 
   it('should show proper states for valid url based on useAccessCheck Values', async () => {
@@ -193,7 +176,7 @@ describe('SourceSection', () => {
 
     await waitFor(() => expect(screen.getByPlaceholderText('Enter your source')).toBeValid());
     await waitFor(() => screen.getByText('Access validated'));
-    await waitFor(() => expect(screen.getByText('Git options')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Git reference')).toBeInTheDocument());
   });
 
   it('should fetch secret if private repository has been previously authenticated', async () => {
@@ -216,35 +199,23 @@ describe('SourceSection', () => {
 
   it('should render git only option', () => {
     useAccessCheckMock.mockReturnValue([{}, false]);
-    renderSourceSection(false);
-    expect(screen.queryByText(/container/)).toBeNull();
-  });
-
-  it('should render the sample info alert', () => {
-    useAccessCheckMock.mockReturnValue([{}, false]);
     renderSourceSection();
-    screen.getByTestId('samples-info-alert');
-  });
-
-  it('should not render the samples info alert', () => {
-    useAccessCheckMock.mockReturnValue([{}, false]);
-    renderSourceSection(false);
-    expect(screen.queryByTestId('samples-info-alert')).toBeNull();
+    expect(screen.queryByText(/container/)).toBeNull();
   });
 
   it('should not run detection again if repo is previously entered and validated', () => {
     useAccessCheckMock.mockReturnValue([{}, false]);
-    renderSourceSection(false, {
+    renderSourceSection({
       source: { git: { url: 'https://example.com' }, isValidated: true },
     });
     expect(useAccessCheckMock).toHaveBeenCalledWith(null, undefined);
     expect(screen.getByText('Access validated')).toBeVisible();
-    expect(screen.queryByText('Git options')).toBeVisible();
+    expect(screen.queryByText('Git reference')).toBeVisible();
   });
 
   it('should run detection if repo is previously entered but not validated', () => {
     useAccessCheckMock.mockReturnValue([{}, false]);
-    renderSourceSection(false, {
+    renderSourceSection({
       source: { git: { url: 'https://example.com' }, isValidated: false },
     });
     expect(useAccessCheckMock).toHaveBeenCalledWith('https://example.com', '');

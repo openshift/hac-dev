@@ -12,7 +12,13 @@ const GitImportActions: React.FunctionComponent<GitImportActionsProps> = ({
   reviewMode,
   onBack,
 }) => {
-  const { isValid, dirty, isSubmitting, isValidating } = useFormikContext<ImportFormValues>();
+  const { isValid, dirty, isSubmitting, isValidating, setErrors } =
+    useFormikContext<ImportFormValues>();
+
+  const handleBack = () => {
+    setErrors({});
+    onBack();
+  };
 
   return (
     <Bullseye>
@@ -29,7 +35,7 @@ const GitImportActions: React.FunctionComponent<GitImportActionsProps> = ({
         {reviewMode && (
           <>
             <ActionListItem>
-              <Button variant="secondary" onClick={onBack}>
+              <Button variant="secondary" onClick={handleBack}>
                 Back
               </Button>
             </ActionListItem>

@@ -67,7 +67,12 @@ const SampleCard: React.FC<SampleCardProps> = ({ sample, onSampleImport }) => {
       </CardBody>
       <Divider />
       <CardFooter>
-        <Button variant={ButtonVariant.link} isInline onClick={handleClick}>
+        <Button
+          data-test={`import-sample-${name}`}
+          variant={ButtonVariant.link}
+          isInline
+          onClick={handleClick}
+        >
           Import sample <ArrowRightIcon />
         </Button>
       </CardFooter>

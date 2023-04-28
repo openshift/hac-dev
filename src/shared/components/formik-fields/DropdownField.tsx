@@ -12,7 +12,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
   required,
   items,
   name,
-  recommended,
+  recommended = null,
   onChange,
   fullWidth,
   validateOnChange = false,

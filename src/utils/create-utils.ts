@@ -152,7 +152,6 @@ export const createComponent = (
 /**
  * Create ComponentDetectionQuery CR
  *
- * @param appName application name
  * @param url the URL of the repository that will be analyzed for components
  * @param namespace namespace to deploy resource in. Defaults to current namespace
  * @param secret Name of the secret containing the personal access token
@@ -163,7 +162,6 @@ export const createComponent = (
  *
  */
 export const createComponentDetectionQuery = async (
-  appName: string,
   url: string,
   namespace: string,
   secret?: string,
@@ -172,8 +170,7 @@ export const createComponentDetectionQuery = async (
   dryRun?: boolean,
 ): Promise<ComponentDetectionQueryKind> => {
   // append name with uid for additional randomness
-  const name = `${appName.split(/ |\./).join('-').toLowerCase()}`;
-  const uniqueName = `${name}-${uuidv4()}`;
+  const uniqueName = `cdq-${uuidv4()}`;
 
   const requestData = {
     apiVersion: `${ComponentDetectionQueryModel.apiGroup}/${ComponentDetectionQueryModel.apiVersion}`,
