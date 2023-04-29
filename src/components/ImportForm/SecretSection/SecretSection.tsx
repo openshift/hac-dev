@@ -58,7 +58,7 @@ const SecretSection = () => {
             className="pf-m-link--align-left"
             type="button"
             variant="link"
-            data-test="add-secret-button"
+            data-testid="add-secret-button"
             icon={<PlusCircleIcon />}
             onClick={() =>
               showModal(SecretModal([...partnerTaskSecrets, ...values.newSecrets], onSubmit))

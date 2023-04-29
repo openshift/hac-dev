@@ -57,6 +57,7 @@ const OpaqueSecretForm: React.FC<OpaqueSecretFormProps> = ({
           title="Create new build secret"
           description="Keep your data secure by defining a build time secret."
           variant={ModalVariant.medium}
+          data-testid="opaque-secret-modal"
           width={'40%'}
           actions={[
             <Button
@@ -88,6 +89,8 @@ const OpaqueSecretForm: React.FC<OpaqueSecretFormProps> = ({
                 hasOnCreateOption
                 options={options}
                 variant={SelectVariant.typeahead}
+                toggleId="secret-name-toggle"
+                toggleAriaLabel="secret-name-dropdown"
                 onClear={() => {
                   props.setFieldValue('keyValues', getSupportedPartnerTaskKeyValuePairs());
                 }}
@@ -98,7 +101,7 @@ const OpaqueSecretForm: React.FC<OpaqueSecretFormProps> = ({
               />
               <KeyValueFileInputField
                 name="keyValues"
-                data-test="configmap-key-value-pair"
+                data-test="secret-key-value-pair"
                 entries={keyValues}
                 disableRemoveAction={props.values.keyValues.length === 1}
               />

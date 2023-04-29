@@ -86,6 +86,7 @@ const TextColumnItemContent: React.FC<TextColumntItemContentProps> = ({
           <FlexItem>
             <Tooltip content={tooltip || 'Remove'}>
               <Button
+                data-testid={`${name}-${idx}-remove-button`}
                 aria-label={tooltip || 'Remove'}
                 variant={ButtonVariant.plain}
                 type={ButtonType.button}

@@ -16,6 +16,8 @@ const SelectInputField: React.FC<SelectInputFieldProps> = ({
   helpText,
   required,
   variant,
+  toggleId,
+  toggleAriaLabel,
   onSelect: onSelectCallback,
   onClear: onClearCallback,
 }) => {
@@ -88,6 +90,8 @@ const SelectInputField: React.FC<SelectInputFieldProps> = ({
         selections={field.value}
         placeholderText={placeholderText}
         isCreatable={isCreatable}
+        toggleId={toggleId}
+        toggleAriaLabel={toggleAriaLabel}
         onCreateOption={(hasOnCreateOption && onCreateOption) || undefined}
       >
         {newOptions.map((op) => (

@@ -1,16 +1,26 @@
 import * as React from 'react';
+import '@testing-library/jest-dom';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { act, configure, screen } from '@testing-library/react';
 import { useField } from 'formik';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { useComponentDetection } from '../../utils/cdq-utils';
 import { useDevfileSamples } from '../../utils/useDevfileSamples';
 import { ReviewComponentCard } from '../ReviewComponentCard';
-import '@testing-library/jest-dom';
 
 jest.mock('../../utils/cdq-utils', () => ({ useComponentDetection: jest.fn() }));
 
 jest.mock('../../utils/useDevfileSamples', () => ({
   useDevfileSamples: jest.fn(() => []),
+}));
+
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  useK8sWatchResource: jest.fn(),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
+}));
+
+jest.mock('react-i18next', () => ({
+  useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
 jest.mock('../../utils/useDevfileSamples', () => ({
@@ -56,6 +66,8 @@ const gitRepoComponent = {
   },
 };
 
+const watchResourceMock = useK8sWatchResource as jest.Mock;
+
 describe('ReviewComponentCard', () => {
   let onEditHandler;
   beforeEach(() => {
@@ -65,6 +77,7 @@ describe('ReviewComponentCard', () => {
       { value: '' },
       { setValue: onEditHandler },
     ]);
+    watchResourceMock.mockReturnValue([[], true]);
   });
 
   const {

@@ -11,7 +11,9 @@ import {
   getRandomSvgNumber,
   THUMBNAIL_ANNOTATION,
 } from '../components/ApplicationDetails/ApplicationThumbnail';
+import { ImportSecret } from '../components/ImportForm/utils/types';
 import {
+  PartnerTask,
   SNYK_SPI_TOKEN_ACCESS_BINDING,
   createSecretResource,
   supportedPartnerTasksSecrets,
@@ -289,7 +291,12 @@ export const initiateAccessTokenBinding = async (url: string, namespace: string)
   return createAccessTokenBinding(url, namespace);
 };
 
-export const createSupportedPartnerSecret = async (partnerTask, secret, namespace, dryRun) => {
+export const createSupportedPartnerSecret = async (
+  partnerTask: PartnerTask,
+  secret: ImportSecret,
+  namespace: string,
+  dryRun: boolean,
+) => {
   const spiTokenName = SNYK_SPI_TOKEN_ACCESS_BINDING;
   const resourcePromises = [];
   const secretName = `tmp-upload-secret-`;
@@ -310,7 +317,7 @@ export const createSupportedPartnerSecret = async (partnerTask, secret, namespac
       spiTokenName,
       userName: 'my-username', // username field is a required field, so any random name needs to be passed.
       providerUrl: partnerTask.providerUrl,
-      tokenData: secret.keyValues.find((s) => s.key === partnerTask.tokenKeyName).value,
+      tokenData: secret.keyValues.find((s) => s.key === partnerTask.tokenKeyName)?.value || '',
     },
   };
 
@@ -359,7 +366,7 @@ export const createSupportedPartnerSecret = async (partnerTask, secret, namespac
   return Promise.all(resourcePromises);
 };
 
-export const createSecret = async (secret, namespace, dryRun) => {
+export const createSecret = async (secret: ImportSecret, namespace: string, dryRun: boolean) => {
   const partnerTask = Object.values(supportedPartnerTasksSecrets).find(
     (s) => s.name === secret.secretName,
   );

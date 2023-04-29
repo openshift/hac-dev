@@ -2,10 +2,12 @@ import {
   k8sCreateResource,
   k8sGetResource,
   k8sUpdateResource,
+  commonFetch,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import omit from 'lodash/omit';
 import { THUMBNAIL_ANNOTATION } from '../../components/ApplicationDetails/ApplicationThumbnail';
-import { SPIAccessTokenBindingModel } from '../../models';
+import { supportedPartnerTasksSecrets } from '../../components/Secrets/secret-utils';
+import { SPIAccessTokenBindingModel, SecretModel } from '../../models';
 import { ComponentDetectionQueryKind, SPIAccessTokenBindingKind } from '../../types';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
@@ -16,12 +18,15 @@ import {
   createComponentDetectionQuery,
   createAccessTokenBinding,
   sanitizeName,
+  createSupportedPartnerSecret,
+  createSecret,
 } from './../create-utils';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
 
 const createResourceMock = k8sCreateResource as jest.Mock;
 const getResourceMock = k8sGetResource as jest.Mock;
+const commonFetchMock = commonFetch as jest.Mock;
 
 jest.mock('../../components/ApplicationDetails/ApplicationThumbnail', () => {
   const actual = jest.requireActual('../../components/ApplicationDetails/ApplicationThumbnail');
@@ -443,5 +448,93 @@ describe('Create Utils', () => {
     expect(sanitizeName('my-app')).toBe('my-app');
     // does not handle special characters
     expect(sanitizeName('!  @  #')).toBe('!--@--#');
+  });
+
+  it('should call the create secret api with dryRun query string params', async () => {
+    createResourceMock.mockClear();
+    commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
+
+    createSecret(
+      { secretName: 'my-snyk-secret', keyValues: [{ key: 'token', value: 'my-token-data' }] },
+      'test-ns',
+      true,
+    );
+
+    expect(commonFetchMock).toHaveBeenCalledTimes(1);
+
+    expect(commonFetchMock).toHaveBeenCalledWith(
+      '/api/v1/namespaces/test-ns/secrets?dryRun=All',
+      expect.objectContaining({
+        body: expect.stringContaining('"kind":"Secret"'),
+      }),
+    );
+  });
+
+  it('should create a key/value secret', async () => {
+    commonFetchMock.mockClear();
+    commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
+
+    createSecret(
+      { secretName: 'my-snyk-secret', keyValues: [{ key: 'token', value: 'my-token-data' }] },
+      'test-ns',
+      false,
+    );
+
+    expect(commonFetchMock).toHaveBeenCalledTimes(1);
+
+    expect(commonFetchMock).toHaveBeenCalledWith(
+      '/api/v1/namespaces/test-ns/secrets',
+      expect.objectContaining({
+        body: expect.stringContaining('"kind":"Secret"'),
+      }),
+    );
+  });
+
+  it('should create partner task secret', async () => {
+    commonFetchMock.mockClear();
+    createResourceMock
+      .mockImplementationOnce((props) => Promise.resolve(props))
+      .mockImplementationOnce((props) => Promise.resolve(props));
+
+    createSecret(
+      { secretName: 'snyk-secret', keyValues: [{ key: 'token', value: 'my-token-data' }] },
+      'test-ns',
+      false,
+    );
+
+    expect(commonFetchMock).not.toHaveBeenCalled();
+    expect(createResourceMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('should create a secret and spiacesstokenbinding for partner secret', async () => {
+    createResourceMock.mockClear();
+    createResourceMock
+      .mockImplementationOnce((props) => Promise.resolve(props))
+      .mockImplementationOnce((props) => Promise.resolve(props));
+
+    createSupportedPartnerSecret(
+      supportedPartnerTasksSecrets.snyk,
+      { secretName: 'my-snyk-secret', keyValues: [{ key: 'token', value: 'my-token-data' }] },
+      'test-ns',
+      false,
+    );
+
+    expect(createResourceMock).toHaveBeenCalledTimes(2);
+
+    expect(createResourceMock.mock.calls[0]).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          model: expect.objectContaining(SecretModel),
+        }),
+      ]),
+    );
+
+    expect(createResourceMock.mock.calls[1]).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          model: expect.objectContaining(SPIAccessTokenBindingModel),
+        }),
+      ]),
+    );
   });
 });

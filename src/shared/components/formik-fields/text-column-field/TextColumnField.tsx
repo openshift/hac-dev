@@ -22,7 +22,7 @@ const TextColumnField: React.FC<TextColumnFieldProps> = (props) => {
     noFooter = false,
   } = props;
   const [field, { touched, error }] = useField<string[]>(name);
-  const rowValues = field.value ?? [];
+  const rowValues = field.value || [];
   const fieldId = getFieldId(name, 'single-column');
   const isValid = !(touched && error);
   const getTextColumnKey = (index: number) => index.toString();

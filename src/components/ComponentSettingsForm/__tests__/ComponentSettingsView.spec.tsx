@@ -54,4 +54,10 @@ describe('ComponentSettingsView', () => {
     render(<ComponentSettingsView componentName="nodejs" />);
     screen.getAllByText('Component settings');
   });
+
+  it('should render error state for component settings form', () => {
+    watchResourceMock.mockReturnValue([null, true, new Error('404 not found')]);
+    render(<ComponentSettingsView componentName="nodejs" />);
+    screen.getAllByText('Unable to load component nodejs');
+  });
 });

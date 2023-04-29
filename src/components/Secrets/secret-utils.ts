@@ -4,7 +4,17 @@ import { SecretKind } from '../../types';
 
 export const SNYK_SPI_TOKEN_ACCESS_BINDING = 'spi-access-token-binding-for-snyk-secret';
 
-export const supportedPartnerTasksSecrets = {
+export type PartnerTask = {
+  name: string;
+  providerUrl: string;
+  tokenKeyName: string;
+  keyValuePairs: {
+    key: string;
+    value: string;
+    readOnlyKey?: boolean;
+  }[];
+};
+export const supportedPartnerTasksSecrets: { [key: string]: PartnerTask } = {
   snyk: {
     name: 'snyk-secret',
     providerUrl: 'https://snyk.io/',

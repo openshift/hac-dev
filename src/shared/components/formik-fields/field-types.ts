@@ -166,6 +166,8 @@ export interface SelectInputOption {
 
 export interface SelectInputFieldProps extends FieldProps {
   variant?: SelectVariant;
+  toggleId?: string;
+  toggleAriaLabel?: string;
   onSelect?: (e: React.SyntheticEvent<HTMLElement>, selectedValue: any) => void;
   onClear?: () => void;
 

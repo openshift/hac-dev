@@ -84,6 +84,7 @@ const KeyValueFileInputField: React.FC<KeyValueEntryFormProps & FieldProps> = ({
                 <FlexItem>
                   <FileUploadField
                     required
+                    data-testid="file-upload-value"
                     id="value"
                     type="text"
                     label="Value"
