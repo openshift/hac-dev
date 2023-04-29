@@ -133,7 +133,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
   const tabComponents = tabs?.map(({ key, label, component, isFilled = true, ...rest }) => {
     return (
       <Tab
-        data-test={`details__tabItem ${key}`}
+        data-test={`details__tabItem ${label.toLocaleLowerCase().replace(/\s/g, '')}`}
         key={key}
         eventKey={key}
         title={<TabTitleText>{label}</TabTitleText>}
