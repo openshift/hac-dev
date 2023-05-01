@@ -1,3 +1,4 @@
+import { DetectedComponents } from '../../../../types';
 import { mockDetectedComponent } from '../__data__/mock-cdq';
 import { createResourceData, transformComponentValues } from '../transform-utils';
 import { CPUUnits, DetectedFormComponent, MemoryUnits } from '../types';
@@ -109,5 +110,24 @@ describe('Transform Utils', () => {
       userModifiedComponent,
     );
     expect(transformedComponentValues[0].componentStub.componentName).toBe('my-component-name');
+  });
+
+  it('should allow for 0 instances', () => {
+    const detectedFormComponent: DetectedComponents = {
+      ...mockDetectedComponent,
+      nodejs: {
+        ...mockDetectedComponent.nodejs,
+        componentStub: {
+          ...mockDetectedComponent.nodejs.componentStub,
+          replicas: 0,
+        },
+      },
+    };
+
+    const transformedComponentValues = transformComponentValues(
+      detectedFormComponent,
+      mockComponent,
+    );
+    expect(transformedComponentValues[0].componentStub.replicas).toBe(0);
   });
 });
