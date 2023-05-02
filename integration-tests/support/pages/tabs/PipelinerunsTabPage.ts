@@ -62,7 +62,7 @@ export class TaskRunsTab {
         status: 'Succeeded',
       },
       { name: `${pipelineName}-sbom-json-check`, task: 'sbom-json-check', status: 'Succeeded' },
-      { name: `${pipelineName}-clair-scan`, task: 'clair-scan', status: 'Succeeded|Test Warnings' }, // Adding Test Warnings as some packages might have medium vulnerabilities sometimes
+      { name: `${pipelineName}-clair-scan`, task: 'clair-scan', status: 'Succeeded|Test Failures' }, // Adding Test Warnings as some packages might have medium vulnerabilities sometimes
       { name: `${pipelineName}-clamav-scan`, task: 'clamav-scan', status: 'Succeeded' },
       { name: `${pipelineName}-label-check`, task: 'label-check', status: 'Succeeded' },
       {

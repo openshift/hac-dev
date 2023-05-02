@@ -21,10 +21,6 @@ export class AddComponentPage extends AbstractWizardPage {
     cy.get(addComponentPagePO.enterSource).clear().type(source);
   }
 
-  clickGitOptions() {
-    cy.contains(addComponentPagePO.gitOptions).click();
-  }
-
   setGitReference(gitReference: string) {
     cy.get(addComponentPagePO.gitReference).clear().type(gitReference);
   }
@@ -33,8 +29,8 @@ export class AddComponentPage extends AbstractWizardPage {
     cy.get(addComponentPagePO.contextDir).clear().type(contextDir);
   }
 
-  clickNext() {
-    cy.get(addComponentPagePO.next).click({ force: true });
+  submit() {
+    cy.get(addComponentPagePO.next).click({ force: true }).click();
   }
 
   clickCancel() {

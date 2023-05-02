@@ -69,6 +69,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
               label="Component name"
               type={TextInputTypes.text}
               isDisabled={editMode}
+              dataTest="component-name-field"
             />
             <br />
             {component.source?.git?.url ? (

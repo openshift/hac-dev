@@ -1,5 +1,5 @@
 export const formPO = {
-  create: '[data-test-id="submit-button"]',
+  create: 'button[type=submit]',
   cancel: '[data-test-id="reset-button"]',
 };
 export const alert = '.pf-c-alert';
@@ -34,6 +34,7 @@ export const waits = {
 export const actions = {
   kebabButton: '[data-testid="kebab-button"]',
   deleteItem: '[data-testid="Delete"]',
+  deleteComponent: '[data-testid="Delete component"]',
   deleteModalInput: 'input[name*="resourceName"]',
   deleteModalButton: 'button[data-testid="delete-resource"]',
   editItem: '[data-testid="Edit"]',

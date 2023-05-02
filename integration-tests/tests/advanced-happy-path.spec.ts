@@ -62,16 +62,11 @@ describe('Advanced Happy path', () => {
     Applications.deleteApplication(applicationName);
   });
 
-  describe('Create an Application with a component', () => {
-    it('Set Application Name', () => {
-      Applications.createApplication(applicationName);
-    });
-
-    it('Add a component to Application', () => {
-      Applications.createComponent(repoLink, componentName, 'Go', true, {
-        varName: 'TEST_ENV_VAR',
-        value: 'Test go app',
-      });
+  it('Create an Application with a component', () => {
+    Applications.createApplication();
+    Applications.createComponent(repoLink, componentName, applicationName, 'Go', true, {
+      varName: 'TEST_ENV_VAR',
+      value: 'Test go app',
     });
   });
 
@@ -99,9 +94,7 @@ describe('Advanced Happy path', () => {
         'Custom',
       );
     });
-  });
 
-  describe('Verify and wait for "Pipeline runs" Tab', () => {
     it('Verify the Pipeline run details and Task runs', () => {
       Applications.goToPipelinerunsTab();
       UIhelper.getTableRow('Pipeline run List', 'Running')

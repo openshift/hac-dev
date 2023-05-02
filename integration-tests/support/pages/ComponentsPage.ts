@@ -3,7 +3,6 @@ import { UIhelper } from '../../utils/UIhelper';
 import { CPUUnit, MemoryUnit } from '../constants/Units';
 import { addComponentPagePO, ComponentsPagePO } from '../pageObjects/createApplication-po';
 import { alertTitle } from '../pageObjects/global-po';
-import { componentsTabPO } from '../pageObjects/pages-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class ComponentPage extends AbstractWizardPage {
@@ -11,10 +10,20 @@ export class ComponentPage extends AbstractWizardPage {
 
   editComponentName(newName: string) {
     cy.get(ComponentsPagePO.dropdown, { timeout: 80000 }).eq(0).should('be.enabled'); // Work around for issue : HAC-3585 to reduce test flakiness
-    cy.get(ComponentsPagePO.editComponentNameIcon, { timeout: 80000 }).eq(0).click();
-    cy.get(ComponentsPagePO.editNameInput).clear().type(newName);
-    cy.get(ComponentsPagePO.checkIcon).click();
-    cy.contains('div', newName).should('be.visible');
+    cy.get(ComponentsPagePO.componentNameField).clear().type(newName);
+    cy.get(ComponentsPagePO.componentNameField).should('have.value', newName);
+  }
+
+  extractComponentName() {
+    cy.get(ComponentsPagePO.componentNameField)
+      .invoke('val')
+      .then((val: string) => {
+        this.componentName = val.trim();
+      });
+  }
+
+  setApplicationName(name: string) {
+    cy.get(ComponentsPagePO.appInput).clear().type(name);
   }
 
   saveChanges() {
@@ -45,7 +54,7 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   setCpuByButton(value: number, unit: CPUUnit) {
-    cy.contains(`.pf-c-dropdown__toggle-text`, 'cores').parent().click();
+    cy.contains(`[data-test="dropdown"]`, 'cores').click();
     cy.contains('li', new RegExp(`^${unit}$`)).click();
 
     cy.get(ComponentsPagePO.cpuInput).then(($cpu) => {
@@ -76,11 +85,6 @@ export class ComponentPage extends AbstractWizardPage {
     cy.contains('li', unit).click();
   }
 
-  showAdvancedOptions() {
-    cy.contains('button', ComponentsPagePO.showAdvancedSetting).click();
-    cy.testA11y(`Component deployment options`);
-  }
-
   selectRuntime(runtimeName: string) {
     UIhelper.selectValueInDropdownbyLabelName('Runtime', runtimeName);
   }
@@ -102,6 +106,7 @@ export class ComponentPage extends AbstractWizardPage {
 
   selectCustomBuildPipeline() {
     cy.get(ComponentsPagePO.customBuildPipelineRadioBtn).click();
+    cy.contains('Custom build pipeline').should('be.visible');
   }
 
   checkStatusOnModal(labelText: string) {

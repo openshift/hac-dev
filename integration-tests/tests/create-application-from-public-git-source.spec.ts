@@ -1,11 +1,9 @@
 import { CPUUnit, MemoryUnit } from '../support/constants/Units';
-import { ComponentsPagePO } from '../support/pageObjects/createApplication-po';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
-import { UIhelper } from '../utils/UIhelper';
 
 describe('Create Component from Public Git Source', { tags: ['@PR-check', '@publicRepo'] }, () => {
   const addComponent = new AddComponentPage();
@@ -26,37 +24,24 @@ describe('Create Component from Public Git Source', { tags: ['@PR-check', '@publ
   });
 
   describe('Creating a Quarkus Component', () => {
-    it('Create Application', () => {
-      Applications.createApplication(applicationName);
-    });
-    it('Validate Repo', () => {
-      // Enter git repo URL
+    it('Import code', () => {
+      Applications.createApplication();
       addComponent.setSource(publicRepo);
-      // Check if the source is validated
       addComponent.waitRepoValidated();
-    });
-
-    it('Setup Git Options', () => {
-      addComponent.clickGitOptions();
-
       addComponent.setGitReference(gitReference);
       addComponent.setContextDir(contextDir);
-      UIhelper.clickButton('Next', { invoke: true });
+      addComponent.submit();
+      Common.waitForLoad();
     });
 
     it('Update Build & deploy configuration', () => {
-      Common.waitForLoad();
-      cy.get(ComponentsPagePO.extractComponentName).then((innerText) => {
-        componentPage.componentName = innerText.text().trim();
-
-        componentPage.expandDetails(componentPage.componentName);
-        componentPage.setCpuByButton(cpuCount + 1, cpuUnit);
-        componentPage.setRam(ramValue, ramUnit);
-      });
+      componentPage.setApplicationName(applicationName);
+      componentPage.extractComponentName();
+      componentPage.setCpuByButton(cpuCount + 1, cpuUnit);
+      componentPage.setRam(ramValue, ramUnit);
     });
 
-    it('Update replicas in advanced deployment options and set Env var', () => {
-      componentPage.showAdvancedOptions();
+    it('Update replicas in and set Env var', () => {
       componentPage.setReplicas(replicaCount);
       componentPage.addEnvVar('secondEnvVar', '3000');
     });
@@ -71,7 +56,7 @@ describe('Create Component from Public Git Source', { tags: ['@PR-check', '@publ
       );
     });
 
-    it('Check python component should not exists', () => {
+    it('Check python component does not exist', () => {
       cy.contains('python-app-multi-components').should('not.exist');
     });
   });

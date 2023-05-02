@@ -17,6 +17,7 @@ const ApplicationSection: React.FunctionComponent = () => {
         placeholder="Enter name"
         isDisabled={inAppContext}
         required
+        dataTest="app-name-field"
       />
     </FormSection>
   );

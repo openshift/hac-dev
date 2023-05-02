@@ -91,14 +91,14 @@ export class ApplicationDetailPage {
 
   openAddComponentPage() {
     cy.get(addComponentPagePO.addComponent).click({ force: true });
-    Common.verifyPageTitle(pageTitles.buildApp);
+    Common.verifyPageTitle(pageTitles.createApp);
     Common.waitForLoad();
-    cy.testA11y(`${pageTitles.buildApp} page`);
+    cy.testA11y(`${pageTitles.createApp} page`);
   }
 
   deleteComponent(componentName: string) {
     this.openActionList(componentName);
-    cy.get(actions.deleteItem).click();
+    cy.get(actions.deleteComponent).click();
     cy.get(actions.deleteModalInput).clear().type(componentName);
     cy.get(actions.deleteModalButton).click();
   }
