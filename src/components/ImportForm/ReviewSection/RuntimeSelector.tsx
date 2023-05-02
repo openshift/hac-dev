@@ -223,6 +223,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       recommended={recommendedRuntime?.name}
       onChange={onChange}
       dropdownToggle={detectingRuntimeToggle}
+      helpText="Use the recommended runtime for optimal build and deployment."
       labelIcon={
         <HelpPopover bodyContent="The recommended runtime controls some of your settings, so changing it to an incompatible runtime might break your build or deployment. The runtime detected is based on an analysis of content in the repository. We use the programming language, devfile, and other files to detect the recommended option." />
       }

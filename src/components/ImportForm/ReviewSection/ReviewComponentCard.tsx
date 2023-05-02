@@ -4,7 +4,6 @@ import {
   CardBody,
   CardExpandableContent,
   CardHeader,
-  CardTitle,
   Flex,
   FlexItem,
   FormSection,
@@ -63,45 +62,38 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
           'data-test': `${name}-toggle-button`,
         }}
       >
-        <CardTitle style={{ flex: 1 }}>
-          <Flex>
-            <FlexItem flex={{ default: 'flex_4' }}>
-              <InputField
-                name={`${fieldPrefix}.componentName`}
-                label="Component name"
-                type={TextInputTypes.text}
-                isDisabled={editMode}
+        <Flex style={{ flex: 1 }}>
+          <FlexItem flex={{ default: 'flex_4' }}>
+            <InputField
+              name={`${fieldPrefix}.componentName`}
+              label="Component name"
+              type={TextInputTypes.text}
+              isDisabled={editMode}
+            />
+            <br />
+            {component.source?.git?.url ? (
+              <GitRepoLink
+                url={component.source.git.url}
+                revision={component.source.git.revision}
+                context={component.source.git.context}
               />
-              <br />
-              {component.source?.git?.url ? (
-                <GitRepoLink
-                  url={component.source.git.url}
-                  revision={component.source.git.revision}
-                  context={component.source.git.context}
-                />
-              ) : (
-                <ExternalLink
-                  href={
-                    component.containerImage?.includes('http')
-                      ? component.containerImage
-                      : `https://${component.containerImage}`
-                  }
-                  text={component.containerImage}
-                />
-              )}
-            </FlexItem>
-            {showRuntimeSelector && (
-              <FlexItem flex={{ default: 'flex_2' }}>
-                <RuntimeSelector detectedComponentIndex={detectedComponentIndex} />
-                <HelperText style={{ fontWeight: 100 }}>
-                  <HelperTextItem variant="indeterminate">
-                    Use the recommended runtime for optimal build and deployment.
-                  </HelperTextItem>
-                </HelperText>
-              </FlexItem>
+            ) : (
+              <ExternalLink
+                href={
+                  component.containerImage?.includes('http')
+                    ? component.containerImage
+                    : `https://${component.containerImage}`
+                }
+                text={component.containerImage}
+              />
             )}
-          </Flex>
-        </CardTitle>
+          </FlexItem>
+          {showRuntimeSelector && (
+            <FlexItem flex={{ default: 'flex_2' }}>
+              <RuntimeSelector detectedComponentIndex={detectedComponentIndex} />
+            </FlexItem>
+          )}
+        </Flex>
       </CardHeader>
       <CardExpandableContent>
         <CardBody className="review-component-card__card-body">

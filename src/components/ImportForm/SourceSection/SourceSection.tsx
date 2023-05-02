@@ -8,6 +8,7 @@ import { getFieldId, InputField } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
 import { ServiceProviderType } from '../../../types';
 import { HeadTitle } from '../../HeadTitle';
+import HelpPopover from '../../HelpPopover';
 import { useAccessCheck } from '../utils/auth-utils';
 import { ImportFormValues } from '../utils/types';
 import { gitUrlRegex } from '../utils/validation-utils';
@@ -102,6 +103,7 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
         setFormValidated();
         isGit && setShowGitOptions(true);
       } else {
+        setShowGitOptions(false);
         if (
           serviceProvider === ServiceProviderType.GitHub ||
           serviceProvider === ServiceProviderType.Quay
@@ -115,7 +117,6 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
           setFieldValue('source.isValidated', false);
           setHelpTextInvalid('This provider is not supported');
         }
-        setShowGitOptions(false);
       }
     }
   }, [
@@ -161,6 +162,7 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
           label={label}
           validated={!isValid && ValidatedOptions.error}
           isRequired
+          labelIcon={<HelpPopover bodyContent="Make sure the URL is correct." />}
         >
           <InputField
             name="source.git.url"

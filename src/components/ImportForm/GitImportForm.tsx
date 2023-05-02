@@ -163,7 +163,7 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
         <>
           <PageSection variant={PageSectionVariants.light}>
             <Stack>
-              <StackItem>
+              <StackItem className="pf-u-pt-lg">
                 <Bullseye>
                   <img
                     src={reviewMode ? integrationIcon : applicationIcon}

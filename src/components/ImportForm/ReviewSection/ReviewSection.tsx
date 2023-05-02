@@ -1,17 +1,18 @@
 import * as React from 'react';
 import {
-  EmptyState,
-  EmptyStateIcon,
   FormSection,
   Spinner,
   Title,
-  EmptyStateBody,
   Divider,
   Flex,
   FlexItem,
   HelperText,
   HelperTextItem,
   Badge,
+  Backdrop,
+  Bullseye,
+  Card,
+  CardBody,
 } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
 import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
@@ -26,16 +27,20 @@ import { ReviewComponentCard } from './ReviewComponentCard';
 
 const ComponentLoadingState: React.FC = () => {
   return (
-    <EmptyState>
-      <EmptyStateIcon variant="container" component={Spinner} />
-      <Title size="lg" headingLevel="h4">
-        Detecting
-      </Title>
-      <EmptyStateBody>
-        Sit tight while we determine your application&apos;s runtime and other settings to configure
-        its build and deployment. This should only take a moment.
-      </EmptyStateBody>
-    </EmptyState>
+    <Backdrop>
+      <Bullseye>
+        <Card isRounded isCompact>
+          <CardBody>
+            <Bullseye style={{ marginBottom: 'var(--pf-global--spacer--md)' }}>
+              <Spinner size="lg" />
+            </Bullseye>
+            <HelperText>
+              <HelperTextItem variant="indeterminate">Detecting values...</HelperTextItem>
+            </HelperText>
+          </CardBody>
+        </Card>
+      </Bullseye>
+    </Backdrop>
   );
 };
 

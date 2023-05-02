@@ -119,14 +119,14 @@ describe('SourceSection', () => {
 
     await waitFor(() => {
       expect(screen.queryByText('Git reference')).toBeInTheDocument();
-      expect(screen.queryByText('Context dir')).toBeInTheDocument();
+      expect(screen.queryByText('Context directory')).toBeInTheDocument();
     });
 
     await user.type(input, 'dummy text');
 
     await waitFor(() => {
       expect(screen.queryByText('Git reference')).toBeNull();
-      expect(screen.queryByText('Context dir')).toBeNull();
+      expect(screen.queryByText('Context directory')).toBeNull();
     });
   });
 

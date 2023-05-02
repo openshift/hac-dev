@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { InputField } from '../../../shared';
+import HelpPopover from '../../HelpPopover';
 
 const GitOptions: React.FC = () => {
   return (
@@ -13,9 +14,12 @@ const GitOptions: React.FC = () => {
 
       <InputField
         name="source.git.context"
-        label="Context dir"
+        label="Context directory"
         helpText="Optional subdirectory for the application source code."
         data-test="context-dir"
+        labelIcon={
+          <HelpPopover bodyContent="Make sure this path is correct. You might get an error if your build context folder is your root directory but your Dockerfile is in a subdirectory of that folder." />
+        }
       />
     </>
   );

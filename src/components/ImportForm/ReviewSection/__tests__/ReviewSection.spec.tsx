@@ -31,7 +31,8 @@ describe('ReviewSection', () => {
     const result = formikRenderer(<ReviewSection />, { source: { git: {} } });
     // force a re-render because formik is mocked
     result.rerender(<ReviewSection />);
-    expect(screen.getByText('Detecting')).toBeInTheDocument();
+    screen.getByRole('progressbar');
+    expect(screen.getByText('Detecting values...')).toBeInTheDocument();
   });
 
   it('should handle cdq loaded but no results', async () => {

@@ -53,7 +53,8 @@ const SampleCard: React.FC<SampleCardProps> = ({ sample, onSampleImport }) => {
       <CardTitle>{name}</CardTitle>
       <CardBody>
         <TextContent>{description}</TextContent>
-        <br />
+      </CardBody>
+      <CardFooter>
         <Button
           variant="link"
           isInline
@@ -64,7 +65,7 @@ const SampleCard: React.FC<SampleCardProps> = ({ sample, onSampleImport }) => {
         >
           Open Git repository
         </Button>
-      </CardBody>
+      </CardFooter>
       <Divider />
       <CardFooter>
         <Button

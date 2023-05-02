@@ -22,7 +22,7 @@ const GitImportActions: React.FunctionComponent<GitImportActionsProps> = ({
 
   return (
     <Bullseye>
-      <ActionList>
+      <ActionList className="pf-u-pb-lg">
         <ActionListItem>
           <Button
             type="submit"
