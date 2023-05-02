@@ -1,7 +1,6 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { act, configure, fireEvent, render, screen } from '@testing-library/react';
-import { SCAN_TASK } from '../../../hooks/useClairScanResults';
 import { CustomError } from '../../../shared/utils/error/custom-error';
 import { routerRenderer } from '../../../utils/test-utils';
 import SidePanelHost from '../../SidePanel/SidePanelHost';
@@ -122,7 +121,7 @@ describe('PipelineRunVisualization', () => {
         error={null}
       />,
     );
-    const clairScan = screen.getByTestId(SCAN_TASK);
+    const clairScan = screen.getByTestId('clair-scan');
 
     const warningNodes = clairScan.querySelectorAll('.pipelinerun-node.pf-m-warning');
     expect(warningNodes).toHaveLength(1);
@@ -143,7 +142,7 @@ describe('PipelineRunVisualization', () => {
         />
       </SidePanelHost>,
     );
-    const clairScanNode = screen.getByTestId(SCAN_TASK);
+    const clairScanNode = screen.getByTestId('clair-scan');
     const clickable = clairScanNode.querySelector('.pf-topology-pipelines__pill');
     expect(clickable).toBeVisible();
     await act(async () => {

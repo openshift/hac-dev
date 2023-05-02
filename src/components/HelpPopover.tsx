@@ -4,7 +4,7 @@ import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons/dist/js/icon
 
 const HelpPopover: React.FC<Omit<PopoverProps, 'children'>> = (props) => (
   <Popover {...props}>
-    <span aria-label="help" role="button" tabIndex={0}>
+    <span style={{ cursor: 'pointer' }} aria-label="help" role="button" tabIndex={0}>
       <OutlinedQuestionCircleIcon />
     </span>
   </Popover>

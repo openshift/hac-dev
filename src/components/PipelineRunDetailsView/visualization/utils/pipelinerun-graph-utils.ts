@@ -10,7 +10,7 @@ import {
   WhenStatus,
 } from '@patternfly/react-topology';
 import { PipelineNodeModel } from '@patternfly/react-topology/src/pipelines/types';
-import { SCAN_RESULT } from '../../../../hooks/useClairScanResults';
+import { SCAN_RESULT } from '../../../../hooks/useScanResults';
 import { formatPrometheusDuration } from '../../../../shared/components/timestamp/datetime';
 import {
   TaskRunKind,

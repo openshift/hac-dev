@@ -1,6 +1,6 @@
 import merge from 'lodash/merge';
 import { preferredNameAnnotation } from '../consts/pipeline';
-import { ClairScanResult, SCAN_RESULT } from '../hooks/useClairScanResults';
+import { ScanResults, SCAN_RESULT } from '../hooks/useScanResults';
 import { PipelineRunModel } from '../models';
 import {
   Condition,
@@ -238,7 +238,7 @@ export const taskResultsStatus = (taskResults: TektonResultsRun[]): runStatus =>
   const scanResult = taskResults?.find((result) => result.name === SCAN_RESULT);
   if (scanResult) {
     try {
-      const resultObj: ClairScanResult = JSON.parse(scanResult.value);
+      const resultObj: ScanResults = JSON.parse(scanResult.value);
       if (resultObj.vulnerabilities?.critical || resultObj.vulnerabilities?.high) {
         return runStatus.TestFailed;
       }
