@@ -32,6 +32,7 @@ export type DetectedFormComponent = {
   projectType?: string;
   devfileFound?: boolean;
   defaultBuildPipeline?: boolean;
+  targetPortDetected?: boolean;
 };
 export type ImportSecret = {
   secretName: string;

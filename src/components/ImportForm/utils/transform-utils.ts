@@ -61,6 +61,7 @@ export const transformComponentValues = (
         replicas: component?.replicas || 1,
         targetPort: component?.targetPort || 8080,
       },
+      targetPortDetected: component?.targetPort !== undefined,
     };
   }, []);
 };

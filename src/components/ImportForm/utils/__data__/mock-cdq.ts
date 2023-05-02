@@ -27,10 +27,12 @@ export const mockCDQ = {
               url: 'https://github.com/nodeshift-starters/devfile-sample.git',
             },
           },
+          targetPort: 8080,
         },
         devfileFound: true,
         language: 'nodejs',
         projectType: 'nodejs',
+        targetPortDetected: true,
       },
     },
     conditions: [

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { act, configure, screen } from '@testing-library/react';
+import { act, configure, fireEvent, screen } from '@testing-library/react';
 import { useField } from 'formik';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { useComponentDetection } from '../../utils/cdq-utils';
@@ -64,6 +64,7 @@ const gitRepoComponent = {
       },
     ],
   },
+  targetPortDetected: true,
 };
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
@@ -183,5 +184,32 @@ describe('ReviewComponentCard', () => {
       { isDetected: true, source: { git: {} } },
     );
     expect(screen.getByLabelText('Component name')).toBeDisabled();
+  });
+
+  it('should indicate when the target port is not detected', () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={{ ...gitRepoComponent, targetPortDetected: false }}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+        isExpanded
+      />,
+      { isDetected: true, source: { git: {} } },
+    );
+
+    expect(screen.getByText('Build & deploy configuration')).toBeInTheDocument();
+    expect(
+      screen.queryByText(`We can't detect your target port. Check if it's correct.`),
+    ).toBeInTheDocument();
+
+    // Text should go away once the user enters a value
+    const targetPortInput = screen.getByTestId('components[0].componentStub.targetPort');
+    fireEvent.change(targetPortInput, {
+      target: { value: 8081 },
+    });
+    expect(
+      screen.queryByText(`We can't detect your target port. Check if it's correct.`),
+    ).not.toBeInTheDocument();
   });
 });
