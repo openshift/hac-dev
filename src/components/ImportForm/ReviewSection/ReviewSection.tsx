@@ -46,7 +46,6 @@ const ReviewSection: React.FunctionComponent = () => {
         git: { url: sourceUrl, revision, context },
       },
       secret,
-      application,
     },
     setFieldValue,
   } = useFormikContext<ImportFormValues>();
@@ -106,7 +105,7 @@ const ReviewSection: React.FunctionComponent = () => {
         myComponent: {
           componentStub: {
             componentName: 'my-component',
-            application,
+            application: 'my-app',
             source: { git: { url: sourceUrl, revision, context } },
           },
         },
@@ -124,7 +123,6 @@ const ReviewSection: React.FunctionComponent = () => {
       unmounted = true;
     };
   }, [
-    application,
     detectedComponents,
     detectionLoaded,
     detectionError,

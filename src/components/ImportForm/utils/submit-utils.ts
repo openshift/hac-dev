@@ -50,7 +50,6 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
   if (strategy === ImportStrategy.SAMPLE) {
     const detectedSampleComponents = await detectComponents(
       source.git.url,
-      application,
       namespace,
       secret,
       source.git.context,

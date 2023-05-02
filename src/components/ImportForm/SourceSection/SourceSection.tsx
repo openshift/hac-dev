@@ -6,9 +6,9 @@ import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
 import { useOnMount } from '../../../hooks/useOnMount';
 import { getFieldId, InputField } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
-import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../../types';
+import { ServiceProviderType } from '../../../types';
 import { HeadTitle } from '../../HeadTitle';
-import { useAccessCheck, useAccessTokenBinding } from '../utils/auth-utils';
+import { useAccessCheck } from '../utils/auth-utils';
 import { ImportFormValues } from '../utils/types';
 import { gitUrlRegex } from '../utils/validation-utils';
 import AuthOptions from './AuthOptions';
@@ -50,8 +50,10 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
   const isValid = !(touched && error);
   const label = 'Git repository URL';
 
-  const [{ isGit, isRepoAccessible, serviceProvider, accessibility }, accessCheckLoaded] =
-    useAccessCheck(isValidated ? null : sourceUrl, authSecret);
+  const [{ isGit, isRepoAccessible, serviceProvider }, accessCheckLoaded] = useAccessCheck(
+    isValidated ? null : sourceUrl,
+    authSecret,
+  );
 
   const setFormValidating = React.useCallback(() => {
     setValidated(ValidatedOptions.default);
@@ -105,12 +107,15 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
           serviceProvider === ServiceProviderType.Quay
         ) {
           setValidated(ValidatedOptions.error);
+          setFieldValue('source.isValidated', false);
           setHelpTextInvalid('Unable to access repository');
-          setShowAuthOptions(true);
+          // setShowAuthOptions(true);
         } else if (!serviceProvider) {
           setValidated(ValidatedOptions.error);
+          setFieldValue('source.isValidated', false);
           setHelpTextInvalid('This provider is not supported');
         }
+        setShowGitOptions(false);
       }
     }
   }, [
@@ -123,23 +128,25 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
     sourceUrl,
   ]);
 
-  const isPrivateAuthorized =
-    accessCheckLoaded &&
-    isRepoAccessible &&
-    !showAuthOptions &&
-    accessibility === SPIAccessCheckAccessibilityStatus.private;
+  // Sections related to auth options. Disabled until we have full private repo support.
 
-  useAccessTokenBinding(isPrivateAuthorized && source);
+  // const isPrivateAuthorized =
+  //   accessCheckLoaded &&
+  //   isRepoAccessible &&
+  //   !showAuthOptions &&
+  //   accessibility === SPIAccessCheckAccessibilityStatus.private;
 
-  React.useEffect(() => {
-    if (isPrivateAuthorized) {
-      if (authSecret) {
-        setFormValidated();
-      } else {
-        setFormValidating();
-      }
-    }
-  }, [authSecret, isPrivateAuthorized, setFormValidated, setFormValidating]);
+  // useAccessTokenBinding(isPrivateAuthorized && source);
+
+  // React.useEffect(() => {
+  //   if (isPrivateAuthorized) {
+  //     if (authSecret) {
+  //       setFormValidated();
+  //     } else {
+  //       setFormValidating();
+  //     }
+  //   }
+  // }, [authSecret, isPrivateAuthorized, setFormValidated, setFormValidating]);
 
   useOnMount(() => {
     source && !isValidated && handleSourceChange();

@@ -154,7 +154,6 @@ describe('Submit Utils: createResources', () => {
     );
     expect(detectComponentsMock).toHaveBeenCalledWith(
       'https://github.com/example/repo',
-      'test-app',
       'test-ns',
       undefined,
       '/',
