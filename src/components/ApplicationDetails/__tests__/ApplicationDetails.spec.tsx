@@ -144,7 +144,7 @@ describe('ApplicationDetails', () => {
     expect(activeTab).toHaveTextContent('Overview');
     detailsPage.unmount();
 
-    useParamsMock.mockReturnValue({ activeTab: 'activity' });
+    useParamsMock.mockReturnValue({ activeTab: 'activity', activity: 'latest-commits' });
     detailsPage = routerRenderer(<ApplicationDetails applicationName="test" />);
     appDetails = detailsPage.getByTestId('details');
     activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');

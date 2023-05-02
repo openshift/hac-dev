@@ -15,7 +15,7 @@ const tryJSONParse = <T = any>(data: string): string | T => {
  *
  * @returns setter and JSON value if parseable, or else `string`.
  */
-export const useLocalStorage = <T extends object>(key: string): [T | string, React.Dispatch<T>] => {
+export const useLocalStorage = <T>(key: string): [T | string, React.Dispatch<T>] => {
   const [value, setValue] = React.useState(tryJSONParse<T>(window.localStorage.getItem(key)));
 
   useEventListener(window, 'storage', () => {

@@ -57,7 +57,7 @@ describe('DetailsPage', () => {
         baseURL="/"
         tabs={[
           { key: 'tab1', label: 'Tab 1', component: <div>Tab1 content</div> },
-          { key: 'tab2', label: 'Tab 1', component: <div>Tab1 content</div> },
+          { key: 'tab2', label: 'Tab 2', component: <div>Tab2 content</div> },
         ]}
       />,
     );
@@ -178,7 +178,7 @@ describe('DetailsPage', () => {
         baseURL="/"
         tabs={[
           { key: 'tab1', label: 'Tab 1', component: <div>Tab1 content</div> },
-          { key: 'tab2', label: 'Tab 1', component: <div>Tab1 content</div> },
+          { key: 'tab2', label: 'Tab 2', component: <div>Tab2 content</div> },
         ]}
       />,
     );

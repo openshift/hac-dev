@@ -69,9 +69,10 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const params = useParams();
-  const { activeTab: tab } = params;
+  const { activeTab: tab, activity: subTab } = params;
+  const currentTab = tab && subTab ? `${tab}/${subTab}` : tab;
 
-  const activeTabKey = React.useMemo(() => tab || tabs?.[0]?.key, [tab, tabs]);
+  const activeTabKey = React.useMemo(() => currentTab || tabs?.[0]?.key, [currentTab, tabs]);
   const navigate = useNavigate();
   const setActiveTab = React.useCallback(
     (newTab: string) => {
@@ -133,7 +134,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
   const tabComponents = tabs?.map(({ key, label, component, isFilled = true, ...rest }) => {
     return (
       <Tab
-        data-test={`details__tabItem ${key}`}
+        data-test={`details__tabItem ${label.toLocaleLowerCase().replace(/\s/g, '')}`}
         key={key}
         eventKey={key}
         title={<TabTitleText>{label}</TabTitleText>}
