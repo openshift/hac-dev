@@ -77,9 +77,6 @@ pactWith({ consumer: 'HACdev', provider: 'HAS' }, (provider) => {
           method: 'POST',
           path,
           body: requestBody,
-          headers: {
-            'Content-type': 'application/json',
-          },
         },
         willRespondWith: {
           status: 201,
@@ -93,7 +90,7 @@ pactWith({ consumer: 'HACdev', provider: 'HAS' }, (provider) => {
         return fetch(`${provider.mockService.baseUrl}${path}`, {
           method: 'POST',
           body: JSON.stringify(requestBody),
-          headers: { 'Content-type': 'application/json' },
+          headers: { 'Content-Type': 'application/json' },
         }).then((res) => res.json());
       });
       /* eslint-enable */
