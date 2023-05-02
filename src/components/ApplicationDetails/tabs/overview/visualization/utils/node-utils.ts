@@ -78,7 +78,7 @@ export const getLinkDataForElement = (
   element: Node<PipelineNodeModel, WorkflowNodeModelData>,
   workspace: string,
 ): { tab?: string; path?: string; filter?: { name: string; value: string } } => {
-  const { workflowType, isDisabled, groupNode, status } = element.getData();
+  const { workflowType, isDisabled, groupNode, status, resources } = element.getData();
   const label = element.getLabel();
 
   switch (workflowType) {
@@ -99,7 +99,10 @@ export const getLinkDataForElement = (
       }
       return {
         tab: 'activity/pipelineruns',
-        // TODO: filter by build once the PLR tab supports filtering
+        filter:
+          !groupNode && !isDisabled && resources?.[0]
+            ? { name: 'name', value: resources[0].metadata.name }
+            : undefined,
       };
     case WorkflowNodeType.TESTS:
     case WorkflowNodeType.APPLICATION_TEST:
