@@ -125,4 +125,8 @@ export class ComponentPage extends AbstractWizardPage {
   verifyComponentGHReferenceAndLink(linkText: string, link: string) {
     cy.contains('a', linkText).should('be.visible').and('have.attr', 'href', link);
   }
+
+  verifyRuntime(runtimeType: string) {
+    cy.get(ComponentsPagePO.dropdown, { timeout: 80000 }).eq(0).should('have.text', runtimeType);
+  }
 }

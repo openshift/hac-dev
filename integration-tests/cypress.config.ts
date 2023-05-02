@@ -53,8 +53,8 @@ export default defineConfig({
     testIsolation: false,
     excludeSpecPattern:
       process.env.CYPRESS_PERIODIC_RUN || process.env.GH_COMMENTBODY?.toLowerCase() == '[test]'
-        ? 'tests/*-private-git-*' // TODO: remove once https://issues.redhat.com/browse/RHTAPBUGS-111 is resolved
-        : 'tests/{advanced-happy-path*,*-private-git-*}',
+        ? ''
+        : 'tests/advanced-happy-path*',
     setupNodeEvents(on, config) {
       require('cypress-mochawesome-reporter/plugin')(on);
       require('@cypress/grep/src/plugin')(config);

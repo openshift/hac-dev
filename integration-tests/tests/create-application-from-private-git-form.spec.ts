@@ -15,7 +15,7 @@ describe(
     const componentPage = new ComponentPage();
     const applicationDetailPage = new ApplicationDetailPage();
     const applicationName = Common.generateAppName();
-    const privateRepo = 'https://github.com/hac-test/private-repo-check';
+    const privateRepo = 'https://github.com/redhat-hac-qe/nodejs-ex-private'; // issue: RHTAPBUGS-111 https://github.com/hac-test/private-repo-check';
     const componentName = `py-${applicationName}`;
 
     const user = Cypress.env('GH_USERNAME');

@@ -13,8 +13,9 @@ describe(
     const componentPage = new ComponentPage();
     const applicationDetailPage = new ApplicationDetailPage();
     const applicationName = Common.generateAppName();
-    const privateRepo = 'https://github.com/hac-test/private-repo-check';
-    const componentName = `py-${applicationName}`;
+    const privateRepo = 'https://github.com/redhat-hac-qe/nodejs-ex-private';
+    const componentName = `nodejs-${applicationName}`;
+    const runtimeType = 'Node';
     const username = Cypress.env('GH_USERNAME');
     const token = Cypress.env('GH_TOKEN');
 
@@ -38,6 +39,7 @@ describe(
 
       it('Create Application', () => {
         componentPage.editComponentName(componentName);
+        componentPage.verifyRuntime(runtimeType);
         componentPage.clickCreateApplication();
         Applications.goToComponentsTab();
         applicationDetailPage.createdComponentExists(componentName, applicationName);
