@@ -38,7 +38,7 @@ export type ImportSecret = {
   keyValues: {
     key: string;
     value: string;
-    disabled?: boolean;
+    readOnlyKey?: boolean;
   }[];
 };
 
@@ -63,7 +63,7 @@ export type ImportFormValues = {
   initialDetectionLoaded?: boolean;
   runtime?: string;
   sample?: string;
-  secrets?: ImportSecret[];
+  importSecrets?: ImportSecret[];
   newSecrets?: string[];
   partnerTaskSecrets?: string[];
 };

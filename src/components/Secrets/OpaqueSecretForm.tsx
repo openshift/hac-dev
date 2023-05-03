@@ -18,7 +18,10 @@ import { RawComponentProps } from '../modal/createModalLauncher';
 import {
   getSupportedPartnerTaskKeyValuePairs,
   getSupportedPartnerTaskSecrets,
+  isPartnerTask,
 } from './secret-utils';
+
+import './OpaqueSecretForm.scss';
 
 const createPartnerTaskSecret = (secret, onSubmit, onClose) => {
   onSubmit && onSubmit(secret);
@@ -39,12 +42,16 @@ const OpaqueSecretForm: React.FC<OpaqueSecretFormProps> = ({
   onSubmit,
   existingSecrets,
 }) => {
-  const keyValues = getSupportedPartnerTaskKeyValuePairs();
+  const defaultKeyValues = [{ key: '', value: '', readOnlyKey: false }];
   const options = getSupportedPartnerTaskSecrets().filter(
     (secret) => !existingSecrets.includes(secret.value),
   );
 
-  const initialValues: SecretFormValues = { secretName: '', keyValues, existingSecrets };
+  const initialValues: SecretFormValues = {
+    secretName: '',
+    keyValues: defaultKeyValues,
+    existingSecrets,
+  };
   return (
     <Formik
       onSubmit={(v) => createPartnerTaskSecret(v, onSubmit, modalProps.onClose)}
@@ -55,10 +62,10 @@ const OpaqueSecretForm: React.FC<OpaqueSecretFormProps> = ({
         <Modal
           {...modalProps}
           title="Create new build secret"
-          description="Keep your data secure by defining a build time secret."
+          description="Keep your data secure with a build-time secret."
           variant={ModalVariant.medium}
           data-testid="opaque-secret-modal"
-          width={'40%'}
+          className="opaque-secret-modal"
           actions={[
             <Button
               key="confirm"
@@ -76,13 +83,16 @@ const OpaqueSecretForm: React.FC<OpaqueSecretFormProps> = ({
           ]}
         >
           <ModalBoxHeader>
-            <Alert isInline title="At this time RHTAP only support Opaque secret types" />
+            <Alert
+              isInline
+              title="For now we only support Opaque secret types, but we’ll be expanding to more types in the future."
+            />
           </ModalBoxHeader>
           <ModalBoxBody>
             <Form>
               <SelectInputField
                 required
-                name={'secretName'}
+                name="secretName"
                 label="Select or enter name"
                 helpText="Unique name of the new secret."
                 isCreatable
@@ -92,17 +102,32 @@ const OpaqueSecretForm: React.FC<OpaqueSecretFormProps> = ({
                 toggleId="secret-name-toggle"
                 toggleAriaLabel="secret-name-dropdown"
                 onClear={() => {
-                  props.setFieldValue('keyValues', getSupportedPartnerTaskKeyValuePairs());
+                  const newKeyValues = props.values.keyValues.filter((kv) => !kv.readOnlyKey);
+                  props.setFieldValue('keyValues', [
+                    ...(newKeyValues.length ? newKeyValues : defaultKeyValues),
+                  ]);
                 }}
                 onSelect={(e, value) => {
+                  if (isPartnerTask(value)) {
+                    props.setFieldValue('keyValues', [
+                      ...props.values.keyValues.filter(
+                        (kv) => !kv.readOnlyKey && (!!kv.key || !!kv.value),
+                      ),
+                      ...getSupportedPartnerTaskKeyValuePairs(value),
+                    ]);
+                  } else {
+                    const newKeyValues = props.values.keyValues.filter((kv) => !kv.readOnlyKey);
+                    props.setFieldValue('keyValues', [
+                      ...(newKeyValues.length ? newKeyValues : defaultKeyValues),
+                    ]);
+                  }
                   props.setFieldValue('secretName', value);
-                  props.setFieldValue('keyValues', getSupportedPartnerTaskKeyValuePairs(value));
                 }}
               />
               <KeyValueFileInputField
                 name="keyValues"
                 data-test="secret-key-value-pair"
-                entries={keyValues}
+                entries={defaultKeyValues}
                 disableRemoveAction={props.values.keyValues.length === 1}
               />
             </Form>

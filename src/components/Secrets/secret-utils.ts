@@ -31,12 +31,15 @@ export const getSupportedPartnerTaskSecrets = () => {
   }));
 };
 
-const defaultValues = [{ key: '', value: '', readOnlyKey: false }];
+export const isPartnerTask = (secretName: string) => {
+  return !!Object.values(supportedPartnerTasksSecrets).find((secret) => secret.name === secretName);
+};
+
 export const getSupportedPartnerTaskKeyValuePairs = (secretName?: string) => {
   const partnerTask = Object.values(supportedPartnerTasksSecrets).find(
     (secret) => secret.name === secretName,
   );
-  return partnerTask ? partnerTask.keyValuePairs : defaultValues;
+  return partnerTask ? partnerTask.keyValuePairs : [];
 };
 
 export const createSecretResource = async (

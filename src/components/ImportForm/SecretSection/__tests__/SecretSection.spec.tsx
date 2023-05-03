@@ -31,7 +31,10 @@ describe('SecretSection', () => {
   });
 
   it('should be able to remove the newly added secrets from the list', async () => {
-    formikRenderer(<SecretSection />, { secrets: [], newSecrets: ['secret-one', 'secret-two'] });
+    formikRenderer(<SecretSection />, {
+      importSecrets: [],
+      newSecrets: ['secret-one', 'secret-two'],
+    });
 
     expect(screen.queryByDisplayValue('secret-one')).toBeInTheDocument();
     expect(screen.queryByDisplayValue('secret-two')).toBeInTheDocument();

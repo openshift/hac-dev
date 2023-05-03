@@ -44,7 +44,15 @@ export const createSecrets = async (secrets, namespace, dryRun) =>
   Promise.all(secrets.map((secret) => createSecret(secret, namespace, dryRun)));
 
 export const createResources = async (formValues: ImportFormValues, strategy: ImportStrategy) => {
-  const { source, application, inAppContext, components, secret, namespace, secrets } = formValues;
+  const {
+    source,
+    application,
+    inAppContext,
+    components,
+    secret,
+    namespace,
+    importSecrets = [],
+  } = formValues;
   const shouldCreateApplication = !inAppContext;
   let applicationName = application;
   let detectedComponents = components;
@@ -80,7 +88,7 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
     applicationData = await createApplication(application, namespace);
     applicationName = applicationData.metadata.name;
   }
-  await createSecrets(secrets, namespace, true);
+  await createSecrets(importSecrets, namespace, true);
 
   const createdComponents = await createComponents(
     detectedComponents,
@@ -91,7 +99,7 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
     componentAnnotations,
   );
 
-  await createSecrets(secrets, namespace, false);
+  await createSecrets(importSecrets, namespace, false);
 
   return {
     applicationName,
