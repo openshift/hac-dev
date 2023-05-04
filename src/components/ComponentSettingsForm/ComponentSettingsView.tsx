@@ -8,6 +8,7 @@ import { useTrackEvent, TrackEvents } from '../../utils/analytics';
 import { createComponent } from '../../utils/create-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
+import { createSecrets } from '../ImportForm/utils/submit-utils';
 import { createResourceData, transformResources } from '../ImportForm/utils/transform-utils';
 import { reviewValidationSchema } from '../ImportForm/utils/validation-utils';
 import ComponentSettingsForm from './ComponentSettingsForm';
@@ -53,10 +54,13 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
         },
       },
     ],
+    namespace,
     isDetected: true,
+    importSecrets: [],
+    newSecrets: [],
   };
 
-  const handleSubmit = (values, actions) => {
+  const handleSubmit = async (values, actions) => {
     const componentValues = values.components[0].componentStub;
     const applicationName = componentValues.application;
 
@@ -73,6 +77,17 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       app_name: applicationName,
       workspace,
     });
+
+    try {
+      await createSecrets(values.importSecrets, namespace, true);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('Error while submitting secret:', e);
+      actions.setSubmitting(false);
+      actions.setStatus({ submitError: e.message });
+    }
+
+    await createSecrets(values.importSecrets, namespace, false);
 
     return createComponent(
       transformedComponentValues,

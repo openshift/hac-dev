@@ -1,7 +1,7 @@
 import { FormikHelpers } from 'formik';
 import { ApplicationKind } from '../../../types';
 import { SAMPLE_ANNOTATION } from '../../../utils/component-utils';
-import { createApplication, createComponent } from '../../../utils/create-utils';
+import { createApplication, createComponent, createSecret } from '../../../utils/create-utils';
 import { detectComponents } from './cdq-utils';
 import { transformResources, transformComponentValues } from './transform-utils';
 import { DetectedFormComponent, ImportFormValues, ImportStrategy } from './types';
@@ -40,8 +40,19 @@ export const createComponents = async (
   return Promise.all(createComponentPromises);
 };
 
+export const createSecrets = async (secrets, namespace, dryRun) =>
+  Promise.all(secrets.map((secret) => createSecret(secret, namespace, dryRun)));
+
 export const createResources = async (formValues: ImportFormValues, strategy: ImportStrategy) => {
-  const { source, application, inAppContext, components, secret, namespace } = formValues;
+  const {
+    source,
+    application,
+    inAppContext,
+    components,
+    secret,
+    namespace,
+    importSecrets = [],
+  } = formValues;
   const shouldCreateApplication = !inAppContext;
   let applicationName = application;
   let detectedComponents = components;
@@ -77,6 +88,7 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
     applicationData = await createApplication(application, namespace);
     applicationName = applicationData.metadata.name;
   }
+  await createSecrets(importSecrets, namespace, true);
 
   const createdComponents = await createComponents(
     detectedComponents,
@@ -86,6 +98,8 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
     false,
     componentAnnotations,
   );
+
+  await createSecrets(importSecrets, namespace, false);
 
   return {
     applicationName,

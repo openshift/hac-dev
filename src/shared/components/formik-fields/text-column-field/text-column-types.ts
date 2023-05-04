@@ -8,6 +8,7 @@ export type TextColumnFieldChildParameterProps = {
   onChange?: OnChangeHandler;
   isReadOnly?: boolean;
   placeholder?: string;
+  removeButton?: React.ReactNode;
 };
 
 export type MergeNewValueUtil = (newValue: string) => string[];
@@ -26,6 +27,7 @@ export type TextColumnFieldProps = FieldProps & {
   onChange?: OnChangeHandler;
   dndEnabled?: boolean;
   children?: TextColumnFieldChildProps;
+  noFooter?: boolean;
 };
 
 export type TextColumnItemProps = TextColumnFieldProps & {

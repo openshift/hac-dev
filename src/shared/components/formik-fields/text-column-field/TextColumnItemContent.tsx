@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   Flex,
   FlexItem,
@@ -27,11 +26,12 @@ const DEFAULT_CHILDREN = (
   props: TextColumnFieldChildParameterProps,
   mergeNewValue: MergeNewValueUtil,
 ) => {
-  const { name, onChange, ...otherProps } = props;
+  const { name, onChange, isReadOnly, placeholder } = props;
 
   return (
     <InputField
-      {...otherProps}
+      isReadOnly={isReadOnly}
+      placeholder={placeholder}
       name={name}
       type={TextInputTypes.text}
       onChange={(e) => {
@@ -60,14 +60,35 @@ const TextColumnItemContent: React.FC<TextColumntItemContentProps> = ({
   dragRef,
   opacity,
 }) => {
-  const { t } = useTranslation();
-
   const mergeNewValue: MergeNewValueUtil = (newValue) => {
     const values: string[] = [...rowValues];
     values[idx] = newValue;
 
     return values;
   };
+
+  const removeButton = (
+    <Tooltip content={tooltip || 'Remove'}>
+      <Button
+        data-testid={`${name}-${idx}-remove-button`}
+        aria-label={tooltip || 'Remove'}
+        variant={ButtonVariant.plain}
+        type={ButtonType.button}
+        isInline
+        isDisabled={disableDeleteRow}
+        onClick={() => {
+          arrayHelpers.remove(idx);
+          if (onChange) {
+            const values = [...rowValues];
+            values.splice(idx, 1);
+            onChange(values);
+          }
+        }}
+      >
+        <MinusCircleIcon />
+      </Button>
+    </Tooltip>
+  );
 
   return (
     <div ref={previewDropRef} style={{ opacity }}>
@@ -77,37 +98,22 @@ const TextColumnItemContent: React.FC<TextColumntItemContentProps> = ({
       >
         {dndEnabled && (
           <FlexItem style={{ cursor: 'move' }}>
-            <div ref={dragRef}>
+            <div ref={dragRef} data-testid="drag-and-drop-handle">
               <GripVerticalIcon />
             </div>
           </FlexItem>
         )}
         <FlexItem grow={{ default: 'grow' }}>
-          {children({ name: `${name}.${idx}`, isReadOnly, placeholder, onChange }, mergeNewValue)}
+          {children(
+            { name: `${name}.${idx}`, isReadOnly, placeholder, onChange, removeButton },
+            mergeNewValue,
+          )}
         </FlexItem>
-        {!isReadOnly && (
-          <FlexItem>
-            <Tooltip content={tooltip || t('console-shared~Remove')}>
-              <Button
-                aria-label={tooltip || t('console-shared~Remove')}
-                variant={ButtonVariant.plain}
-                type={ButtonType.button}
-                isInline
-                isDisabled={disableDeleteRow}
-                onClick={() => {
-                  arrayHelpers.remove(idx);
-                  if (onChange) {
-                    const values = [...rowValues];
-                    values.splice(idx, 1);
-                    onChange(values);
-                  }
-                }}
-              >
-                <MinusCircleIcon />
-              </Button>
-            </Tooltip>
+        {
+          <FlexItem style={{ minWidth: 'var(--pf-global--spacer--2xl)' }}>
+            {!isReadOnly && removeButton}
           </FlexItem>
-        )}
+        }
       </Flex>
     </div>
   );

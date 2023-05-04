@@ -1,5 +1,10 @@
 import React from 'react';
-import { ValidatedOptions, TextInputTypes, gridItemSpanValueShape } from '@patternfly/react-core';
+import {
+  ValidatedOptions,
+  TextInputTypes,
+  gridItemSpanValueShape,
+  SelectVariant,
+} from '@patternfly/react-core';
 import { DropdownItemObject } from '../dropdown/BasicDropdown';
 import { RowRendererProps } from './multi-column-field/MultiColumnFieldRow';
 
@@ -160,6 +165,12 @@ export interface SelectInputOption {
 }
 
 export interface SelectInputFieldProps extends FieldProps {
+  variant?: SelectVariant;
+  toggleId?: string;
+  toggleAriaLabel?: string;
+  onSelect?: (e: React.SyntheticEvent<HTMLElement>, selectedValue: any) => void;
+  onClear?: () => void;
+
   options: SelectInputOption[];
   placeholderText?: React.ReactNode;
   isCreatable?: boolean;

@@ -55,6 +55,8 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
     },
     namespace,
     secret: '',
+    importSecrets: [],
+    newSecrets: [],
   };
 
   const showModal = useModalLauncher();

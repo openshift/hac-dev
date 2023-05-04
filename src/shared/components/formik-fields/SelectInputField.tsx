@@ -2,6 +2,7 @@ import React from 'react';
 import { FormGroup, Select, SelectVariant, SelectOption } from '@patternfly/react-core';
 import { useField, useFormikContext, FormikValues } from 'formik';
 import { pull } from 'lodash-es';
+import { useDeepCompareMemoize } from '../../hooks';
 import { SelectInputFieldProps, SelectInputOption } from './field-types';
 import { getFieldId } from './field-utils';
 
@@ -14,41 +15,60 @@ const SelectInputField: React.FC<SelectInputFieldProps> = ({
   hasOnCreateOption,
   helpText,
   required,
+  variant,
+  toggleId,
+  toggleAriaLabel,
+  onSelect: onSelectCallback,
+  onClear: onClearCallback,
 }) => {
   const [field, { touched, error }] = useField<string[]>(name);
-  const { setFieldValue, setFieldTouched } = useFormikContext<FormikValues>();
+  const { setFieldValue, setFieldTouched, validateForm } = useFormikContext<FormikValues>();
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
-  const [newOptions, setNewOptions] = React.useState<SelectInputOption[]>([]);
+  const [newOptions, setNewOptions] = React.useState<SelectInputOption[]>(options);
   const fieldId = getFieldId(name, 'select-input');
   const isValid = !(touched && error);
   const errorMessage = !isValid ? error : '';
+  const selectVariant = variant || SelectVariant.typeaheadMulti;
+  const memoizedValue = useDeepCompareMemoize(field.value);
+
+  React.useEffect(() => {
+    validateForm();
+  }, [memoizedValue, validateForm]);
 
   const onToggle = () => {
     setIsOpen(!isOpen);
   };
-
   const onSelect = (event, selection: string) => {
     const selections = field.value;
-    if (selections.includes(selection)) {
-      setFieldValue(name, pull(selections, selection));
+
+    if (selectVariant === SelectVariant.typeaheadMulti) {
+      if (selections.includes(selection)) {
+        setFieldValue(name, pull(selections, selection));
+      } else {
+        setFieldValue(name, [...selections, selection]);
+      }
     } else {
-      setFieldValue(name, [...selections, selection]);
+      setFieldValue(name, selection, true);
     }
-    setFieldTouched(name);
+
+    setFieldTouched(name, true);
+    setIsOpen(false);
+    onSelectCallback && onSelectCallback(event, selection);
   };
 
   const onCreateOption = (newVal: string) => {
-    const hasDuplicateOption = [...newOptions, ...options].find(
-      (option) => option.value === newVal,
-    );
+    const hasDuplicateOption = newOptions.find((option) => option.value === newVal);
     if (!hasDuplicateOption) {
       setNewOptions([...newOptions, { value: newVal, disabled: false }]);
     }
+    setFieldValue(name, newVal, true);
+    setFieldTouched(name, true);
   };
 
   const onClearSelection = () => {
-    setFieldValue(name, []);
-    setFieldTouched(name);
+    setFieldValue(name, selectVariant === SelectVariant.typeaheadMulti ? [] : '');
+    setFieldTouched(name, true);
+    onClearCallback && onClearCallback();
   };
 
   return (
@@ -61,7 +81,8 @@ const SelectInputField: React.FC<SelectInputFieldProps> = ({
       isRequired={required}
     >
       <Select
-        variant={SelectVariant.typeaheadMulti}
+        name={name}
+        variant={selectVariant}
         onToggle={onToggle}
         onSelect={onSelect}
         onClear={onClearSelection}
@@ -69,9 +90,11 @@ const SelectInputField: React.FC<SelectInputFieldProps> = ({
         selections={field.value}
         placeholderText={placeholderText}
         isCreatable={isCreatable}
+        toggleId={toggleId}
+        toggleAriaLabel={toggleAriaLabel}
         onCreateOption={(hasOnCreateOption && onCreateOption) || undefined}
       >
-        {[...options, ...newOptions].map((op) => (
+        {newOptions.map((op) => (
           <SelectOption value={op.value} isDisabled={op.disabled} key={op.value} />
         ))}
       </Select>

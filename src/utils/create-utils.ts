@@ -2,6 +2,7 @@ import {
   k8sListResourceItems,
   k8sCreateResource,
   k8sUpdateResource,
+  commonFetch,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import isEqual from 'lodash/isEqual';
 import isNumber from 'lodash/isNumber';
@@ -10,11 +11,19 @@ import {
   getRandomSvgNumber,
   THUMBNAIL_ANNOTATION,
 } from '../components/ApplicationDetails/ApplicationThumbnail';
+import { ImportSecret } from '../components/ImportForm/utils/types';
+import {
+  PartnerTask,
+  SNYK_SPI_TOKEN_ACCESS_BINDING,
+  createSecretResource,
+  supportedPartnerTasksSecrets,
+} from '../components/Secrets/secret-utils';
 import {
   ApplicationModel,
   ComponentModel,
   ComponentDetectionQueryModel,
   SPIAccessTokenBindingModel,
+  SecretModel,
 } from '../models';
 import {
   ComponentKind,
@@ -280,4 +289,109 @@ export const initiateAccessTokenBinding = async (url: string, namespace: string)
   }
 
   return createAccessTokenBinding(url, namespace);
+};
+
+export const createSupportedPartnerSecret = async (
+  partnerTask: PartnerTask,
+  secret: ImportSecret,
+  namespace: string,
+  dryRun: boolean,
+) => {
+  const spiTokenName = SNYK_SPI_TOKEN_ACCESS_BINDING;
+  const resourcePromises = [];
+  const secretName = `tmp-upload-secret-`;
+  const secretResource = {
+    apiVersion: 'v1',
+    kind: 'Secret',
+    metadata: {
+      generateName: secretName,
+      namespace,
+      labels: {
+        'spi.appstudio.redhat.com/upload-secret': 'token',
+        'spi.appstudio.redhat.com/token-name': spiTokenName,
+      },
+    },
+    type: 'Opaque',
+    data: {},
+    stringData: {
+      spiTokenName,
+      userName: 'my-username', // username field is a required field, so any random name needs to be passed.
+      providerUrl: partnerTask.providerUrl,
+      tokenData: secret.keyValues.find((s) => s.key === partnerTask.tokenKeyName)?.value || '',
+    },
+  };
+
+  resourcePromises.push(createSecretResource(secretResource, namespace, dryRun));
+
+  const spiAccessTokenBinding = {
+    apiVersion: `${SPIAccessTokenBindingModel.apiGroup}/${SPIAccessTokenBindingModel.apiVersion}`,
+    kind: SPIAccessTokenBindingModel.kind,
+    metadata: {
+      name: `spi-access-token-binding-for-${secret.secretName}`,
+      namespace,
+    },
+    spec: {
+      repoUrl: partnerTask.providerUrl,
+      lifetime: '-1',
+      secret: {
+        type: 'Opaque',
+        name: secret.secretName,
+        fields: {
+          token: partnerTask.tokenKeyName,
+        },
+        linkedTo: [
+          {
+            serviceAccount: {
+              reference: {
+                name: 'pipeline',
+              },
+            },
+          },
+        ],
+      },
+    },
+  };
+
+  resourcePromises.push(
+    k8sCreateResource({
+      model: SPIAccessTokenBindingModel,
+      queryOptions: {
+        name: spiAccessTokenBinding.metadata.name,
+        ns: namespace,
+        ...(dryRun && { queryParams: { dryRun: 'All' } }),
+      },
+      resource: spiAccessTokenBinding,
+    }),
+  );
+  return Promise.all(resourcePromises);
+};
+
+export const createSecret = async (secret: ImportSecret, namespace: string, dryRun: boolean) => {
+  const partnerTask = Object.values(supportedPartnerTasksSecrets).find(
+    (s) => s.name === secret.secretName,
+  );
+  if (partnerTask) {
+    return createSupportedPartnerSecret(partnerTask, secret, namespace, dryRun);
+  }
+  const secretResource = {
+    apiVersion: SecretModel.apiVersion,
+    kind: SecretModel.kind,
+    metadata: {
+      name: secret.secretName,
+      namespace,
+    },
+    type: 'Opaque',
+    data: {},
+    stringData: secret.keyValues.reduce((acc, s) => {
+      acc[s.key] = s.value;
+      return acc;
+    }, {}),
+  };
+  //Todo: K8sCreateResource appends the resource name and errors out.
+  // Fix the below code when this sdk-utils issue is resolved https://issues.redhat.com/browse/RHCLOUD-21655.
+  return commonFetch(`/api/v1/namespaces/${namespace}/secrets${dryRun ? '?dryRun=All' : ''}`, {
+    method: 'POST',
+    body: JSON.stringify(secretResource),
+    headers: { 'Content-type': 'application/json' },
+  });
 };
