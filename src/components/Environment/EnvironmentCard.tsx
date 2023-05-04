@@ -7,7 +7,6 @@ import {
   CardActions,
   CardBody,
   Text,
-  TextContent,
   TextVariants,
   Label,
   DescriptionList,
@@ -76,11 +75,9 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment, readOnly
     <Card isFlat>
       <CardHeader>
         <CardTitle>
-          <TextContent>
-            <Text component={TextVariants.h3}>
-              {environment.spec?.displayName ?? environment.metadata.name}
-            </Text>
-          </TextContent>
+          <div className="environment-list__card-title">
+            {environment.spec?.displayName ?? environment.metadata.name}
+          </div>
           <EnvConnectionStatus environment={environment} />
         </CardTitle>
         {!readOnly && actions?.length ? (

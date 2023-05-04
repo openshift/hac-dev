@@ -6,7 +6,12 @@ export const gitUrlRegex =
 // generic regex to validate container image /^[^/]+\.[^/.]+\/([a-z0-9-_]+\/)?[^/.]+(:.+)?$/
 export const containerImageRegex = /^(https:\/\/)?quay.io\/([a-z0-9-_]+\/)?[^/.]+(:.+)?$/;
 
+export const MAX_RESOURCE_NAME_LENGTH = 63;
+export const RESOURCE_NAME_LENGTH_ERROR_MSG = `Must be no more than ${MAX_RESOURCE_NAME_LENGTH} characters.`;
+
 export const resourceNameRegex = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
+export const RESOURCE_NAME_REGEX_MSG =
+  'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).';
 
 export const filePathOrURLRegex =
   /^((^\.|^\.\.|^[\w-]+)(\/(?=[\w-])[\w-]+)*$)|(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/;
@@ -52,20 +57,16 @@ export const sampleValidationSchema = yup.object({
 export const reviewValidationSchema = yup.object({
   application: yup
     .string()
-    .matches(
-      resourceNameRegex,
-      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
-    )
+    .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
+    .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
     .required('Required'),
   components: yup.array().of(
     yup.object({
       componentStub: yup.object({
         componentName: yup
           .string()
-          .matches(
-            resourceNameRegex,
-            'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
-          )
+          .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
+          .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
           .required('Required'),
         targetPort: yup
           .number()
@@ -105,10 +106,8 @@ export const SecretFromSchema = yup.object({
   secretName: yup
     .string()
     .required('Required')
-    .matches(
-      resourceNameRegex,
-      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
-    )
+    .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
+    .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
     .test(
       'existing-secret-test',
       'Secret already exists',

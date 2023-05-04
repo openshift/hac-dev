@@ -2,6 +2,7 @@ import * as React from 'react';
 import { FormSection, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
 import { CheckboxField, InputField } from '../../../shared';
+import { RESOURCE_NAME_REGEX_MSG } from '../../ImportForm/utils/validation-utils';
 import { FormValues } from './types';
 
 type Props = { isInPage?: boolean; edit?: boolean };
@@ -33,11 +34,7 @@ const IntegrationTestSection: React.FC<Props> = ({ isInPage, edit }) => {
         <InputField
           label="Integration test name"
           name="integrationTest.name"
-          helpText={
-            edit
-              ? ''
-              : 'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).'
-          }
+          helpText={edit ? '' : RESOURCE_NAME_REGEX_MSG}
           data-test="display-name-input"
           isReadOnly={edit}
           required

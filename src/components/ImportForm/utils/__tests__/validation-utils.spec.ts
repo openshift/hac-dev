@@ -1,5 +1,6 @@
 import {
   containerImageRegex,
+  RESOURCE_NAME_REGEX_MSG,
   resourceNameRegex,
   reviewValidationSchema,
 } from '../validation-utils';
@@ -34,25 +35,15 @@ describe('Review form validation schema', () => {
       ],
       isDetected: true,
     };
-    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
-      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
-    );
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(RESOURCE_NAME_REGEX_MSG);
     values.components[0].componentStub.componentName = 'Test-';
-    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
-      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
-    );
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(RESOURCE_NAME_REGEX_MSG);
     values.components[0].componentStub.componentName = 'test-@!';
-    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
-      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
-    );
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(RESOURCE_NAME_REGEX_MSG);
     values.components[0].componentStub.componentName = '-test';
-    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
-      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
-    );
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(RESOURCE_NAME_REGEX_MSG);
     values.components[0].componentStub.componentName = '1-test';
-    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
-      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
-    );
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(RESOURCE_NAME_REGEX_MSG);
   });
 
   it('should pass when target port is not provided', async () => {

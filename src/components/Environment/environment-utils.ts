@@ -10,7 +10,13 @@ import {
 } from '../../models';
 import { GitOpsDeploymentManagedEnvironmentKind, EnvironmentKind, SecretKind } from '../../types';
 import { ReleasePlanKind } from '../../types/coreBuildService';
-import { dnsSubDomainRegex, resourceNameRegex } from '../ImportForm/utils/validation-utils';
+import {
+  dnsSubDomainRegex,
+  MAX_RESOURCE_NAME_LENGTH,
+  RESOURCE_NAME_LENGTH_ERROR_MSG,
+  RESOURCE_NAME_REGEX_MSG,
+  resourceNameRegex,
+} from '../ImportForm/utils/validation-utils';
 import { CreateEnvironmentFormValues } from './create/CreateEnvironmentForm';
 
 export enum EnvironmentDeploymentStrategy {
@@ -57,7 +63,11 @@ export const clusterTypeItems = [
 ];
 
 export const environmentFormSchema = yup.object({
-  name: yup.string().trim().min(1).required('Required'),
+  name: yup
+    .string()
+    .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
+    .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
+    .required('Required'),
   deploymentStrategy: yup.string().required('Required'),
   environmentType: yup.string().required('Required'),
   clusterType: yup.string().required('Required'),
@@ -90,10 +100,7 @@ export const environmentFormSchema = yup.object({
     ),
   targetNamespace: yup
     .string()
-    .matches(
-      resourceNameRegex,
-      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
-    )
+    .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
     .required('Required'),
 });
 
