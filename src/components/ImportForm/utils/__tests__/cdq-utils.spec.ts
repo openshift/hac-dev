@@ -41,14 +41,13 @@ describe('CDQ Utils: useComponentDetection', () => {
     createCDQMock.mockResolvedValue({ metadata: { name: 'test-cdq' } });
 
     const { waitForNextUpdate } = renderHook(() =>
-      useComponentDetection('https://github.com/test/repo', 'test-app', 'token', '/', 'dev'),
+      useComponentDetection('https://github.com/test/repo', 'token', '/', 'dev'),
     );
 
     await waitForNextUpdate();
 
     expect(createCDQMock).toHaveBeenCalled();
     expect(createCDQMock).toHaveBeenCalledWith(
-      'test-app',
       'https://github.com/test/repo',
       '',
       'token',
@@ -61,7 +60,7 @@ describe('CDQ Utils: useComponentDetection', () => {
     useK8sWatchMock.mockReturnValue([{}, true, null]);
     createCDQMock.mockResolvedValue({ metadata: { name: 'test-cdq' } });
 
-    renderHook(() => useComponentDetection('', 'test-app', null, '/', ''));
+    renderHook(() => useComponentDetection('', null, '/', ''));
 
     expect(createCDQMock).toHaveBeenCalledTimes(0);
   });
@@ -70,7 +69,7 @@ describe('CDQ Utils: useComponentDetection', () => {
     useK8sWatchMock.mockReturnValue([{}, true, null]);
     createCDQMock.mockResolvedValue({ metadata: { name: 'test-cdq' } });
 
-    renderHook(() => useComponentDetection('', 'test-app', null, '/', ''));
+    renderHook(() => useComponentDetection('', null, '/', ''));
 
     expect(useK8sWatchMock).toHaveBeenCalledWith(null);
     expect(createCDQMock).toHaveBeenCalledTimes(0);
@@ -82,12 +81,11 @@ describe('CDQ Utils: useComponentDetection', () => {
 
     let source = 'https://github.com/test/repo';
     const { rerender, waitForNextUpdate } = renderHook(() =>
-      useComponentDetection(source, 'test-app', undefined, '/', 'dev'),
+      useComponentDetection(source, undefined, '/', 'dev'),
     );
 
     source = 'https://example.com/test/repo';
     expect(createCDQMock).toHaveBeenCalledWith(
-      'test-app',
       'https://github.com/test/repo',
       '',
       undefined,
@@ -102,7 +100,6 @@ describe('CDQ Utils: useComponentDetection', () => {
     await waitForNextUpdate();
 
     expect(createCDQMock).toHaveBeenCalledWith(
-      'test-app',
       'https://example.com/test/repo',
       '',
       undefined,
@@ -116,7 +113,7 @@ describe('CDQ Utils: useComponentDetection', () => {
     createCDQMock.mockResolvedValue({ metadata: { name: 'test-cdq' } });
 
     const { waitFor, waitForNextUpdate, unmount } = renderHook(() =>
-      useComponentDetection('https://github.com/test/repo', 'test-app', 'token', '/', 'dev'),
+      useComponentDetection('https://github.com/test/repo', 'token', '/', 'dev'),
     );
     await waitForNextUpdate();
     unmount();
@@ -135,7 +132,6 @@ describe('CDQ Utils: useComponentDetection', () => {
     const { result, rerender, waitForNextUpdate } = renderHook(() =>
       useComponentDetection(
         'https://github.com/nodeshift-starters/devfile-sample.git',
-        'test-app',
         undefined,
         '/',
         'dev',
@@ -167,7 +163,6 @@ describe('CDQ Utils: useComponentDetection', () => {
     const { result, rerender, waitForNextUpdate } = renderHook(() =>
       useComponentDetection(
         'https://github.com/openshift/dynamic-plugin-sdk/tree/main/packages/sample-app',
-        'test-app',
         undefined,
         '/',
         'dev',
@@ -197,13 +192,7 @@ describe('CDQ Utils: useComponentDetection', () => {
     });
 
     const { result, rerender, waitForNextUpdate } = renderHook(() =>
-      useComponentDetection(
-        'https://github.com/example/empty-repo',
-        'test-app',
-        undefined,
-        '/',
-        'dev',
-      ),
+      useComponentDetection('https://github.com/example/empty-repo', undefined, '/', 'dev'),
     );
 
     expect(result.current).toStrictEqual([undefined, false, undefined]);

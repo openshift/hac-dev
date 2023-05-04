@@ -1,5 +1,4 @@
 import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
-import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import {
   DetailsTab,
@@ -14,7 +13,6 @@ import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
 describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
   const applicationName = Common.generateAppName();
   const applicationDetailPage = new ApplicationDetailPage();
-  const addComponent = new AddComponentPage();
   const publicRepo = 'https://github.com/hac-test/devfile-sample-code-with-quarkus';
   const componentName: string = Common.generateAppName('java-quarkus');
   const piplinerunlogsTasks = ['init', 'clone-repository', 'build-container', 'show-summary'];
@@ -24,55 +22,43 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
     Applications.deleteApplication(applicationName);
   });
 
-  describe('Create an Application with a component', () => {
-    it('Create an Application with a component', () => {
-      Applications.createApplication(applicationName);
-      Applications.createComponent(publicRepo, componentName);
-      Applications.checkComponentInListView(
-        componentName,
-        applicationName,
-        'Build Running',
-        'Default',
-      );
-    });
+  it('Create an Application with a component', () => {
+    Applications.createApplication();
+    Applications.createComponent(publicRepo, componentName, applicationName);
+    Applications.checkComponentInListView(
+      componentName,
+      applicationName,
+      'Build Running',
+      'Default',
+    );
   });
 
-  describe('Try to add a new component using the "Overview" tab', () => {
+  describe('Check different ways to add a component', () => {
     it("Use 'Components' tabs to start adding a new component", () => {
       Applications.goToOverviewTab().addComponent();
       cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
-    });
-
-    it('Verify we are on "Add Component" wizard, and then hit Cancel', () => {
       cy.url().should('include', `/import?application=${applicationName}`);
-      addComponent.clickCancel();
-      cy.url().should('include', `${applicationName}/overview`);
-    });
-  });
 
-  describe('Try to add a new component using the "Components" tab', () => {
+      Applications.clickBreadcrumbLink(applicationName);
+      cy.url().should('include', `${applicationName}`);
+    });
+
     it("Use HACBS 'Components' tabs to start adding a new component", () => {
       Applications.goToComponentsTab().clickAddComponent();
       cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
-    });
-
-    it('Verify we are on "Add Component" wizard, and then hit Cancel', () => {
       cy.url().should('include', `/import?application=${applicationName}`);
-      addComponent.clickCancel();
-      cy.url().should('include', `${applicationName}/components`);
-    });
-  });
 
-  describe('Try to add a new component using the "Actions" dropdown', () => {
+      Applications.clickBreadcrumbLink(applicationName);
+      cy.url().should('include', `${applicationName}`);
+    });
+
     it("Click 'Actions' dropdown to add a component", () => {
       Applications.clickActionsDropdown('Add component');
       cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
-    });
-
-    it('Verify we are on "Add Component" wizard, and then hit Cancel', () => {
       cy.url().should('include', `/import?application=${applicationName}`);
-      addComponent.clickCancel();
-      cy.url().should('include', `${applicationName}/components`);
+
+      Applications.clickBreadcrumbLink(applicationName);
+      cy.url().should('include', `${applicationName}`);
     });
   });
 

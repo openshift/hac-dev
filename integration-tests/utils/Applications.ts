@@ -44,27 +44,30 @@ export class Applications {
     cy.get(`[data-id="${applicationName}"]`).find(actions.kebabButton).click();
   }
 
-  static createApplication(name: string) {
+  static createApplication() {
     cy.title().should('eq', `Applications | ${FULL_APPLICATION_TITLE}`);
     const createApplicationPage = new CreateApplicationPage();
     createApplicationPage.clickCreateApplication();
-    cy.title().should('eq', `Import - Name application | ${FULL_APPLICATION_TITLE}`);
+    cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
     cy.testA11y(`${pageTitles.createApp} page`);
-    createApplicationPage.setApplicationName(name);
-    createApplicationPage.clickNext();
-    createApplicationPage.clickNext();
-    cy.testA11y(`Select source form`);
   }
 
   static createComponent(
     publicGitRepo: string,
     componentName: string,
+    applicationName?: string,
     runtime?: string,
     useCustomBuildPipeline: boolean = false,
     envVar?: { varName: string; value: string },
   ) {
-    this.addComponentStep(publicGitRepo);
-    this.configureComponentsStep(componentName, useCustomBuildPipeline, runtime, envVar);
+    this.importCodeStep(publicGitRepo);
+    this.configureComponentsStep(
+      componentName,
+      useCustomBuildPipeline,
+      applicationName,
+      runtime,
+      envVar,
+    );
   }
 
   static checkComponentInListView(
@@ -148,7 +151,7 @@ export class Applications {
     cy.get(integrationTestsTabPO.clickTab).click();
   }
 
-  static addComponentStep(publicGitRepo: string) {
+  static importCodeStep(publicGitRepo: string) {
     const addComponent = new AddComponentPage();
     cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
 
@@ -156,36 +159,33 @@ export class Applications {
     addComponent.setSource(publicGitRepo);
     // Check if the source is validated
     addComponent.waitRepoValidated();
-    // Setup Git Options
-    addComponent.clickGitOptions();
 
-    addComponent.clickNext();
+    addComponent.submit();
     cy.title().should('eq', `Import - Configure components | ${FULL_APPLICATION_TITLE}`);
   }
 
   static configureComponentsStep(
     componentName: string,
     useCustomBuildPipeline: boolean,
+    applicationName?: string,
     runtime?: string,
     envVar?: { varName: string; value: string },
   ) {
     const componentPage = new ComponentPage();
     componentPage.editComponentName(componentName);
 
+    if (applicationName) {
+      componentPage.setApplicationName(applicationName);
+    }
     if (runtime) {
       componentPage.selectRuntime(runtime);
     }
-
     if (envVar) {
-      componentPage.expandDetails(componentName);
-      componentPage.showAdvancedOptions();
       componentPage.addEnvVar(envVar.varName, envVar.value);
     }
-
     if (useCustomBuildPipeline) {
       componentPage.selectCustomBuildPipeline();
     }
-
     componentPage.clickCreateApplication();
   }
 }

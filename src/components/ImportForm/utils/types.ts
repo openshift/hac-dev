@@ -31,6 +31,7 @@ export type DetectedFormComponent = {
   language?: string;
   projectType?: string;
   devfileFound?: boolean;
+  defaultBuildPipeline?: boolean;
 };
 
 export type ImportFormValues = {

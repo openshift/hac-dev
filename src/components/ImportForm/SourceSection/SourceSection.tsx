@@ -1,33 +1,21 @@
 import * as React from 'react';
-import {
-  Button,
-  ButtonVariant,
-  Flex,
-  FlexItem,
-  FormGroup,
-  FormSection,
-  HelperText,
-  HelperTextItem,
-  Text,
-  TextContent,
-  ValidatedOptions,
-} from '@patternfly/react-core';
-import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
+import { Bullseye, FormGroup, FormSection, ValidatedOptions } from '@patternfly/react-core';
 import { useField, useFormikContext } from 'formik';
 import gitUrlParse from 'git-url-parse';
 import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
 import { useOnMount } from '../../../hooks/useOnMount';
 import { getFieldId, InputField } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
-import { ServiceProviderType, SPIAccessCheckAccessibilityStatus } from '../../../types';
+import { ServiceProviderType } from '../../../types';
 import { HeadTitle } from '../../HeadTitle';
-import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
-import SamplesInfoAlert from '../SampleSection/SampleInfoAlert';
-import { useAccessCheck, useAccessTokenBinding } from '../utils/auth-utils';
-import { ImportFormValues, ImportStrategy } from '../utils/types';
+import HelpPopover from '../../HelpPopover';
+import { useAccessCheck } from '../utils/auth-utils';
+import { ImportFormValues } from '../utils/types';
 import { gitUrlRegex } from '../utils/validation-utils';
 import AuthOptions from './AuthOptions';
 import GitOptions from './GitOptions';
+
+import './SourceSection.scss';
 
 enum AccessHelpText {
   default = '',
@@ -35,11 +23,9 @@ enum AccessHelpText {
   validated = 'Access validated',
 }
 
-type SourceSectionProps = {
-  onStrategyChange?: (strategy: ImportStrategy) => void;
-};
+type SourceSectionProps = {};
 
-export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }) => {
+const SourceSection: React.FC<SourceSectionProps> = () => {
   const [, { value: source, touched, error }] = useField<string>({
     name: 'source.git.url',
     type: 'input',
@@ -48,7 +34,6 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
   const {
     values: { secret: authSecret },
     setFieldValue,
-    setFieldTouched,
   } = useFormikContext<ImportFormValues>();
 
   const [sourceUrl, setSourceUrl] = React.useState('');
@@ -64,10 +49,12 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
 
   const fieldId = getFieldId('source.git.url', 'input');
   const isValid = !(touched && error);
-  const label = 'Git repo URL';
+  const label = 'Git repository URL';
 
-  const [{ isGit, isRepoAccessible, serviceProvider, accessibility }, accessCheckLoaded] =
-    useAccessCheck(isValidated ? null : sourceUrl, authSecret);
+  const [{ isGit, isRepoAccessible, serviceProvider }, accessCheckLoaded] = useAccessCheck(
+    isValidated ? null : sourceUrl,
+    authSecret,
+  );
 
   const setFormValidating = React.useCallback(() => {
     setValidated(ValidatedOptions.default);
@@ -116,15 +103,18 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
         setFormValidated();
         isGit && setShowGitOptions(true);
       } else {
+        setShowGitOptions(false);
         if (
           serviceProvider === ServiceProviderType.GitHub ||
           serviceProvider === ServiceProviderType.Quay
         ) {
           setValidated(ValidatedOptions.error);
+          setFieldValue('source.isValidated', false);
           setHelpTextInvalid('Unable to access repository');
-          setShowAuthOptions(true);
+          // setShowAuthOptions(true);
         } else if (!serviceProvider) {
           setValidated(ValidatedOptions.error);
+          setFieldValue('source.isValidated', false);
           setHelpTextInvalid('This provider is not supported');
         }
       }
@@ -139,103 +129,57 @@ export const SourceSection: React.FC<SourceSectionProps> = ({ onStrategyChange }
     sourceUrl,
   ]);
 
-  const isPrivateAuthorized =
-    accessCheckLoaded &&
-    isRepoAccessible &&
-    !showAuthOptions &&
-    accessibility === SPIAccessCheckAccessibilityStatus.private;
+  // Sections related to auth options. Disabled until we have full private repo support.
 
-  useAccessTokenBinding(isPrivateAuthorized && source);
+  // const isPrivateAuthorized =
+  //   accessCheckLoaded &&
+  //   isRepoAccessible &&
+  //   !showAuthOptions &&
+  //   accessibility === SPIAccessCheckAccessibilityStatus.private;
 
-  React.useEffect(() => {
-    if (isPrivateAuthorized) {
-      if (authSecret) {
-        setFormValidated();
-      } else {
-        setFormValidating();
-      }
-    }
-  }, [authSecret, isPrivateAuthorized, setFormValidated, setFormValidating]);
+  // useAccessTokenBinding(isPrivateAuthorized && source);
+
+  // React.useEffect(() => {
+  //   if (isPrivateAuthorized) {
+  //     if (authSecret) {
+  //       setFormValidated();
+  //     } else {
+  //       setFormValidating();
+  //     }
+  //   }
+  // }, [authSecret, isPrivateAuthorized, setFormValidated, setFormValidating]);
 
   useOnMount(() => {
     source && !isValidated && handleSourceChange();
   });
 
-  const handleStrategyChange = React.useCallback(() => {
-    setFieldValue('source.git.url', '');
-    setFieldTouched('source.git.url', false);
-    onStrategyChange(ImportStrategy.SAMPLE);
-  }, [onStrategyChange, setFieldValue, setFieldTouched]);
-
-  const description =
-    'To add components to your application, provide a link to your GitHub repo or start with a code sample.';
-
   return (
-    <>
+    <Bullseye>
       <HeadTitle>Import - Add components | {FULL_APPLICATION_TITLE}</HeadTitle>
-      <TextContent>
-        <Text component="h2">Add components to your application</Text>
-        <HelperText>
-          <HelperTextItem>
-            {description}{' '}
-            <HelpTopicLink topicId="stonesoup-import-add-component" isInline>
-              Learn more <span className="pf-u-screen-reader">about adding components</span>{' '}
-              <OpenDrawerRightIcon />
-            </HelpTopicLink>
-          </HelperTextItem>
-        </HelperText>
-      </TextContent>
-      {onStrategyChange && (
-        <SamplesInfoAlert>
-          <p>
-            If you select a sample, be sure to fork it to your own repository. That way, you can
-            edit the sample and choose to customize your pipeline and rebuilds whenever changes are
-            made.{' '}
-            <Button variant={ButtonVariant.link} onClick={handleStrategyChange} isInline>
-              Start with a sample.
-            </Button>
-          </p>
-        </SamplesInfoAlert>
-      )}
-      <FormSection>
+      <FormSection className="source-section pf-u-min-width">
         <FormGroup
           fieldId={fieldId}
           label={label}
           validated={!isValid && ValidatedOptions.error}
           isRequired
+          labelIcon={<HelpPopover bodyContent="Make sure the URL is correct." />}
         >
-          <Flex>
-            <FlexItem style={{ flexBasis: '750px' }}>
-              <InputField
-                name="source.git.url"
-                placeholder="Enter your source"
-                onChange={debouncedHandleSourceChange}
-                validated={validated}
-                helpText={helpText}
-                helpTextInvalid={helpTextInvalid}
-                required
-                data-test="enter-source"
-              />
-            </FlexItem>
-
-            {onStrategyChange ? (
-              <FlexItem>
-                No code?{' '}
-                <Button
-                  data-testid="start-with-sample-button"
-                  variant={ButtonVariant.link}
-                  onClick={handleStrategyChange}
-                  isInline
-                >
-                  Start with a sample.
-                </Button>
-              </FlexItem>
-            ) : null}
-          </Flex>
+          <InputField
+            name="source.git.url"
+            placeholder="Enter your source"
+            onChange={debouncedHandleSourceChange}
+            validated={validated}
+            helpText={helpText}
+            helpTextInvalid={helpTextInvalid}
+            required
+            data-test="enter-source"
+          />
         </FormGroup>
         {showAuthOptions && <AuthOptions />}
         {showGitOptions && <GitOptions />}
       </FormSection>
-    </>
+    </Bullseye>
   );
 };
+
+export default SourceSection;

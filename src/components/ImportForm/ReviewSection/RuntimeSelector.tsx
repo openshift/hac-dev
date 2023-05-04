@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { DropdownToggle, Spinner } from '@patternfly/react-core';
+import { Badge, DropdownToggle, Spinner } from '@patternfly/react-core';
 import { DockerIcon } from '@patternfly/react-icons/dist/esm/icons/docker-icon';
 import { ImageIcon } from '@patternfly/react-icons/dist/esm/icons/image-icon';
 import { useFormikContext } from 'formik';
 import { DropdownField } from '../../../shared';
+import HelpPopover from '../../HelpPopover';
 import { useComponentDetection } from '../utils/cdq-utils';
 import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues } from '../utils/types';
@@ -37,7 +38,6 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
   const {
     values: {
       secret,
-      application,
       source: {
         git: { url: sourceUrl, revision, context },
       },
@@ -54,6 +54,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
   const [detecting, setDetecting] = React.useState(false);
   const [runtimeSource, setRuntimeSource] = React.useState('');
   const [selectedRuntime, setSelectedRuntime] = React.useState(null);
+  const [recommendedRuntime, setRecommendedRuntime] = React.useState(null);
   const originalComponentRef = React.useRef(components?.[detectedComponentIndex]);
   originalComponentRef.current = components?.[detectedComponentIndex];
   const DetectingRuntime = 'Detecting runtime...';
@@ -72,17 +73,17 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
   }, [samples, detectionFailed]);
 
   const onChange = (value: string) => {
-    const runtime = samples.find((s) => s.name === value);
+    const runtime = samples.find((s) => value.includes(s.name));
+
     if (
       (runtime?.attributes?.git as any)?.remotes?.origin ===
       selectedRuntime?.attributes?.git?.remotes?.origin
     ) {
       return;
     }
-    const runtimeSourceUrl =
-      value === dockerFileSample.value
-        ? sourceUrl
-        : (runtime?.attributes?.git as any)?.remotes?.origin;
+    const runtimeSourceUrl = value.includes(dockerFileSample.value)
+      ? sourceUrl
+      : (runtime?.attributes?.git as any)?.remotes?.origin;
     setSelectedRuntime(value === dockerFileSample.value ? dockerFileSample : runtime);
     setRuntimeSource(runtimeSourceUrl);
     setDetecting(true);
@@ -91,7 +92,6 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
 
   const [detectedComponents, detectionLoaded, detectionError] = useComponentDetection(
     runtimeSource,
-    application,
     secret,
     sourceUrl !== runtimeSource ? undefined : context,
     revision,
@@ -126,11 +126,31 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
           icon={toggleIcon}
           data-test="dropdown-toggle"
         >
-          {isDetectingRuntime ? DetectingRuntime : selectedRuntime?.name || 'Select a runtime'}
+          {isDetectingRuntime ? (
+            DetectingRuntime
+          ) : selectedRuntime?.name ? (
+            <>
+              {selectedRuntime?.name}
+              {selectedRuntime?.name === recommendedRuntime?.name && (
+                <>
+                  &nbsp;<Badge isRead>Recommended</Badge>
+                </>
+              )}
+            </>
+          ) : (
+            'Select a runtime'
+          )}
         </DropdownToggle>
       );
     },
-    [detecting, samplesLoaded, selectedRuntime, isDetectingRuntime],
+    [
+      isDetectingRuntime,
+      selectedRuntime?.icon,
+      selectedRuntime?.name,
+      detecting,
+      samplesLoaded,
+      recommendedRuntime?.name,
+    ],
   );
 
   React.useEffect(() => {
@@ -140,11 +160,12 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       !detectionFailed &&
       (!selectedRuntime || selectedRuntime.name === DetectingRuntime)
     ) {
-      setSelectedRuntime(
+      const runtime =
         samples?.find(
           (s) => s.attributes.projectType === components[detectedComponentIndex]?.projectType,
-        ) || dockerFileSample,
-      );
+        ) || dockerFileSample;
+      setSelectedRuntime(runtime);
+      setRecommendedRuntime(runtime);
     } else if (!selectedRuntime && !detectionFailed) {
       setSelectedRuntime({ name: DetectingRuntime });
     }
@@ -199,8 +220,13 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       isDisabled={detecting || !samplesLoaded}
       placeholder="Select a runtime"
       value={selectedRuntime?.name}
+      recommended={recommendedRuntime?.name}
       onChange={onChange}
       dropdownToggle={detectingRuntimeToggle}
+      helpText="Use the recommended runtime for optimal build and deployment."
+      labelIcon={
+        <HelpPopover bodyContent="The recommended runtime controls some of your settings, so changing it to an incompatible runtime might break your build or deployment. The runtime detected is based on an analysis of content in the repository. We use the programming language, devfile, and other files to detect the recommended option." />
+      }
     />
   );
 };

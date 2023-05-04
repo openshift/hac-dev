@@ -18,11 +18,12 @@ export const addComponentPagePO = {
 
 export const componentSamplesPagePO = {
   grid: '.catalog-page__grid',
-  nodejs: '[data-test="sample-Node"]',
-  python: '[data-test="sample-Python"]',
-  quarkus: '[data-test="sample-Quarkus"]',
-  spring: '[data-test="sample-Spring Boot"]',
-  create: '[data-test="submit-button"]',
+  sample: (name: string) => `[data-test="${name}"]`,
+  import: (name: string) => `[data-test="import-${name}"]`,
+  nodejs: 'sample-Node',
+  python: 'sample-Python',
+  quarkus: 'sample-Quarkus',
+  spring: 'sample-Spring Boot',
 };
 
 export const createApplicationPagePO = {
@@ -32,10 +33,10 @@ export const createApplicationPagePO = {
 };
 
 export const ComponentsPagePO = {
+  appInput: '[data-test="app-name-field"] input',
   create: 'button[type=submit]',
   createText: 'Create',
-  extractComponentName: '[class="editable-label-field__label"]',
-  editComponentNameIcon: '[data-test="pencil-icon"]',
+  componentNameField: '[data-test="component-name-field"] input',
   checkIcon: '[data-test="check-icon"]',
   closeIcon: '[data-test="close-icon"]',
   showAdvancedSetting: 'Show advanced deployment options',
@@ -51,7 +52,7 @@ export const ComponentsPagePO = {
   loading: '[data-test="loading-indicator"]',
   saveButton: '[data-test="submit-button"]',
   editNameInput: '[data-test="editable-label-input"]',
-  customBuildPipelineRadioBtn: '[data-test="custom-build-pipelines"]',
+  customBuildPipelineRadioBtn: '[for*="defaultBuildPipeline"] .pf-c-switch__toggle',
   customBuildRequestedState: '[data-testid="requested-state"]',
   label: '[class="pf-c-label__content"]',
   customBuildPipelineModalCloseBtn: '[data-test="close-button custom-pipeline-modal"]',

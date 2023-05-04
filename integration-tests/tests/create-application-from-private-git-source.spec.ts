@@ -20,7 +20,7 @@ describe(
 
     before(function () {
       Tokens.removeBindingsAndTokens();
-      Applications.createApplication(applicationName);
+      Applications.createApplication();
     });
 
     after(function () {

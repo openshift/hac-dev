@@ -1,80 +1,77 @@
 import { NavItem } from '../support/constants/PageTitle';
 import { actions } from '../support/pageObjects/global-po';
-import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { ComponentSamplesPage } from '../support/pages/ComponentSamplesPage';
-import { ComponentPage } from '../support/pages/ComponentsPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
-describe('Create Application from Sample', { tags: ['@PR-check', '@publicRepo'] }, () => {
-  const applicationName = Common.generateAppName();
+describe('Create component from sample', { tags: ['@PR-check', '@publicRepo'] }, () => {
   const applicationDetailPage = new ApplicationDetailPage();
-  const componentPage = new ComponentPage();
-  const addComponent = new AddComponentPage();
   const componentSamplesPage = new ComponentSamplesPage();
   const publicRepos = [
     'https://github.com/nodeshift-starters/devfile-sample.git',
     'https://github.com/devfile-samples/devfile-sample-code-with-quarkus.git',
   ];
+  const requestOptions = {
+    method: 'GET',
+    url: /^.*\/namespaces\/[A-za-z0-9-]+\/components\?limit=250.*$/,
+  };
 
-  beforeEach(function () {
-    cy.intercept({
-      method: 'GET',
-      url: /^.*\/namespaces\/[A-za-z0-9-]+\/components\?limit=250.*$/,
-    }).as('componentsAPI');
-  });
-
-  it('NodeJS app can be created', () => {
-    //set application name
-    Applications.createApplication(applicationName);
-
-    //Open app sample page
-    addComponent.openSamplesPage();
+  it('NodeJS component can be created', () => {
+    cy.intercept(requestOptions).as('componentsAPI');
+    Applications.createApplication();
     componentSamplesPage.selectNodeJSSample();
 
-    // Create sample component
-    componentPage.clickCreateApplication();
-    Applications.goToComponentsTab();
-
     cy.wait('@componentsAPI').then((xhr) => {
-      for (const item of xhr.response.body.items) {
-        if (
-          item.spec.application === applicationName &&
-          item.spec.source.git.url === publicRepos[0]
-        ) {
-          applicationDetailPage.createdComponentExists(item.spec.componentName, applicationName);
-          break;
+      cy.url().then((url) => {
+        Cypress.env(
+          'appName',
+          url
+            .split('/')
+            .filter((e) => e)
+            .pop(),
+        );
+        for (const item of xhr.response.body.items) {
+          if (
+            item.spec.application === Cypress.env('appName') &&
+            item.spec.source.git.url === publicRepos[0]
+          ) {
+            Applications.goToComponentsTab();
+            applicationDetailPage.createdComponentExists(
+              item.spec.componentName,
+              Cypress.env('appName'),
+            );
+            break;
+          }
         }
-      }
+      });
     });
   });
 
   it('Add and then delete a quarkus component', () => {
     //Open components page
-    Common.openApplicationURL(applicationName);
+    Common.openApplicationURL(Cypress.env('appName'));
     //open app sample page
     applicationDetailPage.openAddComponentPage();
-    addComponent.openSamplesPage();
     componentSamplesPage.selectQuarkusSample();
-
-    // Create sample component
-    componentPage.clickCreateApplication();
+    cy.intercept(requestOptions).as('componentsAPI');
     Applications.goToComponentsTab();
 
     cy.wait('@componentsAPI').then((xhr) => {
       for (const item of xhr.response.body.items) {
         if (
-          item.spec.application === applicationName &&
+          item.spec.application === Cypress.env('appName') &&
           item.spec.source.git.url === publicRepos[1]
         ) {
           const quarkusComponentName = item.spec.componentName;
 
           //Check if component exists
-          applicationDetailPage.createdComponentExists(quarkusComponentName, applicationName);
+          applicationDetailPage.createdComponentExists(
+            quarkusComponentName,
+            Cypress.env('appName'),
+          );
 
-          //Open components page
-          Common.openApplicationURL(applicationName);
+          //Delete component
           applicationDetailPage.deleteComponent(quarkusComponentName);
 
           //Check if component does not exists
@@ -87,10 +84,10 @@ describe('Create Application from Sample', { tags: ['@PR-check', '@publicRepo'] 
 
   it('Delete application with existing component', () => {
     Common.navigateTo(NavItem.applications);
-    Applications.openKebabMenu(applicationName);
+    Applications.openKebabMenu(Cypress.env('appName'));
     cy.get(actions.deleteItem).click();
-    cy.get(actions.deleteModalInput).clear().type(applicationName);
+    cy.get(actions.deleteModalInput).clear().type(Cypress.env('appName'));
     cy.get(actions.deleteModalButton).click();
-    cy.get(`[data-id="${applicationName}"]`).should('not.exist');
+    cy.get(`[data-id="${Cypress.env('appName')}"]`).should('not.exist');
   });
 });

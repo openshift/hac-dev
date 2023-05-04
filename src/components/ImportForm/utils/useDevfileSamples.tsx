@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CatalogItem } from '@openshift/dynamic-plugin-sdk-extensions';
 import { getDevfileSamples } from '../../../utils/devfile-utils';
 
-type SampleAttrs = {
+export type SampleAttrs = {
   projectType: string;
   language: string;
   git: {

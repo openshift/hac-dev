@@ -8,6 +8,7 @@ describe('Review form validation schema', () => {
   it('should fail when component name is missing', async () => {
     await expect(
       reviewValidationSchema.validate({
+        application: 'my-app',
         components: [
           {
             componentStub: {
@@ -22,6 +23,7 @@ describe('Review form validation schema', () => {
 
   it('should fail when component name is invalid', async () => {
     const values = {
+      application: 'my-app',
       components: [
         {
           componentStub: {
@@ -55,6 +57,7 @@ describe('Review form validation schema', () => {
 
   it('should pass when target port is not provided', async () => {
     const values = {
+      application: 'my-app',
       components: [
         {
           componentStub: {
@@ -78,6 +81,7 @@ describe('Review form validation schema', () => {
 
   it('should fail when target port is invalid', async () => {
     const values = {
+      application: 'my-app',
       components: [
         {
           componentStub: {
@@ -93,6 +97,7 @@ describe('Review form validation schema', () => {
 
   it('should fail when target port is in invalid range', async () => {
     const values = {
+      application: 'my-app',
       components: [
         {
           componentStub: {
@@ -110,6 +115,7 @@ describe('Review form validation schema', () => {
 
   it('should fail when target port is in invalid range', async () => {
     const values = {
+      application: 'my-app',
       components: [
         {
           componentStub: {
@@ -127,6 +133,7 @@ describe('Review form validation schema', () => {
 
   it('should fail when resource unit is negative', async () => {
     const values = {
+      application: 'my-app',
       components: [
         {
           componentStub: {
@@ -146,6 +153,7 @@ describe('Review form validation schema', () => {
   });
   it('should pass when dockerfileUrl is not provided', async () => {
     const values = {
+      application: 'my-app',
       components: [
         {
           componentStub: {
@@ -168,6 +176,7 @@ describe('Review form validation schema', () => {
   });
   it('should pass when dockerfileUrl is a url', async () => {
     const values = {
+      application: 'my-app',
       components: [
         {
           componentStub: {
@@ -202,6 +211,7 @@ describe('Review form validation schema', () => {
   });
   it('should pass when dockerfileUrl is a relative pat', async () => {
     const values = {
+      application: 'my-app',
       components: [
         {
           componentStub: {

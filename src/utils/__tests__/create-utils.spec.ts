@@ -409,16 +409,12 @@ describe('Create Utils', () => {
       }),
     );
 
-    await createComponentDetectionQuery(
-      'test-application',
-      'https://github.com/test/repository',
-      'test-ns',
-    );
+    await createComponentDetectionQuery('https://github.com/test/repository', 'test-ns');
 
     expect(k8sCreateResource).toHaveBeenCalledWith({
       model: ComponentDetectionQueryModel,
       queryOptions: {
-        name: expect.stringContaining('test-application'),
+        name: expect.stringContaining('cdq'),
         ns: 'test-ns',
       },
       resource: expect.objectContaining(mockCDQData),

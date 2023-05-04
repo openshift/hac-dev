@@ -1,23 +1,24 @@
 import * as React from 'react';
 import {
-  EmptyState,
-  EmptyStateIcon,
   FormSection,
   Spinner,
   Title,
+  Divider,
+  Flex,
+  FlexItem,
   HelperText,
-  TextContent,
-  Text,
   HelperTextItem,
-  EmptyStateBody,
-  FormGroup,
+  Badge,
+  Backdrop,
+  Bullseye,
+  Card,
+  CardBody,
 } from '@patternfly/react-core';
-import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
 import { useFormikContext } from 'formik';
 import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
-import { RadioButtonField } from '../../../shared';
 import { HeadTitle } from '../../HeadTitle';
-import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
+import ApplicationSection from '../ApplicationSection/ApplicationSection';
+import GitImportErrors from '../GitImportErrors';
 import { useComponentDetection } from '../utils/cdq-utils';
 import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues } from '../utils/types';
@@ -26,16 +27,20 @@ import { ReviewComponentCard } from './ReviewComponentCard';
 
 const ComponentLoadingState: React.FC = () => {
   return (
-    <EmptyState>
-      <EmptyStateIcon variant="container" component={Spinner} />
-      <Title size="lg" headingLevel="h4">
-        Detecting
-      </Title>
-      <EmptyStateBody>
-        Sit tight while we determine your application&apos;s runtime and other settings to configure
-        its build and deployment. This should only take a moment.
-      </EmptyStateBody>
-    </EmptyState>
+    <Backdrop>
+      <Bullseye>
+        <Card isRounded isCompact>
+          <CardBody>
+            <Bullseye style={{ marginBottom: 'var(--pf-global--spacer--md)' }}>
+              <Spinner size="lg" />
+            </Bullseye>
+            <HelperText>
+              <HelperTextItem variant="indeterminate">Detecting values...</HelperTextItem>
+            </HelperText>
+          </CardBody>
+        </Card>
+      </Bullseye>
+    </Backdrop>
   );
 };
 
@@ -46,8 +51,6 @@ const ReviewSection: React.FunctionComponent = () => {
         git: { url: sourceUrl, revision, context },
       },
       secret,
-      application,
-      isDetected,
     },
     setFieldValue,
   } = useFormikContext<ImportFormValues>();
@@ -57,7 +60,6 @@ const ReviewSection: React.FunctionComponent = () => {
 
   const [detectedComponents, detectionLoaded, detectionError] = useComponentDetection(
     !isContainerImage ? sourceUrl : null,
-    application,
     secret,
     context,
     revision,
@@ -108,7 +110,7 @@ const ReviewSection: React.FunctionComponent = () => {
         myComponent: {
           componentStub: {
             componentName: 'my-component',
-            application,
+            application: 'my-app',
             source: { git: { url: sourceUrl, revision, context } },
           },
         },
@@ -126,7 +128,6 @@ const ReviewSection: React.FunctionComponent = () => {
       unmounted = true;
     };
   }, [
-    application,
     detectedComponents,
     detectionLoaded,
     detectionError,
@@ -144,47 +145,50 @@ const ReviewSection: React.FunctionComponent = () => {
   return (
     <>
       <HeadTitle>Import - Configure components | {FULL_APPLICATION_TITLE}</HeadTitle>
-      <TextContent>
-        <Text component="h2">Configure your components for deployment</Text>
-        <HelperText>
-          <HelperTextItem>
-            Review and define deployment settings and options.{' '}
-            <HelpTopicLink topicId="stonesoup-import-configure-component" isInline>
-              Learn more <span className="pf-u-screen-reader">about configuring components</span>{' '}
-              <OpenDrawerRightIcon />
-            </HelpTopicLink>
-          </HelperTextItem>
-        </HelperText>
-      </TextContent>
-      <FormSection>
-        {cachedComponents.current.map((component, index) => (
-          <ReviewComponentCard
-            key={component.componentStub.componentName}
-            detectedComponent={component}
-            detectedComponentIndex={index}
-            isExpanded={!isDetected}
-            showRuntimeSelector
-          />
-        ))}
-
-        <FormGroup label="Build pipeline">
-          <RadioButtonField
-            name="pipelinesascode"
-            aria-label="Default"
-            label="Default"
-            description="Manually trigger rebuilds from the Application screen."
-            value="manual"
-          />
-          <RadioButtonField
-            name="pipelinesascode"
-            aria-label="Custom"
-            label="Custom"
-            description="Customize build pipeline in your component's repository to automatically trigger rebuilds."
-            value="automatic"
-            data-test="custom-build-pipelines"
-          />
-        </FormGroup>
-      </FormSection>
+      <Flex direction={{ default: 'column', lg: 'row' }}>
+        <Flex flex={{ default: 'flex_1' }} direction={{ default: 'column' }}>
+          <FlexItem>
+            <Title size="md" headingLevel="h4" className="pf-u-mt-lg pf-u-mb-lg">
+              Application details
+            </Title>
+          </FlexItem>
+          <FlexItem>
+            <ApplicationSection />
+          </FlexItem>
+        </Flex>
+        <Divider
+          orientation={{
+            default: 'vertical',
+          }}
+        />
+        <Flex flex={{ default: 'flex_4' }} direction={{ default: 'column' }}>
+          <FlexItem>
+            <Title size="md" headingLevel="h4">
+              Components <Badge isRead>{cachedComponents.current.length}</Badge>
+            </Title>
+            <HelperText className="pf-u-mb-sm">
+              <HelperTextItem>
+                A component is an image built from source code in a repository. One or more
+                components that run together form an application.
+              </HelperTextItem>
+            </HelperText>
+          </FlexItem>
+          <FlexItem>
+            <FormSection>
+              {cachedComponents.current.map((component, index) => (
+                <ReviewComponentCard
+                  key={component.componentStub.componentName}
+                  detectedComponent={component}
+                  detectedComponentIndex={index}
+                  isExpanded={index === 0}
+                  showRuntimeSelector
+                />
+              ))}
+            </FormSection>
+            <GitImportErrors />
+          </FlexItem>
+        </Flex>
+      </Flex>
     </>
   );
 };

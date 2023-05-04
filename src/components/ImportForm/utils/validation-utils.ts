@@ -18,16 +18,6 @@ const combineRegExps = (...regexps: RegExp[]) => {
   return new RegExp(regexStringsWithoutFlags.join('|'));
 };
 
-export const applicationValidationSchema = yup.object({
-  application: yup
-    .string()
-    .matches(
-      resourceNameRegex,
-      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
-    )
-    .required('Required'),
-});
-
 const createSourceValidationSchema = (containerImageSupport: boolean) =>
   yup.object({
     source: yup.object({
@@ -60,6 +50,13 @@ export const sampleValidationSchema = yup.object({
 });
 
 export const reviewValidationSchema = yup.object({
+  application: yup
+    .string()
+    .matches(
+      resourceNameRegex,
+      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
+    )
+    .required('Required'),
   components: yup.array().of(
     yup.object({
       componentStub: yup.object({

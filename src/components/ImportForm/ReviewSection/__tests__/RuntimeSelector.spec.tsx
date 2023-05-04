@@ -161,7 +161,6 @@ describe('RuntimeSelector', () => {
       undefined,
       undefined,
       undefined,
-      undefined,
     );
     expect(setFieldValueMock).toHaveBeenCalledWith('detectionFailed', false);
     expect(setFieldValueMock).toHaveBeenCalledWith('isDetected', true);
@@ -206,7 +205,6 @@ describe('RuntimeSelector', () => {
     expect(screen.getByText('Basic Nodejs')).toBeVisible();
     expect(useComponentDetectionMock).toHaveBeenLastCalledWith(
       'https://github.com/sclorg/nodejs-ex',
-      undefined,
       undefined,
       '/testDirectory',
       undefined,
@@ -258,7 +256,6 @@ describe('RuntimeSelector', () => {
     expect(screen.getByText('Basic Quarkus')).toBeVisible();
     expect(useComponentDetectionMock).toHaveBeenLastCalledWith(
       'https://github.com/devfile-samples/devfile-sample-code-with-quarkus',
-      undefined,
       undefined,
       undefined,
       undefined,

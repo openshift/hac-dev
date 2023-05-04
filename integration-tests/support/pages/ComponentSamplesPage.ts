@@ -12,7 +12,10 @@ export class ComponentSamplesPage extends AbstractWizardPage {
   }
 
   selectSample(sampleName: string) {
-    cy.get(sampleName).click();
+    cy.get(componentSamplesPagePO.sample(sampleName)).within(() => {
+      cy.get(componentSamplesPagePO.import(sampleName)).click();
+    });
+    cy.contains('Importing sample...').should('not.exist');
     Common.waitForLoad();
   }
 }

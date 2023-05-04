@@ -49,6 +49,7 @@ export const transformComponentValues = (
     const component = detectedComponent.componentStub;
     return {
       ...detectedComponent,
+      defaultBuildPipeline: true,
       componentStub: {
         ...component,
         ...(originalComponent && {

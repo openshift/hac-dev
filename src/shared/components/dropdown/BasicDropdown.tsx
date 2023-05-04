@@ -1,5 +1,11 @@
 import React from 'react';
-import { Dropdown, DropdownToggle, DropdownItem, DropdownItemProps } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownItemProps,
+  Badge,
+} from '@patternfly/react-core';
 import './BasicDropdown.scss';
 
 export type DropdownItemObject = {
@@ -10,6 +16,7 @@ export type DropdownItemObject = {
 type BasicDropdownProps = {
   items: DropdownItemObject[];
   selected?: string;
+  recommended?: string;
   onChange?: (selection: string) => void;
   placeholder?: string;
   fullWidth?: boolean;
@@ -20,6 +27,7 @@ type BasicDropdownProps = {
 const BasicDropdown: React.FC<BasicDropdownProps> = ({
   items,
   selected,
+  recommended,
   onChange,
   placeholder,
   disabled,
@@ -32,16 +40,32 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
     setDropdownOpen(false);
   };
 
+  const recommendedBadge = React.useMemo(
+    () => (
+      <>
+        &nbsp;<Badge isRead>Recommended</Badge>
+      </>
+    ),
+    [],
+  );
+
   const dropdownToggleComponent = React.useMemo(
     () =>
       dropdownToggle ? (
         dropdownToggle(onToggle)
       ) : (
         <DropdownToggle onToggle={onToggle} isDisabled={disabled} data-test="dropdown-toggle">
-          {selected || placeholder}
+          {selected ? (
+            <>
+              {selected}
+              {selected === recommended && recommendedBadge}
+            </>
+          ) : (
+            placeholder
+          )}
         </DropdownToggle>
       ),
-    [dropdownToggle, selected, placeholder, disabled],
+    [dropdownToggle, disabled, selected, recommended, recommendedBadge, placeholder],
   );
 
   const dropdownItems = React.useMemo(
@@ -51,10 +75,11 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
         return (
           <DropdownItem key={key} {...props}>
             {value}
+            {value === recommended && recommendedBadge}
           </DropdownItem>
         );
       }),
-    [items],
+    [items, recommended, recommendedBadge],
   );
   return (
     <Dropdown
