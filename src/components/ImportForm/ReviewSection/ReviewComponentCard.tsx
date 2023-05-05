@@ -14,6 +14,7 @@ import {
   TextInputTypes,
   Title,
   TitleSizes,
+  ValidatedOptions,
 } from '@patternfly/react-core';
 import {
   EnvironmentField,
@@ -48,8 +49,10 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
 }) => {
   const component = detectedComponent.componentStub;
   const name = component.componentName;
+  const targetPortDetected = detectedComponent.targetPortDetected;
   const fieldPrefix = `components[${detectedComponentIndex}].componentStub`;
   const [expandedComponent, setExpandedComponent] = React.useState(isExpanded);
+  const [targetPortTouched, setTargetPortTouched] = React.useState(false);
 
   return (
     <Card isFlat isCompact isSelected={expandedComponent} isExpanded={expandedComponent}>
@@ -114,12 +117,21 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
             <Grid hasGutter>
               <GridItem sm={12} lg={4}>
                 <InputField
+                  data-test={`${fieldPrefix}.targetPort`}
                   name={`${fieldPrefix}.targetPort`}
                   label="Target port"
                   helpText="Target port for traffic."
                   type={TextInputTypes.number}
                   min={1}
                   max={65535}
+                  onChange={() => setTargetPortTouched(true)}
+                  onBlur={() => setTargetPortTouched(true)}
+                  helpTextInvalid="We can't detect your target port. Check if it's correct."
+                  validated={
+                    targetPortDetected || targetPortTouched
+                      ? ValidatedOptions.default
+                      : ValidatedOptions.error
+                  }
                 />
               </GridItem>
               <GridItem sm={12} lg={4}>

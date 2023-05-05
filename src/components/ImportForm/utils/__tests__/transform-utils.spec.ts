@@ -42,6 +42,7 @@ const mockComponent: DetectedFormComponent = {
   language: 'nodejs',
   projectType: 'nodejs',
   defaultBuildPipeline: true,
+  targetPortDetected: true,
 };
 
 describe('Transform Utils', () => {
