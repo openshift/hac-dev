@@ -19,8 +19,6 @@ export const createComponents = async (
     const componentValues = {
       ...componentData,
       resources: componentData.resources && transformResources(componentData.resources),
-      replicas: componentData.replicas && Number(componentData.replicas),
-      targetPort: componentData.targetPort && Number(componentData.targetPort),
     };
     const enablePac = !component.defaultBuildPipeline;
 

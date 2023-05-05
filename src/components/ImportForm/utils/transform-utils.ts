@@ -58,7 +58,7 @@ export const transformComponentValues = (
             : component.componentName,
         }),
         resources: createResourceData(component?.resources || {}),
-        replicas: component?.replicas || 1,
+        replicas: component?.replicas === undefined ? 1 : component.replicas,
         targetPort: component?.targetPort || 8080,
       },
     };

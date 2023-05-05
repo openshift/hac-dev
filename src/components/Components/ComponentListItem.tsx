@@ -179,7 +179,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
               </DescriptionListDescription>
             </DescriptionListGroup>
           )}
-          {replicas && (
+          {replicas !== undefined && (
             <DescriptionListGroup>
               <DescriptionListTerm>Instances</DescriptionListTerm>
               <DescriptionListDescription>{replicas}</DescriptionListDescription>
