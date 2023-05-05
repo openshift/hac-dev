@@ -160,7 +160,7 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             label: 'Create environment',
             component: (
               <Link
-                to={`/application-pipeline/workspaces/${workspace}/workspace-settings/environment/create`}
+                to={`/application-pipeline/environments/workspaces/${workspace}/create`}
                 onClick={() => {
                   track(TrackEvents.ButtonClicked, {
                     link_name: 'add-environment',
