@@ -20,10 +20,9 @@ export const ApplicationListHeader = () => {
       props: { className: applicationTableColumnClasses.lastDeploy },
     },
     {
-      title: '',
+      title: ' ',
       props: {
         className: applicationTableColumnClasses.kebab,
-        style: { paddingRight: 'var(--pf-global--spacer--3xl)' },
       },
     },
   ];

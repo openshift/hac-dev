@@ -25,10 +25,9 @@ export const TaskRunListHeader = () => {
       props: { className: taskRunTableColumnClasses.status },
     },
     {
-      title: '',
+      title: ' ',
       props: {
         className: taskRunTableColumnClasses.kebab,
-        style: { width: '1%', paddingRight: 24 },
       },
     },
   ];

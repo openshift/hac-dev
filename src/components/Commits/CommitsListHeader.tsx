@@ -35,7 +35,7 @@ const CommitsListHeader = () => {
       props: { className: commitsTableColumnClasses.status },
     },
     {
-      title: '',
+      title: ' ',
       props: { className: commitsTableColumnClasses.kebab },
     },
   ];

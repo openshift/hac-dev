@@ -40,7 +40,7 @@ export const PipelineRunListHeader = () => {
       props: { className: pipelineRunTableColumnClasses.component },
     },
     {
-      title: '',
+      title: ' ',
       props: { className: pipelineRunTableColumnClasses.kebab },
     },
   ];
