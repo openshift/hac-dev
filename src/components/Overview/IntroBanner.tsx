@@ -55,7 +55,7 @@ const IntroBanner: React.FC = () => {
           </CardTitle>
           <CardBody>
             <Text>
-              Import, containerize and deploy to a development environment. With just a few clicks,
+              Import, containerize, and deploy to a development environment. With just a few clicks,
               you can interact with your application running in OpenShift and Kubernetes. Build
               here, go anywhere.
             </Text>
@@ -75,7 +75,7 @@ const IntroBanner: React.FC = () => {
                   </p>
                   <p>
                     Join the{' '}
-                    <ExternalLink href="https://dn.dev/slack">
+                    <ExternalLink href="https://rhdevnation.slack.com/channels/software-supply-chain-security">
                       #software-supply-chain-security
                     </ExternalLink>{' '}
                     channel on Slack

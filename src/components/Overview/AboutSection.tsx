@@ -72,7 +72,7 @@ const AboutSection: React.FC = () => (
             <CardBody>
               You can run your containerized applications in the bundled, shared Kubernetes-based
               environments that are powered by Red Hat OpenShift. You can share the routes created
-              for your services and you can continuously build, test and rollout your applications
+              for your services and you can continuously build, test, and rollout your applications
               with a simple `git push` or acceptance of a pull request.
             </CardBody>
           </Card>
@@ -100,7 +100,7 @@ const AboutSection: React.FC = () => (
             <CardTitle>Contact us</CardTitle>
             <CardBody>
               Join the{' '}
-              <ExternalLink href="https://dn.dev/slack">
+              <ExternalLink href="https://rhdevnation.slack.com/channels/software-supply-chain-security">
                 #software-supply-chain-security
               </ExternalLink>{' '}
               channel on Slack
