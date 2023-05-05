@@ -170,6 +170,7 @@ export const createEnvironment = async (
           clusterCredentialsSecret: secret.metadata.name,
           targetNamespace: values.targetNamespace,
           ingressDomain: clusterType === ClusterType.kubernetes ? values.ingressDomain : undefined,
+          namespaces: [values.targetNamespace],
         },
       },
     },

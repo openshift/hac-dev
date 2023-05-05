@@ -17,6 +17,7 @@ export type EnvironmentKind = K8sResourceCommon & {
         apiURL: string;
         clusterCredentialsSecret: string;
         targetNamespace: string;
+        namespaces?: string[];
       };
     };
   };
