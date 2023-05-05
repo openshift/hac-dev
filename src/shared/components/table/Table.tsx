@@ -147,6 +147,7 @@ const Table: React.FC<TableProps> = ({
     <div className="table">
       <TableWrapper virtualize={virtualize} ariaLabel={ariaLabel} ariaRowCount={ariaRowCount}>
         <PfTable
+          className="table__header"
           cells={columns}
           gridBreakPoint={gridBreakPoint}
           role={virtualize ? 'presentation' : 'grid'}

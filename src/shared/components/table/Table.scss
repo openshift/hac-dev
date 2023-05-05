@@ -6,6 +6,10 @@
   overflow: visible !important;
 }
 
+.table__header .pf-c-table__action, .pf-c-table__action.m-no-actions {
+  padding-left: var(--pf-global--spacer--2xl);
+}
+
 @media screen and (max-width: $pf-global--breakpoint--xl) {
   .table .pf-c-table .pf-c-table__action {
     width: 10% !important;

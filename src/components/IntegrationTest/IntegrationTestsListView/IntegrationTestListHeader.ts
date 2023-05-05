@@ -3,7 +3,7 @@ export const integrationListTableColumnClasses = {
   containerImage: 'pf-m-width-35 pf-l-flex',
   mandatory: 'pf-m-width-20',
   pipeline: 'pf-m-width-15',
-  kebab: 'pf-c-table__action pf-m-width-5',
+  kebab: 'pf-c-table__action',
 };
 
 export const IntegrationTestListHeader = () => {
@@ -25,10 +25,9 @@ export const IntegrationTestListHeader = () => {
       props: { className: integrationListTableColumnClasses.pipeline },
     },
     {
-      title: '',
+      title: ' ',
       props: {
         className: integrationListTableColumnClasses.kebab,
-        style: { paddingRight: 64 },
       },
     },
   ];
