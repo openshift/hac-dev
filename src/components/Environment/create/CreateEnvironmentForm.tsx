@@ -68,8 +68,8 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
         <Form onSubmit={handleSubmit} className="hacDev-create-environment-form">
           <FormSection>
             <InputField
-              aria-label="Environment Name"
-              label="Environment Name"
+              aria-label="Environment name"
+              label="Environment name"
               name="name"
               required
             />
@@ -88,7 +88,7 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
               What cluster would you like to use for creating this environment?
             </Text>
             <DropdownField
-              label="Select Cluster"
+              label="Select cluster"
               name="environmentType"
               items={environmentTypeItems}
               placeholder="Select"

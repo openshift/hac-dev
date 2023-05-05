@@ -63,10 +63,10 @@ users:
 
 describe('CreateEnvironment', () => {
   const fillEnvironmentForm = () => {
-    fireEvent.input(screen.getByLabelText('Environment Name'), { target: { value: 'Env 1' } });
+    fireEvent.input(screen.getByLabelText('Environment name'), { target: { value: 'Env 1' } });
 
     fireEvent.click(screen.getAllByRole('button', { name: 'Select' })[0]);
-    fireEvent.click(screen.getByText('I would like to bring my own cluster'));
+    fireEvent.click(screen.getByText('I want to bring my own cluster'));
 
     fireEvent.click(screen.getAllByRole('button', { name: 'Select' })[0]);
     fireEvent.click(screen.getByText('OpenShift'));
@@ -160,7 +160,7 @@ describe('CreateEnvironment', () => {
     const submitButton = screen.getByRole('button', { name: 'Create environment' });
     expect(submitButton).toBeEnabled();
 
-    expect(screen.queryByLabelText('IngressDomain')).toBeFalsy();
+    expect(screen.queryByLabelText('Ingress domain')).toBeFalsy();
 
     fireEvent.click(screen.getAllByRole('button', { name: 'OpenShift' })[0]);
 

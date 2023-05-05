@@ -43,7 +43,7 @@ export type KubeConfig = {
 };
 
 export const environmentTypeItems = [
-  { key: EnvironmentType.managed, value: 'I would like to bring my own cluster' },
+  { key: EnvironmentType.managed, value: 'I want to bring my own cluster' },
 ];
 
 export const clusterTypeValues = {
