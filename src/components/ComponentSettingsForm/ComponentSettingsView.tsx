@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { Formik } from 'formik';
 import { useComponent } from '../../hooks/useComponents';
@@ -22,6 +22,8 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
 }) => {
   const track = useTrackEvent();
   const navigate = useNavigate();
+  const { appName } = useParams();
+
   const { namespace, workspace } = useWorkspaceInfo();
 
   const [component, loaded, componentError] = useComponent(namespace, componentName);
@@ -46,6 +48,7 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
   }
 
   const initialValues = {
+    application: appName,
     components: [
       {
         componentStub: {
