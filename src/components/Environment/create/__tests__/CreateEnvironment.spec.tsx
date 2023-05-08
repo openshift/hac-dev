@@ -63,7 +63,7 @@ users:
 
 describe('CreateEnvironment', () => {
   const fillEnvironmentForm = () => {
-    fireEvent.input(screen.getByLabelText('Environment name'), { target: { value: 'Env 1' } });
+    fireEvent.input(screen.getByLabelText('Environment name'), { target: { value: 'env-1' } });
 
     fireEvent.click(screen.getAllByRole('button', { name: 'Select' })[0]);
     fireEvent.click(screen.getByText('I want to bring my own cluster'));
@@ -137,7 +137,7 @@ describe('CreateEnvironment', () => {
           },
           spec: {
             deploymentStrategy: 'AppStudioAutomated',
-            displayName: 'Env 1',
+            displayName: 'env-1',
             tags: ['managed'],
             unstableConfigurationFields: {
               clusterType: 'OpenShift',
@@ -211,7 +211,7 @@ describe('CreateEnvironment', () => {
           },
           spec: {
             deploymentStrategy: 'AppStudioAutomated',
-            displayName: 'Env 1',
+            displayName: 'env-1',
             tags: ['managed'],
             unstableConfigurationFields: {
               clusterType: 'Kubernetes',
