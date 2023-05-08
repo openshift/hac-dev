@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
+import { ScanResults } from '../../hooks/useScanResults';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
@@ -12,7 +13,9 @@ import { usePipelinerunActions } from './pipelinerun-actions';
 import { pipelineRunTableColumnClasses } from './PipelineRunListHeader';
 import { ScanStatus } from './ScanStatus';
 
-const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) => {
+type PipelineListRowProps = RowFunctionArgs<PipelineRunKind & { scanResults: ScanResults }>;
+
+const PipelineListRow: React.FC<PipelineListRowProps> = ({ obj }) => {
   const capitalize = (label: string) => {
     return label && label.charAt(0).toUpperCase() + label.slice(1);
   };
@@ -38,7 +41,7 @@ const PipelineListRow: React.FC<RowFunctionArgs<PipelineRunKind>> = ({ obj }) =>
         />
       </TableData>
       <TableData className={pipelineRunTableColumnClasses.vulnerabilities}>
-        <ScanStatus pipelineRunName={obj.metadata?.name} />
+        <ScanStatus scanResults={obj.scanResults} />
       </TableData>
       <TableData className={pipelineRunTableColumnClasses.duration}>
         {status !== 'Pending'

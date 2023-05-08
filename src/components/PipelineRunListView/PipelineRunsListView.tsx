@@ -15,10 +15,12 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
+import { getScanResults } from '../../hooks/useScanResults';
 import { useSearchParam } from '../../hooks/useSearchParam';
+import { useTaskRuns } from '../../hooks/useTaskRuns';
 import { PipelineRunGroupVersionKind } from '../../models';
 import { Table } from '../../shared';
-import { PipelineRunKind } from '../../types';
+import { PipelineRunKind, TektonResourceLabel } from '../../types';
 import { statuses } from '../../utils/commits-utils';
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
@@ -33,8 +35,9 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [statusFilterExpanded, setStatusFilterExpanded] = React.useState<boolean>(false);
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
+  const [taskRuns, taskRunsLoaded] = useTaskRuns(namespace);
 
-  const [pipelineRuns, loaded] = useK8sWatchResource<PipelineRunKind[]>({
+  const [pipelineRuns, pipelineRunsLoaded] = useK8sWatchResource<PipelineRunKind[]>({
     groupVersionKind: PipelineRunGroupVersionKind,
     namespace,
     isList: true,
@@ -44,6 +47,42 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
       },
     },
   });
+
+  const { pipelineRunsWithStatus, loaded } = React.useMemo(() => {
+    if (pipelineRunsLoaded && taskRunsLoaded) {
+      return {
+        pipelineRunsWithStatus: pipelineRuns.map((pipelineRun) => {
+          const taskRunsForPR = taskRuns.filter(
+            (taskRun) =>
+              taskRun.metadata?.labels?.[TektonResourceLabel.pipelinerun] ===
+              pipelineRun.metadata.name,
+          );
+
+          const scanResults = getScanResults(taskRunsForPR)[0];
+          return {
+            ...pipelineRun,
+            scanResults,
+          };
+        }),
+        loaded: true,
+      };
+    }
+    if (pipelineRunsLoaded) {
+      return {
+        pipelineRunsWithStatus: pipelineRuns.map((pipelineRun) => {
+          return {
+            ...pipelineRun,
+            scanResults: undefined,
+          };
+        }),
+        loaded: true,
+      };
+    }
+    return {
+      pipelineRunsWithStatus: [],
+      loaded: false,
+    };
+  }, [pipelineRuns, pipelineRunsLoaded, taskRuns, taskRunsLoaded]);
 
   const statusFilters = React.useMemo(
     () => (statusFiltersParam ? statusFiltersParam.split(',') : []),
@@ -56,7 +95,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
   );
 
   const statusFilterObj = React.useMemo(() => {
-    return pipelineRuns.reduce((acc, plr) => {
+    return pipelineRunsWithStatus.reduce((acc, plr) => {
       const stat = pipelineRunStatus(plr);
       if (statuses.includes(stat)) {
         if (acc[stat] !== undefined) {
@@ -67,11 +106,11 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
       }
       return acc;
     }, {});
-  }, [pipelineRuns]);
+  }, [pipelineRunsWithStatus]);
 
   const filteredPLRs = React.useMemo(
     () =>
-      pipelineRuns.filter(
+      pipelineRunsWithStatus.filter(
         (plr) =>
           (!nameFilter ||
             plr.metadata.name.indexOf(nameFilter) !== -1 ||
@@ -80,7 +119,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
             ) !== -1) &&
           (!statusFilters.length || statusFilters.includes(pipelineRunStatus(plr))),
       ),
-    [nameFilter, pipelineRuns, statusFilters],
+    [nameFilter, pipelineRunsWithStatus, statusFilters],
   );
 
   const onClearFilters = () => setNameFilter('');
@@ -94,7 +133,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
     );
   }
 
-  if (!pipelineRuns || pipelineRuns.length === 0) {
+  if (!pipelineRunsWithStatus || pipelineRunsWithStatus.length === 0) {
     return <PipelineRunEmptyState applicationName={applicationName} />;
   }
 
