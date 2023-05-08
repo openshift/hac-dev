@@ -61,7 +61,7 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
   return (
     <PageLayout
       title="Create environment"
-      description="Bring your managed workload clusters to create environments and deploy applications created using Red Hat Trusted Application Pipeline."
+      description="Bring your managed workload Kubernetes clusters to create environments and deploy applications created using Red Hat Trusted Application Pipeline."
       footer={footer}
     >
       <PageSection variant={PageSectionVariants.light} isFilled isWidthLimited>
@@ -77,7 +77,7 @@ const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
               label="Deployment strategy"
               name="deploymentStrategy"
               items={deploymentStrategyItems}
-              helpText="Set whether application component updates will need to be manually or automatically promoted to this environment, and if changes will be manually or automatically deployed."
+              helpText="For now, all applications, their components, and any future changes will be automatically deployed to this environment. Manual deployment strategy is coming soon."
               validateOnChange
               isDisabled
             />

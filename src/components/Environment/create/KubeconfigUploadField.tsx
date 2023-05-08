@@ -48,7 +48,12 @@ const KubeconfigUploadField: React.FC<KubeconfigUploadFieldProps> = ({ name }) =
       }}
       allowEditingUploadedText
       required
-    />
+    >
+      <div className="pf-c-form__helper-text">
+        We’ll use the kubeconfig file to connect with your cluster. Credentials are stored in a
+        secret until the environment is deleted.
+      </div>
+    </FileUploadField>
   );
 };
 
