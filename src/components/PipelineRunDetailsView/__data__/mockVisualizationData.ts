@@ -2723,7 +2723,7 @@ export const mockPipelineRun = {
             ],
             taskResults: [
               {
-                name: 'CLAIR_SCAN_RESULT',
+                name: 'CVE_SCAN_RESULT',
                 type: 'string',
                 value: '{"vulnerabilities":{"critical":1,"high":1,"medium":1,"low":1}}\n',
               },
@@ -3952,7 +3952,7 @@ export const mockPipelineRun = {
           ],
           taskResults: [
             {
-              name: 'CLAIR_SCAN_RESULT',
+              name: 'CVE_SCAN_RESULT',
               type: 'string',
               value: '{"vulnerabilities":{"critical":1,"high":1,"medium":1,"low":1}}\n',
             },
@@ -6221,7 +6221,7 @@ export const mockTaskRuns = [
             exitCode: 0,
             finishedAt: '2023-03-16T01:01:11Z',
             message:
-              '[{"key":"CLAIR_SCAN_RESULT","value":"{\\"vulnerabilities\\":{\\"critical\\":1,\\"high\\":1,\\"medium\\":1,\\"low\\":1}}\\n","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928471\\",\\"note\\":\\"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+              '[{"key":"CVE_SCAN_RESULT","value":"{\\"vulnerabilities\\":{\\"critical\\":1,\\"high\\":1,\\"medium\\":1,\\"low\\":1}}\\n","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1678928471\\",\\"note\\":\\"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
             reason: 'Completed',
             startedAt: '2023-03-16T01:01:11Z',
           },
@@ -6229,7 +6229,7 @@ export const mockTaskRuns = [
       ],
       taskResults: [
         {
-          name: 'CLAIR_SCAN_RESULT',
+          name: 'CVE_SCAN_RESULT',
           type: 'string',
           value: '{"vulnerabilities":{"critical":1,"high":1,"medium":1,"low":1}}\n',
         },
@@ -6237,7 +6237,7 @@ export const mockTaskRuns = [
           name: 'TEST_OUTPUT',
           type: 'string',
           value:
-            '{"result":"SUCCESS","timestamp":"1678928471","note":"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair","namespace":"default","successes":0,"failures":0,"warnings":0}\n',
+            '{"result":"SUCCESS","timestamp":"1678928471","note":"Please refer to result CVE_SCAN_RESULT for the vulnerabilities scanned by clair","namespace":"default","successes":0,"failures":0,"warnings":0}\n',
         },
       ],
       taskSpec: {
@@ -6267,7 +6267,7 @@ export const mockTaskRuns = [
           },
           {
             description: 'clair scan result',
-            name: 'CLAIR_SCAN_RESULT',
+            name: 'CVE_SCAN_RESULT',
             type: 'string',
           },
         ],

@@ -10,7 +10,7 @@ import {
   WhenStatus,
 } from '@patternfly/react-topology';
 import { PipelineNodeModel } from '@patternfly/react-topology/src/pipelines/types';
-import { SCAN_RESULT } from '../../../../hooks/useScanResults';
+import { isCVEScanResult } from '../../../../hooks/useScanResults';
 import { formatPrometheusDuration } from '../../../../shared/components/timestamp/datetime';
 import {
   TaskRunKind,
@@ -210,9 +210,7 @@ export const appendStatus = (
           // ignore
         }
       }
-      const scanResult = taskRun?.status?.taskResults?.find(
-        (result) => result.name === SCAN_RESULT,
-      );
+      const scanResult = taskRun?.status?.taskResults?.find((result) => isCVEScanResult(result));
 
       if (scanResult) {
         try {
