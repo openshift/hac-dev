@@ -7,6 +7,7 @@ const renderFunction = (
   {
     onChange,
     type,
+    children,
     ...baseProps
   }: Omit<BaseInputFieldProps, 'onChange' | 'type'> &
     Omit<React.ComponentProps<typeof FileUpload>, 'validated'>,
@@ -25,7 +26,9 @@ const renderFunction = (
   return (
     <BaseInputField {...baseProps}>
       {(props) => (
-        <FileUpload ref={ref} {...props} onChange={onChangeHandle} id={baseProps.id} type={type} />
+        <FileUpload ref={ref} {...props} onChange={onChangeHandle} id={baseProps.id} type={type}>
+          {children}
+        </FileUpload>
       )}
     </BaseInputField>
   );
