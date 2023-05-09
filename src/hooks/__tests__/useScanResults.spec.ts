@@ -36,7 +36,7 @@ describe('useScanResults', () => {
           status: {
             taskResults: [
               {
-                name: 'CLAIR_SCAN_RESULT',
+                name: 'CVE_SCAN_RESULT',
                 value: '{ "vulnerabilities": { "critical": 1, "high": 2, "medium": 3, "low": 4 } }',
               },
             ],
