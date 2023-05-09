@@ -5,11 +5,16 @@ import { mockApplication, componentCRMocks } from '../../Components/__data__/moc
 import SampleImportForm from '../SampleImportForm';
 import { createResources } from '../utils/submit-utils';
 import { ImportStrategy } from '../utils/types';
+import { useValidApplicationName } from '../utils/useValidApplicationName';
 
 jest.mock('../../../utils/analytics');
 
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
+}));
+
+jest.mock('../utils/useValidApplicationName', () => ({
+  useValidApplicationName: jest.fn(),
 }));
 
 jest.mock('../utils/submit-utils.ts', () => ({
@@ -37,6 +42,7 @@ configure({ testIdAttribute: 'data-test' });
 
 const createResourcesMock = createResources as jest.Mock;
 const useNavigateMock = useNavigate as jest.Mock;
+const useValidApplicationNameMock = useValidApplicationName as jest.Mock;
 
 describe('SampleImportForm', () => {
   let navigateMock;
@@ -44,14 +50,22 @@ describe('SampleImportForm', () => {
   beforeEach(() => {
     navigateMock = jest.fn();
     useNavigateMock.mockImplementation(() => navigateMock);
+    useValidApplicationNameMock.mockReturnValue(['my-app', true]);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
+  it('should show the spinner when app name recommendation is not loaded', () => {
+    useValidApplicationNameMock.mockReturnValue(['', false]);
+
+    render(<SampleImportForm applicationName="" />);
+    screen.getByRole('progressbar');
+  });
+
   it('should render correct section, title and actions for sample form', () => {
-    render(<SampleImportForm applicationName="" recommendedApplicationName="my-app" />);
+    render(<SampleImportForm applicationName="" />);
 
     screen.getByTestId('sample-section');
     screen.getByText('Select a sample');
@@ -65,7 +79,7 @@ describe('SampleImportForm', () => {
       application: mockApplication,
       components: componentCRMocks,
     });
-    render(<SampleImportForm applicationName="" recommendedApplicationName="my-app" />);
+    render(<SampleImportForm applicationName="" />);
 
     const importSampleButton = screen.getByTestId('import-sample-button');
 
@@ -96,7 +110,7 @@ describe('SampleImportForm', () => {
       application: mockApplication,
       components: componentCRMocks,
     });
-    render(<SampleImportForm applicationName="" recommendedApplicationName="my-app" />);
+    render(<SampleImportForm applicationName="" />);
 
     const importSampleButton = screen.getByTestId('import-sample-button');
 

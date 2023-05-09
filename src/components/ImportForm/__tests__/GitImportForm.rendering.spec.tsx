@@ -35,12 +35,7 @@ describe('GitImportForm rendering', () => {
 
   it('should render correct section, title and actions for source step', () => {
     render(
-      <GitImportForm
-        applicationName=""
-        recommendedApplicationName="my-app"
-        reviewMode={false}
-        setReviewMode={setReviewModeMock}
-      />,
+      <GitImportForm applicationName="" reviewMode={false} setReviewMode={setReviewModeMock} />,
     );
 
     screen.getByTestId('source-section');
@@ -50,12 +45,7 @@ describe('GitImportForm rendering', () => {
 
   it('should render correct section, title and actions for review step', () => {
     render(
-      <GitImportForm
-        applicationName=""
-        recommendedApplicationName="my-app"
-        reviewMode={true}
-        setReviewMode={setReviewModeMock}
-      />,
+      <GitImportForm applicationName="" reviewMode={true} setReviewMode={setReviewModeMock} />,
     );
 
     screen.getByTestId('review-section');

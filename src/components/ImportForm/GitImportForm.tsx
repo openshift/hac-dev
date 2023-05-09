@@ -27,14 +27,12 @@ import { reviewValidationSchema, sourceValidationSchema } from './utils/validati
 
 type GitImportFormProps = {
   applicationName: string;
-  recommendedApplicationName: string;
   reviewMode: boolean;
   setReviewMode: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
   applicationName,
-  recommendedApplicationName,
   reviewMode,
   setReviewMode,
 }) => {
@@ -43,7 +41,7 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
   const { namespace, workspace } = useWorkspaceInfo();
 
   const initialValues: ImportFormValues = {
-    application: applicationName || recommendedApplicationName,
+    application: applicationName || '',
     inAppContext: applicationName ? true : false,
     components: [],
     source: {

@@ -22,7 +22,8 @@ import GitImportErrors from '../GitImportErrors';
 import { useComponentDetection } from '../utils/cdq-utils';
 import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues } from '../utils/types';
-import { containerImageRegex } from '../utils/validation-utils';
+import { useValidApplicationName } from '../utils/useValidApplicationName';
+import { containerImageRegex, gitUrlRegex } from '../utils/validation-utils';
 import { ReviewComponentCard } from './ReviewComponentCard';
 
 const ComponentLoadingState: React.FC = () => {
@@ -47,11 +48,13 @@ const ComponentLoadingState: React.FC = () => {
 const ReviewSection: React.FunctionComponent = () => {
   const {
     values: {
+      inAppContext,
       source: {
         git: { url: sourceUrl, revision, context },
       },
       secret,
     },
+    isSubmitting,
     setFieldValue,
   } = useFormikContext<ImportFormValues>();
   const cachedComponents = React.useRef([]);
@@ -64,6 +67,14 @@ const ReviewSection: React.FunctionComponent = () => {
     context,
     revision,
   );
+
+  const [validAppName] = useValidApplicationName(sourceUrl);
+
+  React.useEffect(() => {
+    if (sourceUrl && gitUrlRegex.test(sourceUrl) && !inAppContext && !isSubmitting) {
+      setFieldValue('application', validAppName);
+    }
+  }, [sourceUrl, inAppContext, validAppName, setFieldValue, isSubmitting]);
 
   React.useEffect(() => {
     let unmounted = false;

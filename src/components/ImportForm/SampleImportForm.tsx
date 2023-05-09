@@ -22,19 +22,17 @@ import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import SampleSection from './SampleSection/SampleSection';
 import { createResources } from './utils/submit-utils';
 import { ImportFormValues, ImportStrategy } from './utils/types';
+import { useValidApplicationName } from './utils/useValidApplicationName';
 
 type SampleImportFormProps = {
   applicationName: string;
-  recommendedApplicationName: string;
 };
 
-const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({
-  applicationName,
-  recommendedApplicationName,
-}) => {
+const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({ applicationName }) => {
   const navigate = useNavigate();
   const track = useTrackEvent();
   const { namespace, workspace } = useWorkspaceInfo();
+  const [validAppName, appNameloaded] = useValidApplicationName();
 
   const [submitting, setSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState('');
@@ -45,7 +43,7 @@ const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({
       track(TrackEvents.ButtonClicked, { link_name: 'import-submit', workspace });
 
       const values: ImportFormValues = {
-        application: applicationName || recommendedApplicationName,
+        application: applicationName || validAppName,
         inAppContext: applicationName ? true : false,
         source: {
           git: {
@@ -90,8 +88,16 @@ const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({
           setSubmitError(error.message);
         });
     },
-    [applicationName, namespace, navigate, recommendedApplicationName, track, workspace],
+    [applicationName, namespace, navigate, validAppName, track, workspace],
   );
+
+  if (!appNameloaded) {
+    return (
+      <Bullseye>
+        <Spinner />
+      </Bullseye>
+    );
+  }
 
   return (
     <PageSection variant={PageSectionVariants.light} padding={{ default: 'noPadding' }}>
