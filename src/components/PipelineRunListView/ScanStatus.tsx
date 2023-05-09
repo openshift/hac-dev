@@ -1,12 +1,10 @@
 import React from 'react';
 import { Skeleton } from '@patternfly/react-core';
-import { useScanResults } from '../../hooks/useScanResults';
+import { ScanResults } from '../../hooks/useScanResults';
 import { ScanDetailStatus } from '../PipelineRunDetailsView/tabs/ScanDetailStatus';
 
-export const ScanStatus: React.FC<{ pipelineRunName: string }> = ({ pipelineRunName }) => {
-  const [scanResults, loaded] = useScanResults(pipelineRunName);
-
-  if (!loaded) {
+export const ScanStatus: React.FC<{ scanResults?: ScanResults }> = ({ scanResults }) => {
+  if (scanResults === undefined) {
     return <Skeleton screenreaderText="Loading Vulnerability Scan status" />;
   }
 
@@ -14,5 +12,5 @@ export const ScanStatus: React.FC<{ pipelineRunName: string }> = ({ pipelineRunN
     return <>-</>;
   }
 
-  return <ScanDetailStatus scanResults={scanResults} />;
+  return <ScanDetailStatus scanResults={scanResults} condensed />;
 };

@@ -21,12 +21,17 @@ export const MediumIcon = () => <EqualsIcon title="Medium" color={goldColor.valu
 
 export const LowIcon = () => <AngleDoubleDownIcon title="Low" color={blueColor.value} />;
 
-export const ScanDetailStatus: React.FC<{ scanResults: ScanResults }> = ({ scanResults }) => (
+type ScanDetailStatusProps = {
+  scanResults: ScanResults;
+  condensed?: boolean;
+};
+
+export const ScanDetailStatus: React.FC<ScanDetailStatusProps> = ({ scanResults, condensed }) => (
   <div className="scan-detail-status">
     <div className="scan-detail-status__severity" data-testid="scan-status-critical-test-id">
       <span className="scan-detail-status__severity-status">
         <CriticalIcon />
-        Critical
+        {!condensed ? 'Critical' : null}
       </span>
       <span className="scan-detail-status__severity-count">
         {scanResults.vulnerabilities.critical}
@@ -35,14 +40,14 @@ export const ScanDetailStatus: React.FC<{ scanResults: ScanResults }> = ({ scanR
     <div className="scan-detail-status__severity" data-testid="scan-status-high-test-id">
       <span className="scan-detail-status__severity-status">
         <HighIcon />
-        High
+        {!condensed ? 'High' : null}
       </span>
       <span className="scan-detail-status__severity-count">{scanResults.vulnerabilities.high}</span>
     </div>
     <div className="scan-detail-status__severity" data-testid="scan-status-medium-test-id">
       <span className="scan-detail-status__severity-status">
         <MediumIcon />
-        Medium
+        {!condensed ? 'Medium' : null}
       </span>
       <span className="scan-detail-status__severity-count">
         {scanResults.vulnerabilities.medium}
@@ -51,7 +56,7 @@ export const ScanDetailStatus: React.FC<{ scanResults: ScanResults }> = ({ scanR
     <div className="scan-detail-status__severity" data-testid="scan-status-low-test-id">
       <span className="scan-detail-status__severity-status">
         <LowIcon />
-        Low
+        {!condensed ? 'Low' : null}
       </span>
       <span className="scan-detail-status__severity-count">{scanResults.vulnerabilities.low}</span>
     </div>
