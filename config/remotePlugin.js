@@ -408,6 +408,19 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
+      path: '/application-pipeline/environments/workspaces',
+      exact: true,
+      component: {
+        $codeRef: 'EnvironmentsListPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
       path: '/application-pipeline/environments/workspaces/:workspaceName/create',
       exact: true,
       component: {
