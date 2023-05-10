@@ -617,7 +617,7 @@ export const MockCommit = {
             },
           ],
         },
-        serviceAccountName: 'pipeline',
+        serviceAccountName: 'appstudio-pipeline',
         timeout: '1h0m0s',
         workspaces: [
           {
@@ -5211,7 +5211,7 @@ export const MockBuildPipelines = [
           },
         ],
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
       workspaces: [
         {
@@ -7954,7 +7954,7 @@ export const MockTestPipelines = [
         bundle: 'quay.io/kpavic/test-bundle:component-pipeline-pass',
         name: 'component-pipeline-pass',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
     },
     status: {
@@ -8045,7 +8045,7 @@ export const MockTestPipelines = [
         bundle: 'quay.io/kpavic/test-bundle:component-pipeline-pass',
         name: 'component-pipeline-pass',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
     },
     status: {
@@ -8138,7 +8138,7 @@ export const MockTestPipelines = [
         bundle: 'quay.io/kpavic/test-bundle:pipeline',
         name: 'demo-pipeline',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
     },
     status: {
@@ -8299,7 +8299,7 @@ export const MockTestPipelines = [
         bundle: 'quay.io/kpavic/test-bundle:component-pipeline-pass',
         name: 'component-pipeline-pass',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
     },
     status: {

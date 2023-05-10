@@ -1928,8 +1928,8 @@ export const mockPods: PodKind[] = [
       terminationGracePeriodSeconds: 30,
       activeDeadlineSeconds: 5400,
       dnsPolicy: 'ClusterFirst',
-      serviceAccountName: 'pipeline',
-      serviceAccount: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
+      serviceAccount: 'appstudio-pipeline',
       nodeName: 'ip-10-205-29-65.ec2.internal',
       securityContext: {
         seLinuxOptions: {
@@ -2724,8 +2724,8 @@ export const mockPods: PodKind[] = [
       terminationGracePeriodSeconds: 30,
       activeDeadlineSeconds: 5400,
       dnsPolicy: 'ClusterFirst',
-      serviceAccountName: 'pipeline',
-      serviceAccount: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
+      serviceAccount: 'appstudio-pipeline',
       nodeName: 'ip-10-205-29-65.ec2.internal',
       securityContext: {
         seLinuxOptions: {
@@ -3307,8 +3307,8 @@ export const mockPods: PodKind[] = [
       terminationGracePeriodSeconds: 30,
       activeDeadlineSeconds: 5400,
       dnsPolicy: 'ClusterFirst',
-      serviceAccountName: 'pipeline',
-      serviceAccount: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
+      serviceAccount: 'appstudio-pipeline',
       nodeName: 'ip-10-205-29-65.ec2.internal',
       securityContext: {
         seLinuxOptions: {
@@ -3893,8 +3893,8 @@ export const mockPods: PodKind[] = [
       terminationGracePeriodSeconds: 30,
       activeDeadlineSeconds: 5400,
       dnsPolicy: 'ClusterFirst',
-      serviceAccountName: 'pipeline',
-      serviceAccount: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
+      serviceAccount: 'appstudio-pipeline',
       nodeName: 'ip-10-205-29-65.ec2.internal',
       securityContext: {
         seLinuxOptions: {
@@ -4466,8 +4466,8 @@ export const mockPods: PodKind[] = [
       terminationGracePeriodSeconds: 30,
       activeDeadlineSeconds: 5400,
       dnsPolicy: 'ClusterFirst',
-      serviceAccountName: 'pipeline',
-      serviceAccount: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
+      serviceAccount: 'appstudio-pipeline',
       nodeName: 'ip-10-205-26-223.ec2.internal',
       securityContext: {
         seLinuxOptions: {

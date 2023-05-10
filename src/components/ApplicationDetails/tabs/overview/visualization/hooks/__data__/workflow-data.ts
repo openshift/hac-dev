@@ -71,7 +71,7 @@ export const sampleBuildPipelines: PipelineRunKind[] = [
           'quay.io/redhat-appstudio/build-templates-bundle:19cf17aa63a1c65eee897af8430dbb9c1682d77a',
         name: 'docker-build',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
       workspaces: [
         {
@@ -202,7 +202,7 @@ export const sampleBuildPipelines: PipelineRunKind[] = [
           'quay.io/redhat-appstudio/build-templates-bundle:19cf17aa63a1c65eee897af8430dbb9c1682d77a',
         name: 'docker-build',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
       workspaces: [
         {
@@ -292,7 +292,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
         bundle: 'quay.io/kpavic/test-bundle:component-pipeline-pass',
         name: 'component-pipeline-pass',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
     },
     status: {

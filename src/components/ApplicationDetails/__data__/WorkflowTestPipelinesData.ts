@@ -67,7 +67,7 @@ export const mockTestPipelinesData = [
         bundle: 'quay.io/kpavic/test-bundle:component-pipeline-pass',
         name: 'component-pipeline-pass',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
     },
     status: {
@@ -401,7 +401,7 @@ export const mockTestPipelinesData = [
         bundle: 'quay.io/kpavic/test-bundle:component-pipeline-pass',
         name: 'component-pipeline-pass',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
     },
     status: {
@@ -735,7 +735,7 @@ export const mockTestPipelinesData = [
         bundle: 'quay.io/kpavic/test-bundle:component-pipeline-pass',
         name: 'component-pipeline-pass',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
     },
     status: {

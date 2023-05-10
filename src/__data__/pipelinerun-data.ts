@@ -167,7 +167,7 @@ const samplePipelineRun: PipelineRunKind = {
       },
     ],
     pipelineSpec: samplePipelineSpec,
-    serviceAccountName: 'pipeline',
+    serviceAccountName: 'appstudio-pipeline',
     timeout: '1h0m0s',
   },
 };
@@ -586,7 +586,7 @@ export const testPipelineRuns: TestPipelineRuns = {
           },
         },
       ],
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
     },
     status: {

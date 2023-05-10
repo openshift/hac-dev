@@ -598,7 +598,7 @@ export const mockPipelineRun = {
         },
       ],
     },
-    serviceAccountName: 'pipeline',
+    serviceAccountName: 'appstudio-pipeline',
     timeout: '1h0m0s',
     workspaces: [
       {
@@ -5314,7 +5314,7 @@ export const mockTaskRuns = [
         },
       ],
       resources: {},
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         bundle:
           'quay.io/redhat-appstudio-tekton-catalog/task-git-clone:0.1@sha256:f4e37778cba00296606ddfbc1c58181330899cafcaa1ee41c75a7cf8bed312f0',
@@ -5679,7 +5679,7 @@ export const mockTaskRuns = [
         },
       ],
       resources: {},
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         bundle:
           'quay.io/redhat-appstudio-tekton-catalog/task-deprecated-image-check:0.1@sha256:28d724dd6f6c365b2a839d9e52baac91559fd78c160774769c1ec724301f78d4',
@@ -5917,7 +5917,7 @@ export const mockTaskRuns = [
         },
       ],
       resources: {},
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         bundle:
           'quay.io/redhat-appstudio-tekton-catalog/task-sanity-inspect-image:0.1@sha256:fd4efd9d12eea3a8d47532c4226e685618845d0ba95abb98e008020243d96301',
@@ -6162,7 +6162,7 @@ export const mockTaskRuns = [
         },
       ],
       resources: {},
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         bundle:
           'quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1@sha256:fba8170329ab00b864ee7d16e0358df4c4386880e10894fd7bbbb1457112477b',
@@ -6399,7 +6399,7 @@ export const mockTaskRuns = [
         },
       ],
       resources: {},
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         bundle:
           'quay.io/redhat-appstudio-tekton-catalog/task-sanity-label-check:0.1@sha256:534770bf7a7c10277ab5f9c1e7b766abbffb343cc864dd9545aecc5278257dc3',
@@ -6583,7 +6583,7 @@ export const mockTaskRuns = [
     },
     spec: {
       resources: {},
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         bundle:
           'quay.io/redhat-appstudio-tekton-catalog/task-sanity-label-check:0.1@sha256:534770bf7a7c10277ab5f9c1e7b766abbffb343cc864dd9545aecc5278257dc3',
@@ -6790,7 +6790,7 @@ export const mockTaskRuns = [
         },
       ],
       resources: {},
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         bundle:
           'quay.io/redhat-appstudio-tekton-catalog/task-init:0.1@sha256:5ce77110e2a49407a69a7922042dc0859f7e8f5f75dc0cd0bcc2d17860469bdb',
@@ -7028,7 +7028,7 @@ export const mockTaskRuns = [
         },
       ],
       resources: {},
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         bundle:
           'quay.io/redhat-appstudio-tekton-catalog/task-clamav-scan:0.1@sha256:28b425322aa84f988c6c4f8d503787b3fb301668b2ad6728846b8f8c45ba012b',
@@ -7335,7 +7335,7 @@ export const mockTaskRuns = [
         },
       ],
       resources: {},
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         bundle:
           'quay.io/redhat-appstudio-tekton-catalog/task-summary:0.1@sha256:03361504506b038934d2a2ed397970f183f9a23506b810bccc964f4c486bfe79',
@@ -7521,7 +7521,7 @@ export const mockTaskRuns = [
         },
       ],
       resources: {},
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         bundle:
           'quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.1@sha256:c3712257615d206ef40013bf1c5c681670fc8f7fd6aac9fa4c86f7afeff627ef',
@@ -8010,7 +8010,7 @@ export const mockTaskRuns = [
         },
       ],
       resources: {},
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         bundle:
           'quay.io/redhat-appstudio-tekton-catalog/task-sbom-json-check:0.1@sha256:ce6a0932da9b41080108284d1366fc2de8374fca5137500138e16ad9e04610c6',

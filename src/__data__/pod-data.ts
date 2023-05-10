@@ -23,8 +23,8 @@ export const samplePod: PodKind = {
     terminationGracePeriodSeconds: 30,
     activeDeadlineSeconds: 5395,
     dnsPolicy: 'ClusterFirst',
-    serviceAccountName: 'pipeline',
-    serviceAccount: 'pipeline',
+    serviceAccountName: 'appstudio-pipeline',
+    serviceAccount: 'appstudio-pipeline',
     nodeName: 'ip-10-0-202-33.us-east-2.compute.internal',
     securityContext: {
       seLinuxOptions: {

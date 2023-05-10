@@ -31,6 +31,7 @@ import {
   ComponentDetectionQueryKind,
   SPIAccessTokenBindingKind,
 } from '../types';
+import { PIPELINE_SERVICE_ACCOUNT } from './../consts/pipeline';
 import { ComponentSpecs } from './../types/component';
 import { PAC_ANNOTATION } from './component-utils';
 
@@ -343,7 +344,7 @@ export const createSupportedPartnerSecret = async (
           {
             serviceAccount: {
               reference: {
-                name: 'pipeline',
+                name: PIPELINE_SERVICE_ACCOUNT,
               },
             },
           },

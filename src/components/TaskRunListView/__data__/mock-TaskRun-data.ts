@@ -81,7 +81,7 @@ export const testTaskRuns: TaskRunKind[] = [
       },
     },
     spec: {
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         kind: 'Task',
         name: 'example-task',
@@ -199,7 +199,7 @@ export const testTaskRuns: TaskRunKind[] = [
       },
     },
     spec: {
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       taskRef: {
         kind: 'Task',
         name: 'example-task',
