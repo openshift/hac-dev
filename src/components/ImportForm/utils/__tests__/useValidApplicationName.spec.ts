@@ -1,6 +1,7 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { renderHook } from '@testing-library/react-hooks';
-import { useValidApplicationName } from '../useValidApplicationName';
+import { ApplicationKind } from '../../../../types';
+import { incrementNameCount, useValidApplicationName } from '../useValidApplicationName';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
@@ -21,5 +22,20 @@ describe('useValidApplicationName', () => {
     watchResourceMock.mockReturnValue([testAppData, true]);
     const { result } = renderHook(() => useValidApplicationName());
     expect(result.current[0]).toBe('my-app-3');
+  });
+});
+
+describe('incrementNameCount', () => {
+  it('should return with preffered application name', () => {
+    expect(incrementNameCount(testAppData as ApplicationKind[], 'new-app')).toBe('new-app');
+  });
+
+  it('should return next available incremented name', () => {
+    testAppData.push({ metadata: { name: 'new-app' } });
+    expect(incrementNameCount(testAppData as ApplicationKind[], 'new-app')).toBe('new-app-1');
+  });
+
+  it('should fallback to base name', () => {
+    expect(incrementNameCount(testAppData as ApplicationKind[])).toBe('my-app-3');
   });
 });

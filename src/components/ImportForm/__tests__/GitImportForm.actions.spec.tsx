@@ -53,12 +53,7 @@ describe('GitImportForm actions', () => {
 
   it('should handle form reset', () => {
     render(
-      <GitImportForm
-        applicationName=""
-        recommendedApplicationName="my-app"
-        reviewMode={true}
-        setReviewMode={setReviewModeMock}
-      />,
+      <GitImportForm applicationName="" reviewMode={true} setReviewMode={setReviewModeMock} />,
     );
     const formikProps = FormikMock.mock.calls[0][0] as React.ComponentProps<typeof Formik>;
 
@@ -71,24 +66,18 @@ describe('GitImportForm actions', () => {
 
   it('should not set inAppContext if application name is not passed', () => {
     render(
-      <GitImportForm
-        applicationName=""
-        recommendedApplicationName="my-app"
-        reviewMode={true}
-        setReviewMode={setReviewModeMock}
-      />,
+      <GitImportForm applicationName="" reviewMode={true} setReviewMode={setReviewModeMock} />,
     );
     const formikProps = FormikMock.mock.calls[0][0] as React.ComponentProps<typeof Formik>;
 
     expect(formikProps.initialValues.inAppContext).toBe(false);
-    expect(formikProps.initialValues.application).toBe('my-app');
+    expect(formikProps.initialValues.application).toBe('');
   });
 
   it('should set inAppContext if application name is passed', () => {
     render(
       <GitImportForm
         applicationName="my-app"
-        recommendedApplicationName="my-app-1"
         reviewMode={true}
         setReviewMode={setReviewModeMock}
       />,
@@ -104,7 +93,6 @@ describe('GitImportForm actions', () => {
     render(
       <GitImportForm
         applicationName="my-app"
-        recommendedApplicationName="my-app-1"
         reviewMode={true}
         setReviewMode={setReviewModeMock}
       />,
@@ -127,12 +115,7 @@ describe('GitImportForm actions', () => {
     };
     createApplicationMock.mockRejectedValue({ code: 409, message: 'App already exist!' });
     render(
-      <GitImportForm
-        applicationName=""
-        recommendedApplicationName="my-app"
-        reviewMode={true}
-        setReviewMode={setReviewModeMock}
-      />,
+      <GitImportForm applicationName="" reviewMode={true} setReviewMode={setReviewModeMock} />,
     );
     const formikProps = FormikMock.mock.calls[0][0] as React.ComponentProps<typeof Formik>;
 
