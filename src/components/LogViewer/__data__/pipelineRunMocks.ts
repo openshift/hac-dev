@@ -275,7 +275,7 @@ export const pipelineRunMock = {
         'quay.io/redhat-appstudio/build-templates-bundle:8201a567956ba6d2095d615ea2c0f6ab35f9ba5f',
       name: 'docker-build',
     },
-    serviceAccountName: 'pipeline',
+    serviceAccountName: 'appstudio-pipeline',
     timeout: '1h0m0s',
     workspaces: [
       {

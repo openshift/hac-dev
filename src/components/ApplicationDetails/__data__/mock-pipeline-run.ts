@@ -66,7 +66,7 @@ export const mockPipelineRuns = [
           'quay.io/redhat-appstudio/build-templates-bundle:ad4c34b71d468a991450b0091cd96765471ed82d',
         name: 'docker-build',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
       workspaces: [
         {
@@ -561,7 +561,7 @@ export const mockPipelineRuns = [
           'quay.io/redhat-appstudio/build-templates-bundle:ad4c34b71d468a991450b0091cd96765471ed82d',
         name: 'docker-build',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
       workspaces: [
         {

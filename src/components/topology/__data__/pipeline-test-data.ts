@@ -175,7 +175,7 @@ export const testPipelineRun: PipelineRunKind = {
     pipelineRef: {
       name: 'sum-and-multiply-pipeline',
     },
-    serviceAccountName: 'pipeline',
+    serviceAccountName: 'appstudio-pipeline',
     timeout: '1h0m0s',
   },
   status: {

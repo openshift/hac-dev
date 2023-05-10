@@ -55,7 +55,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
         bundle: 'quay.io/redhat-appstudio/example-tekton-bundle:integration-pipeline-pass',
         name: 'integration-pipeline-pass',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
     },
     status: {
@@ -391,7 +391,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
         bundle: 'quay.io/redhat-appstudio/example-tekton-bundle:integration-pipeline-pass',
         name: 'integration-pipeline-pass',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
     },
     status: {
       childReferences: [

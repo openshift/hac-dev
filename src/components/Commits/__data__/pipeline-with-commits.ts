@@ -185,7 +185,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
           'quay.io/redhat-appstudio/build-templates-bundle:ab259a6fef091698b0fc145537338fa78f521c1f',
         name: 'docker-build',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
       workspaces: [
         {
@@ -415,7 +415,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
           'quay.io/redhat-appstudio/build-templates-bundle:ab259a6fef091698b0fc145537338fa78f521c1f',
         name: 'docker-build',
       },
-      serviceAccountName: 'pipeline',
+      serviceAccountName: 'appstudio-pipeline',
       timeout: '1h0m0s',
       workspaces: [
         {

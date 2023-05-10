@@ -28,6 +28,6 @@ export enum SecretAnnotationId {
 
 export const preferredNameAnnotation = 'pipeline.openshift.io/preferredName';
 
-export const PIPELINE_SERVICE_ACCOUNT = 'pipeline';
+export const PIPELINE_SERVICE_ACCOUNT = 'appstudio-pipeline';
 
 export const PIPELINE_NAMESPACE = 'openshift-pipelines';
