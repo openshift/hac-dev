@@ -29,6 +29,28 @@ describe('TaskRunDetailsTab', () => {
     expect(screen.queryByText('Task run details')).toBeInTheDocument();
   });
 
+  it('should render the taskrun details tab for embeddedt taskrun', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    const taskRunWithSpec = {
+      ...testTaskRuns[0],
+      spec: {
+        taskSpec: {
+          steps: [
+            {
+              image: 'ubuntu',
+              name: 'echo',
+              script: '#!/usr/bin/env bash\necho "Hello world!"\n',
+            },
+          ],
+        },
+      },
+    };
+    render(<TaskRunDetailsTab taskRun={taskRunWithSpec} error={null} />, {
+      wrapper: BrowserRouter,
+    });
+    expect(screen.queryByText('Task run details')).toBeInTheDocument();
+  });
+
   it('should render the taskrun and task name and description', () => {
     watchResourceMock.mockReturnValue([[], true]);
     render(<TaskRunDetailsTab taskRun={testTaskRuns[0]} error={null} />, {
