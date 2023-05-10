@@ -5,5 +5,6 @@
 }
 .key-value--wrapper + .key-value--wrapper {
   border-top: 1px solid var(--pf-global--BorderColor--100);
+  margin-top: var(--pf-global--spacer--md);
   padding-top: var(--pf-global--spacer--sm);
 }
