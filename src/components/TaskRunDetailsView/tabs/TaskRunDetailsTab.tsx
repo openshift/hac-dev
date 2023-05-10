@@ -103,7 +103,7 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
                   default: '1Col',
                 }}
               >
-                {taskRun.spec.taskRef.name && (
+                {taskRun.spec.taskRef?.name && (
                   <DescriptionListGroup>
                     <DescriptionListTerm>Task</DescriptionListTerm>
                     <DescriptionListDescription>
