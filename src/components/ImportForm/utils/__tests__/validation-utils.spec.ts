@@ -241,7 +241,13 @@ describe('Review form validation schema', () => {
     values.components[0].componentStub.source.git.dockerfileUrl = '.Dockerfile.prod';
     await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
 
-    values.components[0].componentStub.source.git.dockerfileUrl = 'Dockerfile.prod.bad';
+    values.components[0].componentStub.source.git.dockerfileUrl = 'Dockerfile.something.prod';
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+
+    values.components[0].componentStub.source.git.dockerfileUrl = 'Dockerfile.something.else.prod';
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+
+    values.components[0].componentStub.source.git.dockerfileUrl = 'Dockerfile.bad.';
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
       'Must be a valid relative file path or URL.',
     );
