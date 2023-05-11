@@ -58,7 +58,9 @@ describe('SourceSection', () => {
     renderSourceSection();
 
     expect(screen.getByPlaceholderText('Enter your source')).toBeInvalid();
-    expect(screen.getByText('Unable to access repository')).toBeVisible();
+    expect(
+      screen.getByText("Looks like your repository is private, so we're not able to access it."),
+    ).toBeVisible();
   });
 
   it('displays error when provider is not supported', async () => {
@@ -93,7 +95,9 @@ describe('SourceSection', () => {
     await user.type(input, 'https://github.com/openshift/');
 
     await waitFor(() => expect(screen.getByPlaceholderText('Enter your source')).toBeInvalid());
-    await waitFor(() => expect(screen.getByText('Not a valid source repository')).toBeVisible());
+    await waitFor(() =>
+      expect(screen.getByText("That repository URL isn't quite right. Try again.")).toBeVisible(),
+    );
   });
 
   it('should not show Authorization or Git options if input is invalid', async () => {

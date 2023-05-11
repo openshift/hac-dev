@@ -8,7 +8,6 @@ import { getFieldId, InputField } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
 import { ServiceProviderType } from '../../../types';
 import { HeadTitle } from '../../HeadTitle';
-import HelpPopover from '../../HelpPopover';
 import { useAccessCheck } from '../utils/auth-utils';
 import { ImportFormValues } from '../utils/types';
 import { gitUrlRegex } from '../utils/validation-utils';
@@ -96,7 +95,7 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
           const { organization } = gitUrlParse(sourceUrl);
           if (!organization) {
             setValidated(ValidatedOptions.error);
-            setHelpTextInvalid('Not a valid source repository');
+            setHelpTextInvalid("That repository URL isn't quite right. Try again.");
             return;
           }
         } catch {
@@ -112,7 +111,9 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
         ) {
           setValidated(ValidatedOptions.error);
           setFieldValue('source.isValidated', false);
-          setHelpTextInvalid('Unable to access repository');
+          setHelpTextInvalid(
+            "Looks like your repository is private, so we're not able to access it.",
+          );
           // setShowAuthOptions(true);
         } else if (!serviceProvider) {
           setValidated(ValidatedOptions.error);
@@ -164,7 +165,6 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
           label={label}
           validated={!isValid && ValidatedOptions.error}
           isRequired
-          labelIcon={<HelpPopover bodyContent="Make sure the URL is correct." />}
         >
           <InputField
             name="source.git.url"
