@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner, Title } from '@patternfly/react-core';
-import { PipelineRunLabel } from '../../../consts/pipelinerun';
-import { PipelineRunGroupVersionKind } from '../../../models';
+import { usePipelineRunsWithStatus } from '../../../hooks';
 import { Table } from '../../../shared';
 import { PipelineRunKind } from '../../../types';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
@@ -18,16 +16,8 @@ const IntegrationTestPipelineRunTab: React.FC<IntegrationTestPipelineRunTabProps
 }) => {
   const { namespace } = useWorkspaceInfo();
 
-  const [pipelineRuns, loaded] = useK8sWatchResource<PipelineRunKind[]>({
-    groupVersionKind: PipelineRunGroupVersionKind,
-    namespace,
-    isList: true,
-    selector: {
-      matchLabels: {
-        [PipelineRunLabel.APPLICATION]: applicationName,
-        [IntegrationTestLabels.SCENARIO]: testName,
-      },
-    },
+  const [pipelineRunsWithStatus, loaded] = usePipelineRunsWithStatus(namespace, applicationName, {
+    [IntegrationTestLabels.SCENARIO]: testName,
   });
 
   if (!loaded) {
@@ -38,11 +28,11 @@ const IntegrationTestPipelineRunTab: React.FC<IntegrationTestPipelineRunTabProps
     );
   }
 
-  if (!pipelineRuns || pipelineRuns.length === 0) {
+  if (!pipelineRunsWithStatus || pipelineRunsWithStatus.length === 0) {
     return <PipelineRunEmptyState applicationName={applicationName} />;
   }
 
-  pipelineRuns?.sort(
+  pipelineRunsWithStatus?.sort(
     (app1, app2) =>
       +new Date(app2.metadata.creationTimestamp) - +new Date(app1.metadata.creationTimestamp),
   );
@@ -53,7 +43,7 @@ const IntegrationTestPipelineRunTab: React.FC<IntegrationTestPipelineRunTabProps
         Pipeline runs
       </Title>
       <Table
-        data={pipelineRuns}
+        data={pipelineRunsWithStatus}
         aria-label="Pipeline run List"
         Header={PipelineRunListHeader}
         Row={PipelineRunListRow}
