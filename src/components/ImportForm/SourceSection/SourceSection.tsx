@@ -94,7 +94,7 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
           const { organization } = gitUrlParse(sourceUrl);
           if (!organization) {
             setValidated(ValidatedOptions.error);
-            setHelpTextInvalid('Not a valid source repository');
+            setHelpTextInvalid("That repository URL isn't quite right. Try again.");
             return;
           }
         } catch {
@@ -110,7 +110,9 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
         ) {
           setValidated(ValidatedOptions.error);
           setFieldValue('source.isValidated', false);
-          setHelpTextInvalid('Unable to access repository');
+          setHelpTextInvalid(
+            "Looks like your repository is private, so we're not able to access it.",
+          );
           // setShowAuthOptions(true);
         } else if (!serviceProvider) {
           setValidated(ValidatedOptions.error);
