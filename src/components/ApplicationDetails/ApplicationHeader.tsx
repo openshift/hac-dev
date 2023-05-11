@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Button, Flex, FlexItem, Text, Tooltip } from '@patternfly/react-core';
-import { OutlinedCopyIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-copy-icon';
-import { global_palette_blue_400 as linkColor } from '@patternfly/react-tokens/dist/js/global_palette_blue_400';
+import { Flex, FlexItem, Text, Truncate } from '@patternfly/react-core';
+import ExternalLinkAltIcon from '@patternfly/react-icons/dist/js/icons/external-link-alt-icon';
 import { useApplicationHealthStatus, useLatestApplicationRouteURL } from '../../hooks';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
@@ -10,18 +9,8 @@ import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import { ApplicationThumbnail } from './ApplicationThumbnail';
 
 export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ application }) => {
-  const [urlCopied, setUrlCopied] = React.useState<boolean>(false);
-
   const selectedComponentRoute = useLatestApplicationRouteURL(application.metadata.name);
   const [healthStatus, healthStatusloaded] = useApplicationHealthStatus(application.metadata.name);
-
-  const onCopyButtonClick = React.useCallback(() => {
-    navigator.clipboard.writeText(selectedComponentRoute);
-    setUrlCopied(true);
-    setTimeout(() => {
-      setUrlCopied(false);
-    }, 3000);
-  }, [selectedComponentRoute]);
 
   return (
     <Flex>
@@ -43,23 +32,20 @@ export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ 
         </Flex>
         <FlexItem>
           {selectedComponentRoute && (
-            <>
-              <ExternalLink href={selectedComponentRoute}>
-                {selectedComponentRoute.length > 40
-                  ? `${selectedComponentRoute.slice(0, 40)}...`
-                  : selectedComponentRoute}
-              </ExternalLink>{' '}
-              <Tooltip content={urlCopied ? 'URL Copied' : 'Copy URL'}>
-                <Button
-                  variant="plain"
-                  data-testid="route-copy-icon"
-                  isInline
-                  onClick={onCopyButtonClick}
-                >
-                  <OutlinedCopyIcon color={linkColor.value} />
-                </Button>
-              </Tooltip>
-            </>
+            <ExternalLink href={selectedComponentRoute} dataTestID="component-route-link">
+              <Flex>
+                <FlexItem flex={{ default: 'flex_3' }}>
+                  <Truncate
+                    position="middle"
+                    content={selectedComponentRoute}
+                    trailingNumChars={Math.min(selectedComponentRoute.length / 2, 30)}
+                  />
+                </FlexItem>
+                <FlexItem>
+                  <ExternalLinkAltIcon size="sm" />
+                </FlexItem>
+              </Flex>
+            </ExternalLink>
           )}
         </FlexItem>
       </FlexItem>

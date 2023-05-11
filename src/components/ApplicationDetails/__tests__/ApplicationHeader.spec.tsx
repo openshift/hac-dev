@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { configure, render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { configure, render, screen } from '@testing-library/react';
 import {
   useApplicationHealthStatus,
   useApplicationRoutes,
@@ -13,7 +12,7 @@ import { getComponentRouteWebURL } from '../../../utils/route-utils';
 import { ApplicationHeader } from '../ApplicationHeader';
 import '@testing-library/jest-dom';
 
-configure({ testIdAttribute: 'data-testid' });
+configure({ testIdAttribute: 'data-test-id' });
 
 jest.mock('../../../hooks/useComponents', () => {
   return {
@@ -75,7 +74,7 @@ describe('ApplicationHeader', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('should show route in the application if it is available', () => {
+  it('should show ExternalLink in the application if it is available', () => {
     sortedComponentMocks.mockReturnValueOnce([[{ metadata: { name: 'basic-node-js' } }], true]);
     applicationRoutesMock.mockReturnValue([mockRoutes, true]);
     applicationHealthSTatusMock.mockReturnValue([{ status: 'Succeded' }, true]);
@@ -90,12 +89,10 @@ describe('ApplicationHeader', () => {
         }
       />,
     );
-    expect(
-      screen.queryByText(`${getComponentRouteWebURL(mockRoutes, 'basic-node-js').slice(0, 40)}...`),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId('component-route-link')).toBeInTheDocument();
   });
 
-  it('should show tooltip on copy button if it is available', async () => {
+  it('should show truncated URL with middle truncate', async () => {
     sortedComponentMocks.mockReturnValueOnce([[{ metadata: { name: 'basic-node-js' } }], true]);
     applicationRoutesMock.mockReturnValue([mockRoutes, true]);
     applicationHealthSTatusMock.mockReturnValue([{ status: 'Succeded' }, true]);
@@ -109,15 +106,8 @@ describe('ApplicationHeader', () => {
         }
       />,
     );
-
-    expect(
-      screen.queryByText(`${getComponentRouteWebURL(mockRoutes, 'basic-node-js').slice(0, 40)}...`),
-    ).toBeInTheDocument();
-
-    const user = userEvent.setup();
-
-    await waitFor(() => user.hover(screen.getByTestId('route-copy-icon')));
-
-    await waitFor(() => expect(screen.getByText('Copy URL')).toBeInTheDocument());
+    expect(screen.getByTestId('component-route-link')).toBeInTheDocument();
+    expect(screen.getByText('https://nodejs-test.apps.appstudio-s')).toBeInTheDocument(); // truncated first half
+    expect(screen.getByText('tage.x99m.p1.openshiftapps.com')).toBeInTheDocument(); // truncated second half
   });
 });
