@@ -60,17 +60,15 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
   const DetectingRuntime = 'Detecting runtime...';
 
   const items = React.useMemo(() => {
-    return (
-      [
-        ...(samples || []).map((s) => ({
-          key: s.uid,
-          value: s.name,
-          icon: <img src={s.icon.url} />,
-        })),
-        ...(!detectionFailed ? [dockerFileSample] : []),
-      ] || []
-    );
-  }, [samples, detectionFailed]);
+    return [
+      ...(samples || []).map((s) => ({
+        key: s.uid,
+        value: s.name,
+        icon: <img src={s.icon.url} />,
+      })),
+      dockerFileSample,
+    ];
+  }, [samples]);
 
   const onChange = (value: string) => {
     const runtime = samples.find((s) => value.includes(s.name));
