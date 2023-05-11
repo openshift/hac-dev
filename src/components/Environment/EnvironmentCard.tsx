@@ -15,11 +15,14 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
   pluralize,
+  CardFooter,
 } from '@patternfly/react-core';
 import { useEnvironmentActions } from '../../components/Environment/environment-actions';
+import { useLatestApplicationRouteURL } from '../../hooks';
 import { EnvironmentKindWithHealthStatus } from '../../hooks/useAllApplicationEnvironmentsWithHealthStatus';
 import { useApplications } from '../../hooks/useApplications';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
+import ExternalLink from '../../shared/components/links/ExternalLink';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { EnvironmentKind } from '../../types';
 import { getEnvironmentDeploymentStrategyLabel } from '../../utils/environment-utils';
@@ -64,13 +67,19 @@ const ApplicationEnvironmentStatus: React.FC<{
 type EnvironmentCardProps = {
   environment: EnvironmentKind;
   readOnly?: boolean;
+  applicationName?: string;
 };
 
-const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment, readOnly }) => {
+const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
+  environment,
+  readOnly,
+  applicationName,
+}) => {
   const actions = useEnvironmentActions(environment);
   const type = getEnvironmentType(environment);
   const { namespace, workspace } = useWorkspaceInfo();
   const [applications, appsLoaded] = useApplications(namespace);
+  const applicationRoute = useLatestApplicationRouteURL(applicationName);
 
   return (
     <Card isFlat>
@@ -127,11 +136,11 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment, readOnly
             environment={environment as EnvironmentKindWithHealthStatus}
           />
 
-          {appsLoaded && applications?.length > 0 && (
+          {!applicationName && appsLoaded && applications?.length > 0 && (
             <DescriptionListGroup>
-              <DescriptionListTerm>Applications Deployed</DescriptionListTerm>
+              <DescriptionListTerm>Applications deployed</DescriptionListTerm>
               <DescriptionListDescription>
-                <Link to={`/stonesoup/workspaces/${workspace}/applications`}>
+                <Link to={`/application-pipeline/workspaces/${workspace}/applications`}>
                   {pluralize(applications.length, 'application')}
                 </Link>
               </DescriptionListDescription>
@@ -139,6 +148,18 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({ environment, readOnly
           )}
         </DescriptionList>
       </CardBody>
+
+      {applicationName && applicationRoute && (
+        <CardFooter>
+          <DescriptionList columnModifier={{ default: '2Col' }}>
+            <DescriptionListGroup>
+              <DescriptionListDescription>
+                <ExternalLink href={applicationRoute}>View URL</ExternalLink>
+              </DescriptionListDescription>
+            </DescriptionListGroup>
+          </DescriptionList>
+        </CardFooter>
+      )}
     </Card>
   );
 };

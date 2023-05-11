@@ -14,7 +14,7 @@ const RedirectPage: React.FunctionComponent = () => {
     hash: location.hash,
   };
 
-  return <Navigate to={to} />;
+  return <Navigate to={to} replace />;
 };
 
 export default RedirectPage;

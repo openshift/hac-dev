@@ -344,7 +344,7 @@ describe('PipelineRunDetailsTab', () => {
     expect(screen.getByText('View SBOM')).toBeInTheDocument();
     expect(screen.getByText('View SBOM')).toHaveProperty(
       'href',
-      'http://localhost/stonesoup/workspaces/test-ws/applications/my-app/taskruns/sum-and-multiply-pipeline-8mhx4-show-sbom/logs',
+      'http://localhost/application-pipeline/workspaces/test-ws/applications/my-app/taskruns/sum-and-multiply-pipeline-8mhx4-show-sbom/logs',
     );
   });
 });

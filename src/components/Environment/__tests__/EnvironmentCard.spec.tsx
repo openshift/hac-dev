@@ -3,6 +3,7 @@ import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import '@testing-library/jest-dom';
 import { getActiveWorkspace, useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen } from '@testing-library/react';
+import { useLatestApplicationRouteURL } from '../../../hooks';
 import { EnvironmentModel } from '../../../models';
 import { EnvironmentKind } from '../../../types';
 import EnvironmentCard from '../EnvironmentCard';
@@ -18,6 +19,10 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 jest.mock('../../../utils/rbac', () => ({
   useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
+jest.mock('../../../hooks', () => ({
+  useLatestApplicationRouteURL: jest.fn(),
 }));
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -40,6 +45,7 @@ const getActiveWorkspaceMock = getActiveWorkspace as jest.Mock;
 getActiveWorkspaceMock.mockReturnValue('test-ws');
 
 const useK8sWatchMock = useK8sWatchResource as jest.Mock;
+const useLatestApplicationRouteURLMock = useLatestApplicationRouteURL as jest.Mock;
 
 const testEnv: EnvironmentKind = {
   apiVersion: `${EnvironmentModel.apiGroup}/${EnvironmentModel.apiVersion}`,
@@ -101,7 +107,22 @@ describe('', () => {
     };
     useK8sWatchMock.mockReturnValue([[{ metadata: { name: 'test-app' } }], true]);
     render(<EnvironmentCard environment={env} />);
-    expect(screen.getByText('Applications Deployed')).toBeVisible();
+    expect(screen.getByText('Applications deployed')).toBeVisible();
     expect(screen.getByText('1 application')).toBeVisible();
+  });
+
+  it('should render Application Route URL', () => {
+    const env = {
+      ...testEnv,
+      spec: {
+        ...testEnv.spec,
+        displayName: undefined,
+      },
+    };
+    useK8sWatchMock.mockReturnValue([[{ metadata: { name: 'test-app' } }], true]);
+    useLatestApplicationRouteURLMock.mockReturnValue('https://example.com/');
+    render(<EnvironmentCard environment={env} applicationName="test" />);
+    expect(screen.getByText('View URL')).toBeVisible();
+    expect(screen.getByText('View URL')).toHaveProperty('href', 'https://example.com/');
   });
 });

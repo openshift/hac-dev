@@ -27,7 +27,7 @@ import { applicationQuickstartContent } from './ApplicationQuickstartContent';
 import DetailsPage from './DetailsPage';
 import ApplicationOverviewTab from './tabs/ApplicationOverviewTab';
 import ComponentsTab from './tabs/ComponentsTab';
-import EnvironmentsTab from './tabs/EnvironmentsTab';
+import DeploymentsTab from './tabs/DeploymentsTab';
 import IntegrationTestsTab from './tabs/IntegrationTestsTab';
 
 import './ApplicationDetails.scss';
@@ -235,9 +235,9 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             component: <IntegrationTestsTab applicationName={applicationName} />,
           },
           {
-            key: 'environments',
-            label: 'Environments',
-            component: <EnvironmentsTab applicationName={applicationName} />,
+            key: 'deployments',
+            label: 'Deployments',
+            component: <DeploymentsTab applicationName={applicationName} />,
           },
         ]}
       />

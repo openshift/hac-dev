@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { configure, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useApplicationHealthStatus, useApplicationRoutes } from '../../../hooks';
+import {
+  useApplicationHealthStatus,
+  useApplicationRoutes,
+  useLatestApplicationRouteURL,
+} from '../../../hooks';
 import { mockRoutes } from '../../../hooks/__data__/mock-data';
 import { useSortedComponents } from '../../../hooks/useComponents';
 import { ApplicationKind } from '../../../types';
@@ -23,12 +27,14 @@ jest.mock('../../../hooks', () => {
     ...actual,
     useApplicationHealthStatus: jest.fn(),
     useApplicationRoutes: jest.fn(),
+    useLatestApplicationRouteURL: jest.fn(),
   };
 });
 
 const sortedComponentMocks = useSortedComponents as jest.Mock;
 const applicationRoutesMock = useApplicationRoutes as jest.Mock;
 const applicationHealthSTatusMock = useApplicationHealthStatus as jest.Mock;
+const latesAppRouteMock = useLatestApplicationRouteURL as jest.Mock;
 
 describe('ApplicationHeader', () => {
   it('should render Application header', () => {
@@ -73,6 +79,7 @@ describe('ApplicationHeader', () => {
     sortedComponentMocks.mockReturnValueOnce([[{ metadata: { name: 'basic-node-js' } }], true]);
     applicationRoutesMock.mockReturnValue([mockRoutes, true]);
     applicationHealthSTatusMock.mockReturnValue([{ status: 'Succeded' }, true]);
+    latesAppRouteMock.mockReturnValue(getComponentRouteWebURL(mockRoutes, 'basic-node-js'));
     render(
       <ApplicationHeader
         application={
