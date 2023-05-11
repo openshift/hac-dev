@@ -24,7 +24,6 @@ import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import AppEmptyState from '../EmptyState/AppEmptyState';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import EnvironmentCard from './EnvironmentCard';
-import EnvironmentsInfoAlert from './EnvironmentsInfoAlert';
 
 import './EnvironmentList.scss';
 
@@ -35,6 +34,7 @@ type EnvironmentListProps = {
   ToolbarGroups?: React.ReactNode;
   onClearAllFilters?: () => void;
   readOnly?: boolean;
+  applicationName?: string;
 };
 
 const EnvironmentList: React.FC<EnvironmentListProps> = ({
@@ -44,6 +44,7 @@ const EnvironmentList: React.FC<EnvironmentListProps> = ({
   filter,
   onClearAllFilters,
   readOnly = false,
+  applicationName,
 }) => {
   const { workspace } = useWorkspaceInfo();
   const [nameFilter, setNameFilter, unsetNameFilter] = useSearchParam('name', '');
@@ -113,7 +114,6 @@ const EnvironmentList: React.FC<EnvironmentListProps> = ({
 
   return (
     <>
-      <EnvironmentsInfoAlert />
       <Toolbar
         collapseListedFiltersBreakpoint="xl"
         clearAllFilters={onClearAllFilters}
@@ -152,7 +152,11 @@ const EnvironmentList: React.FC<EnvironmentListProps> = ({
               data-test="environment-card"
               className="environment-list_card"
             >
-              <EnvironmentCard environment={env} readOnly={readOnly} />
+              <EnvironmentCard
+                environment={env}
+                readOnly={readOnly}
+                applicationName={applicationName}
+              />
             </GridItem>
           ))}
         </Grid>

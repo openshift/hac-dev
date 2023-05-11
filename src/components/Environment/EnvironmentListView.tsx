@@ -101,6 +101,7 @@ const ApplicationEnvironmentListView: React.FC<EnvironmentListViewProps> = ({
         setTypesFilter([]);
       }}
       readOnly={true}
+      applicationName={applicationName}
     />
   );
 };

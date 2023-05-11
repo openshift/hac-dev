@@ -191,7 +191,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                     <DescriptionListTerm>SBOM</DescriptionListTerm>
                     <DescriptionListDescription>
                       <Link
-                        to={`/stonesoup/workspaces/${workspace}/applications/${
+                        to={`/application-pipeline/workspaces/${workspace}/applications/${
                           sbomTaskRun.metadata.labels[PipelineRunLabel.APPLICATION]
                         }/taskruns/${sbomTaskRun.metadata.name}/logs`}
                       >

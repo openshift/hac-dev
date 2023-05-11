@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
 import EnvironmentListView from '../components/Environment/EnvironmentListView';
+import EnvironmentsInfoAlert from '../components/Environment/EnvironmentsInfoAlert';
 import { HelpTopicLink } from '../components/HelpTopicLink/HelpTopicLink';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
@@ -37,6 +38,7 @@ const EnvironmentsListPage: React.FC = () => {
           }
         >
           <PageSection variant={PageSectionVariants.light} isFilled>
+            <EnvironmentsInfoAlert />
             <EnvironmentListView />
           </PageSection>
         </PageLayout>
