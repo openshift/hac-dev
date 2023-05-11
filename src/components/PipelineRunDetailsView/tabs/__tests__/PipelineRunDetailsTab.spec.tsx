@@ -303,6 +303,33 @@ describe('PipelineRunDetailsTab', () => {
     expect(screen.queryByText('Download SBOM')).toBeInTheDocument();
   });
 
+  it('should render the download SBOM section for a pipelinerun with IMAGE_URL result', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    const simplePipelineRun = {
+      ...testPipelineRun,
+      status: {
+        ...testPipelineRun.status,
+        pipelineResults: [
+          {
+            name: 'IMAGE_URL',
+            value: 'quay.io/test/user-workload:test-image',
+          },
+        ],
+      },
+    };
+    render(
+      <PipelineRunDetailsTab
+        pipelineRun={simplePipelineRun}
+        taskRuns={getTaskRunsFromPLR(simplePipelineRun)}
+        error={null}
+      />,
+      {
+        wrapper: BrowserRouter,
+      },
+    );
+    expect(screen.queryByText('Download SBOM')).toBeInTheDocument();
+  });
+
   it('should not render the download SBOM section for a pipelinerun without any image annotation', () => {
     watchResourceMock.mockReturnValue([[], true]);
 

@@ -56,10 +56,12 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
       : '',
   );
   const sha =
-    pipelineRun?.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] ||
-    pipelineRun?.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];
+    pipelineRun.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] ||
+    pipelineRun.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];
   const applicationName = pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION];
-  const buildImage = pipelineRun.metadata?.annotations?.[PipelineRunLabel.BUILD_IMAGE_ANNOTATION];
+  const buildImage =
+    pipelineRun.metadata?.annotations?.[PipelineRunLabel.BUILD_IMAGE_ANNOTATION] ||
+    pipelineRun.status?.pipelineResults?.find(({ name }) => name === `IMAGE_URL`)?.value;
   const sourceUrl = getSourceUrl(pipelineRun);
   const pipelineStatus = !error ? pipelineRunStatus(pipelineRun) : null;
   const sbomTaskRun = React.useMemo(() => getSbomTaskRun(taskRuns), [taskRuns]);
@@ -71,9 +73,9 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
       </Title>
       <PipelineRunVisualization pipelineRun={pipelineRun} error={error} taskRuns={taskRuns} />
       {!error && (
-        <Flex>
-          <Flex flex={{ default: 'flex_3' }}>
-            <FlexItem>
+        <>
+          <Flex direction={{ default: 'row' }}>
+            <FlexItem style={{ flex: 1 }}>
               <DescriptionList
                 data-test="pipelinerun-details"
                 columnModifier={{
@@ -116,10 +118,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                 </DescriptionListGroup>
               </DescriptionList>
             </FlexItem>
-          </Flex>
-
-          <Flex flex={{ default: 'flex_3' }}>
-            <FlexItem>
+            <FlexItem style={{ flex: 1 }}>
               <DescriptionList
                 data-test="pipelinerun-details"
                 columnModifier={{
@@ -271,6 +270,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
               </DescriptionList>
             </FlexItem>
           </Flex>
+
           {pipelineRun.status?.pipelineResults ? (
             <>
               <Divider style={{ padding: 'var(--pf-global--spacer--lg) 0' }} />
@@ -280,7 +280,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
               />
             </>
           ) : null}
-        </Flex>
+        </>
       )}
     </>
   );
