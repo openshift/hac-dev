@@ -17,6 +17,7 @@
     "axe-core": "^4.4.2",
     "cypress": "12.7.0",
     "cypress-axe": "^1.4.0",
+    "cypress-high-resolution": "^1.0.0",
     "cypress-mochawesome-reporter": "^3.4.0",
     "cypress-multi-reporters": "^1.6.0",
     "cypress-terminal-report": "^5.0.2",

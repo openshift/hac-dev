@@ -134,6 +134,7 @@ export default defineConfig({
         CLEAN_NAMESPACE: 'false',
         PR_CHECK: false,
         PERIODIC_RUN: false,
+        resolution: 'high',
       };
 
       for (const key in defaultValues) {
@@ -158,6 +159,7 @@ export default defineConfig({
           });
         config.reporterOptions.reporterEnabled = reporters.join(',');
       }
+      require('cypress-high-resolution')(on, config);
       return config;
     },
   },
