@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Bullseye,
   SearchInput,
@@ -15,12 +14,10 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { getScanResults } from '../../hooks/useScanResults';
+import { usePipelineRunsWithStatus } from '../../hooks';
 import { useSearchParam } from '../../hooks/useSearchParam';
-import { useTaskRuns } from '../../hooks/useTaskRuns';
-import { PipelineRunGroupVersionKind } from '../../models';
 import { Table } from '../../shared';
-import { PipelineRunKind, TektonResourceLabel } from '../../types';
+import { PipelineRunKind } from '../../types';
 import { statuses } from '../../utils/commits-utils';
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
@@ -35,54 +32,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [statusFilterExpanded, setStatusFilterExpanded] = React.useState<boolean>(false);
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
-  const [taskRuns, taskRunsLoaded] = useTaskRuns(namespace);
-
-  const [pipelineRuns, pipelineRunsLoaded] = useK8sWatchResource<PipelineRunKind[]>({
-    groupVersionKind: PipelineRunGroupVersionKind,
-    namespace,
-    isList: true,
-    selector: {
-      matchLabels: {
-        [PipelineRunLabel.APPLICATION]: applicationName,
-      },
-    },
-  });
-
-  const { pipelineRunsWithStatus, loaded } = React.useMemo(() => {
-    if (pipelineRunsLoaded && taskRunsLoaded) {
-      return {
-        pipelineRunsWithStatus: pipelineRuns.map((pipelineRun) => {
-          const taskRunsForPR = taskRuns.filter(
-            (taskRun) =>
-              taskRun.metadata?.labels?.[TektonResourceLabel.pipelinerun] ===
-              pipelineRun.metadata.name,
-          );
-
-          const scanResults = getScanResults(taskRunsForPR)[0];
-          return {
-            ...pipelineRun,
-            scanResults,
-          };
-        }),
-        loaded: true,
-      };
-    }
-    if (pipelineRunsLoaded) {
-      return {
-        pipelineRunsWithStatus: pipelineRuns.map((pipelineRun) => {
-          return {
-            ...pipelineRun,
-            scanResults: undefined,
-          };
-        }),
-        loaded: true,
-      };
-    }
-    return {
-      pipelineRunsWithStatus: [],
-      loaded: false,
-    };
-  }, [pipelineRuns, pipelineRunsLoaded, taskRuns, taskRunsLoaded]);
+  const [pipelineRunsWithStatus, loaded] = usePipelineRunsWithStatus(namespace, applicationName);
 
   const statusFilters = React.useMemo(
     () => (statusFiltersParam ? statusFiltersParam.split(',') : []),
