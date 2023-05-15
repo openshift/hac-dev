@@ -18,14 +18,12 @@ configure({ testIdAttribute: 'data-test' });
 describe('DetailsPage', () => {
   it('should render the DetailsPage', () => {
     const { getByTestId } = routerRenderer(
-      <DetailsPage headTitle="test" title="Details" baseURL="/" tabs={[]} />,
-    );
-    expect(getByTestId('details')).toBeInTheDocument();
-  });
-
-  it('should render the DetailsPage', () => {
-    const { getByTestId } = routerRenderer(
-      <DetailsPage headTitle="test" title="Details" baseURL="/" tabs={[]} />,
+      <DetailsPage
+        headTitle="test"
+        title="Details"
+        baseURL="/test"
+        tabs={[{ key: 'test', label: 'test', component: 'test' }]}
+      />,
     );
     expect(getByTestId('details')).toBeInTheDocument();
   });
@@ -33,6 +31,7 @@ describe('DetailsPage', () => {
   it('should not render the tabs if invalid values are passed', () => {
     routerRenderer(<DetailsPage headTitle="test" title="Details" baseURL="/" tabs={null} />);
     expect(screen.queryByTestId('app-details__tabs')).not.toBeInTheDocument();
+    expect(screen.getByText('404: Page not found')).toBeInTheDocument();
   });
 
   it('should render the tabs', () => {
@@ -88,7 +87,7 @@ describe('DetailsPage', () => {
         headTitle="test"
         title="Details"
         baseURL="/"
-        tabs={[]}
+        tabs={[{ key: 'test', label: 'test', component: 'test' }]}
         actions={[
           {
             type: 'section-label',
@@ -111,7 +110,7 @@ describe('DetailsPage', () => {
         headTitle="test"
         title="Details"
         baseURL="/"
-        tabs={[]}
+        tabs={[{ key: 'test', label: 'test', component: 'test' }]}
         actions={[
           {
             key: 'disabled-section',
@@ -143,7 +142,7 @@ describe('DetailsPage', () => {
         headTitle="test"
         title="Details"
         baseURL="/"
-        tabs={[]}
+        tabs={[{ key: 'test', label: 'test', component: 'test' }]}
         actions={[
           {
             key: 'disabled-section',
