@@ -53,7 +53,7 @@ const AboutSection: React.FC = () => (
             <CardTitle>Shift Left for DevSecOps</CardTitle>
             <CardBody>
               Out-of-the-box support for{' '}
-              <ExternalLink href="https://slsa.dev/spec/v0.1/levels">SLSA Level 3</ExternalLink>{' '}
+              <ExternalLink href="https://slsa.dev/spec/v1.0/levels">SLSA Level 3</ExternalLink>{' '}
               means you can identify critical vulnerabilities in your application much earlier with
               each pull request introspecting your direct and transitive dependencies.
             </CardBody>
