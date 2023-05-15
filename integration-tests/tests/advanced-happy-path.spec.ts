@@ -97,12 +97,11 @@ describe('Advanced Happy path', () => {
 
     it('Verify the Pipeline run details and Task runs', () => {
       Applications.goToPipelinerunsTab();
-      UIhelper.getTableRow('Pipeline run List', 'Running')
-        .contains(`${componentName}-on-push`)
+      cy.contains(`${componentName}-on-push`)
         .invoke('text')
         .then((pipelinerunName) => {
           componentInfo.firstPipelineRunName = pipelinerunName;
-          PipelinerunsTabPage.clickOnRunningPipelinerun(componentName);
+          UIhelper.clickLink(componentInfo.firstPipelineRunName);
           DetailsTab.waitUntilStatusIsNotRunning();
           DetailsTab.checkStatusSucceeded(
             TaskRunsTab.getAdvancedTaskNamesList(componentInfo.firstPipelineRunName),
@@ -203,12 +202,12 @@ describe('Advanced Happy path', () => {
 
     it('Verify and wait for the new Pipeline run', () => {
       Applications.goToPipelinerunsTab();
-      UIhelper.getTableRow('Pipeline run List', 'Running')
+      UIhelper.getTableRow('Pipeline run List', /Running|Pending/)
         .contains(`${componentName}-on-push`)
         .invoke('text')
         .then((pipelinerunName) => {
           componentInfo.secondPipelineRunName = pipelinerunName;
-          PipelinerunsTabPage.clickOnRunningPipelinerun(componentName);
+          UIhelper.clickLink(componentInfo.secondPipelineRunName);
           DetailsTab.waitUntilStatusIsNotRunning();
           DetailsTab.checkStatusSucceeded(
             TaskRunsTab.getAdvancedTaskNamesList(componentInfo.secondPipelineRunName),
