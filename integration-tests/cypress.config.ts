@@ -43,8 +43,10 @@ export default defineConfig({
     },
     cypressMochawesomeReporterReporterOptions: {
       charts: true,
-      embeddedScreenshots: true,
+      embeddedScreenshots: false,
       ignoreVideos: true,
+      reportDir: 'cypress',
+      inlineAssets: true,
     },
   },
   e2e: {
@@ -93,8 +95,16 @@ export default defineConfig({
         },
       });
 
+      on('before:run', async (details) => {
+        // cypress-mochawesome-reporter
+        await beforeRunHook(details);
+      });
+
       // workaround for report portal runs not finishing
       on('after:run', async () => {
+        // cypress-mochawesome-reporter
+        await afterRunHook();
+
         if (config.env.PR_CHECK === true) {
           let retries = 10;
           console.log('Wait for reportportal agent to finish...');
@@ -121,8 +131,6 @@ export default defineConfig({
             }
           }
         }
-        // cypress-mochawesome-reporter
-        await afterRunHook();
       });
 
       const defaultValues: { [key: string]: string | boolean } = {
