@@ -117,7 +117,7 @@ export const getLinkDataForElement = (
           };
     case WorkflowNodeType.STATIC_ENVIRONMENT:
       return {
-        tab: 'environments',
+        tab: 'deployments',
         filter:
           !groupNode && !isDisabled
             ? { name: 'name', value: label }
@@ -126,7 +126,7 @@ export const getLinkDataForElement = (
     case WorkflowNodeType.MANAGED_ENVIRONMENT:
     case WorkflowNodeType.RELEASE:
       return {
-        tab: 'environments',
+        tab: 'deployments',
         filter:
           !groupNode && !isDisabled
             ? { name: 'name', value: label }
