@@ -65,11 +65,7 @@ export class TaskRunsTab {
       { name: `${pipelineName}-clair-scan`, task: 'clair-scan', status: 'Succeeded|Test Failures' }, // Adding Test Warnings as some packages might have medium vulnerabilities sometimes
       { name: `${pipelineName}-clamav-scan`, task: 'clamav-scan', status: 'Succeeded' },
       { name: `${pipelineName}-label-check`, task: 'label-check', status: 'Succeeded' },
-      {
-        name: `${pipelineName}-optional-label-check`,
-        task: 'label-check',
-        status: 'Succeeded|Test Failures',
-      }, // Adding Test Failures as This optional check currently gives warning.
+      { name: `${pipelineName}-show-sbom`, task: 'show-sbom', status: 'Succeeded' },
       { name: `${pipelineName}-show-summary`, task: 'summary', status: 'Succeeded' },
     ];
   }
