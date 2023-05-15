@@ -1,10 +1,9 @@
 import React from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { useApplication } from '../../hooks/useApplications';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
 import {
   ApplicationModel,
   ComponentModel,
@@ -17,7 +16,7 @@ import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { MVP_FLAG } from '../../utils/flag-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
-import { ACTIVITY_SECONDARY_TAB_KEY, ActivityTab } from '../Activity/ActivityTab';
+import { ActivityTab } from '../Activity/ActivityTab';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { useModalLauncher } from '../modal/ModalProvider';
@@ -46,9 +45,6 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
     'create',
   );
   const [canDeleteApplication] = useAccessReviewForModel(ApplicationModel, 'delete');
-  const { activity: subTab } = useParams();
-  const [lastActivitySubTab] = useLocalStorage<string>(ACTIVITY_SECONDARY_TAB_KEY);
-  const activitySubTab = subTab || lastActivitySubTab || 'latest-commits';
 
   const navigate = useNavigate();
   const { quickStarts } = useChrome();
@@ -217,9 +213,10 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             component: <ApplicationOverviewTab applicationName={applicationName} />,
           },
           {
-            key: `activity/${activitySubTab}`,
+            key: 'activity',
             label: 'Activity',
             isFilled: true,
+            partial: true,
             className: 'application-details__activity',
             component: <ActivityTab applicationName={applicationName} />,
           },

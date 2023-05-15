@@ -37,6 +37,15 @@ export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicatio
     }
   }, [activeTab, lastSelectedTab, currentTab, setLocalStorageItem]);
 
+  React.useEffect(() => {
+    if (!activeTab && lastSelectedTab) {
+      navigate(
+        `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/${parentTab}/${lastSelectedTab}`,
+        { replace: true },
+      );
+    }
+  }, [activeTab, applicationName, lastSelectedTab, navigate, parentTab, workspace]);
+
   return (
     <>
       <Title size="xl" headingLevel="h3" className="pf-c-title pf-u-mt-lg pf-u-mb-sm">

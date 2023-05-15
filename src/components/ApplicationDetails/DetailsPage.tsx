@@ -22,6 +22,8 @@ import { CaretDownIcon } from '@patternfly/react-icons/dist/esm/icons/caret-down
 import cx from 'classnames';
 import { FULL_APPLICATION_TITLE } from '../../consts/labels';
 import BreadCrumbs from '../../shared/components/breadcrumbs/BreadCrumbs';
+import { HttpError } from '../../shared/utils/error/http-error';
+import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { HeadTitle } from '../HeadTitle';
 
 import './DetailsPage.scss';
@@ -39,6 +41,7 @@ type DetailsPageTabProps = {
   label: string;
   component: React.ReactNode;
   isDisabled?: true;
+  partial?: boolean;
   className?: string;
   isFilled?: boolean;
 };
@@ -158,13 +161,17 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
   };
 
   const activeTab: DetailsPageTabProps = React.useMemo(
-    () => tabs?.filter((t) => t.key === activeTabKey)[0],
+    () => tabs?.find((t) => (t.partial ? activeTabKey.startsWith(t.key) : t.key === activeTabKey)),
     [activeTabKey, tabs],
   );
 
+  if (!activeTab) {
+    return <ErrorEmptyState httpError={HttpError.fromCode(404)} />;
+  }
+
   return (
     <PageGroup data-test="details" className="app-details">
-      <HeadTitle>{`${headTitle} - ${activeTab?.label} | ${FULL_APPLICATION_TITLE}`}</HeadTitle>
+      <HeadTitle>{`${headTitle} - ${activeTab.label} | ${FULL_APPLICATION_TITLE}`}</HeadTitle>
       <PageSection type="breadcrumb">
         {breadcrumbs && <BreadCrumbs data-test="details__breadcrumbs" breadcrumbs={breadcrumbs} />}
         <Flex style={{ paddingTop: 'var(--pf-global--spacer--lg)' }}>
@@ -205,7 +212,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
               onTabSelect && onTabSelect(k);
             }}
             unmountOnExit
-            activeKey={activeTabKey}
+            activeKey={activeTab.key}
           >
             {tabComponents}
           </Tabs>

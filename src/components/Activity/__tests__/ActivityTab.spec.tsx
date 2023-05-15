@@ -26,7 +26,7 @@ const useNavigateMock = useNavigate as jest.Mock;
 const useParamsMock = useParams as jest.Mock;
 
 describe('Activity Tab', () => {
-  let navigateMock;
+  let navigateMock: jest.Mock;
 
   beforeEach(() => {
     navigateMock = jest.fn();
@@ -82,5 +82,16 @@ describe('Activity Tab', () => {
     const activeTab = tabs.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
     expect(activeTab).toHaveTextContent('Pipeline runs');
     activitiesPage.unmount();
+  });
+
+  it('should replace url if full path was not used', () => {
+    localStorage.setItem(ACTIVITY_SECONDARY_TAB_KEY, 'pipelineruns');
+
+    useParamsMock.mockReturnValue({ activeTab: 'activity' });
+    routerRenderer(<ActivityTab applicationName="abcd" />);
+    expect(navigateMock).toHaveBeenCalledWith(
+      '/application-pipeline/workspaces/test-ws/applications/abcd/activity/pipelineruns',
+      { replace: true },
+    );
   });
 });
