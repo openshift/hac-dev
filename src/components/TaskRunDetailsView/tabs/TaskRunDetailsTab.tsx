@@ -15,6 +15,7 @@ import {
 } from '@patternfly/react-core';
 import { TektonResourceLabel } from '../../../consts/pipeline';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
+import { SyncMarkdownView } from '../../../shared/components/markdown-view/MarkdownView';
 import { ErrorDetailsWithStaticLog } from '../../../shared/components/pipeline-run-logs/logs/log-snippet-types';
 import { getTRLogSnippet } from '../../../shared/components/pipeline-run-logs/logs/pipelineRunLogSnippet';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
@@ -114,7 +115,10 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
                 <DescriptionListGroup>
                   <DescriptionListTerm>Description</DescriptionListTerm>
                   <DescriptionListDescription>
-                    {taskRun.status?.taskSpec?.description || '-'}
+                    <SyncMarkdownView
+                      content={taskRun?.status?.taskSpec?.description || '-'}
+                      inline
+                    />
                   </DescriptionListDescription>
                 </DescriptionListGroup>
                 <DescriptionListGroup>

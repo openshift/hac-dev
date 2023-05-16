@@ -5,6 +5,7 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from '@patternfly/react-core';
+import { SyncMarkdownView } from '../../../shared/components/markdown-view/MarkdownView';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { TaskRunKind } from '../../../types';
 import { calculateDuration, runStatus } from '../../../utils/pipeline-utils';
@@ -40,7 +41,7 @@ const TaskRunDetails: React.FC<Props> = ({ taskRun, status }) => (
           <DescriptionListGroup>
             <DescriptionListTerm>Description</DescriptionListTerm>
             <DescriptionListDescription>
-              {taskRun?.status?.taskSpec?.description || '-'}
+              <SyncMarkdownView content={taskRun?.status?.taskSpec?.description || '-'} inline />
             </DescriptionListDescription>
           </DescriptionListGroup>
           <ScanDescriptionListGroup taskRuns={[taskRun]} hideIfNotFound />
