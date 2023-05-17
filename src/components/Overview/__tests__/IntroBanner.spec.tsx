@@ -51,6 +51,10 @@ describe('Intro Banner', () => {
         name: 'Info alert: We have received your request. While you are waiting, please join our Slack channel.',
       }),
     ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'https://dn.dev/DevNationSlack' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: '#software-supply-chain-security' }),
+    ).toBeInTheDocument();
   });
 
   it('should show create application action when user is signed up', () => {

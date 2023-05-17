@@ -14,6 +14,7 @@ describe('About section', () => {
   it('should render the links correctly in about section', () => {
     render(<AboutSection />);
     expect(screen.getByRole('link', { name: 'SLSA Level 3' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'https://dn.dev/DevNationSlack' })).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: '#software-supply-chain-security' }),
     ).toBeInTheDocument();

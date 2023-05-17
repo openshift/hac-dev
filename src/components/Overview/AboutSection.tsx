@@ -99,11 +99,15 @@ const AboutSection: React.FC = () => (
           <Card isLarge>
             <CardTitle>Contact us</CardTitle>
             <CardBody>
-              Join the{' '}
+              Join the DevNation Slack workspace here:{' '}
+              <ExternalLink href="https://dn.dev/DevNationSlack">
+                https://dn.dev/DevNationSlack
+              </ExternalLink>
+              , and then join our{' '}
               <ExternalLink href="https://rhdevnation.slack.com/channels/software-supply-chain-security">
                 #software-supply-chain-security
               </ExternalLink>{' '}
-              channel on Slack
+              channel.
             </CardBody>
           </Card>
         </StackItem>
