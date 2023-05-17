@@ -5,6 +5,7 @@ import {
   DropdownItem,
   DropdownItemProps,
   Badge,
+  ValidatedOptions,
 } from '@patternfly/react-core';
 import './BasicDropdown.scss';
 
@@ -22,6 +23,7 @@ type BasicDropdownProps = {
   fullWidth?: boolean;
   disabled?: boolean;
   dropdownToggle?: (onToggle: (isOpen: boolean) => void) => React.ReactElement;
+  validated?: ValidatedOptions;
 };
 
 const BasicDropdown: React.FC<BasicDropdownProps> = ({
@@ -32,6 +34,7 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
   placeholder,
   disabled,
   dropdownToggle,
+  validated,
 }) => {
   const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
   const onToggle = (isOpen: boolean) => setDropdownOpen(isOpen);
@@ -91,6 +94,7 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
       disabled={disabled}
       className="basic-dropdown"
       data-test="dropdown"
+      {...(validated === ValidatedOptions.error && { 'aria-invalid': true })}
     />
   );
 };

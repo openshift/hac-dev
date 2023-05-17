@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup } from '@patternfly/react-core';
+import { FormGroup, ValidatedOptions } from '@patternfly/react-core';
 import { useField, useFormikContext, FormikValues } from 'formik';
 import BasicDropdown from '../dropdown/BasicDropdown';
 import { DropdownFieldProps } from './field-types';
@@ -25,6 +25,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
   const fieldId = getFieldId(name, 'dropdown');
   const isValid = !(touched && error);
   const errorMessage = !isValid ? error : '';
+  const validated = isValid ? ValidatedOptions.default : ValidatedOptions.error;
 
   return (
     <FormGroup
@@ -33,11 +34,12 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
       labelIcon={labelIcon}
       helperText={helpText}
       helperTextInvalid={errorMessage}
-      validated={isValid ? 'default' : 'error'}
+      validated={validated}
       isRequired={required}
     >
       <BasicDropdown
         {...props}
+        validated={validated}
         disabled={isDisabled}
         items={items}
         selected={value ?? field.value}
