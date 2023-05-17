@@ -75,10 +75,8 @@ const IntroBanner: React.FC = () => {
                   </p>
                   <p>
                     Join the DevNation Slack workspace here:{' '}
-                    <ExternalLink href="https://dn.dev/DevNationSlack">
-                      https://dn.dev/DevNationSlack
-                    </ExternalLink>
-                    , and then join our{' '}
+                    <ExternalLink href="https://dn.dev/slack">https://dn.dev/slack</ExternalLink>,
+                    and then join our{' '}
                     <ExternalLink href="https://rhdevnation.slack.com/channels/software-supply-chain-security">
                       #software-supply-chain-security
                     </ExternalLink>{' '}
