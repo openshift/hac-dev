@@ -74,11 +74,15 @@ const IntroBanner: React.FC = () => {
                     and start using the service.
                   </p>
                   <p>
-                    Join the{' '}
+                    Join the DevNation Slack workspace here:{' '}
+                    <ExternalLink href="https://dn.dev/DevNationSlack">
+                      https://dn.dev/DevNationSlack
+                    </ExternalLink>
+                    , and then join our{' '}
                     <ExternalLink href="https://rhdevnation.slack.com/channels/software-supply-chain-security">
                       #software-supply-chain-security
                     </ExternalLink>{' '}
-                    channel on Slack
+                    channel.
                   </p>
                 </Alert>
               ) : (
