@@ -85,4 +85,21 @@ describe('DeleteResourceModal', () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'My App' } });
     expect(screen.getByText('Delete')).toBeEnabled();
   });
+
+  it('should show error and not close modal if deletion fails', async () => {
+    const obj = { apiVersion: 'v1', kind: 'Application', metadata: { name: 'test' } };
+    const onClose = jest.fn();
+    k8sDeleteMock.mockRejectedValue(new Error('Unable to delete'));
+    render(
+      <DeleteResourceModal
+        obj={obj}
+        model={ApplicationModel}
+        onClose={onClose}
+        displayName="My App"
+      />,
+    );
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'My App' } });
+    fireEvent.click(screen.getByText('Delete'));
+    await waitFor(() => expect(screen.getByText('Unable to delete')).toBeVisible());
+  });
 });
