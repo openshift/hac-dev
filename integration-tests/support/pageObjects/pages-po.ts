@@ -35,6 +35,13 @@ export const pipelinerunsTabPO = {
   downloadAllTaskLogsButton: 'Download all task logs',
   relatedPipelinePopup: 'div[class="pf-c-popover__content"]',
   relatedPipelineCloseBtn: 'button[aria-label="Close"]',
+
+  node: (nodeId) => `g[data-id="${nodeId}"]`,
+  logText: '[class="logs__content"]',
+  drawerPanel: 'div[class*="drawer__panel-main"]',
+  drawerClose: 'div[class="pf-c-drawer__close"]',
+  listGroup: 'div[class$="list__group"]',
+  PF4TableRow: '[data-ouia-component-type="PF4/TableRow"]',
 };
 
 export const integrationTestsTabPO = {

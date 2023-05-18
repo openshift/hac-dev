@@ -47,6 +47,51 @@ export class DetailsTab {
         }
       });
   }
+
+  static clickOnNode(nodeId: string) {
+    cy.get(pipelinerunsTabPO.node(nodeId)).click();
+  }
+
+  static checkNodeDrawerPanelResult(section: string, value: string) {
+    cy.contains(pipelinerunsTabPO.PF4TableRow, section)
+      .contains(value)
+      .scrollIntoView()
+      .should('be.visible');
+  }
+
+  static checkVulScanOnClairDrawer(vulnerabilities: RegExp) {
+    cy.get(pipelinerunsTabPO.drawerPanel)
+      .contains(pipelinerunsTabPO.listGroup, 'Vulnerabilities scan')
+      .contains(vulnerabilities)
+      .scrollIntoView()
+      .should('be.visible');
+  }
+
+  static checkVulScanOnPipelinerunDetails(vulnerabilities: RegExp) {
+    cy.contains(pipelinerunsTabPO.listGroup, 'Vulnerabilities scan')
+      .contains(vulnerabilities)
+      .scrollIntoView()
+      .should('be.visible');
+  }
+
+  static clickOnVulScanViewLogs() {
+    cy.contains(pipelinerunsTabPO.listGroup, 'Vulnerabilities scan').contains('View logs').click();
+  }
+
+  static clickOnDrawerPanelLogsTab() {
+    cy.get(pipelinerunsTabPO.drawerPanel).contains('button', 'Logs').click();
+  }
+
+  static verifyLogs(logText: string | RegExp) {
+    cy.get(pipelinerunsTabPO.logText)
+      .contains(logText, { timeout: 80000 })
+      .scrollIntoView()
+      .should('be.visible');
+  }
+
+  static closeDrawerPanel() {
+    cy.get(pipelinerunsTabPO.drawerClose).click().should('not.exist');
+  }
 }
 
 export class TaskRunsTab {
