@@ -68,7 +68,8 @@ COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z \
     -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` \
     -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` \
     -e CYPRESS_GH_PR_TITLE=${PR_TITLE} \
-    -e GH_COMMENTBODY=${GH_COMMENTBODY}"
+    -e GH_COMMENTBODY=${GH_COMMENTBODY} \
+    -e CYPRESS_REMOVE_APP_ON_FAIL=false"
 TEST_IMAGE="quay.io/hacdev/hac-tests:next"
 
 set +e
