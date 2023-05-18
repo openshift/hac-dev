@@ -6,7 +6,7 @@ import includes from 'lodash/includes';
 import reduce from 'lodash/reduce';
 import truncate from 'lodash/truncate';
 import uniqueId from 'lodash/uniqueId';
-import * as sanitizeHtml from 'sanitize-html';
+import sanitizeHtml from 'sanitize-html';
 import { Converter } from 'showdown';
 import { useForceRender, useResizeObserver } from '../../hooks';
 
