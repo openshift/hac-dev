@@ -21,16 +21,14 @@ describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
   after(function () {
     // If some test failed, don't remove the app
     let allTestsSucceeded = true;
-    if (
-      this.test.parent.eachTest((test) => {
-        if (test.state == 'failed') {
-          allTestsSucceeded = false;
-        }
-      })
-    )
-      if (allTestsSucceeded || Cypress.env('REMOVE_APP_ON_FAIL')) {
-        Applications.deleteApplication(applicationName);
+    this.test.parent.eachTest((test) => {
+      if (test.state == 'failed') {
+        allTestsSucceeded = false;
       }
+    });
+    if (allTestsSucceeded || Cypress.env('REMOVE_APP_ON_FAIL')) {
+      Applications.deleteApplication(applicationName);
+    }
   });
 
   it('Create an Application with a component', () => {
