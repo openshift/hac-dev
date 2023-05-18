@@ -128,7 +128,6 @@ describe('ReviewComponentCard', () => {
 
     expect(screen.getByText('Build & deploy configuration')).toBeInTheDocument();
 
-    expect(screen.queryByText('Dockerfile')).toBeVisible();
     expect(screen.queryByText('Target port')).toBeVisible();
     expect(screen.queryByText('Instances')).toBeVisible();
   });
@@ -211,5 +210,37 @@ describe('ReviewComponentCard', () => {
     expect(
       screen.queryByText(`We can't detect your target port. Check if it's correct.`),
     ).not.toBeInTheDocument();
+  });
+
+  it('should show dockerfile field if dockerfile runtime is selected', async () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    useFieldMock.mockReturnValue([{}, { value: 'Dockerfile' }]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+      />,
+      { isDetected: true, source: { git: {} } },
+    );
+    await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
+
+    expect(screen.queryByText('Dockerfile')).toBeVisible();
+  });
+
+  it('should not show dockerfile field if other runtimes are selected', async () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    useFieldMock.mockReturnValue([{}, { value: 'JavaScript' }]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+      />,
+      { isDetected: true, source: { git: {} } },
+    );
+    await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
+
+    expect(screen.queryByText('Dockerfile')).toBeNull();
   });
 });
