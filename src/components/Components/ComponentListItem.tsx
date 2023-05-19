@@ -18,7 +18,6 @@ import {
   Tooltip,
 } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
-import ExternalLinkAltIcon from '@patternfly/react-icons/dist/js/icons/external-link-alt-icon';
 import { global_palette_red_100 as redColor } from '@patternfly/react-tokens/dist/js/global_palette_red_100';
 import { PACState } from '../../hooks/usePACState';
 import { DeploymentGroupVersionKind } from '../../models/deployment';
@@ -130,9 +129,10 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
                         app_name: component.spec.application,
                         workspace,
                       }}
-                    >
-                      Route <ExternalLinkAltIcon />
-                    </ExternalLink>
+                      text="Route"
+                      showIcon
+                      size="sm"
+                    />
                   )}
                 </FlexItem>
               </Flex>
