@@ -13,8 +13,8 @@ import {
   Divider,
   TextContent,
 } from '@patternfly/react-core';
-import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import { ArrowRightIcon } from '@patternfly/react-icons/dist/js/icons/arrow-right-icon';
+import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { SampleAttrs } from '../utils/useDevfileSamples';
 
 type SampleCardProps = {
@@ -55,16 +55,7 @@ const SampleCard: React.FC<SampleCardProps> = ({ sample, onSampleImport }) => {
         <TextContent>{description}</TextContent>
       </CardBody>
       <CardFooter>
-        <Button
-          variant="link"
-          isInline
-          iconPosition="right"
-          icon={<ExternalLinkAltIcon style={{ marginLeft: 'var(--pf-global--spacer--xs)' }} />}
-          onClick={(e) => e.stopPropagation()}
-          component={(props) => <a {...props} href={sourceUrl} target="_blank" rel="noreferrer" />}
-        >
-          Open Git repository
-        </Button>
+        <ExternalLink showIcon text="Open Git repository" href={sourceUrl} />
       </CardFooter>
       <Divider />
       <CardFooter>

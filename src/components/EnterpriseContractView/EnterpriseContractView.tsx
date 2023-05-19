@@ -14,7 +14,6 @@ import {
 } from '@patternfly/react-core';
 import { ArrowRightIcon } from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
-import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import { EnterpriseContractPolicyGroupVersionKind } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { EnterpriseContractPolicyKind } from '../../types';
@@ -62,14 +61,7 @@ const EnterpriseContractView: React.FC = () => {
       <Text data-testid="enterprise-contract-title" component="p" className="pf-u-mt-lg">
         An Enterprise Contract (EC) is a set of release policies applied to your release target,
         also known as a managed environment.{' '}
-        <ExternalLink
-          href={ENTERPRISE_CONTRACT_INFO_LINK}
-          text={
-            <>
-              Learn more <ExternalLinkAltIcon />
-            </>
-          }
-        />
+        <ExternalLink href={ENTERPRISE_CONTRACT_INFO_LINK} text="Learn more" showIcon />
       </Text>
       <Title headingLevel="h3" className="pf-u-mt-md pf-u-mb-md">
         Release Policy
