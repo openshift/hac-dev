@@ -51,7 +51,7 @@ describe('Intro Banner', () => {
         name: 'Info alert: We have received your request. While you are waiting, please join our Slack channel.',
       }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'https://dn.dev/DevNationSlack' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'https://dn.dev/slack' })).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: '#software-supply-chain-security' }),
     ).toBeInTheDocument();
