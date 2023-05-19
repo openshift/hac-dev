@@ -185,9 +185,9 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
           <PageSection variant={PageSectionVariants.light}>
             <Form onSubmit={formikProps.handleSubmit} onReset={formikProps.handleReset}>
               {reviewMode ? <ReviewSection /> : <SourceSection />}
-              <GitImportActions reviewMode={reviewMode} onBack={handleBack} />
             </Form>
           </PageSection>
+          <GitImportActions reviewMode={reviewMode} onBack={handleBack} sticky={reviewMode} />
         </>
       )}
     </Formik>
