@@ -59,6 +59,7 @@ describe('Advanced Happy path', () => {
   };
 
   const integrationTestTaskNames = ['task-success', 'task-success-2', 'task-skipped'];
+  const vulnerabilities = /Critical(\d+).*High(\d+).*Medium(\d+).*Low(\d+)/g;
 
   before(() => {
     Common.createGitHubRepository(repoName);
@@ -120,9 +121,32 @@ describe('Advanced Happy path', () => {
     });
   });
 
+  describe('Verify CVE scan', () => {
+    it('Verify clair scan node details on drawer Panel', () => {
+      UIhelper.clickTab('Details');
+      DetailsTab.clickOnNode('clair-scan');
+      DetailsTab.checkVulScanOnClairDrawer(vulnerabilities);
+      DetailsTab.checkNodeDrawerPanelResult('TEST_OUTPUT', '"result":"SUCCESS"');
+      DetailsTab.clickOnDrawerPanelLogsTab();
+      DetailsTab.verifyLogs('Task clair-scan completed');
+      DetailsTab.closeDrawerPanel();
+    });
+
+    it('Verify vulnebralities on pipeline run Details Page', () => {
+      DetailsTab.checkVulScanOnPipelinerunDetails(vulnerabilities);
+      DetailsTab.clickOnVulScanViewLogs();
+      DetailsTab.verifyLogs('Task clair-scan completed');
+    });
+
+    it('Verify vulnebralities on pipeline run list', () => {
+      Applications.clickBreadcrumbLink('Pipeline runs');
+      UIhelper.getTableRow('Pipeline run List', componentInfo.firstPipelineRunName).within(() => {
+        cy.contains(vulnerabilities).should('be.visible');
+      });
+    });
+  });
   describe('Check Component Deployment', () => {
     it('Verify the status code and response body of the deployment URL of each component', () => {
-      Applications.clickBreadcrumbLink('Pipeline runs');
       Applications.goToComponentsTab();
       applicationDetailPage.expandDetails(componentName);
 
