@@ -121,9 +121,22 @@ describe('Advanced Happy path', () => {
     });
   });
 
+  describe('Verify SBOM on pipeline run details', () => {
+    it('Verify SBOM and logs', () => {
+      UIhelper.clickTab('Details');
+      DetailsTab.checkDownloadSBOM();
+      UIhelper.clickLink('View SBOM');
+      DetailsTab.verifyLogs('"bomFormat": "CycloneDX"');
+    });
+
+    it('Execute and validate using Cosign', () => {
+      Applications.clickBreadcrumbLink(componentInfo.firstPipelineRunName);
+      DetailsTab.downloadSBOMAndCheckUsingCosign();
+    });
+  });
+
   describe('Verify CVE scan', () => {
     it('Verify clair scan node details on drawer Panel', () => {
-      UIhelper.clickTab('Details');
       DetailsTab.clickOnNode('clair-scan');
       DetailsTab.checkVulScanOnClairDrawer(vulnerabilities);
       DetailsTab.checkNodeDrawerPanelResult('TEST_OUTPUT', '"result":"SUCCESS"');
@@ -157,6 +170,10 @@ describe('Advanced Happy path', () => {
         });
 
       Applications.checkComponentStatus(componentName, 'Build Succeeded');
+    });
+
+    it('Verify SBOM on components tab', () => {
+      DetailsTab.checkDownloadSBOM();
     });
   });
 
