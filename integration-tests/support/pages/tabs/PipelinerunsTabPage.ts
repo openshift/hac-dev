@@ -92,6 +92,25 @@ export class DetailsTab {
   static closeDrawerPanel() {
     cy.get(pipelinerunsTabPO.drawerClose).click().should('not.exist');
   }
+
+  static checkDownloadSBOM() {
+    cy.contains(pipelinerunsTabPO.listGroup, 'Download SBOM')
+      .find('input')
+      .should('contain.value', `cosign download sbom quay.io/`)
+      .and('be.visible');
+  }
+
+  static downloadSBOMAndCheckUsingCosign() {
+    cy.contains(pipelinerunsTabPO.listGroup, 'Download SBOM')
+      .find('input')
+      .invoke('val')
+      .then((value) => {
+        cy.exec(`${value}`).then((obj) => {
+          expect(obj.code).to.equal(0);
+          expect(JSON.parse(obj.stdout).components.length).to.greaterThan(0);
+        });
+      });
+  }
 }
 
 export class TaskRunsTab {
