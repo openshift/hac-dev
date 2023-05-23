@@ -156,7 +156,6 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                   <SwitchField
                     name={`components[${detectedComponentIndex}].defaultBuildPipeline`}
                     label="Default build pipeline"
-                    labelOff="Custom build pipeline"
                   />
                   &nbsp;
                   <HelpPopover bodyContent="Keep in mind that a default build pipeline skips several advanced tasks to get your application up and running sooner." />
