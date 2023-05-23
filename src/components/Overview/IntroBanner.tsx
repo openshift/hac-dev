@@ -100,13 +100,13 @@ const IntroBanner: React.FC = () => {
                     link_name: 'create-application',
                   }}
                 >
-                  + Create an application
+                  Create application
                 </ButtonWithAccessTooltip>
                 {applicationsLoaded && applications?.length > 0 ? (
                   <Button
                     className="intro-banner__cta"
                     component={(props) => <Link {...props} to="/application-pipeline/workspaces" />}
-                    variant="primary"
+                    variant="secondary"
                     data-test="view-my-applications"
                     isLarge
                   >

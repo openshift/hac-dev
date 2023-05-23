@@ -13,6 +13,7 @@
   &__cta {
     margin-top: var(--pf-global--spacer--sm);
     margin-right: var(--pf-global--spacer--md);
+    color: var(--pf-global--Color--light-100);
 
     & + &__cta {
       margin-right: none;
