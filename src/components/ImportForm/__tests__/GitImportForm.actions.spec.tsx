@@ -55,19 +55,6 @@ describe('GitImportForm actions', () => {
     jest.clearAllMocks();
   });
 
-  it('should handle form reset', () => {
-    render(
-      <GitImportForm applicationName="" reviewMode={true} setReviewMode={setReviewModeMock} />,
-    );
-    const formikProps = FormikMock.mock.calls[0][0] as React.ComponentProps<typeof Formik>;
-
-    expect(formikProps.onReset).not.toBeNull();
-
-    // navigate back in history when reset is clicked
-    formikProps.onReset({}, {} as any);
-    expect(navigateMock).toHaveBeenCalledWith(-1);
-  });
-
   it('should not set inAppContext if application name is not passed', () => {
     render(
       <GitImportForm applicationName="" reviewMode={true} setReviewMode={setReviewModeMock} />,

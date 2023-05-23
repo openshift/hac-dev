@@ -18,6 +18,7 @@ import { useTrackEvent, TrackEvents } from '../../utils/analytics';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../modal/ModalProvider';
+import { createCloseImportFormModal } from './CloseImportFormModal';
 import GitImportActions from './GitImportActions';
 import ReviewSection from './ReviewSection/ReviewSection';
 import SourceSection from './SourceSection/SourceSection';
@@ -130,7 +131,11 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
 
   const handleReset = () => {
     track(TrackEvents.ButtonClicked, { link_name: 'import-leave', workspace });
-    navigate(-1);
+    showModal<{ leave: boolean }>(createCloseImportFormModal()).closed.then(({ leave }) => {
+      if (leave) {
+        navigate(-1);
+      }
+    });
   };
 
   const handleNext = async () => {
@@ -150,13 +155,16 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
       // eslint-disable-next-line camelcase
       step_name: 'review-step',
     });
-    setReviewMode(false);
+    showModal<{ leave: boolean }>(createCloseImportFormModal()).closed.then(({ leave }) => {
+      if (leave) {
+        setReviewMode(false);
+      }
+    });
   };
 
   return (
     <Formik
       onSubmit={reviewMode ? handleSubmit : handleNext}
-      onReset={handleReset}
       initialValues={initialValues}
       validationSchema={reviewMode ? reviewValidationSchema : sourceValidationSchema}
     >
@@ -183,7 +191,7 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
           </PageSection>
           {reviewMode && <Divider className="import-form__divider" />}
           <PageSection variant={PageSectionVariants.light}>
-            <Form onSubmit={formikProps.handleSubmit} onReset={formikProps.handleReset}>
+            <Form onSubmit={formikProps.handleSubmit} onReset={handleReset}>
               {reviewMode ? <ReviewSection /> : <SourceSection />}
             </Form>
           </PageSection>
