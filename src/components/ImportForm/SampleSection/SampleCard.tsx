@@ -45,7 +45,7 @@ const SampleCard: React.FC<SampleCardProps> = ({ sample, onSampleImport }) => {
             className="catalog-tile-pf-icon"
             src={icon.url}
             alt={name}
-            style={{ maxWidth: '60px' }}
+            style={{ maxWidth: '60px', fontSize: 'var(--pf-global--FontSize--md)' }}
           />
         )}
         {badges.length > 0 && <CardActions>{badges}</CardActions>}
