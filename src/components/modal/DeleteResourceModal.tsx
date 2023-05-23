@@ -43,6 +43,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
   const [error, setError] = React.useState<string>();
   const resourceName = displayName || obj.metadata.name;
   const deleteResource = async () => {
+    setError(null);
     try {
       await k8sDeleteResource({
         model,
@@ -51,10 +52,10 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
           ns: obj.metadata.namespace,
         },
       });
+      onClose({ submitClicked: true });
     } catch (e) {
       setError(e.message || e.toString());
     }
-    onClose({ submitClicked: true });
   };
 
   const onReset = () => {
@@ -109,6 +110,7 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
                     helpTextInvalid={`${obj.kind} name does not match`}
                     helpText={helpText}
                     validated={validatedState}
+                    autoComplete="off"
                     autoFocus
                     required
                   />
