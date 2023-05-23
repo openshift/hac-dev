@@ -84,6 +84,7 @@ const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({ appl
         .catch((error) => {
           // eslint-disable-next-line no-console
           console.warn('Error while submitting import form:', error);
+          track('Sample import failed', error);
           setSubmitting(false);
           setSubmitError(error.message);
         });
