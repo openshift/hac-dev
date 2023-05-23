@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, ValidatedOptions } from '@patternfly/react-core';
+import { FormGroup, HelperText, HelperTextItem, ValidatedOptions } from '@patternfly/react-core';
 import { FieldArray, useField } from 'formik';
 import DragAndDrop from '../../drag-drop/DragAndDrop';
 import { getFieldId } from '../field-utils';
@@ -39,7 +39,11 @@ const TextColumnField: React.FC<TextColumnFieldProps> = (props) => {
             isRequired={required}
             data-test={props['data-test'] || 'text-column-field'}
           >
-            {helpText && <div className="pf-c-form__helper-text">{helpText}</div>}
+            {helpText && (
+              <HelperText>
+                <HelperTextItem variant="indeterminate">{helpText}</HelperTextItem>
+              </HelperText>
+            )}
             {dndEnabled ? (
               <DragAndDrop>
                 {rowValues.map((v, idx) => {
