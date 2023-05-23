@@ -17,6 +17,10 @@ jest.mock('../../../utils/rbac', () => ({
   useAccessReviewForModels: jest.fn(),
 }));
 
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ workspace: 'test-ws' })),
+}));
+
 configure({ testIdAttribute: 'data-test' });
 
 const useNavigateMock = useNavigate as jest.Mock;
@@ -33,8 +37,10 @@ describe('NoAccessState', () => {
     render(<NoAccessState />);
 
     screen.getByTestId('no-access-state');
-    screen.getByText('Access permissions needed');
-    screen.getByText('To access this page, ask your administrator to adjust your permissions.');
+    screen.getByText(`Let's get you access`);
+    screen.getByText(
+      `Ask the administrator of the test-ws workspace for access permissions. We're always here to help, so chat with us if you have any questions in the meantime.`,
+    );
     screen.getByText('Go to applications list');
   });
 

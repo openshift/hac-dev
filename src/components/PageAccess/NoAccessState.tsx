@@ -13,6 +13,7 @@ import {
 import { LockIcon } from '@patternfly/react-icons/dist/esm/icons/lock-icon';
 import { css } from '@patternfly/react-styles';
 import { HttpError } from '../../shared/utils/error/http-error';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 
 import '../EmptyState/EmptyState.scss';
 
@@ -31,6 +32,7 @@ const NoAccessState: React.FC<NoAccessStateProps> = ({
   ...props
 }) => {
   const navigate = useNavigate();
+  const { workspace } = useWorkspaceInfo();
   return (
     <EmptyState
       className={css('app-empty-state', className)}
@@ -40,10 +42,11 @@ const NoAccessState: React.FC<NoAccessStateProps> = ({
     >
       <EmptyStateIcon className={css('app-empty-state__icon ')} icon={LockIcon} />
       <Title className="pf-u-mt-lg" headingLevel="h2" size="lg">
-        {title || 'Access permissions needed'}
+        {title || `Let's get you access`}
       </Title>
       <EmptyStateBody>
-        {body || 'To access this page, ask your administrator to adjust your permissions.'}
+        {body ||
+          `Ask the administrator of the ${workspace} workspace for access permissions. We're always here to help, so chat with us if you have any questions in the meantime.`}
       </EmptyStateBody>
       {children || (
         <Button
