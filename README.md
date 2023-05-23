@@ -8,14 +8,20 @@ HAC Developer Experience will deliver the UI for App Studio.
 
 ### Run with webpack proxy
 
-1. ```npm install```
+First, install the npm dependencies with `npm install`.
 
-2. For devsandbox - ```npm run start:prod:beta```
-   
-3. For KCP - ```npm run start:prod:beta:kcp```
+For connecting to the stage environment, create the file `config/.env.local` with the contents
+below. Otherwise, skip this step.
 
-4. Open the URL listed in the terminal output.
+ ```bash
+ REGISTRATION_URL=https://registration-service-toolchain-host-operator.apps.stone-stg-host.qc0p.p1.openshiftapps.com
+ PROXY_URL=https://api-toolchain-host-operator.apps.stone-stg-host.qc0p.p1.openshiftapps.com
+ PROXY_WEBSOCKET_URL=wss://api-toolchain-host-operator.apps.stone-stg-host.qc0p.p1.openshiftapps.com
+ ```
 
+Finally, execute `npm run start:prod:beta` to start the proxy.
+
+Use the URL listed in the terminal output.
 
 ### Update `/etc/hosts`
 
@@ -26,7 +32,6 @@ To use webpack proxy you need to append this to your `/etc/hosts` for auth:
 127.0.0.1 stage.foo.redhat.com
 127.0.0.1 qa.foo.redhat.com
 127.0.0.1 ci.foo.redhat.com
-
 ```
 
 ### Testing
@@ -41,8 +46,4 @@ We encourage public contributions! Please review [CONTRIBUTING.md](docs/CONTRIBU
 - **[ARCHITECTURE](docs/ARCHITECTURE.md)**
 - **[STYLEGUIDE](docs/STYLEGUIDE.md)**
 - **[OWNERS](OWNERS)**
-
-
-
-
 
