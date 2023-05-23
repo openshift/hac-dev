@@ -21,7 +21,9 @@ const ResourceLimitField: React.FC<ResourceLimitFieldProps> = ({
 
   return (
     <FormGroup
+      className="resource-limit-field"
       fieldId={fieldId}
+      data-test="resource-limit-field"
       label={label}
       helperText={helpText}
       helperTextInvalid={errorMessage}

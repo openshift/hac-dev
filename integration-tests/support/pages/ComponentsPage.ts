@@ -81,7 +81,9 @@ export class ComponentPage extends AbstractWizardPage {
 
   setRam(value: number, unit: MemoryUnit) {
     cy.get(ComponentsPagePO.memoryInput).clear().type(value.toString());
-    cy.contains('div[class="pf-c-form__group"]', 'Memory').find(ComponentsPagePO.dropdown).click();
+    cy.contains(`[data-test="resource-limit-field"]`, 'Memory')
+      .find(ComponentsPagePO.dropdown)
+      .click();
     cy.contains('li', unit).click();
   }
 
