@@ -120,6 +120,7 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
         .catch((error) => {
           // eslint-disable-next-line no-console
           console.warn('Error while submitting import form:', error);
+          track('Git import failed', error);
           formikHelpers.setSubmitting(false);
           formikHelpers.setStatus({ submitError: error.message });
         });
