@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { configure, render, screen } from '@testing-library/react';
-import { shallow } from 'enzyme';
 import { mockPods } from '../__data__/pod-mock-data';
-import { ContainerNavList } from '../ContainerNavList';
 import { PodLogViewer } from '../PodLogViewer';
 
 configure({ testIdAttribute: 'data-test' });
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   getActiveWorkspace: jest.fn(() => 'test-ws'),
+}));
+
+jest.mock('react-i18next', () => ({
+  useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
 jest.mock('../../../shared/components/pipeline-run-logs/logs/Logs', () => () => (
@@ -31,8 +33,10 @@ describe('PodLogViewer', () => {
   });
 
   it('should show correct navList', () => {
-    const wrapper = shallow(<PodLogViewer pod={mockPods[0]} />);
-    const navList = wrapper.find("[data-test='pod-log-navlist']");
-    expect(navList.shallow().find(ContainerNavList).exists()).toBe(true);
+    render(<PodLogViewer pod={mockPods[0]} />);
+
+    screen.getByTestId('pod-log-navlist');
+    screen.findByText('my-nodejs');
+    screen.findByText('my-nodejs-2');
   });
 });
