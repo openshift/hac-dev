@@ -162,36 +162,30 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 </GridItem>
               )}
             </Grid>
-            <Grid hasGutter>
-              <GridItem sm={12} lg={4}>
-                <ResourceLimitField
-                  name={`${fieldPrefix}.resources.cpu`}
-                  unitName={`${fieldPrefix}.resources.cpuUnit`}
-                  label="CPU"
-                  minValue={0}
-                  unitOptions={CPUUnits}
-                  helpText="The amount of CPU the container is guaranteed"
-                />
-              </GridItem>
-              <GridItem sm={12} lg={4}>
-                <ResourceLimitField
-                  name={`${fieldPrefix}.resources.memory`}
-                  unitName={`${fieldPrefix}.resources.memoryUnit`}
-                  label="Memory"
-                  minValue={0}
-                  unitOptions={MemoryUnits}
-                  helpText="The amount of memory the container is guaranteed"
-                />
-              </GridItem>
-              <GridItem sm={12} lg={4}>
-                <NumberSpinnerField
-                  name={`${fieldPrefix}.replicas`}
-                  label="Instances"
-                  min={0}
-                  helpText="Number of instances of your image"
-                />
-              </GridItem>
-            </Grid>
+            <div className="review-component-card__limits">
+              <ResourceLimitField
+                name={`${fieldPrefix}.resources.cpu`}
+                unitName={`${fieldPrefix}.resources.cpuUnit`}
+                label="CPU"
+                minValue={0}
+                unitOptions={CPUUnits}
+                helpText="The amount of CPU the container is guaranteed"
+              />
+              <ResourceLimitField
+                name={`${fieldPrefix}.resources.memory`}
+                unitName={`${fieldPrefix}.resources.memoryUnit`}
+                label="Memory"
+                minValue={0}
+                unitOptions={MemoryUnits}
+                helpText="The amount of memory the container is guaranteed"
+              />
+              <NumberSpinnerField
+                name={`${fieldPrefix}.replicas`}
+                label="Instances"
+                min={0}
+                helpText="Number of instances of your image"
+              />
+            </div>
             <EnvironmentField
               name={`${fieldPrefix}.env`}
               envs={component.env}

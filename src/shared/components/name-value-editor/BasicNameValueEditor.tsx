@@ -47,35 +47,33 @@ const PairElement: React.FC<PairElementProps> = ({
   );
 
   return (
-    <Flex className="pairs-list__row" data-test="pairs-list-row" direction={{ default: 'row' }}>
-      <Flex flex={{ default: 'flex_1' }}>
-        <FlexItem fullWidth={{ default: 'fullWidth' }}>
-          <input
-            type="text"
-            data-test="pairs-list-name"
-            className="pf-c-form-control"
-            placeholder={nameString}
-            value={pair[NameValueEditorPair.Name]}
-            onChange={onChangeName}
-            disabled={readOnly}
-          />
-        </FlexItem>
-      </Flex>
-      <Flex spacer={{ default: 'spacerNone' }} flex={{ default: 'flex_1' }}>
-        <FlexItem fullWidth={{ default: 'fullWidth' }}>
-          <input
-            type="text"
-            data-test="pairs-list-value"
-            className="pf-c-form-control"
-            placeholder={valueString}
-            value={pair[NameValueEditorPair.Value] || ''}
-            onChange={onChangeValue}
-            disabled={readOnly}
-          />
-        </FlexItem>
-      </Flex>
+    <div className="pairs-list__row" data-test="pairs-list-row">
+      <div className="pairs-list__row--name">
+        <span className="pairs-list__row--label">Name</span>
+        <input
+          type="text"
+          data-test="pairs-list-name"
+          className="pf-c-form-control"
+          placeholder={nameString}
+          value={pair[NameValueEditorPair.Name]}
+          onChange={onChangeName}
+          disabled={readOnly}
+        />
+      </div>
+      <div className="pairs-list__row--value">
+        <span className="pairs-list__row--label">Value</span>
+        <input
+          type="text"
+          data-test="pairs-list-value"
+          className="pf-c-form-control"
+          placeholder={valueString}
+          value={pair[NameValueEditorPair.Value] || ''}
+          onChange={onChangeValue}
+          disabled={readOnly}
+        />
+      </div>
       {!readOnly && (
-        <FlexItem>
+        <span className="pairs-list__row--remove">
           <Tooltip content={toolTip || 'Remove'}>
             <Button
               type="button"
@@ -87,9 +85,9 @@ const PairElement: React.FC<PairElementProps> = ({
               {deleteIcon}
             </Button>
           </Tooltip>
-        </FlexItem>
+        </span>
       )}
-    </Flex>
+    </div>
   );
 };
 
@@ -173,7 +171,7 @@ const BasicNameValueEditor: React.FC<NameValueEditorProps> = ({
         </Flex>
         <FlexItem className="empty__header" />
       </Flex>
-      {pairElems}
+      <div className="pairs-list__elements">{pairElems}</div>
       <Flex direction={{ default: 'row' }} justifyContent={{ default: 'justifyContentFlexStart' }}>
         {readOnly ? null : (
           <FlexItem>
