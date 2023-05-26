@@ -80,8 +80,10 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
       setSourceUrl(null);
       return;
     }
-    setFormValidating();
     setHelpTextInvalid('');
+    requestAnimationFrame(() => {
+      setFormValidating();
+    });
     setSourceUrl(searchTerm);
   }, [source, setFieldValue, setFormValidating]);
 
