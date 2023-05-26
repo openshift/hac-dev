@@ -4,4 +4,19 @@
 
     margin-left: var(--pf-global--spacer--lg);
   }
+  &__limits {
+    display: grid;
+    gap: var(--pf-global--spacer--md);
+    grid-template-columns: auto;
+    justify-content: start;
+    @media (min-width: 600px) {
+      grid-template-columns: auto auto;
+    }
+    @media (min-width: 769px) {
+      grid-template-columns: auto auto auto;
+    }
+    .resource-limit-field {
+      max-width: 270px;
+    }
+  }
 }

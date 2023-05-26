@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, render, screen } from '@testing-library/react';
-import { shallow } from 'enzyme';
 import { PipelineRunLabel, PipelineRunType } from '../../../consts/pipelinerun';
-import { PipelineRunLogs } from '../../../shared';
 import { componentCRMocks } from '../../ApplicationDetails/__data__/mock-data';
 import { pipelineRunMock } from '../__data__/pipelineRunMocks';
 import { BuildLogViewer } from '../BuildLogViewer';
@@ -13,9 +11,11 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
-configure({ testIdAttribute: 'data-test' });
-
 describe('BuildLogViewer', () => {
+  beforeEach(() => {
+    configure({ testIdAttribute: 'data-test' });
+  });
+
   it('should show loading box if pipelineRuns are being fetched', () => {
     const watchResourceMock = useK8sWatchResource as jest.Mock;
     watchResourceMock.mockReturnValue([[], false]);
@@ -35,16 +35,19 @@ describe('BuildLogViewer', () => {
     const watchResourceMock = useK8sWatchResource as jest.Mock;
     watchResourceMock.mockReturnValue([[pipelineRunMock], true]);
     watchResourceMock.mockReturnValue([[pipelineRunMock], true]);
-    const wrapper = shallow(<BuildLogViewer component={componentCRMocks[0]} />);
-    expect(wrapper.find('span').contains('basic-node-js')).toBe(true);
+    render(<BuildLogViewer component={componentCRMocks[0]} />);
+    screen.getByText('basic-node-js', { exact: false });
   });
 
   it('should render PipelineRunLogs', () => {
+    configure({ testIdAttribute: 'data-testid' });
+
     const watchResourceMock = useK8sWatchResource as jest.Mock;
     watchResourceMock.mockReturnValue([[pipelineRunMock], true]);
     watchResourceMock.mockReturnValue([[pipelineRunMock], true]);
-    const wrapper = shallow(<BuildLogViewer component={componentCRMocks[0]} />);
-    expect(wrapper.find(PipelineRunLogs).exists()).toBe(true);
+    render(<BuildLogViewer component={componentCRMocks[0]} />);
+
+    screen.getByTestId('logs-tasklist');
   });
 
   it('should show empty box if it is not a build pipelinerun', () => {

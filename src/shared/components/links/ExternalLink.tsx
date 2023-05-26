@@ -16,6 +16,7 @@ type ExternalLinkProps = {
   icon?: ButtonProps['icon'];
   onClick?: ButtonProps['onClick'];
   analytics?: AnalyticsButtonProperties;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 };
 
 const ExternalLink: React.FC<ExternalLinkProps> = ({
@@ -30,6 +31,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
   variant = ButtonVariant.link,
   icon,
   onClick,
+  size = 'sm',
 }) => (
   <AnalyticsButton
     component="a"
@@ -53,7 +55,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
     {showIcon ? (
       <>
         {' '}
-        <ExternalLinkAltIcon />
+        <ExternalLinkAltIcon size={size} />
       </>
     ) : null}
   </AnalyticsButton>

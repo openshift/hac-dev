@@ -1,4 +1,5 @@
 import * as React from 'react';
+import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { screen } from '@testing-library/react';
 import { routerRenderer } from '../../../utils/test-utils';
@@ -9,6 +10,10 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
   k8sCreateResource: jest.fn(),
   getActiveWorkspace: jest.fn(() => 'test-ws'),
+}));
+
+jest.mock('react-i18next', () => ({
+  useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
 jest.mock('react-router-dom', () => {
@@ -22,6 +27,7 @@ jest.mock('react-router-dom', () => {
 });
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
+// const sanitizeHtmlMock = sanitizeHtml as jest.Mock;
 
 describe('TaskRunDetailsView', () => {
   const taskrunName = testTaskRuns[0].metadata.name;

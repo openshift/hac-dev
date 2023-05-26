@@ -14,6 +14,10 @@ RUN apt update && \
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
+RUN wget "https://github.com/sigstore/cosign/releases/download/v2.0.0/cosign-linux-amd64" && \
+    mv cosign-linux-amd64 /usr/local/bin/cosign && \
+    chmod +x /usr/local/bin/cosign
+    
 USER node:0
 
 COPY --chown=node:root --chmod=775 . /tmp/e2e
