@@ -67,6 +67,16 @@ $ podman run quay.io/hacdev/hac-tests:next -v <path to integration-tests>:/e2e:Z
 ```
 The entrypoint searches for any code within `/e2e` path and runs it instead of any code that was already present inside the image.
 
+#### Accessing test results
+Test artifacts (reports, screenshots, videos, etc.) are only accessible to the host system if the appropriate container folder is mounted.
+
+When running with local test code mounted, with the `-v <path to integration-tests>:/e2e:Z` option, all the test artifacts are available to the host at `<path to integration-tests>/cypress`.
+
+When running the container with the included test code, the tests artifacts are available inside the container at `/tmp/artifacts`. Mouning the folder, the host can then access the artifacts at the `<chosen path>`:
+```
+$ podman run -v <chosen path>:/tmp/artifacts:Z quay.io/hacdev/hac-tests:next <environment variables>
+```
+
 #### Building the image
 To build the image locally, navigate to this folder and run (using your favorite container runtime)
 ```
