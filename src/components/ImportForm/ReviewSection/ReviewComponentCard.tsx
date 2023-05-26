@@ -158,7 +158,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                     label="Default build pipeline"
                   />
                   &nbsp;
-                  <HelpPopover bodyContent="Keep in mind that a default build pipeline skips several advanced tasks to get your application up and running sooner." />
+                  <HelpPopover bodyContent="A default build pipeline skips several advanced tasks to get your application running sooner." />
                 </GridItem>
               )}
             </Grid>
@@ -169,7 +169,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 label="CPU"
                 minValue={0}
                 unitOptions={CPUUnits}
-                helpText="The amount of CPU the container is guaranteed"
+                helpText="Amount of CPU the container is guaranteed"
               />
               <ResourceLimitField
                 name={`${fieldPrefix}.resources.memory`}
@@ -177,7 +177,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 label="Memory"
                 minValue={0}
                 unitOptions={MemoryUnits}
-                helpText="The amount of memory the container is guaranteed"
+                helpText="Amount of memory the container is guaranteed"
               />
               <NumberSpinnerField
                 name={`${fieldPrefix}.replicas`}

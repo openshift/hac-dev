@@ -64,7 +64,7 @@ const SampleSection: React.FunctionComponent<SampleSectionProp> = ({ onSampleImp
             <ToolbarItem alignment={{ default: 'alignRight' }}>
               <TextContent>
                 <Text component={TextVariants.h5}>
-                  {pluralize(filteredSamples.length, 'item', 'items')}
+                  {`${filteredSamples.length} of ${pluralize(samples.length, 'item', 'items')}`}
                 </Text>
               </TextContent>
             </ToolbarItem>
