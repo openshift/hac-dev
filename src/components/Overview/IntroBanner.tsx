@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Card,
@@ -14,11 +13,12 @@ import {
   Text,
 } from '@patternfly/react-core';
 import { FULL_APPLICATION_TITLE } from '../../consts/labels';
+import { useSignupStatus } from '../../hooks';
 import { ApplicationGroupVersionKind, ApplicationModel, ComponentModel } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
-import { SIGNUP_FLAG, SIGNUP_PENDING_FLAG } from '../../utils/flag-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
+import { SignupStatus } from '../../utils/signup-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import SignupButton from './SignupButton';
@@ -30,11 +30,10 @@ const IntroBanner: React.FC = () => {
   const [canCreateApplication] = useAccessReviewForModel(ApplicationModel, 'create');
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 
-  const [signupFlag] = useFeatureFlag(SIGNUP_FLAG);
-  const [signupPendingFlag] = useFeatureFlag(SIGNUP_PENDING_FLAG);
+  const signupStatus = useSignupStatus();
 
   const [applications, applicationsLoaded] = useK8sWatchResource<ApplicationKind[]>(
-    signupFlag && namespace
+    signupStatus === SignupStatus.SignedUp && namespace
       ? {
           groupVersionKind: ApplicationGroupVersionKind,
           namespace,
@@ -61,32 +60,7 @@ const IntroBanner: React.FC = () => {
             </Text>
           </CardBody>
           <CardBody>
-            {!signupFlag ? (
-              signupPendingFlag ? (
-                <Alert
-                  variant="info"
-                  isInline
-                  title="We have received your request. While you are waiting, please join our Slack channel."
-                >
-                  <p>
-                    We are working hard to get you early access. After we approve your request, we
-                    will send you an email notification with information about how you can access
-                    and start using the service.
-                  </p>
-                  <p>
-                    Join the DevNation Slack workspace here:{' '}
-                    <ExternalLink href="https://dn.dev/slack">https://dn.dev/slack</ExternalLink>,
-                    and then join our{' '}
-                    <ExternalLink href="https://rhdevnation.slack.com/channels/software-supply-chain-security">
-                      #software-supply-chain-security
-                    </ExternalLink>{' '}
-                    channel.
-                  </p>
-                </Alert>
-              ) : (
-                <SignupButton />
-              )
-            ) : (
+            {signupStatus === SignupStatus.SignedUp && (
               <>
                 <ButtonWithAccessTooltip
                   className="intro-banner__cta"
@@ -117,6 +91,29 @@ const IntroBanner: React.FC = () => {
                 ) : undefined}
               </>
             )}
+            {signupStatus === SignupStatus.PendingApproval && (
+              <Alert
+                variant="info"
+                isInline
+                title="We have received your request. While you are waiting, please join our Slack channel."
+              >
+                <p>
+                  We are working hard to get you early access. After we approve your request, we
+                  will send you an email notification with information about how you can access and
+                  start using the service.
+                </p>
+                <p>
+                  Join the DevNation Slack workspace here:{' '}
+                  <ExternalLink href="https://dn.dev/slack">https://dn.dev/slack</ExternalLink>, and
+                  then join our{' '}
+                  <ExternalLink href="https://rhdevnation.slack.com/channels/software-supply-chain-security">
+                    #software-supply-chain-security
+                  </ExternalLink>{' '}
+                  channel.
+                </p>
+              </Alert>
+            )}
+            {signupStatus === SignupStatus.NotSignedUp && <SignupButton />}
           </CardBody>
         </Card>
       </GridItem>
