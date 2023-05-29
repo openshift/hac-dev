@@ -146,7 +146,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
         </DescriptionList>
       </CardBody>
 
-      {applicationName && applicationRoute && (
+      {applicationName && applicationRoute && type !== EnvironmentType.managed && (
         <CardFooter>
           <DescriptionList columnModifier={{ default: '2Col' }}>
             <DescriptionListGroup>

@@ -6,6 +6,7 @@ import { render, screen } from '@testing-library/react';
 import { useLatestApplicationRouteURL } from '../../../hooks';
 import { EnvironmentModel } from '../../../models';
 import { EnvironmentKind } from '../../../types';
+import { EnvironmentType } from '../environment-utils';
 import EnvironmentCard from '../EnvironmentCard';
 
 jest.mock('@openshift/dynamic-plugin-sdk', () => ({
@@ -124,5 +125,22 @@ describe('', () => {
     render(<EnvironmentCard environment={env} applicationName="test" />);
     expect(screen.getByText('View URL')).toBeVisible();
     expect(screen.getByText('View URL')).toHaveProperty('href', 'https://example.com/');
+  });
+
+  it('should not render Application Route URL for managed environment', () => {
+    const env = {
+      ...testEnv,
+      spec: {
+        ...testEnv.spec,
+        tags: [EnvironmentType.managed],
+
+        displayName: undefined,
+      },
+    };
+    useK8sWatchMock.mockReturnValue([[{ metadata: { name: 'test-app' } }], true]);
+    useLatestApplicationRouteURLMock.mockReturnValue('https://example.com/');
+    render(<EnvironmentCard environment={env} applicationName="test" />);
+    screen.debug();
+    expect(screen.queryByText('View URL')).not.toBeInTheDocument();
   });
 });
