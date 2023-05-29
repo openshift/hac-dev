@@ -66,8 +66,8 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
           'data-test': `${name}-toggle-button`,
         }}
       >
-        <Flex style={{ flex: 1 }}>
-          <FlexItem flex={{ default: 'flex_4' }}>
+        <Flex className="pf-u-flex-1" direction={{ default: 'column', sm: 'row' }}>
+          <FlexItem flex={{ default: 'flex_4', md: 'flex_3' }}>
             <InputField
               name={`${fieldPrefix}.componentName`}
               label="Component name"
