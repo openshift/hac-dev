@@ -10,11 +10,11 @@ HAC Developer Experience will deliver the UI for App Studio.
 
 1. ```npm install```
 
-2. For devsandbox - ```npm run start:prod:beta```
-   
-3. For KCP - ```npm run start:prod:beta:kcp```
+If this fails try `npm install --legacy-peer-dep`
 
-4. Open the URL listed in the terminal output.
+2. Start webpack - ```npm run start:prod:beta```
+
+3. Open the URL listed in the terminal output.
 
 
 ### Update `/etc/hosts`
