@@ -456,6 +456,7 @@ describe('Create Utils', () => {
 
     createSecret(
       { secretName: 'my-snyk-secret', keyValues: [{ key: 'token', value: 'my-token-data' }] },
+      'test-ws',
       'test-ns',
       true,
     );
@@ -463,7 +464,7 @@ describe('Create Utils', () => {
     expect(commonFetchMock).toHaveBeenCalledTimes(1);
 
     expect(commonFetchMock).toHaveBeenCalledWith(
-      '/api/v1/namespaces/test-ns/secrets?dryRun=All',
+      '/workspaces/test-ws/api/v1/namespaces/test-ns/secrets?dryRun=All',
       expect.objectContaining({
         body: expect.stringContaining('"kind":"Secret"'),
       }),
@@ -476,6 +477,7 @@ describe('Create Utils', () => {
 
     createSecret(
       { secretName: 'my-snyk-secret', keyValues: [{ key: 'token', value: 'my-token-data' }] },
+      'test-ws',
       'test-ns',
       false,
     );
@@ -483,7 +485,7 @@ describe('Create Utils', () => {
     expect(commonFetchMock).toHaveBeenCalledTimes(1);
 
     expect(commonFetchMock).toHaveBeenCalledWith(
-      '/api/v1/namespaces/test-ns/secrets',
+      '/workspaces/test-ws/api/v1/namespaces/test-ns/secrets',
       expect.objectContaining({
         body: expect.stringContaining('"kind":"Secret"'),
       }),
@@ -498,6 +500,7 @@ describe('Create Utils', () => {
 
     createSecret(
       { secretName: 'snyk-secret', keyValues: [{ key: 'token', value: 'my-token-data' }] },
+      'test-ws',
       'test-ns',
       false,
     );

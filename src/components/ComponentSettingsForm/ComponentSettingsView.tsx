@@ -82,7 +82,7 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
     });
 
     try {
-      await createSecrets(values.importSecrets, namespace, true);
+      await createSecrets(values.importSecrets, workspace, namespace, true);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.warn('Error while submitting secret:', e);
@@ -90,7 +90,7 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       actions.setStatus({ submitError: e.message });
     }
 
-    await createSecrets(values.importSecrets, namespace, false);
+    await createSecrets(values.importSecrets, workspace, namespace, false);
 
     return createComponent(
       transformedComponentValues,
