@@ -25,6 +25,21 @@ describe('Advanced Happy path', () => {
   const gitHubUser = Cypress.env('GH_USERNAME');
   const componentName = Common.generateAppName('go');
 
+  after(function () {
+    Common.deleteGitHubRepository(repoOwner, repoName);
+
+    // If some test failed, don't remove the app
+    let allTestsSucceeded = true;
+    this.test.parent.eachTest((test) => {
+      if (test.state == 'failed') {
+        allTestsSucceeded = false;
+      }
+    });
+    if (allTestsSucceeded || Cypress.env('REMOVE_APP_ON_FAIL')) {
+      Applications.deleteApplication(applicationName);
+    }
+  });
+
   const componentInfo: { [key: string]: string } = {
     deploymentBodyOriginal: 'Hello World!',
     deploymentBodyUpdated: 'Bye World!',
@@ -44,6 +59,7 @@ describe('Advanced Happy path', () => {
   };
 
   const integrationTestTaskNames = ['task-success', 'task-success-2', 'task-skipped'];
+  const vulnerabilities = /Critical(\d+).*High(\d+).*Medium(\d+).*Low(\d+)/g;
 
   before(() => {
     Common.createGitHubRepository(repoName);
@@ -55,11 +71,6 @@ describe('Advanced Happy path', () => {
       componentInfo.goFileSHAOriginal = response.body.sha;
       componentInfo.goFileBase64Original = response.body.content;
     });
-  });
-
-  after(function () {
-    Common.deleteGitHubRepository(repoOwner, repoName);
-    Applications.deleteApplication(applicationName);
   });
 
   it('Create an Application with a component', () => {
@@ -110,9 +121,45 @@ describe('Advanced Happy path', () => {
     });
   });
 
+  describe('Verify SBOM on pipeline run details', () => {
+    it('Verify SBOM and logs', () => {
+      UIhelper.clickTab('Details');
+      DetailsTab.checkDownloadSBOM();
+      UIhelper.clickLink('View SBOM');
+      DetailsTab.verifyLogs('"bomFormat": "CycloneDX"');
+    });
+
+    it('Execute and validate using Cosign', () => {
+      Applications.clickBreadcrumbLink(componentInfo.firstPipelineRunName);
+      DetailsTab.downloadSBOMAndCheckUsingCosign();
+    });
+  });
+
+  describe('Verify CVE scan', () => {
+    it('Verify clair scan node details on drawer Panel', () => {
+      DetailsTab.clickOnNode('clair-scan');
+      DetailsTab.checkVulScanOnClairDrawer(vulnerabilities);
+      DetailsTab.checkNodeDrawerPanelResult('TEST_OUTPUT', '"result":"SUCCESS"');
+      DetailsTab.clickOnDrawerPanelLogsTab();
+      DetailsTab.verifyLogs('Task clair-scan completed');
+      DetailsTab.closeDrawerPanel();
+    });
+
+    it('Verify vulnebralities on pipeline run Details Page', () => {
+      DetailsTab.checkVulScanOnPipelinerunDetails(vulnerabilities);
+      DetailsTab.clickOnVulScanViewLogs();
+      DetailsTab.verifyLogs('Task clair-scan completed');
+    });
+
+    it('Verify vulnebralities on pipeline run list', () => {
+      Applications.clickBreadcrumbLink('Pipeline runs');
+      UIhelper.getTableRow('Pipeline run List', componentInfo.firstPipelineRunName).within(() => {
+        cy.contains(vulnerabilities).should('be.visible');
+      });
+    });
+  });
   describe('Check Component Deployment', () => {
     it('Verify the status code and response body of the deployment URL of each component', () => {
-      Applications.clickBreadcrumbLink('Pipeline runs');
       Applications.goToComponentsTab();
       applicationDetailPage.expandDetails(componentName);
 
@@ -123,6 +170,10 @@ describe('Advanced Happy path', () => {
         });
 
       Applications.checkComponentStatus(componentName, 'Build Succeeded');
+    });
+
+    it('Verify SBOM on components tab', () => {
+      DetailsTab.checkDownloadSBOM();
     });
   });
 

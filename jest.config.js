@@ -10,7 +10,6 @@ module.exports = {
   },
   preset: 'ts-jest',
   roots: ['<rootDir>/src/'],
-  setupFiles: ['<rootDir>/config/setupTests.js'],
   testEnvironment: 'jsdom',
   transform: {
     '^.+\\.(ts|tsx|js|jsx)$': 'ts-jest',

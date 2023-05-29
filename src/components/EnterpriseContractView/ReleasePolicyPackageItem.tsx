@@ -9,7 +9,6 @@ import {
   DataListContent,
   DescriptionList,
 } from '@patternfly/react-core';
-import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { BASE_INFO_URL } from './const';
 import { ReleaseAnnotation, ReleasePackageInfo } from './types';
@@ -45,9 +44,11 @@ const ReleasePolicyPackageItem: React.FC<ReleasePolicyPackageItemProps> = ({
             <DataListItemCells
               dataListCells={[
                 <DataListCell key="name">
-                  <ExternalLink href={`${BASE_INFO_URL}#${releasePackageInfo.shortName}_package`}>
-                    {releasePackageInfo.title} <ExternalLinkAltIcon />
-                  </ExternalLink>
+                  <ExternalLink
+                    href={`${BASE_INFO_URL}#${releasePackageInfo.shortName}_package`}
+                    text={releasePackageInfo.title}
+                    showIcon
+                  />
                 </DataListCell>,
               ]}
             />
@@ -59,9 +60,9 @@ const ReleasePolicyPackageItem: React.FC<ReleasePolicyPackageItemProps> = ({
                   key={annotation.shortName}
                   additionalClassName="release-policy-item__package-annotation-link"
                   href={`${BASE_INFO_URL}#${annotation.shortName}`}
-                >
-                  {annotation.title} <ExternalLinkAltIcon />
-                </ExternalLink>
+                  text={annotation.title}
+                  showIcon
+                />
               ))}
             </DescriptionList>
           </DataListContent>

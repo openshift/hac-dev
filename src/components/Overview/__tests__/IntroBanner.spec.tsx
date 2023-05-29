@@ -60,7 +60,7 @@ describe('Intro Banner', () => {
   it('should show create application action when user is signed up', () => {
     useFeatureFlagMock.mockReturnValue([true, () => {}]);
     render(<IntroBanner />);
-    expect(screen.getByRole('link', { name: '+ Create an application' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Create application' })).toBeInTheDocument();
   });
 
   it('should show view application action when user is signed up and has applications', () => {

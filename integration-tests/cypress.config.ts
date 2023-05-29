@@ -143,6 +143,7 @@ export default defineConfig({
         PR_CHECK: false,
         PERIODIC_RUN: false,
         resolution: 'high',
+        REMOVE_APP_ON_FAIL: false,
       };
 
       for (const key in defaultValues) {

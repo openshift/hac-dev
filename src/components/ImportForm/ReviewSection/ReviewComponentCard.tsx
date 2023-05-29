@@ -16,6 +16,7 @@ import {
   TitleSizes,
   ValidatedOptions,
 } from '@patternfly/react-core';
+import { useField } from 'formik';
 import {
   EnvironmentField,
   InputField,
@@ -53,6 +54,9 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
   const fieldPrefix = `components[${detectedComponentIndex}].componentStub`;
   const [expandedComponent, setExpandedComponent] = React.useState(isExpanded);
   const [targetPortTouched, setTargetPortTouched] = React.useState(false);
+  const [, { value: language }] = useField<string>(
+    `components[${detectedComponentIndex}].language`,
+  );
 
   return (
     <Card isFlat isCompact isSelected={expandedComponent} isExpanded={expandedComponent}>
@@ -134,59 +138,54 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                   }
                 />
               </GridItem>
-              <GridItem sm={12} lg={4}>
-                <InputField
-                  name={`${fieldPrefix}.source.git.dockerfileUrl`}
-                  label="Dockerfile"
-                  type={TextInputTypes.text}
-                  placeholder="Dockerfile"
-                  labelIcon={
-                    <HelpPopover bodyContent="You can modify this path to point to your Dockerfile." />
-                  }
-                />
-              </GridItem>
+              {language === 'Dockerfile' && (
+                <GridItem sm={12} lg={4}>
+                  <InputField
+                    name={`${fieldPrefix}.source.git.dockerfileUrl`}
+                    label="Dockerfile"
+                    type={TextInputTypes.text}
+                    placeholder="Dockerfile"
+                    labelIcon={
+                      <HelpPopover bodyContent="You can modify this path to point to your Dockerfile." />
+                    }
+                  />
+                </GridItem>
+              )}
               {!editMode && (
                 <GridItem sm={12} lg={4} style={{ display: 'flex', alignItems: 'center' }}>
                   <SwitchField
                     name={`components[${detectedComponentIndex}].defaultBuildPipeline`}
                     label="Default build pipeline"
-                    labelOff="Custom build pipeline"
                   />
                   &nbsp;
                   <HelpPopover bodyContent="Keep in mind that a default build pipeline skips several advanced tasks to get your application up and running sooner." />
                 </GridItem>
               )}
             </Grid>
-            <Grid hasGutter>
-              <GridItem sm={12} lg={4}>
-                <ResourceLimitField
-                  name={`${fieldPrefix}.resources.cpu`}
-                  unitName={`${fieldPrefix}.resources.cpuUnit`}
-                  label="CPU"
-                  minValue={0}
-                  unitOptions={CPUUnits}
-                  helpText="The amount of CPU the container is guaranteed"
-                />
-              </GridItem>
-              <GridItem sm={12} lg={4}>
-                <ResourceLimitField
-                  name={`${fieldPrefix}.resources.memory`}
-                  unitName={`${fieldPrefix}.resources.memoryUnit`}
-                  label="Memory"
-                  minValue={0}
-                  unitOptions={MemoryUnits}
-                  helpText="The amount of memory the container is guaranteed"
-                />
-              </GridItem>
-              <GridItem sm={12} lg={4}>
-                <NumberSpinnerField
-                  name={`${fieldPrefix}.replicas`}
-                  label="Instances"
-                  min={0}
-                  helpText="Number of instances of your image"
-                />
-              </GridItem>
-            </Grid>
+            <div className="review-component-card__limits">
+              <ResourceLimitField
+                name={`${fieldPrefix}.resources.cpu`}
+                unitName={`${fieldPrefix}.resources.cpuUnit`}
+                label="CPU"
+                minValue={0}
+                unitOptions={CPUUnits}
+                helpText="The amount of CPU the container is guaranteed"
+              />
+              <ResourceLimitField
+                name={`${fieldPrefix}.resources.memory`}
+                unitName={`${fieldPrefix}.resources.memoryUnit`}
+                label="Memory"
+                minValue={0}
+                unitOptions={MemoryUnits}
+                helpText="The amount of memory the container is guaranteed"
+              />
+              <NumberSpinnerField
+                name={`${fieldPrefix}.replicas`}
+                label="Instances"
+                min={0}
+                helpText="Number of instances of your image"
+              />
+            </div>
             <EnvironmentField
               name={`${fieldPrefix}.env`}
               envs={component.env}
