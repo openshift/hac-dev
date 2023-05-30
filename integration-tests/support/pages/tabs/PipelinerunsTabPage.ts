@@ -1,3 +1,4 @@
+import { Common } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
 import { pipelinerunsTabPO } from '../../pageObjects/pages-po';
 
@@ -5,6 +6,12 @@ type taskRunDetailsRow = {
   name: string | RegExp;
   task: string;
   status: string;
+};
+
+type ecSecurityRulesRow = {
+  rule: string | RegExp;
+  status: string | RegExp;
+  message: string | RegExp;
 };
 
 // Pipelineruns List view page
@@ -17,6 +24,39 @@ export class PipelinerunsTabPage {
     cy.contains(pipelinerunsTabPO.relatedPipelinePopup, 'Related pipelines').within(() => {
       cy.contains(pipelineName).scrollIntoView().should('be.visible');
       cy.get(pipelinerunsTabPO.relatedPipelineCloseBtn).click().should('not.exist');
+    });
+  }
+
+  static getPipelineRunNameByLabel(applicationName: string, label: string) {
+    return cy
+      .getCookie('cs_jwt')
+      .should('exist')
+      .its('value')
+      .then((token) => {
+        const namespace = `${Cypress.env('USERNAME').toLowerCase()}-tenant`;
+        const request = {
+          method: 'GET',
+          url: `${Common.getOrigin()}/api/k8s/workspaces/${Cypress.env(
+            'USERNAME',
+          ).toLowerCase()}/apis/tekton.dev/v1beta1/namespaces/${namespace}/pipelineruns?labelSelector=appstudio.openshift.io/application=${applicationName},${label}&limit=250`,
+          headers: {
+            authorization: `Bearer ${token}`,
+            accept: 'application/json',
+          },
+        };
+        cy.request(request).its('body.items[0].metadata.name');
+      });
+  }
+
+  static verifyECSecurityRulesResultSummary(summary: RegExp) {
+    cy.contains(pipelinerunsTabPO.ecResultSummary, summary).should('be.visible');
+  }
+
+  static verifyECSecurityRules(UniqueTextInRow: string | RegExp, rowValues: ecSecurityRulesRow) {
+    cy.contains(pipelinerunsTabPO.ecSecurityRulesTableRow, UniqueTextInRow).within(() => {
+      cy.contains(rowValues.rule).scrollIntoView().should('be.visible');
+      cy.contains(rowValues.status).scrollIntoView().should('be.visible');
+      cy.contains(rowValues.message).scrollIntoView().should('be.visible');
     });
   }
 }

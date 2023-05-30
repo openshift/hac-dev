@@ -42,6 +42,9 @@ export const pipelinerunsTabPO = {
   drawerClose: 'div[class="pf-c-drawer__close"]',
   listGroup: 'div[class$="list__group"]',
   PF4TableRow: '[data-ouia-component-type="PF4/TableRow"]',
+
+  ecResultSummary: 'div[data-testid="result-summary"]',
+  ecSecurityRulesTableRow: 'tr[data-ouia-component-type="PF4/TableRow"]:not([hidden])',
 };
 
 export const integrationTestsTabPO = {
