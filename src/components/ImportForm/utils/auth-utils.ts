@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { k8sCreateResource, useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import {
+  k8sCreateResource,
+  k8sDeleteResource,
+  K8sResourceCommon,
+  useK8sWatchResource,
+} from '@openshift/dynamic-plugin-sdk-utils';
 import { useFormikContext } from 'formik';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import {
@@ -37,8 +42,14 @@ export const useAccessCheck = (
   const [name, setName] = React.useState<string>();
 
   React.useEffect(() => {
+    let resourceName = null;
+
+    if (!source) {
+      setName(null);
+      return;
+    }
     if (source) {
-      k8sCreateResource({
+      k8sCreateResource<K8sResourceCommon>({
         model: SPIAccessCheckModel,
         queryOptions: {
           ns: namespace,
@@ -55,10 +66,21 @@ export const useAccessCheck = (
           },
         },
       }).then((res) => {
-        // TODO fix type for generateName resources not having name?
-        setName((res.metadata as any).name);
+        resourceName = res.metadata.name;
+        setName(resourceName);
       });
     }
+    return () => {
+      if (resourceName) {
+        k8sDeleteResource({
+          model: SPIAccessCheckModel,
+          queryOptions: {
+            name: resourceName,
+            ns: namespace,
+          },
+        });
+      }
+    };
   }, [namespace, source, dependency]);
 
   const [accessCheck, loaded] = useK8sWatchResource<SPIAccessCheckKind>(
