@@ -56,6 +56,10 @@ describe('Advanced Happy path', () => {
     pipelineToRun: 'integration-pipeline-fail',
     imageBundleEdit: 'quay.io/redhat-appstudio/example-tekton-bundle:integration-pipeline-pass',
     pipelineToRunEdit: 'integration-pipeline-pass',
+    enterpriseContractITName: Common.generateAppName('check-contract'),
+    enterpriseContractImageBundle:
+      'quay.io/redhat-appstudio-tekton-catalog/pipeline-enterprise-contract:devel',
+    enterpriseContractPipelineRun: 'enterprise-contract',
   };
 
   const integrationTestTaskNames = ['task-success', 'task-success-2', 'task-skipped'];
@@ -210,6 +214,22 @@ describe('Advanced Happy path', () => {
       });
     });
 
+    it('Add Enterprise Contract integration test and verify', () => {
+      Applications.clickActionsDropdown('Add integration test');
+      integrationTestsTabPage.addIntegrationTest(
+        integrationTestDetails.enterpriseContractITName,
+        integrationTestDetails.enterpriseContractImageBundle,
+        integrationTestDetails.enterpriseContractPipelineRun,
+        'check',
+      );
+      integrationTestsTabPage.verifyRowInIntegrationTestsTable({
+        name: integrationTestDetails.enterpriseContractITName,
+        ContainerImage: integrationTestDetails.enterpriseContractImageBundle,
+        optionalForRelease: 'Optional',
+        pipelines: integrationTestDetails.enterpriseContractPipelineRun,
+      });
+    });
+
     it('Edit integration test and verify', () => {
       integrationTestsTabPage.openAndClickKebabMenu(
         integrationTestDetails.integrationTestName,
@@ -270,16 +290,18 @@ describe('Advanced Happy path', () => {
   describe('Verify Integration Test Pipeline Runs on Activity Tab', () => {
     it('Verify Integration Test pipeline run Details', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
-      UIhelper.verifyRowInTable('Pipeline run List', `${applicationName}-`, [/^Test$/]);
-      UIhelper.clickRowCellInTable(
-        'Pipeline run List',
-        `${applicationName}-`,
-        `${applicationName}-`,
-      );
+      PipelinerunsTabPage.getPipelineRunNameByLabel(
+        applicationName,
+        `test.appstudio.openshift.io/scenario=${integrationTestDetails.integrationTestName}`,
+      ).then((testPipelineName) => {
+        integrationTestDetails.passIntegrationTestPipelineRunName = testPipelineName;
+        UIhelper.verifyRowInTable('Pipeline run List', testPipelineName, [/^Test$/]);
+        UIhelper.clickLink(testPipelineName);
+      });
       DetailsTab.waitUntilStatusIsNotRunning();
       UIhelper.verifyLabelAndValue('Status', 'Succeeded');
       UIhelper.verifyLabelAndValue('Pipeline', integrationTestDetails.pipelineToRunEdit);
-      UIhelper.verifyLabelAndValue('Related pipelines', '1 pipeline').click();
+      UIhelper.verifyLabelAndValue('Related pipelines', '2 pipelines').click();
       PipelinerunsTabPage.verifyRelatedPipelines(componentInfo.secondPipelineRunName);
     });
 
@@ -305,6 +327,47 @@ describe('Advanced Happy path', () => {
       ]);
       UIhelper.clickTab('Logs');
       applicationDetailPage.verifyBuildLogTaskslist(integrationTestTaskNames);
+    });
+  });
+
+  describe('Verify Enterprise Contract Integration Test Pipeline Runs on Activity Tab', () => {
+    it('Verify EC Integration Test pipeline run Details', () => {
+      Applications.clickBreadcrumbLink('Pipeline runs');
+      PipelinerunsTabPage.getPipelineRunNameByLabel(
+        applicationName,
+        `test.appstudio.openshift.io/scenario=${integrationTestDetails.enterpriseContractITName}`,
+      ).then((testPipelineName) => {
+        integrationTestDetails.enterpriseContractITPipelineRunName = testPipelineName;
+        UIhelper.verifyRowInTable('Pipeline run List', testPipelineName, [/^Test$/]);
+        UIhelper.clickLink(testPipelineName);
+        DetailsTab.waitUntilStatusIsNotRunning();
+        UIhelper.verifyLabelAndValue('Status', 'Failed');
+        UIhelper.verifyLabelAndValue(
+          'Pipeline',
+          integrationTestDetails.enterpriseContractPipelineRun,
+        );
+        UIhelper.verifyLabelAndValue('Related pipelines', '2 pipelines').click();
+        PipelinerunsTabPage.verifyRelatedPipelines(
+          integrationTestDetails.passIntegrationTestPipelineRunName,
+        );
+      });
+    });
+
+    it('Verify EC Integration Test pipeline runs Logs Tab', () => {
+      UIhelper.clickTab('Logs');
+      DetailsTab.verifyLogs('"result": "FAILURE"');
+    });
+
+    it('Verify EC Integration Test pipeline runs Security Tab', () => {
+      UIhelper.clickTab('Security');
+      PipelinerunsTabPage.verifyECSecurityRulesResultSummary(
+        /Failed(\d+).*Warning(\d+).*Success(\d+)/g,
+      );
+      PipelinerunsTabPage.verifyECSecurityRules('Failed', {
+        rule: /Blocking CVE check/g,
+        status: 'Failed',
+        message: /Found (\d+) CVE vulnerabilities of high security level/g,
+      });
     });
   });
 
@@ -394,7 +457,16 @@ describe('Advanced Happy path', () => {
 
     it('verify the Commit Pipeline runs Tab', () => {
       UIhelper.clickTab('Pipeline runs');
-      UIhelper.verifyRowInTable('Pipelinerun List', `${applicationName}-`, ['Succeeded', 'Test']);
+      UIhelper.verifyRowInTable(
+        'Pipelinerun List',
+        integrationTestDetails.enterpriseContractITPipelineRunName,
+        ['Failed', 'Test'],
+      );
+      UIhelper.verifyRowInTable(
+        'Pipelinerun List',
+        integrationTestDetails.passIntegrationTestPipelineRunName,
+        ['Succeeded', 'Test'],
+      );
       UIhelper.verifyRowInTable('Pipelinerun List', componentInfo.secondPipelineRunName, [
         'Succeeded',
         'Build',
@@ -408,7 +480,7 @@ describe('Advanced Happy path', () => {
       Common.waitForLoad();
       UIhelper.verifyGraphNodes('Components', false);
       UIhelper.verifyGraphNodes('Builds');
-      UIhelper.verifyGraphNodes('Tests');
+      UIhelper.verifyGraphNodes('Tests', false);
       UIhelper.verifyGraphNodes('Static environments');
     });
   });

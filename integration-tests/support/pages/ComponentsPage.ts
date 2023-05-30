@@ -108,7 +108,7 @@ export class ComponentPage extends AbstractWizardPage {
 
   selectCustomBuildPipeline() {
     cy.get(ComponentsPagePO.customBuildPipelineRadioBtn).click();
-    cy.contains('Custom build pipeline').should('be.visible');
+    cy.contains('Default build pipeline').should('be.visible');
   }
 
   checkStatusOnModal(labelText: string) {
