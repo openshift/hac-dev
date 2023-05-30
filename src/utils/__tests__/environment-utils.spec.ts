@@ -84,6 +84,23 @@ describe('environment-utils', () => {
     expect(sortEnvironmentsBasedonParent([a, b, c])).toEqual([a, b, c]);
   });
 
+  it('should alphabettically sort environments without parentEnvironment', () => {
+    const bRootEnvironment = {
+      metadata: {
+        name: 'b_root_env',
+      },
+      spec: {},
+    } as EnvironmentKind;
+
+    expect(sortEnvironmentsBasedonParent([bRootEnvironment, a])).toEqual([a, bRootEnvironment]);
+    expect(sortEnvironmentsBasedonParent([bRootEnvironment, a, b, c])).toEqual([
+      a,
+      bRootEnvironment,
+      b,
+      c,
+    ]);
+  });
+
   it('should sort environments alphabetically as well', () => {
     expect(sortEnvironmentsBasedonParent([cb, c, ba, b, bc, bb, a])).toEqual([
       a,

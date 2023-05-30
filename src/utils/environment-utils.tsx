@@ -83,7 +83,9 @@ export const sortEnvironmentsBasedonParent = (
   if (!environments || !environments.length) {
     return [];
   }
-  const sortedEnvs = environments.filter((env) => !isPositionedEnvironment(env, environments));
+  const sortedEnvs = environments
+    .filter((env) => !isPositionedEnvironment(env, environments))
+    .sort((a, b) => a.metadata.name.localeCompare(b.metadata.name));
   const positionedEnvs = environments.filter((env) => isPositionedEnvironment(env, environments));
   insertPositionedEnvironments(positionedEnvs, sortedEnvs);
   return sortedEnvs;
