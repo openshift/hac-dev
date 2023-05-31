@@ -71,6 +71,17 @@ COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z \
     -e GH_COMMENTBODY=${GH_COMMENTBODY}"
 TEST_IMAGE="quay.io/hacdev/hac-tests:next"
 
+# If test dockerfile changes, rebuild the runner image
+if ! git diff --exit-code --quiet origin/$ghprbTargetBranch HEAD -- integration-tests/Dockerfile; then
+  echo "Dockerfile changes detected, rebuilding test image"
+  TEST_IMAGE="hac-dev:pr-${ghprbPullId}"
+
+  cd integration-tests
+  docker build -t "$TEST_IMAGE" . -f Dockerfile
+  podman pull docker-daemon:$TEST_IMAGE
+  cd ..
+fi
+
 set +e
 TEST_RUN=0
 
@@ -80,6 +91,11 @@ podman run --userns=keep-id ${COMMON_SETUP} \
     -e CYPRESS_QUAY_TOKEN=${CYPRESS_QUAY_TOKEN} \
     -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
     ${TEST_IMAGE} || TEST_RUN=1
+
+if [[ $TEST_IMAGE =~ "hac-dev:pr" ]]; then
+  podman rmi -f $TEST_IMAGE
+  docker rmi -f $TEST_IMAGE
+fi
 
 bonfire namespace release -f ${NAMESPACE}
 
