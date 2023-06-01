@@ -46,6 +46,12 @@ export type KubeConfig = {
       server: string;
     };
   }[];
+  users: {
+    name: string;
+    user: {
+      token: string;
+    };
+  };
 };
 
 export const environmentTypeItems = [
@@ -89,7 +95,11 @@ export const environmentFormSchema = yup.object({
       (value) => {
         try {
           const kubeconfig = YAML.load(value) as KubeConfig;
-          if (typeof kubeconfig !== 'object' || !kubeconfig?.clusters?.[0]?.cluster?.server) {
+          if (
+            typeof kubeconfig !== 'object' ||
+            !kubeconfig?.clusters?.[0]?.cluster?.server ||
+            !kubeconfig?.users?.[0]?.user?.token
+          ) {
             return false;
           }
           return true;
