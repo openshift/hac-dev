@@ -5,3 +5,4 @@ export { useComponentPipelineRun } from './useComponentPipelineRun';
 export { useApplicationHealthStatus } from './useApplicationHealthStatus';
 export { useLatestApplicationRouteURL } from './useLatestApplicationRouteURL';
 export { usePipelineRunsWithStatus } from './usePipelineRunsWithStatus';
+export { useSignupStatus } from './useSignupStatus';

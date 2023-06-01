@@ -1,28 +1,25 @@
 import { SetFeatureFlag } from '@openshift/dynamic-plugin-sdk-extensions';
-import { commonFetch } from '@openshift/dynamic-plugin-sdk-utils';
+import { fetchSignupStatus, SignupStatus } from './signup-utils';
 
 export const SIGNUP_FLAG = 'SIGNUP';
 export const SIGNUP_PENDING_FLAG = 'SIGNUP_PENDING';
 
 export const setSignupFeatureFlags = async (setFlag: SetFeatureFlag) => {
-  try {
-    const response = await commonFetch('/registration/api/v1/signup');
-    if (response.status === 200) {
-      try {
-        const data = await response.json();
-        if (data.status.ready) {
-          setFlag(SIGNUP_FLAG, true);
-        } else if (data.status.reason === 'PendingApproval') {
-          setFlag(SIGNUP_FLAG, false);
-          setFlag(SIGNUP_PENDING_FLAG, true);
-        }
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('Error when fetching signup status: ', e);
-      }
-    }
-  } catch (error) {
-    if (error.code === 404) setFlag(SIGNUP_FLAG, false);
+  const response = await fetchSignupStatus();
+  switch (response) {
+    case SignupStatus.SignedUp:
+      setFlag(SIGNUP_FLAG, true);
+      break;
+    case SignupStatus.PendingApproval:
+      setFlag(SIGNUP_FLAG, false);
+      setFlag(SIGNUP_PENDING_FLAG, true);
+      break;
+    case SignupStatus.NotSignedUp:
+      setFlag(SIGNUP_FLAG, false);
+      break;
+    default:
+      // eslint-disable-next-line no-console
+      console.error('Unable to determine signup status.');
   }
 };
 
