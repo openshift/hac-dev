@@ -31,7 +31,7 @@ To use webpack proxy you need to append this to your `/etc/hosts` for auth:
 
 ### Testing
 
-`npm run verify` will run `npm run lint` (eslint) and `npm test` (Jest)
+`npm run verify` will run `npm run lint` (eslint) and `npm test` (Jest). To generate contracts using Pact, run `npm run pact` command. Read more about Pact contract tests [here](pactTests.md).
 
 
 ## Contributing
