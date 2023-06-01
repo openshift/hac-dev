@@ -57,8 +57,7 @@ preferences: {}
 users:
 - name: admin
   user:
-    client-certificate-data: 6Q0FJczNIUG9OKzQo=
-    client-key-data: GTmRHbEptLQo=
+    token: 6Q0FJczNIUG9OKzQo=
 `;
 
 describe('CreateEnvironment', () => {
