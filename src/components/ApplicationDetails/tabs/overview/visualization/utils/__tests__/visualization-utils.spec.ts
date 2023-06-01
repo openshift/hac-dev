@@ -43,7 +43,7 @@ describe('getNodeWidth', () => {
   test('should return the max length resources', () => {
     const plainWidth = getNodeWidth('test');
     const statusWidth = getNodeWidth('test', 'danger');
-    const badgedWidth = getNodeWidth('test', 'danger', ['1', '2']);
+    const badgedWidth = getNodeWidth('test', 'danger', 2);
     expect(plainWidth).toBeGreaterThan(0);
     expect(statusWidth).toBeGreaterThan(plainWidth);
     expect(badgedWidth).toBeGreaterThan(statusWidth);

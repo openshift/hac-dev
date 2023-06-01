@@ -250,7 +250,7 @@ export const groupToPipelineNode = (
     label,
     height: DEFAULT_NODE_HEIGHT,
     type: group ? NodeType.WORKFLOW_GROUP : NodeType.WORKFLOW_NODE,
-    width: getNodeWidth(label, status, group ? undefined : children),
+    width: getNodeWidth(label, status, childNodes?.length),
     group,
     children,
     runAfterTasks: group ? [] : runAfterTasks,

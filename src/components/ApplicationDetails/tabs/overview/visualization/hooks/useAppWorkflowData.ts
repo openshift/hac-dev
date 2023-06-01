@@ -40,34 +40,31 @@ export const useAppWorkflowData = (
     applicationTestsLoaded,
     applicationErrors,
   ] = useAppApplicationTestNodes(namespace, applicationName, buildTasks, expanded);
-  const testsGroup = React.useMemo(
-    () =>
-      applicationTestsLoaded
-        ? groupToPipelineNode(
-            'tests',
-            applicationName,
-            !applicationIntegrationTests?.length && !applicationIntegrationTests.length
-              ? 'No tests set'
-              : 'Tests',
-            WorkflowNodeType.TESTS,
-            buildTasks,
-            expanded,
-            expanded ? applicationIntegrationTestTasks : undefined,
-            applicationIntegrationTestNodes,
-            applicationIntegrationTests,
-            worstWorkflowStatus(applicationIntegrationTestNodes),
-          )
-        : undefined,
-    [
-      applicationTestsLoaded,
-      applicationName,
-      applicationIntegrationTests,
-      buildTasks,
-      expanded,
-      applicationIntegrationTestTasks,
-      applicationIntegrationTestNodes,
-    ],
-  );
+  const testsGroup = React.useMemo(() => {
+    const testsExist = applicationIntegrationTests?.length || applicationIntegrationTests.length;
+    return applicationTestsLoaded
+      ? groupToPipelineNode(
+          'tests',
+          applicationName,
+          testsExist ? 'Tests' : 'No tests set',
+          WorkflowNodeType.TESTS,
+          buildTasks,
+          expanded,
+          expanded ? applicationIntegrationTestTasks : undefined,
+          testsExist ? applicationIntegrationTestNodes : [],
+          applicationIntegrationTests,
+          worstWorkflowStatus(applicationIntegrationTestNodes),
+        )
+      : undefined;
+  }, [
+    applicationTestsLoaded,
+    applicationName,
+    applicationIntegrationTests,
+    buildTasks,
+    expanded,
+    applicationIntegrationTestTasks,
+    applicationIntegrationTestNodes,
+  ]);
 
   const [
     staticEnvironmentNodes,

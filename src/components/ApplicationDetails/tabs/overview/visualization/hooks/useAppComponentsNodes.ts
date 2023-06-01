@@ -56,7 +56,7 @@ export const useAppComponentsNodes = (
             previousTasks,
             expanded,
             expanded ? componentNodes?.map((c) => c.id) : undefined,
-            componentNodes,
+            components.length ? componentNodes : [],
             components,
           )
         : undefined,

@@ -157,7 +157,7 @@ export const useAppReleaseNodes = (
             previousTasks,
             expanded,
             expanded ? releaseNodes?.map((c) => c.id) : undefined,
-            releaseNodes,
+            releases?.length ? releaseNodes : [],
             releases,
             worstWorkflowStatus(releaseNodes),
           )

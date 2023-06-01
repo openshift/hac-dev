@@ -20,6 +20,11 @@ const DAGRE_SHARED_PROPS: dagre.GraphLabel = {
   ranksep: NODE_SEPARATION_HORIZONTAL,
 };
 
+const WORKFLOW_VISUALIZATION_PROPS: dagre.GraphLabel = {
+  ...DAGRE_SHARED_PROPS,
+  ranksep: 10,
+};
+
 const EXPANDED_WORKFLOW_VISUALIZATION_PROPS: dagre.GraphLabel = {
   ...DAGRE_SHARED_PROPS,
   ranksep: EXPANDED_NODE_SEPARATION_HORIZONTAL,
@@ -43,7 +48,7 @@ export const COMMIT_VISUALIZATION_PROPS: dagre.GraphLabel = {
 export const getLayoutData = (layout: PipelineLayout): dagre.GraphLabel => {
   switch (layout) {
     case PipelineLayout.WORKFLOW_VISUALIZATION:
-      return DAGRE_SHARED_PROPS;
+      return WORKFLOW_VISUALIZATION_PROPS;
     case PipelineLayout.EXPANDED_WORKFLOW_VISUALIZATION:
       return EXPANDED_WORKFLOW_VISUALIZATION_PROPS;
     case PipelineLayout.COMMIT_VISUALIZATION:

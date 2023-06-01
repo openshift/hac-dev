@@ -82,7 +82,7 @@ export const useAppBuildNodes = (
             previousTasks,
             expanded,
             expanded ? buildNodes?.map((c) => c.id) : undefined,
-            buildNodes,
+            components.length && latestBuilds.length ? buildNodes : [],
             latestBuilds,
             components.length && buildNodes?.[0].id === 'no-builds'
               ? runStatus.NeedsMerge
