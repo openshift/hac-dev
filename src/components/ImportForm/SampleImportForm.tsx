@@ -53,7 +53,7 @@ const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({ appl
         namespace,
       };
 
-      createResources(values, ImportStrategy.SAMPLE)
+      createResources(values, ImportStrategy.SAMPLE, workspace)
         .then(({ applicationName: appName, application, components }) => {
           if (application) {
             track('Application Create', {

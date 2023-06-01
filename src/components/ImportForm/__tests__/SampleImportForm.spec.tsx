@@ -97,6 +97,7 @@ describe('SampleImportForm', () => {
         },
       },
       ImportStrategy.SAMPLE,
+      'test-ws',
     );
 
     expect(navigateMock).toHaveBeenCalledWith(

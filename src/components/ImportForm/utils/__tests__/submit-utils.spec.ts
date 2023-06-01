@@ -43,6 +43,7 @@ describe('Submit Utils: createResources', () => {
         },
       },
       ImportStrategy.GIT,
+      'test-ws',
     );
     expect(createApplicationMock).toHaveBeenCalledTimes(2);
     expect(createComponentMock).toHaveBeenCalledTimes(2);
@@ -70,6 +71,7 @@ describe('Submit Utils: createResources', () => {
         },
       },
       ImportStrategy.GIT,
+      'test-ws',
     );
     expect(createApplicationMock).toHaveBeenCalledTimes(0);
     expect(createComponentMock).toHaveBeenCalledTimes(2);
@@ -98,6 +100,7 @@ describe('Submit Utils: createResources', () => {
           },
         },
         ImportStrategy.GIT,
+        'test-ws',
       ),
     ).rejects.toThrow();
     expect(createApplicationMock).toHaveBeenLastCalledWith('test-app', 'test-ns', true);
@@ -128,6 +131,7 @@ describe('Submit Utils: createResources', () => {
           },
         },
         ImportStrategy.GIT,
+        'test-ws',
       ),
     ).rejects.toThrow();
     expect(createApplicationMock).toHaveBeenLastCalledWith('test-app', 'test-ns', true);
@@ -151,6 +155,7 @@ describe('Submit Utils: createResources', () => {
         },
       },
       ImportStrategy.SAMPLE,
+      'test-ws',
     );
     expect(detectComponentsMock).toHaveBeenCalledWith(
       'https://github.com/example/repo',

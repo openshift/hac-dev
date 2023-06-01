@@ -62,7 +62,7 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
   const handleSubmit = React.useCallback(
     (values: ImportFormValues, formikHelpers) => {
       track(TrackEvents.ButtonClicked, { link_name: 'import-submit', workspace });
-      return createResources(values, ImportStrategy.GIT)
+      return createResources(values, ImportStrategy.GIT, workspace)
         .then(({ applicationName: appName, application, components, componentNames }) => {
           if (application) {
             track('Application Create', {

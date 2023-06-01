@@ -367,7 +367,12 @@ export const createSupportedPartnerSecret = async (
   return Promise.all(resourcePromises);
 };
 
-export const createSecret = async (secret: ImportSecret, namespace: string, dryRun: boolean) => {
+export const createSecret = async (
+  secret: ImportSecret,
+  workspace: string,
+  namespace: string,
+  dryRun: boolean,
+) => {
   const partnerTask = Object.values(supportedPartnerTasksSecrets).find(
     (s) => s.name === secret.secretName,
   );
@@ -390,9 +395,12 @@ export const createSecret = async (secret: ImportSecret, namespace: string, dryR
   };
   //Todo: K8sCreateResource appends the resource name and errors out.
   // Fix the below code when this sdk-utils issue is resolved https://issues.redhat.com/browse/RHCLOUD-21655.
-  return commonFetch(`/api/v1/namespaces/${namespace}/secrets${dryRun ? '?dryRun=All' : ''}`, {
-    method: 'POST',
-    body: JSON.stringify(secretResource),
-    headers: { 'Content-type': 'application/json' },
-  });
+  return commonFetch(
+    `/workspaces/${workspace}/api/v1/namespaces/${namespace}/secrets${dryRun ? '?dryRun=All' : ''}`,
+    {
+      method: 'POST',
+      body: JSON.stringify(secretResource),
+      headers: { 'Content-type': 'application/json' },
+    },
+  );
 };

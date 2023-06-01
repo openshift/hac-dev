@@ -4,7 +4,7 @@ import { SAMPLE_ANNOTATION } from '../../../utils/component-utils';
 import { createApplication, createComponent, createSecret } from '../../../utils/create-utils';
 import { detectComponents } from './cdq-utils';
 import { transformResources, transformComponentValues } from './transform-utils';
-import { DetectedFormComponent, ImportFormValues, ImportStrategy } from './types';
+import { DetectedFormComponent, ImportFormValues, ImportSecret, ImportStrategy } from './types';
 
 export const createComponents = async (
   components: DetectedFormComponent[],
@@ -38,10 +38,18 @@ export const createComponents = async (
   return Promise.all(createComponentPromises);
 };
 
-export const createSecrets = async (secrets, namespace, dryRun) =>
-  Promise.all(secrets.map((secret) => createSecret(secret, namespace, dryRun)));
+export const createSecrets = async (
+  secrets: ImportSecret[],
+  workspace: string,
+  namespace: string,
+  dryRun: boolean,
+) => Promise.all(secrets.map((secret) => createSecret(secret, workspace, namespace, dryRun)));
 
-export const createResources = async (formValues: ImportFormValues, strategy: ImportStrategy) => {
+export const createResources = async (
+  formValues: ImportFormValues,
+  strategy: ImportStrategy,
+  workspace: string,
+) => {
   const {
     source,
     application,
@@ -86,7 +94,7 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
     applicationData = await createApplication(application, namespace);
     applicationName = applicationData.metadata.name;
   }
-  await createSecrets(importSecrets, namespace, true);
+  await createSecrets(importSecrets, workspace, namespace, true);
 
   const createdComponents = await createComponents(
     detectedComponents,
@@ -97,7 +105,7 @@ export const createResources = async (formValues: ImportFormValues, strategy: Im
     componentAnnotations,
   );
 
-  await createSecrets(importSecrets, namespace, false);
+  await createSecrets(importSecrets, workspace, namespace, false);
 
   return {
     applicationName,
