@@ -29,7 +29,7 @@ const patchSourceUrl = (stub: any, url: string) => {
 const dockerFileSample = {
   key: 'docker-build',
   value: 'Dockerfile',
-  icon: <DockerIcon color="#2496ed" />,
+  icon: <DockerIcon width={24} height={24} color="#2496ed" />,
   name: 'Dockerfile',
 };
 
