@@ -24,7 +24,7 @@ pactWith({ consumer: 'HACdev', provider: 'HAS' }, (provider) => {
       const path = `${await PactUrlUtil.getPath(Kind.Application, namespace, app)}`;
       const devfileExample =
         'metadata:\n  attributes:\n    appModelRepository.context: /\n    appModelRepository.url: https://github.com/redhat-appstudio-appdata/asdf-kkanova-match-share\n    gitOpsRepository.context: ./\n    gitOpsRepository.url: https://github.com/redhat-appstudio-appdata/asdf-kkanova-match-share\n  name: asdf\nprojects:\n- git:\n    remotes:\n      origin: https://github.com/sclorg/nodejs-ex\n  name: gh-component\n- git:\n    remotes:\n      origin: https://github.com/devfile-samples/devfile-sample-java-springboot-basic.git\n  name: quay-component\nschemaVersion: 2.1.0\n';
-      const expectedResponse = {
+      const expectedResponseBody = {
         apiVersion: `${ApplicationGroupVersionKind.group}/${ApplicationGroupVersionKind.version}`,
         kind: ApplicationGroupVersionKind.kind,
         metadata: {
@@ -46,6 +46,14 @@ pactWith({ consumer: 'HACdev', provider: 'HAS' }, (provider) => {
             generate: devfileExample,
             matcher: `((${comp1})[\\s\\S]*(${comp2}))|((${comp2}})[\\s\\S]*(${comp1}))`,
           }),
+          conditions: [
+            {
+              reason: 'OK',
+              type: 'Created',
+              status: 'True',
+              message: 'Application has been successfully created',
+            },
+          ],
         },
       };
 
@@ -61,7 +69,7 @@ pactWith({ consumer: 'HACdev', provider: 'HAS' }, (provider) => {
         },
         willRespondWith: {
           status: 200,
-          body: expectedResponse,
+          body: expectedResponseBody,
         },
       });
 
