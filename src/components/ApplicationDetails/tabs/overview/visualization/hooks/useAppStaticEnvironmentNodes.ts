@@ -97,7 +97,7 @@ export const useAppStaticEnvironmentNodes = (
             previousTasks,
             expanded,
             expanded ? staticEnvironmentNodes?.map((c) => c.id) : undefined,
-            staticEnvironmentNodes,
+            staticEnvironments?.length ? staticEnvironmentNodes : [],
             staticEnvironments,
             worstWorkflowStatus(staticEnvironmentNodes),
           )

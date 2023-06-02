@@ -4,8 +4,7 @@ import update from 'lodash/update';
 import { NODE_ICON_WIDTH, NODE_PADDING } from '../const';
 import { PipelineMixedNodeModel, WorkflowResources } from '../types';
 
-const STATUS_WIDTH = 24;
-const BADGE_WIDTH = 36;
+const STATUS_WIDTH = 16;
 
 const DEFAULT_CHAR_WIDTH = 8;
 
@@ -34,8 +33,10 @@ export const getTextWidth = (text: string, font: string = '0.875rem RedHatText')
 export const getLabelWidth = (label: string): number =>
   getTextWidth(label) + NODE_PADDING * 2 + NODE_ICON_WIDTH;
 
-export const getNodeWidth = (label: string, status?: string, children?: string[]): number =>
-  getLabelWidth(label) + (status ? STATUS_WIDTH : 0) + (children?.length ? BADGE_WIDTH : 0);
+export const getNodeWidth = (label: string, status?: string, numChildren = 0): number =>
+  getLabelWidth(label) +
+  (status ? STATUS_WIDTH + NODE_PADDING : 0) +
+  (numChildren ? getTextWidth(`${numChildren}`) + NODE_PADDING * 3 : 0);
 
 export const getLatestResource = (resources = []) =>
   resources

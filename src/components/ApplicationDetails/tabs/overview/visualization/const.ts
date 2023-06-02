@@ -6,10 +6,10 @@ export const TOOLBAR_HEIGHT = 40;
 
 export const NODE_WIDTH = 100;
 export const NODE_HEIGHT = 30;
-export const NODE_PADDING = 12;
+export const NODE_PADDING = 8;
 export const EDGE_MARKER_WIDTH = 10;
 
-export const NODE_ICON_WIDTH = 13;
+export const NODE_ICON_WIDTH = 26;
 
 export enum NodeType {
   WORKFLOW_NODE = 'workflow-node',
