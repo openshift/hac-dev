@@ -263,4 +263,61 @@ describe('RuntimeSelector', () => {
     expect(setFieldValueMock).toHaveBeenCalledWith('detectionFailed', false);
     expect(setFieldValueMock).toHaveBeenCalledWith('isDetected', true);
   });
+
+  it('should not pass the git revision in cdq call when the runtime is changed', async () => {
+    useDevfileSamplesMock.mockReturnValue([
+      [
+        {
+          name: 'Python',
+          attributes: {
+            projectType: 'python',
+            git: {
+              remotes: {
+                origin: 'https://github.com/devfile-samples/devfile-sample-python-basic',
+              },
+            },
+          },
+          icon: {},
+        },
+      ],
+      true,
+    ]);
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
+      source: {
+        git: {
+          url: 'https://github.com/sclorg/nodejs-ex',
+          context: '/testDirectory',
+          revision: 'master',
+        },
+      },
+      isDetected: false,
+      initialDetectionLoaded: true,
+      detectionFailed: false,
+      components: [
+        {
+          projectType: 'nodejs',
+        },
+      ],
+    });
+
+    expect(screen.getByText(detectingRuntime)).toBeVisible();
+    await act(async () => screen.getByText(detectingRuntime).click());
+
+    useComponentDetectionMock.mockReturnValue([
+      { node: { componentStub: { source: { source: { git: {} } } } } },
+      true,
+    ]);
+    await act(async () => screen.getByText('Python').click());
+
+    expect(screen.getByText('Python')).toBeVisible();
+    expect(useComponentDetectionMock).toHaveBeenLastCalledWith(
+      'https://github.com/devfile-samples/devfile-sample-python-basic',
+      undefined,
+      undefined,
+      undefined,
+    );
+    expect(setFieldValueMock).toHaveBeenCalledWith('detectionFailed', false);
+    expect(setFieldValueMock).toHaveBeenCalledWith('isDetected', true);
+  });
 });
