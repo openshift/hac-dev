@@ -18,6 +18,8 @@ export const setSignupFeatureFlags = async (setFlag: SetFeatureFlag) => {
       setFlag(SIGNUP_FLAG, false);
       break;
     default:
+      // let's disable the signup if something breaks
+      setFlag(SIGNUP_FLAG, false);
       // eslint-disable-next-line no-console
       console.error('Unable to determine signup status.');
   }

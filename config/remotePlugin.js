@@ -127,7 +127,7 @@ const routeExtensions = [
     },
   },
 
-  // application-pipeline overview
+  // application-pipeline overview (use exact if user has signup)
   {
     type: 'core.page/route',
     properties: {
@@ -137,27 +137,15 @@ const routeExtensions = [
         $codeRef: 'OverviewPage',
       },
     },
-  },
-  // If user is not signed up, take user to overview page even for applications and environments nav item.
-  // Remove this once we have navigation filtering based on feature flags.
-  {
-    type: 'core.page/route',
-    properties: {
-      path: '/application-pipeline/workspaces',
-      exact: true,
-      component: {
-        $codeRef: 'OverviewPage',
-      },
-    },
     flags: {
-      disallowed: ['SIGNUP'],
+      required: ['SIGNUP'],
     },
   },
+  // If user doesn't have signup flag enabled redirect the user allways to Overview (exact: false)
   {
     type: 'core.page/route',
     properties: {
-      path: '/application-pipeline/environments',
-      exact: true,
+      path: '/application-pipeline',
       component: {
         $codeRef: 'OverviewPage',
       },

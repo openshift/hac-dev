@@ -31,4 +31,11 @@ describe('setSignupFeatureFlags', () => {
     await setSignupFeatureFlags(setFlag);
     expect(setFlag).toHaveBeenCalledWith(SIGNUP_FLAG, false);
   });
+
+  it('sets signup flag on any error', async () => {
+    fetchMock.mockRejectedValue({ code: 401 });
+    const setFlag = jest.fn();
+    await setSignupFeatureFlags(setFlag);
+    expect(setFlag).toHaveBeenCalledWith(SIGNUP_FLAG, false);
+  });
 });
