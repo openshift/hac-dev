@@ -71,3 +71,14 @@ export const addIntegrationTestStepPO = {
   displayNameInput: '[data-test="display-name-input"]',
   optionalreleaseCheckbox: '[data-test="optional-release-checkbox"]',
 };
+
+export const environmentsPagePO = {
+  kubconfigTextArea: 'textarea[id="text-file-kubeconfig"]',
+  kubeconfigValidationMsg: 'div[id="form-input-kubeconfig-field-helper"]',
+  envCard: '[data-ouia-component-type="PF4/Card"]',
+  label: 'div[class*="list__group"]',
+  kebabButton: 'button[data-testid="kebab-button"]',
+  envDropdownDeleteBtn: 'li[data-testid="Delete"]',
+  envDeleteBtn: 'button[data-testid="delete-resource"]',
+  envCardConnectionLabel: 'div[class="pf-c-card__title"] span[class="pf-c-label__content"]',
+};

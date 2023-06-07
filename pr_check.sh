@@ -90,6 +90,7 @@ podman run --userns=keep-id ${COMMON_SETUP} \
     -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \
     -e CYPRESS_QUAY_TOKEN=${CYPRESS_QUAY_TOKEN} \
     -e CYPRESS_RP_TOKEN=${CYPRESS_RP_HAC} \
+    -e CYPRESS_VC_KUBECONFIG=${CYPRESS_VC_KUBECONFIG} \
     ${TEST_IMAGE} || TEST_RUN=1
 
 if [[ $TEST_IMAGE =~ "hac-dev:pr" ]]; then
