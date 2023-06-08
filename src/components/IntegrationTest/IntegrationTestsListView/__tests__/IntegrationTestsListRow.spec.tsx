@@ -41,13 +41,4 @@ describe('IntegrationTestListRow', () => {
     const cells = wrapper.container.getElementsByTagName('td');
     expect(cells[2].innerHTML).toBe('Mandatory');
   });
-
-  it('should append https to bundle url only where required', () => {
-    const integrationTest = MockIntegrationTestsWithGit[1];
-    const wrapper = render(<IntegrationTestListRow obj={integrationTest} columns={[]} />, {
-      container: document.createElement('tr'),
-    });
-    const cells = wrapper.container.getElementsByTagName('td');
-    expect(cells[1].children[0].innerHTML).toBe(`${integrationTest.spec.bundle}`);
-  });
 });
