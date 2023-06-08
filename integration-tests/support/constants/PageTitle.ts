@@ -9,6 +9,7 @@ export const pageTitles = {
 export enum NavItem {
   applications = 'Applications',
   settings = 'Settings',
+  environments = 'Environments',
 }
 
 export const FULL_APPLICATION_TITLE = 'Red Hat Trusted Application Pipeline';
