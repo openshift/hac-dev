@@ -1,6 +1,6 @@
 import { IntegrationTestScenarioModel } from '../../../models';
 import { Action } from '../../../shared/components/action-menu/types';
-import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
+import { IntegrationTestScenarioKind, ResolverType } from '../../../types/coreBuildService';
 import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { createDeleteModalLauncher } from '../../modal/DeleteResourceModal';
@@ -44,8 +44,13 @@ export const useIntegrationTestActions = (
       cta: {
         href: `/application-pipeline/workspaces/${workspace}/applications/${integrationTest.spec.application}/integrationtests/${integrationTest.metadata.name}/edit`,
       },
-      disabled: !canUpdateIntegrationTest,
-      disabledTooltip: "You don't have access to edit this integration test",
+      disabled:
+        !canUpdateIntegrationTest ||
+        integrationTest.spec?.resolverRef?.resolver !== ResolverType.GIT,
+      disabledTooltip:
+        integrationTest.spec?.resolverRef?.resolver !== ResolverType.GIT && canUpdateIntegrationTest
+          ? undefined
+          : "You don't have access to edit this integration test",
       analytics: {
         link_name: 'edit-integration-test',
         link_location: 'integration-test-actions',

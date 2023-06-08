@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
-import { MockIntegrationTestsWithGit } from '../../IntegrationTestsListView/__data__/mock-integration-tests';
+import {
+  MockIntegrationTestsWithBundles,
+  MockIntegrationTestsWithGit,
+} from '../../IntegrationTestsListView/__data__/mock-integration-tests';
 import IntegrationTestOverviewTab from '../IntegrationTestOverviewTab';
 
 jest.mock('react-router-dom', () => ({
@@ -57,5 +60,13 @@ describe('IntegrationTestOverviewTab', () => {
   it('should append https to the git url if it is not present in the spec', () => {
     render(<IntegrationTestOverviewTab integrationTest={MockIntegrationTestsWithGit[1]} />);
     expect(screen.getAllByRole('link')[0].getAttribute('href')).toBe('https://test-url2');
+  });
+
+  it('should render correct param values for bundle resolvers', () => {
+    render(<IntegrationTestOverviewTab integrationTest={MockIntegrationTestsWithBundles[0]} />);
+    screen.getByText('test-app-test-1'); // name
+    screen.getByText('test-namespace'); // namespace
+    screen.getByText('Optional'); // optional for release
+    screen.getByText('Bundle');
   });
 });

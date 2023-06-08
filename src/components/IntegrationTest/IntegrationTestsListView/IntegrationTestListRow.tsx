@@ -37,7 +37,7 @@ const IntegrationTestListRow: React.FC<RowFunctionArgs<IntegrationTestScenarioKi
                 content={
                   obj?.spec?.resolverRef?.params.find(
                     (param) => param.name === ResolverRefParams.URL,
-                  )?.value
+                  )?.value || '-'
                 }
               />
             }
@@ -59,7 +59,7 @@ const IntegrationTestListRow: React.FC<RowFunctionArgs<IntegrationTestScenarioKi
             text={
               obj?.spec?.resolverRef?.params.find(
                 (param) => param.name === ResolverRefParams.REVISION,
-              )?.value
+              )?.value || '-'
             }
             stopPropagation
           />

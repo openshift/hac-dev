@@ -4,7 +4,11 @@ import {
   IntegrationTestScenarioGroupVersionKind,
   IntegrationTestScenarioModel,
 } from '../../../../models';
-import { IntegrationTestScenarioKind, ResolverParam } from '../../../../types/coreBuildService';
+import {
+  IntegrationTestScenarioKind,
+  ResolverParam,
+  ResolverType,
+} from '../../../../types/coreBuildService';
 import { FormValues, IntegrationTestFormValues, IntegrationTestLabels } from '../types';
 
 export enum ResolverRefParams {
@@ -28,7 +32,7 @@ export const editIntegrationTest = (
     spec: {
       ...integrationTest.spec,
       resolverRef: {
-        resolver: 'git',
+        resolver: ResolverType.GIT,
         params: [
           { name: ResolverRefParams.URL, value: url },
           { name: ResolverRefParams.REVISION, value: revision },
@@ -83,7 +87,7 @@ export const createIntegrationTest = (
     spec: {
       application,
       resolverRef: {
-        resolver: 'git',
+        resolver: ResolverType.GIT,
         params: [
           { name: ResolverRefParams.URL, value: url },
           { name: ResolverRefParams.REVISION, value: revision },
@@ -137,16 +141,16 @@ export const getURLForParam = (params: ResolverParam[], paramName: string): stri
   const resolverParam =
     paramName === ResolverRefParams.URL ? url : params.find((param) => param.name === paramName);
 
-  const checkedURL = getGitHubLink(url.value);
+  const checkedURL = getGitHubLink(url?.value);
 
   if (paramName === ResolverRefParams.URL) {
     return checkedURL;
   }
-  if (paramName === ResolverRefParams.PATH) {
+  if (paramName === ResolverRefParams.PATH && resolverParam) {
     const branch = params.find((param) => param.name === ResolverRefParams.REVISION);
     return `${checkedURL}/tree/${branch.value}/${resolverParam.value}`;
   }
-  if (paramName === ResolverRefParams.REVISION) {
+  if (paramName === ResolverRefParams.REVISION && resolverParam) {
     return `${checkedURL}/tree/${resolverParam.value}`;
   }
   return null;

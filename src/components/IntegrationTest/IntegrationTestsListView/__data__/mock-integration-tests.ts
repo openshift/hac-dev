@@ -1,4 +1,4 @@
-import { IntegrationTestScenarioKind } from '../../../../types/coreBuildService';
+import { IntegrationTestScenarioKind, ResolverType } from '../../../../types/coreBuildService';
 import { IntegrationTestLabels } from '../../IntegrationTestForm/types';
 
 export const MockIntegrationTests = [
@@ -53,6 +53,44 @@ export const MockIntegrationTests = [
   },
 ];
 
+export const MockIntegrationTestsWithBundles: IntegrationTestScenarioKind[] = [
+  {
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    kind: 'IntegrationTestScenario',
+    metadata: {
+      labels: {
+        [IntegrationTestLabels.OPTIONAL]: 'true',
+      },
+      annotations: {
+        'app.kubernetes.io/display-name': 'Test 1',
+      },
+      name: 'test-app-test-1',
+      namespace: 'test-namespace',
+      uid: 'ed722704-74bc-4152-b27b-bee29cc7bfd2',
+    },
+    spec: {
+      application: 'test-app',
+      resolverRef: {
+        resolver: ResolverType.BUNDLES,
+        params: [
+          {
+            name: 'bundle',
+            value: 'quay.io/redhat-appstudio/example-tekton-bundle:integration-pipeline-pass',
+          },
+          { name: 'name', value: 'integration-pipeline-pass' },
+          { name: 'kind', value: 'pipeline' },
+        ],
+      },
+      contexts: [
+        {
+          description: 'Application testing 1',
+          name: 'application',
+        },
+      ],
+    },
+  },
+];
+
 export const MockIntegrationTestsWithGit: IntegrationTestScenarioKind[] = [
   {
     apiVersion: 'appstudio.redhat.com/v1alpha1',
@@ -71,7 +109,7 @@ export const MockIntegrationTestsWithGit: IntegrationTestScenarioKind[] = [
     spec: {
       application: 'test-app',
       resolverRef: {
-        resolver: 'git',
+        resolver: ResolverType.GIT,
         params: [
           { name: 'url', value: 'https://test-url' },
           { name: 'revision', value: 'main' },
@@ -100,7 +138,7 @@ export const MockIntegrationTestsWithGit: IntegrationTestScenarioKind[] = [
     spec: {
       application: 'test-app',
       resolverRef: {
-        resolver: 'git',
+        resolver: ResolverType.GIT,
         params: [
           { name: 'url', value: 'test-url2' },
           { name: 'revision', value: 'main2' },
@@ -144,7 +182,7 @@ export const MockIntegrationTestsWithGit: IntegrationTestScenarioKind[] = [
             value: 'pipelines/integration_pipeline_pass.yaml',
           },
         ],
-        resolver: 'git',
+        resolver: ResolverType.GIT,
       },
     },
     status: {
