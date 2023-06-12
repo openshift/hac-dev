@@ -18,6 +18,7 @@ import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
 import { OverviewTabPage } from '../support/pages/tabs/OverviewTabPage';
 import { Common } from './Common';
 import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
+import { UIhelper } from './UIhelper';
 
 export class Applications {
   static deleteApplication(applicationName: string) {
@@ -59,6 +60,7 @@ export class Applications {
     runtime?: string,
     useCustomBuildPipeline: boolean = false,
     envVar?: { varName: string; value: string },
+    secret?: { secretName: string; key: string; value: string },
   ) {
     this.importCodeStep(publicGitRepo);
     this.configureComponentsStep(
@@ -67,6 +69,7 @@ export class Applications {
       applicationName,
       runtime,
       envVar,
+      secret,
     );
   }
 
@@ -170,6 +173,7 @@ export class Applications {
     applicationName?: string,
     runtime?: string,
     envVar?: { varName: string; value: string },
+    secret?: { secretName: string; key: string; value: string },
   ) {
     const componentPage = new ComponentPage();
     componentPage.editComponentName(componentName);
@@ -186,6 +190,38 @@ export class Applications {
     if (useCustomBuildPipeline) {
       componentPage.selectCustomBuildPipeline();
     }
+    if (secret) {
+      UIhelper.clickButton('Add secret');
+      cy.contains(applicationsPagePO.formGroup, 'Select or enter name').within(() => {
+        cy.get('input').clear().type(secret.secretName);
+        cy.contains('button', `Create "${secret.secretName}"`).click();
+      });
+      cy.get(applicationsPagePO.secretKey).clear().type(secret.key);
+      cy.get(applicationsPagePO.secretValue).clear().type(secret.value);
+      UIhelper.clickButton('Create');
+    }
     componentPage.clickCreateApplication();
+  }
+
+  static verifySecretUsingAPI(secretName: string, key: string, value: string) {
+    cy.getCookie('cs_jwt')
+      .should('exist')
+      .its('value')
+      .then((token) => {
+        const namespace = `${Cypress.env('USERNAME').toLowerCase()}-tenant`;
+        const request = {
+          method: 'GET',
+          url: `${Common.getOrigin()}/api/k8s/workspaces/${Cypress.env(
+            'USERNAME',
+          ).toLowerCase()}/api/v1/namespaces/${namespace}/secrets/${secretName}`,
+          headers: {
+            authorization: `Bearer ${token}`,
+            accept: 'application/json',
+          },
+        };
+        cy.request(request)
+          .its(`body.data.${key}`)
+          .should('eq', Buffer.from(value, 'utf8').toString('base64'));
+      });
   }
 }

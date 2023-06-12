@@ -1,5 +1,8 @@
 export const applicationsPagePO = {
   appStatus: '[class="pf-c-label__content"]',
+  formGroup: 'div[class="pf-c-form__group"]',
+  secretKey: 'input[label="Key"]',
+  secretValue: 'textarea[id="value"]',
 };
 
 export const overviewTabPO = {
