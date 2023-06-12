@@ -40,7 +40,7 @@ export const MockIntegrationTests = [
     },
     spec: {
       application: 'test-app',
-      bundle: 'quay.io/test-rep/test-bundle:test-2',
+      bundle: 'https://quay.io/test-rep/test-bundle:test-2',
       contexts: [
         {
           description: 'Application testing 2',

@@ -14,7 +14,10 @@ const IntegrationTestListRow: React.FC<RowFunctionArgs<IntegrationTestScenarioKi
 }) => {
   const actions = useIntegrationTestActions(obj);
   const { workspace } = useWorkspaceInfo();
-  const containerImageUrl = `https://${obj.spec.bundle}`;
+  const containerImageUrl = /(http(s?)):\/\//i.test(obj.spec.bundle)
+    ? obj.spec.bundle
+    : `https://${obj.spec.bundle}`;
+
   return (
     <>
       <TableData
