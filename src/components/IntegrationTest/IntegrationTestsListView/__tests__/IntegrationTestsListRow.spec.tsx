@@ -12,7 +12,7 @@ jest.mock('../../../../utils/rbac', () => ({
 }));
 
 describe('IntegrationTestListRow', () => {
-  it('should render integration test info', () => {
+  it('should render integration test info with https appended url', () => {
     const integrationTest = MockIntegrationTests[0];
     const wrapper = render(<IntegrationTestListRow obj={integrationTest} columns={[]} />, {
       container: document.createElement('tr'),
@@ -20,7 +20,7 @@ describe('IntegrationTestListRow', () => {
     const cells = wrapper.container.getElementsByTagName('td');
 
     expect(cells[0].innerHTML).toBe(integrationTest.metadata.name);
-    expect(cells[1].innerHTML.includes(integrationTest.spec.bundle)).toBeTruthy();
+    expect(cells[1].children[0].innerHTML).toBe(`https://${integrationTest.spec.bundle}`);
     expect(cells[3].innerHTML).toBe(integrationTest.spec.pipeline);
   });
 
@@ -40,5 +40,14 @@ describe('IntegrationTestListRow', () => {
     });
     const cells = wrapper.container.getElementsByTagName('td');
     expect(cells[2].innerHTML).toBe('Mandatory');
+  });
+
+  it('should append https to bundle url only where required', () => {
+    const integrationTest = MockIntegrationTests[1];
+    const wrapper = render(<IntegrationTestListRow obj={integrationTest} columns={[]} />, {
+      container: document.createElement('tr'),
+    });
+    const cells = wrapper.container.getElementsByTagName('td');
+    expect(cells[1].children[0].innerHTML).toBe(`${integrationTest.spec.bundle}`);
   });
 });
