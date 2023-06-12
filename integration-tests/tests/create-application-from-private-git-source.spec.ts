@@ -5,43 +5,39 @@ import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 import { Tokens } from '../utils/Tokens';
 
-describe(
-  'Create Component from Private Git Source',
-  { tags: ['@PR-check', '@privateRepo'] },
-  () => {
-    const addComponent = new AddComponentPage();
-    const componentPage = new ComponentPage();
-    const applicationDetailPage = new ApplicationDetailPage();
-    const applicationName = Common.generateAppName();
-    const privateRepo = 'https://github.com/hac-test/private-repo-check';
-    const componentName = `py-${applicationName}`;
-    const username = Cypress.env('GH_USERNAME');
-    const token = Cypress.env('GH_TOKEN');
+describe('Create Component from Private Git Source', () => {
+  const addComponent = new AddComponentPage();
+  const componentPage = new ComponentPage();
+  const applicationDetailPage = new ApplicationDetailPage();
+  const applicationName = Common.generateAppName();
+  const privateRepo = 'https://github.com/hac-test/private-repo-check';
+  const componentName = `py-${applicationName}`;
+  const username = Cypress.env('GH_USERNAME');
+  const token = Cypress.env('GH_TOKEN');
 
-    before(function () {
-      Tokens.removeBindingsAndTokens();
-      Applications.createApplication();
+  before(function () {
+    Tokens.removeBindingsAndTokens();
+    Applications.createApplication();
+  });
+
+  after(function () {
+    Applications.deleteApplication(applicationName);
+  });
+
+  describe('Creating Component', () => {
+    it('Validate Repo', () => {
+      addComponent.setSource(privateRepo);
+      addComponent.waitUnableToAccess();
+      addComponent.loginByToken(username, token);
+      addComponent.waitRepoValidated(180000);
+      addComponent.clickNext();
     });
 
-    after(function () {
-      Applications.deleteApplication(applicationName);
+    it('Create Application', () => {
+      componentPage.editComponentName(componentName);
+      componentPage.clickCreateApplication();
+      Applications.goToComponentsTab();
+      applicationDetailPage.createdComponentExists(componentName, applicationName);
     });
-
-    describe('Creating Component', () => {
-      it('Validate Repo', () => {
-        addComponent.setSource(privateRepo);
-        addComponent.waitUnableToAccess();
-        addComponent.loginByToken(username, token);
-        addComponent.waitRepoValidated(180000);
-        addComponent.clickNext();
-      });
-
-      it('Create Application', () => {
-        componentPage.editComponentName(componentName);
-        componentPage.clickCreateApplication();
-        Applications.goToComponentsTab();
-        applicationDetailPage.createdComponentExists(componentName, applicationName);
-      });
-    });
-  },
-);
+  });
+});

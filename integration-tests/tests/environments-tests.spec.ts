@@ -7,8 +7,8 @@ import { EnvironmentsPage } from '../support/pages/EnvironmentsPage';
 
 describe('Create Env using Non-OpenShift Cluster', () => {
   const applicationName = Common.generateAppName();
-  const publicRepo = 'https://github.com/hac-test/devfile-sample-code-with-quarkus';
-  const componentName: string = Common.generateAppName('java-quarkus');
+  const publicRepo = 'https://github.com/devfile-samples/devfile-sample-python-basic.git';
+  const componentName: string = Common.generateAppName('python-basic');
 
   const envName = Common.generateAppName('env');
   const clusterInformation = {
@@ -58,6 +58,7 @@ describe('Create Env using Non-OpenShift Cluster', () => {
         .then((pipelinerunName) => {
           UIhelper.clickLink(pipelinerunName);
           DetailsTab.waitUntilStatusIsNotRunning();
+          UIhelper.verifyLabelAndValue('Status', 'Succeeded');
         });
     });
   });
