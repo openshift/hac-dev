@@ -10,7 +10,7 @@ import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
 import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
 
-describe('Basic Happy Path', { tags: ['@PR-check', '@publicRepo'] }, () => {
+describe('Basic Happy Path', () => {
   const applicationName = Common.generateAppName();
   const applicationDetailPage = new ApplicationDetailPage();
   const publicRepo = 'https://github.com/hac-test/devfile-sample-code-with-quarkus';

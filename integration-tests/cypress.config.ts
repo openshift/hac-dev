@@ -59,7 +59,6 @@ export default defineConfig({
         : 'tests/{advanced-happy-path*,environments-tests*,*-private-git-*}',
     setupNodeEvents(on, config) {
       require('cypress-mochawesome-reporter/plugin')(on);
-      require('@cypress/grep/src/plugin')(config);
 
       const logOptions = {
         outputRoot: `${config.projectRoot}/cypress`,

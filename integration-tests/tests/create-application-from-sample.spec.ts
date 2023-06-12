@@ -5,7 +5,7 @@ import { ComponentSamplesPage } from '../support/pages/ComponentSamplesPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
-describe('Create component from sample', { tags: ['@PR-check', '@publicRepo'] }, () => {
+describe('Create component from sample', () => {
   const applicationDetailPage = new ApplicationDetailPage();
   const componentSamplesPage = new ComponentSamplesPage();
   const publicRepos = [

@@ -5,7 +5,7 @@ import { ComponentPage } from '../support/pages/ComponentsPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
-describe('Create Component from Public Git Source', { tags: ['@PR-check', '@publicRepo'] }, () => {
+describe('Create Component from Public Git Source', () => {
   const addComponent = new AddComponentPage();
   const componentPage = new ComponentPage();
   const applicationDetailPage = new ApplicationDetailPage();
