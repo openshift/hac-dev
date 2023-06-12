@@ -54,8 +54,8 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
   const fieldPrefix = `components[${detectedComponentIndex}].componentStub`;
   const [expandedComponent, setExpandedComponent] = React.useState(isExpanded);
   const [targetPortTouched, setTargetPortTouched] = React.useState(false);
-  const [, { value: language }] = useField<string>(
-    `components[${detectedComponentIndex}].language`,
+  const [, { value: selectedRuntime }] = useField<string>(
+    `components[${detectedComponentIndex}].selectedRuntime`,
   );
 
   return (
@@ -138,7 +138,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                   }
                 />
               </GridItem>
-              {language === 'Dockerfile' && (
+              {selectedRuntime === 'Dockerfile' && (
                 <GridItem sm={12} lg={4}>
                   <InputField
                     name={`${fieldPrefix}.source.git.dockerfileUrl`}

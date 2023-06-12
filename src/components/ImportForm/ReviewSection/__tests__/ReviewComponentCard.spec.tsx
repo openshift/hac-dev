@@ -165,7 +165,7 @@ describe('ReviewComponentCard', () => {
         detectedComponentIndex={0}
         showRuntimeSelector
       />,
-      { isDetected: true, source: { git: {} } },
+      { isDetected: true, source: { git: {} }, components: [] },
     );
     screen.getByLabelText('Component name');
   });
@@ -180,7 +180,7 @@ describe('ReviewComponentCard', () => {
         showRuntimeSelector
         editMode
       />,
-      { isDetected: true, source: { git: {} } },
+      { isDetected: true, source: { git: {} }, components: [] },
     );
     expect(screen.getByLabelText('Component name')).toBeDisabled();
   });
@@ -194,7 +194,7 @@ describe('ReviewComponentCard', () => {
         showRuntimeSelector
         isExpanded
       />,
-      { isDetected: true, source: { git: {} } },
+      { isDetected: true, source: { git: {} }, components: [] },
     );
 
     expect(screen.getByText('Build & deploy configuration')).toBeInTheDocument();
@@ -221,7 +221,7 @@ describe('ReviewComponentCard', () => {
         detectedComponentIndex={0}
         showRuntimeSelector
       />,
-      { isDetected: true, source: { git: {} } },
+      { isDetected: true, source: { git: {} }, components: [] },
     );
     await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
 
@@ -237,7 +237,7 @@ describe('ReviewComponentCard', () => {
         detectedComponentIndex={0}
         showRuntimeSelector
       />,
-      { isDetected: true, source: { git: {} } },
+      { isDetected: true, source: { git: {} }, components: [] },
     );
     await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
 

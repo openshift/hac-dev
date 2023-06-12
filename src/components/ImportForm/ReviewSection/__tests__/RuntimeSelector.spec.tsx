@@ -74,6 +74,7 @@ describe('RuntimeSelector', () => {
       source: { git: {} },
     });
 
+    expect(setFieldValueMock).toHaveBeenCalledWith('components[0].selectedRuntime', 'Dockerfile');
     await act(() => expect(screen.getByText('Dockerfile')).toBeVisible());
   });
 
@@ -116,6 +117,7 @@ describe('RuntimeSelector', () => {
       source: { git: {} },
     });
 
+    expect(setFieldValueMock).toHaveBeenCalledWith('components[0].selectedRuntime', 'Basic Nodejs');
     expect(screen.getByText('Basic Nodejs')).toBeVisible();
   });
 

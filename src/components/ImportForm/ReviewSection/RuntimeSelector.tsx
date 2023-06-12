@@ -74,8 +74,9 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     const runtime = samples.find((s) => value.includes(s.name));
 
     if (
+      runtime &&
       (runtime?.attributes?.git as any)?.remotes?.origin ===
-      selectedRuntime?.attributes?.git?.remotes?.origin
+        selectedRuntime?.attributes?.git?.remotes?.origin
     ) {
       return;
     }
@@ -83,6 +84,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       ? sourceUrl
       : (runtime?.attributes?.git as any)?.remotes?.origin;
     setSelectedRuntime(value === dockerFileSample.value ? dockerFileSample : runtime);
+    setFieldValue(`${fieldPrefix}.selectedRuntime`, value);
     setRuntimeSource(runtimeSourceUrl);
     setDetecting(true);
     setFieldValue('isDetected', false);
@@ -164,8 +166,10 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
         ) || dockerFileSample;
       setSelectedRuntime(runtime);
       setRecommendedRuntime(runtime);
+      setFieldValue(`${fieldPrefix}.selectedRuntime`, runtime.name);
     } else if (!selectedRuntime && !detectionFailed) {
       setSelectedRuntime({ name: DetectingRuntime });
+      setFieldValue(`${fieldPrefix}.selectedRuntime`, null);
     }
   }, [
     components,
@@ -175,6 +179,8 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     samplesLoaded,
     selectedRuntime,
     detectionFailed,
+    setFieldValue,
+    fieldPrefix,
   ]);
 
   React.useEffect(() => {
