@@ -64,6 +64,11 @@ describe('Advanced Happy path', () => {
 
   const integrationTestTaskNames = ['task-success', 'task-success-2', 'task-skipped'];
   const vulnerabilities = /Critical(\d+).*High(\d+).*Medium(\d+).*Low(\d+)/g;
+  const secret = {
+    secretName: Common.generateAppName('secret'),
+    key: 'secretKey',
+    value: 'secretValue',
+  };
 
   before(() => {
     Common.createGitHubRepository(repoName);
@@ -79,10 +84,18 @@ describe('Advanced Happy path', () => {
 
   it('Create an Application with a component', () => {
     Applications.createApplication();
-    Applications.createComponent(repoLink, componentName, applicationName, 'Go', true, {
-      varName: 'TEST_ENV_VAR',
-      value: 'Test go app',
-    });
+    Applications.createComponent(
+      repoLink,
+      componentName,
+      applicationName,
+      'Go',
+      true,
+      {
+        varName: 'TEST_ENV_VAR',
+        value: 'Test go app',
+      },
+      secret,
+    );
   });
 
   describe('Trigger a new Pipelinerun related to push event', () => {
@@ -108,6 +121,10 @@ describe('Advanced Happy path', () => {
         'Build Running',
         'Custom',
       );
+    });
+
+    it('Verify Secret Using API', () => {
+      Applications.verifySecretUsingAPI(secret.secretName, secret.key, secret.value);
     });
 
     it('Verify the Pipeline run details and Task runs', () => {
