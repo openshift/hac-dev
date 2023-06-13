@@ -2,6 +2,13 @@ import { FormikHelpers } from 'formik';
 import { ApplicationKind } from '../../../types';
 import { SAMPLE_ANNOTATION } from '../../../utils/component-utils';
 import { createApplication, createComponent, createSecret } from '../../../utils/create-utils';
+import {
+  EC_INTEGRATION_TEST_URL,
+  EC_INTEGRATION_TEST_REVISION,
+  EC_INTEGRATION_TEST_PATH,
+} from '../../IntegrationTest/IntegrationTestForm/const';
+import { IntegrationTestFormValues } from '../../IntegrationTest/IntegrationTestForm/types';
+import { createIntegrationTest } from '../../IntegrationTest/IntegrationTestForm/utils/create-utils';
 import { detectComponents } from './cdq-utils';
 import { transformResources, transformComponentValues } from './transform-utils';
 import { DetectedFormComponent, ImportFormValues, ImportSecret, ImportStrategy } from './types';
@@ -76,8 +83,17 @@ export const createResources = async (
     componentAnnotations = { [SAMPLE_ANNOTATION]: 'true' };
   }
 
+  const integrationTestValues: IntegrationTestFormValues = {
+    name: `${applicationName}-enterprise-contract`,
+    url: EC_INTEGRATION_TEST_URL,
+    revision: EC_INTEGRATION_TEST_REVISION,
+    path: EC_INTEGRATION_TEST_PATH,
+    optional: false,
+  };
+
   if (shouldCreateApplication) {
     await createApplication(application, namespace, true);
+    await createIntegrationTest(integrationTestValues, applicationName, namespace, true);
   }
 
   await createComponents(
@@ -93,6 +109,7 @@ export const createResources = async (
   if (shouldCreateApplication) {
     applicationData = await createApplication(application, namespace);
     applicationName = applicationData.metadata.name;
+    await createIntegrationTest(integrationTestValues, applicationName, namespace);
   }
   await createSecrets(importSecrets, workspace, namespace, true);
 

@@ -1,4 +1,5 @@
 import { createApplication, createComponent } from '../../../../utils/create-utils';
+import { createIntegrationTest } from '../../../IntegrationTest/IntegrationTestForm/utils/create-utils';
 import { detectComponents } from '../cdq-utils';
 import { createResources, checkApplicationName } from '../submit-utils';
 import { ImportFormValues, ImportStrategy } from './../types';
@@ -11,6 +12,10 @@ jest.mock('../../../../utils/create-utils', () => ({
   createComponent: jest.fn(),
 }));
 
+jest.mock('../../../IntegrationTest/IntegrationTestForm/utils/create-utils', () => ({
+  createIntegrationTest: jest.fn(),
+}));
+
 jest.mock('../cdq-utils', () => ({
   detectComponents: jest.fn(),
 }));
@@ -18,6 +23,7 @@ jest.mock('../cdq-utils', () => ({
 const createApplicationMock = createApplication as jest.Mock;
 const createComponentMock = createComponent as jest.Mock;
 const detectComponentsMock = detectComponents as jest.Mock;
+const createIntegrationTestMock = createIntegrationTest as jest.Mock;
 
 describe('Submit Utils: createResources', () => {
   it('should create application and components', async () => {
@@ -46,6 +52,7 @@ describe('Submit Utils: createResources', () => {
       'test-ws',
     );
     expect(createApplicationMock).toHaveBeenCalledTimes(2);
+    expect(createIntegrationTestMock).toHaveBeenCalledTimes(2);
     expect(createComponentMock).toHaveBeenCalledTimes(2);
   });
 
@@ -74,6 +81,7 @@ describe('Submit Utils: createResources', () => {
       'test-ws',
     );
     expect(createApplicationMock).toHaveBeenCalledTimes(0);
+    expect(createIntegrationTestMock).toHaveBeenCalledTimes(0);
     expect(createComponentMock).toHaveBeenCalledTimes(2);
   });
 
@@ -105,6 +113,7 @@ describe('Submit Utils: createResources', () => {
     ).rejects.toThrow();
     expect(createApplicationMock).toHaveBeenLastCalledWith('test-app', 'test-ns', true);
     expect(createComponentMock).toHaveBeenCalledTimes(0);
+    expect(createIntegrationTestMock).toHaveBeenCalledTimes(0);
   });
 
   it('should not create any resources if component dry run fails', async () => {

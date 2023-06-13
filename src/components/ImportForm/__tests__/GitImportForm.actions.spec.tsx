@@ -19,6 +19,10 @@ jest.mock('../../../utils/create-utils', () => ({
   createApplication: jest.fn(),
 }));
 
+jest.mock('../../IntegrationTest/IntegrationTestForm/utils/create-utils', () => ({
+  createIntegrationTest: jest.fn(),
+}));
+
 jest.mock('../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
