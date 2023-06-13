@@ -85,7 +85,7 @@ Provider:
 Pact tests should be also used as a gating during the promotion of a change to staging or production environments. Pact has a `can-i-deploy` functionality, that checks specified versions of consumer and provider and responds with the information, whether those changes are compatible or not. This part is not implemented yet.
 
 ### Pact broker
-Pact broker is an application running on the cluster maintained by HAC-dev QEs. You can read more about it in [official documentation](https://docs.pact.io/pact_broker). If you want to know more about the actual setup, see the [HAC-dev QE infra-deployments fork documentation](https://github.com/redhat-hac-qe/infra-deployments/blob/main/README.md).
+Pact broker is an application running on the cluster maintained by HAC-dev QEs. You can read more about it in [official documentation](https://docs.pact.io/pact_broker). If you want to know more about the actual setup, see the [HAC-dev QE infra-deployments fork documentation](https://github.com/redhat-hac-qe/infra-deployments/wiki).
 
 ## Implementation details
 The rest of this documentation is dedicated to the implementation details of HAC-dev participant. If you're interested in seeing detailed information about implementation on providers, follow the appropriate link: [HAS](https://github.com/redhat-appstudio/application-service/blob/main/testPacts.md)
