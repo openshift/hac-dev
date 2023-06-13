@@ -3,7 +3,7 @@ import { K8sGroupVersionKind } from '../dynamic-plugin-sdk';
 
 export const IntegrationTestScenarioModel: K8sModelCommon = {
   apiGroup: 'appstudio.redhat.com',
-  apiVersion: 'v1alpha1',
+  apiVersion: 'v1beta1',
   kind: 'IntegrationTestScenario',
   plural: 'integrationtestscenarios',
   namespaced: true,

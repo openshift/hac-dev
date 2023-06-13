@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { configure, render } from '@testing-library/react';
-import { useField, useFormikContext } from 'formik';
+import { screen, configure, waitFor } from '@testing-library/react';
+import { ServiceProviderType } from '../../../../types';
+import { formikRenderer } from '../../../../utils/test-utils';
+import { useAccessCheck } from '../../../ImportForm/utils/auth-utils';
 import IntegrationTestSection from '../IntegrationTestSection';
 
 const navigateMock = jest.fn();
@@ -22,43 +24,37 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 
-jest.mock('formik', () => ({
-  useFormikContext: jest.fn(),
-  useField: jest.fn(),
+jest.mock('../../../ImportForm/utils/auth-utils', () => ({
+  useAccessCheck: jest.fn(),
 }));
-
-const useFormikContextMock = useFormikContext as jest.Mock;
-
-const useFieldMock = useField as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
+const useAccessCheckMock = useAccessCheck as jest.Mock;
+
 describe('IntegrationTestSection', () => {
-  it('should render the page header by default', async () => {
+  beforeEach(() => {
     useK8sWatchResourceMock.mockReturnValue([[], false]);
-    useFormikContextMock.mockReturnValue({
-      setTouched: () => {},
-      values: { source: 'test-source', secret: null },
-      setFieldValue: jest.fn(),
-      useField: () => ['', { touched: false, error: undefined }],
-      setStatus: jest.fn(),
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: true, serviceProvider: ServiceProviderType.GitHub },
+      true,
+    ]);
+  });
+  it('should render the page header by default', async () => {
+    const wrapper = formikRenderer(<IntegrationTestSection />, {
+      source: 'test-source',
+      secret: null,
     });
-    useFieldMock.mockReturnValue([{ value: false }, { touched: false, error: null }]);
-    const wrapper = render(<IntegrationTestSection />);
-    await expect(wrapper).toBeTruthy();
-    expect(wrapper.getByTestId('integration-test-section-header')).toBeTruthy();
+    await waitFor(() => {
+      expect(wrapper).toBeTruthy();
+      expect(wrapper.getByTestId('integration-test-section-header')).toBeTruthy();
+    });
   });
   it('should hide the page header when isInPage is set', async () => {
-    useK8sWatchResourceMock.mockReturnValue([[], false]);
-    useFormikContextMock.mockReturnValue({
-      setTouched: () => {},
-      values: { source: 'test-source', secret: null },
-      setFieldValue: jest.fn(),
-      useField: () => ['', { touched: false, error: undefined }],
-      setStatus: jest.fn(),
+    const wrapper = formikRenderer(<IntegrationTestSection isInPage />, {
+      source: 'test-source',
+      secret: null,
     });
-    useFieldMock.mockReturnValue([{ value: false }, { touched: false, error: null }]);
-    const wrapper = render(<IntegrationTestSection isInPage />);
     let found;
     try {
       wrapper.getByTestId('integration-test-section-header');
@@ -66,6 +62,21 @@ describe('IntegrationTestSection', () => {
     } catch {
       found = false;
     }
-    expect(found).toEqual(false);
+
+    await waitFor(() => expect(found).toEqual(false));
+  });
+
+  it('should return show error message if the repo is not accessible', async () => {
+    useK8sWatchResourceMock.mockReturnValue([[], true]);
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: false, serviceProvider: ServiceProviderType.GitHub },
+      true,
+    ]);
+    formikRenderer(<IntegrationTestSection isInPage />, {
+      source: 'http://test.com/testorg/test-repo',
+      secret: null,
+    });
+
+    screen.getByText('Unable to access repository');
   });
 });

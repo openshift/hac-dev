@@ -6,8 +6,9 @@ describe('validation-utils', () => {
       integrationTestValidationSchema.validate({
         integrationTest: {
           name: 'test-name',
-          pipeline: 'pipeline',
-          bundle: 'quay.io/foo/bar',
+          url: 'test-url',
+          path: 'test-path',
+          revision: 'revision',
         },
       }),
     ).not.toThrow();
@@ -17,8 +18,9 @@ describe('validation-utils', () => {
     await expect(
       integrationTestValidationSchema.validate({
         integrationTest: {
-          pipeline: 'pipeline',
-          bundle: 'quay.io/foo/bar',
+          url: 'test-url',
+          path: 'test-path',
+          revision: 'revision',
         },
       }),
     ).rejects.toThrow('Required');
@@ -29,8 +31,9 @@ describe('validation-utils', () => {
       integrationTestValidationSchema.validate({
         integrationTest: {
           name: '$symbol-first',
-          pipeline: 'pipeline',
-          bundle: 'quay.io/foo/bar',
+          url: 'test-url',
+          path: 'test-path',
+          revision: 'revision',
         },
       }),
     ).rejects.toThrow(
@@ -38,23 +41,24 @@ describe('validation-utils', () => {
     );
   });
 
-  it('should fail when pipeline is missing', async () => {
+  it('should fail when url is missing', async () => {
     await expect(
       integrationTestValidationSchema.validate({
         integrationTest: {
           name: 'test-name',
-          bundle: 'quay.io/foo/bar',
+          path: 'test-path',
+          revision: 'revision',
         },
       }),
     ).rejects.toThrow('Required');
   });
 
-  it('should fail when bundle is missing', async () => {
+  it('should fail when path is missing', async () => {
     await expect(
       integrationTestValidationSchema.validate({
         integrationTest: {
-          name: 'test-name',
-          pipeline: 'pipeline',
+          url: 'test-url',
+          path: 'test-path',
         },
       }),
     ).rejects.toThrow('Required');

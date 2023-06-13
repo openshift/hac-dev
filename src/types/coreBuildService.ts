@@ -1,17 +1,30 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { Condition } from './pipeline-run';
 
+export enum ResolverType {
+  GIT = 'git',
+  BUNDLES = 'bundles',
+}
 export type IntegrationTestScenarioKind = K8sResourceCommon & {
   spec: IntegrationTestScenarioSpec;
 };
 
+export type ResolverParam = {
+  name: string;
+  value: string;
+};
+
 export type IntegrationTestScenarioSpec = {
   application: string;
-  bundle: string;
-  pipeline: string;
   contexts?: Context[];
   environment?: Environment;
   params?: Param[];
+  resolverRef?: {
+    resolver: ResolverType;
+    params: ResolverParam[];
+  };
+  pipeline?: string;
+  bundle?: string;
 };
 
 export type Context = {
