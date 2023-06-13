@@ -104,7 +104,7 @@ const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({ appl
     <PageSection variant={PageSectionVariants.light} padding={{ default: 'noPadding' }}>
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
-          <Text component={TextVariants.h2}>Select a sample</Text>
+          <Text component={TextVariants.h2}>Start with a sample</Text>
         </TextContent>
       </PageSection>
       {submitting && (

@@ -68,7 +68,7 @@ describe('SampleImportForm', () => {
     render(<SampleImportForm applicationName="" />);
 
     screen.getByTestId('sample-section');
-    screen.getByText('Select a sample');
+    screen.getByText('Start with a sample');
 
     screen.getByRole('button', { name: 'Import sample' });
   });
