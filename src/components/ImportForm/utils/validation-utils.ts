@@ -33,7 +33,7 @@ const createSourceValidationSchema = (containerImageSupport: boolean) =>
           .max(2000, 'Please enter a URL that is less than 2000 characters.')
           .matches(
             containerImageSupport ? combineRegExps(gitUrlRegex, containerImageRegex) : gitUrlRegex,
-            'Invalid Source URL',
+            "That repository URL isn't quite right. Try again.",
           )
           .required('Required'),
         revision: yup.string(),
