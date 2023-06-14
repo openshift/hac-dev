@@ -19,26 +19,16 @@ import { OverviewTabPage } from '../support/pages/tabs/OverviewTabPage';
 import { Common } from './Common';
 import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
 import { UIhelper } from './UIhelper';
+import { hacAPIEndpoints } from '../utils/APIEndpoints';
+import { APIHelper } from '../utils/APIHelper';
 
 export class Applications {
   static deleteApplication(applicationName: string) {
-    cy.getCookie('cs_jwt')
-      .should('exist')
-      .then((cookie) => {
-        const token = cookie.value;
-        const namespace = `${Cypress.env('USERNAME').toLowerCase()}-tenant`;
-        const request = {
-          method: 'DELETE',
-          url: `${Common.getOrigin()}/api/k8s/apis/appstudio.redhat.com/v1alpha1/namespaces/${namespace}/applications/${applicationName}`,
-          headers: {
-            authorization: `Bearer ${token}`,
-            accept: 'application/json',
-          },
-          failOnStatusCode: false,
-        };
-
-        cy.request(request);
-      });
+    APIHelper.requestHACAPI({
+      method: 'DELETE',
+      url: hacAPIEndpoints.applications(applicationName),
+      failOnStatusCode: false,
+    });
   }
 
   static openKebabMenu(applicationName: string) {
@@ -204,24 +194,8 @@ export class Applications {
   }
 
   static verifySecretUsingAPI(secretName: string, key: string, value: string) {
-    cy.getCookie('cs_jwt')
-      .should('exist')
-      .its('value')
-      .then((token) => {
-        const namespace = `${Cypress.env('USERNAME').toLowerCase()}-tenant`;
-        const request = {
-          method: 'GET',
-          url: `${Common.getOrigin()}/api/k8s/workspaces/${Cypress.env(
-            'USERNAME',
-          ).toLowerCase()}/api/v1/namespaces/${namespace}/secrets/${secretName}`,
-          headers: {
-            authorization: `Bearer ${token}`,
-            accept: 'application/json',
-          },
-        };
-        cy.request(request)
-          .its(`body.data.${key}`)
-          .should('eq', Buffer.from(value, 'utf8').toString('base64'));
-      });
+    APIHelper.requestHACAPI({ url: hacAPIEndpoints.secrets(secretName) })
+      .its(`body.data.${key}`)
+      .should('eq', Buffer.from(value, 'utf8').toString('base64'));
   }
 }

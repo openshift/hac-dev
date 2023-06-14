@@ -1,4 +1,5 @@
-import { Common } from '../../utils/Common';
+import { APIHelper } from '../../utils/APIHelper';
+import { hacAPIEndpoints } from '../../utils/APIEndpoints';
 import { UIhelper } from '../../utils/UIhelper';
 import { environmentsPagePO } from '../pageObjects/pages-po';
 
@@ -77,23 +78,10 @@ export class EnvironmentsPage {
   }
 
   static deleteEnvironmentUsingAPI(envName: string) {
-    cy.getCookie('cs_jwt')
-      .should('exist')
-      .its('value')
-      .then((token) => {
-        const namespace = `${Cypress.env('USERNAME').toLowerCase()}-tenant`;
-        const request = {
-          method: 'DELETE',
-          url: `${Common.getOrigin()}/api/k8s/workspaces/${Cypress.env(
-            'USERNAME',
-          ).toLowerCase()}/apis/appstudio.redhat.com/v1alpha1/namespaces/${namespace}/environments/${envName}`,
-          headers: {
-            authorization: `Bearer ${token}`,
-            accept: 'application/json',
-          },
-          failOnStatusCode: false,
-        };
-        cy.request(request);
-      });
+    APIHelper.requestHACAPI({
+      method: 'DELETE',
+      url: hacAPIEndpoints.environments(envName),
+      failOnStatusCode: false,
+    });
   }
 }

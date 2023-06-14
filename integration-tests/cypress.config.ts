@@ -151,6 +151,9 @@ export default defineConfig({
         }
       }
 
+      config.env['HAC_WORKSPACE'] = config.env['USERNAME'].toLowerCase();
+      config.env['HAC_NAMESPACE'] = `${config.env['HAC_WORKSPACE']}-tenant`;
+
       if (
         config.env.PR_CHECK === true &&
         config.reporterOptions.reportportalAgentJsCypressReporterOptions

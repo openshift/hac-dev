@@ -11,6 +11,8 @@ import {
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
+import { APIHelper } from '../utils/APIHelper';
+import { githubAPIEndpoints } from '../utils/APIEndpoints';
 
 describe('Advanced Happy path', () => {
   const applicationName = Common.generateAppName();
@@ -26,7 +28,7 @@ describe('Advanced Happy path', () => {
   const componentName = Common.generateAppName('go');
 
   after(function () {
-    Common.deleteGitHubRepository(repoOwner, repoName);
+    APIHelper.deleteGitHubRepository(repoName);
 
     // If some test failed, don't remove the app
     let allTestsSucceeded = true;
@@ -71,11 +73,11 @@ describe('Advanced Happy path', () => {
   };
 
   before(() => {
-    Common.createGitHubRepository(repoName);
-    Common.importCodeToGitHubRepository(sourceCodeRepoLink, repoName);
-    Common.githubRequest(
+    APIHelper.createGitHubRepository(repoName);
+    APIHelper.importCodeToGitHubRepository(sourceCodeRepoLink, repoName);
+    APIHelper.githubRequest(
       'GET',
-      `https://api.github.com/repos/hac-test/devfile-sample-go-basic/contents/${componentInfo.filePath}`,
+      githubAPIEndpoints.contents('hac-test', 'devfile-sample-go-basic', componentInfo.filePath),
     ).then((response) => {
       componentInfo.goFileSHAOriginal = response.body.sha;
       componentInfo.goFileBase64Original = response.body.content;
@@ -187,7 +189,11 @@ describe('Advanced Happy path', () => {
       cy.get(applicationDetailPagePO.route(componentName), { timeout: 240000 })
         .invoke('text')
         .then((route) => {
-          Common.checkResponseBodyAndStatusCode(route, componentInfo.deploymentBodyOriginal, 5000);
+          APIHelper.checkResponseBodyAndStatusCode(
+            route,
+            componentInfo.deploymentBodyOriginal,
+            5000,
+          );
         });
 
       Applications.checkComponentStatus(componentName, 'Build Succeeded');
@@ -418,7 +424,7 @@ describe('Advanced Happy path', () => {
       cy.get(applicationDetailPagePO.route(componentName), { timeout: 240000 })
         .invoke('text')
         .then((route) => {
-          Common.checkResponseBodyAndStatusCode(
+          APIHelper.checkResponseBodyAndStatusCode(
             route,
             componentInfo.deploymentBodyUpdated,
             20000,

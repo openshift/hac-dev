@@ -8,6 +8,7 @@ import {
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
+import { APIHelper } from '../utils/APIHelper';
 import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
 
 describe('Basic Happy Path', () => {
@@ -79,10 +80,7 @@ describe('Basic Happy Path', () => {
         .invoke('text')
         .then((pipelinerunName) => {
           PipelinerunsTabPage.clickOnRunningPipelinerun(componentName);
-          UIhelper.verifyLabelAndValue(
-            'Namespace',
-            `${Cypress.env('USERNAME').toLowerCase()}-tenant`,
-          );
+          UIhelper.verifyLabelAndValue('Namespace', Cypress.env('HAC_NAMESPACE'));
           UIhelper.verifyLabelAndValue('Pipeline', 'docker-build');
           UIhelper.verifyLabelAndValue('Application', applicationName);
           UIhelper.verifyLabelAndValue('Component', componentName);
@@ -109,7 +107,7 @@ describe('Basic Happy Path', () => {
       cy.get(applicationDetailPagePO.route(componentName), { timeout: 240000 })
         .invoke('text')
         .then((route) => {
-          Common.checkResponseBodyAndStatusCode(route, quarkusDeplomentBody, 10000);
+          APIHelper.checkResponseBodyAndStatusCode(route, quarkusDeplomentBody, 10000);
         });
 
       Applications.checkComponentStatus(componentName, 'Build Succeeded');
