@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { MemoryUnits, CPUUnits } from './types';
 
 export const gitUrlRegex =
   /^((((ssh|git|https?:?):\/\/:?)(([^\s@]+@|[^@]:?)[-\w.]+(:\d\d+:?)?(\/[-\w.~/?[\]!$&'()*+,;=:@%]*:?)?:?))|([^\s@]+@[-\w.]+:[-\w.~/?[\]!$&'()*+,;=:@%]*?:?))$/;
@@ -75,11 +76,26 @@ export const reviewValidationSchema = yup.object({
           .max(65535, 'Port must be between 1 and 65535.')
           .optional(),
         resources: yup.object({
-          cpu: yup.number().typeError('Must be an integer').min(0, 'Value must be greater than 0'),
+          cpuUnit: yup.string(),
+          cpu: yup
+            .number()
+            .typeError('Must be an integer')
+            .min(1, 'Value must be greater than 0')
+            .when('cpuUnit', {
+              is: (value) => value === CPUUnits.cores,
+              then: (schema) => schema.max(2, 'Value must not be greater than 2 cores'),
+              otherwise: (schema) => schema.max(10, 'Value must not be greater than 10 millicores'),
+            }),
+          memoryUnit: yup.string(),
           memory: yup
             .number()
             .typeError('Must be an integer')
-            .min(0, 'Value must be greater than 0'),
+            .min(1, 'Value must be greater than 0')
+            .when('memoryUnit', {
+              is: (value) => value === MemoryUnits.Gi,
+              then: (schema) => schema.max(2, 'Value must not be greater than 2Gi'),
+              otherwise: (schema) => schema.max(256, 'Value must not be greater than 256Mi'),
+            }),
         }),
         replicas: yup
           .number()

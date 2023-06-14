@@ -57,6 +57,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
   const [, { value: selectedRuntime }] = useField<string>(
     `components[${detectedComponentIndex}].selectedRuntime`,
   );
+  const [, { value: selectedUnitName }] = useField<string>(`${fieldPrefix}.resources.memoryUnit`);
 
   return (
     <Card isFlat isCompact isSelected={expandedComponent} isExpanded={expandedComponent}>
@@ -176,6 +177,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 unitName={`${fieldPrefix}.resources.memoryUnit`}
                 label="Memory"
                 minValue={0}
+                maxValue={selectedUnitName === MemoryUnits.Gi ? 2 : 256}
                 unitOptions={MemoryUnits}
                 helpText="Amount of memory the container is guaranteed"
               />
