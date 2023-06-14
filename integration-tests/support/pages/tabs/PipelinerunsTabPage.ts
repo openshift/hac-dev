@@ -1,6 +1,7 @@
-import { Common } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
 import { pipelinerunsTabPO } from '../../pageObjects/pages-po';
+import { hacAPIEndpoints } from '../../../utils/APIEndpoints';
+import { APIHelper } from '../../../utils/APIHelper';
 
 type taskRunDetailsRow = {
   name: string | RegExp;
@@ -28,24 +29,9 @@ export class PipelinerunsTabPage {
   }
 
   static getPipelineRunNameByLabel(applicationName: string, label: string) {
-    return cy
-      .getCookie('cs_jwt')
-      .should('exist')
-      .its('value')
-      .then((token) => {
-        const namespace = `${Cypress.env('USERNAME').toLowerCase()}-tenant`;
-        const request = {
-          method: 'GET',
-          url: `${Common.getOrigin()}/api/k8s/workspaces/${Cypress.env(
-            'USERNAME',
-          ).toLowerCase()}/apis/tekton.dev/v1beta1/namespaces/${namespace}/pipelineruns?labelSelector=appstudio.openshift.io/application=${applicationName},${label}&limit=250`,
-          headers: {
-            authorization: `Bearer ${token}`,
-            accept: 'application/json',
-          },
-        };
-        cy.request(request).its('body.items[0].metadata.name');
-      });
+    return APIHelper.requestHACAPI({
+      url: hacAPIEndpoints.pipelinerunsFilter(applicationName, label),
+    }).its('body.items[0].metadata.name');
   }
 
   static verifyECSecurityRulesResultSummary(summary: RegExp) {

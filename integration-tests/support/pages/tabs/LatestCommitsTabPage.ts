@@ -1,18 +1,9 @@
-import { Common } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
+import { APIHelper } from '../../../utils/APIHelper';
+import { githubAPIEndpoints } from '../../../utils/APIEndpoints';
 
 // Latest Commits List view page
 export class LatestCommitsTabPage {
-  //NOTE : This is currently not being used. keeping it for incase future for use case.
-  fetchCommitSHAOnPR(componentName: string, publicGitRepo: string, pullNumber: number) {
-    const owner = publicGitRepo.split('/')[3];
-    const repoName = publicGitRepo.split('/')[4];
-    Common.githubRequest(
-      'GET',
-      `https://api.github.com/repos/${owner}/${repoName}/pulls/${pullNumber}/commits`,
-    );
-  }
-
   mergePR(
     owner: string,
     repoName: string,
@@ -21,9 +12,9 @@ export class LatestCommitsTabPage {
     commitMessage: string,
   ) {
     const body = { commit_title: `${commitTitle}`, commit_message: `${commitMessage}` };
-    Common.githubRequest(
+    APIHelper.githubRequest(
       'PUT',
-      `https://api.github.com/repos/${owner}/${repoName}/pulls/${pullNumber}/merge`,
+      githubAPIEndpoints.merge(owner, repoName, pullNumber),
       body,
     ).then((result) => {
       expect(result.body.merged).to.be.true;
@@ -44,7 +35,7 @@ export class LatestCommitsTabPage {
       content: `${updatedFileContentInBase64}`,
       sha: `${fileSHA}`,
     };
-    Common.githubRequest(
+    APIHelper.githubRequest(
       'PUT',
       `https://api.github.com/repos/${owner}/${repoName}/contents/${filePath}`,
       body,

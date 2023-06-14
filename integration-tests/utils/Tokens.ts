@@ -1,45 +1,28 @@
-import { Common } from './Common';
+import { APIHelper } from './APIHelper';
+import { hacAPIEndpoints } from './APIEndpoints';
 
 export class Tokens {
   static removeBindingsAndTokens() {
-    cy.getCookie('cs_jwt')
-      .should('exist')
-      .then((cookie) => {
-        const token = cookie.value;
-        const namespace = `${Cypress.env('USERNAME').toLowerCase()}-tenant`;
-
-        removeAllResources(token, namespace, 'spiaccesstokenbinding');
-        removeAllResources(token, namespace, 'spiaccesstoken');
-      });
+    removeAllResources('spiaccesstokenbinding');
+    removeAllResources('spiaccesstoken');
   }
 }
 
-function removeAllResources(token: string, namespace: string, resourceType: string) {
+function removeAllResources(resourceType: string) {
   const getResources = {
     method: 'GET',
-    url: `${Common.getOrigin()}/api/k8s/apis/appstudio.redhat.com/v1beta1/namespaces/${namespace}/${resourceType}s`,
-    headers: {
-      authorization: `Bearer ${token}`,
-      accept: 'application/json',
-    },
+    url: hacAPIEndpoints.resources(resourceType),
   };
-
-  cy.request(getResources)
+  APIHelper.requestHACAPI(getResources)
     .its('body')
     .then((respBody) => {
       for (const item of respBody.items) {
         const resourceName = item.metadata.name;
         const removeResources = {
           method: 'DELETE',
-          url: `${Common.getOrigin()}/api/k8s/apis/appstudio.redhat.com/v1beta1/namespaces/${namespace}/${resourceType}s/${resourceName}`,
-          headers: {
-            authorization: `Bearer ${token}`,
-            accept: 'application/json',
-          },
+          url: `${hacAPIEndpoints.resources(resourceType)}/${resourceName}`,
         };
-        cy.request(removeResources).should((response) => {
-          expect(response.status).to.eq(200);
-        });
+        APIHelper.requestHACAPI(removeResources).its('status').should('equal', 200);
       }
     });
 }
