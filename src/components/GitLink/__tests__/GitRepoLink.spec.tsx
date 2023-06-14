@@ -14,4 +14,14 @@ describe('GitRepoLink', () => {
     const result = render(<GitRepoLink url="https://bitbucket.org/myorg/myproject" />);
     expect(result.baseElement.querySelector('svg').getAttribute('alt')).toBe('Bitbucket');
   });
+
+  it('should render revision if available', () => {
+    const result = render(<GitRepoLink url="https://github.com/myorg/myproject" revision="main" />);
+    expect(result.baseElement).toHaveTextContent('(main)');
+  });
+
+  it('should render context dir if available', () => {
+    const result = render(<GitRepoLink url="https://github.com/myorg/myproject" context="./src" />);
+    expect(result.baseElement).toHaveTextContent('(src)');
+  });
 });

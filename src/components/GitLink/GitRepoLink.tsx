@@ -21,18 +21,16 @@ const GitRepoLink: React.FC<Props> = ({ url, revision, context }) => {
     path,
   )}`;
 
-  // omit the main and master branch to reduce visual clutter
-  const rev = revision === 'main' || revision === 'master' ? '' : revision;
-
   return (
     <Tooltip content={fullUrl} position={TooltipPosition.bottom}>
       <ExternalLink href={fullUrl} icon={icon}>
         {parsed.owner}/{parsed.name}
-        {rev ? (
+        {revision ? (
           <>
             {' '}
             (<CodeBranchIcon />
-            {rev} {path ? ` / ${path}` : ''})
+            {revision}
+            {path ? ` / ${path}` : ''})
           </>
         ) : path ? (
           ` (${path})`
