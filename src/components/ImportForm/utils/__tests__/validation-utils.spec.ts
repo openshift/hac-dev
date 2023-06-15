@@ -55,7 +55,7 @@ describe('Review form validation schema', () => {
             componentName: 'test-comp',
             resources: {
               cpu: 1,
-              memory: 512,
+              memory: 255,
             },
             source: {
               git: {
@@ -131,7 +131,7 @@ describe('Review form validation schema', () => {
             componentName: 'test-comp',
             resources: {
               cpu: -1,
-              memory: 512,
+              memory: 256,
             },
           },
         },
@@ -151,7 +151,7 @@ describe('Review form validation schema', () => {
             componentName: 'test-comp',
             resources: {
               cpu: 1,
-              memory: 512,
+              memory: 255,
             },
             source: {
               git: {
@@ -174,7 +174,7 @@ describe('Review form validation schema', () => {
             componentName: 'test-comp',
             resources: {
               cpu: 1,
-              memory: 512,
+              memory: 255,
             },
             source: {
               git: {
@@ -209,7 +209,7 @@ describe('Review form validation schema', () => {
             componentName: 'test-comp',
             resources: {
               cpu: 1,
-              memory: 512,
+              memory: 255,
             },
             source: {
               git: {
@@ -267,7 +267,7 @@ describe('Review form validation schema', () => {
             componentName: 'test-comp',
             resources: {
               cpu: 1,
-              memory: 512,
+              memory: 255,
             },
             source: {
               git: {
@@ -297,6 +297,52 @@ describe('Review form validation schema', () => {
     await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
 
     values.components[0].componentStub.source.git.dockerfileUrl = 'www.test.com/Dockerfile';
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+  });
+  it('should pass if memory is between 0 and 256Mi/2Gi', async () => {
+    const values = {
+      application: 'my-app',
+      components: [
+        {
+          componentStub: {
+            componentName: 'test-comp',
+            resources: {
+              cpu: 1,
+              cpuUnit: 'cores',
+              memory: 255,
+              memoryUnit: 'Mi',
+            },
+            source: {
+              git: {
+                dockerfileUrl: 'https://www.test.com/Dockerfile',
+              },
+            },
+          },
+        },
+      ],
+      isDetected: true,
+    };
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+    values.components[0].componentStub.resources.memory = 300;
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Value must not be greater than 256Mi',
+    );
+    values.components[0].componentStub.resources.memoryUnit = 'Gi';
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Value must not be greater than 2Gi',
+    );
+    values.components[0].componentStub.resources.memory = 1;
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+    values.components[0].componentStub.resources.cpu = 10;
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Value must not be greater than 2 cores',
+    );
+    values.components[0].componentStub.resources.cpu = 100;
+    values.components[0].componentStub.resources.cpuUnit = 'millicores';
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Value must not be greater than 10 millicores',
+    );
+    values.components[0].componentStub.resources.cpu = 10;
     await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
   });
 });
