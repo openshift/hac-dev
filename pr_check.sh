@@ -64,7 +64,7 @@ COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z \
     -v $PWD/integration-tests:/e2e:Z \
     -e CYPRESS_PR_CHECK=true \
     -e CYPRESS_GH_PR_LINK=${ghprbPullLink} \
-    -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/hac/application-pipeline \
+    -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/preview/application-pipeline \
     -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` \
     -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` \
     -e CYPRESS_GH_PR_TITLE=${PR_TITLE} \
@@ -98,7 +98,7 @@ if [[ $TEST_IMAGE =~ "hac-dev:pr" ]]; then
   docker rmi -f $TEST_IMAGE
 fi
 
-bonfire namespace release -f ${NAMESPACE}
+# bonfire namespace release -f ${NAMESPACE}
 
 # teardown_docker
 exit $TEST_RUN
