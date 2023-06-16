@@ -8,6 +8,8 @@ export type IntegrationTestFormValues = {
   path?: string;
   optional: boolean;
   secret?: string;
+  environmentName?: string;
+  environmentType?: string;
 };
 
 export enum IntegrationTestAnnotations {
@@ -22,4 +24,8 @@ export enum IntegrationTestLabels {
 export type FormValues = ImportFormValues & {
   applicationData?: K8sResourceCommon;
   integrationTest: IntegrationTestFormValues;
+};
+
+export const ENVIRONMENTS = {
+  DEFAULT: 'No environment',
 };

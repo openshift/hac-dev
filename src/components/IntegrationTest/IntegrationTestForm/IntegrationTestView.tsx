@@ -44,6 +44,8 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
       url: url?.value ?? '',
       revision: revision?.value ?? '',
       path: path?.value ?? '',
+      environmentName: integrationTest?.spec?.environment?.name ?? '',
+      environmentType: integrationTest?.spec?.environment?.type ?? '',
       optional:
         integrationTest?.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true' ?? false,
     },

@@ -8,12 +8,15 @@ import {
 } from '@patternfly/react-core';
 import { useFormikContext, useField } from 'formik';
 import gitUrlParse from 'git-url-parse';
-import { CheckboxField, InputField } from '../../../shared';
+import { useAllEnvironments } from '../../../hooks/useAllEnvironments';
+import { CheckboxField, DropdownField, InputField } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
+import { EnvironmentType, getEnvironmentType } from '../../Environment/environment-utils';
 import { AccessHelpText } from '../../ImportForm/SourceSection/SourceSection';
 import { useAccessCheck } from '../../ImportForm/utils/auth-utils';
 import { gitUrlRegex, RESOURCE_NAME_REGEX_MSG } from '../../ImportForm/utils/validation-utils';
-import { IntegrationTestFormValues } from './types';
+import { ENVIRONMENTS, IntegrationTestFormValues } from './types';
+import './IntegrationTestSection.scss';
 
 type Props = { isInPage?: boolean; edit?: boolean };
 
@@ -23,12 +26,46 @@ const IntegrationTestSection: React.FC<Props> = ({ isInPage, edit }) => {
     type: 'input',
   });
 
+  const [, { value: ITSEnvName }] = useField<string>({
+    name: 'integrationTest.environmentName',
+    type: 'dropdown',
+  });
+  const [environments, environmentsLoaded] = useAllEnvironments();
+  // const [currentEnvironment, setCurrentEnvironment] = React.useState<string>(
+  //   ITSEnvName ?? ENVIRONMENTS.DEFAULT,
+  // );
+
+  const dropdownItems = React.useMemo(() => {
+    const items = [{ key: 'none', value: 'No environment' }];
+    environmentsLoaded &&
+      Array.isArray(environments) &&
+      environments.length > 0 &&
+      environments.forEach((env) => {
+        const envType = getEnvironmentType(env); // only Static and default(dev) environment to be used
+        if (envType === EnvironmentType.static || envType === EnvironmentType.default) {
+          items.push({ key: env.metadata.name, value: env.metadata.name });
+        }
+      });
+    return items;
+  }, [environments, environmentsLoaded]);
+
   const [, { value: isValidated }] = useField<boolean>('source.isValidated');
 
   const {
     values: { secret: authSecret },
     setFieldValue,
   } = useFormikContext<IntegrationTestFormValues>();
+
+  const setEnvironment = (envName) => {
+    if (envName === ENVIRONMENTS.DEFAULT) {
+      setFieldValue('integrationTest.environmentName', null);
+      setFieldValue('integrationTest.environmentType', null);
+    } else {
+      const environment = environments.find((env) => env.metadata.name === envName);
+      setFieldValue('integrationTest.environmentName', environment.metadata.name);
+      setFieldValue('integrationTest.environmentType', environment.spec.type);
+    }
+  };
 
   const [sourceUrl, setSourceUrl] = React.useState('');
   const [validated, setValidated] = React.useState(null);
@@ -121,7 +158,7 @@ const IntegrationTestSection: React.FC<Props> = ({ isInPage, edit }) => {
           name="integrationTest.name"
           helpText={edit ? '' : RESOURCE_NAME_REGEX_MSG}
           data-test="display-name-input"
-          isReadOnly={edit}
+          isDisabled={edit}
           required
         />
         <InputField
@@ -144,9 +181,20 @@ const IntegrationTestSection: React.FC<Props> = ({ isInPage, edit }) => {
         <InputField
           name="integrationTest.path"
           label="Path in repository"
+          isDisabled={edit}
           helpText="Subdirectory for the application source code."
           data-test="git-path-repo"
           required
+        />
+        <DropdownField
+          name={'integrationTest.environmentName'}
+          label="Environment"
+          placeholder={ITSEnvName ? ITSEnvName : ENVIRONMENTS.DEFAULT}
+          onChange={setEnvironment}
+          items={dropdownItems}
+          helpText="If this test needs a temporary deployment, select an environment. We'll clone the environment each time the test runs, then delete it after."
+          isDisabled={edit}
+          className="integration-test-section__dropdown"
         />
         <CheckboxField
           name="integrationTest.optional"
