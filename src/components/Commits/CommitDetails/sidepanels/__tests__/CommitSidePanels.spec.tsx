@@ -3,10 +3,10 @@ import '@testing-library/jest-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { act, fireEvent, screen } from '@testing-library/react';
 import { useBuildPipelines } from '../../../../../hooks/useBuildPipelines';
-import { useCommitPipelineruns } from '../../../../../hooks/useCommitPipelineruns';
 import { useComponents } from '../../../../../hooks/useComponents';
 import { useEnvironments } from '../../../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../../../hooks/useIntegrationTestScenarios';
+import { usePipelineRunsForCommit } from '../../../../../hooks/usePipelineRuns';
 import { useReleasePlans } from '../../../../../hooks/useReleasePlans';
 import { useReleases } from '../../../../../hooks/useReleases';
 import { useSnapshots } from '../../../../../hooks/useSnapshots';
@@ -90,11 +90,11 @@ jest.mock('../../../../../utils/commits-utils', () => {
   };
 });
 
-jest.mock('../../../../../hooks/useCommitPipelineruns', () => {
-  const actual = jest.requireActual('../../../../../hooks/useCommitPipelineruns');
+jest.mock('../../../../../hooks/usePipelineRuns', () => {
+  const actual = jest.requireActual('../../../../../hooks/usePipelineRuns');
   return {
     ...actual,
-    useCommitPipelineruns: jest.fn(),
+    usePipelineRunsForCommit: jest.fn(),
   };
 });
 
@@ -115,7 +115,7 @@ const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 const mockUseCommitStatus = useCommitStatus as jest.Mock;
 const mockGetLatestCommitFromPipelineRuns = getLatestCommitFromPipelineRuns as jest.Mock;
-const mockUseCommitPipelineruns = useCommitPipelineruns as jest.Mock;
+const mockUsePipelineRunsForCommit = usePipelineRunsForCommit as jest.Mock;
 const mockUseTaskRuns = useTaskRuns as jest.Mock;
 
 const commit = MockCommit;
@@ -124,7 +124,7 @@ describe('CommitVisualization', () => {
   beforeEach(() => {
     mockGetLatestCommitFromPipelineRuns.mockReturnValue(commit);
     mockUseCommitStatus.mockReturnValue(['Success', true]);
-    mockUseCommitPipelineruns.mockReturnValue([MockBuildPipelines, true]);
+    mockUsePipelineRunsForCommit.mockReturnValue([MockTestPipelines, true]);
     mockUseTaskRuns.mockReturnValue([testTaskRuns, true, undefined]);
 
     mockUseBuildPipelines.mockReturnValue([MockBuildPipelines, true]);
@@ -146,7 +146,7 @@ describe('CommitVisualization', () => {
   });
 
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
     (window.SVGElement as any).prototype.getBBox = undefined;
     (HTMLCanvasElement as any).prototype.getContext = undefined;
   });

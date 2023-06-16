@@ -21,6 +21,8 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
 }));
 
+jest.mock('../../../hooks/useTektonResults');
+
 jest.mock('../../../hooks/useApplicationRoutes', () => ({
   useApplicationRoutes: jest.fn(),
 }));
@@ -57,8 +59,9 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-jest.mock('../../../hooks/usePipelineRunsForApplication', () => ({
-  useLatestPipelineRunForComponent: () => [mockPipelineRuns[0], true],
+jest.mock('../../../hooks/usePipelineRuns', () => ({
+  ...(jest.requireActual('../../../hooks/usePipelineRuns') as any),
+  useLatestBuildPipelineRunForComponent: () => [mockPipelineRuns[0], true],
 }));
 
 jest.mock('../../../utils/component-utils', () => {

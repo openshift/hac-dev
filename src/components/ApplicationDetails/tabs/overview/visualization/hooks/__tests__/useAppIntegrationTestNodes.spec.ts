@@ -13,17 +13,16 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
   };
 });
 
+jest.mock('../../../../../../../hooks/useTektonResults');
+
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('useAppApplicationTestNodes', () => {
   beforeEach(() => {
+    useK8sWatchResourceMock.mockReset();
     useK8sWatchResourceMock
       .mockReturnValueOnce([[mockIntegrationTestScenariosData[0]], true])
       .mockReturnValueOnce([testPipelineRuns, true]);
-  });
-
-  afterEach(() => {
-    jest.resetAllMocks();
   });
 
   it('should return integration test nodes', () => {
@@ -40,7 +39,7 @@ describe('useAppApplicationTestNodes', () => {
 
   it('should return failed status', () => {
     const failedPipelinerun = testPipelineRuns[0];
-    jest.resetAllMocks();
+    useK8sWatchResourceMock.mockReset();
 
     useK8sWatchResourceMock
       .mockReturnValueOnce([[mockIntegrationTestScenariosData[0]], true])

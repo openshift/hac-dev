@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Tab, Tabs, TabTitleText, Title } from '@patternfly/react-core';
-import { useLocalStorage } from '../../hooks';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import PipelineRunsTab from '../ApplicationDetails/tabs/PipelineRunsTab';
 import CommitsListView from '../Commits/CommitsListView';

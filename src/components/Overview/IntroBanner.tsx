@@ -13,7 +13,7 @@ import {
   Text,
 } from '@patternfly/react-core';
 import { FULL_APPLICATION_TITLE } from '../../consts/labels';
-import { useSignupStatus } from '../../hooks';
+import { useSignupStatus } from '../../hooks/useSignupStatus';
 import { ApplicationGroupVersionKind, ApplicationModel, ComponentModel } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';

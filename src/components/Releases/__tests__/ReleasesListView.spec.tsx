@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
-import { useApplicationReleases } from '../../../hooks';
+import { useApplicationReleases } from '../../../hooks/useApplicationReleases';
 import { mockRelease } from '../__data__/mock-release-data';
 import ReleasesListView from '../ReleasesListView';
 
@@ -12,7 +12,7 @@ jest.mock('../../../hooks/useSearchParam', () => ({
   useSearchParam: jest.fn(() => ['']),
 }));
 
-jest.mock('../../../hooks', () => ({
+jest.mock('../../../hooks/useApplicationReleases', () => ({
   useApplicationReleases: jest.fn(),
 }));
 

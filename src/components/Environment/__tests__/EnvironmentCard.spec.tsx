@@ -3,7 +3,7 @@ import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import '@testing-library/jest-dom';
 import { getActiveWorkspace, useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen } from '@testing-library/react';
-import { useLatestApplicationRouteURL } from '../../../hooks';
+import { useLatestApplicationRouteURL } from '../../../hooks/useLatestApplicationRouteURL';
 import { EnvironmentModel } from '../../../models';
 import { EnvironmentKind } from '../../../types';
 import { EnvironmentType } from '../environment-utils';
@@ -22,7 +22,7 @@ jest.mock('../../../utils/rbac', () => ({
   useAccessReviewForModel: jest.fn(() => [true, true]),
 }));
 
-jest.mock('../../../hooks', () => ({
+jest.mock('../../../hooks/useLatestApplicationRouteURL', () => ({
   useLatestApplicationRouteURL: jest.fn(),
 }));
 

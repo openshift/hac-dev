@@ -5,11 +5,11 @@ import { useBuildPipelines } from '../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../hooks/useComponents';
 import { useEnvironments } from '../../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../../hooks/useIntegrationTestScenarios';
+import { usePipelineRunsForCommit } from '../../../../hooks/usePipelineRuns';
 import { useReleasePlans } from '../../../../hooks/useReleasePlans';
 import { useReleases } from '../../../../hooks/useReleases';
 import { useSnapshots } from '../../../../hooks/useSnapshots';
 import { useSnapshotsEnvironmentBindings } from '../../../../hooks/useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from '../../../../hooks/useTestPipelines';
 import { Commit, ComponentKind, EnvironmentKind, PipelineRunKind } from '../../../../types';
 import {
   ReleaseKind,
@@ -57,7 +57,7 @@ export const useCommitWorkflowData = (
     applicationName,
     commit.sha,
   );
-  const [testPipelines, testPipelinesLoaded, testPipelinesError] = useTestPipelines(
+  const [testPipelines, testPipelinesLoaded, testPipelinesError] = usePipelineRunsForCommit(
     namespace,
     applicationName,
     commit.sha,

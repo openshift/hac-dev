@@ -8,8 +8,7 @@ import {
   ModalVariant,
 } from '@patternfly/react-core';
 import dayjs from 'dayjs';
-import { PipelineRunType } from '../../consts/pipelinerun';
-import { useComponentPipelineRun } from '../../hooks';
+import { useLatestBuildPipelineRunForComponent } from '../../hooks/usePipelineRuns';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
 import PipelineRunLogs from '../../shared/components/pipeline-run-logs/PipelineRunLogs';
 import { EmptyBox, LoadingBox } from '../../shared/components/status-box/StatusBox';
@@ -28,11 +27,9 @@ type BuildLogViewerProps = ComponentProps & {
 
 export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => {
   const { workspace } = useWorkspaceInfo();
-  const { pipelineRun, loaded } = useComponentPipelineRun(
-    component.metadata.name,
-    component.spec.application,
+  const [pipelineRun, loaded] = useLatestBuildPipelineRunForComponent(
     component.metadata.namespace,
-    PipelineRunType.BUILD,
+    component.metadata.name,
   );
   const [taskRuns, tloaded] = useTaskRuns(
     pipelineRun?.metadata?.namespace,
@@ -43,7 +40,7 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
     [loaded, pipelineRun],
   );
 
-  if (loaded && tloaded && !pipelineRun) {
+  if (loaded && !pipelineRun) {
     return <EmptyBox label="pipeline runs" />;
   }
 

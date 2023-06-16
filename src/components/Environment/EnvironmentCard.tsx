@@ -17,9 +17,9 @@ import {
   CardFooter,
 } from '@patternfly/react-core';
 import { useEnvironmentActions } from '../../components/Environment/environment-actions';
-import { useLatestApplicationRouteURL } from '../../hooks';
 import { EnvironmentKindWithHealthStatus } from '../../hooks/useAllApplicationEnvironmentsWithHealthStatus';
 import { useApplications } from '../../hooks/useApplications';
+import { useLatestApplicationRouteURL } from '../../hooks/useLatestApplicationRouteURL';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';

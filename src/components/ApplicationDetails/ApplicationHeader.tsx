@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Flex, FlexItem, Text, Truncate } from '@patternfly/react-core';
 import ExternalLinkAltIcon from '@patternfly/react-icons/dist/js/icons/external-link-alt-icon';
-import { useApplicationHealthStatus, useLatestApplicationRouteURL } from '../../hooks';
+import { useApplicationHealthStatus } from '../../hooks/useApplicationHealthStatus';
+import { useLatestApplicationRouteURL } from '../../hooks/useLatestApplicationRouteURL';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
 import { runStatus } from '../../utils/pipeline-utils';

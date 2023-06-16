@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEventListener } from './';
+import { useEventListener } from './useEventListener';
 
 const tryJSONParse = <T = any>(data: string): string | T => {
   try {

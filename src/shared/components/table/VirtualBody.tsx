@@ -16,6 +16,12 @@ export type VirtualBodyProps<D = any, C = any> = {
   width: number;
   expand: boolean;
   getRowProps?: (obj: D) => Partial<Pick<TableRowProps, 'id' | 'className' | 'title'>>;
+  onRowsRendered?: (params: {
+    overscanStartIndex: number;
+    overscanStopIndex: number;
+    startIndex: number;
+    stopIndex: number;
+  }) => void;
 };
 
 export type RowFunctionArgs<T = any, C = any> = {
@@ -40,6 +46,7 @@ export const VirtualBody: React.FC<VirtualBodyProps> = (props) => {
     scrollTop,
     width,
     getRowProps,
+    onRowsRendered,
   } = props;
 
   const cellMeasurementCache = new CellMeasurerCache({
@@ -93,6 +100,7 @@ export const VirtualBody: React.FC<VirtualBodyProps> = (props) => {
       rowRenderer={rowRenderer}
       scrollTop={scrollTop}
       width={width}
+      onRowsRendered={onRowsRendered}
     />
   );
 };

@@ -44,6 +44,7 @@ export type TableProps<D = any, C = any> = Partial<ComponentProps<D>> & {
   expand?: boolean;
   getRowProps?: VirtualBodyProps<D>['getRowProps'];
   virtualize?: boolean;
+  onRowsRendered?: VirtualBodyProps<D>['onRowsRendered'];
 };
 
 export type ComponentProps<D = any> = {
@@ -108,6 +109,7 @@ const Table: React.FC<TableProps> = ({
   data,
   getRowProps,
   virtualize = true,
+  onRowsRendered,
 }) => {
   const filters = useDeepCompareMemoize(initFilters);
   const Header = useDeepCompareMemoize(initHeader);
@@ -136,6 +138,7 @@ const Table: React.FC<TableProps> = ({
                 width={width}
                 expand={expand}
                 getRowProps={getRowProps}
+                onRowsRendered={onRowsRendered}
               />
             </div>
           )}

@@ -15,6 +15,12 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   k8sPatchResource: jest.fn(() => Promise.resolve()),
 }));
 
+jest.mock('../../../hooks/useTektonResults');
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  ...(jest.requireActual('../../../utils/workspace-context-utils') as any),
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
+}));
+
 jest.mock('../../PipelineRunDetailsView/PipelineRunVisualization', () => () => <div />);
 
 jest.mock('react-router-dom', () => {
@@ -157,17 +163,6 @@ describe('PipelineRunDetailsView', () => {
     screen.getByText('Go to applications list');
   });
 
-  it('should render the error state if the pipeline run is being deleted', () => {
-    const deletedPipelineRun = {
-      ...mockPipelineRun,
-      metadata: { ...mockPipelineRun.metadata, deletionTimestamp: '1' },
-    };
-    watchResourceMock.mockReturnValueOnce([deletedPipelineRun, true]).mockReturnValue([[], true]);
-    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
-    screen.getByText('404: Page not found');
-    screen.getByText('Go to applications list');
-  });
-
   it('should render pipeline run name if pipeline run data is loaded', () => {
     watchResourceMock.mockReturnValueOnce([mockPipelineRun, true]).mockReturnValue([[], true]);
     routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
@@ -287,7 +282,7 @@ describe('PipelineRunDetailsView', () => {
     fireEvent.click(startNewBuildButton);
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith(
-        '/application-pipeline/workspaces//applications/test-app/activity/pipelineruns?name=mock-component',
+        '/application-pipeline/workspaces/test-ws/applications/test-app/activity/pipelineruns?name=mock-component',
       ),
     );
   });

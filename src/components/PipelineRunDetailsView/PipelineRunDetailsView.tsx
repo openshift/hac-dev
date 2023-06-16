@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useComponent } from '../../hooks/useComponents';
-import { usePipelineRun } from '../../hooks/usePipelineRunsForApplication';
+import { usePipelineRun } from '../../hooks/usePipelineRuns';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
 import { ComponentModel, PipelineRunModel } from '../../models';
 import { HttpError } from '../../shared/utils/error/http-error';

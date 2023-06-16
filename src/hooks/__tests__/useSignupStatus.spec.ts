@@ -2,8 +2,8 @@ import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { commonFetch } from '@openshift/dynamic-plugin-sdk-utils';
 import { waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
-import { useSignupStatus } from '..';
 import { SignupStatus } from '../../utils/signup-utils';
+import { useSignupStatus } from '../useSignupStatus';
 
 jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),

@@ -1,37 +1,46 @@
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import '@testing-library/jest-dom';
 import { renderHook } from '@testing-library/react-hooks';
+import { usePipelineRunsForCommit } from '../../../hooks/usePipelineRuns';
 import { pipelineWithCommits } from '../__data__/pipeline-with-commits';
 import { useCommitStatus } from '../commit-status';
 
-jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
-  useK8sWatchResource: jest.fn(),
-  getActiveWorkspace: jest.fn(),
+jest.mock('../../../hooks/usePipelineRuns', () => ({
+  usePipelineRunsForCommit: jest.fn(),
 }));
 
-const watchResourceMock = useK8sWatchResource as jest.Mock;
+const usePipelineRunsForCommitMock = usePipelineRunsForCommit as jest.Mock;
 
 describe('useCommitStatus', () => {
   it('returns Pending status if pipelineruns are not loaded', () => {
-    watchResourceMock.mockReturnValue([null, false]);
+    usePipelineRunsForCommitMock.mockReturnValue([null, false]);
     const { result } = renderHook(() => useCommitStatus('app', 'commit'));
     expect(result.current).toEqual(['Pending', false, undefined]);
   });
 
   it('returns Pending status if pipelineruns for given commit are not found', () => {
-    watchResourceMock.mockReturnValue([pipelineWithCommits, true]);
+    usePipelineRunsForCommitMock.mockReturnValue([pipelineWithCommits, true]);
     const { result } = renderHook(() => useCommitStatus('app', 'commit123'));
     expect(result.current).toEqual(['Pending', true, undefined]);
   });
 
   it('returns correct status if pipelineruns are loaded', () => {
-    watchResourceMock.mockReturnValue([pipelineWithCommits, true]);
+    usePipelineRunsForCommitMock.mockReturnValue([
+      pipelineWithCommits.filter(
+        (p) => p.metadata.labels['pipelinesascode.tekton.dev/sha'] === 'commit14rt',
+      ),
+      true,
+    ]);
     const { result } = renderHook(() => useCommitStatus('purple-mermaid-app', 'commit14rt'));
     expect(result.current).toEqual(['Succeeded', true, undefined]);
   });
 
   it('returns status from the latest started pipelinerun', () => {
-    watchResourceMock.mockReturnValue([pipelineWithCommits, true]);
+    usePipelineRunsForCommitMock.mockReturnValue([
+      pipelineWithCommits.filter(
+        (p) => p.metadata.labels['pipelinesascode.tekton.dev/sha'] === 'commit123',
+      ),
+      true,
+    ]);
     const { result } = renderHook(() => useCommitStatus('purple-mermaid-app', 'commit123'));
     expect(result.current).toEqual(['Failed', true, undefined]);
   });

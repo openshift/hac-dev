@@ -24,6 +24,8 @@ export const useAppApplicationTestNodes = (
     namespace,
     applicationName,
   );
+
+  // TODO this is inefficient to get all unbounded test pipelines in an application
   const [testPipelines, testPipelinesLoaded, testPipelinesError] = useTestPipelines(
     namespace,
     applicationName,

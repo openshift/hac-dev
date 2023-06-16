@@ -1,18 +1,14 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 import { DataState, testPipelineRuns } from '../../../../../__data__/pipelinerun-data';
 import { PipelineRunLabel } from '../../../../../consts/pipelinerun';
+import { usePipelineRunsForCommit } from '../../../../../hooks/usePipelineRuns';
 import RelatedPipelineRuns from '../../../RelatedPipelineRuns';
 
-jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
-  const actual = jest.requireActual('@openshift/dynamic-plugin-sdk-utils');
-  return {
-    ...actual,
-    useK8sWatchResource: jest.fn(),
-  };
-});
+jest.mock('../../../../../hooks/usePipelineRuns', () => ({
+  usePipelineRunsForCommit: jest.fn(),
+}));
 
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
@@ -41,25 +37,25 @@ const testPipelineRun = {
   },
 };
 
-const watchResourceMock = useK8sWatchResource as jest.Mock;
+const usePipelineRunsForCommitMock = usePipelineRunsForCommit as jest.Mock;
 
 describe('RelatedPipelineRuns', () => {
   it('should render loading pipelineruns', () => {
-    watchResourceMock.mockReturnValue([[], false]);
+    usePipelineRunsForCommitMock.mockReturnValue([[], false]);
     render(<RelatedPipelineRuns pipelineRun={buildPipelineRun} />);
 
     screen.getByText('Loading related pipelines');
   });
 
   it('should render 0 pipelines if there is not any related pipelineruns', () => {
-    watchResourceMock.mockReturnValue([[], true]);
+    usePipelineRunsForCommitMock.mockReturnValue([[], true]);
     render(<RelatedPipelineRuns pipelineRun={buildPipelineRun} />);
 
     screen.getByText('0 pipelines');
   });
 
   it('should render popover with no related pipelines is not any related pipelineruns', async () => {
-    watchResourceMock.mockReturnValue([[], true]);
+    usePipelineRunsForCommitMock.mockReturnValue([[], true]);
     render(<RelatedPipelineRuns pipelineRun={buildPipelineRun} />);
     screen.getByText('0 pipelines');
 
@@ -70,7 +66,7 @@ describe('RelatedPipelineRuns', () => {
   });
 
   it('should render popover with related pipelineruns links', async () => {
-    watchResourceMock.mockReturnValue([[buildPipelineRun, testPipelineRun], true]);
+    usePipelineRunsForCommitMock.mockReturnValue([[buildPipelineRun, testPipelineRun], true]);
     render(<RelatedPipelineRuns pipelineRun={buildPipelineRun} />);
 
     fireEvent.click(screen.getByText('1 pipeline'));
@@ -80,7 +76,7 @@ describe('RelatedPipelineRuns', () => {
   });
 
   it('should not render the source pipelinerun inside the related pipelineruns popover', async () => {
-    watchResourceMock.mockReturnValue([[buildPipelineRun, testPipelineRun], true]);
+    usePipelineRunsForCommitMock.mockReturnValue([[buildPipelineRun, testPipelineRun], true]);
     render(<RelatedPipelineRuns pipelineRun={testPipelineRun} />);
 
     fireEvent.click(screen.getByText('1 pipeline'));

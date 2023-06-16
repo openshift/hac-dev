@@ -3,8 +3,8 @@ import { Title } from '@patternfly/react-core';
 import { Table } from '../../../shared';
 import { PipelineRunKind } from '../../../types';
 import PipelineRunEmptyState from '../../PipelineRunDetailsView/PipelineRunEmptyState';
-import { PipelineRunListHeader } from '../../PipelineRunListView/PipelineRunListHeader';
-import PipelineRunListRow from '../../PipelineRunListView/PipelineRunListRow';
+import { PipelineRunListHeaderWithVulnerabilities } from '../../PipelineRunListView/PipelineRunListHeader';
+import { PipelineRunListRowWithVulnerabilities } from '../../PipelineRunListView/PipelineRunListRow';
 
 type CommitsPipelineRunTabProps = {
   commit?: string;
@@ -32,9 +32,9 @@ const CommitsPipelineRunTab: React.FC<CommitsPipelineRunTabProps> = ({
       <Table
         data={pipelineRuns}
         aria-label="Pipelinerun List"
-        Header={PipelineRunListHeader}
+        Header={PipelineRunListHeaderWithVulnerabilities}
         loaded
-        Row={PipelineRunListRow}
+        Row={PipelineRunListRowWithVulnerabilities}
         getRowProps={(obj: PipelineRunKind) => ({
           id: obj.metadata.name,
         })}

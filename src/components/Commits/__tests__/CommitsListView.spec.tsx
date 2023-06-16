@@ -4,6 +4,7 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { useTRPipelineRuns } from '../../../hooks/useTektonResults';
 import * as dateTime from '../../../shared/components/timestamp/datetime';
 import { getCommitsFromPLRs } from '../../../utils/commits-utils';
 import { pipelineWithCommits } from '../__data__/pipeline-with-commits';
@@ -14,6 +15,8 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
   getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
+
+jest.mock('../../../hooks/useTektonResults');
 
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
@@ -64,17 +67,13 @@ jest.mock('../../../utils/rbac', () => ({
 
 const mockNavigate = useNavigate as jest.Mock;
 const watchResourceMock = useK8sWatchResource as jest.Mock;
+const useTRPipelineRunsMock = useTRPipelineRuns as jest.Mock;
 
 const commits = getCommitsFromPLRs(pipelineWithCommits.slice(0, 4));
 
 describe('CommitsListView', () => {
   beforeEach(() => {
     watchResourceMock.mockReturnValue([pipelineWithCommits.slice(0, 4), true]);
-  });
-  it('should render spinner while data is not loaded', () => {
-    watchResourceMock.mockReturnValue([[], false]);
-    render(<CommitsListView applicationName="purple-mermaid-app" />);
-    expect(screen.getByRole('progressbar')).toBeVisible();
   });
 
   it('should render empty state if no commits are present', () => {
@@ -184,5 +183,12 @@ describe('CommitsListView', () => {
     });
     expect(screen.queryByText('#11 test-title')).not.toBeInTheDocument();
     expect(screen.queryByText('#11 test-title-2')).not.toBeInTheDocument();
+  });
+
+  it('should render spinner while data is not loaded', () => {
+    watchResourceMock.mockReturnValue([[], false]);
+    useTRPipelineRunsMock.mockReturnValue([[], false]);
+    render(<CommitsListView applicationName="purple-mermaid-app" />);
+    expect(screen.getByRole('progressbar')).toBeVisible();
   });
 });

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Skeleton } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { ScanResults } from '../../hooks/useScanResults';
+import { useScanResults } from '../../hooks/useScanResults';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
@@ -13,16 +14,30 @@ import { usePipelinerunActions } from './pipelinerun-actions';
 import { pipelineRunTableColumnClasses } from './PipelineRunListHeader';
 import { ScanStatus } from './ScanStatus';
 
-type PipelineListRowProps = RowFunctionArgs<PipelineRunKind & { scanResults: ScanResults }>;
+type PipelineRunListRowProps = RowFunctionArgs<PipelineRunKind>;
 
-const PipelineListRow: React.FC<PipelineListRowProps> = ({ obj }) => {
+type BasePipelineRunListRowProps = PipelineRunListRowProps & { showVulnerabilities?: boolean };
+
+const BasePipelineRunListRow: React.FC<BasePipelineRunListRowProps> = ({
+  obj,
+  showVulnerabilities,
+}) => {
   const capitalize = (label: string) => {
     return label && label.charAt(0).toUpperCase() + label.slice(1);
   };
 
+  const [scanResults, scanLoaded] = useScanResults(
+    showVulnerabilities ? obj.metadata.name : null,
+    // enable cache only if the pipeline run has completed
+    !!obj?.status?.completionTime,
+  );
+
   const status = pipelineRunStatus(obj);
   const actions = usePipelinerunActions(obj);
   const { workspace } = useWorkspaceInfo();
+  if (!obj.metadata?.labels) {
+    obj.metadata.labels = {};
+  }
   const applicationName = obj.metadata?.labels[PipelineRunLabel.APPLICATION];
 
   return (
@@ -40,9 +55,11 @@ const PipelineListRow: React.FC<PipelineListRowProps> = ({ obj }) => {
           timestamp={typeof obj.status?.startTime === 'string' ? obj.status?.startTime : ''}
         />
       </TableData>
-      <TableData className={pipelineRunTableColumnClasses.vulnerabilities}>
-        <ScanStatus scanResults={obj.scanResults} />
-      </TableData>
+      {showVulnerabilities ? (
+        <TableData className={pipelineRunTableColumnClasses.vulnerabilities}>
+          {scanLoaded ? <ScanStatus scanResults={scanResults} /> : <Skeleton />}
+        </TableData>
+      ) : null}
       <TableData className={pipelineRunTableColumnClasses.duration}>
         {status !== 'Pending'
           ? calculateDuration(
@@ -81,4 +98,10 @@ const PipelineListRow: React.FC<PipelineListRowProps> = ({ obj }) => {
   );
 };
 
-export default PipelineListRow;
+export const PipelineRunListRow: React.FC<PipelineRunListRowProps> = (props) => (
+  <BasePipelineRunListRow {...props} showVulnerabilities={false} />
+);
+
+export const PipelineRunListRowWithVulnerabilities: React.FC<PipelineRunListRowProps> = (props) => (
+  <BasePipelineRunListRow {...props} showVulnerabilities />
+);
