@@ -16,6 +16,10 @@ export class IntegrationTestsTabPage {
     cy.get(integrationTestsTabPO.filterInputField).clear().type(inputString);
   }
 
+  hasIntegrationTest(integrationTestName: string) {
+    UIhelper.verifyRowInTable('Integration tests', integrationTestName, [integrationTestName]);
+  }
+
   openAndClickKebabMenu(integrationTestName: string, option: string) {
     cy.get(`[data-id="${integrationTestName}"]`).find(actions.kebabButton).click();
     cy.contains('li', option).click();
