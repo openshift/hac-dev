@@ -363,6 +363,21 @@ const routeExtensions = [
     },
   },
 
+  // Release objects
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/workspaces/:workspaceName/applications/:appName/releases/:release',
+      exact: true,
+      component: {
+        $codeRef: 'Release',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+
   // Component settings
 
   {
@@ -447,6 +462,7 @@ module.exports = {
       EditIntegrationTest: resolve(__dirname, '../src/pages/EditIntegrationTestPage'),
       IntegrationTest: resolve(__dirname, '../src/pages/IntegrationTestPage'),
       CommitsPage: resolve(__dirname, '../src/pages/CommitsPage'),
+      Release: resolve(__dirname, '../src/pages/ReleasePage'),
       IntegrationTestDetails: resolve(__dirname, '../src/pages/IntegrationTestDetailsPage'),
       Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
       ApplicationDetails: resolve(__dirname, '../src/pages/ApplicationDetailsPage'),
