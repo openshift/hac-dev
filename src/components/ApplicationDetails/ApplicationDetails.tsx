@@ -28,6 +28,7 @@ import ApplicationOverviewTab from './tabs/ApplicationOverviewTab';
 import ComponentsTab from './tabs/ComponentsTab';
 import DeploymentsTab from './tabs/DeploymentsTab';
 import IntegrationTestsTab from './tabs/IntegrationTestsTab';
+import ReleasesTab from './tabs/ReleasesTab';
 
 import './ApplicationDetails.scss';
 
@@ -235,6 +236,11 @@ const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicatio
             key: 'deployments',
             label: 'Deployments',
             component: <DeploymentsTab applicationName={applicationName} />,
+          },
+          {
+            key: 'releases',
+            label: 'Releases',
+            component: <ReleasesTab applicationName={applicationName} />,
           },
         ]}
       />
