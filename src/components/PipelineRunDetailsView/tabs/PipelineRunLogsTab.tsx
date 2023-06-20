@@ -8,7 +8,7 @@ type PipelineRunLogsTabProps = {
 };
 
 const PipelineRunLogsTab: React.FC<PipelineRunLogsTabProps> = ({ pipelineRun, taskRuns }) => (
-  <PipelineRunLogs obj={pipelineRun} taskRuns={taskRuns} />
+  <PipelineRunLogs className="pf-u-pt-md" obj={pipelineRun} taskRuns={taskRuns} />
 );
 
 export default PipelineRunLogsTab;

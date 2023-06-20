@@ -58,17 +58,17 @@ describe('ComponentListItem', () => {
     screen.getAllByText('Route');
   });
 
-  it('should render View Build logs action item', async () => {
+  it('should render View details action item', async () => {
     render(
       <BrowserRouter>
         <ComponentListItem component={componentCRMocks[0]} routes={[]} />
       </BrowserRouter>,
     );
     await waitFor(() => screen.getByText('Build Succeeded'));
-    await waitFor(() => screen.getByText('View build logs'));
+    await waitFor(() => screen.getByText('View details'));
   });
 
-  it('should render View Build logs action item', async () => {
+  it('should render View details action item', async () => {
     mockLatestPipelineRunForComponent.mockReturnValue([mockPipelineRuns[1], true]);
     render(
       <BrowserRouter>
@@ -76,7 +76,7 @@ describe('ComponentListItem', () => {
       </BrowserRouter>,
     );
     await waitFor(() => screen.getByText('Build Failed'));
-    await waitFor(() => screen.getByText('View build logs'));
+    await waitFor(() => screen.getByText('View details'));
   });
 
   it('should render Delete action item', async () => {

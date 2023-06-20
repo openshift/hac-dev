@@ -25,7 +25,7 @@ jest.mock('../../../utils/component-utils', () => {
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('BuildStatusColumn', () => {
-  it('should render View Build logs action item', async () => {
+  it('should render View details action item', async () => {
     useK8sWatchResourceMock.mockReturnValue([mockPipelineRuns, true]);
     render(
       <BrowserRouter>
@@ -33,7 +33,7 @@ describe('BuildStatusColumn', () => {
       </BrowserRouter>,
     );
     await waitFor(() => screen.getByText('Build Succeeded'));
-    await waitFor(() => screen.getByText('View build logs'));
+    await waitFor(() => screen.getByText('View details'));
   });
   it('should render failures', async () => {
     useK8sWatchResourceMock.mockReturnValue([[mockPipelineRuns[2]], true]);
@@ -43,7 +43,7 @@ describe('BuildStatusColumn', () => {
       </BrowserRouter>,
     );
     await waitFor(() => screen.getByText('Build Failed'));
-    await waitFor(() => screen.getByText('View build logs'));
+    await waitFor(() => screen.getByText('View details'));
   });
 
   it('should not render merge status if the pipelineruns is still loading', async () => {
@@ -56,23 +56,23 @@ describe('BuildStatusColumn', () => {
     expect(screen.queryByText('Merge build PR')).not.toBeInTheDocument();
   });
 
-  it('should not render View Build logs action item for components without build pipelinerun', async () => {
+  it('should not render View details action item for components without build pipelinerun', async () => {
     useK8sWatchResourceMock.mockReturnValue([[], true]);
     render(
       <BrowserRouter>
         <BuildStatusColumn component={componentCRMocks[0]} />
       </BrowserRouter>,
     );
-    expect(screen.queryByText('View build logs')).not.toBeInTheDocument();
+    expect(screen.queryByText('View details')).not.toBeInTheDocument();
   });
 
-  it('should render View Build logs action item for components without PAC annotation', async () => {
+  it('should render View details action item for components without PAC annotation', async () => {
     useK8sWatchResourceMock.mockReturnValue([[mockPipelineRuns], true]);
     render(
       <BrowserRouter>
         <BuildStatusColumn component={componentCRMocks[0]} />
       </BrowserRouter>,
     );
-    await waitFor(() => screen.getByText('View build logs'));
+    await waitFor(() => screen.getByText('View details'));
   });
 });

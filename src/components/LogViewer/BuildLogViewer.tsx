@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { ModalVariant, Stack, StackItem } from '@patternfly/react-core';
+import { Link } from 'react-router-dom';
+import {
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  ModalVariant,
+} from '@patternfly/react-core';
 import dayjs from 'dayjs';
 import { PipelineRunType } from '../../consts/pipelinerun';
 import { useComponentPipelineRun } from '../../hooks';
@@ -7,8 +14,11 @@ import { useTaskRuns } from '../../hooks/useTaskRuns';
 import PipelineRunLogs from '../../shared/components/pipeline-run-logs/PipelineRunLogs';
 import { EmptyBox, LoadingBox } from '../../shared/components/status-box/StatusBox';
 import { ComponentKind } from '../../types';
+import { pipelineRunStatus } from '../../utils/pipeline-utils';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ComponentProps, createModalLauncher } from '../modal/createModalLauncher';
 import { useModalLauncher } from '../modal/ModalProvider';
+import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 
 import './BuildLogViewer.scss';
 
@@ -17,6 +27,7 @@ type BuildLogViewerProps = ComponentProps & {
 };
 
 export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => {
+  const { workspace } = useWorkspaceInfo();
   const { pipelineRun, loaded } = useComponentPipelineRun(
     component.metadata.name,
     component.spec.application,
@@ -27,36 +38,65 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
     pipelineRun?.metadata?.namespace,
     pipelineRun?.metadata?.name,
   );
+  const plrStatus = React.useMemo(
+    () => loaded && pipelineRun && pipelineRunStatus(pipelineRun),
+    [loaded, pipelineRun],
+  );
 
   if (loaded && tloaded && !pipelineRun) {
     return <EmptyBox label="pipeline runs" />;
   }
 
   return (
-    <Stack>
-      <StackItem>
-        <span style={{ marginRight: 'var(--pf-global--spacer--xl)' }}>
-          {' '}
-          Component: {component.metadata.name}
-        </span>
-        {pipelineRun && loaded && (
-          <span>
-            {' '}
-            Build start date:{' '}
-            {dayjs(new Date(pipelineRun.metadata.creationTimestamp)).format(
-              'MMMM DD, YYYY, h:mm A',
-            )}
-          </span>
-        )}
-      </StackItem>
-      <StackItem isFilled className="build-log-viewer__body">
+    <>
+      <div className="pf-c-modal-box__title build-log-viewer__title">
+        <span className="pf-c-modal-box__title-text">{`Build pipeline run log for ${component.metadata.name}`}</span>
+        <StatusIconWithTextLabel status={plrStatus} />
+      </div>
+      <div>
+        <DescriptionList
+          data-test="pipeline-run-details"
+          columnModifier={{
+            default: '3Col',
+          }}
+        >
+          <DescriptionListGroup>
+            <DescriptionListTerm>Component</DescriptionListTerm>
+            <DescriptionListDescription>{component.metadata.name}</DescriptionListDescription>
+          </DescriptionListGroup>
+          <DescriptionListGroup>
+            <DescriptionListTerm>Build pipeline run</DescriptionListTerm>
+            <DescriptionListDescription>
+              {pipelineRun && loaded && (
+                <Link
+                  to={`/application-pipeline/workspaces/${workspace}/applications/${component.spec.application}/pipelineruns/${pipelineRun.metadata?.name}`}
+                  title={pipelineRun.metadata?.name}
+                >
+                  {pipelineRun.metadata?.name}
+                </Link>
+              )}
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+          <DescriptionListGroup>
+            <DescriptionListTerm>Build start date</DescriptionListTerm>
+            <DescriptionListDescription>
+              {pipelineRun &&
+                loaded &&
+                dayjs(new Date(pipelineRun.metadata.creationTimestamp)).format(
+                  'MMMM DD, YYYY, h:mm A',
+                )}
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+        </DescriptionList>
+      </div>
+      <div className="build-log-viewer__body">
         {pipelineRun && taskRuns && tloaded ? (
           <PipelineRunLogs obj={pipelineRun} taskRuns={taskRuns} />
         ) : (
           <LoadingBox />
         )}
-      </StackItem>
-    </Stack>
+      </div>
+    </>
   );
 };
 
@@ -64,7 +104,6 @@ export const buildLogViewerLauncher = createModalLauncher(BuildLogViewer, {
   className: 'build-log-viewer',
   'data-testid': 'view-build-logs-modal',
   variant: ModalVariant.large,
-  title: 'View build logs',
 });
 
 export const useBuildLogViewerModal = (component: ComponentKind) => {
