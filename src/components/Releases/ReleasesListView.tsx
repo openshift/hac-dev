@@ -14,11 +14,11 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
-import { useApplicationReleases } from '../../hooks/useApplicationReleases';
+import { useApplicationReleases } from '../../hooks';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { Table } from '../../shared';
-import CommitsEmptyState from '../Commits/CommitsEmptyState';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
+import ReleasesEmptyState from './ReleasesEmptyState';
 import ReleasesListHeader from './ReleasesListHeader';
 import ReleasesListRow from './ReleasesListRow';
 
@@ -45,7 +45,7 @@ const ReleasesListView: React.FC<ReleasesListViewProps> = ({ applicationName }) 
   }
 
   if (!releases?.length) {
-    return <CommitsEmptyState applicationName={applicationName} />;
+    return <ReleasesEmptyState />;
   }
 
   return (
@@ -54,7 +54,7 @@ const ReleasesListView: React.FC<ReleasesListViewProps> = ({ applicationName }) 
         Releases
       </Title>
       <>
-        <Toolbar data-testid="component-list-toolbar" clearAllFilters={onClearFilters}>
+        <Toolbar data-testid="release-list-toolbar" clearAllFilters={onClearFilters}>
           <ToolbarContent>
             <ToolbarGroup alignment={{ default: 'alignLeft' }}>
               <ToolbarItem>

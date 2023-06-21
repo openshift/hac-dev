@@ -25,7 +25,7 @@ const ReleasesListRow: React.FC<RowFunctionArgs<ReleaseKind, { applicationName: 
         </Link>
       </TableData>
       <TableData className={releasesTableColumnClasses.status}>
-        <StatusIconWithText status={status} />
+        <StatusIconWithText dataTestAttribute="release-status" status={status} />
       </TableData>
       <TableData className={releasesTableColumnClasses.releasePlan}>
         {obj.spec.releasePlan}
