@@ -31,7 +31,14 @@ const AuthOptions: React.FC = () => {
   const startAuthorization = React.useCallback(async () => {
     if (oAuthUrl) {
       const token = await getToken();
-      window.open(`${oAuthUrl}&k8s_token=${token}`, '_blank');
+      await fetch(`${oAuthUrl.split('/oauth/')[0]}/login`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      window.open(oAuthUrl, '_blank');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [oAuthUrl]);
