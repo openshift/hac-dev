@@ -49,6 +49,7 @@ describe('CustomizeAllPipelines', () => {
         {
           metadata: {
             name: 'my-component',
+            annotations: {},
           },
           spec: {
             application: 'test',

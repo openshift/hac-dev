@@ -4,7 +4,11 @@ import { k8sPatchResource, useK8sWatchResource } from '@openshift/dynamic-plugin
 import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { ComponentKind } from '../../../types';
-import { PAC_ANNOTATION, SAMPLE_ANNOTATION } from '../../../utils/component-utils';
+import {
+  BUILD_STATUS_ANNOTATION,
+  PAC_ANNOTATION,
+  SAMPLE_ANNOTATION,
+} from '../../../utils/component-utils';
 import CustomizePipeline from '../CustomizePipelines';
 
 jest.mock('../../../utils/analytics');
@@ -40,6 +44,8 @@ const createComponent = (
       annotations: {
         [PAC_ANNOTATION]: pacValue,
         [SAMPLE_ANNOTATION]: sample ? 'true' : undefined,
+        [BUILD_STATUS_ANNOTATION]:
+          pacValue === 'done' ? '{"pac":{"merge-url":"example.com"}}' : null,
       },
     },
     spec: {

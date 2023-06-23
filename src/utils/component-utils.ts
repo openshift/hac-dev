@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { k8sPatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { useApplicationPipelineGitHubApp } from '../hooks/useApplicationPipelineGitHubApp';
 import { ComponentModel } from '../models';
@@ -12,6 +13,8 @@ export const PAC_ANNOTATION = 'appstudio.openshift.io/pac-provision';
 
 // removal of this annotation from a non-pac component will trigger a new build
 export const INITIAL_BUILD_ANNOTATION = 'appstudio.openshift.io/component-initial-build';
+
+export const BUILD_STATUS_ANNOTATION = 'build.appstudio.openshift.io/status';
 
 export enum PACProvision {
   done = 'done',
@@ -86,4 +89,43 @@ export const useURLForComponentPRs = (components: ComponentKind[]): string => {
     return acc;
   }, '');
   return `https://github.com/pulls?q=is:pr+is:open+author:app/${PR_BOT_NAME}${repos}`;
+};
+
+export type ComponentBuildStatus = {
+  simple?: {
+    'build-start-time'?: string;
+    'error-id'?: number;
+    'error-message'?: string;
+  };
+  pac?: {
+    state?: 'enabled' | 'disabled' | 'error';
+    'merge-url'?: string;
+    'error-id'?: number;
+    'error-message'?: string;
+  };
+  message?: string;
+};
+
+/**
+ * If whole pac section is missing, PaC state is considered disabled
+ * Missing pac section shows that PaC was never requested on this component before,
+ * where as pac.state=disabled means that it was provisioned and then removed.
+ *
+ * https://github.com/redhat-appstudio/build-service/pull/164
+ */
+export const useComponentBuildStatus = (component: ComponentKind): ComponentBuildStatus => {
+  const buildStatusJSON = component.metadata.annotations[BUILD_STATUS_ANNOTATION];
+  return React.useMemo(() => {
+    if (!buildStatusJSON) {
+      return null;
+    }
+    try {
+      const buildStatus = JSON.parse(buildStatusJSON) as ComponentBuildStatus;
+      return buildStatus;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Error while parsing component build status: ', e);
+      return null;
+    }
+  }, [buildStatusJSON]);
 };
