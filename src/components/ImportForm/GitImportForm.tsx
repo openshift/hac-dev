@@ -129,13 +129,15 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
     [track, workspace, navigate, showModal, namespace],
   );
 
-  const handleReset = () => {
+  const handleReset = (openModal: boolean) => () => {
     track(TrackEvents.ButtonClicked, { link_name: 'import-leave', workspace });
-    showModal<{ leave: boolean }>(createCloseImportFormModal()).closed.then(({ leave }) => {
-      if (leave) {
-        navigate(-1);
-      }
-    });
+    openModal
+      ? showModal<{ leave: boolean }>(createCloseImportFormModal()).closed.then(({ leave }) => {
+          if (leave) {
+            navigate(-1);
+          }
+        })
+      : navigate(-1);
   };
 
   const handleNext = async () => {
@@ -148,18 +150,20 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
     setReviewMode(true);
   };
 
-  const handleBack = () => {
+  const handleBack = (openModal: boolean) => () => {
     track(TrackEvents.ButtonClicked, {
       link_name: 'import-back',
       workspace,
       // eslint-disable-next-line camelcase
       step_name: 'review-step',
     });
-    showModal<{ leave: boolean }>(createCloseImportFormModal()).closed.then(({ leave }) => {
-      if (leave) {
-        setReviewMode(false);
-      }
-    });
+    openModal
+      ? showModal<{ leave: boolean }>(createCloseImportFormModal()).closed.then(({ leave }) => {
+          if (leave) {
+            setReviewMode(false);
+          }
+        })
+      : setReviewMode(false);
   };
 
   return (
@@ -191,11 +195,18 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
           </PageSection>
           {reviewMode && <Divider className="import-form__divider" />}
           <PageSection variant={PageSectionVariants.light}>
-            <Form onSubmit={formikProps.handleSubmit} onReset={handleReset}>
+            <Form
+              onSubmit={formikProps.handleSubmit}
+              onReset={formikProps.dirty ? handleReset(true) : handleReset(false)}
+            >
               {reviewMode ? <ReviewSection /> : <SourceSection />}
             </Form>
           </PageSection>
-          <GitImportActions reviewMode={reviewMode} onBack={handleBack} sticky={reviewMode} />
+          <GitImportActions
+            reviewMode={reviewMode}
+            onBack={formikProps.dirty ? handleBack(true) : handleBack(false)}
+            sticky={reviewMode}
+          />
         </>
       )}
     </Formik>
