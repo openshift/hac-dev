@@ -20,6 +20,7 @@ const SelectInputField: React.FC<SelectInputFieldProps> = ({
   toggleAriaLabel,
   onSelect: onSelectCallback,
   onClear: onClearCallback,
+  ...restProps
 }) => {
   const [field, { touched, error }] = useField<string[]>(name);
   const { setFieldValue, setFieldTouched, validateForm } = useFormikContext<FormikValues>();
@@ -81,6 +82,7 @@ const SelectInputField: React.FC<SelectInputFieldProps> = ({
       isRequired={required}
     >
       <Select
+        {...restProps}
         name={name}
         variant={selectVariant}
         onToggle={onToggle}

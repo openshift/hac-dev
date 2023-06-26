@@ -170,10 +170,10 @@ export interface SelectInputFieldProps extends FieldProps {
   toggleAriaLabel?: string;
   onSelect?: (e: React.SyntheticEvent<HTMLElement>, selectedValue: any) => void;
   onClear?: () => void;
-
   options: SelectInputOption[];
   placeholderText?: React.ReactNode;
   isCreatable?: boolean;
+  isInputValuePersisted?: boolean;
   hasOnCreateOption?: boolean;
 }
 
