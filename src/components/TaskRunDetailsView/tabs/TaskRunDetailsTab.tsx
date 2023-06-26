@@ -13,14 +13,13 @@ import {
   Title,
   Divider,
 } from '@patternfly/react-core';
-import { TektonResourceLabel } from '../../../consts/pipeline';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { SyncMarkdownView } from '../../../shared/components/markdown-view/MarkdownView';
 import { ErrorDetailsWithStaticLog } from '../../../shared/components/pipeline-run-logs/logs/log-snippet-types';
 import { getTRLogSnippet } from '../../../shared/components/pipeline-run-logs/logs/pipelineRunLogSnippet';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
-import { TaskRunKind } from '../../../types';
-import { calculateDuration, taskRunStatus } from '../../../utils/pipeline-utils';
+import { TaskRunKind, TektonResourceLabel } from '../../../types';
+import { calculateDuration, taskName, taskRunStatus } from '../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import MetadataList from '../../PipelineRunDetailsView/MetadataList';
 import RunResultsList from '../../PipelineRunDetailsView/tabs/RunResultsList';
@@ -104,12 +103,10 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
                   default: '1Col',
                 }}
               >
-                {taskRun.spec.taskRef?.name && (
+                {taskName(taskRun) && (
                   <DescriptionListGroup>
                     <DescriptionListTerm>Task</DescriptionListTerm>
-                    <DescriptionListDescription>
-                      {taskRun.spec.taskRef.name}
-                    </DescriptionListDescription>
+                    <DescriptionListDescription>{taskName(taskRun)}</DescriptionListDescription>
                   </DescriptionListGroup>
                 )}
                 <DescriptionListGroup>

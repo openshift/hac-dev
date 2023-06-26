@@ -11,7 +11,11 @@ import { TaskRunStatus } from './task-run';
 export type PipelineTaskRef = {
   bundle?: string;
   kind?: string;
-  name: string;
+  name?: string;
+  params?: {
+    name: string;
+    value: string;
+  }[];
 };
 
 export type PipelineTaskWorkspace = {

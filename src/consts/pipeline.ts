@@ -1,10 +1,3 @@
-export enum TektonResourceLabel {
-  pipeline = 'tekton.dev/pipeline',
-  pipelinerun = 'tekton.dev/pipelineRun',
-  taskrun = 'tekton.dev/taskRun',
-  pipelineTask = 'tekton.dev/pipelineTask',
-}
-
 export enum PipelineResourceType {
   git = 'git',
   image = 'image',

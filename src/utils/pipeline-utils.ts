@@ -310,3 +310,9 @@ const SBOM_TASK = 'show-sbom';
 
 export const getSbomTaskRun = (taskruns: TaskRunKind[]) =>
   taskruns.find((tr) => tr?.metadata?.labels?.[TektonResourceLabel.pipelineTask] === SBOM_TASK);
+
+export const taskName = (taskrun: TaskRunKind) =>
+  taskrun.spec.taskRef?.name ||
+  taskrun.metadata.labels[TektonResourceLabel.pipelineTask] ||
+  taskrun.metadata.labels[TektonResourceLabel.task] ||
+  taskrun.spec.taskRef?.params?.find((r) => r.name === 'name')?.value;

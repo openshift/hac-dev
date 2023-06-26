@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Bullseye, Spinner } from '@patternfly/react-core';
-import { TektonResourceLabel } from '../../consts/pipeline';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useTaskRun } from '../../hooks/usePipelineRunsForApplication';
 import { HttpError } from '../../shared/utils/error/http-error';
+import { TektonResourceLabel } from '../../types';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { taskRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
