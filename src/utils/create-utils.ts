@@ -25,11 +25,16 @@ import {
   SPIAccessTokenBindingModel,
   SecretModel,
 } from '../models';
+import { RemoteSecretModel } from '../models/remotesecret';
 import {
   ComponentKind,
   ApplicationKind,
   ComponentDetectionQueryKind,
   SPIAccessTokenBindingKind,
+  SecretKind,
+  RemoteSecretKind,
+  K8sSecretType,
+  SecretType,
 } from '../types';
 import { PIPELINE_SERVICE_ACCOUNT } from './../consts/pipeline';
 import { ComponentSpecs } from './../types/component';
@@ -340,15 +345,6 @@ export const createSupportedPartnerSecret = async (
         fields: {
           token: partnerTask.tokenKeyName,
         },
-        linkedTo: [
-          {
-            serviceAccount: {
-              reference: {
-                name: PIPELINE_SERVICE_ACCOUNT,
-              },
-            },
-          },
-        ],
       },
     },
   };
@@ -367,6 +363,54 @@ export const createSupportedPartnerSecret = async (
   return Promise.all(resourcePromises);
 };
 
+const createRemoteSecret = (
+  secret: SecretKind,
+  namespace: string,
+  linkServiceAccount: boolean,
+  dryRun: boolean,
+): Promise<RemoteSecretKind> => {
+  const remoteSecretResource: RemoteSecretKind = {
+    apiVersion: `${RemoteSecretModel.apiGroup}/${RemoteSecretModel.apiVersion}`,
+    kind: RemoteSecretModel.kind,
+    metadata: {
+      name: `${secret.metadata.name}-remote-secret`,
+      namespace,
+    },
+    spec: {
+      secret: {
+        ...(linkServiceAccount && {
+          linkedTo: [
+            {
+              serviceAccount: {
+                reference: {
+                  name: PIPELINE_SERVICE_ACCOUNT,
+                },
+              },
+            },
+          ],
+        }),
+        name: secret.metadata.name,
+        type: secret.type,
+      },
+      targets: [
+        {
+          namespace,
+        },
+      ],
+    },
+  };
+
+  return k8sCreateResource({
+    model: RemoteSecretModel,
+    queryOptions: {
+      name: `${secret.metadata.name}-remote-secret`,
+      ns: namespace,
+      ...(dryRun && { queryParams: { dryRun: 'All' } }),
+    },
+    resource: remoteSecretResource,
+  });
+};
+
 export const createSecret = async (
   secret: ImportSecret,
   workspace: string,
@@ -379,28 +423,47 @@ export const createSecret = async (
   if (partnerTask) {
     return createSupportedPartnerSecret(partnerTask, secret, namespace, dryRun);
   }
+
   const secretResource = {
     apiVersion: SecretModel.apiVersion,
     kind: SecretModel.kind,
     metadata: {
       name: secret.secretName,
       namespace,
+      labels: {
+        'appstudio.redhat.com/upload-secret': 'remotesecret',
+      },
+      annotations: {
+        'appstudio.redhat.com/remotesecret-name': `${secret.secretName}-remote-secret`,
+      },
     },
-    type: 'Opaque',
-    data: {},
+    type: K8sSecretType[secret.type],
     stringData: secret.keyValues.reduce((acc, s) => {
-      acc[s.key] = s.value;
+      acc[s.key] = s.value ? s.value : '';
       return acc;
     }, {}),
   };
+
+  const promiseArray = [];
+  // Create RemoteSecrets
+  promiseArray.push(
+    createRemoteSecret(secretResource, namespace, secret.type === SecretType.image, dryRun),
+  );
+
   //Todo: K8sCreateResource appends the resource name and errors out.
   // Fix the below code when this sdk-utils issue is resolved https://issues.redhat.com/browse/RHCLOUD-21655.
-  return commonFetch(
-    `/workspaces/${workspace}/api/v1/namespaces/${namespace}/secrets${dryRun ? '?dryRun=All' : ''}`,
-    {
-      method: 'POST',
-      body: JSON.stringify(secretResource),
-      headers: { 'Content-type': 'application/json' },
-    },
+  promiseArray.push(
+    commonFetch(
+      `/workspaces/${workspace}/api/v1/namespaces/${namespace}/secrets${
+        dryRun ? '?dryRun=All' : ''
+      }`,
+      {
+        method: 'POST',
+        body: JSON.stringify(secretResource),
+        headers: { 'Content-type': 'application/json' },
+      },
+    ),
   );
+
+  return Promise.all(promiseArray);
 };

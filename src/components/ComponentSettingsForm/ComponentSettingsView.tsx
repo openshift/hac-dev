@@ -88,6 +88,7 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       console.warn('Error while submitting secret:', e);
       actions.setSubmitting(false);
       actions.setStatus({ submitError: e.message });
+      return;
     }
 
     await createSecrets(values.importSecrets, workspace, namespace, false);

@@ -8,7 +8,7 @@ import { InputField, TextColumnField } from '../../../shared';
 import { SPIAccessTokenBindingKind } from '../../../types';
 import { useModalLauncher } from '../../modal/ModalProvider';
 import { SNYK_SPI_TOKEN_ACCESS_BINDING } from '../../Secrets/secret-utils';
-import { SecretModal } from '../../Secrets/SecretModal';
+import { SecretModalLauncher } from '../../Secrets/SecretModalLauncher';
 import { ImportFormValues } from '../utils/types';
 
 const SecretSection = () => {
@@ -69,7 +69,7 @@ const SecretSection = () => {
         data-testid="add-secret-button"
         icon={<PlusCircleIcon />}
         onClick={() =>
-          showModal(SecretModal([...partnerTaskSecrets, ...values.newSecrets], onSubmit))
+          showModal(SecretModalLauncher([...partnerTaskSecrets, ...values.newSecrets], onSubmit))
         }
       >
         Add secret

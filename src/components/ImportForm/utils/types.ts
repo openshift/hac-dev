@@ -37,6 +37,7 @@ export type DetectedFormComponent = {
 };
 export type ImportSecret = {
   secretName: string;
+  type: string;
   keyValues: {
     key: string;
     value: string;
