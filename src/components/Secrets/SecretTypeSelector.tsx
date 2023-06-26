@@ -27,6 +27,7 @@ const SecretTypeSelector: React.FC<SecretTypeSelectorProps> = ({ onChange }) => 
     <DropdownField
       name="type"
       label="Secret type"
+      data-testid="secret-type-selector"
       items={dropdownItems}
       title={dropdownItems.find(({ value }) => value === values.type).value}
       onChange={(type: SecretType) => setValues(type)}

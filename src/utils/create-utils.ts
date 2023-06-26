@@ -15,6 +15,7 @@ import { ImportSecret } from '../components/ImportForm/utils/types';
 import {
   PartnerTask,
   SNYK_SPI_TOKEN_ACCESS_BINDING,
+  createRemoteSecretResource,
   createSecretResource,
   supportedPartnerTasksSecrets,
 } from '../components/Secrets/secret-utils';
@@ -25,18 +26,14 @@ import {
   SPIAccessTokenBindingModel,
   SecretModel,
 } from '../models';
-import { RemoteSecretModel } from '../models/remotesecret';
 import {
   ComponentKind,
   ApplicationKind,
   ComponentDetectionQueryKind,
   SPIAccessTokenBindingKind,
-  SecretKind,
-  RemoteSecretKind,
   K8sSecretType,
   SecretType,
 } from '../types';
-import { PIPELINE_SERVICE_ACCOUNT } from './../consts/pipeline';
 import { ComponentSpecs } from './../types/component';
 import { PAC_ANNOTATION } from './component-utils';
 
@@ -363,54 +360,6 @@ export const createSupportedPartnerSecret = async (
   return Promise.all(resourcePromises);
 };
 
-const createRemoteSecret = (
-  secret: SecretKind,
-  namespace: string,
-  linkServiceAccount: boolean,
-  dryRun: boolean,
-): Promise<RemoteSecretKind> => {
-  const remoteSecretResource: RemoteSecretKind = {
-    apiVersion: `${RemoteSecretModel.apiGroup}/${RemoteSecretModel.apiVersion}`,
-    kind: RemoteSecretModel.kind,
-    metadata: {
-      name: `${secret.metadata.name}-remote-secret`,
-      namespace,
-    },
-    spec: {
-      secret: {
-        ...(linkServiceAccount && {
-          linkedTo: [
-            {
-              serviceAccount: {
-                reference: {
-                  name: PIPELINE_SERVICE_ACCOUNT,
-                },
-              },
-            },
-          ],
-        }),
-        name: secret.metadata.name,
-        type: secret.type,
-      },
-      targets: [
-        {
-          namespace,
-        },
-      ],
-    },
-  };
-
-  return k8sCreateResource({
-    model: RemoteSecretModel,
-    queryOptions: {
-      name: `${secret.metadata.name}-remote-secret`,
-      ns: namespace,
-      ...(dryRun && { queryParams: { dryRun: 'All' } }),
-    },
-    resource: remoteSecretResource,
-  });
-};
-
 export const createSecret = async (
   secret: ImportSecret,
   workspace: string,
@@ -447,7 +396,7 @@ export const createSecret = async (
   const promiseArray = [];
   // Create RemoteSecrets
   promiseArray.push(
-    createRemoteSecret(secretResource, namespace, secret.type === SecretType.image, dryRun),
+    createRemoteSecretResource(secretResource, namespace, secret.type === SecretType.image, dryRun),
   );
 
   //Todo: K8sCreateResource appends the resource name and errors out.

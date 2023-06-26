@@ -25,26 +25,31 @@ const SecretForm: React.FC<SecretFormProps> = ({ existingSecrets }) => {
     (secret) => !existingSecrets.includes(secret.value),
   );
   const [options, setOptions] = React.useState(initialOptions);
+  const currentTypeRef = React.useRef(values.type);
 
   const clearKeyValues = () => {
-    const newKeyValues = values.keyValues.filter(
-      (kv) => !kv.readOnlyKey || values.type === SecretType.image,
-    );
+    const newKeyValues = values.keyValues.filter((kv) => !kv.readOnlyKey);
     setFieldValue('keyValues', [...(newKeyValues.length ? newKeyValues : defaultKeyValues)]);
   };
 
   const resetKeyValues = () => {
     setOptions([]);
-    setFieldValue('secretName', '');
-    setFieldValue('keyValues', defaultImageKeyValues);
+    const newKeyValues = values.keyValues.filter(
+      (kv) => !kv.readOnlyKey && (!!kv.key || !!kv.value),
+    );
+    setFieldValue('keyValues', [...newKeyValues, ...defaultImageKeyValues]);
   };
 
   return (
     <Form>
       <SecretTypeSelector
         onChange={(type) => {
+          currentTypeRef.current = type;
           if (type === SecretType.image) {
             resetKeyValues();
+            values.secretName &&
+              isPartnerTask(values.secretName) &&
+              setFieldValue('secretName', '');
           } else {
             setOptions(initialOptions);
             clearKeyValues();
@@ -64,15 +69,17 @@ const SecretForm: React.FC<SecretFormProps> = ({ existingSecrets }) => {
         variant={SelectVariant.typeahead}
         toggleId="secret-name-toggle"
         toggleAriaLabel="secret-name-dropdown"
-        onClear={clearKeyValues}
+        onClear={() => {
+          if (currentTypeRef.current !== values.type || isPartnerTask(values.secretName)) {
+            clearKeyValues();
+          }
+        }}
         onSelect={(e, value) => {
           if (isPartnerTask(value)) {
             setFieldValue('keyValues', [
               ...values.keyValues.filter((kv) => !kv.readOnlyKey && (!!kv.key || !!kv.value)),
               ...getSupportedPartnerTaskKeyValuePairs(value),
             ]);
-          } else {
-            clearKeyValues();
           }
           setFieldValue('secretName', value);
         }}
