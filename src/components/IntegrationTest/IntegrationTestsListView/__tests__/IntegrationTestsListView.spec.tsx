@@ -72,6 +72,18 @@ describe('IntegrationTestsListView', () => {
     expect(wrapper.container.getElementsByTagName('table')).toHaveLength(1);
   });
 
+  it('should show button to add integration test and it should redirect to add integration page', async () => {
+    useK8sWatchResourceMock.mockReturnValue([MockIntegrationTests, true, undefined]);
+    const integrationListView = render(<IntegrationTestsListView applicationName="test-app" />);
+    fireEvent.click(integrationListView.getByTestId('add-integration-test'));
+
+    await waitFor(() =>
+      expect(navigateMock).toHaveBeenCalledWith(
+        '/application-pipeline/workspaces/test-ws/applications/test-app/integrationtests/add',
+      ),
+    );
+  });
+
   it('should show the add integration test page on Add action', async () => {
     useK8sWatchResourceMock.mockReturnValue([[], true, undefined]);
     const wrapper = render(<IntegrationTestsListView applicationName="test-app" />);

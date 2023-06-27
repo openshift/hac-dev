@@ -37,12 +37,10 @@ type IntegrationTestsListViewProps = {
   applicationName: string;
 };
 
-const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ handleAddTest }) => {
-  const [canCreateIntegrationTest] = useAccessReviewForModel(
-    IntegrationTestScenarioModel,
-    'create',
-  );
-
+const IntegrationTestsEmptyState: React.FC<{
+  handleAddTest: () => void;
+  canCreateIntegrationTest: boolean;
+}> = ({ handleAddTest, canCreateIntegrationTest }) => {
   return (
     <AppEmptyState
       data-test="integration-tests__empty"
@@ -73,6 +71,10 @@ const IntegrationTestsEmptyState: React.FC<{ handleAddTest: () => void }> = ({ h
 
 const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ applicationName }) => {
   const { namespace, workspace } = useWorkspaceInfo();
+  const [canCreateIntegrationTest] = useAccessReviewForModel(
+    IntegrationTestScenarioModel,
+    'create',
+  );
 
   const navigate = useNavigate();
   const [integrationTests, integrationTestsLoaded] = useIntegrationTestScenarios(
@@ -116,7 +118,12 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
   }
 
   if (!applicationIntegrationTests?.length) {
-    return <IntegrationTestsEmptyState handleAddTest={handleAddTest} />;
+    return (
+      <IntegrationTestsEmptyState
+        handleAddTest={handleAddTest}
+        canCreateIntegrationTest={canCreateIntegrationTest}
+      />
+    );
   }
   const onClearFilters = () => setNameFilter('');
   const onNameInput = (name: string) => setNameFilter(name);
@@ -150,6 +157,17 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
                     value={nameFilter}
                   />
                 </InputGroup>
+              </ToolbarItem>
+              <ToolbarItem>
+                <ButtonWithAccessTooltip
+                  variant={ButtonVariant.secondary}
+                  onClick={handleAddTest}
+                  isDisabled={!canCreateIntegrationTest}
+                  tooltip="You don't have access to add an integration test"
+                  data-test="add-integration-test"
+                >
+                  Add integration test
+                </ButtonWithAccessTooltip>
               </ToolbarItem>
             </ToolbarGroup>
           </ToolbarContent>
