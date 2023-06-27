@@ -110,11 +110,11 @@ describe('CommitsListView', () => {
     await waitFor(() => screen.getAllByPlaceholderText<HTMLInputElement>('Filter by name...'));
   });
 
-  it('should show Recent commits heading based on the props', () => {
+  it('should show Latest commits heading based on the props', () => {
     const { rerender } = render(<CommitsListView applicationName="purple-mermaid-app" />);
-    expect(screen.queryByText('Recent commits')).not.toBeInTheDocument();
+    expect(screen.queryByText('Latest commits')).not.toBeInTheDocument();
     rerender(<CommitsListView applicationName="purple-mermaid-app" recentOnly />);
-    expect(screen.queryByText('Recent commits')).toBeInTheDocument();
+    expect(screen.queryByText('Latest commits')).toBeInTheDocument();
   });
 
   it('should navigate to activity tab', () => {

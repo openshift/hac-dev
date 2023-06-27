@@ -121,7 +121,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
       {recentOnly ? (
         <>
           <Title size="lg" headingLevel="h3" className="pf-c-title pf-u-mt-lg pf-u-mb-sm">
-            Recent commits
+            Latest commits
           </Title>
         </>
       ) : null}
