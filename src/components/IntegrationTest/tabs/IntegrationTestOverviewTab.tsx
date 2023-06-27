@@ -31,7 +31,7 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
   return (
     <>
       <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
-        Integration Test details
+        Integration test details
       </Title>
       <Flex>
         <Flex flex={{ default: 'flex_3' }}>

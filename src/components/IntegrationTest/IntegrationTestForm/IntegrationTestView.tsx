@@ -71,7 +71,7 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
         : createIntegrationTest(values.integrationTest, applicationName, namespace)
     )
       .then((newIntegrationTest) => {
-        track(integrationTest ? 'Integration Test Edited' : 'Integration Test Created', {
+        track(integrationTest ? 'Integration test Edited' : 'Integration test Created', {
           app_name: newIntegrationTest.spec.application,
           integration_test_name: newIntegrationTest.metadata.name,
           bundle: newIntegrationTest.spec.bundle,
