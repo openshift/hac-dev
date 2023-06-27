@@ -99,7 +99,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
         })}
       >
         <FlexItem className="multi-stream-logs__button" align={{ default: 'alignRight' }}>
-          <Button variant="link" onClick={downloadLogs} isInline>
+          <Button variant="link" onClick={downloadLogs} isDisabled={!!errorMessage} isInline>
             <DownloadIcon className="multi-stream-logs__icon" />
             {t('Download')}
           </Button>

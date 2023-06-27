@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Nav, NavItem, NavList } from '@patternfly/react-core';
+import { css } from '@patternfly/react-styles';
 import get from 'lodash/get';
 import { ColoredStatusIcon } from '../../../components/topology/StatusIcon';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
@@ -13,6 +14,7 @@ import { getPLRLogSnippet } from './logs/pipelineRunLogSnippet';
 import './PipelineRunLogs.scss';
 
 interface PipelineRunLogsProps {
+  className?: string;
   obj: PipelineRunKind;
   taskRuns: TaskRunKind[];
   activeTask?: string;
@@ -88,7 +90,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
   };
 
   render() {
-    const { obj, taskRuns: tRuns } = this.props;
+    const { className, obj, taskRuns: tRuns } = this.props;
     const { activeItem } = this.state;
 
     const taskRunFromYaml = tRuns?.reduce((acc, value) => {
@@ -135,7 +137,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
     };
 
     return (
-      <div className="pipeline-run-logs">
+      <div className={css('pipeline-run-logs', className)}>
         <div className="pipeline-run-logs__tasklist" data-testid="logs-tasklist">
           {taskCount > 0 ? (
             <Nav onSelect={this.onNavSelect} theme="light">

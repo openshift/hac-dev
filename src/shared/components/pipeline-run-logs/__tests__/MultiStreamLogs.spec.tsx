@@ -103,6 +103,21 @@ describe('MultiStreamLogs', () => {
     });
   });
 
+  it('should disable download when an error is present', () => {
+    render(
+      <MultiStreamLogs
+        resourceName={samplePod.metadata.name}
+        resource={samplePod}
+        errorMessage="test error"
+        taskName={'step-init'}
+        downloadAllLabel={'Download all task logs'}
+        onDownloadAll={downloadAllCallback}
+      />,
+    );
+    const downloadButton = screen.getByText('Download');
+    expect(downloadButton).toBeDisabled();
+  });
+
   it('should render resume log stream button when user scrolls up and removed when users scrolls to the bottom of the logs', async () => {
     mockUseScrollDirection.mockReturnValue([ScrollDirection.scrollingUp, () => {}]);
     const { getByTestId, rerender } = render(
