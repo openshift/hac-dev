@@ -142,6 +142,7 @@ export class Applications {
 
   static goToIntegrationTestsTab() {
     cy.get(integrationTestsTabPO.clickTab).click();
+    Common.waitForLoad();
   }
 
   static importCodeStep(publicGitRepo: string) {

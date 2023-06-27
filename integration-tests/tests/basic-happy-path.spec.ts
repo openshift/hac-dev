@@ -10,10 +10,12 @@ import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
 import { APIHelper } from '../utils/APIHelper';
 import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
+import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
 
 describe('Basic Happy Path', () => {
   const applicationName = Common.generateAppName();
   const applicationDetailPage = new ApplicationDetailPage();
+  const integrationTestsTab = new IntegrationTestsTabPage();
   const publicRepo = 'https://github.com/hac-test/devfile-sample-code-with-quarkus';
   const componentName: string = Common.generateAppName('java-quarkus');
   const piplinerunlogsTasks = ['init', 'clone-repository', 'build-container', 'show-summary'];
@@ -41,6 +43,11 @@ describe('Basic Happy Path', () => {
       'Build Running',
       'Default',
     );
+  });
+
+  it('Check default Integration Test', () => {
+    Applications.goToIntegrationTestsTab();
+    integrationTestsTab.hasIntegrationTest(`${applicationName}-enterprise-contract`);
   });
 
   describe('Check different ways to add a component', () => {
