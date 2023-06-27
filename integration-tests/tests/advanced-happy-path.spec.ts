@@ -508,7 +508,7 @@ describe('Advanced Happy path', () => {
     });
   });
 
-  describe('Verify the Recent Commits section on application overview page', () => {
+  describe('Verify the Latest Commits section on application overview page', () => {
     it('Verify the Commits List view should have both the commits', () => {
       Applications.goToOverviewTab();
       UIhelper.verifyRowInTable('Commit List', componentInfo.firstCommitTitle, [
