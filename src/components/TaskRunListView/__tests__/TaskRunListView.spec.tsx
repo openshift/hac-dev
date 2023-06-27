@@ -30,7 +30,7 @@ describe('TaskRunListView', () => {
   it('should render empty state when no TaskRuns present', () => {
     mockUseSearchParam.mockReturnValueOnce(['']);
     const wrapper = render(<TaskRunListView taskRuns={[]} loaded={false} />);
-    expect(wrapper.findByText('No TaskRuns found')).toBeTruthy();
+    expect(wrapper.findByText('No task runs found')).toBeTruthy();
   });
 
   it('should render table', () => {

@@ -165,7 +165,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
               </NavList>
             </Nav>
           ) : (
-            <div className="pipeline-run-logs__nav">{'No TaskRuns found'}</div>
+            <div className="pipeline-run-logs__nav">{'No task runs found'}</div>
           )}
         </div>
         <div className="pipeline-run-logs__container">
@@ -180,9 +180,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
             <div className="pipeline-run-logs__log">
               <div className="pipeline-run-logs__logtext" data-testid="task-logs-error">
                 {waitingForPods && !pipelineRunFinished && `Waiting for ${taskName} task to start `}
-                {!resource &&
-                  pipelineRunFinished &&
-                  get(obj, ['status', 'conditions', 0, 'message'], 'No logs found')}
+                {!resource && pipelineRunFinished && !obj.status && 'No logs found'}
                 {logDetails && (
                   <div className="pipeline-run-logs__logsnippet">{logDetails.staticMessage}</div>
                 )}

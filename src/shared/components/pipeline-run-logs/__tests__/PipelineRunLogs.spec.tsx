@@ -90,7 +90,18 @@ describe('PipelineRunLogs', () => {
     screen.getByTestId('logs-tasklist');
     screen.getByTestId('task-logs-error');
 
-    screen.getByText('No TaskRuns found');
+    screen.getByText('No task runs found');
+  });
+
+  it('should show error message if the pipelinerun is failed', () => {
+    const failedPLR = testPipelineRuns[DataState.FAILED];
+
+    render(<PipelineRunLogs obj={failedPLR} taskRuns={[]} />);
+
+    screen.getByTestId('logs-tasklist');
+    screen.getByTestId('task-logs-error');
+
+    screen.getByText('Error retrieving pipeline for pipelinerun');
   });
 
   it('should render logs no longer available message when pods are not available', () => {

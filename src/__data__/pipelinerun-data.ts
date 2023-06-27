@@ -880,7 +880,12 @@ export const testPipelineRuns: TestPipelineRuns = {
       pipelineSpec: samplePipelineSpec,
       conditions: [
         { status: 'True', type: 'Failure' },
-        { status: 'False', type: 'Succeeded' },
+        {
+          status: 'False',
+          type: 'Succeeded',
+          message: 'Error retrieving pipeline for pipelinerun',
+          reason: 'CouldntGetPipeline',
+        },
       ],
     },
   },
