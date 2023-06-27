@@ -90,7 +90,7 @@ describe('PipelineRunLogs', () => {
     screen.getByTestId('logs-tasklist');
     screen.getByTestId('task-logs-error');
 
-    screen.getByText('No TaskRuns found');
+    screen.getByText('No task runs found');
   });
 
   it('should show error message if the pipelinerun is failed', () => {
