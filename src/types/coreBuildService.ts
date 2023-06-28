@@ -34,8 +34,8 @@ export type Context = {
 
 export type Environment = {
   name: string;
-  params: any[];
-  type: string;
+  params?: any[];
+  type?: string;
 };
 
 export type Param = {

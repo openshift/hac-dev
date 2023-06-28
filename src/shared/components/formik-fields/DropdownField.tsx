@@ -18,6 +18,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
   validateOnChange = false,
   value,
   isDisabled,
+  className,
   ...props
 }) => {
   const [field, { touched, error }] = useField(name);
@@ -36,6 +37,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
       helperTextInvalid={errorMessage}
       validated={validated}
       isRequired={required}
+      className={className}
     >
       <BasicDropdown
         {...props}

@@ -108,6 +108,7 @@ export const MockIntegrationTestsWithGit: IntegrationTestScenarioKind[] = [
     },
     spec: {
       application: 'test-app',
+      environment: { name: 'env1', type: 'POC' },
       resolverRef: {
         resolver: ResolverType.GIT,
         params: [

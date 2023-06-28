@@ -24,6 +24,10 @@ const integrationTestData = {
   },
   spec: {
     application: 'Test Application',
+    environment: {
+      name: 'test1',
+      type: 'POC',
+    },
     resolverRef: {
       resolver: 'git',
       params: [
@@ -50,6 +54,8 @@ describe('Create Utils', () => {
         url: 'test-url',
         path: 'test-path',
         optional: false,
+        environmentName: 'test1',
+        environmentType: 'POC',
       },
       'Test Application',
       'test-ns',
@@ -74,6 +80,8 @@ describe('Create Utils', () => {
         url: 'test-url',
         path: 'test-path',
         optional: true,
+        environmentName: 'test1',
+        environmentType: 'POC',
       },
       'Test Application',
       'test-ns',
@@ -91,6 +99,8 @@ describe('Create Utils', () => {
         url: 'test-url',
         path: 'test-path',
         optional: false,
+        environmentName: 'test1',
+        environmentType: 'POC',
       },
       'Test Application',
       'test-ns',
@@ -107,6 +117,8 @@ describe('Create Utils', () => {
         url: 'test-url',
         path: 'test-path',
         optional: false,
+        environmentName: 'test1',
+        environmentType: 'POC',
       },
       'Test Application',
       'test-ns',

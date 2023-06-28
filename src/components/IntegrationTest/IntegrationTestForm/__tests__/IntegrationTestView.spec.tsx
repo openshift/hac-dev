@@ -3,6 +3,8 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useApplications } from '../../../../hooks/useApplications';
+import { useEnvironments } from '../../../../hooks/useEnvironments';
+import { useReleasePlans } from '../../../../hooks/useReleasePlans';
 import { namespaceRenderer } from '../../../../utils/test-utils';
 import { WorkspaceContext } from '../../../../utils/workspace-context-utils';
 import { mockApplication } from '../../../ApplicationDetails/__data__/mock-data';
@@ -13,6 +15,14 @@ import { createIntegrationTest } from '../utils/create-utils';
 
 jest.mock('../../../../utils/analytics');
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
+
+jest.mock('../../../../hooks/useEnvironments', () => ({
+  useEnvironments: jest.fn(),
+}));
+
+jest.mock('../../../../hooks/useReleasePlans', () => ({
+  useReleasePlans: jest.fn(),
+}));
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
@@ -60,6 +70,8 @@ jest.mock('../../../../utils/rbac', () => ({
 
 const createIntegrationTestMock = createIntegrationTest as jest.Mock;
 const useAccessCheckMock = useAccessCheck as jest.Mock;
+const useEnvironmentsMock = useEnvironments as jest.Mock;
+const useReleasePlansMock = useReleasePlans as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
@@ -101,6 +113,8 @@ describe('IntegrationTestView', () => {
     useApplicationsMock.mockReturnValue([[mockApplication], true]);
     watchResourceMock.mockReturnValueOnce([[], true]);
     useAccessCheckMock.mockReturnValue([{}, false]);
+    useEnvironmentsMock.mockReturnValue([[], true]);
+    useReleasePlansMock.mockReturnValue([[], true]);
   });
   const fillIntegrationTestForm = (wrapper: RenderResult) => {
     fireEvent.input(wrapper.getByLabelText(/Integration test name/), {
@@ -128,6 +142,7 @@ describe('IntegrationTestView', () => {
     wrapper.getByLabelText(/GitHub URL/);
     wrapper.getByLabelText(/Revision/);
     wrapper.getByLabelText(/Path in repository/);
+    wrapper.getByText(/Environment/);
     wrapper.getByRole('button', { name: 'Add integration test' });
   });
 

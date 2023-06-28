@@ -9,7 +9,12 @@ import {
   ResolverParam,
   ResolverType,
 } from '../../../../types/coreBuildService';
-import { FormValues, IntegrationTestFormValues, IntegrationTestLabels } from '../types';
+import {
+  ENVIRONMENTS,
+  FormValues,
+  IntegrationTestFormValues,
+  IntegrationTestLabels,
+} from '../types';
 
 export enum ResolverRefParams {
   URL = 'url',
@@ -22,7 +27,7 @@ export const editIntegrationTest = (
   integrationTestValues: IntegrationTestFormValues,
   dryRun?: boolean,
 ): Promise<IntegrationTestScenarioKind> => {
-  const { url, revision, path, optional } = integrationTestValues;
+  const { url, revision, path, optional, environmentName, environmentType } = integrationTestValues;
   const integrationTestResource: IntegrationTestScenarioKind = {
     ...integrationTest,
     metadata: {
@@ -31,6 +36,13 @@ export const editIntegrationTest = (
     },
     spec: {
       ...integrationTest.spec,
+      environment:
+        environmentType && environmentName !== ENVIRONMENTS.DEFAULT
+          ? {
+              name: environmentName,
+              type: environmentType,
+            }
+          : null,
       resolverRef: {
         resolver: ResolverType.GIT,
         params: [
@@ -75,7 +87,8 @@ export const createIntegrationTest = (
   namespace: string,
   dryRun?: boolean,
 ): Promise<IntegrationTestScenarioKind> => {
-  const { name, url, revision, path, optional } = integrationTestValues;
+  const { name, url, revision, path, optional, environmentName, environmentType } =
+    integrationTestValues;
   const integrationTestResource: IntegrationTestScenarioKind = {
     apiVersion: `${IntegrationTestScenarioGroupVersionKind.group}/${IntegrationTestScenarioGroupVersionKind.version}`,
     kind: IntegrationTestScenarioGroupVersionKind.kind,
@@ -86,6 +99,13 @@ export const createIntegrationTest = (
     },
     spec: {
       application,
+      environment:
+        environmentType && environmentName !== ENVIRONMENTS.DEFAULT
+          ? {
+              name: environmentName,
+              type: environmentType,
+            }
+          : null,
       resolverRef: {
         resolver: ResolverType.GIT,
         params: [
