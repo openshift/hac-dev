@@ -96,6 +96,7 @@ const OpaqueSecretForm: React.FC<OpaqueSecretFormProps> = ({
                 label="Select or enter name"
                 helpText="Unique name of the new secret."
                 isCreatable
+                isInputValuePersisted
                 hasOnCreateOption
                 options={options}
                 variant={SelectVariant.typeahead}
