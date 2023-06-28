@@ -26,6 +26,7 @@ const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const mockComponent = {
   metadata: {
     name: `my-component`,
+    annotations: {},
   },
   spec: {
     source: {

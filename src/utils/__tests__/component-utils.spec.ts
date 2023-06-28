@@ -1,7 +1,13 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { useApplicationPipelineGitHubApp } from '../../hooks/useApplicationPipelineGitHubApp';
 import { ComponentKind } from '../../types';
-import { isPACEnabled, PAC_ANNOTATION, useURLForComponentPRs } from '../component-utils';
+import {
+  isPACEnabled,
+  PAC_ANNOTATION,
+  useURLForComponentPRs,
+  useComponentBuildStatus,
+  BUILD_STATUS_ANNOTATION,
+} from '../component-utils';
 
 jest.mock('../../hooks/useApplicationPipelineGitHubApp', () => ({
   useApplicationPipelineGitHubApp: jest.fn(),
@@ -74,5 +80,21 @@ describe('component-utils', () => {
     ).toBe(
       'https://github.com/pulls?q=is:pr+is:open+author:app/appstudio-staging-ci+repo:org/repo1+repo:org/repo2',
     );
+  });
+
+  it('should provide parsed component build status when available', () => {
+    const mockComponent = {
+      metadata: {
+        annotations: {
+          [BUILD_STATUS_ANNOTATION]:
+            '{"pac":{"state":"enabled","merge-url":"example.com"},"message":"done"}',
+        },
+      },
+    } as any as ComponentKind;
+
+    expect(renderHook(() => useComponentBuildStatus(mockComponent)).result.current).toEqual({
+      pac: { state: 'enabled', 'merge-url': 'example.com' },
+      message: 'done',
+    });
   });
 });

@@ -26,7 +26,7 @@ import { ComponentModel } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ComponentKind } from '../../types';
 import { useTrackEvent, TrackEvents } from '../../utils/analytics';
-import { useURLForComponentPRs, enablePAC, disablePAC } from '../../utils/component-utils';
+import { enablePAC, disablePAC, useComponentBuildStatus } from '../../utils/component-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import AnalyticsButton from '../AnalyticsButton/AnalyticsButton';
@@ -99,8 +99,9 @@ const Row: React.FC<{
     },
     [onStateChange],
   );
-  const prURL = useURLForComponentPRs([component]);
   const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
+  const buildStatus = useComponentBuildStatus(component);
+  const prURL = buildStatus?.pac?.['merge-url'];
 
   React.useEffect(() => {
     onStateChange(pacState);
@@ -172,7 +173,7 @@ const Row: React.FC<{
                 return (
                   <ExternalLink
                     variant={ButtonVariant.secondary}
-                    href={prURL}
+                    href={prURL || component.spec.source.git.url}
                     showIcon
                     analytics={{
                       link_name: 'merge-pull-request',
