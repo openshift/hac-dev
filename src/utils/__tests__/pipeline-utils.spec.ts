@@ -1,5 +1,5 @@
 import { DataState, testPipelineRuns } from '../../__data__/pipelinerun-data';
-import { PipelineRunKind } from '../../types';
+import { PipelineRunKind, TaskRunKind } from '../../types';
 import {
   calculateDuration,
   getDuration,
@@ -9,6 +9,7 @@ import {
   pipelineRunStatus,
   pipelineRunStatusToGitOpsStatus,
   runStatus,
+  taskName,
 } from '../pipeline-utils';
 
 const samplePipelineRun = testPipelineRuns[DataState.SUCCEEDED];
@@ -184,5 +185,35 @@ describe('getLabelColorFromStatus', () => {
   it('should return gold for cancelled/cancelling status', () => {
     expect(getLabelColorFromStatus(runStatus.Cancelled)).toBe('gold');
     expect(getLabelColorFromStatus(runStatus.Cancelling)).toBe('gold');
+  });
+});
+
+describe('taskName', () => {
+  it('should try to find out correct task name from taskRef or labels', () => {
+    expect(taskName({ spec: { taskRef: { name: 'my-task' } } } as TaskRunKind)).toBe('my-task');
+    expect(
+      taskName({
+        spec: {},
+        metadata: { labels: { ['tekton.dev/pipelineTask']: 'my-task' } },
+      } as unknown as TaskRunKind),
+    ).toBe('my-task');
+    expect(
+      taskName({
+        spec: {},
+        metadata: { labels: { ['tekton.dev/task']: 'my-task' } },
+      } as unknown as TaskRunKind),
+    ).toBe('my-task');
+    expect(
+      taskName({
+        metadata: { labels: {} },
+        spec: { taskRef: { params: [{ name: 'name', value: 'my-task' }] } },
+      } as TaskRunKind),
+    ).toBe('my-task');
+    expect(
+      taskName({
+        metadata: { labels: {} },
+        spec: { taskRef: { params: [{ name: 'myparam', value: 'my-task' }] } },
+      } as TaskRunKind),
+    ).toBe(undefined);
   });
 });

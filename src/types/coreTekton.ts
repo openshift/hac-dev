@@ -156,5 +156,6 @@ export enum TektonResourceLabel {
   pipeline = 'tekton.dev/pipeline',
   pipelinerun = 'tekton.dev/pipelineRun',
   taskrun = 'tekton.dev/taskRun',
+  task = 'tekton.dev/task',
   pipelineTask = 'tekton.dev/pipelineTask',
 }

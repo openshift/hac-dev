@@ -5,7 +5,7 @@ import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { TaskRunKind } from '../../types/task-run';
-import { taskRunStatus } from '../../utils/pipeline-utils';
+import { taskName, taskRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { StatusIconWithText } from '../topology/StatusIcon';
 import { taskRunTableColumnClasses } from './TaskRunListHeader';
@@ -22,9 +22,7 @@ const TaskRunListRow: React.FC<RowFunctionArgs<TaskRunKind>> = ({ obj }) => {
           {obj.metadata.name}
         </Link>
       </TableData>
-      <TableData className={taskRunTableColumnClasses.task}>
-        {obj.spec.taskRef?.name ?? '-'}
-      </TableData>
+      <TableData className={taskRunTableColumnClasses.task}>{taskName(obj) ?? '-'}</TableData>
       <TableData className={taskRunTableColumnClasses.started}>
         <Timestamp timestamp={obj.status?.startTime} />
       </TableData>
