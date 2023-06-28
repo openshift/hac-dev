@@ -46,7 +46,7 @@ const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = (
         { path: '#', name: title },
       ]}
       title={title}
-      description="Test all your components after you commit code by adding an integration test. Integration tests run in parallel using temporary environments. Only validated versions of applications will be deployed."
+      description="Test all your components after you commit code by adding an integration test. Integration tests run in parallel using temporary environments."
       footer={footer}
     >
       <PageSection isFilled variant={PageSectionVariants.light}>
