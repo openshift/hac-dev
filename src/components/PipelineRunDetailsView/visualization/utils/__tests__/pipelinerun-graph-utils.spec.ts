@@ -465,6 +465,48 @@ describe('pipelinerun-graph-utils: ', () => {
       });
     });
 
+    it('should return Test Failure status for the last step in a task', () => {
+      expect(
+        createStepStatus(
+          'step1',
+          {
+            reason: runStatus.TestFailed,
+            steps: [
+              { name: 'step1', terminated: { reason: 'Completed', startedAt: 0, finishedAt: 1 } },
+              { name: 'step2', terminated: { reason: 'Completed', startedAt: 1, finishedAt: 2 } },
+            ],
+          } as any as PipelineTaskStatus,
+          true, // last step
+        ),
+      ).toEqual({
+        name: 'step1',
+        status: runStatus.TestFailed,
+        startTime: 0,
+        endTime: 1,
+      });
+    });
+
+    it('should return actual step status if its not the last step in a task', () => {
+      expect(
+        createStepStatus(
+          'step1',
+          {
+            reason: runStatus.TestFailed,
+            steps: [
+              { name: 'step1', terminated: { reason: 'Completed', startedAt: 0, finishedAt: 1 } },
+              { name: 'step2', terminated: { reason: 'Completed', startedAt: 1, finishedAt: 2 } },
+            ],
+          } as any as PipelineTaskStatus,
+          false, // not a final step
+        ),
+      ).toEqual({
+        name: 'step1',
+        status: runStatus.Succeeded,
+        startTime: 0,
+        endTime: 1,
+      });
+    });
+
     it('should return Running status', () => {
       expect(
         createStepStatus('step1', {
@@ -492,31 +534,4 @@ describe('pipelinerun-graph-utils: ', () => {
       });
     });
   });
-
-  // export const createStepStatus = (stepName: string, status: PipelineTaskStatus): StepStatus => {
-  //   let stepRunStatus: runStatus = runStatus.Pending;
-  //   let startTime: string;
-  //   let endTime: string;
-
-  //   const [matchingStep, prevStep] = getMatchingStep(stepName, status);
-  //     if (matchingStep.running) {
-  //       if (!prevStep) {
-  //         stepRunStatus = runStatus.Running;
-  //         startTime = matchingStep.running.startedAt;
-  //       } else if (prevStep.terminated) {
-  //         stepRunStatus = runStatus.Running;
-  //         startTime = prevStep.terminated.finishedAt;
-  //       } else {
-  //         stepRunStatus = runStatus.Pending;
-  //       }
-  //     }
-  //   }
-
-  //   return {
-  //     startTime,
-  //     endTime,
-  //     name: stepName,
-  //     status: stepRunStatus,
-  //   };
-  // };
 });
