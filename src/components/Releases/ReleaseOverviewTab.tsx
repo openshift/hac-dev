@@ -13,7 +13,6 @@ import { useReleaseStatus } from '../../hooks';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { ReleaseKind } from '../../types';
 import { calculateDuration } from '../../utils/pipeline-utils';
-import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import MetadataList from '../PipelineRunDetailsView/MetadataList';
 import { StatusIconWithText } from '../topology/StatusIcon';
 
@@ -23,7 +22,7 @@ type ReleaseOverviewTabProps = {
 };
 
 const ReleaseOverviewTab: React.FC<ReleaseOverviewTabProps> = ({ applicationName, release }) => {
-  const { workspace } = useWorkspaceInfo();
+  const releaseWorkspace = release.status?.processing?.pipelineRun?.split('/')[0];
   const pipelineRun = release.status?.processing?.pipelineRun?.split('/')[1];
   const duration = calculateDuration(
     typeof release.status?.startTime === 'string' ? release.status?.startTime : '',
@@ -116,7 +115,7 @@ const ReleaseOverviewTab: React.FC<ReleaseOverviewTabProps> = ({ applicationName
                 <DescriptionListDescription>
                   {pipelineRun ? (
                     <Link
-                      to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${pipelineRun}`}
+                      to={`/application-pipeline/workspaces/${releaseWorkspace}/applications/${applicationName}/pipelineruns/${pipelineRun}`}
                     >
                       {pipelineRun}
                     </Link>

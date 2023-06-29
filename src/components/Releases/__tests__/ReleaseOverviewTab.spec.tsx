@@ -39,7 +39,7 @@ describe('ReleaseOverviewTab', () => {
     expect(screen.getByText('Pipeline Run')).toBeVisible();
     expect(screen.getByText('test-strategy')).toBeVisible();
     expect(screen.getByRole('link', { name: 'test-pipelinerun' }).getAttribute('href')).toBe(
-      '/application-pipeline/workspaces/test-ws/applications/test-app/pipelineruns/test-pipelinerun',
+      '/application-pipeline/workspaces/test-target/applications/test-app/pipelineruns/test-pipelinerun',
     );
   });
 });
