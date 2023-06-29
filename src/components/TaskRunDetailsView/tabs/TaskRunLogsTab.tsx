@@ -8,14 +8,10 @@ export type TaskRunLogProps = {
 };
 
 const TaskRunLogsTab: React.FC<TaskRunLogProps> = ({ taskRun }) => {
-  const podName = taskRun?.status?.podName;
-  const taskName = taskRun?.spec.taskRef?.name ?? taskRun?.metadata.name;
   const status = taskRunStatus(taskRun);
   const namespace = taskRun.metadata?.namespace;
 
-  return (
-    <TaskRunLogs podName={podName} taskName={taskName} status={status} namespace={namespace} />
-  );
+  return <TaskRunLogs taskRun={taskRun} status={status} namespace={namespace} />;
 };
 
 export default TaskRunLogsTab;

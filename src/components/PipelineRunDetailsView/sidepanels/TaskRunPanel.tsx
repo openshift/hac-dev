@@ -61,9 +61,8 @@ const TaskRunPanel: React.FC<Props> = ({ taskNode, onClose }) => {
           <Tab title="Logs" eventKey="logs">
             <DrawerPanelBody style={{ height: '100%' }}>
               <TaskRunLogs
-                taskName={task.name}
+                taskRun={taskRun}
                 namespace={taskNode.getData().namespace}
-                podName={taskRun?.status?.podName}
                 status={status}
               />
             </DrawerPanelBody>

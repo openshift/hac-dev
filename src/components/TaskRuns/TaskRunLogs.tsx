@@ -1,16 +1,18 @@
 import React from 'react';
 import { PodGroupVersionKind } from '../../models/pod';
 import LogsWrapperComponent from '../../shared/components/pipeline-run-logs/logs/LogsWrapperComponent';
+import { TaskRunKind } from '../../types';
 import { runStatus } from '../../utils/pipeline-utils';
 
 type Props = {
-  podName: string;
-  taskName: string;
+  taskRun: TaskRunKind;
   namespace: string;
   status: runStatus;
 };
 
-const TaskRunLogs: React.FC<Props> = ({ taskName, podName, namespace, status }) => {
+const TaskRunLogs: React.FC<Props> = ({ taskRun, namespace, status }) => {
+  const podName = taskRun?.status?.podName;
+
   if (status === runStatus.Skipped) {
     return <div>No logs. This task was skipped.</div>;
   }
@@ -22,13 +24,13 @@ const TaskRunLogs: React.FC<Props> = ({ taskName, podName, namespace, status }) 
   }
   return (
     <LogsWrapperComponent
+      taskRun={taskRun}
       resource={{
         name: podName,
         groupVersionKind: PodGroupVersionKind,
         namespace,
         isList: false,
       }}
-      taskName={taskName}
     />
   );
 };
