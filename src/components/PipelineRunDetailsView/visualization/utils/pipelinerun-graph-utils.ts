@@ -102,7 +102,11 @@ export const getPipelineFromPipelineRun = (pipelineRun: PipelineRunKind): Pipeli
   };
 };
 
-export const createStepStatus = (stepName: string, status: PipelineTaskStatus): StepStatus => {
+export const createStepStatus = (
+  stepName: string,
+  status: PipelineTaskStatus,
+  isFinalStep: boolean = false,
+): StepStatus => {
   let stepRunStatus: runStatus = runStatus.Pending;
   let startTime: string;
   let endTime: string;
@@ -115,7 +119,9 @@ export const createStepStatus = (stepName: string, status: PipelineTaskStatus): 
       stepRunStatus = runStatus.Pending;
     } else if (matchingStep.terminated) {
       stepRunStatus =
-        matchingStep.terminated.reason === TerminatedReasons.Completed
+        status.reason === runStatus.TestFailed && isFinalStep
+          ? runStatus.TestFailed
+          : matchingStep.terminated.reason === TerminatedReasons.Completed
           ? runStatus.Succeeded
           : runStatus.Failed;
       startTime = matchingStep.terminated.startedAt;
@@ -222,7 +228,9 @@ export const appendStatus = (
     }
     // Get the steps status
     const stepList = taskStatus?.steps || mTask?.steps || mTask?.taskSpec?.steps || [];
-    mTask.steps = stepList.map((step) => createStepStatus(step.name, mTask.status));
+    mTask.steps = stepList.map((step, i, { length }) =>
+      createStepStatus(step.name, mTask.status, i + 1 === length),
+    );
 
     return mTask;
   });
