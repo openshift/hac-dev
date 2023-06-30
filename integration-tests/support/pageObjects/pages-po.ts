@@ -73,6 +73,7 @@ export const createBuildStepPO = {
 export const addIntegrationTestStepPO = {
   displayNameInput: '[data-test="display-name-input"]',
   optionalreleaseCheckbox: '[data-test="optional-release-checkbox"]',
+  accessValidationMsg: 'div[id="form-input-integrationTest-url-field-helper"]',
 };
 
 export const environmentsPagePO = {

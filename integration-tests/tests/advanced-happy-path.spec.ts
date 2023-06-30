@@ -54,14 +54,8 @@ describe('Advanced Happy path', () => {
   const integrationTestDetails: { [key: string]: string } = {
     integrationTestName: Common.generateAppName('integration-tests'),
     integrationTestNameTemp: Common.generateAppName('integration-tests-temp'),
-    imageBundle: 'quay.io/redhat-appstudio/example-tekton-bundle:integration-pipeline-fail',
-    pipelineToRun: 'integration-pipeline-fail',
-    imageBundleEdit: 'quay.io/redhat-appstudio/example-tekton-bundle:integration-pipeline-pass',
-    pipelineToRunEdit: 'integration-pipeline-pass',
-    enterpriseContractITName: Common.generateAppName('check-contract'),
-    enterpriseContractImageBundle:
-      'quay.io/redhat-appstudio-tekton-catalog/pipeline-enterprise-contract:devel',
-    enterpriseContractPipelineRun: 'enterprise-contract',
+    githubURL: 'https://github.com/redhat-appstudio/integration-examples',
+    pathInRepository: 'pipelines/integration_pipeline_pass.yaml',
   };
 
   const integrationTestTaskNames = ['task-success', 'task-success-2', 'task-skipped'];
@@ -210,15 +204,16 @@ describe('Advanced Happy path', () => {
       integrationTestsTabPage.clickOnAddIntegrationTestBtn();
       integrationTestsTabPage.addIntegrationTest(
         integrationTestDetails.integrationTestName,
-        integrationTestDetails.imageBundle,
-        integrationTestDetails.pipelineToRun,
+        integrationTestDetails.githubURL,
+        'main',
+        integrationTestDetails.pathInRepository,
         'check',
       );
       integrationTestsTabPage.verifyRowInIntegrationTestsTable({
         name: integrationTestDetails.integrationTestName,
-        ContainerImage: integrationTestDetails.imageBundle,
+        githubURL: integrationTestDetails.githubURL,
         optionalForRelease: 'Optional',
-        pipelines: integrationTestDetails.pipelineToRun,
+        revision: 'main',
       });
     });
 
@@ -226,30 +221,15 @@ describe('Advanced Happy path', () => {
       Applications.clickActionsDropdown('Add integration test');
       integrationTestsTabPage.addIntegrationTest(
         integrationTestDetails.integrationTestNameTemp,
-        integrationTestDetails.imageBundle,
-        integrationTestDetails.pipelineToRun,
+        integrationTestDetails.githubURL,
+        'main',
+        integrationTestDetails.pathInRepository,
       );
       integrationTestsTabPage.verifyRowInIntegrationTestsTable({
         name: integrationTestDetails.integrationTestNameTemp,
-        ContainerImage: integrationTestDetails.imageBundle,
+        githubURL: integrationTestDetails.githubURL,
         optionalForRelease: 'Mandatory',
-        pipelines: integrationTestDetails.pipelineToRun,
-      });
-    });
-
-    it('Add Enterprise Contract integration test and verify', () => {
-      Applications.clickActionsDropdown('Add integration test');
-      integrationTestsTabPage.addIntegrationTest(
-        integrationTestDetails.enterpriseContractITName,
-        integrationTestDetails.enterpriseContractImageBundle,
-        integrationTestDetails.enterpriseContractPipelineRun,
-        'check',
-      );
-      integrationTestsTabPage.verifyRowInIntegrationTestsTable({
-        name: integrationTestDetails.enterpriseContractITName,
-        ContainerImage: integrationTestDetails.enterpriseContractImageBundle,
-        optionalForRelease: 'Optional',
-        pipelines: integrationTestDetails.enterpriseContractPipelineRun,
+        revision: 'main',
       });
     });
 
@@ -259,16 +239,12 @@ describe('Advanced Happy path', () => {
         'Edit',
       );
       Common.waitForLoad();
-      integrationTestsTabPage.editIntegrationTest(
-        integrationTestDetails.imageBundleEdit,
-        integrationTestDetails.pipelineToRunEdit,
-        'uncheck',
-      );
+      integrationTestsTabPage.editIntegrationTest(integrationTestDetails.githubURL, 'uncheck');
       integrationTestsTabPage.verifyRowInIntegrationTestsTable({
         name: integrationTestDetails.integrationTestName,
-        ContainerImage: integrationTestDetails.imageBundleEdit,
+        githubURL: integrationTestDetails.githubURL,
         optionalForRelease: 'Mandatory',
-        pipelines: integrationTestDetails.pipelineToRunEdit,
+        revision: 'main',
       });
     });
 
@@ -323,7 +299,6 @@ describe('Advanced Happy path', () => {
       });
       DetailsTab.waitUntilStatusIsNotRunning();
       UIhelper.verifyLabelAndValue('Status', 'Succeeded');
-      UIhelper.verifyLabelAndValue('Pipeline', integrationTestDetails.pipelineToRunEdit);
       UIhelper.verifyLabelAndValue('Related pipelines', '2 pipelines').click();
       PipelinerunsTabPage.verifyRelatedPipelines(componentInfo.secondPipelineRunName);
     });
@@ -358,17 +333,18 @@ describe('Advanced Happy path', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
       PipelinerunsTabPage.getPipelineRunNameByLabel(
         applicationName,
-        `test.appstudio.openshift.io/scenario=${integrationTestDetails.enterpriseContractITName}`,
+        `test.appstudio.openshift.io/scenario=${applicationName}-enterprise-contract`,
+        {
+          key: 'pac.test.appstudio.openshift.io/sha-title',
+          value: componentInfo.updatedCommitMessage,
+        },
       ).then((testPipelineName) => {
         integrationTestDetails.enterpriseContractITPipelineRunName = testPipelineName;
         UIhelper.verifyRowInTable('Pipeline run List', testPipelineName, [/^Test$/]);
         UIhelper.clickLink(testPipelineName);
         DetailsTab.waitUntilStatusIsNotRunning();
-        UIhelper.verifyLabelAndValue('Status', 'Failed');
-        UIhelper.verifyLabelAndValue(
-          'Pipeline',
-          integrationTestDetails.enterpriseContractPipelineRun,
-        );
+        UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+        UIhelper.verifyLabelAndValue('Pipeline', testPipelineName);
         UIhelper.verifyLabelAndValue('Related pipelines', '2 pipelines').click();
         PipelinerunsTabPage.verifyRelatedPipelines(
           integrationTestDetails.passIntegrationTestPipelineRunName,
@@ -378,7 +354,7 @@ describe('Advanced Happy path', () => {
 
     it('Verify EC Integration Test pipeline runs Logs Tab', () => {
       UIhelper.clickTab('Logs');
-      DetailsTab.verifyLogs('"result": "FAILURE"');
+      DetailsTab.verifyLogs('"result": "SUCCESS"');
     });
 
     it('Verify EC Integration Test pipeline runs Security Tab', () => {
@@ -386,10 +362,10 @@ describe('Advanced Happy path', () => {
       PipelinerunsTabPage.verifyECSecurityRulesResultSummary(
         /Failed(\d+).*Warning(\d+).*Success(\d+)/g,
       );
-      PipelinerunsTabPage.verifyECSecurityRules('Failed', {
-        rule: /Blocking CVE check/g,
-        status: 'Failed',
-        message: /Found (\d+) CVE vulnerabilities of high security level/g,
+      PipelinerunsTabPage.verifyECSecurityRules('Attestation signature check passed', {
+        rule: 'Attestation signature check passed',
+        status: 'Success',
+        message: '-',
       });
     });
   });
@@ -400,8 +376,8 @@ describe('Advanced Happy path', () => {
       UIhelper.clickTab('Integration tests');
       UIhelper.clickLink(integrationTestDetails.integrationTestName);
       UIhelper.verifyLabelAndValue('Name', integrationTestDetails.integrationTestName);
-      UIhelper.verifyLabelAndValue('Image bundle', integrationTestDetails.imageBundleEdit);
-      UIhelper.verifyLabelAndValue('Pipeline to run', integrationTestDetails.pipelineToRunEdit);
+      UIhelper.verifyLabelAndValue('GitHub URL', integrationTestDetails.githubURL);
+      UIhelper.verifyLabelAndValue('Path in repository', integrationTestDetails.pathInRepository);
       UIhelper.verifyLabelAndValue('Optional for release', 'Mandatory');
     });
 
@@ -483,7 +459,7 @@ describe('Advanced Happy path', () => {
       UIhelper.verifyRowInTable(
         'Pipelinerun List',
         integrationTestDetails.enterpriseContractITPipelineRunName,
-        ['Failed', 'Test'],
+        ['Succeeded', 'Test'],
       );
       UIhelper.verifyRowInTable(
         'Pipelinerun List',
