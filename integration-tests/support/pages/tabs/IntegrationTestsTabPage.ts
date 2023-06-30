@@ -6,9 +6,9 @@ import { integrationTestsTabPO, addIntegrationTestStepPO } from '../../pageObjec
 
 type integrationTableRow = {
   name: string;
-  ContainerImage: string;
+  githubURL: string;
   optionalForRelease: string;
-  pipelines: string;
+  revision: string;
 };
 
 export class IntegrationTestsTabPage {
@@ -27,14 +27,19 @@ export class IntegrationTestsTabPage {
 
   addIntegrationTest(
     integrationTestName: string,
-    imageBundle: string,
-    pipelineToRun,
+    githubURL: string,
+    revision: string,
+    pathInRepository: string,
     markOptionalForRelease?: string,
   ) {
     this.verifySaveChangesIsDisabled();
     UIhelper.inputValueInTextBoxByLabelName('Integration test name', integrationTestName);
-    UIhelper.inputValueInTextBoxByLabelName('Image bundle', imageBundle);
-    UIhelper.inputValueInTextBoxByLabelName('Pipeline to run', pipelineToRun);
+    UIhelper.inputValueInTextBoxByLabelName('GitHub URL', githubURL);
+    cy.contains(addIntegrationTestStepPO.accessValidationMsg, 'Access validated', {
+      timeout: 80000,
+    }).should('be.visible');
+    UIhelper.inputValueInTextBoxByLabelName('Revision', revision);
+    UIhelper.inputValueInTextBoxByLabelName('Path in repository', pathInRepository);
     if (markOptionalForRelease === 'uncheck') {
       cy.get(addIntegrationTestStepPO.optionalreleaseCheckbox).uncheck();
     } else if (markOptionalForRelease === 'check') {
@@ -45,16 +50,15 @@ export class IntegrationTestsTabPage {
     Common.waitForLoad();
   }
 
-  editIntegrationTest(imageBundle: string, pipelineToRun: string, markOptionalForRelease?: string) {
+  editIntegrationTest(githubURL: string, markOptionalForRelease?: string) {
     this.verifyIntegrationNameIsDisabled();
     this.verifySaveChangesIsDisabled();
 
-    if (imageBundle) {
-      UIhelper.inputValueInTextBoxByLabelName('Image bundle', imageBundle);
-    }
-
-    if (pipelineToRun) {
-      UIhelper.inputValueInTextBoxByLabelName('Pipeline to run', pipelineToRun);
+    if (githubURL) {
+      UIhelper.inputValueInTextBoxByLabelName('GitHub URL', githubURL);
+      cy.contains(addIntegrationTestStepPO.accessValidationMsg, 'Access validated', {
+        timeout: 80000,
+      }).should('be.visible');
     }
 
     if (markOptionalForRelease === 'uncheck')
@@ -71,7 +75,7 @@ export class IntegrationTestsTabPage {
   }
 
   verifyIntegrationNameIsDisabled() {
-    cy.get(addIntegrationTestStepPO.displayNameInput).should('have.attr', 'readonly');
+    cy.get(addIntegrationTestStepPO.displayNameInput).should('have.attr', 'disabled');
   }
 
   verifySaveChangesIsDisabled() {
@@ -80,9 +84,9 @@ export class IntegrationTestsTabPage {
 
   verifyRowInIntegrationTestsTable(rowDetails: integrationTableRow) {
     UIhelper.verifyRowInTable('Integration tests', rowDetails.name, [
-      new RegExp(rowDetails.ContainerImage),
+      new RegExp(rowDetails.githubURL),
       new RegExp(`^${rowDetails.optionalForRelease}$`),
-      new RegExp(`^${rowDetails.pipelines}$`),
+      new RegExp(`^${rowDetails.revision}$`),
     ]);
   }
 

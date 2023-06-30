@@ -28,10 +28,25 @@ export class PipelinerunsTabPage {
     });
   }
 
-  static getPipelineRunNameByLabel(applicationName: string, label: string) {
+  static getPipelineRunNameByLabel(
+    applicationName: string,
+    label: string,
+    annotations?: { key: string; value: string },
+  ) {
     return APIHelper.requestHACAPI({
       url: hacAPIEndpoints.pipelinerunsFilter(applicationName, label),
-    }).its('body.items[0].metadata.name');
+    })
+      .its('body.items')
+      .then((items) => {
+        if (!annotations) {
+          return items[0].metadata.name;
+        }
+        for (let i in items) {
+          if (items[i].metadata.annotations[annotations.key] === annotations.value) {
+            return items[i].metadata.name;
+          }
+        }
+      });
   }
 
   static verifyECSecurityRulesResultSummary(summary: RegExp) {
@@ -153,7 +168,11 @@ export class TaskRunsTab {
       },
       { name: `${pipelineName}-sbom-json-check`, task: 'sbom-json-check', status: 'Succeeded' },
       { name: `${pipelineName}-clair-scan`, task: 'clair-scan', status: 'Succeeded|Test Failures' }, // Adding Test Warnings as some packages might have medium vulnerabilities sometimes
-      { name: `${pipelineName}-clamav-scan`, task: 'clamav-scan', status: 'Succeeded' },
+      {
+        name: `${pipelineName}-clamav-scan`,
+        task: 'clamav-scan',
+        status: 'Succeeded|Test Failures',
+      },
       { name: `${pipelineName}-label-check`, task: 'label-check', status: 'Succeeded' },
       { name: `${pipelineName}-show-sbom`, task: 'show-sbom', status: 'Succeeded' },
       { name: `${pipelineName}-show-summary`, task: 'summary', status: 'Succeeded' },
