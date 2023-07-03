@@ -131,6 +131,7 @@ describe('Advanced Happy path', () => {
           componentInfo.firstPipelineRunName = pipelinerunName;
           UIhelper.clickLink(componentInfo.firstPipelineRunName);
           DetailsTab.waitUntilStatusIsNotRunning();
+          UIhelper.verifyLabelAndValue('Status', 'Succeeded');
           DetailsTab.checkStatusSucceeded(
             TaskRunsTab.getAdvancedTaskNamesList(componentInfo.firstPipelineRunName),
           );
@@ -279,6 +280,7 @@ describe('Advanced Happy path', () => {
           componentInfo.secondPipelineRunName = pipelinerunName;
           UIhelper.clickLink(componentInfo.secondPipelineRunName);
           DetailsTab.waitUntilStatusIsNotRunning();
+          UIhelper.verifyLabelAndValue('Status', 'Succeeded');
           DetailsTab.checkStatusSucceeded(
             TaskRunsTab.getAdvancedTaskNamesList(componentInfo.secondPipelineRunName),
           );

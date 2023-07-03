@@ -93,6 +93,7 @@ describe('Basic Happy Path', () => {
           UIhelper.verifyLabelAndValue('Component', componentName);
           UIhelper.verifyLabelAndValue('Related pipelines', '0 pipelines');
           DetailsTab.waitUntilStatusIsNotRunning();
+          UIhelper.verifyLabelAndValue('Status', 'Succeeded');
 
           //Verify the Pipeline run details Graph
           piplinerunlogsTasks.forEach((item) => {
