@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { Bullseye, FormGroup, FormSection, ValidatedOptions } from '@patternfly/react-core';
 import { useField, useFormikContext } from 'formik';
 import gitUrlParse from 'git-url-parse';
@@ -8,6 +9,7 @@ import { getFieldId, InputField } from '../../../shared';
 import { HeadTitle } from '../../../shared/components/HeadTitle';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
 import { SPIAccessCheckAccessibilityStatus, ServiceProviderType } from '../../../types';
+import { PROD_FLAG } from '../../../utils/flag-utils';
 import { useAccessCheck, useAccessTokenBinding } from '../utils/auth-utils';
 import { ImportFormValues } from '../utils/types';
 import { gitUrlRegex } from '../utils/validation-utils';
@@ -25,6 +27,7 @@ export enum AccessHelpText {
 type SourceSectionProps = {};
 
 const SourceSection: React.FC<SourceSectionProps> = () => {
+  const [isProdFlag] = useFeatureFlag(PROD_FLAG);
   const [, { value: source }] = useField<string>({
     name: 'source.git.url',
     type: 'input',
@@ -113,7 +116,7 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
           setHelpTextInvalid(
             "Looks like your repository is private, so we're not able to access it.",
           );
-          setShowAuthOptions(true);
+          !isProdFlag && setShowAuthOptions(true);
         } else if (!serviceProvider) {
           setValidated(ValidatedOptions.error);
           setFieldValue('source.isValidated', false);
@@ -129,6 +132,7 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
     setFieldValue,
     setFormValidated,
     sourceUrl,
+    isProdFlag,
   ]);
 
   const isPrivateAuthorized =
@@ -140,14 +144,14 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
   useAccessTokenBinding(isPrivateAuthorized && source);
 
   React.useEffect(() => {
-    if (isPrivateAuthorized) {
+    if (isPrivateAuthorized && !isProdFlag) {
       if (authSecret) {
         setFormValidated();
       } else {
         setFormValidating();
       }
     }
-  }, [authSecret, isPrivateAuthorized, setFormValidated, setFormValidating]);
+  }, [authSecret, isPrivateAuthorized, isProdFlag, setFormValidated, setFormValidating]);
 
   useOnMount(() => {
     source && !isValidated && handleSourceChange();
@@ -169,8 +173,8 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
             data-test="enter-source"
           />
         </FormGroup>
-        {showAuthOptions && <AuthOptions />}
-        {showGitOptions && <GitOptions />}
+        {!isProdFlag && showAuthOptions ? <AuthOptions /> : null}
+        {!isProdFlag && showGitOptions ? <GitOptions /> : null}
       </FormSection>
     </Bullseye>
   );
