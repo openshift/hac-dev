@@ -23,6 +23,11 @@ jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
   }),
 }));
 
+jest.mock('@openshift/dynamic-plugin-sdk', () => {
+  const actual = jest.requireActual('@openshift/dynamic-plugin-sdk');
+  return { ...actual, useFeatureFlag: () => [false] };
+});
+
 jest.mock('../../../../shared/hooks', () => ({
   useFormikValidationFix: jest.fn(),
 }));
