@@ -1,7 +1,7 @@
 import { k8sCreateResource, useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { act, renderHook } from '@testing-library/react-hooks';
 import { initiateAccessTokenBinding } from '../../../../utils/create-utils';
-import { useAccessCheck, useAccessTokenBinding } from '../auth-utils';
+import { initiateSpiAuthSession, useAccessCheck, useAccessTokenBinding } from '../auth-utils';
 
 import '@testing-library/jest-dom';
 
@@ -151,5 +151,22 @@ describe('Auth Utils: useAccessCheck', () => {
       serviceProvider: 'github',
     });
     expect(result.current[1]).toBe(true);
+  });
+});
+
+window.fetch = jest.fn();
+const fetchMock = window.fetch as jest.Mock;
+
+describe('Auth Utils: initiateSpiAuthSession', () => {
+  it('should call fetch with oAuth domain', async () => {
+    await initiateSpiAuthSession('https://abcd.com/oauth/dummy', '1235');
+    expect(fetchMock).toHaveBeenCalled();
+    expect(fetchMock).toHaveBeenCalledWith('https://abcd.com/login', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        Authorization: `Bearer 1235`,
+      },
+    });
   });
 });
