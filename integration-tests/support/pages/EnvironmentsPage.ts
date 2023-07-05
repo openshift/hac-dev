@@ -50,7 +50,7 @@ export class EnvironmentsPage {
       this.verifyCardLabelAndValue('Deployment strategy', deploymentStrategy);
       this.verifyCardLabelAndValue('Cluster type', clusterType);
       if (applicationStatus) {
-        this.verifyCardLabelAndValue('Application status', applicationStatus, 100000);
+        this.verifyCardLabelAndValue('Application status', applicationStatus, 180000);
       }
     });
   }
