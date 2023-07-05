@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Alert,
   AlertActionCloseButton,
@@ -23,16 +22,16 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { useApplicationRoutes } from '../../hooks';
+import { useApplicationRoutes } from '../../hooks/useApplicationRoutes';
 import { useComponents } from '../../hooks/useComponents';
 import { useAllGitOpsDeploymentCRs } from '../../hooks/useGitOpsDeploymentCR';
 import { PACState } from '../../hooks/usePACState';
+import { usePipelineRuns } from '../../hooks/usePipelineRuns';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { useSnapshotsEnvironmentBindings } from '../../hooks/useSnapshotsEnvironmentBindings';
 import emptyStateImgUrl from '../../imgs/Components.svg';
-import { ComponentModel, PipelineRunGroupVersionKind } from '../../models';
+import { ComponentModel } from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
-import { PipelineRunKind } from '../../types';
 import { useURLForComponentPRs } from '../../utils/component-utils';
 import { getGitOpsDeploymentStrategy } from '../../utils/gitops-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
@@ -72,16 +71,18 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
 
   const prURL = useURLForComponentPRs(components);
 
-  const [pipelineRuns, pipelineRunsLoaded] = useK8sWatchResource<PipelineRunKind[]>({
-    groupVersionKind: PipelineRunGroupVersionKind,
-    isList: true,
+  // TODO this is inefficient to fetch all unbounded pipeline runs for the sake of creating filters
+  const [pipelineRuns, pipelineRunsLoaded] = usePipelineRuns(
     namespace,
-    selector: {
-      matchLabels: {
-        [PipelineRunLabel.APPLICATION]: applicationName,
-      },
-    },
-  });
+    React.useMemo(
+      () => ({
+        selector: {
+          matchLabels: { [PipelineRunLabel.APPLICATION]: applicationName },
+        },
+      }),
+      [applicationName],
+    ),
+  );
 
   const [snapshotEBs, snapshotLoaded] = useSnapshotsEnvironmentBindings(namespace, applicationName);
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
-import { useLatestPipelineRunForComponent } from '../../hooks/usePipelineRunsForApplication';
+import { useLatestBuildPipelineRunForComponent } from '../../hooks/usePipelineRuns';
 import { ComponentKind } from '../../types';
 import { getBuildStatusIcon } from '../../utils/gitops-utils';
 import { pipelineRunStatus, runStatus } from '../../utils/pipeline-utils';
@@ -13,7 +13,10 @@ type BuildStatusComponentProps = {
 
 const BuildStatusColumn: React.FC<BuildStatusComponentProps> = ({ component }) => {
   const { namespace } = useWorkspaceInfo();
-  const [pipelineRun, pipelineRunLoaded] = useLatestPipelineRunForComponent(namespace, component);
+  const [pipelineRun, pipelineRunLoaded] = useLatestBuildPipelineRunForComponent(
+    namespace,
+    component.metadata.name,
+  );
   const status = pipelineRun ? pipelineRunStatus(pipelineRun) : runStatus.PipelineNotStarted;
   const buildLogsModal = useBuildLogViewerModal(component);
   const isContainerImage = !component.spec.source?.git?.url;

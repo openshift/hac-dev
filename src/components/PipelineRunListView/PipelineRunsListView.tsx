@@ -14,7 +14,7 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { usePipelineRunsWithStatus } from '../../hooks';
+import { usePipelineRuns } from '../../hooks/usePipelineRuns';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { Table } from '../../shared';
 import { PipelineRunKind } from '../../types';
@@ -23,8 +23,8 @@ import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import PipelineRunEmptyState from '../PipelineRunDetailsView/PipelineRunEmptyState';
-import { PipelineRunListHeader } from './PipelineRunListHeader';
-import PipelineRunListRow from './PipelineRunListRow';
+import { PipelineRunListHeaderWithVulnerabilities } from './PipelineRunListHeader';
+import { PipelineRunListRowWithVulnerabilities } from './PipelineRunListRow';
 
 type PipelineRunsListViewProps = { applicationName: string };
 const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ applicationName }) => {
@@ -32,7 +32,19 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [statusFilterExpanded, setStatusFilterExpanded] = React.useState<boolean>(false);
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
-  const [pipelineRunsWithStatus, loaded] = usePipelineRunsWithStatus(namespace, applicationName);
+  const [pipelineRuns, loaded, , getNextPage] = usePipelineRuns(
+    namespace,
+    React.useMemo(
+      () => ({
+        selector: {
+          matchLabels: {
+            [PipelineRunLabel.APPLICATION]: applicationName,
+          },
+        },
+      }),
+      [applicationName],
+    ),
+  );
 
   const statusFilters = React.useMemo(
     () => (statusFiltersParam ? statusFiltersParam.split(',') : []),
@@ -45,7 +57,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
   );
 
   const statusFilterObj = React.useMemo(() => {
-    return pipelineRunsWithStatus.reduce((acc, plr) => {
+    return pipelineRuns.reduce((acc, plr) => {
       const stat = pipelineRunStatus(plr);
       if (statuses.includes(stat)) {
         if (acc[stat] !== undefined) {
@@ -56,26 +68,36 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
       }
       return acc;
     }, {});
-  }, [pipelineRunsWithStatus]);
+  }, [pipelineRuns]);
 
   const filteredPLRs = React.useMemo(
     () =>
-      pipelineRunsWithStatus.filter(
+      pipelineRuns.filter(
         (plr) =>
           (!nameFilter ||
-            plr.metadata.name.indexOf(nameFilter) !== -1 ||
-            plr.metadata.labels[PipelineRunLabel.COMPONENT]?.indexOf(
+            plr.metadata.name.indexOf(nameFilter) >= 0 ||
+            plr.metadata.labels?.[PipelineRunLabel.COMPONENT]?.indexOf(
               nameFilter.trim().toLowerCase(),
-            ) !== -1) &&
+            ) >= 0) &&
           (!statusFilters.length || statusFilters.includes(pipelineRunStatus(plr))),
       ),
-    [nameFilter, pipelineRunsWithStatus, statusFilters],
+    [nameFilter, pipelineRuns, statusFilters],
   );
 
-  const onClearFilters = () => setNameFilter('');
+  const onClearFilters = () => {
+    setNameFilter('');
+    setStatusFilters([]);
+  };
   const onNameInput = (name: string) => setNameFilter(name);
 
-  if (!loaded) {
+  // using client side filtering requires continuous fetching of results in an attempt to find a match
+  React.useEffect(() => {
+    if (loaded && filteredPLRs.length === 0) {
+      getNextPage?.();
+    }
+  }, [loaded, filteredPLRs.length, getNextPage]);
+
+  if (!loaded && pipelineRuns.length === 0) {
     return (
       <Bullseye>
         <Spinner />
@@ -83,14 +105,9 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
     );
   }
 
-  if (!pipelineRunsWithStatus || pipelineRunsWithStatus.length === 0) {
+  if (pipelineRuns.length === 0) {
     return <PipelineRunEmptyState applicationName={applicationName} />;
   }
-
-  filteredPLRs?.sort(
-    (app1, app2) =>
-      +new Date(app2.metadata.creationTimestamp) - +new Date(app1.metadata.creationTimestamp),
-  );
 
   return (
     <>
@@ -150,12 +167,17 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
         <Table
           data={filteredPLRs}
           aria-label="Pipeline run List"
-          Header={PipelineRunListHeader}
-          Row={PipelineRunListRow}
-          loaded={loaded}
+          Header={PipelineRunListHeaderWithVulnerabilities}
+          Row={PipelineRunListRowWithVulnerabilities}
+          loaded
           getRowProps={(obj: PipelineRunKind) => ({
             id: obj.metadata.name,
           })}
+          onRowsRendered={({ stopIndex }) => {
+            if (loaded && stopIndex === filteredPLRs.length - 1) {
+              getNextPage?.();
+            }
+          }}
         />
       ) : (
         <FilteredEmptyState onClearFilters={onClearFilters} />

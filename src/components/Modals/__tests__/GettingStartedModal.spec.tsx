@@ -18,7 +18,7 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   ]),
 }));
 
-jest.mock('../../../hooks', () => ({
+jest.mock('../../../hooks/useLocalStorage', () => ({
   useLocalStorage: jest.fn(),
 }));
 

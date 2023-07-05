@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Button,
   PageSection,
@@ -20,11 +19,10 @@ import {
   Spinner,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
-import { PipelineRunLabel } from '../../consts/pipelinerun';
+import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
+import { usePipelineRuns } from '../../hooks/usePipelineRuns';
 import { useSearchParam } from '../../hooks/useSearchParam';
-import { PipelineRunGroupVersionKind } from '../../models';
 import { Table } from '../../shared';
-import { PipelineRunKind } from '../../types';
 import { getCommitsFromPLRs, statuses } from '../../utils/commits-utils';
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
@@ -51,16 +49,27 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
 
   const { namespace, workspace } = useWorkspaceInfo();
 
-  const [pipelineRuns, loaded] = useK8sWatchResource<PipelineRunKind[]>({
-    groupVersionKind: PipelineRunGroupVersionKind,
+  const [pipelineRuns, loaded] = usePipelineRuns(
     namespace,
-    isList: true,
-    selector: {
-      matchLabels: {
-        [PipelineRunLabel.APPLICATION]: applicationName,
-      },
-    },
-  });
+    React.useMemo(
+      () => ({
+        selector: {
+          matchLabels: {
+            [PipelineRunLabel.APPLICATION]: applicationName,
+            [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
+          },
+          matchExpressions: [
+            {
+              key: PipelineRunLabel.COMMIT_LABEL,
+              operator: 'Exists',
+            },
+          ],
+        },
+        limit: recentOnly ? RECENT_COMMIT_LIMIT : undefined,
+      }),
+      [applicationName, recentOnly],
+    ),
+  );
 
   const commits = React.useMemo(
     () =>

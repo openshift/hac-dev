@@ -14,7 +14,7 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
-import { useApplicationReleases } from '../../hooks';
+import { useApplicationReleases } from '../../hooks/useApplicationReleases';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { Table } from '../../shared';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';

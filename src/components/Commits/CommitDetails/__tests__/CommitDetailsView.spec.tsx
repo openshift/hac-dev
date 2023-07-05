@@ -2,7 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { screen } from '@testing-library/react';
-import { useCommitPipelineruns } from '../../../../hooks/useCommitPipelineruns';
+import { usePipelineRunsForCommit } from '../../../../hooks/usePipelineRuns';
 import { getCommitShortName } from '../../../../utils/commits-utils';
 import { routerRenderer } from '../../../../utils/test-utils';
 import { pipelineWithCommits } from '../../__data__/pipeline-with-commits';
@@ -27,17 +27,17 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-jest.mock('../../../../hooks', () => ({
+jest.mock('../../../../hooks/useLocalStorage', () => ({
   useLocalStorage: jest.fn(),
 }));
 
-jest.mock('../../../../hooks/useCommitPipelineruns', () => ({
-  useCommitPipelineruns: jest.fn(),
+jest.mock('../../../../hooks/usePipelineRuns', () => ({
+  usePipelineRunsForCommit: jest.fn(),
 }));
 
 jest.mock('../visualization/CommitVisualization', () => () => <div />);
 
-const watchCommitPrsMock = useCommitPipelineruns as jest.Mock;
+const watchCommitPrsMock = usePipelineRunsForCommit as jest.Mock;
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('CommitDetailsView', () => {

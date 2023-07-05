@@ -14,7 +14,7 @@ import {
 } from '@patternfly/react-core';
 import EllipsisHIcon from '@patternfly/react-icons/dist/js/icons/ellipsis-h-icon';
 import '././ContextSwitcher.scss';
-import { useLocalStorage } from '../../hooks';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { ContextMenuListItem, filteredItems, findItemByKey } from './context-switcher-utils';
 
 const LOCAL_STORAGE_KEY = 'context-switcher';

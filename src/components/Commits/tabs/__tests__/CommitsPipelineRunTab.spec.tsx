@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen } from '@testing-library/react';
 import { PipelineRunLabel } from '../../../../consts/pipelinerun';
-import PipelineListRow from '../../../PipelineRunListView/PipelineRunListRow';
+import { PipelineRunListRow } from '../../../PipelineRunListView/PipelineRunListRow';
 import { pipelineWithCommits } from '../../__data__/pipeline-with-commits';
 import CommitsPipelineRunTab from '../CommitsPipelineRunTab';
 
@@ -11,7 +11,7 @@ jest.mock('../../../../shared/components/table/VirtualBody', () => {
   return {
     VirtualBody: (props) => {
       return props.data.map((plr, i) => (
-        <PipelineListRow key={i} columns={props.columns} obj={plr} />
+        <PipelineRunListRow key={i} columns={props.columns} obj={plr} />
       ));
     },
   };

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { TektonResourceLabel, TaskRunKind, TektonResultsRun } from '../types';
+import { OR } from '../utils/tekton-results';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
-import { useTaskRuns } from './useTaskRuns';
+import { useTRTaskRuns } from './useTektonResults';
 
 export const SCAN_RESULT = 'CLAIR_SCAN_RESULT';
 export const SCAN_RESULTS = 'CLAIR_SCAN_RESULTS';
@@ -66,21 +67,37 @@ export const getScanResults = (taskRuns: TaskRunKind[]): [ScanResults, TaskRunKi
   return [null, []];
 };
 
-export const useScanResults = (pipelineRun: string): [ScanResults, boolean] => {
+export const useScanResults = (
+  pipelineRunName: string,
+  // enable cache only if the pipeline run has completed
+  cache?: boolean,
+): [ScanResults, boolean] => {
   const { namespace } = useWorkspaceInfo();
-  // not passing pipelinerun name here to avoid extra network calls
-  const [taskRuns, loaded] = useTaskRuns(namespace, pipelineRun);
+  // Fetch directly from tekton-results because a task result is only present on completed tasks runs.
+  const [taskRuns, loaded] = useTRTaskRuns(
+    pipelineRunName ? namespace : null,
+    React.useMemo(
+      () => ({
+        filter: OR(
+          ...CVE_SCAN_RESULT_FIELDS.map((field) => `data.status.taskResults.contains("${field}")`),
+        ),
+        selector: {
+          matchLabels: {
+            [TektonResourceLabel.pipelinerun]: pipelineRunName,
+          },
+        },
+      }),
+      [pipelineRunName],
+    ),
+    cache ? `useScaneResults-${pipelineRunName}` : undefined,
+  );
 
   return React.useMemo(() => {
-    if (!loaded || !pipelineRun) {
+    if (!loaded || !pipelineRunName) {
       return [null, loaded];
     }
 
-    const taskRunsForPR = taskRuns.filter(
-      (taskRun) => taskRun.metadata?.labels?.[TektonResourceLabel.pipelinerun] === pipelineRun,
-    );
-
-    const [resultObj] = getScanResults(taskRunsForPR);
+    const [resultObj] = getScanResults(taskRuns);
     return [resultObj, loaded];
-  }, [loaded, pipelineRun, taskRuns]);
+  }, [loaded, pipelineRunName, taskRuns]);
 };

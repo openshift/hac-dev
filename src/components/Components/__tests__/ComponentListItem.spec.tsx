@@ -4,20 +4,28 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import '@testing-library/jest-dom';
 import { configure, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { mockRoutes } from '../../../hooks/__data__/mock-data';
-import { useLatestPipelineRunForComponent } from '../../../hooks/usePipelineRunsForApplication';
+import { useLatestBuildPipelineRunForComponent } from '../../../hooks/usePipelineRuns';
 import { componentCRMocks } from '../../ApplicationDetails/__data__/mock-data';
 import { mockPipelineRuns } from '../../ApplicationDetails/__data__/mock-pipeline-run';
 import { ComponentListItem } from '../ComponentListItem';
 
 configure({ testIdAttribute: 'data-testid' });
 
+jest.mock('../../../hooks/useApplicationPipelineGitHubApp', () => ({
+  useApplicationPipelineGitHubApp: jest.fn(() => ({
+    name: 'test-app',
+    url: 'https://github.com/test-app',
+  })),
+}));
+
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(),
   getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
-jest.mock('../../../hooks/usePipelineRunsForApplication', () => ({
-  useLatestPipelineRunForComponent: jest.fn(),
+jest.mock('../../../hooks/usePipelineRuns', () => ({
+  ...jest.requireActual<any>('../../../hooks/usePipelineRuns'),
+  useLatestBuildPipelineRunForComponent: jest.fn(),
 }));
 
 jest.mock('../../../utils/component-utils', () => {
@@ -35,11 +43,11 @@ jest.mock('../../../utils/rbac', () => ({
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('ComponentListItem', () => {
-  const mockLatestPipelineRunForComponent = useLatestPipelineRunForComponent as jest.Mock;
+  const mockLatestPipelineRunForComponent = useLatestBuildPipelineRunForComponent as jest.Mock;
 
   beforeEach(() => {
     mockLatestPipelineRunForComponent.mockReturnValue([mockPipelineRuns[0], true]);
-    useK8sWatchResourceMock.mockReturnValue([[mockPipelineRuns[2]], true]);
+    useK8sWatchResourceMock.mockReturnValue([[mockPipelineRuns[1]], true]);
   });
 
   it('should render display name of the component', () => {

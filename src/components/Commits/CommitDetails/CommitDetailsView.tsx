@@ -1,6 +1,6 @@
 import React from 'react';
 import { Bullseye, Spinner, Text, TextVariants } from '@patternfly/react-core';
-import { useCommitPipelineruns } from '../../../hooks/useCommitPipelineruns';
+import { usePipelineRunsForCommit } from '../../../hooks/usePipelineRuns';
 import { PipelineRunGroupVersionKind } from '../../../models';
 import { HttpError } from '../../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../../utils/breadcrumb-utils';
@@ -29,9 +29,9 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
   const { namespace, workspace } = useWorkspaceInfo();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
-  const [pipelineruns, loaded, loadErr] = useCommitPipelineruns(
-    applicationName,
+  const [pipelineruns, loaded, loadErr] = usePipelineRunsForCommit(
     namespace,
+    applicationName,
     commitName,
   );
 

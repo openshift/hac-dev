@@ -1,8 +1,5 @@
 import React from 'react';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { PipelineRunGroupVersionKind } from '../../models';
-import { PipelineRunKind } from '../../types';
+import { usePipelineRunsForCommit } from '../../hooks/usePipelineRuns';
 import { statuses } from '../../utils/commits-utils';
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
@@ -12,26 +9,19 @@ export const useCommitStatus = (
   commit: string,
 ): [string, boolean, unknown] => {
   const { namespace } = useWorkspaceInfo();
-  const [pipelineruns, loaded, loadErr] = useK8sWatchResource<PipelineRunKind[]>({
-    groupVersionKind: PipelineRunGroupVersionKind,
-    isList: true,
-    namespace,
-  });
+
+  const [pipelineRuns, loaded, error] = usePipelineRunsForCommit(namespace, application, commit);
 
   const plrsForCommit = React.useMemo(
     () =>
-      pipelineruns
-        ?.filter(
-          (plr) =>
-            plr.metadata.labels[PipelineRunLabel.APPLICATION] === application &&
-            plr.metadata.labels[PipelineRunLabel.COMMIT_LABEL] === commit,
-        )
-        .sort((a, b) => parseInt(a.status?.startTime, 10) - parseInt(b.status?.startTime, 10)),
-    [application, commit, pipelineruns],
+      pipelineRuns?.sort(
+        (a, b) => parseInt(a.status?.startTime, 10) - parseInt(b.status?.startTime, 10),
+      ),
+    [pipelineRuns],
   );
 
   const commitStatus = React.useMemo(() => {
-    if (!loaded || loadErr) {
+    if (!loaded || error) {
       return 'Pending';
     }
 
@@ -40,7 +30,7 @@ export const useCommitStatus = (
       return plrStatus;
     }
     return 'Pending';
-  }, [loaded, loadErr, plrsForCommit]);
+  }, [loaded, error, plrsForCommit]);
 
-  return [commitStatus, loaded, loadErr];
+  return [commitStatus, loaded, error];
 };

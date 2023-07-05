@@ -9,7 +9,7 @@ export const pipelineRunTableColumnClasses = {
   kebab: 'pf-c-table__action',
 };
 
-export const PipelineRunListHeader = () => {
+const createPipelineRunListHeader = (showVulnerabilities: boolean) => () => {
   return [
     {
       title: 'Name',
@@ -19,10 +19,14 @@ export const PipelineRunListHeader = () => {
       title: 'Started',
       props: { className: pipelineRunTableColumnClasses.started },
     },
-    {
-      title: 'Vulnerabilities',
-      props: { className: pipelineRunTableColumnClasses.vulnerabilities },
-    },
+    ...(showVulnerabilities
+      ? [
+          {
+            title: 'Vulnerabilities',
+            props: { className: pipelineRunTableColumnClasses.vulnerabilities },
+          },
+        ]
+      : []),
     {
       title: 'Duration',
       props: { className: pipelineRunTableColumnClasses.duration },
@@ -45,3 +49,7 @@ export const PipelineRunListHeader = () => {
     },
   ];
 };
+
+export const PipelineRunListHeader = createPipelineRunListHeader(false);
+
+export const PipelineRunListHeaderWithVulnerabilities = createPipelineRunListHeader(true);

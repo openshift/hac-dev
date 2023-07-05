@@ -1,22 +1,28 @@
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import * as React from 'react';
 import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
-import { PipelineRunGroupVersionKind } from '../models';
 import { PipelineRunKind } from '../types';
+import { usePipelineRuns } from './usePipelineRuns';
 
 export const useBuildPipelines = (
   namespace: string,
   applicationName: string,
+  // TODO inefficient to get all builds without a commit
   commit?: string,
 ): [PipelineRunKind[], boolean, unknown] =>
-  useK8sWatchResource<PipelineRunKind[]>({
-    groupVersionKind: PipelineRunGroupVersionKind,
+  usePipelineRuns(
     namespace,
-    selector: {
-      matchLabels: {
-        [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
-        [PipelineRunLabel.APPLICATION]: applicationName,
-        ...(commit && { [PipelineRunLabel.COMMIT_LABEL]: commit }),
-      },
-    },
-    isList: true,
-  });
+    React.useMemo(
+      () => ({
+        selector: {
+          matchLabels: {
+            [PipelineRunLabel.APPLICATION]: applicationName,
+            [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
+            ...(commit && { [PipelineRunLabel.COMMIT_LABEL]: commit }),
+          },
+        },
+        limit: 100,
+      }),
+      [applicationName, commit],
+    ),
+    // TODO better way to do this?
+  ) as unknown as [PipelineRunKind[], boolean, unknown];

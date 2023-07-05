@@ -1,8 +1,9 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { k8sPatchResource, useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { k8sPatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+import { usePipelineRuns } from '../../../hooks/usePipelineRuns';
 import { ComponentKind } from '../../../types';
 import {
   BUILD_STATUS_ANNOTATION,
@@ -19,6 +20,10 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
+jest.mock('../../../hooks/usePipelineRuns', () => ({
+  usePipelineRuns: jest.fn(() => [[], true]),
+}));
+
 jest.mock('../../../hooks/useApplicationPipelineGitHubApp', () => ({
   useApplicationPipelineGitHubApp: jest.fn(() => ({
     name: 'test-app',
@@ -30,7 +35,11 @@ jest.mock('../../../utils/rbac', () => ({
   useAccessReviewForModel: jest.fn(() => [true, true]),
 }));
 
-const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
+jest.mock('../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
+}));
+
+const usePipelineRunsMock = usePipelineRuns as jest.Mock;
 const k8sPatchResourceMock = k8sPatchResource as jest.Mock;
 
 let componentCount = 1;
@@ -60,7 +69,7 @@ const createComponent = (
 describe('CustomizePipeline', () => {
   afterEach(() => {
     k8sPatchResourceMock.mockClear();
-    useK8sWatchResourceMock.mockClear();
+    usePipelineRunsMock.mockClear();
   });
 
   it('should render opt in', () => {
@@ -94,7 +103,7 @@ describe('CustomizePipeline', () => {
   });
 
   it('should render pull request sent', () => {
-    useK8sWatchResourceMock.mockReturnValue([[], true]);
+    usePipelineRunsMock.mockReturnValue([[], true]);
     const result = render(
       <CustomizePipeline
         components={[createComponent('done')]}
@@ -107,7 +116,7 @@ describe('CustomizePipeline', () => {
   });
 
   it('should render pull request merged', () => {
-    useK8sWatchResourceMock.mockReturnValue([[{}], true]);
+    usePipelineRunsMock.mockReturnValue([[{}], true]);
     const result = render(
       <CustomizePipeline
         components={[createComponent('done')]}
@@ -120,7 +129,7 @@ describe('CustomizePipeline', () => {
   });
 
   it('should render resend pull request', () => {
-    useK8sWatchResourceMock.mockReturnValue([[{}], true]);
+    usePipelineRunsMock.mockReturnValue([[{}], true]);
     const result = render(
       <CustomizePipeline
         components={[createComponent('error')]}
@@ -133,7 +142,7 @@ describe('CustomizePipeline', () => {
   });
 
   it('should render install GitHub app alert', () => {
-    useK8sWatchResourceMock.mockReturnValue([[{}], true]);
+    usePipelineRunsMock.mockReturnValue([[{}], true]);
     const result = render(
       <CustomizePipeline
         components={[createComponent('error')]}
@@ -184,7 +193,7 @@ describe('CustomizePipeline', () => {
   });
 
   it('should display completed upgrade message', () => {
-    useK8sWatchResourceMock.mockReturnValue([[{}], true]);
+    usePipelineRunsMock.mockReturnValue([[{}], true]);
     expect(
       render(
         <CustomizePipeline

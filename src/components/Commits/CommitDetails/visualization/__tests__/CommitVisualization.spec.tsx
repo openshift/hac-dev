@@ -27,8 +27,14 @@ import {
 import CommitVisualization from '../CommitVisualization';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
-  useK8sWatchResource: jest.fn(),
+  useK8sWatchResource: jest.fn(() => [[], true, null]),
   getActiveWorkspace: jest.fn(() => 'test-ws'),
+}));
+
+jest.mock('../../../../../hooks/useTektonResults');
+
+jest.mock('../../../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
 jest.mock('../../../../../hooks/useBuildPipelines', () => ({
@@ -97,7 +103,7 @@ describe('CommitVisualization', () => {
   });
 
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
     (window.SVGElement as any).prototype.getBBox = undefined;
     (HTMLCanvasElement as any).prototype.getContext = undefined;
   });

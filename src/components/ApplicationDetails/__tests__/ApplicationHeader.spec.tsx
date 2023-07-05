@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { configure, render, screen } from '@testing-library/react';
-import {
-  useApplicationHealthStatus,
-  useApplicationRoutes,
-  useLatestApplicationRouteURL,
-} from '../../../hooks';
 import { mockRoutes } from '../../../hooks/__data__/mock-data';
+import { useApplicationHealthStatus } from '../../../hooks/useApplicationHealthStatus';
+import { useApplicationRoutes } from '../../../hooks/useApplicationRoutes';
 import { useSortedComponents } from '../../../hooks/useComponents';
+import { useLatestApplicationRouteURL } from '../../../hooks/useLatestApplicationRouteURL';
 import { ApplicationKind } from '../../../types';
 import { getComponentRouteWebURL } from '../../../utils/route-utils';
 import { ApplicationHeader } from '../ApplicationHeader';
@@ -20,15 +18,15 @@ jest.mock('../../../hooks/useComponents', () => {
   };
 });
 
-jest.mock('../../../hooks', () => {
-  const actual = jest.requireActual('../../../hooks');
-  return {
-    ...actual,
-    useApplicationHealthStatus: jest.fn(),
-    useApplicationRoutes: jest.fn(),
-    useLatestApplicationRouteURL: jest.fn(),
-  };
-});
+jest.mock('../../../hooks/useApplicationRoutes', () => ({
+  useApplicationRoutes: jest.fn(),
+}));
+jest.mock('../../../hooks/useApplicationHealthStatus', () => ({
+  useApplicationHealthStatus: jest.fn(),
+}));
+jest.mock('../../../hooks/useLatestApplicationRouteURL', () => ({
+  useLatestApplicationRouteURL: jest.fn(),
+}));
 
 const sortedComponentMocks = useSortedComponents as jest.Mock;
 const applicationRoutesMock = useApplicationRoutes as jest.Mock;

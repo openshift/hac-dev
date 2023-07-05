@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { useTaskRun } from '../../hooks/usePipelineRunsForApplication';
+import { useTaskRun } from '../../hooks/usePipelineRuns';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { TektonResourceLabel } from '../../types';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';

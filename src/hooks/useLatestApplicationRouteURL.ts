@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { getFirstComponentRouteWebURL } from '../utils/route-utils';
+import { useApplicationRoutes } from './useApplicationRoutes';
 import { useSortedComponents } from './useComponents';
-import { useApplicationRoutes } from '.';
 
 export const useLatestApplicationRouteURL = (application: string) => {
   const [components, componentsLoaded] = useSortedComponents(application);

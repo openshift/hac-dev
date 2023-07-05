@@ -9,7 +9,7 @@ import {
   FlexItem,
   Title,
 } from '@patternfly/react-core';
-import { useReleaseStatus } from '../../hooks';
+import { useReleaseStatus } from '../../hooks/useReleaseStatus';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { ReleaseKind } from '../../types';
 import { calculateDuration } from '../../utils/pipeline-utils';

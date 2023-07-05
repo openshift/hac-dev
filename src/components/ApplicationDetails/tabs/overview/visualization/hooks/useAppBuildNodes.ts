@@ -26,6 +26,7 @@ export const useAppBuildNodes = (
   errors: unknown[],
 ] => {
   const [components, componentsLoaded, componentsError] = useComponents(namespace, applicationName);
+  // TODO this is inefficient to get all builds just to find the latest component builds
   const [buildPipelines, buildPipelinesLoaded, buildPipelinesError] = useBuildPipelines(
     namespace,
     applicationName,
