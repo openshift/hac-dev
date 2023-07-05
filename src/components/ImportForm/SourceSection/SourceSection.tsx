@@ -92,12 +92,14 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
     if (accessCheckLoaded) {
       if (isRepoAccessible) {
         try {
-          const { organization } = gitUrlParse(sourceUrl);
+          const { organization, ref, filepath } = gitUrlParse(sourceUrl);
           if (!organization) {
             setValidated(ValidatedOptions.error);
             setHelpTextInvalid("That repository URL isn't quite right. Try again.");
             return;
           }
+          setFieldValue('source.git.revision', ref);
+          setFieldValue('source.git.context', filepath);
         } catch {
           // ignore, should never happen when isRepoAccessible is true, but for tests it is not valid
         }

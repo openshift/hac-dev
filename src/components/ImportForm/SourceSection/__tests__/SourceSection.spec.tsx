@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+import { configure, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ServiceProviderType } from '../../../../types';
 import { formikRenderer } from '../../../../utils/test-utils';
@@ -8,6 +8,8 @@ import { ImportFormValues } from '../../utils/types';
 import SourceSection from '../SourceSection';
 
 import '@testing-library/jest-dom';
+
+configure({ testIdAttribute: 'data-test' });
 
 jest.mock('../../utils/auth-utils', () => ({
   useAccessTokenBinding: jest.fn(),
@@ -179,6 +181,29 @@ describe('SourceSection', () => {
     });
     expect(useAccessCheckMock).toHaveBeenCalledWith('https://example.com', '');
     expect(screen.queryByText('Access validated')).not.toBeInTheDocument();
+  });
+
+  it('should set reference and context directory when present in url segment', async () => {
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: true, isGit: true, serviceProvider: ServiceProviderType.GitHub },
+      true,
+    ]);
+
+    const { input, user } = renderSourceSection();
+
+    await user.type(input, 'https://github.com/example/repo');
+
+    await waitFor(() => {
+      expect(screen.getByTestId('git-reference')).toHaveValue('');
+      expect(screen.getByTestId('context-dir')).toHaveValue('');
+    });
+
+    await user.type(input, 'https://github.com/example/repo/tree/main/my-dir');
+
+    await waitFor(() => {
+      expect(screen.getByTestId('git-reference')).toHaveValue('main');
+      expect(screen.getByTestId('context-dir')).toHaveValue('my-dir');
+    });
   });
 
   // Tests related to auth options. Disabled until we have full private repo support.

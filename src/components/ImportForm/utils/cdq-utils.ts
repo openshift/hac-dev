@@ -16,6 +16,8 @@ import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 /**
  * Create a ComponentDetectionQuery when any of the params change,
  * and return the detected components when detection is completed.
+ *
+ * Note: CDQ will fail if source url string also contains context/ref segment
  */
 export const useComponentDetection = (
   source: string,
