@@ -47,7 +47,6 @@ const ReleasePolicyPackageItem: React.FC<ReleasePolicyPackageItemProps> = ({
                   <ExternalLink
                     href={`${BASE_INFO_URL}#${releasePackageInfo.shortName}_package`}
                     text={releasePackageInfo.title}
-                    showIcon
                   />
                 </DataListCell>,
               ]}
@@ -61,7 +60,6 @@ const ReleasePolicyPackageItem: React.FC<ReleasePolicyPackageItemProps> = ({
                   additionalClassName="release-policy-item__package-annotation-link"
                   href={`${BASE_INFO_URL}#${annotation.shortName}`}
                   text={annotation.title}
-                  showIcon
                 />
               ))}
             </DescriptionList>

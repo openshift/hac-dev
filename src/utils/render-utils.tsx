@@ -15,7 +15,9 @@ export const handleURLs = (value: string): React.ReactNode => {
     return (
       <>
         {handleURLs(prefix)}
-        <ExternalLink href={link}>{link}</ExternalLink>
+        <ExternalLink href={link} hideIcon>
+          {link}
+        </ExternalLink>
         {handleURLs(suffix)}
       </>
     );

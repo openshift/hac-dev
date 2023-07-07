@@ -33,7 +33,7 @@ export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ 
         </Flex>
         <FlexItem>
           {selectedComponentRoute && (
-            <ExternalLink href={selectedComponentRoute} dataTestID="component-route-link">
+            <ExternalLink href={selectedComponentRoute} dataTestID="component-route-link" hideIcon>
               <Flex>
                 <FlexItem flex={{ default: 'flex_3' }}>
                   <Truncate

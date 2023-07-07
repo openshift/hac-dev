@@ -179,7 +179,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                       <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
                         {`cosign download sbom ${buildImage}`}
                       </ClipboardCopy>
-                      <ExternalLink href="https://docs.sigstore.dev/cosign/installation" showIcon>
+                      <ExternalLink href="https://docs.sigstore.dev/cosign/installation">
                         Install Cosign
                       </ExternalLink>
                     </DescriptionListDescription>

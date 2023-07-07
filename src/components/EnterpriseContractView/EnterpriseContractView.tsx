@@ -61,7 +61,7 @@ const EnterpriseContractView: React.FC = () => {
       <Text data-testid="enterprise-contract-title" component="p" className="pf-u-mt-lg">
         An Enterprise Contract (EC) is a set of release policies applied to your release target,
         also known as a managed environment.{' '}
-        <ExternalLink href={ENTERPRISE_CONTRACT_INFO_LINK} text="Learn more" showIcon />
+        <ExternalLink href={ENTERPRISE_CONTRACT_INFO_LINK} text="Learn more" />
       </Text>
       <Title headingLevel="h3" className="pf-u-mt-md pf-u-mb-md">
         Release Policy
@@ -107,7 +107,7 @@ const EnterpriseContractView: React.FC = () => {
       )}
       {policyLoaded && enterpriseContractPolicy[0]?.spec.sources[0]?.git?.repository ? (
         <div data-testid="enterprise-contract-github-link" className="pf-u-mt-md">
-          <ExternalLink href={enterpriseContractPolicy[0].spec.sources[0].git.repository}>
+          <ExternalLink href={enterpriseContractPolicy[0].spec.sources[0].git.repository} hideIcon>
             <Flex
               alignItems={{ default: 'alignItemsCenter' }}
               spaceItems={{ default: 'spaceItemsXs' }}
