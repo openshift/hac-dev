@@ -7,8 +7,9 @@ import {
 import omit from 'lodash/omit';
 import { THUMBNAIL_ANNOTATION } from '../../components/ApplicationDetails/ApplicationThumbnail';
 import { supportedPartnerTasksSecrets } from '../../components/Secrets/secret-utils';
+import { PIPELINE_SERVICE_ACCOUNT } from '../../consts/pipeline';
 import { SPIAccessTokenBindingModel, SecretModel } from '../../models';
-import { ComponentDetectionQueryKind, SPIAccessTokenBindingKind } from '../../types';
+import { ComponentDetectionQueryKind, SPIAccessTokenBindingKind, SecretType } from '../../types';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
 import { ComponentKind, ComponentSpecs } from './../../types/component';
@@ -455,7 +456,11 @@ describe('Create Utils', () => {
     commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
 
     createSecret(
-      { secretName: 'my-snyk-secret', keyValues: [{ key: 'token', value: 'my-token-data' }] },
+      {
+        secretName: 'my-snyk-secret',
+        type: SecretType.opaque,
+        keyValues: [{ key: 'token', value: 'my-token-data' }],
+      },
       'test-ws',
       'test-ns',
       true,
@@ -476,7 +481,11 @@ describe('Create Utils', () => {
     commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
 
     createSecret(
-      { secretName: 'my-snyk-secret', keyValues: [{ key: 'token', value: 'my-token-data' }] },
+      {
+        secretName: 'my-snyk-secret',
+        type: SecretType.opaque,
+        keyValues: [{ key: 'token', value: 'my-token-data' }],
+      },
       'test-ws',
       'test-ns',
       false,
@@ -487,19 +496,89 @@ describe('Create Utils', () => {
     expect(commonFetchMock).toHaveBeenCalledWith(
       '/workspaces/test-ws/api/v1/namespaces/test-ns/secrets',
       expect.objectContaining({
-        body: expect.stringContaining('"kind":"Secret"'),
+        body: expect.stringContaining('"type":"Opaque"'),
       }),
+    );
+  });
+
+  it('should create a Image pull secret', async () => {
+    commonFetchMock.mockClear();
+    commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
+
+    createSecret(
+      {
+        secretName: 'registry-creds',
+        type: SecretType.image,
+        keyValues: [{ key: 'token', value: 'my-token-data' }],
+      },
+      'test-ws',
+      'test-ns',
+      false,
+    );
+
+    expect(commonFetchMock).toHaveBeenCalledTimes(1);
+
+    expect(commonFetchMock).toHaveBeenCalledWith(
+      '/workspaces/test-ws/api/v1/namespaces/test-ns/secrets',
+      expect.objectContaining({
+        body: expect.stringContaining('"type":"kubernetes.io/dockerconfigjson"'),
+      }),
+    );
+  });
+
+  it('should link the secret to the pipeline service account', async () => {
+    commonFetchMock.mockClear();
+    commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
+
+    createSecret(
+      {
+        secretName: 'registry-creds',
+        type: SecretType.image,
+        keyValues: [{ key: 'token', value: 'my-token-data' }],
+      },
+      'test-ws',
+      'test-ns',
+      false,
+    );
+
+    expect(commonFetchMock).toHaveBeenCalledTimes(1);
+
+    expect(createResourceMock.mock.calls[2]).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          resource: expect.objectContaining({
+            spec: expect.objectContaining({
+              secret: expect.objectContaining({
+                linkedTo: expect.arrayContaining([
+                  expect.objectContaining({
+                    serviceAccount: expect.objectContaining({
+                      reference: expect.objectContaining({
+                        name: PIPELINE_SERVICE_ACCOUNT,
+                      }),
+                    }),
+                  }),
+                ]),
+              }),
+            }),
+          }),
+        }),
+      ]),
     );
   });
 
   it('should create partner task secret', async () => {
     commonFetchMock.mockClear();
     createResourceMock
+      .mockClear()
       .mockImplementationOnce((props) => Promise.resolve(props))
       .mockImplementationOnce((props) => Promise.resolve(props));
 
     createSecret(
-      { secretName: 'snyk-secret', keyValues: [{ key: 'token', value: 'my-token-data' }] },
+      {
+        secretName: 'snyk-secret',
+        type: SecretType.opaque,
+        keyValues: [{ key: 'token', value: 'my-token-data' }],
+      },
       'test-ws',
       'test-ns',
       false,
@@ -517,7 +596,11 @@ describe('Create Utils', () => {
 
     createSupportedPartnerSecret(
       supportedPartnerTasksSecrets.snyk,
-      { secretName: 'my-snyk-secret', keyValues: [{ key: 'token', value: 'my-token-data' }] },
+      {
+        secretName: 'my-snyk-secret',
+        type: SecretType.opaque,
+        keyValues: [{ key: 'token', value: 'my-token-data' }],
+      },
       'test-ns',
       false,
     );

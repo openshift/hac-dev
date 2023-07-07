@@ -15,6 +15,7 @@ import { ImportSecret } from '../components/ImportForm/utils/types';
 import {
   PartnerTask,
   SNYK_SPI_TOKEN_ACCESS_BINDING,
+  createRemoteSecretResource,
   createSecretResource,
   supportedPartnerTasksSecrets,
 } from '../components/Secrets/secret-utils';
@@ -30,8 +31,9 @@ import {
   ApplicationKind,
   ComponentDetectionQueryKind,
   SPIAccessTokenBindingKind,
+  K8sSecretType,
+  SecretType,
 } from '../types';
-import { PIPELINE_SERVICE_ACCOUNT } from './../consts/pipeline';
 import { ComponentSpecs } from './../types/component';
 import { PAC_ANNOTATION } from './component-utils';
 
@@ -340,15 +342,6 @@ export const createSupportedPartnerSecret = async (
         fields: {
           token: partnerTask.tokenKeyName,
         },
-        linkedTo: [
-          {
-            serviceAccount: {
-              reference: {
-                name: PIPELINE_SERVICE_ACCOUNT,
-              },
-            },
-          },
-        ],
       },
     },
   };
@@ -379,28 +372,47 @@ export const createSecret = async (
   if (partnerTask) {
     return createSupportedPartnerSecret(partnerTask, secret, namespace, dryRun);
   }
+
   const secretResource = {
     apiVersion: SecretModel.apiVersion,
     kind: SecretModel.kind,
     metadata: {
       name: secret.secretName,
       namespace,
+      labels: {
+        'appstudio.redhat.com/upload-secret': 'remotesecret',
+      },
+      annotations: {
+        'appstudio.redhat.com/remotesecret-name': `${secret.secretName}-remote-secret`,
+      },
     },
-    type: 'Opaque',
-    data: {},
+    type: K8sSecretType[secret.type],
     stringData: secret.keyValues.reduce((acc, s) => {
-      acc[s.key] = s.value;
+      acc[s.key] = s.value ? s.value : '';
       return acc;
     }, {}),
   };
+
+  const promiseArray = [];
+  // Create RemoteSecrets
+  promiseArray.push(
+    createRemoteSecretResource(secretResource, namespace, secret.type === SecretType.image, dryRun),
+  );
+
   //Todo: K8sCreateResource appends the resource name and errors out.
   // Fix the below code when this sdk-utils issue is resolved https://issues.redhat.com/browse/RHCLOUD-21655.
-  return commonFetch(
-    `/workspaces/${workspace}/api/v1/namespaces/${namespace}/secrets${dryRun ? '?dryRun=All' : ''}`,
-    {
-      method: 'POST',
-      body: JSON.stringify(secretResource),
-      headers: { 'Content-type': 'application/json' },
-    },
+  promiseArray.push(
+    commonFetch(
+      `/workspaces/${workspace}/api/v1/namespaces/${namespace}/secrets${
+        dryRun ? '?dryRun=All' : ''
+      }`,
+      {
+        method: 'POST',
+        body: JSON.stringify(secretResource),
+        headers: { 'Content-type': 'application/json' },
+      },
+    ),
   );
+
+  return Promise.all(promiseArray);
 };

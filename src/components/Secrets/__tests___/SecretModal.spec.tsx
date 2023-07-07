@@ -1,32 +1,42 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { act, fireEvent, screen, waitFor, render } from '@testing-library/react';
-import OpaqueSecretForm from '../OpaqueSecretForm';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { SecretType } from '../../../types';
+import { formikRenderer } from '../../../utils/test-utils';
 import { supportedPartnerTasksSecrets } from '../secret-utils';
+import SecretModal, { SecretModalValues } from '../SecretModal';
 
-describe('OpaqueSecretForm', () => {
-  it('should show Opaque secret form in a modal', async () => {
-    render(
-      <OpaqueSecretForm
+const initialValues: SecretModalValues = {
+  secretName: '',
+  type: SecretType.opaque,
+  keyValues: [{ key: '', value: '', readOnlyKey: false }],
+  existingSecrets: [],
+};
+
+describe('SecretForm', () => {
+  it('should show secret form in a modal', async () => {
+    formikRenderer(
+      <SecretModal
         existingSecrets={['test']}
         onSubmit={jest.fn()}
         modalProps={{ isOpen: true, onClose: jest.fn() }}
       />,
+      initialValues,
     );
 
     await waitFor(() => {
-      screen.getByTestId('opaque-secret-modal');
+      screen.getByTestId('build-secret-modal');
     });
   });
 
   it('should render validation message when user click on create button without filling the form', async () => {
-    const onSubmit = jest.fn();
-    render(
-      <OpaqueSecretForm
+    formikRenderer(
+      <SecretModal
         existingSecrets={['test']}
-        onSubmit={onSubmit}
+        onSubmit={jest.fn()}
         modalProps={{ isOpen: true, onClose: jest.fn() }}
       />,
+      initialValues,
     );
 
     await waitFor(() => {
@@ -37,16 +47,17 @@ describe('OpaqueSecretForm', () => {
 
   it('should call onClose callback when cancel button is clicked', async () => {
     const onClose = jest.fn();
-    render(
-      <OpaqueSecretForm
-        existingSecrets={['test']}
+    formikRenderer(
+      <SecretModal
         onSubmit={jest.fn()}
+        existingSecrets={['test']}
         modalProps={{ isOpen: true, onClose }}
       />,
+      initialValues,
     );
 
     await waitFor(() => {
-      expect(screen.queryByTestId('opaque-secret-modal')).toBeInTheDocument();
+      expect(screen.queryByTestId('build-secret-modal')).toBeInTheDocument();
       fireEvent.click(screen.getByRole('button', { name: /Cancel/ }));
     });
 
@@ -55,17 +66,18 @@ describe('OpaqueSecretForm', () => {
 
   it('should show all the predefined tasks in the select dropdown', async () => {
     const onClose = jest.fn();
-    render(
-      <OpaqueSecretForm
-        existingSecrets={['test']}
+    formikRenderer(
+      <SecretModal
         onSubmit={jest.fn()}
+        existingSecrets={['test']}
         modalProps={{ isOpen: true, onClose }}
       />,
+      initialValues,
     );
 
     await waitFor(() => {
-      expect(screen.queryByTestId('opaque-secret-modal')).toBeInTheDocument();
-      const modal = screen.queryByTestId('opaque-secret-modal');
+      expect(screen.queryByTestId('build-secret-modal')).toBeInTheDocument();
+      const modal = screen.queryByTestId('build-secret-modal');
       fireEvent.click(modal.querySelector('#secret-name-toggle-select-typeahead'));
     });
 
@@ -78,17 +90,18 @@ describe('OpaqueSecretForm', () => {
 
   it('should not show the secrets in the select dropdown if it is already existing', async () => {
     const onClose = jest.fn();
-    render(
-      <OpaqueSecretForm
-        existingSecrets={['snyk-secret']}
+    formikRenderer(
+      <SecretModal
         onSubmit={jest.fn()}
+        existingSecrets={['snyk-secret']}
         modalProps={{ isOpen: true, onClose }}
       />,
+      initialValues,
     );
 
     await waitFor(() => {
-      expect(screen.queryByTestId('opaque-secret-modal')).toBeInTheDocument();
-      const modal = screen.queryByTestId('opaque-secret-modal');
+      expect(screen.queryByTestId('build-secret-modal')).toBeInTheDocument();
+      const modal = screen.queryByTestId('build-secret-modal');
       fireEvent.click(modal.querySelector('#secret-name-toggle-select-typeahead'));
     });
     expect(screen.queryByText('snyk-secret')).not.toBeInTheDocument();
@@ -96,15 +109,16 @@ describe('OpaqueSecretForm', () => {
 
   it('should remove the selected value with clearn button is clicked', async () => {
     const onSubmit = jest.fn();
-    render(
-      <OpaqueSecretForm
+    formikRenderer(
+      <SecretModal
+        onSubmit={jest.fn()}
         existingSecrets={[]}
-        onSubmit={onSubmit}
         modalProps={{ isOpen: true, onClose: onSubmit }}
       />,
+      initialValues,
     );
 
-    const secretModal = screen.queryByTestId('opaque-secret-modal');
+    const secretModal = screen.queryByTestId('build-secret-modal');
 
     act(() => {
       expect(secretModal).toBeInTheDocument();
@@ -124,17 +138,18 @@ describe('OpaqueSecretForm', () => {
 
   it('should call onSubmit handler with newly added secret', async () => {
     const onSubmit = jest.fn();
-    render(
-      <OpaqueSecretForm
+    formikRenderer(
+      <SecretModal
+        onSubmit={jest.fn()}
         existingSecrets={[]}
-        onSubmit={onSubmit}
         modalProps={{ isOpen: true, onClose: onSubmit }}
       />,
+      initialValues,
     );
 
     act(() => {
-      expect(screen.queryByTestId('opaque-secret-modal')).toBeInTheDocument();
-      const modal = screen.queryByTestId('opaque-secret-modal');
+      expect(screen.queryByTestId('build-secret-modal')).toBeInTheDocument();
+      const modal = screen.queryByTestId('build-secret-modal');
       fireEvent.click(modal.querySelector('#secret-name-toggle-select-typeahead'));
     });
 
