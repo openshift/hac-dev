@@ -28,13 +28,11 @@ export const latestCommitsTabPO = {
 export const pipelinerunsTabPO = {
   clickTab: '[data-testid="activity__tabItem pipelineruns"]',
 
-  clickDetailsTab: '[data-test="details__tabItem detail"]',
   statusPO: '[data-test="pipelinerun-details status"]',
 
   clickTaskRunsTab: '[data-test="details__tabItem taskruns"]',
   taskRunStatus: '[data-test="taskrun-status"]',
 
-  clickLogsTab: '[data-test="details__tabItem logs"]',
   downloadAllTaskLogsButton: 'Download all task logs',
   relatedPipelinePopup: 'div[class="pf-c-popover__content"]',
   relatedPipelineCloseBtn: 'button[aria-label="Close"]',

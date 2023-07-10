@@ -65,28 +65,13 @@ export class PipelinerunsTabPage {
 // Pipelineruns Details view page
 export class DetailsTab {
   static goToDetailsTab() {
-    cy.get(pipelinerunsTabPO.clickDetailsTab).click();
+    UIhelper.clickTab('Details');
   }
 
   static waitUntilStatusIsNotRunning() {
     cy.get(pipelinerunsTabPO.statusPO, { timeout: 1000000 })
       .should('not.have.text', 'Pending')
       .and('not.have.text', 'Running');
-  }
-
-  static checkStatusSucceeded(taskNames: taskRunDetailsRow[]) {
-    cy.get(pipelinerunsTabPO.statusPO)
-      .invoke('text')
-      .then((text) => {
-        if (text.includes('Succeeded')) {
-          UIhelper.clickTab('Task runs');
-          TaskRunsTab.assertTaskNamesAndTaskRunStatus(taskNames);
-        } else if (text.includes('Failed')) {
-          LogsTab.goToLogsTab();
-          LogsTab.downloadAllTaskLogs();
-          cy.screenshot('capture-logs-on-pipelinerun-failure', { capture: 'fullPage' });
-        }
-      });
   }
 
   static clickOnNode(nodeId: string) {
@@ -155,6 +140,10 @@ export class DetailsTab {
 }
 
 export class TaskRunsTab {
+  static goToTaskrunsTab() {
+    UIhelper.clickTab('Task runs');
+  }
+
   static getAdvancedTaskNamesList(pipelineName: string): taskRunDetailsRow[] {
     return [
       { name: `${pipelineName}-init`, task: 'init', status: 'Succeeded' },
@@ -199,10 +188,16 @@ export class TaskRunsTab {
 
 export class LogsTab {
   static goToLogsTab() {
-    cy.get(pipelinerunsTabPO.clickLogsTab).click();
+    UIhelper.clickTab('Logs');
   }
 
-  static downloadAllTaskLogs() {
-    cy.contains('button', pipelinerunsTabPO.downloadAllTaskLogsButton).click();
+  static downloadAllTaskLogs(allTaskLogs = true) {
+    LogsTab.goToLogsTab();
+    if (allTaskLogs) {
+      cy.contains('button', pipelinerunsTabPO.downloadAllTaskLogsButton).click();
+    } else {
+      UIhelper.clickButton('Download');
+    }
+    DetailsTab.goToDetailsTab();
   }
 }
