@@ -2,6 +2,7 @@ import { applicationDetailPagePO } from '../support/pageObjects/createApplicatio
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import {
   DetailsTab,
+  LogsTab,
   PipelinerunsTabPage,
   TaskRunsTab,
 } from '../support/pages/tabs/PipelinerunsTabPage';
@@ -93,6 +94,8 @@ describe('Basic Happy Path', () => {
           UIhelper.verifyLabelAndValue('Component', componentName);
           UIhelper.verifyLabelAndValue('Related pipelines', '0 pipelines');
           DetailsTab.waitUntilStatusIsNotRunning();
+
+          LogsTab.downloadAllTaskLogs();
           UIhelper.verifyLabelAndValue('Status', 'Succeeded');
 
           //Verify the Pipeline run details Graph
@@ -100,7 +103,10 @@ describe('Basic Happy Path', () => {
             UIhelper.verifyGraphNodes(item);
           });
 
-          DetailsTab.checkStatusSucceeded(TaskRunsTab.getbasicTaskNamesList(pipelinerunName));
+          TaskRunsTab.goToTaskrunsTab();
+          TaskRunsTab.assertTaskNamesAndTaskRunStatus(
+            TaskRunsTab.getbasicTaskNamesList(pipelinerunName),
+          );
         });
     });
   });

@@ -5,6 +5,7 @@ import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsT
 import { LatestCommitsTabPage } from '../support/pages/tabs/LatestCommitsTabPage';
 import {
   DetailsTab,
+  LogsTab,
   PipelinerunsTabPage,
   TaskRunsTab,
 } from '../support/pages/tabs/PipelinerunsTabPage';
@@ -131,8 +132,11 @@ describe('Advanced Happy path', () => {
           componentInfo.firstPipelineRunName = pipelinerunName;
           UIhelper.clickLink(componentInfo.firstPipelineRunName);
           DetailsTab.waitUntilStatusIsNotRunning();
+          LogsTab.downloadAllTaskLogs();
           UIhelper.verifyLabelAndValue('Status', 'Succeeded');
-          DetailsTab.checkStatusSucceeded(
+
+          TaskRunsTab.goToTaskrunsTab();
+          TaskRunsTab.assertTaskNamesAndTaskRunStatus(
             TaskRunsTab.getAdvancedTaskNamesList(componentInfo.firstPipelineRunName),
           );
         });
@@ -280,8 +284,11 @@ describe('Advanced Happy path', () => {
           componentInfo.secondPipelineRunName = pipelinerunName;
           UIhelper.clickLink(componentInfo.secondPipelineRunName);
           DetailsTab.waitUntilStatusIsNotRunning();
+          LogsTab.downloadAllTaskLogs();
           UIhelper.verifyLabelAndValue('Status', 'Succeeded');
-          DetailsTab.checkStatusSucceeded(
+
+          TaskRunsTab.goToTaskrunsTab();
+          TaskRunsTab.assertTaskNamesAndTaskRunStatus(
             TaskRunsTab.getAdvancedTaskNamesList(componentInfo.secondPipelineRunName),
           );
         });
@@ -300,6 +307,7 @@ describe('Advanced Happy path', () => {
         UIhelper.clickLink(testPipelineName);
       });
       DetailsTab.waitUntilStatusIsNotRunning();
+      LogsTab.downloadAllTaskLogs();
       UIhelper.verifyLabelAndValue('Status', 'Succeeded');
       UIhelper.verifyLabelAndValue('Related pipelines', '2 pipelines').click();
       PipelinerunsTabPage.verifyRelatedPipelines(componentInfo.secondPipelineRunName);
@@ -345,6 +353,7 @@ describe('Advanced Happy path', () => {
         UIhelper.verifyRowInTable('Pipeline run List', testPipelineName, [/^Test$/]);
         UIhelper.clickLink(testPipelineName);
         DetailsTab.waitUntilStatusIsNotRunning();
+        LogsTab.downloadAllTaskLogs(false);
         UIhelper.verifyLabelAndValue('Status', 'Succeeded');
         UIhelper.verifyLabelAndValue('Pipeline', testPipelineName);
         UIhelper.verifyLabelAndValue('Related pipelines', '2 pipelines').click();

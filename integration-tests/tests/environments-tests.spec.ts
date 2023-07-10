@@ -1,5 +1,5 @@
 import { NavItem } from '../support/constants/PageTitle';
-import { DetailsTab } from '../support/pages/tabs/PipelinerunsTabPage';
+import { DetailsTab, LogsTab } from '../support/pages/tabs/PipelinerunsTabPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
@@ -58,6 +58,7 @@ describe('Create Env using Non-OpenShift Cluster', () => {
         .then((pipelinerunName) => {
           UIhelper.clickLink(pipelinerunName);
           DetailsTab.waitUntilStatusIsNotRunning();
+          LogsTab.downloadAllTaskLogs();
           UIhelper.verifyLabelAndValue('Status', 'Succeeded');
         });
     });
