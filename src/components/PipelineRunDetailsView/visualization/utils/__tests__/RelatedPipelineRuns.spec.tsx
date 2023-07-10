@@ -4,6 +4,7 @@ import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 import { DataState, testPipelineRuns } from '../../../../../__data__/pipelinerun-data';
 import { PipelineRunLabel } from '../../../../../consts/pipelinerun';
 import { usePipelineRunsForCommit } from '../../../../../hooks/usePipelineRuns';
+import { getCommitSha } from '../../../../../utils/commits-utils';
 import RelatedPipelineRuns from '../../../RelatedPipelineRuns';
 
 jest.mock('../../../../../hooks/usePipelineRuns', () => ({
@@ -31,8 +32,7 @@ const testPipelineRun = {
     uid: 2,
     labels: {
       ...testPipelineRuns[DataState.RUNNING].metadata.labels,
-      [PipelineRunLabel.TEST_SERVICE_COMMIT]:
-        testPipelineRuns[DataState.RUNNING].metadata.labels[PipelineRunLabel.COMMIT_LABEL],
+      [PipelineRunLabel.TEST_SERVICE_COMMIT]: getCommitSha(testPipelineRuns[DataState.RUNNING]),
     },
   },
 };

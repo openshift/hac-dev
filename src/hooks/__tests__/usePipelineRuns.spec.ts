@@ -20,13 +20,56 @@ const useTRPipelineRunsMock = useTRPipelineRuns as jest.Mock;
 const useTRTaskRunsMock = useTRTaskRuns as jest.Mock;
 
 const resultMock = [
-  { metadata: { name: 'first', creationTimestamp: '2023-04-11T19:36:25Z' } },
-  { metadata: { name: 'second', creationTimestamp: '2022-04-11T19:36:25Z' } },
+  {
+    metadata: {
+      name: 'first',
+      creationTimestamp: '2023-04-11T19:36:25Z',
+      labels: {
+        'pipelinesascode.tekton.dev/sha': 'sample-sha',
+      },
+    },
+  },
+  {
+    metadata: {
+      name: 'second',
+      creationTimestamp: '2022-04-11T19:36:25Z',
+      labels: {
+        'pac.test.appstudio.openshift.io/sha': 'sample-sha',
+      },
+    },
+  },
 ];
 
 const resultMock2 = [
-  { metadata: { name: 'third', creationTimestamp: '2021-04-11T19:36:25Z' } },
-  { metadata: { name: 'fourth', creationTimestamp: '2020-04-11T19:36:25Z' } },
+  {
+    metadata: {
+      name: 'third',
+      creationTimestamp: '2021-04-11T19:36:25Z',
+      annotations: {
+        'build.appstudio.redhat.com/commit_sha': 'sample-sha',
+      },
+    },
+  },
+  {
+    metadata: {
+      name: 'fourth',
+      creationTimestamp: '2020-04-11T19:36:25Z',
+      annotations: {
+        'build.appstudio.redhat.com/commit_sha': 'sample-sha',
+      },
+    },
+  },
+];
+const resultMock3 = [
+  {
+    metadata: {
+      name: 'third',
+      creationTimestamp: '2021-04-11T19:36:25Z',
+      annotations: {
+        'build.appstudio.redhat.com/commit_sha': 'other-sha',
+      },
+    },
+  },
 ];
 
 describe('usePipelineRuns', () => {
@@ -268,7 +311,7 @@ describe('usePipelineRuns', () => {
     it('should create specific selector', () => {
       renderHook(() => usePipelineRunsForCommit('test-ns', 'test-app', 'sample-sha'));
 
-      expect(useK8sWatchResourceMock).toHaveBeenCalledTimes(2);
+      expect(useK8sWatchResourceMock).toHaveBeenCalledTimes(1);
       expect(useK8sWatchResourceMock.mock.calls).toEqual([
         [
           {
@@ -278,26 +321,12 @@ describe('usePipelineRuns', () => {
             selector: {
               matchLabels: {
                 'appstudio.openshift.io/application': 'test-app',
-                'pipelinesascode.tekton.dev/sha': 'sample-sha',
-              },
-            },
-          },
-        ],
-        [
-          {
-            groupVersionKind: PipelineRunGroupVersionKind,
-            namespace: 'test-ns',
-            isList: true,
-            selector: {
-              matchLabels: {
-                'appstudio.openshift.io/application': 'test-app',
-                'pac.test.appstudio.openshift.io/sha': 'sample-sha',
               },
             },
           },
         ],
       ]);
-      expect(useTRPipelineRunsMock).toHaveBeenCalledTimes(2);
+      expect(useTRPipelineRunsMock).toHaveBeenCalledTimes(1);
       expect(useTRPipelineRunsMock.mock.calls).toEqual([
         [
           'test-ns',
@@ -306,19 +335,6 @@ describe('usePipelineRuns', () => {
             selector: {
               matchLabels: {
                 'appstudio.openshift.io/application': 'test-app',
-                'pipelinesascode.tekton.dev/sha': 'sample-sha',
-              },
-            },
-          },
-        ],
-        [
-          'test-ns',
-          {
-            limit: 100,
-            selector: {
-              matchLabels: {
-                'appstudio.openshift.io/application': 'test-app',
-                'pac.test.appstudio.openshift.io/sha': 'sample-sha',
               },
             },
           },
@@ -327,9 +343,10 @@ describe('usePipelineRuns', () => {
     });
 
     it('should return pipeline runs', () => {
-      useK8sWatchResourceMock
-        .mockReturnValueOnce([resultMock, true])
-        .mockReturnValueOnce([resultMock2, true]);
+      useK8sWatchResourceMock.mockReturnValueOnce([
+        [...resultMock, ...resultMock2, ...resultMock3],
+        true,
+      ]);
       useTRPipelineRunsMock.mockReturnValue([[], true]);
       const { result } = renderHook(() =>
         usePipelineRunsForCommit('test-ns', 'test-app', 'sample-sha'),

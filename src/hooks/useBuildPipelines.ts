@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { PipelineRunKind } from '../types';
+import { getCommitSha } from '../utils/commits-utils';
 import { usePipelineRuns } from './usePipelineRuns';
 
 export const useBuildPipelines = (
@@ -8,8 +9,8 @@ export const useBuildPipelines = (
   applicationName: string,
   // TODO inefficient to get all builds without a commit
   commit?: string,
-): [PipelineRunKind[], boolean, unknown] =>
-  usePipelineRuns(
+): [PipelineRunKind[], boolean, unknown] => {
+  const [pipelines, loaded, error] = usePipelineRuns(
     namespace,
     React.useMemo(
       () => ({
@@ -17,12 +18,22 @@ export const useBuildPipelines = (
           matchLabels: {
             [PipelineRunLabel.APPLICATION]: applicationName,
             [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
-            ...(commit && { [PipelineRunLabel.COMMIT_LABEL]: commit }),
           },
         },
         limit: 100,
       }),
-      [applicationName, commit],
+      [applicationName],
     ),
-    // TODO better way to do this?
-  ) as unknown as [PipelineRunKind[], boolean, unknown];
+  );
+
+  return React.useMemo(() => {
+    if (!commit) {
+      return [pipelines, loaded, error];
+    }
+    return [
+      loaded ? pipelines.filter((pipeline) => getCommitSha(pipeline) === commit) : [],
+      loaded,
+      error,
+    ];
+  }, [commit, error, loaded, pipelines]);
+};

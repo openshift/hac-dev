@@ -18,7 +18,7 @@ describe('useCommitStatus', () => {
   });
 
   it('returns Pending status if pipelineruns for given commit are not found', () => {
-    usePipelineRunsForCommitMock.mockReturnValue([pipelineWithCommits, true]);
+    usePipelineRunsForCommitMock.mockReturnValue([[], true]);
     const { result } = renderHook(() => useCommitStatus('app', 'commit123'));
     expect(result.current).toEqual(['Pending', true, undefined]);
   });
@@ -31,7 +31,7 @@ describe('useCommitStatus', () => {
       true,
     ]);
     const { result } = renderHook(() => useCommitStatus('purple-mermaid-app', 'commit14rt'));
-    expect(result.current).toEqual(['Succeeded', true, undefined]);
+    expect(result.current).toEqual(['Pending', true, undefined]);
   });
 
   it('returns status from the latest started pipelinerun', () => {

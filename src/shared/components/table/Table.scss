@@ -6,16 +6,197 @@
   overflow: visible !important;
 }
 
-.table__header .pf-c-table__action, .pf-c-table__action.m-no-actions {
-  padding-left: var(--pf-global--spacer--2xl);
-}
-
-@media screen and (max-width: $pf-global--breakpoint--xl) {
-  .table .pf-c-table .pf-c-table__action {
-    width: 10% !important;
-  }
-}
-
 .table .pf-c-table .wrap-column {
   overflow-wrap: anywhere;
 }
+
+.table .pf-c-table tr > th {
+  max-width: unset;
+}
+
+.table .pf-c-table tr {
+  display: flex;
+  align-items: flex-start;
+}
+
+.table .pf-c-table .pf-c-table__action {
+  --pf-c-table--cell--MinWidth: 0;
+  --pf-c-table--cell--MaxWidth: none;
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  padding-right: 0 !important;
+}
+
+@media screen and (min-width: $pf-global--breakpoint--md) {
+  .table .pf-c-table .pf-m-width-10-on-md {
+    --pf-c-table--cell--Width: 10% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-15-on-md {
+    --pf-c-table--cell--Width: 15% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-20-on-md {
+    --pf-c-table--cell--Width: 20% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-25-on-md {
+    --pf-c-table--cell--Width: 25% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-30-on-md {
+    --pf-c-table--cell--Width: 30% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-35-on-md {
+    --pf-c-table--cell--Width: 35% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-40-on-md {
+    --pf-c-table--cell--Width: 40% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-45-on-md {
+    --pf-c-table--cell--Width: 45% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-50-on-md {
+    --pf-c-table--cell--Width: 50% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-60-on-md {
+    --pf-c-table--cell--Width: 60% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-70-on-md {
+    --pf-c-table--cell--Width: 70% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-80-on-md {
+    --pf-c-table--cell--Width: 80% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-90-on-md {
+    --pf-c-table--cell--Width: 90% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-100-on-md {
+    --pf-c-table--cell--Width: 100% !important;
+  }
+}
+@media screen and (min-width: $pf-global--breakpoint--lg) {
+  .table .pf-c-table .pf-m-width-10-on-lg {
+    --pf-c-table--cell--Width: 10% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-15-on-lg {
+    --pf-c-table--cell--Width: 15% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-20-on-lg {
+    --pf-c-table--cell--Width: 20% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-25-on-lg {
+    --pf-c-table--cell--Width: 25% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-30-on-lg {
+    --pf-c-table--cell--Width: 30% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-35-on-lg {
+    --pf-c-table--cell--Width: 35% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-40-on-lg {
+    --pf-c-table--cell--Width: 40% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-45-on-lg {
+    --pf-c-table--cell--Width: 45% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-50-on-lg {
+    --pf-c-table--cell--Width: 50% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-60-on-lg {
+    --pf-c-table--cell--Width: 60% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-70-on-lg {
+    --pf-c-table--cell--Width: 70% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-80-on-lg {
+    --pf-c-table--cell--Width: 80% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-90-on-lg {
+    --pf-c-table--cell--Width: 90% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-100-on-lg {
+    --pf-c-table--cell--Width: 100% !important;
+  }
+}
+@media screen and (min-width: $pf-global--breakpoint--xl) {
+  .table .pf-c-table .pf-m-width-10-on-xl {
+    --pf-c-table--cell--Width: 10% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-15-on-xl {
+    --pf-c-table--cell--Width: 15% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-20-on-xl {
+    --pf-c-table--cell--Width: 20% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-25-on-xl {
+    --pf-c-table--cell--Width: 25% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-30-on-xl {
+    --pf-c-table--cell--Width: 30% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-35-on-xl {
+    --pf-c-table--cell--Width: 35% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-40-on-xl {
+    --pf-c-table--cell--Width: 40% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-45-on-xl {
+    --pf-c-table--cell--Width: 45% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-50-on-xl {
+    --pf-c-table--cell--Width: 50% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-60-on-xl {
+    --pf-c-table--cell--Width: 60% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-70-on-xl {
+    --pf-c-table--cell--Width: 70% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-80-on-xl {
+    --pf-c-table--cell--Width: 80% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-90-on-xl {
+    --pf-c-table--cell--Width: 90% !important;
+  }
+
+  .table .pf-c-table .pf-m-width-100-on-xl {
+    --pf-c-table--cell--Width: 100% !important;
+  }
+}
+

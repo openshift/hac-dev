@@ -4,6 +4,8 @@ import ActionMenuContent from './ActionMenuContent';
 import ActionMenuToggle from './ActionMenuToggle';
 import { ActionMenuVariant, MenuOption } from './types';
 
+import './ActionMenu.scss';
+
 type ActionMenuProps = {
   actions: MenuOption[];
   variant?: ActionMenuVariant;
@@ -63,7 +65,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   };
 
   return (
-    <div ref={containerRef}>
+    <div className="action-menu-container" ref={containerRef}>
       <ActionMenuToggle
         isOpen={isOpen}
         isDisabled={isDisabled}

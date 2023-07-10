@@ -10,6 +10,7 @@ import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { PipelineRunGroupVersionKind } from '../models';
 import { useDeepCompareMemoize } from '../shared';
 import { PipelineRunKind, TaskRunGroupVersionKind, TaskRunKind } from '../types';
+import { getCommitSha } from '../utils/commits-utils';
 import { EQ } from '../utils/tekton-results';
 import { GetNextPage, useTRPipelineRuns, useTRTaskRuns } from './useTektonResults';
 
@@ -180,51 +181,31 @@ export const usePipelineRunsForCommit = (
   applicationName: string,
   commit: string,
 ): [PipelineRunKind[], boolean, unknown] => {
-  // TODO could actually reduce this to 2 etcd queries along with a single tekton-result query
-  const result = usePipelineRuns(
+  // TODO filter by label and annotation (?)
+  const [results, loaded, error] = usePipelineRuns(
     namespace && applicationName && commit ? namespace : null,
     React.useMemo(
       () => ({
         selector: {
           matchLabels: {
             [PipelineRunLabel.APPLICATION]: applicationName,
-            [PipelineRunLabel.COMMIT_LABEL]: commit,
           },
         },
-        // arbitrary large limit since the number of test pipeline runs for a commit should be limited
+        // arbitrary large limit since the number of pipeline runs for a commit should be limited
         limit: 100,
       }),
-      [applicationName, commit],
-    ),
-  );
-
-  const testResult = usePipelineRuns(
-    namespace && applicationName && commit ? namespace : null,
-    React.useMemo(
-      () => ({
-        selector: {
-          matchLabels: {
-            [PipelineRunLabel.APPLICATION]: applicationName,
-            [PipelineRunLabel.TEST_SERVICE_COMMIT]: commit,
-          },
-        },
-        // arbitrary large limit since the number of test pipeline runs for a commit should be limited
-        limit: 100,
-      }),
-      [applicationName, commit],
+      [applicationName],
     ),
   );
 
   const pipelineRuns = React.useMemo(
     () =>
-      [...(result[0] ?? []), ...(testResult[0] ?? [])].sort((a, b) =>
-        b.metadata.creationTimestamp.localeCompare(a.metadata.creationTimestamp),
-      ),
-    [result, testResult],
+      (results ?? [])
+        .filter((plr) => getCommitSha(plr) === commit)
+        .sort((a, b) => b.metadata.creationTimestamp.localeCompare(a.metadata.creationTimestamp)),
+    [commit, results],
   );
 
-  const loaded = result[1] && testResult[1];
-  const error = result[2] || testResult[2];
   return React.useMemo(() => [pipelineRuns, loaded, error], [pipelineRuns, loaded, error]);
 };
 
