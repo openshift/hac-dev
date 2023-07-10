@@ -10,6 +10,7 @@ import {
   Stack,
   StackItem,
 } from '@patternfly/react-core';
+import argoLogo from '../../imgs/overview/Argo.svg';
 import clairLogo from '../../imgs/overview/Clair.svg';
 import nodeLogo from '../../imgs/overview/Nodejs.svg';
 import openPolicyAgentLogo from '../../imgs/overview/OpenPolicyAgent.svg';
@@ -90,6 +91,7 @@ const AboutSection: React.FC = () => (
               <TechnologyTile name="Python" logo={pythonLogo} />
               <TechnologyTile name="Spring" logo={springLogo} />
               <TechnologyTile name="Tekton" logo={tektonLogo} />
+              <TechnologyTile name="Argo CD" logo={argoLogo} />
               <TechnologyTile name="Open Policy Agent" logo={openPolicyAgentLogo} />
               <TechnologyTile name="OpenShift" logo={redhatLogo} />
             </CardBody>
