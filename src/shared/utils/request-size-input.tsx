@@ -11,6 +11,7 @@ export const RequestSizeInput: React.FC<RequestSizeInputProps> = ({
   inputID,
   isInputDisabled,
   minValue,
+  maxValue,
   name,
   onChange,
   placeholder,
@@ -65,6 +66,7 @@ export const RequestSizeInput: React.FC<RequestSizeInputProps> = ({
           required={required}
           value={value}
           min={minValue}
+          max={maxValue}
           disabled={isInputDisabled}
         />
         <DropdownField
@@ -93,6 +95,7 @@ export type RequestSizeInputProps = {
   describedBy?: string;
   step?: number;
   minValue?: number;
+  maxValue?: number;
   inputID?: string;
   testID?: string;
   isInputDisabled?: boolean;

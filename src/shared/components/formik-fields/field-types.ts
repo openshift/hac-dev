@@ -101,6 +101,7 @@ export interface ResourceLimitFieldProps extends FieldProps {
   unitOptions: object;
   fullWidth?: boolean;
   minValue?: number;
+  maxValue?: number;
 }
 
 export interface MultiColumnFieldProps extends FieldProps {

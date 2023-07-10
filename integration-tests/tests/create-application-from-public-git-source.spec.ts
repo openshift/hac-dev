@@ -16,7 +16,7 @@ describe('Create Component from Public Git Source', () => {
   const ramValue = 1;
   const ramUnit = MemoryUnit.gigabyte;
   const replicaCount = 2;
-  const cpuCount = 10;
+  const cpuCount = 8;
   const cpuUnit = CPUUnit.millicore;
 
   after(() => {
