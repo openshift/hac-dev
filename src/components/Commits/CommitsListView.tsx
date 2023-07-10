@@ -58,12 +58,6 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
             [PipelineRunLabel.APPLICATION]: applicationName,
             [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
           },
-          matchExpressions: [
-            {
-              key: PipelineRunLabel.COMMIT_LABEL,
-              operator: 'Exists',
-            },
-          ],
         },
         limit: recentOnly ? RECENT_COMMIT_LIMIT : undefined,
       }),

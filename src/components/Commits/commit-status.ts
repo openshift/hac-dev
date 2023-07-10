@@ -15,7 +15,7 @@ export const useCommitStatus = (
   const plrsForCommit = React.useMemo(
     () =>
       pipelineRuns?.sort(
-        (a, b) => parseInt(a.status?.startTime, 10) - parseInt(b.status?.startTime, 10),
+        (a, b) => new Date(b.status?.startTime).getTime() - new Date(a.status?.startTime).getTime(),
       ),
     [pipelineRuns],
   );
@@ -25,7 +25,7 @@ export const useCommitStatus = (
       return 'Pending';
     }
 
-    const plrStatus = pipelineRunStatus(plrsForCommit[plrsForCommit.length - 1]);
+    const plrStatus = pipelineRunStatus(plrsForCommit?.[0]);
     if (statuses.includes(plrStatus)) {
       return plrStatus;
     }

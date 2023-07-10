@@ -17,14 +17,19 @@ import {
 
 describe('commit-utils', () => {
   describe('getCommitsFromPLRs', () => {
-    it('Should return 7 commits with correct details', () => {
+    it('Should return 8 commits with correct details', () => {
       const result = getCommitsFromPLRs(pipelineWithCommits);
-      expect(result.length).toBe(7);
-      expect(result[0].sha).toBe('commit123');
-      expect(result[0].branch).toBe('branch_1');
-      expect(result[0].components[0]).toBe('sample-component');
-      expect(result[0].user).toBe('abhi');
-      expect(result[0].pipelineRuns).toHaveLength(5);
+      expect(result.length).toBe(8);
+      expect(result[0].sha).toBe('commit777');
+      expect(result[0].branch).toBeFalsy();
+      expect(result[0].components[0]).toBe('manual-build-component');
+      expect(result[0].user).toBe(undefined);
+      expect(result[0].pipelineRuns).toHaveLength(1);
+      expect(result[1].sha).toBe('commit123');
+      expect(result[1].branch).toBe('branch_1');
+      expect(result[1].components[0]).toBe('sample-component');
+      expect(result[1].user).toBe('abhi');
+      expect(result[1].pipelineRuns).toHaveLength(5);
       expect(result[result.length - 1].sha).toBe('commitabc');
       expect(result[result.length - 1].branch).toBe('branch_x');
       expect(result[result.length - 1].components.length).toBe(2);

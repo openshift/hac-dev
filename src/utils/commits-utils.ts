@@ -1,4 +1,5 @@
 import { getLatestResource } from '../components/ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
+import { getSourceUrl } from '../components/PipelineRunDetailsView/utils/pipelinerun-utils';
 import { PipelineRunEventType, PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { PipelineRunKind, Commit } from '../types';
 import { runStatus } from './pipeline-utils';
@@ -11,21 +12,29 @@ export const statuses = [
   runStatus.Succeeded,
 ];
 
+export const getCommitSha = (pipelineRun: PipelineRunKind) =>
+  pipelineRun?.metadata.labels?.[PipelineRunLabel.COMMIT_LABEL] ||
+  pipelineRun?.metadata.labels?.[PipelineRunLabel.TEST_SERVICE_COMMIT] ||
+  pipelineRun?.metadata.annotations?.[PipelineRunLabel.COMMIT_ANNOTATION];
+
 export const createCommitObjectFromPLR = (plr: PipelineRunKind): Commit => {
-  if (!plr || !plr?.metadata.labels?.[PipelineRunLabel.COMMIT_LABEL]) {
+  if (!plr || !getCommitSha(plr)) {
     return null;
   }
-  const commitSHA = plr.metadata.labels?.[PipelineRunLabel.COMMIT_LABEL];
+  const commitSHA = getCommitSha(plr);
   const commitBranch = plr.metadata.annotations?.[PipelineRunLabel.COMMIT_BRANCH_ANNOTATION] ?? '';
   const commitUser = plr.metadata.labels?.[PipelineRunLabel.COMMIT_USER_LABEL];
-  const shaURL = plr.metadata.annotations?.[PipelineRunLabel.COMMIT_URL_ANNOTATION];
-  const shaTitle = plr.metadata.annotations?.[PipelineRunLabel.COMMIT_SHA_TITLE_ANNOTATION];
   const creationTime = plr.metadata.creationTimestamp;
   const application = plr.metadata.labels[PipelineRunLabel.APPLICATION];
   const component = plr.metadata.labels[PipelineRunLabel.COMPONENT] ?? '';
   const repoName = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_URL_LABEL];
-  const repoURL = plr.metadata.annotations[PipelineRunLabel.COMMIT_FULL_REPO_URL_ANNOTATION];
+  const repoURL = getSourceUrl(plr);
   const repoOrg = plr.metadata.labels[PipelineRunLabel.COMMIT_REPO_ORG_LABEL];
+  const shaURL =
+    plr.metadata.annotations?.[PipelineRunLabel.COMMIT_URL_ANNOTATION] ||
+    `${repoURL}/commit/${commitSHA}`;
+  const shaTitle =
+    plr.metadata.annotations?.[PipelineRunLabel.COMMIT_SHA_TITLE_ANNOTATION] || 'manual build';
   const gitProvider = plr.metadata.labels[PipelineRunLabel.COMMIT_PROVIDER_LABEL];
   const pullRequestNumber = plr.metadata.labels[PipelineRunLabel.PULL_REQUEST_NUMBER_LABEL] ?? '';
   const isPullRequest =
@@ -75,7 +84,7 @@ const updateCommitObject = (plr: PipelineRunKind, commit: Commit): Commit => {
 export const getCommitsFromPLRs = (plrList: PipelineRunKind[], limit?: number): Commit[] => {
   const commits: Commit[] = [];
   plrList.forEach((plr) => {
-    const commitSHA = plr.metadata.labels?.[PipelineRunLabel.COMMIT_LABEL];
+    const commitSHA = getCommitSha(plr);
     if (commitSHA) {
       const existingCommitIndex = commits.findIndex((commit) => commit.sha === commitSHA);
       if (existingCommitIndex > -1) {

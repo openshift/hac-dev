@@ -67,13 +67,13 @@ const CommitOverviewTab: React.FC<CommitsOverviewTabProps> = ({ commit, commitSt
               {createRepoBranchURL(commit) ? (
                 <ExternalLink href={createRepoBranchURL(commit)} text={`${commit.branch}`} />
               ) : (
-                `${commit.branch}`
+                `${commit.branch || '-'}`
               )}
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>By</DescriptionListTerm>
-            <DescriptionListDescription>{commit.user}</DescriptionListDescription>
+            <DescriptionListDescription>{commit.user || '-'}</DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>Created at</DescriptionListTerm>

@@ -25,18 +25,29 @@ const commits = getCommitsFromPLRs(pipelineWithCommits);
 describe('CommitsListRow', () => {
   it('lists correct Commit details', () => {
     const { getAllByText, queryByText, container } = render(
-      <CommitsListRow columns={null} obj={commits[0]} />,
+      <CommitsListRow columns={null} obj={commits[1]} />,
     );
-    const expectedDate = dateTime.dateTimeFormatter.format(new Date(commits[0].creationTime));
+    const expectedDate = dateTime.dateTimeFormatter.format(new Date(commits[1].creationTime));
     expect(queryByText('commit1')).not.toBeInTheDocument();
-    expect(getAllByText('#11 test-title')[0]).toBeInTheDocument();
+    expect(getAllByText(`#11 ${commits[1].shaTitle}`)[0]).toBeInTheDocument();
     expect(container).toHaveTextContent(expectedDate.toString());
     expect(getAllByText('branch_1')[0]).toBeInTheDocument();
     expect(getAllByText('sample-component')[0]).toBeInTheDocument();
   });
 
+  it('lists correct Commit details for manual builds', () => {
+    const { getAllByText, queryByText, container } = render(
+      <CommitsListRow columns={null} obj={commits[0]} />,
+    );
+    const expectedDate = dateTime.dateTimeFormatter.format(new Date(commits[0].creationTime));
+    expect(queryByText('commit1')).not.toBeInTheDocument();
+    expect(getAllByText('manual build')[0]).toBeInTheDocument();
+    expect(container).toHaveTextContent(expectedDate.toString());
+    expect(getAllByText('manual-build-component')[0]).toBeInTheDocument();
+  });
+
   it('should show commit icon for commits', () => {
-    render(<CommitsListRow columns={null} obj={commits[2]} />);
+    render(<CommitsListRow columns={null} obj={commits[3]} />);
     expect(screen.getByAltText('Commit icon')).toBeInTheDocument();
   });
 
@@ -45,7 +56,7 @@ describe('CommitsListRow', () => {
     commits[0].pullRequestNumber = '23';
     render(<CommitsListRow columns={null} obj={commits[0]} />);
     screen.getByAltText('Pull request icon');
-    screen.getAllByText('#23 test-title');
+    screen.getAllByText(`#23 ${commits[0].shaTitle}`);
   });
 
   it('should show plr status on the row', () => {});

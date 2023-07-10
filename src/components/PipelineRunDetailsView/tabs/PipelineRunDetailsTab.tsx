@@ -20,7 +20,7 @@ import { ErrorDetailsWithStaticLog } from '../../../shared/components/pipeline-r
 import { getPLRLogSnippet } from '../../../shared/components/pipeline-run-logs/logs/pipelineRunLogSnippet';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind, TaskRunKind } from '../../../types';
-import { getCommitShortName } from '../../../utils/commits-utils';
+import { getCommitSha, getCommitShortName } from '../../../utils/commits-utils';
 import {
   calculateDuration,
   getSbomTaskRun,
@@ -55,9 +55,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
       ? pipelineRun.status?.completionTime
       : '',
   );
-  const sha =
-    pipelineRun.metadata?.labels[PipelineRunLabel.COMMIT_LABEL] ||
-    pipelineRun.metadata?.labels[PipelineRunLabel.TEST_SERVICE_COMMIT];
+  const sha = getCommitSha(pipelineRun);
   const applicationName = pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION];
   const buildImage =
     pipelineRun.metadata?.annotations?.[PipelineRunLabel.BUILD_IMAGE_ANNOTATION] ||
