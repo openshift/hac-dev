@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { css } from '@patternfly/react-styles';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
@@ -29,7 +28,7 @@ const TaskRunListRow: React.FC<RowFunctionArgs<TaskRunKind>> = ({ obj }) => {
       <TableData className={taskRunTableColumnClasses.status}>
         <StatusIconWithText dataTestAttribute="taskrun-status" status={taskRunStatus(obj)} />
       </TableData>
-      <TableData className={css(taskRunTableColumnClasses.kebab, 'm-no-actions')}> </TableData>
+      <TableData className={taskRunTableColumnClasses.kebab}> </TableData>
     </>
   );
 };

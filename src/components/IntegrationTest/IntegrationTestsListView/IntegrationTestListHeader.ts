@@ -1,7 +1,7 @@
 export const integrationListTableColumnClasses = {
   name: 'pf-m-width-25',
-  containerImage: 'pf-m-width-35 pf-l-flex',
-  mandatory: 'pf-m-width-20',
+  containerImage: 'pf-m-width-25 pf-l-flex',
+  mandatory: 'pf-m-width-25',
   pipeline: 'pf-m-width-15',
   kebab: 'pf-c-table__action',
 };
