@@ -43,6 +43,7 @@ export type EnterpriseContractRule = {
     code: string;
     // eslint-disable-next-line camelcase
     effective_on?: string;
+    solution?: string;
   };
   msg: string;
 };
@@ -68,4 +69,5 @@ export type UIEnterpriseContractData = {
   component: string;
   msg?: string;
   collection?: string[];
+  solution?: string;
 };

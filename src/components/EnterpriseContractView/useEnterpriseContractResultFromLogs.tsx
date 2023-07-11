@@ -86,6 +86,7 @@ export const mapEnterpriseContractResultData = (
         component: compResult.name,
         msg: v.msg,
         collection: v.metadata?.collections,
+        solution: v.metadata?.solution,
       };
       acc.push(rule);
     });
