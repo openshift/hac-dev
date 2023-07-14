@@ -41,6 +41,9 @@ export const editIntegrationTest = (
           ? {
               name: environmentName,
               type: environmentType,
+              configuration: {
+                env: [],
+              },
             }
           : null,
       resolverRef: {
@@ -104,6 +107,9 @@ export const createIntegrationTest = (
           ? {
               name: environmentName,
               type: environmentType,
+              configuration: {
+                env: [],
+              },
             }
           : null,
       resolverRef: {

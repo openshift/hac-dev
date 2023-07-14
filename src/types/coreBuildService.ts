@@ -36,6 +36,9 @@ export type Environment = {
   name: string;
   params?: any[];
   type?: string;
+  configuration?: {
+    env: { name: string; value: string }[];
+  };
 };
 
 export type Param = {

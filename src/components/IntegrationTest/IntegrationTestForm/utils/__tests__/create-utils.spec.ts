@@ -27,6 +27,9 @@ const integrationTestData = {
     environment: {
       name: 'test1',
       type: 'POC',
+      configuration: {
+        env: [],
+      },
     },
     resolverRef: {
       resolver: 'git',
