@@ -31,7 +31,7 @@ curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
 
 # Note: PoC will be cleaned up with Bonfire changes
 # Get a namespace in the eph cluster and set vars accordingly
-NAMESPACE=$(bonfire namespace reserve)
+NAMESPACE=$(bonfire namespace reserve -d 4h)
 ENV_NAME=env-${NAMESPACE}
 oc project ${NAMESPACE}
 HOSTNAME=$(oc get feenv ${ENV_NAME} -o json | jq ".spec.hostname" | tr -d '"')
@@ -98,7 +98,7 @@ if [[ $TEST_IMAGE =~ "hac-dev:pr" ]]; then
   docker rmi -f $TEST_IMAGE
 fi
 
-bonfire namespace release -f ${NAMESPACE}
+# bonfire namespace release -f ${NAMESPACE}
 
 # teardown_docker
 exit $TEST_RUN
