@@ -30,7 +30,7 @@ export class AddComponentPage extends AbstractWizardPage {
   }
 
   submit() {
-    cy.get(addComponentPagePO.next).click({ force: true }).click();
+    cy.contains('button', 'Import code').should('be.enabled').invoke('click');
   }
 
   clickCancel() {
