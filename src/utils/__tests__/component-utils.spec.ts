@@ -3,7 +3,6 @@ import { useApplicationPipelineGitHubApp } from '../../hooks/useApplicationPipel
 import { ComponentKind } from '../../types';
 import {
   isPACEnabled,
-  PAC_ANNOTATION,
   useURLForComponentPRs,
   useComponentBuildStatus,
   BUILD_STATUS_ANNOTATION,
@@ -17,24 +16,21 @@ const useApplicationPipelineGitHubAppMock = useApplicationPipelineGitHubApp as j
 
 describe('component-utils', () => {
   it('should detect pac enabled state', () => {
-    const createComponent = (pacValue: string | undefined): ComponentKind => {
-      let result: any;
-      if (pacValue) {
-        result = {
-          metadata: {
-            annotations: {
-              [PAC_ANNOTATION]: pacValue,
-            },
+    const createComponent = (buildState: string | undefined): ComponentKind => {
+      const result = {
+        metadata: {
+          annotations: {
+            [BUILD_STATUS_ANNOTATION]: buildState && JSON.stringify({ pac: { state: buildState } }),
           },
-        };
-      }
+        },
+      };
       return (result ?? {}) as ComponentKind;
     };
     expect(isPACEnabled(createComponent(undefined))).toBe(false);
-    expect(isPACEnabled(createComponent('request'))).toBe(true);
-    expect(isPACEnabled(createComponent('request'), true)).toBe(false);
-    expect(isPACEnabled(createComponent('done'), false)).toBe(true);
-    expect(isPACEnabled(createComponent('done'), true)).toBe(true);
+    expect(isPACEnabled(createComponent('enabled'))).toBe(true);
+    expect(isPACEnabled(createComponent('disabled'), true)).toBe(false);
+    expect(isPACEnabled(createComponent('disabled'), false)).toBe(true);
+    expect(isPACEnabled(createComponent('enabled'), true)).toBe(true);
   });
 
   it('should create github URL for component PRs', () => {
@@ -46,7 +42,7 @@ describe('component-utils', () => {
       ({
         metadata: {
           annotations: {
-            [PAC_ANNOTATION]: pacEnabled ? 'done' : '',
+            [BUILD_STATUS_ANNOTATION]: pacEnabled && JSON.stringify({ pac: { state: 'enabled' } }),
           },
         },
         spec: {

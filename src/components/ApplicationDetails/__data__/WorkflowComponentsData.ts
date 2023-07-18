@@ -3,9 +3,7 @@ export const mockComponentsData = [
     apiVersion: 'appstudio.redhat.com/v1alpha1',
     kind: 'Component',
     metadata: {
-      annotations: {
-        'appstudio.openshift.io/pac-provision': 'request',
-      },
+      annotations: {},
       resourceVersion: '999994539',
       name: 'test-dotnet60',
       uid: 'fcabf01f-808e-4b6e-a416-378e77eb3920',
@@ -41,7 +39,6 @@ export const mockComponentsData = [
             'f:metadata': {
               'f:annotations': {
                 '.': {},
-                'f:appstudio.openshift.io/pac-provision': {},
               },
             },
             'f:spec': {
@@ -157,10 +154,7 @@ export const mockComponentsData = [
     apiVersion: 'appstudio.redhat.com/v1alpha1',
     kind: 'Component',
     metadata: {
-      annotations: {
-        'appstudio.openshift.io/component-initial-build': 'processed',
-        'appstudio.openshift.io/pac-provision': 'request',
-      },
+      annotations: {},
       resourceVersion: '999922571',
       name: 'test-go',
       uid: '9bef4308-642a-4d0d-b180-f53f0a797f0e',
@@ -196,7 +190,6 @@ export const mockComponentsData = [
             'f:metadata': {
               'f:annotations': {
                 '.': {},
-                'f:appstudio.openshift.io/pac-provision': {},
               },
             },
             'f:spec': {
@@ -254,9 +247,7 @@ export const mockComponentsData = [
           fieldsType: 'FieldsV1',
           fieldsV1: {
             'f:metadata': {
-              'f:annotations': {
-                'f:appstudio.openshift.io/component-initial-build': {},
-              },
+              'f:annotations': {},
             },
           },
           manager: 'manager',
@@ -326,9 +317,7 @@ export const mockComponentsData = [
     apiVersion: 'appstudio.redhat.com/v1alpha1',
     kind: 'Component',
     metadata: {
-      annotations: {
-        'appstudio.openshift.io/pac-provision': 'request',
-      },
+      annotations: {},
       resourceVersion: '1089930845',
       name: 'nodejs-test',
       uid: '3628db9d-1ac1-4fe3-8ed5-a4c5664fb9c4',
@@ -364,7 +353,6 @@ export const mockComponentsData = [
             'f:metadata': {
               'f:annotations': {
                 '.': {},
-                'f:appstudio.openshift.io/pac-provision': {},
               },
             },
             'f:spec': {

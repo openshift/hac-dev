@@ -63,7 +63,7 @@ create_component() {
   NAME=$(echo $GIT_URL | grep -o '[^/]*$')
   IMAGE=quay.io/$QUAY_USERNAME/$NAME
   oc delete --ignore-not-found component $NAME
-  yq e "(.metadata.name=\"$NAME\") | (.spec.componentName=\"$NAME\") | (.spec.source.git.url=\"$GIT_URL\") | (.spec.containerImage=\"$IMAGE\") | (.metadata.annotations.\"appstudio.openshift.io/pac-provision\"=\"${PIPELINESASCODE:-"request"}\")" $SCRIPTDIR/resources/component.yaml | oc apply -f-
+  yq e "(.metadata.name=\"$NAME\") | (.spec.componentName=\"$NAME\") | (.spec.source.git.url=\"$GIT_URL\") | (.spec.containerImage=\"$IMAGE\") | (.metadata.annotations.\"build.appstudio.openshift.io/request\"=\"${PIPELINESASCODE:-"configure-pac"}\")" $SCRIPTDIR/resources/component.yaml | oc apply -f-
 }
 
 create_component_test() {

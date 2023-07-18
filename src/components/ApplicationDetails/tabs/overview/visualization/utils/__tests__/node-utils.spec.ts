@@ -1,3 +1,4 @@
+import { BUILD_STATUS_ANNOTATION } from '../../../../../../../utils/component-utils';
 import { componentCRMocks } from '../../../../../__data__/mock-data';
 import { getBuildNodeForComponent } from '../node-utils';
 
@@ -13,7 +14,9 @@ describe('getBuildNodeForComponent', () => {
       metadata: {
         ...componentCRMocks[0].metadata,
         annotations: {
-          'appstudio.openshift.io/pac-provision': 'done',
+          [BUILD_STATUS_ANNOTATION]: JSON.stringify({
+            pac: { state: 'enabled', 'merge-url': 'example.com' },
+          }),
         },
       },
     };

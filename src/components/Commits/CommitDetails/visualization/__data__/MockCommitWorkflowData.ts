@@ -3299,8 +3299,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/component-initial-build': 'processed',
-        'appstudio.openshift.io/pac-provision': 'done',
         'skip-initial-checks': 'true',
       },
       resourceVersion: '92029137',
@@ -3379,7 +3377,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/pac-provision': 'done',
       },
       resourceVersion: '59051195',
       name: 'devfile-sample-go-basic-2cnf',
@@ -3455,8 +3452,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/component-initial-build': 'processed',
-        'appstudio.openshift.io/pac-provision': 'done',
         'skip-initial-checks': 'true',
       },
       resourceVersion: '92231610',
@@ -3534,7 +3529,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/component-initial-build': 'processed',
         'skip-initial-checks': 'true',
       },
       resourceVersion: '76302998',
@@ -3610,7 +3604,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/component-initial-build': 'processed',
         'skip-initial-checks': 'true',
       },
       resourceVersion: '52321872',
@@ -3693,7 +3686,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/component-initial-build': 'processed',
         'skip-initial-checks': 'true',
       },
       resourceVersion: '76302912',
@@ -3769,8 +3761,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/component-initial-build': 'processed',
-        'appstudio.openshift.io/pac-provision': 'done',
         'skip-initial-checks': 'true',
       },
       resourceVersion: '48396522',
@@ -3855,7 +3845,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/component-initial-build': 'processed',
         'skip-initial-checks': 'true',
       },
       resourceVersion: '76306740',
@@ -3931,7 +3920,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/component-initial-build': 'processed',
         'skip-initial-checks': 'true',
       },
       resourceVersion: '56100925',
@@ -4006,8 +3994,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/component-initial-build': 'processed',
-        'appstudio.openshift.io/pac-provision': 'done',
         'skip-initial-checks': 'true',
       },
       resourceVersion: '88025949',
@@ -4095,9 +4081,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/pac-provision': 'error',
-        'appstudio.openshift.io/pac-provision-error':
-          '70: GitHub Application is not installed in user repository',
       },
       resourceVersion: '73817931',
       name: 'devfile-sample-go-basic-btj3',
@@ -4173,7 +4156,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/component-initial-build': 'processed',
         'skip-initial-checks': 'true',
       },
       resourceVersion: '76306700',
@@ -4249,7 +4231,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/component-initial-build': 'processed',
         'appstudio.openshift.io/sample': 'true',
         'skip-initial-checks': 'true',
       },
@@ -4333,8 +4314,6 @@ export const MockComponents = [
     metadata: {
       annotations: {
         applicationFailCounter: '0',
-        'appstudio.openshift.io/component-initial-build': 'processed',
-        'appstudio.openshift.io/pac-provision': 'done',
         'skip-initial-checks': 'true',
       },
       resourceVersion: '73820802',

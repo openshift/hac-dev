@@ -1,7 +1,14 @@
 import * as React from 'react';
-import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
+import { PipelineRunEventType, PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { ComponentKind } from '../types';
-import { getPACProvision, SAMPLE_ANNOTATION, PACProvision } from '../utils/component-utils';
+import {
+  SAMPLE_ANNOTATION,
+  getPACProvision,
+  ComponentBuildState,
+  BUILD_REQUEST_ANNOTATION,
+  BuildRequest,
+  useComponentBuildStatus,
+} from '../utils/component-utils';
 import { useApplicationPipelineGitHubApp } from './useApplicationPipelineGitHubApp';
 import { usePipelineRuns } from './usePipelineRuns';
 
@@ -18,10 +25,14 @@ export enum PACState {
 const usePACState = (component: ComponentKind) => {
   const isSample = component.metadata?.annotations?.[SAMPLE_ANNOTATION] === 'true';
   const pacProvision = getPACProvision(component);
+  const isRequested =
+    component.metadata?.annotations?.[BUILD_REQUEST_ANNOTATION] === BuildRequest.configurePac;
 
   const { name: prBotName } = useApplicationPipelineGitHubApp();
 
-  // TODO need a better way to identify if the PR has merged on the main branch
+  const buildStatus = useComponentBuildStatus(component);
+  const configurationTime = buildStatus?.pac?.['configuration-time'];
+
   const [pipelineBuildRuns, pipelineBuildRunsLoaded] = usePipelineRuns(
     !isSample && pacProvision ? component.metadata.namespace : null,
     React.useMemo(
@@ -31,6 +42,7 @@ const usePACState = (component: ComponentKind) => {
             [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
             [PipelineRunLabel.APPLICATION]: component.spec.application,
             [PipelineRunLabel.COMPONENT]: component.metadata.name,
+            [PipelineRunLabel.COMMIT_EVENT_TYPE_LABEL]: PipelineRunEventType.PUSH,
           },
           matchExpressions: [
             { key: PipelineRunLabel.PULL_REQUEST_NUMBER_LABEL, operator: 'DoesNotExist' },
@@ -51,19 +63,30 @@ const usePACState = (component: ComponentKind) => {
     ),
   );
 
+  // filter out runs that were created if the component previously had pac configured
+  const runsForComponent = React.useMemo(
+    () =>
+      pipelineBuildRuns?.filter((p) =>
+        configurationTime
+          ? new Date(p.metadata.creationTimestamp) > new Date(configurationTime)
+          : true,
+      ),
+    [configurationTime, pipelineBuildRuns],
+  );
+
   return isSample
     ? PACState.sample
-    : pacProvision === PACProvision.done
+    : isRequested
+    ? PACState.requested
+    : pacProvision === ComponentBuildState.enabled
     ? !pipelineBuildRunsLoaded
       ? PACState.loading
-      : pipelineBuildRuns?.length > 0
+      : runsForComponent?.length > 0
       ? PACState.ready
       : PACState.pending
-    : pacProvision === PACProvision.request
-    ? PACState.requested
-    : pacProvision === PACProvision.error
-    ? PACState.error
-    : PACState.disabled;
+    : !pacProvision || pacProvision === ComponentBuildState.disabled
+    ? PACState.disabled
+    : PACState.error;
 };
 
 export default usePACState;
