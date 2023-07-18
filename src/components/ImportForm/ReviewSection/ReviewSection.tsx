@@ -15,6 +15,7 @@ import {
   CardBody,
 } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
+import gitUrlParse from 'git-url-parse';
 import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
 import { HeadTitle } from '../../HeadTitle';
 import ApplicationSection from '../ApplicationSection/ApplicationSection';
@@ -61,8 +62,13 @@ const ReviewSection: React.FunctionComponent = () => {
   const cachedComponentsLoaded = React.useRef(false);
   const isContainerImage = containerImageRegex.test(sourceUrl);
 
+  const source = React.useMemo(
+    () => (!isContainerImage ? gitUrlParse(sourceUrl).toString() : null),
+    [isContainerImage, sourceUrl],
+  );
+
   const [detectedComponents, detectionLoaded, detectionError] = useComponentDetection(
-    !isContainerImage ? sourceUrl : null,
+    source,
     secret,
     context,
     revision,

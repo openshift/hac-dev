@@ -3,6 +3,7 @@ import { Badge, DropdownToggle, Spinner } from '@patternfly/react-core';
 import { DockerIcon } from '@patternfly/react-icons/dist/esm/icons/docker-icon';
 import { ImageIcon } from '@patternfly/react-icons/dist/esm/icons/image-icon';
 import { useFormikContext } from 'formik';
+import gitUrlParse from 'git-url-parse';
 import { DropdownField } from '../../../shared';
 import HelpPopover from '../../HelpPopover';
 import { useComponentDetection } from '../utils/cdq-utils';
@@ -81,7 +82,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       return;
     }
     const runtimeSourceUrl = value.includes(dockerFileSample.value)
-      ? sourceUrl
+      ? gitUrlParse(sourceUrl).toString()
       : (runtime?.attributes?.git as any)?.remotes?.origin;
     setSelectedRuntime(value === dockerFileSample.value ? dockerFileSample : runtime);
     setFieldValue(`${fieldPrefix}.selectedRuntime`, value);

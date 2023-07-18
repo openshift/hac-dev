@@ -28,6 +28,8 @@ jest.mock('../../../../hooks/useApplications', () => ({
   useApplications: jest.fn(),
 }));
 
+jest.mock('git-url-parse', () => () => jest.fn(() => ({ toString: jest.fn() })));
+
 const useComponentDetectionMock = useComponentDetection as jest.Mock;
 const useApplicationsMock = useApplications as jest.Mock;
 
