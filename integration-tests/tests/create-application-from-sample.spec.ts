@@ -53,11 +53,11 @@ describe('Create component from sample', () => {
     Common.openApplicationURL(Cypress.env('appName'));
     //open app sample page
     applicationDetailPage.openAddComponentPage();
-    componentSamplesPage.selectQuarkusSample();
     cy.intercept(requestOptions).as('componentsAPI');
+    componentSamplesPage.selectQuarkusSample();
     Applications.goToComponentsTab();
 
-    cy.wait('@componentsAPI').then((xhr) => {
+    cy.wait('@componentsAPI', { timeout: 80000 }).then((xhr) => {
       for (const item of xhr.response.body.items) {
         if (
           item.spec.application === Cypress.env('appName') &&

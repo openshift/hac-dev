@@ -147,12 +147,12 @@ export class TaskRunsTab {
   static getAdvancedTaskNamesList(pipelineName: string): taskRunDetailsRow[] {
     return [
       { name: `${pipelineName}-init`, task: 'init', status: 'Succeeded' },
-      { name: `${pipelineName}-clone-repository`, task: 'git-clone', status: 'Succeeded' },
-      { name: `${pipelineName}-build-container`, task: 'buildah', status: 'Succeeded' },
+      { name: `${pipelineName}-clone-repository`, task: 'clone-repository', status: 'Succeeded' },
+      { name: `${pipelineName}-build-container`, task: 'build-container', status: 'Succeeded' },
       { name: `${pipelineName}-inspect-image`, task: 'inspect-image', status: 'Succeeded' },
       {
         name: `${pipelineName}-deprecated-base-image-check`,
-        task: 'deprecated-image-check',
+        task: 'deprecated-base-image-check',
         status: 'Succeeded',
       },
       { name: `${pipelineName}-sbom-json-check`, task: 'sbom-json-check', status: 'Succeeded' },
@@ -164,15 +164,15 @@ export class TaskRunsTab {
       },
       { name: `${pipelineName}-label-check`, task: 'label-check', status: 'Succeeded' },
       { name: `${pipelineName}-show-sbom`, task: 'show-sbom', status: 'Succeeded' },
-      { name: `${pipelineName}-show-summary`, task: 'summary', status: 'Succeeded' },
+      { name: `${pipelineName}-show-summary`, task: 'show-summary', status: 'Succeeded' },
     ];
   }
   static getbasicTaskNamesList(pipelineName: string): taskRunDetailsRow[] {
     return [
       { name: `${pipelineName}-init`, task: 'init', status: 'Succeeded' },
-      { name: `${pipelineName}-clone-repository`, task: 'git-clone', status: 'Succeeded' },
-      { name: `${pipelineName}-build-container`, task: 'buildah', status: 'Succeeded' },
-      { name: `${pipelineName}-show-summary`, task: 'summary', status: 'Succeeded' },
+      { name: `${pipelineName}-clone-repository`, task: 'clone-repository', status: 'Succeeded' },
+      { name: `${pipelineName}-build-container`, task: 'build-container', status: 'Succeeded' },
+      { name: `${pipelineName}-show-summary`, task: 'show-summary', status: 'Succeeded' },
     ];
   }
 
@@ -194,9 +194,13 @@ export class LogsTab {
   static downloadAllTaskLogs(allTaskLogs = true) {
     LogsTab.goToLogsTab();
     if (allTaskLogs) {
-      cy.contains('button', pipelinerunsTabPO.downloadAllTaskLogsButton).click();
+      cy.contains('button', pipelinerunsTabPO.downloadAllTaskLogsButton)
+        .should('be.enabled')
+        .click();
     } else {
-      UIhelper.clickButton('Download');
+      cy.contains('button', /^Download$/)
+        .should('be.enabled')
+        .click();
     }
     DetailsTab.goToDetailsTab();
   }

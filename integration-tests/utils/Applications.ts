@@ -189,7 +189,7 @@ export class Applications {
       });
       cy.get(applicationsPagePO.secretKey).clear().type(secret.key);
       cy.get(applicationsPagePO.secretValue).clear().type(secret.value);
-      UIhelper.clickButton('Create');
+      UIhelper.clickButton('Create').should('not.exist');
     }
     componentPage.clickCreateApplication();
   }

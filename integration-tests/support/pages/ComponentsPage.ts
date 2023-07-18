@@ -92,7 +92,10 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   clickCreateApplication() {
-    cy.get(ComponentsPagePO.create).invoke('click').should('be.disabled');
+    cy.contains('button', 'Create application', { timeout: 80000 })
+      .should('be.enabled')
+      .invoke('click')
+      .should('be.disabled');
     Common.waitForLoad();
   }
 
