@@ -1,15 +1,7 @@
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button, Flex, FlexItem } from '@patternfly/react-core';
-import {
-  DownloadIcon,
-  CompressIcon,
-  ExpandIcon,
-  OutlinedPlayCircleIcon,
-} from '@patternfly/react-icons/dist/js/icons';
-import classNames from 'classnames';
-import { saveAs } from 'file-saver';
-import { useFullscreen } from '../../../hooks/fullscreen';
+import { Button } from '@patternfly/react-core';
+import { OutlinedPlayCircleIcon } from '@patternfly/react-icons/dist/js/icons';
+import { TaskRunKind } from '../../../../types';
 import { useScrollDirection, ScrollDirection } from '../../../hooks/scroll';
 import { LoadingInline } from '../../status-box/StatusBox';
 import { PodKind } from '../../types';
@@ -21,32 +13,32 @@ import './MultiStreamLogs.scss';
 
 type MultiStreamLogsProps = {
   resource: PodKind;
+  taskRun?: TaskRunKind;
   resourceName: string;
-  taskName: string;
-  downloadAllLabel?: string;
-  onDownloadAll?: () => Promise<Error>;
-  errorMessage?: string;
+  setCurrentLogsGetter: (getter: () => string) => void;
 };
 
 export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
   resource,
-  taskName,
+  taskRun,
   resourceName,
-  downloadAllLabel,
-  onDownloadAll,
-  errorMessage,
+  setCurrentLogsGetter,
 }) => {
-  const { t } = useTranslation();
   const scrollPane = React.useRef<HTMLDivElement>();
   const completedRef = React.useRef<boolean[]>([]);
   const [renderToCount, setRenderToCount] = React.useState(0);
-  const [isFullscreen, fullscreenRef, fullscreenToggle] = useFullscreen<HTMLDivElement>();
   const [scrollDirection, handleScrollCallback] = useScrollDirection();
   const { containers, stillFetching } = getRenderContainers(resource);
-  const [downloadAllStatus, setDownloadAllStatus] = React.useState(false);
   const dataRef = React.useRef(null);
   dataRef.current = containers;
   const logViewerRef = React.useRef<HTMLDivElement>();
+  const taskName = taskRun?.spec.taskRef?.name ?? taskRun?.metadata.name;
+
+  React.useEffect(() => {
+    setCurrentLogsGetter(() => {
+      return scrollPane.current?.innerText;
+    });
+  }, [setCurrentLogsGetter]);
 
   const handleClick = React.useCallback(() => {
     logViewerRef.current.scrollTop = logViewerRef.current.scrollHeight;
@@ -68,78 +60,9 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
   const autoScroll =
     scrollDirection == null || scrollDirection === ScrollDirection.scrolledToBottom;
 
-  const startDownloadAll = () => {
-    setDownloadAllStatus(true);
-    onDownloadAll()
-      .then(() => {
-        setDownloadAllStatus(false);
-      })
-      .catch((err: Error) => {
-        setDownloadAllStatus(false);
-        // eslint-disable-next-line no-console
-        console.warn(err.message || t('Error downloading logs.'));
-      });
-  };
-  const downloadLogs = () => {
-    if (!scrollPane.current) return;
-    const logString = scrollPane.current.innerText;
-    const blob = new Blob([logString], {
-      type: 'text/plain;charset=utf-8',
-    });
-    saveAs(blob, `${taskName}.log`);
-  };
-
   const containerStatus = resource?.status?.containerStatuses ?? [];
-  const divider = <FlexItem className="multi-stream-logs__divider">|</FlexItem>;
   return (
-    <div ref={fullscreenRef} className="multi-stream-logs">
-      <Flex
-        className={(classNames as any)({
-          'multi-stream-logs--fullscreen': isFullscreen,
-        })}
-      >
-        <FlexItem className="multi-stream-logs__button" align={{ default: 'alignRight' }}>
-          <Button variant="link" onClick={downloadLogs} isDisabled={!!errorMessage} isInline>
-            <DownloadIcon className="multi-stream-logs__icon" />
-            {t('Download')}
-          </Button>
-        </FlexItem>
-        {divider}
-        {onDownloadAll && (
-          <>
-            <FlexItem className="multi-stream-logs__button">
-              <Button
-                variant="link"
-                onClick={startDownloadAll}
-                isDisabled={downloadAllStatus}
-                isInline
-              >
-                <DownloadIcon className="multi-stream-logs__icon" />
-                {downloadAllLabel || t('Download all')}
-                {downloadAllStatus && <LoadingInline />}
-              </Button>
-            </FlexItem>
-            {divider}
-          </>
-        )}
-        {fullscreenToggle && (
-          <FlexItem className="multi-stream-logs__button">
-            <Button variant="link" onClick={fullscreenToggle} isInline>
-              {isFullscreen ? (
-                <>
-                  <CompressIcon className="multi-stream-logs__icon" />
-                  {t('Collapse')}
-                </>
-              ) : (
-                <>
-                  <ExpandIcon className="multi-stream-logs__icon" />
-                  {t('Expand')}
-                </>
-              )}
-            </Button>
-          </FlexItem>
-        )}
-      </Flex>
+    <>
       <div className="multi-stream-logs__taskName" data-testid="logs-taskName">
         {taskName}
         {(loadingContainers || stillFetching) && resource && (
@@ -155,11 +78,6 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
         ref={logViewerRef}
       >
         <div className="multi-stream-logs__container__logs" ref={scrollPane}>
-          {resource === null && errorMessage && (
-            <div className="pipeline-run-logs__logtext" data-testid="logs-error-message">
-              {errorMessage}
-            </div>
-          )}
           {!loadingContainers &&
             containers.map((container, idx) => {
               const statusIndex = containerStatus.findIndex((c) => c.name === container.name);
@@ -187,6 +105,6 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
           </Button>
         )}
       </div>
-    </div>
+    </>
   );
 };

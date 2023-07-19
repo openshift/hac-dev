@@ -1,10 +1,4 @@
-import {
-  Condition,
-  PipelineRunKind,
-  PLRTaskRunData,
-  PLRTaskRunStep,
-  TaskRunKind,
-} from '../../../../types';
+import { Condition, PipelineRunKind, PLRTaskRunStep, TaskRunKind } from '../../../../types';
 import { pipelineRunStatus, taskRunStatus } from '../../../../utils/pipeline-utils';
 import { CombinedErrorDetails } from './log-snippet-types';
 import { taskRunSnippetMessage } from './log-snippet-utils';
@@ -36,8 +30,7 @@ export const getPLRLogSnippet = (
     return null;
   }
 
-  const tRuns: PLRTaskRunData[] = Object.values(taskRuns || pipelineRun.status.taskRuns || {});
-  const failedTaskRuns = tRuns.filter((taskRun) =>
+  const failedTaskRuns = taskRuns.filter((taskRun) =>
     taskRun?.status?.conditions?.find(
       (condition) => condition.type === 'Succeeded' && condition.status === 'False',
     ),
@@ -58,7 +51,11 @@ export const getPLRLogSnippet = (
     (step: PLRTaskRunStep) => step.terminated?.exitCode !== 0,
   )?.container;
 
-  return taskRunSnippetMessage(failedTaskRun.pipelineTaskName, failedTaskRun.status, containerName);
+  return taskRunSnippetMessage(
+    failedTaskRun?.spec.taskRef?.name ?? failedTaskRun?.metadata.name,
+    failedTaskRun.status,
+    containerName,
+  );
 };
 
 export const getTRLogSnippet = (taskRun: TaskRunKind): CombinedErrorDetails => {

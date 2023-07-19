@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { screen, render, within, fireEvent, act } from '@testing-library/react';
 import { DataState, testPipelineRuns } from '../../../../__data__/pipelinerun-data';
+import { useTRTaskRunLog } from '../../../../hooks/useTektonResults';
 import { TektonResourceLabel } from '../../../../types';
 import { HttpError } from '../../../utils/error/http-error';
 import PipelineRunLogs from '../PipelineRunLogs';
@@ -15,7 +16,12 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
+jest.mock('../../../../hooks/useTektonResults', () => ({
+  useTRTaskRunLog: jest.fn(),
+}));
+
 const watchResourceMock = useK8sWatchResource as jest.Mock;
+const useTRTaskRunLogMock = useTRTaskRunLog as jest.Mock;
 
 describe('PipelineRunLogs', () => {
   const pipelineRun = testPipelineRuns[DataState.SUCCEEDED];
@@ -28,7 +34,11 @@ describe('PipelineRunLogs', () => {
       },
       name: trName,
     },
-    spec: {},
+    spec: {
+      taskRef: {
+        name: 'first',
+      },
+    },
     status: pipelineRun.status.taskRuns[trName].status,
   }));
 
@@ -104,16 +114,36 @@ describe('PipelineRunLogs', () => {
     screen.getByText('Error retrieving pipeline for pipelinerun');
   });
 
-  it('should render logs no longer available message when pods are not available', () => {
+  it('should render tekton logs when pods are not available', () => {
     watchResourceMock.mockReturnValue([
       null,
       true,
       new HttpError('pod not found', 404, null, { statusText: 'some status message' }),
     ]);
+    useTRTaskRunLogMock.mockReturnValue(['Tekton log results', true, null]);
+
     render(<PipelineRunLogs obj={pipelineRun} taskRuns={testTaskRuns} />);
 
-    screen.getByTestId('logs-error-message');
-    screen.getByText('Logs are no longer accessible for finally-do-something task');
+    screen.getByTestId('tr-logs-content');
+    screen.getByText('Tekton log results');
+  });
+
+  it('should render logs no longer available message when pods are not available and no tekton logs', () => {
+    watchResourceMock.mockReturnValue([
+      null,
+      true,
+      new HttpError('pod not found', 404, null, { statusText: 'some status message' }),
+    ]);
+    useTRTaskRunLogMock.mockReturnValue([
+      null,
+      true,
+      new HttpError('logs not found', 404, null, { statusText: 'some status message' }),
+    ]);
+
+    render(<PipelineRunLogs obj={pipelineRun} taskRuns={testTaskRuns} />);
+
+    screen.getByTestId('tr-logs-error-message');
+    screen.getByText('Logs are no longer accessible for first task');
   });
 
   it('should render the task names in the same order when a task is clicked', () => {

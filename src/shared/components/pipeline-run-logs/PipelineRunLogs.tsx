@@ -90,33 +90,29 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
   };
 
   render() {
-    const { className, obj, taskRuns: tRuns } = this.props;
+    const { className, obj, taskRuns } = this.props;
     const { activeItem } = this.state;
 
-    const taskRunFromYaml = tRuns?.reduce((acc, value) => {
-      acc[value?.metadata?.name] = value;
-      return acc;
-    }, {});
-
-    const taskRuns = this.getSortedTaskRun(Object.values(taskRunFromYaml), [
+    const taskRunNames = this.getSortedTaskRun(taskRuns, [
       ...(obj?.status?.pipelineSpec?.tasks || []),
       ...(obj?.status?.pipelineSpec?.finally || []),
     ]);
 
-    const logDetails = getPLRLogSnippet(obj, tRuns) as ErrorDetailsWithStaticLog;
+    const logDetails = getPLRLogSnippet(obj, taskRuns) as ErrorDetailsWithStaticLog;
     const pipelineStatus = pipelineRunStatus(obj);
 
-    const taskCount = taskRuns.length;
+    const taskCount = taskRunNames.length;
     const downloadAllCallback =
       taskCount > 1
         ? getDownloadAllLogsCallback(
+            taskRunNames,
             taskRuns,
-            taskRunFromYaml,
             obj.metadata?.namespace,
             obj.metadata?.name,
           )
         : undefined;
-    const podName = taskRunFromYaml?.[activeItem]?.status?.podName;
+    const activeTaskRun = taskRuns.find((taskRun) => taskRun.metadata.name === activeItem);
+    const podName = activeTaskRun?.status?.podName;
     const resource: WatchK8sResource = taskCount > 0 &&
       podName && {
         name: podName,
@@ -126,8 +122,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
       };
 
     const waitingForPods = !!(activeItem && !resource);
-    const taskName =
-      taskRunFromYaml?.[activeItem]?.metadata?.labels?.[TektonResourceLabel.pipelineTask] || '-';
+    const taskName = activeTaskRun?.metadata?.labels?.[TektonResourceLabel.pipelineTask] || '-';
     const pipelineRunFinished = pipelineStatus !== runStatus.Running;
 
     const selectedItemRef = (item: HTMLSpanElement) => {
@@ -142,21 +137,19 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
           {taskCount > 0 ? (
             <Nav onSelect={this.onNavSelect} theme="light">
               <NavList className="pipeline-run-logs__nav">
-                {taskRuns.map((task) => {
-                  const taskRun = taskRunFromYaml?.[task];
+                {taskRunNames.map((taskRunName) => {
+                  const taskRun = taskRuns.find((t) => t.metadata.name === taskRunName);
                   return (
                     <NavItem
-                      key={task}
-                      itemId={task}
-                      isActive={activeItem === task}
+                      key={taskRunName}
+                      itemId={taskRunName}
+                      isActive={activeItem === taskRunName}
                       className="pipeline-run-logs__navitem"
                     >
-                      <span ref={activeItem === task ? selectedItemRef : undefined}>
+                      <span ref={activeItem === taskRunName ? selectedItemRef : undefined}>
                         <ColoredStatusIcon status={taskRunStatus(taskRun)} />
                         <span className="pipeline-run-logs__namespan">
-                          {taskRunFromYaml[task]?.metadata?.labels?.[
-                            TektonResourceLabel.pipelineTask
-                          ] || '-'}
+                          {taskRun?.metadata?.labels?.[TektonResourceLabel.pipelineTask] || '-'}
                         </span>
                       </span>
                     </NavItem>
@@ -172,7 +165,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
           {activeItem && resource ? (
             <LogsWrapperComponent
               resource={resource}
-              taskName={taskName}
+              taskRun={activeTaskRun}
               downloadAllLabel={'Download all task logs'}
               onDownloadAll={downloadAllCallback}
             />
