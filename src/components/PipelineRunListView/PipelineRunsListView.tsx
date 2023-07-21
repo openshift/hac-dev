@@ -14,6 +14,7 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
+import { useComponents } from '../../hooks/useComponents';
 import { usePipelineRuns } from '../../hooks/usePipelineRuns';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { Table } from '../../shared';
@@ -29,6 +30,7 @@ import { PipelineRunListRowWithVulnerabilities } from './PipelineRunListRow';
 type PipelineRunsListViewProps = { applicationName: string };
 const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ applicationName }) => {
   const { namespace } = useWorkspaceInfo();
+  const [components] = useComponents(namespace, applicationName);
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [statusFilterExpanded, setStatusFilterExpanded] = React.useState<boolean>(false);
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
@@ -40,9 +42,16 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
           matchLabels: {
             [PipelineRunLabel.APPLICATION]: applicationName,
           },
+          matchExpressions: [
+            {
+              key: `${PipelineRunLabel.COMPONENT}`,
+              operator: 'In',
+              values: components?.map((c) => c.metadata?.name),
+            },
+          ],
         },
       }),
-      [applicationName],
+      [applicationName, components],
     ),
   );
 

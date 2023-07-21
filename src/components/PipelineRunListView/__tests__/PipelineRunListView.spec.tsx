@@ -2,9 +2,11 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table';
 import { render, screen, fireEvent, configure } from '@testing-library/react';
+import { useComponents } from '../../../hooks/useComponents';
 import { usePipelineRuns } from '../../../hooks/usePipelineRuns';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import { PipelineRunKind } from '../../../types';
+import { mockComponentsData } from '../../ApplicationDetails/__data__';
 import { PipelineRunListRow } from '../PipelineRunListRow';
 import PipelineRunsListView from '../PipelineRunsListView';
 
@@ -14,6 +16,9 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('../../../hooks/usePipelineRuns', () => ({
   usePipelineRuns: jest.fn(),
+}));
+jest.mock('../../../hooks/useComponents', () => ({
+  useComponents: jest.fn(),
 }));
 
 jest.mock('../../../utils/workspace-context-utils', () => ({
@@ -59,6 +64,7 @@ jest.mock('../../../utils/rbac', () => ({
 }));
 
 const useSearchParamMock = useSearchParam as jest.Mock;
+const useComponentsMock = useComponents as jest.Mock;
 
 const params: any = {};
 
@@ -154,46 +160,47 @@ const usePipelineRunsMock = usePipelineRuns as jest.Mock;
 describe('Pipeline run List', () => {
   beforeEach(() => {
     useSearchParamMock.mockImplementation(mockUseSearchParam);
+    useComponentsMock.mockReturnValue([mockComponentsData, true]);
   });
 
-  // it('should render spinner if application data is not loaded', () => {
-  //   usePipelineRunsMock.mockReturnValue([[], false]);
-  //   render(<PipelineRunsListView applicationName={appName} />);
-  //   screen.getByRole('progressbar');
-  // });
+  it('should render spinner if application data is not loaded', () => {
+    usePipelineRunsMock.mockReturnValue([[], false]);
+    render(<PipelineRunsListView applicationName={appName} />);
+    screen.getByRole('progressbar');
+  });
 
-  // it('should render empty state if no application is present', () => {
-  //   usePipelineRunsMock.mockReturnValue([[], true]);
-  //   render(<PipelineRunsListView applicationName={appName} />);
-  //   screen.queryByText(/Keep tabs on components and activity/);
-  //   screen.queryByText(/Monitor your components with pipelines and oversee CI\/CD activity./);
-  //   const button = screen.queryByText('Add component');
-  //   expect(button).toBeInTheDocument();
-  //   expect(button.closest('a').href).toContain(
-  //     `http://localhost/application-pipeline/workspaces/test-ws/import?application=my-test-app`,
-  //   );
-  // });
+  it('should render empty state if no application is present', () => {
+    usePipelineRunsMock.mockReturnValue([[], true]);
+    render(<PipelineRunsListView applicationName={appName} />);
+    screen.queryByText(/Keep tabs on components and activity/);
+    screen.queryByText(/Monitor your components with pipelines and oversee CI\/CD activity./);
+    const button = screen.queryByText('Add component');
+    expect(button).toBeInTheDocument();
+    expect(button.closest('a').href).toContain(
+      `http://localhost/application-pipeline/workspaces/test-ws/import?application=my-test-app`,
+    );
+  });
 
-  // it('should render correct columns when pipelineRuns are present', () => {
-  //   usePipelineRunsMock.mockReturnValue([pipelineRuns, true]);
-  //   render(<PipelineRunsListView applicationName={appName} />);
-  //   screen.queryByText('Name');
-  //   screen.queryByText('Started');
-  //   screen.queryByText('Duration');
-  //   screen.queryAllByText('Status');
-  //   screen.queryByText('Type');
-  //   screen.queryByText('Component');
-  // });
+  it('should render correct columns when pipelineRuns are present', () => {
+    usePipelineRunsMock.mockReturnValue([pipelineRuns, true]);
+    render(<PipelineRunsListView applicationName={appName} />);
+    screen.queryByText('Name');
+    screen.queryByText('Started');
+    screen.queryByText('Duration');
+    screen.queryAllByText('Status');
+    screen.queryByText('Type');
+    screen.queryByText('Component');
+  });
 
-  // it('should render entire pipelineRuns list when no filter value', async () => {
-  //   usePipelineRunsMock.mockReturnValue([pipelineRuns, true]);
-  //   render(<PipelineRunsListView applicationName={appName} />);
-  //   expect(screen.queryByText('basic-node-js-first')).toBeInTheDocument();
-  //   expect(screen.queryByText('basic-node-js-second')).toBeInTheDocument();
-  //   expect(screen.queryByText('basic-node-js-third')).toBeInTheDocument();
-  //   const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
-  //   expect(filter.value).toBe('');
-  // });
+  it('should render entire pipelineRuns list when no filter value', async () => {
+    usePipelineRunsMock.mockReturnValue([pipelineRuns, true]);
+    render(<PipelineRunsListView applicationName={appName} />);
+    expect(screen.queryByText('basic-node-js-first')).toBeInTheDocument();
+    expect(screen.queryByText('basic-node-js-second')).toBeInTheDocument();
+    expect(screen.queryByText('basic-node-js-third')).toBeInTheDocument();
+    const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
+    expect(filter.value).toBe('');
+  });
 
   it('should render filtered pipelinerun list', async () => {
     usePipelineRunsMock.mockReturnValue([pipelineRuns, true]);
