@@ -135,7 +135,7 @@ const ReviewSection: React.FunctionComponent = () => {
             componentStub: {
               componentName: 'my-component',
               application: 'my-app',
-              source: { git: { url: sourceUrl, revision, context } },
+              source: { git: { url: sourceUrl, revision, context, dockerfileUrl: 'Dockerfile' } },
             },
           },
         },

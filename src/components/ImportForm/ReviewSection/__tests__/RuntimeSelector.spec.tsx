@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, screen } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { useComponentDetection } from '../../utils/cdq-utils';
 import '@testing-library/jest-dom';
@@ -319,6 +319,34 @@ describe('RuntimeSelector', () => {
       undefined,
       undefined,
     );
+    expect(setFieldValueMock).toHaveBeenCalledWith('detectionFailed', false);
+    expect(setFieldValueMock).toHaveBeenCalledWith('isDetected', true);
+  });
+
+  it('should enable submission when dockerfile sample is selected', async () => {
+    useDevfileSamplesMock.mockReturnValue([
+      [{ name: 'Basic Nodejs', attributes: { projectType: 'nodejs' }, icon: {} }],
+      true,
+    ]);
+    useComponentDetectionMock.mockReturnValue([null, true]);
+    formikRenderer(<RuntimeSelector detectedComponentIndex={0} />, {
+      source: {
+        git: { url: 'https://github.com/example/test' },
+      },
+      isDetected: true,
+      initialDetectionLoaded: true,
+      detectionFailed: true,
+      components: [
+        {
+          projectType: 'quarkus',
+        },
+      ],
+    });
+    expect(screen.getByText('Select a runtime')).toBeVisible();
+    await act(async () => screen.getByText('Select a runtime').click());
+    await act(async () => screen.getByText('Dockerfile').click());
+    await waitFor(() => screen.getByText('Dockerfile'));
+
     expect(setFieldValueMock).toHaveBeenCalledWith('detectionFailed', false);
     expect(setFieldValueMock).toHaveBeenCalledWith('isDetected', true);
   });
