@@ -46,12 +46,19 @@ pactWith({ consumer: 'HACdev', provider: 'HAS' }, (provider) => {
             generate: devfileExample,
             matcher: `((${comp1})[\\s\\S]*(${comp2}))|((${comp2}})[\\s\\S]*(${comp1}))`,
           }),
+          // dynamic array validation done by "arrayContains" need updating jest-pact and matchers to v3
           conditions: [
             {
-              reason: 'OK',
-              type: 'Created',
-              status: 'True',
               message: 'Application has been successfully created',
+              reason: 'OK',
+              status: 'True',
+              type: 'Created',
+            },
+            {
+              message: 'Application has been successfully updated',
+              reason: 'OK',
+              status: 'True',
+              type: 'Updated',
             },
           ],
         },
