@@ -57,6 +57,7 @@ const ReviewSection: React.FunctionComponent = () => {
     },
     isSubmitting,
     setFieldValue,
+    setFieldTouched,
   } = useFormikContext<ImportFormValues>();
   const cachedComponents = React.useRef([]);
   const cachedComponentsLoaded = React.useRef(false);
@@ -75,6 +76,18 @@ const ReviewSection: React.FunctionComponent = () => {
   );
 
   const [validAppName] = useValidApplicationName(sourceUrl);
+
+  const getObjectPaths = React.useCallback((obj, prefix): string[] => {
+    prefix = prefix ? `${prefix}.` : '';
+    return Object.keys(obj).reduce((path: string[], key: string) => {
+      if (typeof obj[key] === 'object') {
+        path = [...path, ...getObjectPaths(obj[key], prefix + key)];
+      } else {
+        path.push(prefix + key);
+      }
+      return path;
+    }, []);
+  }, []);
 
   React.useEffect(() => {
     if (sourceUrl && gitUrlRegex.test(sourceUrl) && !inAppContext && !isSubmitting) {
@@ -117,8 +130,9 @@ const ReviewSection: React.FunctionComponent = () => {
       const transformedComponents = transformComponentValues(components);
       setFieldValue('isDetected', true);
 
-      setFieldValue('detectedComponents', transformedComponents);
-      setFieldValue('components', transformedComponents);
+      setFieldValue('detectedComponents', transformedComponents, true);
+      setFieldValue('components', transformedComponents, true);
+      getObjectPaths(transformedComponents, 'components').map((path) => setFieldTouched(path));
       cachedComponents.current = transformedComponents;
     }
 
@@ -153,6 +167,8 @@ const ReviewSection: React.FunctionComponent = () => {
     sourceUrl,
     revision,
     context,
+    setFieldTouched,
+    getObjectPaths,
   ]);
 
   if (!cachedComponentsLoaded.current) {
