@@ -11,6 +11,10 @@ import '@testing-library/jest-dom';
 
 configure({ testIdAttribute: 'data-test' });
 
+jest.mock('../useEnablePrivateAuthFlowFlag', () => ({
+  useEnablePrivateAuthFlowFlag: () => true,
+}));
+
 jest.mock('../../utils/auth-utils', () => ({
   useAccessTokenBinding: jest.fn(),
   useAccessCheck: jest.fn(),

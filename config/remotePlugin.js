@@ -70,7 +70,7 @@ const flagExtensions = [
     type: 'core.flag',
     properties: {
       handler: {
-        $codeRef: 'FlagUtils.setProdFeatureFlag',
+        $codeRef: 'FlagUtils.setDevFeatureFlag',
       },
     },
   },

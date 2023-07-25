@@ -39,8 +39,8 @@ export const setMvpFeatureFlag = (setFlag: SetFeatureFlag): void => {
   setFlag(MVP_FLAG, enabled);
 };
 
-export const PROD_FLAG = 'PRODUCTION';
+export const DEV_FLAG = 'DEVELOPMENT';
 
-export const setProdFeatureFlag = (setFlag: SetFeatureFlag): void => {
-  setFlag(PROD_FLAG, window.location.hostname === 'console.redhat.com');
+export const setDevFeatureFlag = (setFlag: SetFeatureFlag): void => {
+  setFlag(DEV_FLAG, window.location.hostname === 'console.dev.redhat.com');
 };
