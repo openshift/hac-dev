@@ -68,7 +68,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
   return (
     <SidePanelHost>
       <DetailsPage
-        headTitle={commitDisplayName}
+        headTitle={`Commit ${commitDisplayName}`}
         breadcrumbs={[
           ...applicationBreadcrumbs,
           {
