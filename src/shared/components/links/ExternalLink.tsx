@@ -11,7 +11,7 @@ type ExternalLinkProps = {
   dataTestID?: string;
   stopPropagation?: boolean;
   style?: React.CSSProperties;
-  showIcon?: boolean;
+  hideIcon?: boolean;
   variant?: ButtonProps['variant'];
   icon?: ButtonProps['icon'];
   onClick?: ButtonProps['onClick'];
@@ -27,7 +27,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
   dataTestID,
   stopPropagation,
   style,
-  showIcon,
+  hideIcon,
   variant = ButtonVariant.link,
   icon,
   onClick,
@@ -52,7 +52,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
     }}
   >
     {children || text}
-    {showIcon ? (
+    {!hideIcon ? (
       <>
         {' '}
         <ExternalLinkAltIcon size={size} />

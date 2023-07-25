@@ -15,7 +15,11 @@ import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import MetadataList from '../../PipelineRunDetailsView/MetadataList';
 import { IntegrationTestLabels } from '../IntegrationTestForm/types';
-import { getLabelForParam, getURLForParam } from '../IntegrationTestForm/utils/create-utils';
+import {
+  ResolverRefParams,
+  getLabelForParam,
+  getURLForParam,
+} from '../IntegrationTestForm/utils/create-utils';
 
 interface IntegrationTestOverviewTabProps {
   integrationTest: IntegrationTestScenarioKind;
@@ -101,7 +105,15 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
                       <DescriptionListGroup key={param.name}>
                         <DescriptionListTerm>{getLabelForParam(param.name)}</DescriptionListTerm>
                         <DescriptionListDescription>
-                          {paramLink ? (
+                          {param.name === ResolverRefParams.URL ? (
+                            paramLink ? (
+                              <ExternalLink href={paramLink} hideIcon>
+                                {param.value}
+                              </ExternalLink>
+                            ) : (
+                              param.value
+                            )
+                          ) : paramLink ? (
                             <ExternalLink href={paramLink}>{param.value}</ExternalLink>
                           ) : (
                             param.value

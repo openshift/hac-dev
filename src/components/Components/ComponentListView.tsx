@@ -183,9 +183,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                       >
                         Manage build pipelines
                       </AlertActionLink>
-                      <ExternalLink href={prURL} showIcon>
-                        View all pull requests in Github
-                      </ExternalLink>
+                      <ExternalLink href={prURL}>View all pull requests in Github</ExternalLink>
                     </>
                   }
                   data-testid="components-unmerged-build-pr"

@@ -174,7 +174,6 @@ const Row: React.FC<{
                   <ExternalLink
                     variant={ButtonVariant.secondary}
                     href={prURL || component.spec.source.git.url}
-                    showIcon
                     analytics={{
                       link_name: 'merge-pull-request',
                       link_location: 'manage-builds-pipelines',
@@ -193,7 +192,6 @@ const Row: React.FC<{
                   <ExternalLink
                     variant={ButtonVariant.secondary}
                     href={component.spec.source.git.url}
-                    showIcon
                     analytics={{
                       link_name: 'edit-pipeline-in-github',
                       link_location: 'manage-builds-pipelines',
@@ -211,7 +209,6 @@ const Row: React.FC<{
                   <ExternalLink
                     variant={ButtonVariant.secondary}
                     href={`${component.spec.source.git.url.replace(/\.git$/i, '')}/fork`}
-                    showIcon
                     analytics={{
                       link_name: 'fork-sample',
                       link_location: 'manage-builds-pipelines',
@@ -259,7 +256,6 @@ const Row: React.FC<{
                 <>
                   <ExternalLink
                     href={githubAppURL}
-                    showIcon
                     analytics={{
                       link_name: 'install-github-app',
                       link_location: 'manage-builds-pipelines',
@@ -377,7 +373,6 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, modalProps })
           <Text component={TextVariants.p}>
             <ExternalLink
               href={githubAppURL}
-              showIcon
               analytics={{
                 link_name: 'install-github-app',
                 link_location: 'manage-builds-pipelines',

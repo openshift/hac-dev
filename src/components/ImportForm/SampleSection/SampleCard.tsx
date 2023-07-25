@@ -55,7 +55,7 @@ const SampleCard: React.FC<SampleCardProps> = ({ sample, onSampleImport }) => {
         <TextContent>{description}</TextContent>
       </CardBody>
       <CardFooter>
-        <ExternalLink showIcon text="Open Git repository" href={sourceUrl} />
+        <ExternalLink text="Open Git repository" href={sourceUrl} />
       </CardFooter>
       <Divider />
       <CardFooter>

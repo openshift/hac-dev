@@ -130,7 +130,6 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
                         workspace,
                       }}
                       text="Route"
-                      showIcon
                     />
                   )}
                 </FlexItem>
@@ -198,6 +197,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
                   href={componentRouteWebURL}
                   text={componentRouteWebURL}
                   dataTestID={`${name}-route`}
+                  hideIcon
                 />
               </DescriptionListDescription>
             </DescriptionListGroup>
