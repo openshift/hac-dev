@@ -63,6 +63,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
   const sourceUrl = getSourceUrl(pipelineRun);
   const pipelineStatus = !error ? pipelineRunStatus(pipelineRun) : null;
   const sbomTaskRun = React.useMemo(() => getSbomTaskRun(taskRuns), [taskRuns]);
+  const integrationTestName = pipelineRun.metadata.labels[PipelineRunLabel.TEST_SERVICE_SCENARIO];
 
   return (
     <>
@@ -236,7 +237,6 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                     )}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
-
                 {sha && (
                   <DescriptionListGroup>
                     <DescriptionListTerm>Commit</DescriptionListTerm>
@@ -256,6 +256,20 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                     <DescriptionListTerm>Source</DescriptionListTerm>
                     <DescriptionListDescription>
                       <GitRepoLink url={sourceUrl} />
+                    </DescriptionListDescription>
+                  </DescriptionListGroup>
+                )}
+                {integrationTestName && (
+                  <DescriptionListGroup>
+                    <DescriptionListTerm>Integration test</DescriptionListTerm>
+                    <DescriptionListDescription>
+                      <Link
+                        to={`/application-pipeline/workspaces/${workspace}/applications/${
+                          pipelineRun.metadata.labels[PipelineRunLabel.APPLICATION]
+                        }/integrationtests/${integrationTestName}`}
+                      >
+                        {integrationTestName}
+                      </Link>
                     </DescriptionListDescription>
                   </DescriptionListGroup>
                 )}

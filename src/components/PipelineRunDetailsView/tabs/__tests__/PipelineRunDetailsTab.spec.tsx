@@ -6,7 +6,10 @@ import { configure, render, screen } from '@testing-library/react';
 import { PipelineRunLabel } from '../../../../consts/pipelinerun';
 import { CustomError } from '../../../../shared/utils/error/custom-error';
 import { PipelineRunKind, TaskRunKind, TektonResourceLabel } from '../../../../types';
-import { sampleBuildPipelines } from '../../../ApplicationDetails/tabs/overview/visualization/hooks/__data__/workflow-data';
+import {
+  sampleBuildPipelines,
+  sampleTestPipelines,
+} from '../../../ApplicationDetails/tabs/overview/visualization/hooks/__data__/workflow-data';
 import { pipelineWithCommits } from '../../../Commits/__data__/pipeline-with-commits';
 import { testPipelineRun } from '../../../topology/__data__/pipeline-test-data';
 import PipelineRunDetailsTab from '../PipelineRunDetailsTab';
@@ -301,6 +304,36 @@ describe('PipelineRunDetailsTab', () => {
       },
     );
     expect(screen.queryByText('Download SBOM')).toBeInTheDocument();
+  });
+
+  it('should not render integration test section for the test pipelinerun', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    render(
+      <PipelineRunDetailsTab
+        pipelineRun={sampleBuildPipelines[0]}
+        taskRuns={getTaskRunsFromPLR(sampleBuildPipelines[0])}
+        error={null}
+      />,
+      {
+        wrapper: BrowserRouter,
+      },
+    );
+    expect(screen.queryByText('Integration test')).not.toBeInTheDocument();
+  });
+
+  it('should render integration test section for the test pipelinerun', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    render(
+      <PipelineRunDetailsTab
+        pipelineRun={sampleTestPipelines[0]}
+        taskRuns={getTaskRunsFromPLR(sampleTestPipelines[0])}
+        error={null}
+      />,
+      {
+        wrapper: BrowserRouter,
+      },
+    );
+    expect(screen.queryByText('Integration test')).toBeInTheDocument();
   });
 
   it('should render the download SBOM section for a pipelinerun with IMAGE_URL result', () => {
