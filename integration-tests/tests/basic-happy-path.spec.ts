@@ -12,6 +12,7 @@ import { UIhelper } from '../utils/UIhelper';
 import { APIHelper } from '../utils/APIHelper';
 import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
 import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
+import { githubAPIEndpoints } from '../utils/APIEndpoints';
 
 describe('Basic Happy Path', () => {
   const applicationName = Common.generateAppName();
@@ -150,6 +151,22 @@ describe('Basic Happy Path', () => {
     it('Validate Application Status', () => {
       Applications.goToOverviewTab();
       Applications.verifyAppstatusIsSucceeded();
+    });
+
+    it('Verify manual build commit in Latest Commit on Overview Tab', () => {
+      APIHelper.githubRequest(
+        'GET',
+        githubAPIEndpoints.commits(publicRepo.split('/')[3], publicRepo.split('/')[4]),
+      )
+        .its('body[0].sha')
+        .then((commitSHA) => {
+          UIhelper.verifyRowInTable('Commit List', componentName, [
+            /main/,
+            new RegExp(`manual build ${commitSHA.slice(0, 6)}`),
+            /^-$/,
+            /Succeeded/,
+          ]);
+        });
     });
 
     it('Validate the graph views for the created application', () => {
