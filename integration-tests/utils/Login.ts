@@ -29,6 +29,7 @@ export class Login {
 
   private static waitForApps() {
     Common.waitForLoad();
+    Common.verifyPageTitle(pageTitles.overviewPage);
     Common.navigateTo(NavItem.applications);
     Common.verifyPageTitle(pageTitles.applications);
     Common.waitForLoad();
