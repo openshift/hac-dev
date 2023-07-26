@@ -24,7 +24,7 @@ describe('GitImportActions', () => {
   it('should render only Import code action if not in review mode', () => {
     useFormikContextMock.mockReturnValue({ values: { inAppContext: false } });
 
-    render(<GitImportActions reviewMode={false} onBack={handleBack} />);
+    render(<GitImportActions reviewMode={false} onBack={handleBack} onCancel={jest.fn()} />);
 
     screen.getByRole('button', { name: 'Import code' });
   });
@@ -32,7 +32,7 @@ describe('GitImportActions', () => {
   it('should render all the actions if in review mode', () => {
     useFormikContextMock.mockReturnValue({ values: { inAppContext: false } });
 
-    render(<GitImportActions reviewMode={true} onBack={handleBack} />);
+    render(<GitImportActions reviewMode={true} onBack={handleBack} onCancel={jest.fn()} />);
 
     screen.getByRole('button', { name: 'Create application' });
     screen.getByRole('button', { name: 'Back' });
@@ -42,7 +42,7 @@ describe('GitImportActions', () => {
   it('should render Add Component button', () => {
     useFormikContextMock.mockReturnValue({ values: { inAppContext: true } });
 
-    render(<GitImportActions reviewMode={true} onBack={handleBack} />);
+    render(<GitImportActions reviewMode={true} onBack={handleBack} onCancel={jest.fn()} />);
 
     screen.getByRole('button', { name: 'Add component' });
     screen.getByRole('button', { name: 'Cancel' });
@@ -51,7 +51,7 @@ describe('GitImportActions', () => {
   it('should render disabled actions if form is not valid', () => {
     useFormikContextMock.mockReturnValue({ values: { inAppContext: false }, isValid: false });
 
-    render(<GitImportActions reviewMode={false} onBack={handleBack} />);
+    render(<GitImportActions reviewMode={false} onBack={handleBack} onCancel={jest.fn()} />);
 
     expect(screen.getByRole('button', { name: 'Import code' })).toBeDisabled();
   });
@@ -59,7 +59,7 @@ describe('GitImportActions', () => {
   it('should render disabled action with spinner if form is submitting', () => {
     useFormikContextMock.mockReturnValue({ values: { inAppContext: false }, isSubmitting: true });
 
-    render(<GitImportActions reviewMode={true} onBack={handleBack} />);
+    render(<GitImportActions reviewMode={true} onBack={handleBack} onCancel={jest.fn()} />);
 
     screen.getByRole('progressbar');
     expect(screen.getByRole('button', { name: 'Loading... Create application' })).toBeDisabled();
@@ -68,7 +68,7 @@ describe('GitImportActions', () => {
   it('should call handleBack function when back button is clicked', async () => {
     useFormikContextMock.mockReturnValue({ values: { inAppContext: false }, setErrors: jest.fn() });
 
-    render(<GitImportActions reviewMode={true} onBack={handleBack} />);
+    render(<GitImportActions reviewMode={true} onBack={handleBack} onCancel={jest.fn()} />);
 
     const backButton = screen.getByRole('button', { name: 'Back' });
     await waitFor(() => backButton.click());
