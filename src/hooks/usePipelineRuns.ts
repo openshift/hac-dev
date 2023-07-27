@@ -12,6 +12,7 @@ import { useDeepCompareMemoize } from '../shared';
 import { PipelineRunKind, TaskRunGroupVersionKind, TaskRunKind } from '../types';
 import { getCommitSha } from '../utils/commits-utils';
 import { EQ } from '../utils/tekton-results';
+import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { GetNextPage, useTRPipelineRuns, useTRTaskRuns } from './useTektonResults';
 
 const useRuns = <Kind extends K8sResourceCommon>(
@@ -23,6 +24,7 @@ const useRuns = <Kind extends K8sResourceCommon>(
     name?: string;
   },
 ): [Kind[], boolean, unknown, GetNextPage] => {
+  const { workspace } = useWorkspaceInfo();
   const etcdRunsRef = React.useRef<Kind[]>([]);
   const optionsMemo = useDeepCompareMemoize(options);
   const limit = optionsMemo?.limit;
@@ -72,7 +74,8 @@ const useRuns = <Kind extends K8sResourceCommon>(
 
   // Query tekton results if there's no limit or we received less items from etcd than the current limit
   const queryTr =
-    !limit || (namespace && ((runs && loaded && optionsMemo.limit > runs.length) || error));
+    !limit ||
+    (workspace && namespace && ((runs && loaded && optionsMemo.limit > runs.length) || error));
 
   const trOptions: typeof optionsMemo = React.useMemo(() => {
     if (optionsMemo?.name) {

@@ -11,7 +11,8 @@ import { PipelineRunKind, TaskRunKind } from '../types';
 // REST API spec
 // https://github.com/tektoncd/results/blob/main/docs/api/rest-api-spec.md
 
-const URL_PREFIX = '/plugins/tekton-results/apis/results.tekton.dev/v1alpha2/parents';
+const _WORKSPACE_ = '<_workspace_>';
+const URL_PREFIX = `/plugins/tekton-results/workspaces/${_WORKSPACE_}/apis/results.tekton.dev/v1alpha2/parents`;
 
 const MINIMUM_PAGE_SIZE = 5;
 const MAXIMUM_PAGE_SIZE = 10000;
@@ -159,15 +160,17 @@ let CACHE: { [key: string]: [any[], RecordsList] } = {};
 export const clearCache = () => {
   CACHE = {};
 };
+const getTRUrlPrefix = (workspace: string): string => URL_PREFIX.replace(_WORKSPACE_, workspace);
 
 export const createTektonResultsUrl = (
+  workspace: string,
   namespace: string,
   dataType: DataType,
   filter?: string,
   options?: TektonResultsOptions,
   nextPageToken?: string,
 ): string =>
-  `${URL_PREFIX}/${namespace}/results/-/records?${new URLSearchParams({
+  `${getTRUrlPrefix(workspace)}/${namespace}/results/-/records?${new URLSearchParams({
     // default sort should always be by `create_time desc`
     ['order_by']: 'create_time desc',
     ['page_size']: `${Math.max(
@@ -184,6 +187,7 @@ export const createTektonResultsUrl = (
   }).toString()}`;
 
 export const getFilteredRecord = async <R extends K8sResourceCommon>(
+  workspace: string,
   namespace: string,
   dataType: DataType,
   filter?: string,
@@ -191,7 +195,14 @@ export const getFilteredRecord = async <R extends K8sResourceCommon>(
   nextPageToken?: string,
   cacheKey?: string,
 ): Promise<[R[], RecordsList]> => {
-  const url = createTektonResultsUrl(namespace, dataType, filter, options, nextPageToken);
+  const url = createTektonResultsUrl(
+    workspace,
+    namespace,
+    dataType,
+    filter,
+    options,
+    nextPageToken,
+  );
 
   if (cacheKey) {
     const result = CACHE[cacheKey];
@@ -232,6 +243,7 @@ export const getFilteredRecord = async <R extends K8sResourceCommon>(
 };
 
 const getFilteredPipelineRuns = (
+  workspace: string,
   namespace: string,
   filter: string,
   options?: TektonResultsOptions,
@@ -239,6 +251,7 @@ const getFilteredPipelineRuns = (
   cacheKey?: string,
 ) =>
   getFilteredRecord<PipelineRunKind>(
+    workspace,
     namespace,
     DataType.PipelineRun,
     filter,
@@ -248,6 +261,7 @@ const getFilteredPipelineRuns = (
   );
 
 const getFilteredTaskRuns = (
+  workspace: string,
   namespace: string,
   filter: string,
   options?: TektonResultsOptions,
@@ -255,6 +269,7 @@ const getFilteredTaskRuns = (
   cacheKey?: string,
 ) =>
   getFilteredRecord<TaskRunKind>(
+    workspace,
     namespace,
     DataType.TaskRun,
     filter,
@@ -264,32 +279,43 @@ const getFilteredTaskRuns = (
   );
 
 export const getPipelineRuns = (
+  workspace: string,
   namespace: string,
   options?: TektonResultsOptions,
   nextPageToken?: string,
   // supply a cacheKey only if the PipelineRun is complete and response will never change in the future
   cacheKey?: string,
-) => getFilteredPipelineRuns(namespace, '', options, nextPageToken, cacheKey);
+) => getFilteredPipelineRuns(workspace, namespace, '', options, nextPageToken, cacheKey);
 
 export const getTaskRuns = (
+  workspace: string,
   namespace: string,
   options?: TektonResultsOptions,
   nextPageToken?: string,
   // supply a cacheKey only if the TaskRun is complete and response will never change in the future
   cacheKey?: string,
-) => getFilteredTaskRuns(namespace, '', options, nextPageToken, cacheKey);
+) => getFilteredTaskRuns(workspace, namespace, '', options, nextPageToken, cacheKey);
 
-const getLog = (taskRunPath: string) =>
-  commonFetchJSON<Log>(`${URL_PREFIX}/${taskRunPath.replace('/records/', '/logs/')}`);
+const getLog = (workspace: string, taskRunPath: string) =>
+  commonFetchJSON<Log>(
+    `${getTRUrlPrefix(workspace)}/${taskRunPath.replace('/records/', '/logs/')}`,
+  );
 
-export const getTaskRunLog = (namespace: string, taskRunName: string): Promise<string> =>
+export const getTaskRunLog = (
+  workspace: string,
+  namespace: string,
+  taskRunName: string,
+): Promise<string> =>
   getFilteredRecord<any>(
+    workspace,
     namespace,
     DataType.Log,
     AND(EQ(`data.spec.resource.kind`, 'TaskRun'), EQ(`data.spec.resource.name`, taskRunName)),
     { limit: 1 },
   ).then((x) =>
     x?.[1]?.records.length > 0
-      ? getLog(x?.[1]?.records[0].name).then((response) => decodeValue(response.result.data))
+      ? getLog(workspace, x?.[1]?.records[0].name).then((response) =>
+          decodeValue(response.result.data),
+        )
       : throw404(),
   );

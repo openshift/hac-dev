@@ -51,14 +51,21 @@ describe('PipelineRunLogs', () => {
   });
 
   it('should render task list and log window', () => {
-    render(<PipelineRunLogs obj={pipelineRun} taskRuns={testTaskRuns} />);
+    render(<PipelineRunLogs workspace="test-ws" obj={pipelineRun} taskRuns={testTaskRuns} />);
 
     screen.getByTestId('logs-tasklist');
     screen.getByTestId('logs-task-container');
   });
 
   it('should render select and render the first task log', () => {
-    render(<PipelineRunLogs obj={pipelineRun} taskRuns={testTaskRuns} activeTask="first" />);
+    render(
+      <PipelineRunLogs
+        workspace="test-ws"
+        obj={pipelineRun}
+        taskRuns={testTaskRuns}
+        activeTask="first"
+      />,
+    );
 
     screen.getByTestId('logs-tasklist');
     within(screen.getByTestId('logs-taskName')).getByText('first');
@@ -69,6 +76,7 @@ describe('PipelineRunLogs', () => {
 
     render(
       <PipelineRunLogs
+        workspace="test-ws"
         obj={runningPipelineRun}
         taskRuns={[{ ...testTaskRuns[0], status: { ...testTaskRuns[0].status, podName: '' } }]}
       />,
@@ -84,7 +92,7 @@ describe('PipelineRunLogs', () => {
     const plrWithNoStatus = testPipelineRuns[DataState.RUNNING];
     plrWithNoStatus.status = undefined;
 
-    render(<PipelineRunLogs obj={plrWithNoStatus} taskRuns={[]} />);
+    render(<PipelineRunLogs workspace="test-ws" obj={plrWithNoStatus} taskRuns={[]} />);
 
     screen.getByTestId('logs-tasklist');
     screen.getByTestId('task-logs-error');
@@ -95,7 +103,7 @@ describe('PipelineRunLogs', () => {
   it('should show no taskruns found when taskruns are pruned ', () => {
     const succeededPLR = testPipelineRuns[DataState.SUCCEEDED];
 
-    render(<PipelineRunLogs obj={succeededPLR} taskRuns={[]} />);
+    render(<PipelineRunLogs workspace="test-ws" obj={succeededPLR} taskRuns={[]} />);
 
     screen.getByTestId('logs-tasklist');
     screen.getByTestId('task-logs-error');
@@ -106,7 +114,7 @@ describe('PipelineRunLogs', () => {
   it('should show error message if the pipelinerun is failed', () => {
     const failedPLR = testPipelineRuns[DataState.FAILED];
 
-    render(<PipelineRunLogs obj={failedPLR} taskRuns={[]} />);
+    render(<PipelineRunLogs workspace="test-ws" obj={failedPLR} taskRuns={[]} />);
 
     screen.getByTestId('logs-tasklist');
     screen.getByTestId('task-logs-error');
@@ -122,7 +130,7 @@ describe('PipelineRunLogs', () => {
     ]);
     useTRTaskRunLogMock.mockReturnValue(['Tekton log results', true, null]);
 
-    render(<PipelineRunLogs obj={pipelineRun} taskRuns={testTaskRuns} />);
+    render(<PipelineRunLogs workspace="test-ws" obj={pipelineRun} taskRuns={testTaskRuns} />);
 
     screen.getByTestId('tr-logs-content');
     screen.getByText('Tekton log results');
@@ -140,14 +148,14 @@ describe('PipelineRunLogs', () => {
       new HttpError('logs not found', 404, null, { statusText: 'some status message' }),
     ]);
 
-    render(<PipelineRunLogs obj={pipelineRun} taskRuns={testTaskRuns} />);
+    render(<PipelineRunLogs workspace="test-ws" obj={pipelineRun} taskRuns={testTaskRuns} />);
 
     screen.getByTestId('tr-logs-error-message');
     screen.getByText('Logs are no longer accessible for first task');
   });
 
   it('should render the task names in the same order when a task is clicked', () => {
-    render(<PipelineRunLogs obj={pipelineRun} taskRuns={testTaskRuns} />);
+    render(<PipelineRunLogs workspace="test-ws" obj={pipelineRun} taskRuns={testTaskRuns} />);
 
     const expectTasktoBeOrdered = () => {
       const logsContainer = within(screen.getByTestId('logs-tasklist'));
