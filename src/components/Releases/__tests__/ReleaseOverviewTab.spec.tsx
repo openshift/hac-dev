@@ -12,9 +12,17 @@ jest.mock('../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  useK8sWatchResource: jest.fn(() => [{ spec: { application: 'test-app' } }, true]),
+}));
+
+jest.mock('../../../hooks/useWorkspaceResource', () => ({
+  useWorkspaceResource: jest.fn(() => ['test-pipelinerun', 'target-ws']),
+}));
+
 describe('ReleaseOverviewTab', () => {
   it('should render correct details', () => {
-    render(<ReleaseOverviewTab applicationName="test-app" release={mockRelease} />);
+    render(<ReleaseOverviewTab release={mockRelease} />);
     expect(screen.getByText('Duration')).toBeVisible();
     expect(screen.getByText('10 seconds')).toBeVisible();
 
@@ -39,7 +47,7 @@ describe('ReleaseOverviewTab', () => {
     expect(screen.getByText('Pipeline Run')).toBeVisible();
     expect(screen.getByText('test-strategy')).toBeVisible();
     expect(screen.getByRole('link', { name: 'test-pipelinerun' }).getAttribute('href')).toBe(
-      '/application-pipeline/workspaces/test-ws/applications/test-app/pipelineruns/test-pipelinerun',
+      '/application-pipeline/workspaces/target-ws/applications/test-app/pipelineruns/test-pipelinerun',
     );
   });
 });
