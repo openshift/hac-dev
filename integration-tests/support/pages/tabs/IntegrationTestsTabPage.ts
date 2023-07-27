@@ -85,8 +85,8 @@ export class IntegrationTestsTabPage {
   verifyRowInIntegrationTestsTable(rowDetails: integrationTableRow) {
     UIhelper.verifyRowInTable('Integration tests', rowDetails.name, [
       new RegExp(rowDetails.githubURL),
-      new RegExp(`^${rowDetails.optionalForRelease}$`),
-      new RegExp(`^${rowDetails.revision}$`),
+      new RegExp(`^\\s*${rowDetails.optionalForRelease}\\s*$`),
+      new RegExp(`^\\s*${rowDetails.revision}\\s*$`),
     ]);
   }
 

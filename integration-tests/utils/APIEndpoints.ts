@@ -38,4 +38,6 @@ export const githubAPIEndpoints = {
     `https://api.github.com/repos/${owner}/${repoName}/pulls/${pullNumber}/merge`,
   contents: (owner: string, repoName: string, filePath: string) =>
     `https://api.github.com/repos/${owner}/${repoName}/contents/${filePath}`,
+  commits: (owner: string, repoName: string) =>
+    `https://api.github.com/repos/${owner}/${repoName}/commits`,
 };
