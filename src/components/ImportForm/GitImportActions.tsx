@@ -16,12 +16,14 @@ import './GitImportActions.scss';
 type GitImportActionsProps = {
   reviewMode: boolean;
   onBack: () => void;
+  onCancel: () => void;
   sticky?: boolean;
 };
 
 const GitImportActions: React.FunctionComponent<GitImportActionsProps> = ({
   reviewMode,
   onBack,
+  onCancel,
   sticky,
 }) => {
   const {
@@ -31,7 +33,6 @@ const GitImportActions: React.FunctionComponent<GitImportActionsProps> = ({
     isSubmitting,
     isValidating,
     setErrors,
-    handleReset,
     handleSubmit,
   } = useFormikContext<ImportFormValues>();
 
@@ -67,7 +68,7 @@ const GitImportActions: React.FunctionComponent<GitImportActionsProps> = ({
                 </Button>
               </ActionListItem>
               <ActionListItem>
-                <Button variant="link" type="reset" onClick={handleReset}>
+                <Button variant="link" type="reset" onClick={onCancel}>
                   Cancel
                 </Button>
               </ActionListItem>

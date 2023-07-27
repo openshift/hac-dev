@@ -205,6 +205,7 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
           <GitImportActions
             reviewMode={reviewMode}
             onBack={formikProps.dirty ? handleBack(true) : handleBack(false)}
+            onCancel={formikProps.dirty ? handleReset(true) : handleReset(false)}
             sticky={reviewMode}
           />
         </>
