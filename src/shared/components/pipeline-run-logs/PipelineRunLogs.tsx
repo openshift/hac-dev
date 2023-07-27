@@ -18,6 +18,7 @@ interface PipelineRunLogsProps {
   obj: PipelineRunKind;
   taskRuns: TaskRunKind[];
   activeTask?: string;
+  workspace: string;
 }
 interface PipelineRunLogsState {
   activeItem: string;
@@ -90,7 +91,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
   };
 
   render() {
-    const { className, obj, taskRuns } = this.props;
+    const { className, obj, taskRuns, workspace } = this.props;
     const { activeItem } = this.state;
 
     const taskRunNames = this.getSortedTaskRun(taskRuns, [
@@ -107,6 +108,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
         ? getDownloadAllLogsCallback(
             taskRunNames,
             taskRuns,
+            workspace,
             obj.metadata?.namespace,
             obj.metadata?.name,
           )

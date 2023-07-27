@@ -88,7 +88,7 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
       </div>
       <div className="build-log-viewer__body">
         {pipelineRun && taskRuns && tloaded ? (
-          <PipelineRunLogs obj={pipelineRun} taskRuns={taskRuns} />
+          <PipelineRunLogs obj={pipelineRun} taskRuns={taskRuns} workspace={workspace} />
         ) : (
           <LoadingBox />
         )}

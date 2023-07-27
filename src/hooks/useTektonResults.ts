@@ -8,11 +8,13 @@ import {
   getTaskRuns,
   getTaskRunLog,
 } from '../utils/tekton-results';
+import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
 export type GetNextPage = () => void | undefined;
 
 const useTRRuns = <Kind extends K8sResourceCommon>(
   getRuns: (
+    workspace: string,
     namespace: string,
     options?: TektonResultsOptions,
     nextPageToken?: string,
@@ -23,6 +25,7 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
   cacheKey?: string,
 ): [Kind[], boolean, unknown, GetNextPage] => {
   const [nextPageToken, setNextPageToken] = React.useState<string>(null);
+  const { workspace } = useWorkspaceInfo();
 
   const [result, setResult] = React.useState<[Kind[], boolean, unknown, GetNextPage]>([
     [],
@@ -41,7 +44,13 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
     if (namespace) {
       (async () => {
         try {
-          const tkPipelineRuns = await getRuns(namespace, options, nextPageToken, cacheKey);
+          const tkPipelineRuns = await getRuns(
+            workspace,
+            namespace,
+            options,
+            nextPageToken,
+            cacheKey,
+          );
           if (!disposed) {
             const token = tkPipelineRuns[1].nextPageToken;
             setResult((cur) => [
@@ -79,7 +88,7 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
         disposed = true;
       };
     }
-  }, [namespace, options, nextPageToken, cacheKey, getRuns]);
+  }, [workspace, namespace, options, nextPageToken, cacheKey, getRuns]);
   return result;
 };
 
@@ -101,13 +110,14 @@ export const useTRTaskRunLog = (
   namespace: string,
   taskRunName: string,
 ): [string, boolean, unknown] => {
+  const { workspace } = useWorkspaceInfo();
   const [result, setResult] = React.useState<[string, boolean, unknown]>([null, false, undefined]);
   React.useEffect(() => {
     let disposed = false;
     if (namespace && taskRunName) {
       (async () => {
         try {
-          const log = await getTaskRunLog(namespace, taskRunName);
+          const log = await getTaskRunLog(workspace, namespace, taskRunName);
           if (!disposed) {
             setResult([log, true, undefined]);
           }
@@ -121,6 +131,6 @@ export const useTRTaskRunLog = (
     return () => {
       disposed = true;
     };
-  }, [namespace, taskRunName]);
+  }, [workspace, namespace, taskRunName]);
   return result;
 };

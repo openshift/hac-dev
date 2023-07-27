@@ -15,6 +15,10 @@ import { useTRPipelineRuns, useTRTaskRuns } from '../useTektonResults';
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
 jest.mock('../useTektonResults');
 
+jest.mock('../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
+}));
+
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const useTRPipelineRunsMock = useTRPipelineRuns as jest.Mock;
 const useTRTaskRunsMock = useTRTaskRuns as jest.Mock;

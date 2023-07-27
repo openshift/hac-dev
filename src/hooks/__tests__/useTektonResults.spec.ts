@@ -9,6 +9,10 @@ import {
 } from '../../utils/tekton-results';
 import { useTRPipelineRuns, useTRTaskRunLog, useTRTaskRuns } from '../useTektonResults';
 
+jest.mock('../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
+}));
+
 jest.mock('../../utils/tekton-results');
 
 const mockResponse = [
@@ -53,7 +57,7 @@ describe('useTektonResults', () => {
       it(`should return ${name} runs`, async () => {
         getRunsMock.mockReturnValue(mockResponseNext);
         const { result, waitFor } = renderHook(() => useTestHook('test-ns'));
-        expect(getRunsMock).toHaveBeenCalledWith('test-ns', undefined, null, undefined);
+        expect(getRunsMock).toHaveBeenCalledWith('test-ws', 'test-ns', undefined, null, undefined);
         expect(result.current).toEqual([[], false, undefined, undefined]);
         await waitFor(() => result.current[1]);
         expect(result.current).toEqual([mockResponseNext[0], true, undefined, undefined]);
@@ -68,7 +72,13 @@ describe('useTektonResults', () => {
         const { result, waitFor } = renderHook(() =>
           useTestHook('test-ns', filter, 'test-cache-key'),
         );
-        expect(getRunsMock).toHaveBeenCalledWith('test-ns', filter, null, 'test-cache-key');
+        expect(getRunsMock).toHaveBeenCalledWith(
+          'test-ws',
+          'test-ns',
+          filter,
+          null,
+          'test-cache-key',
+        );
         expect(result.current).toEqual([[], false, undefined, undefined]);
         await waitFor(() => result.current[1]);
         expect(result.current).toEqual([mockResponseNext[0], true, undefined, undefined]);
@@ -80,7 +90,13 @@ describe('useTektonResults', () => {
         const { result, waitFor } = renderHook(() =>
           useTestHook('test-ns', undefined, 'test-cache-key'),
         );
-        expect(getRunsMock).toHaveBeenCalledWith('test-ns', undefined, null, 'test-cache-key');
+        expect(getRunsMock).toHaveBeenCalledWith(
+          'test-ws',
+          'test-ns',
+          undefined,
+          null,
+          'test-cache-key',
+        );
         expect(result.current).toEqual([[], false, undefined, undefined]);
         await waitFor(() => result.current[1]);
         expect(result.current).toEqual([mockResponseNext[0], true, undefined, undefined]);
@@ -89,7 +105,7 @@ describe('useTektonResults', () => {
       it(`should return function to get next ${name} runs`, async () => {
         getRunsMock.mockReturnValueOnce(mockResponse).mockReturnValueOnce(mockResponseNext);
         const { result, waitFor } = renderHook(() => useTestHook('test-ns'));
-        expect(getRunsMock).toHaveBeenCalledWith('test-ns', undefined, null, undefined);
+        expect(getRunsMock).toHaveBeenCalledWith('test-ws', 'test-ns', undefined, null, undefined);
         expect(result.current).toEqual([[], false, undefined, undefined]);
         await waitFor(() => result.current[1]);
         expect(result.current).toEqual([mockResponse[0], true, undefined, expect.any(Function)]);
@@ -101,7 +117,13 @@ describe('useTektonResults', () => {
           expect(result.current[3]()).toBe(true);
         });
 
-        expect(getRunsMock).toHaveBeenCalledWith('test-ns', undefined, 'next-token', undefined);
+        expect(getRunsMock).toHaveBeenCalledWith(
+          'test-ws',
+          'test-ns',
+          undefined,
+          'next-token',
+          undefined,
+        );
 
         // subsequent calls should fail
         expect(result.current[3]()).toBe(false);
@@ -122,14 +144,14 @@ describe('useTektonResults', () => {
           throw error;
         });
         const { result } = renderHook(() => useTestHook('test-ns'));
-        expect(getRunsMock).toHaveBeenCalledWith('test-ns', undefined, null, undefined);
+        expect(getRunsMock).toHaveBeenCalledWith('test-ws', 'test-ns', undefined, null, undefined);
         expect(result.current).toEqual([[], false, error, undefined]);
       });
 
       it('should return error when exception thrown when getting next page', async () => {
         getRunsMock.mockReturnValueOnce(mockResponse);
         const { result, waitFor } = renderHook(() => useTestHook('test-ns'));
-        expect(getRunsMock).toHaveBeenCalledWith('test-ns', undefined, null, undefined);
+        expect(getRunsMock).toHaveBeenCalledWith('test-ws', 'test-ns', undefined, null, undefined);
         expect(result.current).toEqual([[], false, undefined, undefined]);
         await waitFor(() => result.current[1]);
         expect(result.current).toEqual([mockResponse[0], true, undefined, expect.any(Function)]);
@@ -145,7 +167,13 @@ describe('useTektonResults', () => {
           expect(result.current[3]()).toBe(true);
         });
 
-        expect(getRunsMock).toHaveBeenCalledWith('test-ns', undefined, 'next-token', undefined);
+        expect(getRunsMock).toHaveBeenCalledWith(
+          'test-ws',
+          'test-ns',
+          undefined,
+          'next-token',
+          undefined,
+        );
         expect(result.current).toEqual([mockResponse[0], true, error, undefined]);
       });
     });
@@ -166,7 +194,7 @@ describe('useTektonResults', () => {
     it('should return task run log', async () => {
       getTaskRunLogMock.mockReturnValue('sample log');
       const { result, waitFor } = renderHook(() => useTRTaskRunLog('test-ns', 'sample-task-run'));
-      expect(getTaskRunLogMock).toHaveBeenCalledWith('test-ns', 'sample-task-run');
+      expect(getTaskRunLogMock).toHaveBeenCalledWith('test-ws', 'test-ns', 'sample-task-run');
       expect(result.current).toEqual([null, false, undefined]);
       await waitFor(() => result.current[1]);
       expect(result.current).toEqual(['sample log', true, undefined]);
@@ -178,7 +206,7 @@ describe('useTektonResults', () => {
         throw error;
       });
       const { result } = renderHook(() => useTRTaskRunLog('test-ns', 'sample-task-run'));
-      expect(getTaskRunLogMock).toHaveBeenCalledWith('test-ns', 'sample-task-run');
+      expect(getTaskRunLogMock).toHaveBeenCalledWith('test-ws', 'test-ns', 'sample-task-run');
       expect(result.current).toEqual([null, false, error]);
     });
   });

@@ -74,6 +74,7 @@ type WatchURLStatus = {
 export const getDownloadAllLogsCallback = (
   sortedTaskRunNames: string[],
   taskRuns: TaskRunKind[],
+  workspace: string,
   namespace: string,
   pipelineRunName: string,
 ): (() => Promise<Error>) => {
@@ -147,7 +148,7 @@ export const getDownloadAllLogsCallback = (
                 ]);
         }
       } else {
-        allLogs += await getTaskRunLog(namespace, currTask).then(
+        allLogs += await getTaskRunLog(workspace, namespace, currTask).then(
           (log) => `${tasks[currTask].name.toUpperCase()}\n\n${log}\n\n`,
         );
       }
