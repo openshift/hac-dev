@@ -158,3 +158,20 @@ export type SnapshotEnvironmentBinding = K8sResourceCommon & {
     gitopsRepoConditions?: Condition[];
   };
 };
+
+export type LimitRange = K8sResourceCommon & {
+  spec: {
+    limits: Limit[];
+  };
+};
+
+export interface Limit {
+  default: Default;
+  defaultRequest: Default;
+  type: string;
+}
+
+export interface Default {
+  cpu: string;
+  memory: string;
+}

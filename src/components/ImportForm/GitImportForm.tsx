@@ -11,6 +11,7 @@ import {
   Divider,
 } from '@patternfly/react-core';
 import { Formik } from 'formik';
+import { useResourceLimits } from '../../hooks/useLimitRange';
 import applicationIcon from '../../imgs/Application.svg';
 import integrationIcon from '../../imgs/Integration-test.svg';
 import { ComponentKind } from '../../types';
@@ -40,6 +41,8 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
   const track = useTrackEvent();
   const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
+  const limit = useResourceLimits(namespace);
+  const maxlimit = useResourceLimits(namespace, true);
 
   const initialValues: ImportFormValues = {
     application: applicationName || '',
@@ -56,6 +59,10 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
     secret: '',
     importSecrets: [],
     newSecrets: [],
+    resourceLimits: {
+      min: limit,
+      max: maxlimit,
+    },
   };
 
   const showModal = useModalLauncher();
@@ -171,6 +178,7 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
       onSubmit={reviewMode ? handleSubmit : handleNext}
       initialValues={initialValues}
       validationSchema={reviewMode ? reviewValidationSchema : sourceValidationSchema}
+      enableReinitialize
     >
       {(formikProps) => (
         <>

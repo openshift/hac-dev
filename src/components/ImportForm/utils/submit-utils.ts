@@ -65,6 +65,7 @@ export const createResources = async (
     secret,
     namespace,
     importSecrets = [],
+    resourceLimits,
   } = formValues;
   const shouldCreateApplication = !inAppContext;
   let applicationName = application;
@@ -79,7 +80,11 @@ export const createResources = async (
       source.git.context,
       source.git.revision,
     );
-    detectedComponents = transformComponentValues(detectedSampleComponents);
+    detectedComponents = transformComponentValues(
+      detectedSampleComponents,
+      null,
+      resourceLimits?.min,
+    );
     componentAnnotations = { [SAMPLE_ANNOTATION]: 'true' };
   }
 

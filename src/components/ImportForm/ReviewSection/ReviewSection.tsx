@@ -54,9 +54,11 @@ const ReviewSection: React.FunctionComponent = () => {
         git: { url: sourceUrl, revision, context },
       },
       secret,
+      resourceLimits: { min: defaultResourceLimits } = {},
     },
     isSubmitting,
     setFieldValue,
+    setFieldTouched,
   } = useFormikContext<ImportFormValues>();
   const cachedComponents = React.useRef([]);
   const cachedComponentsLoaded = React.useRef(false);
@@ -114,24 +116,32 @@ const ReviewSection: React.FunctionComponent = () => {
     }
 
     if (components) {
-      const transformedComponents = transformComponentValues(components);
+      const transformedComponents = transformComponentValues(
+        components,
+        null,
+        defaultResourceLimits,
+      );
       setFieldValue('isDetected', true);
 
-      setFieldValue('detectedComponents', transformedComponents);
-      setFieldValue('components', transformedComponents);
+      setFieldValue('detectedComponents', transformedComponents, true);
+      setFieldValue('components', transformedComponents, true);
       cachedComponents.current = transformedComponents;
     }
 
     if ((detectionLoaded || detectionError) && !components) {
-      const transformedComponents = transformComponentValues({
-        myComponent: {
-          componentStub: {
-            componentName: 'my-component',
-            application: 'my-app',
-            source: { git: { url: sourceUrl, revision, context } },
+      const transformedComponents = transformComponentValues(
+        {
+          myComponent: {
+            componentStub: {
+              componentName: 'my-component',
+              application: 'my-app',
+              source: { git: { url: sourceUrl, revision, context } },
+            },
           },
         },
-      });
+        null,
+        defaultResourceLimits,
+      );
 
       setFieldValue('detectedComponents', undefined);
       setFieldValue('components', transformedComponents);
@@ -153,6 +163,8 @@ const ReviewSection: React.FunctionComponent = () => {
     sourceUrl,
     revision,
     context,
+    setFieldTouched,
+    defaultResourceLimits,
   ]);
 
   if (!cachedComponentsLoaded.current) {

@@ -1,5 +1,6 @@
 import * as yup from 'yup';
-import { MemoryUnits, CPUUnits } from './types';
+import { convertBaseValueToUnits, convertUnitValueToBaseValue } from './conversion-utils';
+import { ImportFormValues } from './types';
 
 export const gitUrlRegex =
   /^((((ssh|git|https?:?):\/\/:?)(([^\s@]+@|[^@]:?)[-\w.]+(:\d\d+:?)?(\/[-\w.~/?[\]!$&'()*+,;=:@%]*:?)?:?))|([^\s@]+@[-\w.]+:[-\w.~/?[\]!$&'()*+,;=:@%]*?:?))$/;
@@ -55,68 +56,113 @@ export const sampleValidationSchema = yup.object({
   }),
 });
 
-export const reviewValidationSchema = yup.object({
-  application: yup
-    .string()
-    .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
-    .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
-    .required('Required'),
-  components: yup.array().of(
-    yup.object({
-      componentStub: yup.object({
-        componentName: yup
-          .string()
-          .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
-          .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
-          .required('Required'),
-        targetPort: yup
-          .number()
-          .typeError('Must be an integer')
-          .min(1, 'Port must be between 1 and 65535.')
-          .max(65535, 'Port must be between 1 and 65535.')
-          .optional(),
-        resources: yup.object({
-          cpuUnit: yup.string(),
-          cpu: yup
+const resourceLimitValidationSchema = (
+  defaultBaseValue: number,
+  selectedBaseValue: number,
+  selectedUnit: string,
+  extraSpace?: boolean,
+) => {
+  const selectedUnitMaxValue = convertBaseValueToUnits(defaultBaseValue, selectedUnit).value;
+
+  return yup
+    .number()
+    .typeError('Must be an integer')
+    .min(1, 'Value must be greater than 0')
+    .test({
+      test() {
+        if (selectedBaseValue > defaultBaseValue) {
+          return false;
+        }
+        return true;
+      },
+      message: `Value must not be greater than ${selectedUnitMaxValue}${
+        extraSpace ? ' ' : ''
+      }${selectedUnit}`,
+    });
+};
+
+const cpuValidationSchema = (formValues: ImportFormValues) => {
+  const defaultMaxCpu = formValues.resourceLimits?.max?.cpu;
+  const defaultCpuUnit = formValues.resourceLimits?.max?.cpuUnit;
+
+  const currentCpu = formValues.components?.[0]?.componentStub?.resources?.cpu;
+  const currentCpuUnit = formValues.components?.[0]?.componentStub?.resources?.cpuUnit;
+
+  const defaultMaxBaseValue = convertUnitValueToBaseValue(defaultMaxCpu, defaultCpuUnit);
+  const currentBaseValue = convertUnitValueToBaseValue(`${currentCpu}`, currentCpuUnit);
+
+  return resourceLimitValidationSchema(
+    defaultMaxBaseValue.value,
+    currentBaseValue.value,
+    currentCpuUnit,
+    true,
+  );
+};
+
+const memoryValidationSchema = (formValues: ImportFormValues) => {
+  const defaultMaxMemory = formValues.resourceLimits?.max?.memory;
+  const defaultMemoryUnit = formValues.resourceLimits?.max?.memoryUnit;
+
+  const currentMemory = formValues.components?.[0]?.componentStub?.resources?.memory;
+  const currentMemoryUnit = formValues.components?.[0]?.componentStub?.resources?.memoryUnit;
+
+  const defaultMaxBaseValue = convertUnitValueToBaseValue(defaultMaxMemory, defaultMemoryUnit);
+  const currentBaseValue = convertUnitValueToBaseValue(`${currentMemory}`, currentMemoryUnit);
+
+  return resourceLimitValidationSchema(
+    defaultMaxBaseValue.value,
+    currentBaseValue.value,
+    currentMemoryUnit,
+  );
+};
+
+export const reviewSectionValidationSchema = (formValues: ImportFormValues) =>
+  yup.object({
+    application: yup
+      .string()
+      .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
+      .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
+      .required('Required'),
+    components: yup.array().of(
+      yup.object({
+        componentStub: yup.object({
+          componentName: yup
+            .string()
+            .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
+            .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
+            .required('Required'),
+          targetPort: yup
             .number()
             .typeError('Must be an integer')
-            .min(1, 'Value must be greater than 0')
-            .when('cpuUnit', {
-              is: (value) => value === CPUUnits.cores,
-              then: (schema) => schema.max(2, 'Value must not be greater than 2 cores'),
-              otherwise: (schema) => schema.max(10, 'Value must not be greater than 10 millicores'),
-            }),
-          memoryUnit: yup.string(),
-          memory: yup
+            .min(1, 'Port must be between 1 and 65535.')
+            .max(65535, 'Port must be between 1 and 65535.')
+            .optional(),
+          resources: yup.object({
+            cpuUnit: yup.string(),
+            cpu: cpuValidationSchema(formValues),
+            memoryUnit: yup.string(),
+            memory: memoryValidationSchema(formValues),
+          }),
+          replicas: yup
             .number()
             .typeError('Must be an integer')
-            .min(1, 'Value must be greater than 0')
-            .when('memoryUnit', {
-              is: (value) => value === MemoryUnits.Gi,
-              then: (schema) => schema.max(2, 'Value must not be greater than 2Gi'),
-              otherwise: (schema) => schema.max(256, 'Value must not be greater than 256Mi'),
+            .min(0, 'Value must be greater than 0'),
+          source: yup.object({
+            git: yup.object({
+              dockerfileUrl: yup
+                .string()
+                .matches(filePathOrURLRegex, 'Must be a valid relative file path or URL.'),
             }),
-        }),
-        replicas: yup
-          .number()
-          .typeError('Must be an integer')
-          .min(0, 'Value must be greater than 0'),
-        source: yup.object({
-          git: yup.object({
-            dockerfileUrl: yup
-              .string()
-              .matches(filePathOrURLRegex, 'Must be a valid relative file path or URL.'),
           }),
         }),
       }),
+    ),
+    runtime: yup.string().when('detectionFailed', {
+      is: true,
+      then: yup.string().required('Runtime not detected'),
     }),
-  ),
-  runtime: yup.string().when('detectionFailed', {
-    is: true,
-    then: yup.string().required('Runtime not detected'),
-  }),
-  isDetected: yup.boolean().isTrue().required('Required'),
-});
+    isDetected: yup.boolean().isTrue().required('Required'),
+  });
 
 export const SecretFromSchema = yup.object({
   secretName: yup
@@ -137,4 +183,8 @@ export const SecretFromSchema = yup.object({
       value: yup.string().required('Required'),
     }),
   ),
+});
+
+export const reviewValidationSchema = yup.mixed().test((values: ImportFormValues) => {
+  return reviewSectionValidationSchema(values).validate(values, { abortEarly: false }) as any;
 });

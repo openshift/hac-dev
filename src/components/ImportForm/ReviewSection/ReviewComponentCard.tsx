@@ -16,7 +16,7 @@ import {
   TitleSizes,
   ValidatedOptions,
 } from '@patternfly/react-core';
-import { useField } from 'formik';
+import { useField, useFormikContext } from 'formik';
 import {
   EnvironmentField,
   InputField,
@@ -28,7 +28,8 @@ import ExternalLink from '../../../shared/components/links/ExternalLink';
 import GitRepoLink from '../../GitLink/GitRepoLink';
 import HelpPopover from '../../HelpPopover';
 import SecretSection from '../SecretSection/SecretSection';
-import { CPUUnits, DetectedFormComponent, MemoryUnits } from '../utils/types';
+import { convertBaseValueToUnits, convertUnitValueToBaseValue } from '../utils/conversion-utils';
+import { CPUUnits, DetectedFormComponent, ImportFormValues, MemoryUnits } from '../utils/types';
 import { RuntimeSelector } from './RuntimeSelector';
 
 import './ReviewComponentCard.scss';
@@ -57,7 +58,9 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
   const [, { value: selectedRuntime }] = useField<string>(
     `components[${detectedComponentIndex}].selectedRuntime`,
   );
-  const [, { value: selectedUnitName }] = useField<string>(`${fieldPrefix}.resources.memoryUnit`);
+  const {
+    values: { resourceLimits, components },
+  } = useFormikContext<ImportFormValues>();
 
   return (
     <Card isFlat isCompact isSelected={expandedComponent} isExpanded={expandedComponent}>
@@ -169,6 +172,15 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 unitName={`${fieldPrefix}.resources.cpuUnit`}
                 label="CPU"
                 minValue={0}
+                maxValue={
+                  convertBaseValueToUnits(
+                    convertUnitValueToBaseValue(
+                      resourceLimits?.max?.cpu,
+                      resourceLimits?.max?.cpuUnit,
+                    ).value,
+                    components?.[detectedComponentIndex]?.componentStub?.resources?.cpuUnit,
+                  ).value
+                }
                 unitOptions={CPUUnits}
                 helpText="Amount of CPU the container is guaranteed"
               />
@@ -177,7 +189,15 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 unitName={`${fieldPrefix}.resources.memoryUnit`}
                 label="Memory"
                 minValue={0}
-                maxValue={selectedUnitName === MemoryUnits.Gi ? 2 : 256}
+                maxValue={
+                  convertBaseValueToUnits(
+                    convertUnitValueToBaseValue(
+                      resourceLimits?.max?.memory,
+                      resourceLimits?.max?.memoryUnit,
+                    ).value,
+                    components?.[detectedComponentIndex]?.componentStub?.resources?.memoryUnit,
+                  ).value
+                }
                 unitOptions={MemoryUnits}
                 helpText="Amount of memory the container is guaranteed"
               />

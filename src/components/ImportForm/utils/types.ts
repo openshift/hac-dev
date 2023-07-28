@@ -69,4 +69,8 @@ export type ImportFormValues = {
   importSecrets?: ImportSecret[];
   newSecrets?: string[];
   partnerTaskSecrets?: string[];
+  resourceLimits?: {
+    min: FormResources;
+    max: FormResources;
+  };
 };

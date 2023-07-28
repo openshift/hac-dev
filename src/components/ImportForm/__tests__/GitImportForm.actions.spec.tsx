@@ -1,7 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, configure, waitFor } from '@testing-library/react';
 import { Formik } from 'formik';
+import { mockLimitRange } from '../../../hooks/__data__/mock-data';
 import { createApplication } from '../../../utils/create-utils';
 import GitImportForm from '../GitImportForm';
 
@@ -35,9 +37,14 @@ jest.mock('../ReviewSection/ReviewSection', () => () => {
   return <div data-test="review-section" />;
 });
 
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  useK8sWatchResource: jest.fn(),
+}));
+
 const useNavigateMock = useNavigate as jest.Mock;
 const FormikMock = Formik as jest.Mock;
 const createApplicationMock = createApplication as jest.Mock;
+const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
@@ -49,6 +56,7 @@ describe('GitImportForm actions', () => {
     setReviewModeMock = jest.fn();
     navigateMock = jest.fn();
     useNavigateMock.mockImplementation(() => navigateMock);
+    watchResourceMock.mockReturnValue([[mockLimitRange], true]);
   });
 
   afterEach(() => {

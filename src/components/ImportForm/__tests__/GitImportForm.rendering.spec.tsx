@@ -1,5 +1,7 @@
 import React from 'react';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen, configure } from '@testing-library/react';
+import { mockLimitRange } from '../../../hooks/__data__/mock-data';
 import GitImportForm from '../GitImportForm';
 
 jest.mock('../../../utils/analytics');
@@ -20,13 +22,20 @@ jest.mock('../ReviewSection/ReviewSection', () => () => {
   return <div data-test="review-section" />;
 });
 
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  useK8sWatchResource: jest.fn(),
+}));
+
 configure({ testIdAttribute: 'data-test' });
+
+const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('GitImportForm rendering', () => {
   let setReviewModeMock;
 
   beforeEach(() => {
     setReviewModeMock = jest.fn();
+    watchResourceMock.mockReturnValue([[mockLimitRange], true]);
   });
 
   afterEach(() => {
