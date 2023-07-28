@@ -208,4 +208,18 @@ describe('useActiveWorkspace', () => {
       );
     });
   });
+
+  it('should update workspace if url segment changes', async () => {
+    k8sListResourceItemsMock.mockReturnValue(mockWorkspaces);
+    window.location.pathname = '/application-pipeline/workspaces/workspace-one/applications';
+    const { result, waitForNextUpdate, rerender } = renderHook(() => useActiveWorkspace());
+    await waitForNextUpdate();
+
+    expect(result.current.workspace).toBe('workspace-one');
+
+    window.location.pathname = '/application-pipeline/workspaces/workspace-two/applications';
+    rerender();
+
+    expect(result.current.workspace).toBe('workspace-two');
+  });
 });

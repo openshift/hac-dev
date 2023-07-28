@@ -5,7 +5,7 @@ import { ContextMenuItem, ContextSwitcher } from '../ContextSwitcher';
 
 export const WorkspaceSwitcher: React.FC<{ selectedWorkspace?: string }> = () => {
   const navigate = useNavigate();
-  const { workspace, setWorkspace, workspaces } = React.useContext(WorkspaceContext);
+  const { workspace, workspaces } = React.useContext(WorkspaceContext);
 
   const menuItems = React.useMemo(
     () => workspaces?.map((app) => ({ key: app.metadata.name, name: app.metadata.name })) || [],
@@ -15,7 +15,6 @@ export const WorkspaceSwitcher: React.FC<{ selectedWorkspace?: string }> = () =>
 
   const onSelect = (item: ContextMenuItem) => {
     navigate(`/application-pipeline/workspaces/${item.name}/applications`);
-    setWorkspace(item.name);
   };
 
   return workspaces.length > 0 ? (

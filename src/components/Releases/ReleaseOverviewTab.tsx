@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -10,21 +11,28 @@ import {
   Title,
 } from '@patternfly/react-core';
 import { useReleaseStatus } from '../../hooks/useReleaseStatus';
+import { useWorkspaceResource } from '../../hooks/useWorkspaceResource';
+import { ReleasePlanGroupVersionKind } from '../../models';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { ReleaseKind } from '../../types';
+import { ReleasePlanKind } from '../../types/coreBuildService';
 import { calculateDuration } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import MetadataList from '../PipelineRunDetailsView/MetadataList';
 import { StatusIconWithText } from '../topology/StatusIcon';
 
 type ReleaseOverviewTabProps = {
-  applicationName: string;
   release: ReleaseKind;
 };
 
-const ReleaseOverviewTab: React.FC<ReleaseOverviewTabProps> = ({ applicationName, release }) => {
-  const { workspace } = useWorkspaceInfo();
-  const pipelineRun = release.status?.processing?.pipelineRun?.split('/')[1];
+const ReleaseOverviewTab: React.FC<ReleaseOverviewTabProps> = ({ release }) => {
+  const { namespace } = useWorkspaceInfo();
+  const [pipelineRun, prWorkspace] = useWorkspaceResource(release.status?.processing?.pipelineRun);
+  const [releasePlan, releasePlanLoaded] = useK8sWatchResource<ReleasePlanKind>({
+    name: release.spec.releasePlan,
+    groupVersionKind: ReleasePlanGroupVersionKind,
+    namespace,
+  });
   const duration = calculateDuration(
     typeof release.status?.startTime === 'string' ? release.status?.startTime : '',
     typeof release.status?.completionTime === 'string' ? release.status?.completionTime : '',
@@ -114,9 +122,9 @@ const ReleaseOverviewTab: React.FC<ReleaseOverviewTabProps> = ({ applicationName
               <DescriptionListGroup>
                 <DescriptionListTerm>Pipeline Run</DescriptionListTerm>
                 <DescriptionListDescription>
-                  {pipelineRun ? (
+                  {pipelineRun && prWorkspace && releasePlanLoaded ? (
                     <Link
-                      to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/pipelineruns/${pipelineRun}`}
+                      to={`/application-pipeline/workspaces/${prWorkspace}/applications/${releasePlan.spec.application}/pipelineruns/${pipelineRun}`}
                     >
                       {pipelineRun}
                     </Link>

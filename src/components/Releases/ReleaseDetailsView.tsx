@@ -73,7 +73,7 @@ const ReleaseDetailsView: React.FC<ReleaseDetailsViewProps> = ({
           key: 'overview',
           label: 'Overview',
           isFilled: true,
-          component: <ReleaseOverviewTab applicationName={applicationName} release={release} />,
+          component: <ReleaseOverviewTab release={release} />,
         },
       ]}
     />
