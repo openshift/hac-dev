@@ -46,6 +46,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       detectionFailed,
       initialDetectionLoaded,
       components,
+      resourceLimits: { min: defaultResourceLimits } = {},
     },
     setFieldValue,
     setFieldError,
@@ -196,6 +197,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       const componentValues = transformComponentValues(
         detectedComponents,
         originalComponentRef.current,
+        defaultResourceLimits,
       )[0];
       const component = patchSourceUrl(componentValues.componentStub, sourceUrl);
       setFieldValue(`${fieldPrefix}.componentStub`, component);
@@ -210,6 +212,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     setFieldError,
     setFieldValue,
     sourceUrl,
+    defaultResourceLimits,
   ]);
 
   // touch the dropdown field on load so validation error message can be shown

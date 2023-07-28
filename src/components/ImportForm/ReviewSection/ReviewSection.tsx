@@ -54,6 +54,7 @@ const ReviewSection: React.FunctionComponent = () => {
         git: { url: sourceUrl, revision, context },
       },
       secret,
+      resourceLimits: { min: defaultResourceLimits } = {},
     },
     isSubmitting,
     setFieldValue,
@@ -76,18 +77,6 @@ const ReviewSection: React.FunctionComponent = () => {
   );
 
   const [validAppName] = useValidApplicationName(sourceUrl);
-
-  const getObjectPaths = React.useCallback((obj, prefix): string[] => {
-    prefix = prefix ? `${prefix}.` : '';
-    return Object.keys(obj).reduce((path: string[], key: string) => {
-      if (typeof obj[key] === 'object') {
-        path = [...path, ...getObjectPaths(obj[key], prefix + key)];
-      } else {
-        path.push(prefix + key);
-      }
-      return path;
-    }, []);
-  }, []);
 
   React.useEffect(() => {
     if (sourceUrl && gitUrlRegex.test(sourceUrl) && !inAppContext && !isSubmitting) {
@@ -127,25 +116,32 @@ const ReviewSection: React.FunctionComponent = () => {
     }
 
     if (components) {
-      const transformedComponents = transformComponentValues(components);
+      const transformedComponents = transformComponentValues(
+        components,
+        null,
+        defaultResourceLimits,
+      );
       setFieldValue('isDetected', true);
 
       setFieldValue('detectedComponents', transformedComponents, true);
       setFieldValue('components', transformedComponents, true);
-      getObjectPaths(transformedComponents, 'components').map((path) => setFieldTouched(path));
       cachedComponents.current = transformedComponents;
     }
 
     if ((detectionLoaded || detectionError) && !components) {
-      const transformedComponents = transformComponentValues({
-        myComponent: {
-          componentStub: {
-            componentName: 'my-component',
-            application: 'my-app',
-            source: { git: { url: sourceUrl, revision, context } },
+      const transformedComponents = transformComponentValues(
+        {
+          myComponent: {
+            componentStub: {
+              componentName: 'my-component',
+              application: 'my-app',
+              source: { git: { url: sourceUrl, revision, context } },
+            },
           },
         },
-      });
+        null,
+        defaultResourceLimits,
+      );
 
       setFieldValue('detectedComponents', undefined);
       setFieldValue('components', transformedComponents);
@@ -168,7 +164,7 @@ const ReviewSection: React.FunctionComponent = () => {
     revision,
     context,
     setFieldTouched,
-    getObjectPaths,
+    defaultResourceLimits,
   ]);
 
   if (!cachedComponentsLoaded.current) {

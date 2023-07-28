@@ -1,5 +1,5 @@
 import { EnvironmentKind } from '../../types';
-import { SnapshotEnvironmentBinding } from '../../types/coreBuildService';
+import { LimitRange, SnapshotEnvironmentBinding } from '../../types/coreBuildService';
 import { RouteKind } from '../../types/routes';
 
 export const mockEnvironments: EnvironmentKind[] = [
@@ -451,3 +451,24 @@ export const mockGitOpsDeployment = [
     },
   },
 ];
+
+export const mockLimitRange: LimitRange = {
+  apiVersion: 'v1',
+  kind: 'LimitRange',
+  metadata: { name: 'resource-limits' },
+  spec: {
+    limits: [
+      {
+        default: {
+          cpu: '2',
+          memory: '2Gi',
+        },
+        defaultRequest: {
+          cpu: '10m',
+          memory: '256Mi',
+        },
+        type: 'Container',
+      },
+    ],
+  },
+};

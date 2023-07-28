@@ -132,4 +132,35 @@ describe('Transform Utils', () => {
     );
     expect(transformedComponentValues[0].componentStub.replicas).toBe(0);
   });
+
+  it('should default to cluster defaults if the detected component resources are empty', () => {
+    const detectedFormComponent: DetectedComponents = {
+      ...mockDetectedComponent,
+      nodejs: {
+        ...mockDetectedComponent.nodejs,
+        componentStub: {
+          ...mockDetectedComponent.nodejs.componentStub,
+          resources: {},
+        },
+      },
+    };
+
+    const clusterDefaults = {
+      cpu: '2000',
+      cpuUnit: CPUUnits.millicores,
+      memory: '10',
+      memoryUnit: MemoryUnits.Gi,
+    };
+
+    const transformedComponentValues = transformComponentValues(
+      detectedFormComponent,
+      mockComponent,
+      clusterDefaults,
+    );
+    expect(transformedComponentValues[0].componentStub.resources.cpu).toBe('2000');
+    expect(transformedComponentValues[0].componentStub.resources.cpuUnit).toBe(CPUUnits.millicores);
+
+    expect(transformedComponentValues[0].componentStub.resources.memory).toBe('10');
+    expect(transformedComponentValues[0].componentStub.resources.memoryUnit).toBe(MemoryUnits.Gi);
+  });
 });

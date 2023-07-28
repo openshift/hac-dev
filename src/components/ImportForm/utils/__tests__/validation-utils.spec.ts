@@ -5,6 +5,21 @@ import {
   reviewValidationSchema,
 } from '../validation-utils';
 
+const resourceLimits = {
+  min: {
+    cpu: '10',
+    cpuUnit: 'millicores',
+    memory: '256',
+    memoryUnit: 'Mi',
+  },
+  max: {
+    cpu: '2',
+    cpuUnit: 'cores',
+    memory: '2',
+    memoryUnit: 'Gi',
+  },
+};
+
 describe('Review form validation schema', () => {
   it('should fail when component name is missing', async () => {
     await expect(
@@ -18,6 +33,7 @@ describe('Review form validation schema', () => {
           },
         ],
         isDetected: true,
+        resourceLimits,
       }),
     ).rejects.toThrow('Required');
   });
@@ -34,6 +50,7 @@ describe('Review form validation schema', () => {
         },
       ],
       isDetected: true,
+      resourceLimits,
     };
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow(RESOURCE_NAME_REGEX_MSG);
     values.components[0].componentStub.componentName = 'Test-';
@@ -66,6 +83,7 @@ describe('Review form validation schema', () => {
         },
       ],
       isDetected: true,
+      resourceLimits,
     };
     await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
   });
@@ -82,6 +100,7 @@ describe('Review form validation schema', () => {
         },
       ],
       isDetected: true,
+      resourceLimits,
     };
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow('Must be an integer');
   });
@@ -98,6 +117,7 @@ describe('Review form validation schema', () => {
         },
       ],
       isDetected: true,
+      resourceLimits,
     };
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
       'Port must be between 1 and 65535.',
@@ -116,6 +136,7 @@ describe('Review form validation schema', () => {
         },
       ],
       isDetected: true,
+      resourceLimits,
     };
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
       'Port must be between 1 and 65535.',
@@ -137,6 +158,7 @@ describe('Review form validation schema', () => {
         },
       ],
       isDetected: true,
+      resourceLimits,
     };
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
       'Value must be greater than 0',
@@ -162,6 +184,7 @@ describe('Review form validation schema', () => {
         },
       ],
       isDetected: true,
+      resourceLimits,
     };
     await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
   });
@@ -185,6 +208,7 @@ describe('Review form validation schema', () => {
         },
       ],
       isDetected: true,
+      resourceLimits,
     };
     await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
 
@@ -220,6 +244,7 @@ describe('Review form validation schema', () => {
         },
       ],
       isDetected: true,
+      resourceLimits,
     };
     await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
 
@@ -278,6 +303,7 @@ describe('Review form validation schema', () => {
         },
       ],
       isDetected: true,
+      resourceLimits,
     };
     await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
 
@@ -299,7 +325,7 @@ describe('Review form validation schema', () => {
     values.components[0].componentStub.source.git.dockerfileUrl = 'www.test.com/Dockerfile';
     await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
   });
-  it('should pass if memory is between 0 and 256Mi/2Gi', async () => {
+  it('should show errors based on selected unit', async () => {
     const values = {
       application: 'my-app',
       components: [
@@ -321,29 +347,86 @@ describe('Review form validation schema', () => {
         },
       ],
       isDetected: true,
+      resourceLimits,
     };
+
     await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
-    values.components[0].componentStub.resources.memory = 300;
-    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
-      'Value must not be greater than 256Mi',
-    );
+    values.components[0].componentStub.resources.memory = 5;
     values.components[0].componentStub.resources.memoryUnit = 'Gi';
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
       'Value must not be greater than 2Gi',
     );
-    values.components[0].componentStub.resources.memory = 1;
-    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+
+    values.components[0].componentStub.resources.memory = 3072; //3gb
+    values.components[0].componentStub.resources.memoryUnit = 'Mi';
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Value must not be greater than 2048Mi',
+    );
+
+    values.components[0].componentStub.resources.memory = 2;
     values.components[0].componentStub.resources.cpu = 10;
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
       'Value must not be greater than 2 cores',
     );
-    values.components[0].componentStub.resources.cpu = 100;
+
+    values.components[0].componentStub.resources.cpu = 20000;
     values.components[0].componentStub.resources.cpuUnit = 'millicores';
     await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
-      'Value must not be greater than 10 millicores',
+      'Value must not be greater than 2000 millicores',
     );
-    values.components[0].componentStub.resources.cpu = 10;
+  });
+  it('should use cluster default resource limit as max value', async () => {
+    const values = {
+      application: 'my-app',
+      detectedComponents: [
+        {
+          componentStub: {
+            componentName: 'test-comp',
+            resources: {},
+            source: {
+              git: {
+                dockerfileUrl: 'https://www.test.com/Dockerfile',
+              },
+            },
+          },
+        },
+      ],
+      components: [
+        {
+          componentStub: {
+            componentName: 'test-comp',
+            resources: {
+              cpu: 1,
+              cpuUnit: 'cores',
+              memory: 255,
+              memoryUnit: 'Mi',
+            },
+            source: {
+              git: {
+                dockerfileUrl: 'https://www.test.com/Dockerfile',
+              },
+            },
+          },
+        },
+      ],
+      isDetected: true,
+      resourceLimits,
+    };
+
     await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+
+    // should throw errors if cpu and memory limit is exceeded from cluster default resource limit
+    await expect(reviewValidationSchema.validate(values)).resolves.toBe(values);
+    values.components[0].componentStub.resources.memory = 6000;
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Value must not be greater than 2048Mi',
+    );
+
+    values.components[0].componentStub.resources.memory = 256;
+    values.components[0].componentStub.resources.cpu = 10;
+    await expect(reviewValidationSchema.validate(values)).rejects.toThrow(
+      'Value must not be greater than 2 cores',
+    );
   });
 });
 
