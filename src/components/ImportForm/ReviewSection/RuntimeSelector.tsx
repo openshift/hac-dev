@@ -190,9 +190,11 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       setFieldError(`${fieldPrefix}.runtime`, detectionError);
     } else if (detectionLoaded && detectedComponents) {
       setDetecting(false);
+      setFieldValue('isDetected', true);
+      setFieldValue('detectionFailed', false);
       // To avoid formik validating on old values due to a formik bug - https://github.com/jaredpalmer/formik/issues/2083
-      setTimeout(() => setFieldValue('isDetected', true));
-      setTimeout(() => setFieldValue('detectionFailed', false));
+      setTimeout(() => setFieldTouched('isDetected', true));
+      setTimeout(() => setFieldTouched('detectionFailed', true));
       const componentValues = transformComponentValues(
         detectedComponents,
         originalComponentRef.current,
@@ -208,6 +210,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     detectionLoaded,
     fieldPrefix,
     setFieldError,
+    setFieldTouched,
     setFieldValue,
     sourceUrl,
   ]);
