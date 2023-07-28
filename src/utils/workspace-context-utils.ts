@@ -35,7 +35,8 @@ export const useWorkspaceInfo = () => {
   const { namespace, workspace } = React.useContext(WorkspaceContext);
   return { namespace, workspace };
 };
-export const getHomeWorkspace = (workspaces) => workspaces?.find((w) => w?.status?.type === 'home');
+export const getHomeWorkspace = (workspaces: Workspace[]) =>
+  workspaces?.find((w) => w?.status?.type === 'home');
 
 export const useActiveWorkspace = (): WorkspaceContextData => {
   const lastUsedWorkspace = useLastUsedWorkspace();
@@ -43,13 +44,16 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
   const [, workspaceFromUrl = ''] = window.location.pathname.match(workspacePathMatcher) || [];
   const [workspace, setWorkspace] = React.useState<string>(getActiveWorkspace);
   const [namespace, setNamespace] = React.useState<string>('');
-  const [workspaces, setWorkspaces] = React.useState<any>([]);
+  const [workspaces, setWorkspaces] = React.useState<Workspace[]>([]);
   const [workspacesLoaded, setWorkspacesLoaded] = React.useState<boolean>(false);
 
-  const getDefaultNsForWorkspace = React.useCallback((allWorkspaces, currentWorkspace) => {
-    const obj = allWorkspaces?.find((w) => w.metadata.name === currentWorkspace);
-    return obj?.status?.namespaces.find((n) => n.type === 'default');
-  }, []);
+  const getDefaultNsForWorkspace = React.useCallback(
+    (allWorkspaces: Workspace[], currentWorkspace: string) => {
+      const obj = allWorkspaces?.find((w) => w.metadata.name === currentWorkspace);
+      return obj?.status?.namespaces.find((n) => n.type === 'default');
+    },
+    [],
+  );
 
   React.useEffect(() => {
     if (workspace && workspaces?.length > 0) {
@@ -61,13 +65,24 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
     }
   }, [getDefaultNsForWorkspace, setNamespace, workspace, workspaces]);
 
+  // switch workspace if URL segment has changed
+  React.useEffect(() => {
+    if (
+      workspace &&
+      workspaceFromUrl &&
+      workspaceFromUrl !== workspace &&
+      workspaces.some((w) => w.metadata.name === workspaceFromUrl)
+    ) {
+      setWorkspace(workspaceFromUrl);
+    }
+  }, [workspace, workspaceFromUrl, workspaces]);
+
   React.useEffect(() => {
     let unmounted = false;
     const fetchWorkspaces = async () => {
-      let allWorkspaces = [];
+      let allWorkspaces: Workspace[] = [];
       try {
-        setActiveWorkspace(''); // to fetch root level workspaces
-        allWorkspaces = await k8sListResourceItems({
+        allWorkspaces = await k8sListResourceItems<Workspace>({
           model: WorkspaceModel,
         });
       } catch (e) {
@@ -78,6 +93,8 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
       if (unmounted) {
         return;
       }
+
+      setActiveWorkspace(''); // to fetch root level workspaces
 
       let ws: string;
       if (Array.isArray(allWorkspaces)) {
