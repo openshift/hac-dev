@@ -4,7 +4,7 @@ export const pageTitles = {
   sampleStart: 'Start with a sample',
   reviewComponent: 'Review your new components',
   componentSettings: 'Component settings',
-  overviewPage: 'Get started with',
+  getStartedPage: 'Get started with',
 };
 
 export enum NavItem {

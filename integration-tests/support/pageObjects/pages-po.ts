@@ -84,3 +84,7 @@ export const environmentsPagePO = {
   envDeleteBtn: 'button[data-testid="delete-resource"]',
   envCardConnectionLabel: 'div[class="pf-c-card__title"] span[class="pf-c-label__content"]',
 };
+
+export const getStartedPagePO = {
+  createAppButton: '[data-test="create-application"]',
+};
