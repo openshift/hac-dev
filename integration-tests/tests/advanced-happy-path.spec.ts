@@ -256,6 +256,7 @@ describe('Advanced Happy path', () => {
     it('Delete one of integration test and verify', () => {
       UIhelper.clickLink(integrationTestDetails.integrationTestNameTemp);
       integrationTestsTabPage.deleteIntegrationTestFromActions();
+      Common.waitForLoad();
       cy.contains(integrationTestDetails.integrationTestNameTemp).should('not.exist');
     });
   });
