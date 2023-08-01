@@ -58,14 +58,34 @@ This folder contains a Dockerfile that specifies an image with all the dependenc
 
 If there are no changes in your local test code, you can pull and run the image from quay, providing the required environment variables. Feel free to use docker or podman, we will be using podman in this example:
 ```
-$ podman run quay.io/hacdev/hac-tests:next -e CYPRESS_HAC_BASE_URL=https://<HOSTNAME>/hac/application-pipeline -e CYPRESS_USERNAME="user1" -e CYPRESS_PASSWORD="user1"
+$ podman run -e CYPRESS_HAC_BASE_URL=https://<HOSTNAME>/hac/application-pipeline -e CYPRESS_USERNAME="user1" -e CYPRESS_PASSWORD="user1" quay.io/hacdev/hac-tests:next
+```
+Note that the container specific arguments like environment and mountpoints are defined before the image tag. Any arguments defined after the image tag will be interpreted as options and passed directly to cypress. 
+In general, the the command structure is as follows:
+```
+$ <container engine> run <mount points> <container environment variables> quay.io/hacdev/hac-tests:next <cypress arguments>
 ```
 
 Since the image already contains all the test code, in case you'd like to run the tests with your local changes, you would need to mount the local code:
 ```
-$ podman run quay.io/hacdev/hac-tests:next -v <path to integration-tests>:/e2e:Z -e CYPRESS_HAC_BASE_URL=https://<HOSTNAME>/hac/application-pipeline -e CYPRESS_USERNAME="user1" -e CYPRESS_PASSWORD="user1"
+$ podman run -v <path to integration-tests>:/e2e:Z -e CYPRESS_HAC_BASE_URL=https://<HOSTNAME>/hac/application-pipeline -e CYPRESS_USERNAME="user1" -e CYPRESS_PASSWORD="user1" quay.io/hacdev/hac-tests:next
 ```
 The entrypoint searches for any code within `/e2e` path and runs it instead of any code that was already present inside the image.
+
+#### Passing arguments to cypress
+The cypress run command can be customized using flags, as per the [documentation](https://docs.cypress.io/guides/guides/command-line#cypress-run). To pass these into the entrypoint, simply add them to the end of your container run command.
+
+For example, we can limit what spec files will be run:
+```
+$ podman run -e CYPRESS_HAC_BASE_URL=https://<HOSTNAME>/hac/application-pipeline quay.io/hacdev/hac-tests:next --spec tests/basic-happy-path.spec.ts
+```
+Or if instead of using container environment variables, you prefer to pass them directly to cypress:
+```
+$ podman run quay.io/hacdev/hac-tests:next -e HAC_BASE_URL=https://<HOSTNAME>/hac/application-pipeline
+```
+There is no need for the `CYPRESS` prefix this way. Passing `HAC_BASE_URL` is equivalent to setting a variable in the container called `CYPRESS_HAC_BASE_URL`.
+
+Keep in mind that it is the image tag that divides the command between container setup on its left, and the entrypoint arguments on the right (those will be passed to cypress).
 
 #### Accessing test results
 Test artifacts (reports, screenshots, videos, etc.) are only accessible to the host system if the appropriate container folder is mounted.
@@ -74,7 +94,7 @@ When running with local test code mounted, with the `-v <path to integration-tes
 
 When running the container with the included test code, the tests artifacts are available inside the container at `/tmp/artifacts`. Mouning the folder, the host can then access the artifacts at the `<chosen path>`:
 ```
-$ podman run -v <chosen path>:/tmp/artifacts:Z quay.io/hacdev/hac-tests:next <environment variables>
+$ podman run -v <chosen path>:/tmp/artifacts:Z <environment variables> quay.io/hacdev/hac-tests:next
 ```
 
 #### Building the image

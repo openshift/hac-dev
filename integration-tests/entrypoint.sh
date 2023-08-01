@@ -1,4 +1,9 @@
 #!/bin/bash
+args="-b chrome";
+for var in "$@"
+do
+  args="$args $var"
+done
 
 if [ -d "/e2e" ]; then
   cd /e2e
@@ -8,7 +13,7 @@ else
   cd /tmp/e2e
 fi
 
-npm run cy:run
+npx cypress run $args
 
 if [ -d "/e2e/cypress" ]; then
   chmod -R a+rwx /e2e/cypress
