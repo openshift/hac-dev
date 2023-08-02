@@ -104,9 +104,19 @@ describe('mapEnterpriseContractResultData', () => {
     const uiData = mapEnterpriseContractResultData([
       mockEnterpriseContractJSON.components[2],
     ] as any);
+
     expect(uiData.length).toEqual(2);
     expect(uiData[0].status).toEqual('Failed');
+    expect(uiData[0].solution).toEqual('solution for failure');
     expect(uiData.findIndex((u) => u.status === 'Warning')).toEqual(-1);
+  });
+
+  it('should map solution data to failed results', () => {
+    const uiData = mapEnterpriseContractResultData([
+      mockEnterpriseContractJSON.components[2],
+    ] as any);
+    expect(uiData[0].status).toEqual('Failed');
+    expect(uiData[0].solution).toEqual('solution for failure');
     expect(uiData).toEqual(mockEnterpriseContractUIData);
   });
 });
