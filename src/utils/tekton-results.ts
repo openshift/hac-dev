@@ -160,6 +160,8 @@ let CACHE: { [key: string]: [any[], RecordsList] } = {};
 export const clearCache = () => {
   CACHE = {};
 };
+const InFlightStore: { [key: string]: boolean } = {};
+
 const getTRUrlPrefix = (workspace: string): string => URL_PREFIX.replace(_WORKSPACE_, workspace);
 
 export const createTektonResultsUrl = (
@@ -175,7 +177,7 @@ export const createTektonResultsUrl = (
     ['order_by']: 'create_time desc',
     ['page_size']: `${Math.max(
       MINIMUM_PAGE_SIZE,
-      Math.min(MAXIMUM_PAGE_SIZE, options?.limit >= 0 ? options.limit : options?.pageSize ?? 50),
+      Math.min(MAXIMUM_PAGE_SIZE, options?.limit >= 0 ? options.limit : options?.pageSize ?? 30),
     )}`,
     ...(nextPageToken ? { ['page_token']: nextPageToken } : {}),
     filter: AND(
@@ -209,8 +211,17 @@ export const getFilteredRecord = async <R extends K8sResourceCommon>(
     if (result) {
       return result;
     }
+    if (InFlightStore[cacheKey]) {
+      return [
+        [],
+        {
+          nextPageToken: null,
+          records: [],
+        },
+      ];
+    }
   }
-
+  InFlightStore[cacheKey] = true;
   const value = await (async (): Promise<[R[], RecordsList]> => {
     try {
       let list: RecordsList = await commonFetchJSON(url);
@@ -237,6 +248,7 @@ export const getFilteredRecord = async <R extends K8sResourceCommon>(
   })();
 
   if (cacheKey) {
+    InFlightStore[cacheKey] = false;
     CACHE[cacheKey] = value;
   }
   return value;

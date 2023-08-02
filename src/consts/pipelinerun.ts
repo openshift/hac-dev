@@ -4,6 +4,7 @@ export enum PipelineRunLabel {
   PIPELINE_USED_BY = 'pipelines.openshift.io/used-by',
   PIPELINE_TYPE = 'pipelines.appstudio.openshift.io/type',
   PIPELINE_NAME = 'tekton.dev/pipeline',
+  PIPELINERUN_NAME = 'tekton.dev/pipelineRun',
   COMMIT_LABEL = 'pipelinesascode.tekton.dev/sha',
   COMMIT_ANNOTATION = 'build.appstudio.redhat.com/commit_sha',
   COMMIT_URL_ANNOTATION = 'pipelinesascode.tekton.dev/sha-url',

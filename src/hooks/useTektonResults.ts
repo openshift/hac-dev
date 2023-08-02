@@ -34,9 +34,10 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
     undefined,
   ]);
 
-  // reset token if namespace or options change
+  // reset token & resutlt if namespace or options change
   React.useEffect(() => {
     setNextPageToken(null);
+    setResult([[], false, undefined, undefined]);
   }, [namespace, options]);
 
   React.useEffect(() => {

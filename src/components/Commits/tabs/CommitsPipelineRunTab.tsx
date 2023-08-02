@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Title } from '@patternfly/react-core';
+import { usePLRVulnerabilities } from '../../../hooks/useScanResults';
 import { Table } from '../../../shared';
 import { PipelineRunKind } from '../../../types';
 import PipelineRunEmptyState from '../../PipelineRunDetailsView/PipelineRunEmptyState';
@@ -15,6 +16,8 @@ const CommitsPipelineRunTab: React.FC<CommitsPipelineRunTabProps> = ({
   pipelineRuns,
   applicationName,
 }) => {
+  const vulnerabilities = usePLRVulnerabilities(pipelineRuns);
+
   if (!pipelineRuns || pipelineRuns.length === 0) {
     return <PipelineRunEmptyState applicationName={applicationName} />;
   }
@@ -34,6 +37,7 @@ const CommitsPipelineRunTab: React.FC<CommitsPipelineRunTabProps> = ({
         aria-label="Pipelinerun List"
         Header={PipelineRunListHeaderWithVulnerabilities}
         loaded
+        customData={vulnerabilities}
         Row={PipelineRunListRowWithVulnerabilities}
         getRowProps={(obj: PipelineRunKind) => ({
           id: obj.metadata.name,

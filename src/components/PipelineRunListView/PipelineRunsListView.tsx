@@ -16,6 +16,7 @@ import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useComponents } from '../../hooks/useComponents';
 import { usePipelineRuns } from '../../hooks/usePipelineRuns';
+import { usePLRVulnerabilities } from '../../hooks/useScanResults';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { Table } from '../../shared';
 import { PipelineRunKind } from '../../types';
@@ -30,12 +31,12 @@ import { PipelineRunListRowWithVulnerabilities } from './PipelineRunListRow';
 type PipelineRunsListViewProps = { applicationName: string };
 const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ applicationName }) => {
   const { namespace } = useWorkspaceInfo();
-  const [components] = useComponents(namespace, applicationName);
+  const [components, componentsLoaded] = useComponents(namespace, applicationName);
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [statusFilterExpanded, setStatusFilterExpanded] = React.useState<boolean>(false);
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
   const [pipelineRuns, loaded, , getNextPage] = usePipelineRuns(
-    namespace,
+    componentsLoaded ? namespace : null,
     React.useMemo(
       () => ({
         selector: {
@@ -92,6 +93,8 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
       ),
     [nameFilter, pipelineRuns, statusFilters],
   );
+
+  const vulnerabilities = usePLRVulnerabilities(filteredPLRs);
 
   const onClearFilters = () => {
     setNameFilter('');
@@ -176,6 +179,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
         <Table
           data={filteredPLRs}
           aria-label="Pipeline run List"
+          customData={vulnerabilities}
           Header={PipelineRunListHeaderWithVulnerabilities}
           Row={PipelineRunListRowWithVulnerabilities}
           loaded

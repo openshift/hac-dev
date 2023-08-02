@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { useScanResults } from '../../hooks/useScanResults';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
@@ -21,16 +20,14 @@ type BasePipelineRunListRowProps = PipelineRunListRowProps & { showVulnerabiliti
 const BasePipelineRunListRow: React.FC<BasePipelineRunListRowProps> = ({
   obj,
   showVulnerabilities,
+  customData,
 }) => {
   const capitalize = (label: string) => {
     return label && label.charAt(0).toUpperCase() + label.slice(1);
   };
-
-  const [scanResults, scanLoaded] = useScanResults(
-    showVulnerabilities ? obj.metadata.name : null,
-    // enable cache only if the pipeline run has completed
-    !!obj?.status?.completionTime,
-  );
+  const [vulnerabilities] = customData?.vulnerabilities?.[obj.metadata.name] ?? [];
+  const scanLoaded = (customData?.fetchedPipelineRuns || []).includes(obj.metadata.name);
+  const scanResults = scanLoaded ? vulnerabilities || {} : undefined;
 
   const status = pipelineRunStatus(obj);
   const actions = usePipelinerunActions(obj);
