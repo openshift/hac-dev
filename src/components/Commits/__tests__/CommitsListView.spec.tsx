@@ -96,7 +96,7 @@ describe('CommitsListView', () => {
       <CommitsListRow columns={null} obj={commits[0]} />,
     );
     const expectedDate = dateTime.dateTimeFormatter.format(new Date(commits[0].creationTime));
-    expect(queryByText('commit1')).not.toBeInTheDocument();
+    expect(queryByText('commit1')).toBeInTheDocument();
     expect(getByText('#11 test-title')).toBeInTheDocument();
     expect(container).toHaveTextContent(expectedDate.toString());
     expect(getByText('branch_1')).toBeInTheDocument();

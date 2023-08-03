@@ -25,7 +25,7 @@ configure({ testIdAttribute: 'data-test-id' });
 describe('CommitLabel', () => {
   it('should render commit label', () => {
     const label = render(<CommitLabel gitProvider="github" sha={sha} shaURL={shaURL} />);
-    const link = label.getByTestId(`commit-label-9135b3`);
+    const link = label.getByTestId(`commit-label-9135b3a`);
     expect(link).toBeInTheDocument();
     expect(label.getByRole('link')).toHaveAttribute('href', shaURL);
   });
