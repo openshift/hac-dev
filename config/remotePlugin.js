@@ -458,6 +458,21 @@ const routeExtensions = [
     },
   },
 
+  // snapshot route
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/workspaces/:workspaceName/applications/:appName/snapshots/:snapshotName',
+      exact: true,
+      component: {
+        $codeRef: 'SnapshotDetailsPage',
+      },
+    },
+    flags: {
+      required: ['HACBS', 'SIGNUP'],
+    },
+  },
+
   // 404 route
   {
     type: 'core.page/route',
@@ -485,6 +500,7 @@ module.exports = {
       EditIntegrationTest: resolve(__dirname, '../src/pages/EditIntegrationTestPage'),
       IntegrationTest: resolve(__dirname, '../src/pages/IntegrationTestPage'),
       CommitsPage: resolve(__dirname, '../src/pages/CommitsPage'),
+      SnapshotDetailsPage: resolve(__dirname, '../src/pages/SnapshotDetailsPage'),
       Release: resolve(__dirname, '../src/pages/ReleasePage'),
       IntegrationTestDetails: resolve(__dirname, '../src/pages/IntegrationTestDetailsPage'),
       Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),

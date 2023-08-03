@@ -12,6 +12,7 @@ import { useSnapshotsEnvironmentBindings } from './useSnapshotsEnvironmentBindin
 export type EnvironmentKindWithHealthStatus = EnvironmentKind & {
   healthStatus: GitOpsDeploymentHealthStatus;
   lastDeploy: string;
+  snapshot?: string;
 };
 
 export const useAllApplicationEnvironmentsWithHealthStatus = (
@@ -56,6 +57,7 @@ export const useAllApplicationEnvironmentsWithHealthStatus = (
         lastDeploy:
           snapshotsEnvironmentBinding?.status?.componentDeploymentConditions?.[0]
             ?.lastTransitionTime,
+        snapshot: snapshotsEnvironmentBinding?.spec?.snapshot,
       };
     });
   }, [allLoaded, snapshotsEnvironmentBindings, environments, releases]);
