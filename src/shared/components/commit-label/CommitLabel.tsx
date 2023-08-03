@@ -3,6 +3,7 @@ import { Label, Tooltip } from '@patternfly/react-core';
 import { BitbucketIcon } from '@patternfly/react-icons/dist/js/icons/bitbucket-icon';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
 import { GitlabIcon } from '@patternfly/react-icons/dist/js/icons/gitlab-icon';
+import { getCommitShortName } from '../../../utils/commits-utils';
 import { GitProvider } from '../../utils/git-utils';
 
 const tipText = {
@@ -22,6 +23,7 @@ type CommitLabelProps = {
   shaURL: string;
 };
 const CommitLabel: React.FC<CommitLabelProps> = ({ gitProvider, sha, shaURL }) => {
+  const commitShortName = getCommitShortName(sha);
   const label = (
     <Label
       className="commit-label"
@@ -34,13 +36,13 @@ const CommitLabel: React.FC<CommitLabelProps> = ({ gitProvider, sha, shaURL }) =
           target="_blank"
           rel="noopener noreferrer"
           className={className}
-          data-test-id={`commit-label-${sha.slice(0, 6)}`}
+          data-test-id={`commit-label-${commitShortName}`}
         >
           {content}
         </a>
       )}
     >
-      {sha.slice(0, 6)}
+      {commitShortName}
     </Label>
   );
   const tooltip = tipText[gitProvider];

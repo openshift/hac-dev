@@ -28,7 +28,7 @@ describe('CommitsListRow', () => {
       <CommitsListRow columns={null} obj={commits[1]} />,
     );
     const expectedDate = dateTime.dateTimeFormatter.format(new Date(commits[1].creationTime));
-    expect(queryByText('commit1')).not.toBeInTheDocument();
+    expect(queryByText('commit1')).toBeInTheDocument();
     expect(getAllByText(`#11 ${commits[1].shaTitle}`)[0]).toBeInTheDocument();
     expect(container).toHaveTextContent(expectedDate.toString());
     expect(getAllByText('branch_1')[0]).toBeInTheDocument();
@@ -40,7 +40,7 @@ describe('CommitsListRow', () => {
       <CommitsListRow columns={null} obj={commits[0]} />,
     );
     const expectedDate = dateTime.dateTimeFormatter.format(new Date(commits[0].creationTime));
-    expect(queryByText('commit1')).not.toBeInTheDocument();
+    expect(queryByText('commit7')).toBeInTheDocument();
     expect(getAllByText('manual build')[0]).toBeInTheDocument();
     expect(container).toHaveTextContent(expectedDate.toString());
     expect(getAllByText('manual-build-component')[0]).toBeInTheDocument();
