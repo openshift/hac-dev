@@ -181,7 +181,6 @@ const IntegrationTestSection: React.FC<Props> = ({ isInPage, edit }) => {
         <InputField
           name="integrationTest.path"
           label="Path in repository"
-          isDisabled={edit}
           helpText="Subdirectory for the application source code."
           data-test="git-path-repo"
           required
