@@ -12,11 +12,12 @@ import {
 } from '@patternfly/react-core';
 import argoLogo from '../../imgs/overview/Argo.svg';
 import clairLogo from '../../imgs/overview/Clair.svg';
+import goLogo from '../../imgs/overview/Go.svg';
+import javaLogo from '../../imgs/overview/Java.svg';
 import nodeLogo from '../../imgs/overview/Nodejs.svg';
 import openPolicyAgentLogo from '../../imgs/overview/OpenPolicyAgent.svg';
 import pythonLogo from '../../imgs/overview/Python.svg';
 import redhatLogo from '../../imgs/overview/RedHat.svg';
-import springLogo from '../../imgs/overview/Spring.svg';
 import tektonLogo from '../../imgs/overview/Tekton.svg';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 
@@ -89,7 +90,8 @@ const AboutSection: React.FC = () => (
               <TechnologyTile name="Node.js" logo={nodeLogo} />
               <TechnologyTile name="Clair" logo={clairLogo} />
               <TechnologyTile name="Python" logo={pythonLogo} />
-              <TechnologyTile name="Spring" logo={springLogo} />
+              <TechnologyTile name="Java" logo={javaLogo} />
+              <TechnologyTile name="Go" logo={goLogo} />
               <TechnologyTile name="Tekton" logo={tektonLogo} />
               <TechnologyTile name="Argo CD" logo={argoLogo} />
               <TechnologyTile name="Open Policy Agent" logo={openPolicyAgentLogo} />
