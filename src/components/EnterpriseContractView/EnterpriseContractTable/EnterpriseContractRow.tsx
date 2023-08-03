@@ -51,6 +51,7 @@ export const EnterpriseContractRow: React.FC<EnterpriseContractRowType> = ({ dat
         <Td colSpan={4}>
           <ExpandableRowContent>
             <DescriptionList
+              isAutoColumnWidths
               columnModifier={{
                 default: '3Col',
               }}
@@ -67,6 +68,12 @@ export const EnterpriseContractRow: React.FC<EnterpriseContractRowType> = ({ dat
                       {data.collection.join(', ')}
                     </ExternalLink>
                   </DescriptionListDescription>
+                </DescriptionListGroup>
+              ) : null}
+              {data.solution ? (
+                <DescriptionListGroup>
+                  <DescriptionListTerm>Solution</DescriptionListTerm>
+                  <DescriptionListDescription>{data.solution}</DescriptionListDescription>
                 </DescriptionListGroup>
               ) : null}
               {data.timestamp ? (

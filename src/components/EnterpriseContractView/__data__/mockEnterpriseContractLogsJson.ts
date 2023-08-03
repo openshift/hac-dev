@@ -47,6 +47,7 @@ export const mockEnterpriseContractYaml = `components:
         attestation of the build pipeline.
       effective_on: "2022-01-01T00:00:00Z"
       title: Missing CVE scan results
+      solution: solution for failure
     msg: CVE scan results not found
 key: |
   -----BEGIN PUBLIC KEY-----
@@ -140,6 +141,7 @@ export const mockEnterpriseContractJSON = {
               'The clair-scan task results have not been found in the SLSA Provenance attestation of the build pipeline.',
             ['effective_on']: '2022-01-01T00:00:00Z',
             title: 'Missing CVE scan results',
+            solution: 'solution for failure',
           },
           msg: 'CVE scan results not found',
         },
@@ -180,6 +182,7 @@ export const mockEnterpriseContractUIData = [
     timestamp: '2022-01-01T00:00:00Z',
     component: 'devfile-sample-python-basic-aw05',
     msg: 'CVE scan results not found',
+    solution: 'solution for failure',
     collection: ['minimal'],
   },
   {
