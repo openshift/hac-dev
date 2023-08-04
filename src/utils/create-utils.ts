@@ -35,7 +35,7 @@ import {
   SecretType,
 } from '../types';
 import { ComponentSpecs } from './../types/component';
-import { PAC_ANNOTATION } from './component-utils';
+import { BuildRequest, BUILD_REQUEST_ANNOTATION } from './component-utils';
 
 export const sanitizeName = (name: string) => name.split(/ |\./).join('-').toLowerCase();
 /**
@@ -117,7 +117,7 @@ export const createComponent = (
           ? {
               annotations: {
                 'image.redhat.com/generate': 'true',
-                [PAC_ANNOTATION]: 'request',
+                [BUILD_REQUEST_ANNOTATION]: BuildRequest.configurePac,
               },
             }
           : {

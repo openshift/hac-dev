@@ -118,7 +118,7 @@ const mockComponentDataWithPAC = {
     ...mockComponentDataWithDevfile.metadata,
     annotations: {
       'image.redhat.com/generate': 'true',
-      'appstudio.openshift.io/pac-provision': 'request',
+      'build.appstudio.openshift.io/request': 'configure-pac',
     },
   },
 };

@@ -6,8 +6,8 @@ import { act } from 'react-dom/test-utils';
 import { usePipelineRuns } from '../../../hooks/usePipelineRuns';
 import { ComponentKind } from '../../../types';
 import {
+  BUILD_REQUEST_ANNOTATION,
   BUILD_STATUS_ANNOTATION,
-  PAC_ANNOTATION,
   SAMPLE_ANNOTATION,
 } from '../../../utils/component-utils';
 import CustomizePipeline from '../CustomizePipelines';
@@ -51,10 +51,17 @@ const createComponent = (
     metadata: {
       name: `my-component-${componentCount++}`,
       annotations: {
-        [PAC_ANNOTATION]: pacValue,
         [SAMPLE_ANNOTATION]: sample ? 'true' : undefined,
-        [BUILD_STATUS_ANNOTATION]:
-          pacValue === 'done' ? '{"pac":{"merge-url":"example.com"}}' : null,
+        [BUILD_REQUEST_ANNOTATION]: pacValue === 'request' ? 'configure-pac' : undefined,
+        [BUILD_STATUS_ANNOTATION]: JSON.stringify(
+          pacValue === 'done'
+            ? { pac: { state: 'enabled', 'merge-url': 'example.com' } }
+            : pacValue === 'request'
+            ? { pac: { state: 'disabled' } }
+            : pacValue === 'error'
+            ? { pac: { state: 'error' } }
+            : undefined,
+        ),
       },
     },
     spec: {

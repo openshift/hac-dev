@@ -48,9 +48,7 @@ export const componentCRMocks: ComponentKind[] = [
       name: 'nodejs',
       namespace: 'rorai',
       uid: '5a14d4b4-480b-4ca5-b7ab-10c2cfffd3d9',
-      annotations: {
-        'appstudio.openshift.io/pac-provision': 'done',
-      },
+      annotations: {},
     },
     spec: {
       application: 'test-application',
