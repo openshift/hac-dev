@@ -24,4 +24,21 @@ describe('GitRepoLink', () => {
     const result = render(<GitRepoLink url="https://github.com/myorg/myproject" context="./src" />);
     expect(result.baseElement).toHaveTextContent('(src)');
   });
+
+  it('should strip leading "/" from context', () => {
+    const result = render(<GitRepoLink url="https://github.com/myorg/myproject" context="/src" />);
+    expect(result.baseElement).toHaveTextContent('(src)');
+  });
+
+  it('should strip leading "./" from context', () => {
+    const result = render(<GitRepoLink url="https://github.com/myorg/myproject" context="./src" />);
+    expect(result.baseElement).toHaveTextContent('(src)');
+  });
+
+  it('should not strip leading "." from context', () => {
+    const result = render(
+      <GitRepoLink url="https://github.com/myorg/myproject" context=".hidden_dir" />,
+    );
+    expect(result.baseElement).toHaveTextContent('(.hidden_dir)');
+  });
 });

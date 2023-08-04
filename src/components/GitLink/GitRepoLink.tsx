@@ -14,7 +14,7 @@ type Props = {
 const GitRepoLink: React.FC<Props> = ({ url, revision, context }) => {
   const parsed = gitUrlParse(url);
   const icon = getGitIcon(parsed.source);
-  const path = context?.replace(/^\.?\/?/g, '');
+  const path = context?.replace(/^(\.?\/)?/g, '');
   const fullUrl = `https://${parsed.source}/${parsed.owner}/${parsed.name}${getGitPath(
     parsed.source,
     revision,
