@@ -30,6 +30,8 @@ export class Login {
   private static waitForApps() {
     Common.waitForLoad();
     Common.verifyPageTitle(pageTitles.overviewPage);
+    // temporary "fix", wait until overviewPage is loaded
+    cy.wait(5000);
     Common.navigateTo(NavItem.applications);
     Common.verifyPageTitle(pageTitles.applications);
     Common.waitForLoad();
