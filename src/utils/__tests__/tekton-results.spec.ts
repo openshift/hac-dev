@@ -312,10 +312,10 @@ describe('tekton-results', () => {
   describe('createTektonResultsUrl', () => {
     it('should create minimal URL', () => {
       expect(createTektonResultsUrl('test-ws', 'test-ns', DataType.PipelineRun)).toEqual(
-        '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=50&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.PipelineRun%22',
+        '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=30&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.PipelineRun%22',
       );
       expect(createTektonResultsUrl('test-ws', 'test-ns', DataType.TaskRun)).toEqual(
-        '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=50&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.TaskRun%22',
+        '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=30&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.TaskRun%22',
       );
     });
 
@@ -334,14 +334,14 @@ describe('tekton-results', () => {
 
     it('should create URL with filter', () => {
       expect(createTektonResultsUrl('test-ws', 'test-ns', DataType.PipelineRun, 'foo=bar')).toEqual(
-        '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=50&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.PipelineRun%22+%26%26+foo%3Dbar',
+        '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=30&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.PipelineRun%22+%26%26+foo%3Dbar',
       );
     });
 
     it('should create URL with page size', () => {
       // default page size
       expect(createTektonResultsUrl('test-ws', 'test-ns', DataType.PipelineRun)).toContain(
-        'page_size=50',
+        'page_size=30',
       );
       // min page size
       expect(
@@ -464,7 +464,7 @@ describe('tekton-results', () => {
     it('should query tekton results with options', async () => {
       await getPipelineRuns('test-ws', 'test-ns', sampleOptions, 'test-token');
       expect(commonFetchJSONMock).toHaveBeenCalledWith(
-        '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=50&page_token=test-token&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.PipelineRun%22+%26%26+data.metadata.labels%5B%22test%22%5D+%3D%3D+%22a%22+%26%26+data.metadata.labels%5B%22mtest%22%5D+%3D%3D+%22ma%22+%26%26+count+%3E+1',
+        '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=30&page_token=test-token&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.PipelineRun%22+%26%26+data.metadata.labels%5B%22test%22%5D+%3D%3D+%22a%22+%26%26+data.metadata.labels%5B%22mtest%22%5D+%3D%3D+%22ma%22+%26%26+count+%3E+1',
       );
     });
   });
@@ -478,7 +478,7 @@ describe('tekton-results', () => {
     it('should query tekton results with options', async () => {
       await getTaskRuns('test-ws', 'test-ns', sampleOptions, 'test-token');
       expect(commonFetchJSONMock).toHaveBeenCalledWith(
-        '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=50&page_token=test-token&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.TaskRun%22+%26%26+data.metadata.labels%5B%22test%22%5D+%3D%3D+%22a%22+%26%26+data.metadata.labels%5B%22mtest%22%5D+%3D%3D+%22ma%22+%26%26+count+%3E+1',
+        '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=30&page_token=test-token&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.TaskRun%22+%26%26+data.metadata.labels%5B%22test%22%5D+%3D%3D+%22a%22+%26%26+data.metadata.labels%5B%22mtest%22%5D+%3D%3D+%22ma%22+%26%26+count+%3E+1',
       );
     });
   });

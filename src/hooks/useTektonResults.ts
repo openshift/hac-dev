@@ -19,7 +19,7 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
     options?: TektonResultsOptions,
     nextPageToken?: string,
     cacheKey?: string,
-  ) => Promise<[Kind[], RecordsList]>,
+  ) => Promise<[Kind[], RecordsList, boolean?]>,
   namespace: string,
   options?: TektonResultsOptions,
   cacheKey?: string,
@@ -53,9 +53,12 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
           );
           if (!disposed) {
             const token = tkPipelineRuns[1].nextPageToken;
+            const callInflight = !!tkPipelineRuns?.[2];
+            const loaded = callInflight ? false : true;
+
             setResult((cur) => [
               nextPageToken ? [...cur[0], ...tkPipelineRuns[0]] : tkPipelineRuns[0],
-              true,
+              loaded,
               undefined,
               token
                 ? (() => {
