@@ -7,6 +7,12 @@ CI_SERVER_URL=https://prow.svc.ci.openshift.org/view/gcs/origin-ci-test
 if [ ! -d node_modules ]; then
     npm install
 fi
+GIT_BRANCH=${GIT_BRANCH:-}
+
+ENV_BRANCH=$(sed "s/origin\///" <<< "$GIT_BRANCH")
+if [[ "${ENV_BRANCH}" = "master" ||  "${ENV_BRANCH}" = "main" ]]; then
+    BETA=true
+fi
 
 if [[ "${JOB_TYPE}" == "presubmit" ]]; then
        echo "detected PR code coverage job for #${PULL_NUMBER}"
