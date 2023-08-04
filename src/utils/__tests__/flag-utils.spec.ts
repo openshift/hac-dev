@@ -25,6 +25,16 @@ describe('setSignupFeatureFlags', () => {
     expect(setFlag).toHaveBeenCalledWith(SIGNUP_PENDING_FLAG, true);
   });
 
+  it('sets signup pending flag on ProvisioningSpace reason', async () => {
+    fetchMock.mockResolvedValue({
+      status: 200,
+      json: async () => ({ status: { ready: false, reason: 'ProvisioningSpace' } }),
+    });
+    const setFlag = jest.fn();
+    await setSignupFeatureFlags(setFlag);
+    expect(setFlag).toHaveBeenCalledWith(SIGNUP_PENDING_FLAG, true);
+  });
+
   it('sets signup flag on fetch error', async () => {
     fetchMock.mockRejectedValue({ code: 404 });
     const setFlag = jest.fn();
