@@ -1,5 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { usePLRScanResults, useScanResults } from '../useScanResults';
+import { DataState, testPipelineRuns } from '../../__data__/pipelinerun-data';
+import { usePLRScanResults, usePLRVulnerabilities, useScanResults } from '../useScanResults';
 import { useTRTaskRuns } from '../useTektonResults';
 
 jest.mock('../useTektonResults', () => ({
@@ -101,5 +102,30 @@ describe('usePLRScanResults', () => {
       medium: 0,
     });
     expect(loaded).toBe(true);
+  });
+});
+
+describe('usePLRVulnerabilities', () => {
+  it('returns default values if taskruns are not available', () => {
+    useTRTaskRunsMock.mockReturnValue([null, false]);
+    const { result } = renderHook(() =>
+      usePLRVulnerabilities([testPipelineRuns[DataState.SUCCEEDED]]),
+    );
+    expect(result.current).toEqual({ fetchedPipelineRuns: [], vulnerabilities: {} });
+  });
+
+  it('returns vulnerabilities when scan taskrun are available', () => {
+    useTRTaskRunsMock.mockReturnValue([[taskRunData[0]], true]);
+
+    const { result } = renderHook(() =>
+      usePLRVulnerabilities([testPipelineRuns[DataState.SUCCEEDED]]),
+    );
+    expect(result.current.vulnerabilities).toEqual(
+      expect.objectContaining({
+        test: expect.arrayContaining([
+          { vulnerabilities: { critical: 1, high: 2, low: 4, medium: 3 } },
+        ]),
+      }),
+    );
   });
 });

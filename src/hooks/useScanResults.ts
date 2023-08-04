@@ -203,11 +203,12 @@ export const usePLRVulnerabilities = (
   vulnerabilities: { [key: string]: ScanResults };
   fetchedPipelineRuns: string[];
 } => {
+  const pageSize = 30;
   const completePLRnames = React.useRef([]);
   const inProgressPLRnames = React.useRef([]);
 
   const loadedPipelineRunNames = React.useRef([]);
-  const [, setCurrentPage] = React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState(0);
   const pipelineRunVulnerabilities = React.useRef({});
 
   const addLoadedPipelineruns = (pipelienRunNames: string[]): void => {
@@ -215,7 +216,10 @@ export const usePLRVulnerabilities = (
   };
 
   // enable cache only if the pipeline run has completed
-  const [vulnerabilities, vloaded, vlist] = usePLRScanResults(completePLRnames.current, true);
+  const [vulnerabilities, vloaded, vlist] = usePLRScanResults(
+    completePLRnames.current.slice((currentPage - 1) * pageSize, completePLRnames.current.length),
+    true,
+  );
   pipelineRunVulnerabilities.current = merge(
     {},
     vulnerabilities,
@@ -227,7 +231,10 @@ export const usePLRVulnerabilities = (
 
   // disable cache for inprogress pipelineruns
   const [runningulnerabilities, runningloaded, runninglist] = usePLRScanResults(
-    inProgressPLRnames.current,
+    inProgressPLRnames.current.slice(
+      (currentPage - 1) * pageSize,
+      inProgressPLRnames.current.length,
+    ),
   );
   pipelineRunVulnerabilities.current = merge(
     {},
@@ -240,19 +247,19 @@ export const usePLRVulnerabilities = (
   }
 
   React.useEffect(() => {
-    const pageSize = 30;
+    const totalPlrs = filteredPLRs.length;
     const noOfPendingPLRS =
-      filteredPLRs.length - completePLRnames.current.length - inProgressPLRnames.current.length;
-    if (filteredPLRs.length > 0 && noOfPendingPLRS > 0) {
+      totalPlrs - completePLRnames.current.length - inProgressPLRnames.current.length;
+    if (totalPlrs > 0 && noOfPendingPLRS > 0) {
       const [completedPipelineRuns, runningPipelineRuns] = partition(
-        filteredPLRs.slice(noOfPendingPLRS >= pageSize ? noOfPendingPLRS : 0, filteredPLRs.length),
+        filteredPLRs.slice(noOfPendingPLRS > pageSize ? noOfPendingPLRS : 0, totalPlrs),
         (plr) => !!plr?.status?.completionTime,
       );
 
       completePLRnames.current = completedPipelineRuns.map(({ metadata: { name } }) => name);
       inProgressPLRnames.current = runningPipelineRuns.map(({ metadata: { name } }) => name);
 
-      setCurrentPage(filteredPLRs.length / pageSize);
+      setCurrentPage(Math.round(totalPlrs / pageSize));
     }
   }, [filteredPLRs]);
 

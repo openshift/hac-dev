@@ -196,7 +196,7 @@ export const getFilteredRecord = async <R extends K8sResourceCommon>(
   options?: TektonResultsOptions,
   nextPageToken?: string,
   cacheKey?: string,
-): Promise<[R[], RecordsList]> => {
+): Promise<[R[], RecordsList, boolean?]> => {
   const url = createTektonResultsUrl(
     workspace,
     namespace,
@@ -218,6 +218,7 @@ export const getFilteredRecord = async <R extends K8sResourceCommon>(
           nextPageToken: null,
           records: [],
         },
+        true,
       ];
     }
   }
