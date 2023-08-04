@@ -1,22 +1,14 @@
 reviewers:
   - abhinandan13jan
-  - christianvogt
-  - debsmita1
-  - divyanshiGupta
-  - invincibleJai
+  - jeff-phillips-18
   - jrichter1
   - karthikjeeyar
   - rohitkrai03
   - rottencandy
   - sahil143
-  - sawood14012
-  - vikram-raj
   - Katka92
 approvers:
-  - christianvogt
-  - invincibleJai
-  - jerolimov
   - jrichter1
   - karthikjeeyar
   - rohitkrai03
-component: HAC Developer Experience
+component: RHTAP UI Experience
