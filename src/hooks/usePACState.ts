@@ -15,7 +15,8 @@ import { usePipelineRuns } from './usePipelineRuns';
 export enum PACState {
   sample,
   disabled,
-  requested,
+  configureRequested,
+  unconfigureRequested,
   error,
   pending,
   ready,
@@ -25,8 +26,10 @@ export enum PACState {
 const usePACState = (component: ComponentKind) => {
   const isSample = component.metadata?.annotations?.[SAMPLE_ANNOTATION] === 'true';
   const pacProvision = getPACProvision(component);
-  const isRequested =
+  const isConfigureRequested =
     component.metadata?.annotations?.[BUILD_REQUEST_ANNOTATION] === BuildRequest.configurePac;
+  const isUnconfigureRequested =
+    component.metadata?.annotations?.[BUILD_REQUEST_ANNOTATION] === BuildRequest.unconfigurePac;
 
   const { name: prBotName } = useApplicationPipelineGitHubApp();
 
@@ -76,8 +79,10 @@ const usePACState = (component: ComponentKind) => {
 
   return isSample
     ? PACState.sample
-    : isRequested
-    ? PACState.requested
+    : isConfigureRequested
+    ? PACState.configureRequested
+    : isUnconfigureRequested
+    ? PACState.unconfigureRequested
     : pacProvision === ComponentBuildState.enabled
     ? !pipelineBuildRunsLoaded
       ? PACState.loading
