@@ -82,6 +82,7 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
     const fetchWorkspaces = async () => {
       let allWorkspaces: Workspace[] = [];
       try {
+        setActiveWorkspace(''); // to fetch root level workspaces
         allWorkspaces = await k8sListResourceItems<Workspace>({
           model: WorkspaceModel,
         });
@@ -93,8 +94,6 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
       if (unmounted) {
         return;
       }
-
-      setActiveWorkspace(''); // to fetch root level workspaces
 
       let ws: string;
       if (Array.isArray(allWorkspaces)) {
