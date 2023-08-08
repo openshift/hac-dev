@@ -53,8 +53,17 @@ const BasePipelineRunListRow: React.FC<BasePipelineRunListRowProps> = ({
         />
       </TableData>
       {showVulnerabilities ? (
-        <TableData className={pipelineRunTableColumnClasses.vulnerabilities}>
-          {scanLoaded ? <ScanStatus scanResults={scanResults} /> : <Skeleton />}
+        <TableData
+          data-testid="vulnerabilities"
+          className={pipelineRunTableColumnClasses.vulnerabilities}
+        >
+          {!obj?.status?.completionTime ? (
+            '-'
+          ) : scanLoaded ? (
+            <ScanStatus scanResults={scanResults} />
+          ) : (
+            <Skeleton />
+          )}
         </TableData>
       ) : null}
       <TableData className={pipelineRunTableColumnClasses.duration}>

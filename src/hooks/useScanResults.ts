@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { merge, partition, uniq } from 'lodash-es';
+import { merge, uniq } from 'lodash-es';
 import { PipelineRunLabel } from '../consts/pipelinerun';
 import { TektonResourceLabel, TaskRunKind, TektonResultsRun, PipelineRunKind } from '../types';
 import { OR } from '../utils/tekton-results';
@@ -205,7 +205,6 @@ export const usePLRVulnerabilities = (
 } => {
   const pageSize = 30;
   const completePLRnames = React.useRef([]);
-  const inProgressPLRnames = React.useRef([]);
 
   const loadedPipelineRunNames = React.useRef([]);
   const [currentPage, setCurrentPage] = React.useState(0);
@@ -229,35 +228,14 @@ export const usePLRVulnerabilities = (
     addLoadedPipelineruns(vlist);
   }
 
-  // disable cache for inprogress pipelineruns
-  const [runningulnerabilities, runningloaded, runninglist] = usePLRScanResults(
-    inProgressPLRnames.current.slice(
-      (currentPage - 1) * pageSize,
-      inProgressPLRnames.current.length,
-    ),
-  );
-  pipelineRunVulnerabilities.current = merge(
-    {},
-    runningulnerabilities,
-    pipelineRunVulnerabilities.current,
-  );
-
-  if (runningloaded && runninglist.length > 0) {
-    addLoadedPipelineruns(runninglist);
-  }
-
   React.useEffect(() => {
     const totalPlrs = filteredPLRs.length;
-    const noOfPendingPLRS =
-      totalPlrs - completePLRnames.current.length - inProgressPLRnames.current.length;
+    const noOfPendingPLRS = totalPlrs - completePLRnames.current.length;
     if (totalPlrs > 0 && noOfPendingPLRS > 0) {
-      const [completedPipelineRuns, runningPipelineRuns] = partition(
-        filteredPLRs.slice(noOfPendingPLRS > pageSize ? noOfPendingPLRS : 0, totalPlrs),
-        (plr) => !!plr?.status?.completionTime,
-      );
-
+      const completedPipelineRuns = filteredPLRs
+        .filter((plr) => !!plr?.status?.completionTime)
+        .slice(noOfPendingPLRS > pageSize ? noOfPendingPLRS : 0, totalPlrs);
       completePLRnames.current = completedPipelineRuns.map(({ metadata: { name } }) => name);
-      inProgressPLRnames.current = runningPipelineRuns.map(({ metadata: { name } }) => name);
 
       setCurrentPage(Math.round(totalPlrs / pageSize));
     }
