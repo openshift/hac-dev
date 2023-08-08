@@ -16,13 +16,15 @@ import {
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
+import gitUrlParse from 'git-url-parse';
+import { useApplications } from '../../hooks/useApplications';
 import { ComponentKind } from '../../types';
 import { useTrackEvent, TrackEvents } from '../../utils/analytics';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import SampleSection from './SampleSection/SampleSection';
 import { createResources } from './utils/submit-utils';
 import { ImportFormValues, ImportStrategy } from './utils/types';
-import { useValidApplicationName } from './utils/useValidApplicationName';
+import { incrementNameCount } from './utils/useValidApplicationName';
 
 type SampleImportFormProps = {
   applicationName: string;
@@ -32,7 +34,7 @@ const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({ appl
   const navigate = useNavigate();
   const track = useTrackEvent();
   const { namespace, workspace } = useWorkspaceInfo();
-  const [validAppName, appNameloaded] = useValidApplicationName();
+  const [applications, appsLoaded] = useApplications(namespace);
 
   const [submitting, setSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState('');
@@ -42,8 +44,10 @@ const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({ appl
       setSubmitting(true);
       track(TrackEvents.ButtonClicked, { link_name: 'import-submit', workspace });
 
+      const validApplication =
+        applicationName || incrementNameCount(applications, gitUrlParse(sourceUrl).name);
       const values: ImportFormValues = {
-        application: applicationName || validAppName,
+        application: validApplication,
         inAppContext: applicationName ? true : false,
         source: {
           git: {
@@ -89,10 +93,10 @@ const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({ appl
           setSubmitError(error.message);
         });
     },
-    [applicationName, namespace, navigate, validAppName, track, workspace],
+    [applicationName, namespace, navigate, applications, track, workspace],
   );
 
-  if (!appNameloaded) {
+  if (!appsLoaded) {
     return (
       <Bullseye>
         <Spinner />

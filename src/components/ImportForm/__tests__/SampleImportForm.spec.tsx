@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { render, waitFor, screen, configure } from '@testing-library/react';
+import { useApplications } from '../../../hooks/useApplications';
 import { mockApplication, componentCRMocks } from '../../Components/__data__/mock-data';
 import SampleImportForm from '../SampleImportForm';
 import { createResources } from '../utils/submit-utils';
 import { ImportStrategy } from '../utils/types';
-import { useValidApplicationName } from '../utils/useValidApplicationName';
 
 jest.mock('../../../utils/analytics');
 
@@ -13,8 +13,8 @@ jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
 }));
 
-jest.mock('../utils/useValidApplicationName', () => ({
-  useValidApplicationName: jest.fn(),
+jest.mock('../../../hooks/useApplications', () => ({
+  useApplications: jest.fn(),
 }));
 
 jest.mock('../utils/submit-utils.ts', () => ({
@@ -42,7 +42,7 @@ configure({ testIdAttribute: 'data-test' });
 
 const createResourcesMock = createResources as jest.Mock;
 const useNavigateMock = useNavigate as jest.Mock;
-const useValidApplicationNameMock = useValidApplicationName as jest.Mock;
+const useApplicationsMock = useApplications as jest.Mock;
 
 describe('SampleImportForm', () => {
   let navigateMock;
@@ -50,7 +50,7 @@ describe('SampleImportForm', () => {
   beforeEach(() => {
     navigateMock = jest.fn();
     useNavigateMock.mockImplementation(() => navigateMock);
-    useValidApplicationNameMock.mockReturnValue(['my-app', true]);
+    useApplicationsMock.mockReturnValue([[], true]);
   });
 
   afterEach(() => {
@@ -58,7 +58,7 @@ describe('SampleImportForm', () => {
   });
 
   it('should show the spinner when app name recommendation is not loaded', () => {
-    useValidApplicationNameMock.mockReturnValue(['', false]);
+    useApplicationsMock.mockReturnValue([[], false]);
 
     render(<SampleImportForm applicationName="" />);
     screen.getByRole('progressbar');
@@ -75,7 +75,7 @@ describe('SampleImportForm', () => {
 
   it('should call create resources when import sample is clicked', async () => {
     createResourcesMock.mockResolvedValue({
-      applicationName: 'my-app',
+      applicationName: 'test-repo',
       application: mockApplication,
       components: componentCRMocks,
     });
@@ -87,7 +87,7 @@ describe('SampleImportForm', () => {
 
     expect(createResourcesMock).toHaveBeenCalledWith(
       {
-        application: 'my-app',
+        application: 'test-repo',
         inAppContext: false,
         namespace: 'test-ns',
         source: {
@@ -101,7 +101,27 @@ describe('SampleImportForm', () => {
     );
 
     expect(navigateMock).toHaveBeenCalledWith(
-      '/application-pipeline/workspaces/test-ws/applications/my-app',
+      '/application-pipeline/workspaces/test-ws/applications/test-repo',
+    );
+  });
+
+  it('should increment app name when name already exists', async () => {
+    createResourcesMock.mockResolvedValue({
+      applicationName: 'test-repo',
+      application: mockApplication,
+      components: componentCRMocks,
+    });
+    useApplicationsMock.mockReturnValue([[{ metadata: { name: 'test-repo' } }], true]);
+    render(<SampleImportForm applicationName="" />);
+
+    const importSampleButton = screen.getByTestId('import-sample-button');
+
+    await waitFor(() => importSampleButton.click());
+
+    expect(createResourcesMock).toHaveBeenCalledWith(
+      expect.objectContaining({ application: 'test-repo-1' }),
+      ImportStrategy.SAMPLE,
+      'test-ws',
     );
   });
 
