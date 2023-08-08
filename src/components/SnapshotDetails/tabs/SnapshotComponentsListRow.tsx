@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import ExternalLink from '../../../shared/components/links/ExternalLink';
+import { ClipboardCopy } from '@patternfly/react-core';
 import { RowFunctionArgs, TableData } from '../../../shared/components/table';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
+import GitRepoLink from '../../GitLink/GitRepoLink';
 import { commitsTableColumnClasses } from './SnapshotComponentsListHeader';
 
 export type SnapshotComponentTableData = {
-  metadata: { uid: string };
+  metadata: { uid: string; name: string };
   name: string;
   containerImage: string;
   application: string;
@@ -19,19 +20,23 @@ const SnapshotComponentsListRow: React.FC<RowFunctionArgs<SnapshotComponentTable
   const { workspace } = useWorkspaceInfo();
   return (
     <>
-      <TableData className={commitsTableColumnClasses.name}>
+      <TableData data-test="snapshot-component-list-row" className={commitsTableColumnClasses.name}>
         <Link
-          to={`/application-pipeline/workspaces/${workspace}/applications/${obj.application}/component/${obj.name}`}
+          to={`/application-pipeline/workspaces/${workspace}/applications/${obj.application}/components/`}
         >
           {obj.name}
         </Link>
       </TableData>
-      <TableData className={commitsTableColumnClasses.image}>{obj.containerImage}</TableData>
+      <TableData className={commitsTableColumnClasses.image}>
+        <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
+          {obj.containerImage}
+        </ClipboardCopy>
+      </TableData>
       <TableData className={commitsTableColumnClasses.url}>
-        <ExternalLink href={obj.source?.git?.url}>{obj.source?.git?.url}</ExternalLink>
+        <GitRepoLink dataTestID="snapshot-component-git-url" url={obj.source?.git?.url} />
       </TableData>
       <TableData className={commitsTableColumnClasses.revision}>
-        {obj.source?.git?.revision}
+        <span data-test="snapshot-component-revision">{obj.source?.git?.revision}</span>
       </TableData>
     </>
   );

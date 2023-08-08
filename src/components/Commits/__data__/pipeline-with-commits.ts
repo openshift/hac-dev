@@ -2657,6 +2657,7 @@ export const mockCommits: Commit[] = [
       uid: 'comm0123456789abcdefghijklmnopqrstuvwxyz',
     },
     branch: 'main',
+    displayName: 'comm012',
     application: 'sample-application',
     components: ['my-comp'],
     user: 'abhi',

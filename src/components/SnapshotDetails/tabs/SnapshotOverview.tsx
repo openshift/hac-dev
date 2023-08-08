@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -13,10 +12,9 @@ import {
 } from '@patternfly/react-core';
 import { ScanStatus } from '../../../components/PipelineRunListView/ScanStatus';
 import { useScanResults } from '../../../hooks/useScanResults';
-import { SnapshotEnvironmentBindingGroupVersionKind } from '../../../models';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../../types';
-import { Snapshot, SnapshotEnvironmentBinding } from '../../../types/coreBuildService';
+import { Snapshot } from '../../../types/coreBuildService';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import SnapshotComponentsList from './SnapshotComponentsList';
 import { SnapshotComponentTableData } from './SnapshotComponentsListRow';
@@ -25,26 +23,23 @@ interface SnapshotOverviewTabProps {
   snapshot: Snapshot;
   commit?: Commit;
   buildPipelineName?: string;
+  environments?: string[];
 }
 
 const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
   snapshot,
   commit,
   buildPipelineName,
+  environments,
 }) => {
   const { workspace } = useWorkspaceInfo();
   const [scanResults, scanLoaded] = useScanResults(buildPipelineName, true);
-  const [snapshotEBs, sebLoaded, sebLoadError] = useK8sWatchResource<SnapshotEnvironmentBinding[]>({
-    groupVersionKind: SnapshotEnvironmentBindingGroupVersionKind,
-    namespace: snapshot.metadata?.namespace,
-    isList: true,
-  });
 
   const componentsTableData: SnapshotComponentTableData[] = React.useMemo(
     () =>
       snapshot.spec.components.map((component) => {
         return {
-          metadata: { uid: component.name },
+          metadata: { uid: component.name, name: component.name },
           application: snapshot.spec.application,
           ...component,
         };
@@ -52,28 +47,16 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
     [snapshot.spec],
   );
 
-  const environments = React.useMemo(() => {
-    const env = [];
-    sebLoaded &&
-      !sebLoadError &&
-      snapshotEBs.forEach((seb) => {
-        if (seb.spec.snapshot === snapshot.metadata.name && seb.spec.environment) {
-          env.push(seb.spec.environment);
-        }
-      });
-    return env;
-  }, [sebLoadError, sebLoaded, snapshotEBs, snapshot.metadata.name]);
-
   return (
     <>
-      <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
+      <Title headingLevel="h4" className="pf-v5-c-title pf-v5-u-mt-lg pf-v5-u-mb-lg" size="lg">
         Snapshot details
       </Title>
       <Flex>
         <Flex flex={{ default: 'flex_3' }}>
           <FlexItem>
             <DescriptionList
-              data-test="integration-test-details"
+              data-test="snapshot-details"
               columnModifier={{
                 default: '1Col',
               }}
@@ -87,12 +70,12 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
               {commit && (
                 <DescriptionListGroup>
                   <DescriptionListTerm>Triggered by</DescriptionListTerm>
-                  <DescriptionListDescription>
+                  <DescriptionListDescription data-test="snapshot-commit-link">
                     <Link
-                      to={`/application-pipeline/workspaces/${workspace}/applications/${snapshot.spec.application}/commits/${commit.sha}`}
-                      title={commit.shaTitle}
+                      to={`/application-pipeline/workspaces/${workspace}/applications/${snapshot.spec.application}/commit/${commit.sha}`}
+                      title={commit.displayName || commit.shaTitle}
                     >
-                      {commit.shaTitle}
+                      {commit.displayName || commit.shaTitle}
                     </Link>
                   </DescriptionListDescription>
                 </DescriptionListGroup>
@@ -104,25 +87,27 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
         <Flex flex={{ default: 'flex_3' }}>
           <FlexItem>
             <DescriptionList
-              data-test="integration-test-details"
+              data-test="snapshot-details"
               columnModifier={{
                 default: '1Col',
               }}
             >
-              <DescriptionListGroup>
-                <DescriptionListTerm>Deployed to</DescriptionListTerm>
-                <DescriptionListDescription>
-                  {environments.map((env) => (
-                    <div key={env}>
-                      <Link
-                        to={`/application-pipeline/workspaces/${workspace}/applications/deployments`}
-                      >
-                        {env}
-                      </Link>
-                    </div>
-                  ))}
-                </DescriptionListDescription>
-              </DescriptionListGroup>
+              {environments && (
+                <DescriptionListGroup>
+                  <DescriptionListTerm>Deployed to</DescriptionListTerm>
+                  <DescriptionListDescription>
+                    {environments.map((env) => (
+                      <div key={env}>
+                        <Link
+                          to={`/application-pipeline/workspaces/${workspace}/applications/${snapshot.spec.application}/deployments`}
+                        >
+                          {env}
+                        </Link>
+                      </div>
+                    ))}
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+              )}
               <DescriptionListGroup>
                 <DescriptionListTerm>Vulnerabilities</DescriptionListTerm>
                 <DescriptionListDescription>
@@ -133,10 +118,12 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
           </FlexItem>
         </Flex>
       </Flex>
-      <SnapshotComponentsList
-        components={componentsTableData}
-        applicationName={snapshot.spec.application}
-      />
+      <div className="pf-vf-u-mt-lg">
+        <SnapshotComponentsList
+          components={componentsTableData}
+          applicationName={snapshot.spec.application}
+        />
+      </div>
     </>
   );
 };

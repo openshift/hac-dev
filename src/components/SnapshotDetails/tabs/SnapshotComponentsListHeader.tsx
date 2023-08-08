@@ -1,6 +1,6 @@
 export const commitsTableColumnClasses = {
-  name: 'pf-m-width-10 wrap-column',
-  image: 'pf-m-width-35 pf-m-width-25-on-lg',
+  name: 'pf-m-width-20 wrap-column',
+  image: 'pf-m-width-35 pf-m-width-25-on-lg wrap-column',
   url: 'pf-m-width-35 pf-m-width-25-on-lg',
   revision: 'pf-m-hidden pf-m-visible-on-lg pf-m-width-20 pf-m-width-10-on-xl',
   kebab: 'pf-c-table__action',

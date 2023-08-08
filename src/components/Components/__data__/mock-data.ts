@@ -19,13 +19,13 @@ export const componentCRMocks: ComponentKind[] = [
       source: {
         git: {
           url: 'https://github.com/nodeshift-starters/devfile-sample.git',
+          revision: 'main',
         },
       },
     },
     status: {
       conditions: [
         {
-          lastTransitionTime: '2022-03-16T04:45:09Z',
           message: 'Component has been successfully created',
           reason: 'OK',
           status: 'True',
@@ -73,7 +73,6 @@ export const componentCRMocks: ComponentKind[] = [
     status: {
       conditions: [
         {
-          lastTransitionTime: '2022-04-11T19:36:28Z',
           message: 'Error while creating component',
           reason: 'Error',
           status: 'False',

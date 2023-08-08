@@ -1,0 +1,25 @@
+import * as React from 'react';
+import { render, screen } from '@testing-library/react';
+import SnapshotComponentsEmptyState from '../SnapshotComponentsEmptyState';
+
+jest.mock('react-router-dom', () => ({
+  Link: (props) => <a href={props.to}>{props.children}</a>,
+}));
+
+jest.mock('../../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
+}));
+
+jest.mock('../../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
+describe('SnapshotComponentsEmptyState', () => {
+  it('should render correct Link to Application Name', () => {
+    render(<SnapshotComponentsEmptyState applicationName="test" />);
+    expect(screen.getByRole('link').getAttribute('href')).toBe(
+      '/application-pipeline/workspaces/test-ws/import?application=test',
+    );
+    screen.getByText('Add component');
+  });
+});

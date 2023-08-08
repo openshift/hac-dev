@@ -9,9 +9,10 @@ type Props = {
   url: string;
   revision?: string;
   context?: string;
+  dataTestID?: string;
 };
 
-const GitRepoLink: React.FC<Props> = ({ url, revision, context }) => {
+const GitRepoLink: React.FC<Props> = ({ url, revision, context, dataTestID }) => {
   const parsed = gitUrlParse(url);
   const icon = getGitIcon(parsed.source);
   const path = context?.replace(/^(\.?\/)?/g, '');
@@ -23,7 +24,7 @@ const GitRepoLink: React.FC<Props> = ({ url, revision, context }) => {
 
   return (
     <Tooltip content={fullUrl} position={TooltipPosition.bottom}>
-      <ExternalLink href={fullUrl} icon={icon}>
+      <ExternalLink href={fullUrl} icon={icon} dataTestID={dataTestID}>
         {parsed.owner}/{parsed.name}
         {revision ? (
           <>

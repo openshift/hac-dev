@@ -13,13 +13,13 @@ import {
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import { Table } from '../../../shared';
 import FilteredEmptyState from '../../EmptyState/FilteredEmptyState';
-import CommitsEmptyState from './SnapshotComponentsEmptyState';
-import CommitsListHeader from './SnapshotComponentsListHeader';
-import CommitsListRow from './SnapshotComponentsListRow';
+import SnapshotComponentsEmptyState from './SnapshotComponentsEmptyState';
+import SnapshotComponentsListHeader from './SnapshotComponentsListHeader';
+import SnapshotComponentsListRow, { SnapshotComponentTableData } from './SnapshotComponentsListRow';
 
 interface SnapshotComponentsListProps {
   applicationName?: string;
-  components: any;
+  components: SnapshotComponentTableData[];
 }
 
 const SnapshotComponentsList: React.FC<SnapshotComponentsListProps> = ({
@@ -46,14 +46,14 @@ const SnapshotComponentsList: React.FC<SnapshotComponentsListProps> = ({
           Components
         </Title>
         {!components || components.length === 0 ? (
-          <CommitsEmptyState applicationName={applicationName} />
+          <SnapshotComponentsEmptyState applicationName={applicationName} />
         ) : (
           <>
             <Text className="pf-u-mb-lg">Component builds that are included in this snapshot</Text>
 
             <Toolbar data-test="component-list-toolbar" clearAllFilters={onClearFilters}>
               <ToolbarContent>
-                <ToolbarGroup alignment={{ default: 'alignLeft' }}>
+                <ToolbarGroup align={{ default: 'alignLeft' }}>
                   <ToolbarItem className="pf-u-ml-0">
                     <SearchInput
                       name="nameInput"
@@ -73,8 +73,8 @@ const SnapshotComponentsList: React.FC<SnapshotComponentsListProps> = ({
               <Table
                 data={filteredComponents}
                 aria-label="Component List"
-                Header={CommitsListHeader}
-                Row={CommitsListRow}
+                Header={SnapshotComponentsListHeader}
+                Row={SnapshotComponentsListRow}
                 loaded
                 getRowProps={(obj) => ({
                   id: obj.sha,

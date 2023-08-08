@@ -1,3 +1,5 @@
+import { Snapshot } from '../../../../../types/coreBuildService';
+
 export const MockCommit = {
   metadata: {
     uid: '8a1fd02d3fec043b009608ac67350cd4a2e02cd9',
@@ -8557,7 +8559,7 @@ export const MockSnapshotsEB = [
   },
 ];
 
-export const MockSnapshots = [
+export const MockSnapshots: Snapshot[] = [
   {
     apiVersion: 'appstudio.redhat.com/v1alpha1',
     kind: 'Snapshot',
@@ -8578,7 +8580,143 @@ export const MockSnapshots = [
         'pac.test.appstudio.openshift.io/git-auth-secret': 'pac-gitauth-vfnr',
       },
       resourceVersion: '92260135',
-      name: 'my-test-output-gwk9q',
+      name: 'my-test-output-1',
+      uid: '406579cb-03dc-4ebd-9d36-aafc9478eb9c',
+      creationTimestamp: '2023-03-27T13:47:16Z',
+      generation: 1,
+      namespace: 'jephilli-tenant',
+      ownerReferences: [
+        {
+          apiVersion: 'appstudio.redhat.com/v1alpha1',
+          blockOwnerDeletion: true,
+          controller: true,
+          kind: 'Application',
+          name: 'my-test-output',
+          uid: '2901ca04-f268-4c04-9ef7-5a46f96a5ab7',
+        },
+      ],
+      labels: {
+        'appstudio.openshift.io/component': 'human-resources-clkq',
+        'pac.test.appstudio.openshift.io/pull-request': '6',
+        'pac.test.appstudio.openshift.io/url-repository': 'human-resources',
+        'pac.test.appstudio.openshift.io/repository': 'human-resources-clkq',
+        'pac.test.appstudio.openshift.io/git-provider': 'github',
+        'pac.test.appstudio.openshift.io/event-type': 'pull_request',
+        'test.appstudio.openshift.io/pipelinerunfinishtime': '1679924836',
+        'pac.test.appstudio.openshift.io/url-org': 'jeff-phillips-18',
+        'pac.test.appstudio.openshift.io/original-prname': 'human-resources-clkq-on-pull-request',
+        'pac.test.appstudio.openshift.io/sha': '8a1fd02d3fec043b009608ac67350cd4a2e02cd9',
+        'pac.test.appstudio.openshift.io/sender': 'jeff-phillips-18',
+        'pac.test.appstudio.openshift.io/state': 'started',
+        'test.appstudio.openshift.io/type': 'component',
+        'pac.test.appstudio.openshift.io/branch': 'main',
+        'pac.test.appstudio.openshift.io/check-run-id': '12302899421',
+      },
+    },
+    spec: {
+      application: 'my-test-output',
+      artifacts: {},
+      components: [
+        {
+          containerImage:
+            'quay.io/redhat-appstudio/user-workload@sha256:0afbdd832f28a7de094e6f0771f5b1b7a80bd8f45d282823ae9ef093d29fac52',
+          name: 'devfile-sample-go-basic-kksq',
+        },
+        {
+          containerImage:
+            'quay.io/redhat-appstudio/user-workload@sha256:704ab805d1f5d6588c97d22c298fc95f41d444d608fc26a8dc4a7b6e177a704a',
+          name: 'devfile-sample-go-basic-vwkv',
+        },
+        {
+          containerImage:
+            'quay.io/redhat-appstudio/user-workload@sha256:a273f9c8e642b4bdd27e329e38d552595fb63c42072d4ee2631f6a5dfede8e28',
+          name: 'human-resources-clkq',
+        },
+        {
+          containerImage: 'quay.io/redhat-appstudio/user-workload:p0QHj-order-app-webshop-4cxk',
+          name: 'order-app-webshop-4cxk',
+        },
+        {
+          containerImage:
+            'quay.io/redhat-appstudio/user-workload:p0QHj-governance-policy-propagator-pswg',
+          name: 'governance-policy-propagator-pswg',
+        },
+        {
+          containerImage:
+            'quay.io/redhat-appstudio/user-workload@sha256:079cf227ab4e744ef777b9c4125039b2cadd7362a80b3b76f0bf3f0cdedbccb9',
+          name: 'pacman-f5si',
+        },
+        {
+          containerImage:
+            'quay.io/redhat-appstudio/user-workload:p0QHj-governance-policy-propagator-aua5',
+          name: 'governance-policy-propagator-aua5',
+        },
+        {
+          containerImage: 'quay.io/redhat-appstudio/user-workload:p0QHj-payment-app-webshop-vh3d',
+          name: 'payment-app-webshop-vh3d',
+        },
+        {
+          containerImage: 'quay.io/redhat-appstudio/user-workload:p0QHj-stock-app-webshop-jhnj',
+          name: 'stock-app-webshop-jhnj',
+        },
+        {
+          containerImage:
+            'quay.io/redhat-appstudio/user-workload:p0QHj-devfile-sample-go-basic-btj3',
+          name: 'devfile-sample-go-basic-btj3',
+        },
+        {
+          containerImage:
+            'quay.io/redhat-appstudio/user-workload:p0QHj-devfile-sample-go-basic-2cnf',
+          name: 'devfile-sample-go-basic-2cnf',
+        },
+        {
+          containerImage: 'quay.io/redhat-appstudio/user-workload:p0QHj-payment-app-webshop-ca6l',
+          name: 'payment-app-webshop-ca6l',
+        },
+        {
+          containerImage: 'quay.io/redhat-appstudio/user-workload:p0QHj-stock-app-webshop-l2gd',
+          name: 'stock-app-webshop-l2gd',
+        },
+        {
+          containerImage:
+            'quay.io/redhat-appstudio/user-workload@sha256:8161eeea15f71858d88a1d801ce12c63347f1c27f0bd572c1a657fbb0ad0c8ab',
+          name: 'devfile-sample-code-with-quarkus-66zm',
+        },
+      ],
+    },
+    status: {
+      conditions: [
+        {
+          lastTransitionTime: '2023-03-27T13:47:16Z',
+          message: 'Snapshot starts being tested by the integrationPipelineRun',
+          reason: 'InProgress',
+          status: 'Unknown',
+          type: 'HACBSIntegrationStatus',
+        },
+      ],
+    },
+  },
+  {
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    kind: 'Snapshot',
+    metadata: {
+      generateName: 'my-test-output-',
+      annotations: {
+        'pac.test.appstudio.openshift.io/on-event': '[pull_request]',
+        'pac.test.appstudio.openshift.io/log-url':
+          'https://console-openshift-console.apps.stone-prd-m01.84db.p1.openshiftapps.com/k8s/ns/jephilli-tenant/tekton.dev~v1beta1~PipelineRun/human-resources-clkq-on-pull-request-fgkpt',
+        'pac.test.appstudio.openshift.io/max-keep-runs': '3',
+        'pac.test.appstudio.openshift.io/on-target-branch': '[main,master]',
+        'pac.test.appstudio.openshift.io/repo-url':
+          'https://github.com/jeff-phillips-18/human-resources',
+        'pac.test.appstudio.openshift.io/installation-id': '34687113',
+        'pac.test.appstudio.openshift.io/sha-url':
+          'https://github.com/jeff-phillips-18/human-resources/commit/8a1fd02d3fec043b009608ac67350cd4a2e02cd9',
+        'pac.test.appstudio.openshift.io/sha-title': 'Update README.md',
+        'pac.test.appstudio.openshift.io/git-auth-secret': 'pac-gitauth-vfnr',
+      },
+      resourceVersion: '92260135',
+      name: 'my-test-output-2',
       uid: '406579cb-03dc-4ebd-9d36-aafc9478eb9c',
       creationTimestamp: '2023-03-27T13:47:16Z',
       generation: 1,
