@@ -156,9 +156,7 @@ describe('tekton-results', () => {
             operator: 'DoesNotExist',
           },
         ]),
-        // TODO
-        // ).toStrictEqual('!data.metadata.labels.contains("test")');
-      ).toStrictEqual('');
+      ).toStrictEqual('!data.metadata.labels.contains("test")');
     });
 
     it('should convert NotIn operator', () => {

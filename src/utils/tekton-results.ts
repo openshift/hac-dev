@@ -93,8 +93,7 @@ export const expressionsToFilter = (expressions: Omit<MatchExpression, 'value'>[
           case 'Exists':
             return `data.metadata.labels.contains("${expression.key}")`;
           case 'DoesNotExist':
-            // TODO crashes tekton-results and `in` expression does not work
-            return ''; //`!data.metadata.labels.contains("${expression.key}")`;
+            return `!data.metadata.labels.contains("${expression.key}")`;
           case 'NotIn':
             return expression.values?.length > 0
               ? AND(
