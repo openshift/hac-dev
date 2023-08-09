@@ -29,6 +29,7 @@ export const useAppApplicationTestNodes = (
   const [testPipelines, testPipelinesLoaded, testPipelinesError] = useTestPipelines(
     namespace,
     applicationName,
+    true,
   );
   const allLoaded = testsLoaded && testPipelinesLoaded;
   const allErrors = [testsError, testPipelinesError].filter((e) => !!e);
