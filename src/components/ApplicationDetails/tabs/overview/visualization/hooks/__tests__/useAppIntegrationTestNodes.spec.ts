@@ -1,6 +1,7 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import '@testing-library/jest-dom';
 import { renderHook } from '@testing-library/react-hooks';
+import { useComponents } from '../../../../../../../hooks/useComponents';
 import { mockIntegrationTestScenariosData } from '../../../../../__data__';
 import { testPipelineRuns } from '../__data__/test-pipeline-data';
 import { useAppApplicationTestNodes } from '../useAppApplicationTestNodes';
@@ -12,10 +13,14 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
     useK8sWatchResource: jest.fn(),
   };
 });
+jest.mock('../../../../../../../hooks/useComponents', () => ({
+  useComponents: jest.fn(),
+}));
 
 jest.mock('../../../../../../../hooks/useTektonResults');
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
+const useComponentsMock = useComponents as jest.Mock;
 
 describe('useAppApplicationTestNodes', () => {
   beforeEach(() => {
@@ -23,6 +28,7 @@ describe('useAppApplicationTestNodes', () => {
     useK8sWatchResourceMock
       .mockReturnValueOnce([[mockIntegrationTestScenariosData[0]], true])
       .mockReturnValueOnce([testPipelineRuns, true]);
+    useComponentsMock.mockReturnValue([[], true]);
   });
 
   it('should return integration test nodes', () => {
