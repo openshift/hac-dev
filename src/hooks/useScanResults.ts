@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { merge, uniq } from 'lodash-es';
+import { difference, merge, uniq } from 'lodash-es';
 import { PipelineRunLabel } from '../consts/pipelinerun';
 import { TektonResourceLabel, TaskRunKind, TektonResultsRun, PipelineRunKind } from '../types';
 import { OR } from '../utils/tekton-results';
@@ -216,7 +216,10 @@ export const usePLRVulnerabilities = (
 
   // enable cache only if the pipeline run has completed
   const [vulnerabilities, vloaded, vlist] = usePLRScanResults(
-    completePLRnames.current.slice((currentPage - 1) * pageSize, completePLRnames.current.length),
+    difference(
+      completePLRnames.current.slice((currentPage - 1) * pageSize, completePLRnames.current.length),
+      loadedPipelineRunNames.current,
+    ),
     true,
   );
   pipelineRunVulnerabilities.current = merge(
