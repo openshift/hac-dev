@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { PipelineRunKind } from '../types';
 import { getCommitSha } from '../utils/commits-utils';
+import { useComponents } from './useComponents';
 import { usePipelineRuns } from './usePipelineRuns';
 
 export const useBuildPipelines = (
@@ -9,9 +10,12 @@ export const useBuildPipelines = (
   applicationName: string,
   // TODO inefficient to get all builds without a commit
   commit?: string,
+  includeComponents?: boolean,
 ): [PipelineRunKind[], boolean, unknown] => {
+  const [components, componentsLoaded] = useComponents(namespace, applicationName);
+
   const [pipelines, loaded, error] = usePipelineRuns(
-    namespace,
+    includeComponents ? (componentsLoaded ? namespace : null) : namespace,
     React.useMemo(
       () => ({
         selector: {
@@ -19,10 +23,21 @@ export const useBuildPipelines = (
             [PipelineRunLabel.APPLICATION]: applicationName,
             [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
           },
+          ...(includeComponents &&
+            componentsLoaded && {
+              matchExpressions: [
+                {
+                  key: `${PipelineRunLabel.COMPONENT}`,
+                  operator: 'In',
+                  values: components?.map((c) => c.metadata?.name),
+                },
+              ],
+            }),
         },
-        limit: 100,
+
+        limit: includeComponents ? components.length : 50,
       }),
-      [applicationName],
+      [applicationName, includeComponents, components, componentsLoaded],
     ),
   );
 

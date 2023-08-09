@@ -30,6 +30,8 @@ export const useAppBuildNodes = (
   const [buildPipelines, buildPipelinesLoaded, buildPipelinesError] = useBuildPipelines(
     namespace,
     applicationName,
+    null,
+    true,
   );
   const allResourcesLoaded: boolean = componentsLoaded && buildPipelinesLoaded;
   const allErrors: unknown[] = [componentsError, buildPipelinesError].filter((e) => !!e);
