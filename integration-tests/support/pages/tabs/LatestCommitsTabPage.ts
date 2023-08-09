@@ -54,7 +54,7 @@ export class LatestCommitsTabPage {
   }
 
   verifyCommitID(sha: string, repoLink: string) {
-    UIhelper.verifyLabelAndValue('Commit', sha.slice(0, 6)).should(
+    UIhelper.verifyLabelAndValue('Commit', sha.slice(0, 7)).should(
       'have.attr',
       'href',
       `${repoLink}/commit/${sha}`,
