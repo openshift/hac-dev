@@ -62,6 +62,7 @@ export const createResources = async (
     application,
     inAppContext,
     components,
+    selectedComponents,
     secret,
     namespace,
     importSecrets = [],
@@ -69,7 +70,9 @@ export const createResources = async (
   } = formValues;
   const shouldCreateApplication = !inAppContext;
   let applicationName = application;
-  let detectedComponents = components;
+  let detectedComponents = selectedComponents
+    ? components?.filter((value, index) => selectedComponents[index])
+    : components;
   let componentAnnotations: { [key: string]: string };
 
   if (strategy === ImportStrategy.SAMPLE) {

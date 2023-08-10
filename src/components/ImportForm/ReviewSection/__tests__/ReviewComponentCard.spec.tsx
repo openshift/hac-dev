@@ -114,6 +114,35 @@ describe('ReviewComponentCard', () => {
     expect(screen.getByText('quay.io/sbudhwar/demo:latest')).toBeInTheDocument();
   });
 
+  it('should render checkbox to select or unselect a component', () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+      />,
+      { isDetected: true, source: { git: {} } },
+    );
+
+    expect(screen.getByTestId('select-component-toggle-0')).toBeInTheDocument();
+  });
+
+  it('should not render checkbox to select or unselect a component if in editMode', () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+        editMode
+      />,
+      { isDetected: true, source: { git: {} } },
+    );
+
+    expect(screen.queryByTestId('select-component-toggle-0')).toBeNull();
+  });
+
   it('should show build and deploy config options when components are detected', async () => {
     useComponentDetectionMock.mockReturnValue([]);
     formikRenderer(

@@ -41,6 +41,45 @@ describe('Submit Utils: createResources', () => {
             },
           },
         ],
+        selectedComponents: [true],
+        namespace: 'test-ns',
+        source: {
+          git: {
+            url: 'https://github.com/example/repo',
+          },
+        },
+      },
+      ImportStrategy.GIT,
+      'test-ws',
+    );
+    expect(createApplicationMock).toHaveBeenCalledTimes(2);
+    expect(createIntegrationTestMock).toHaveBeenCalledTimes(2);
+    expect(createComponentMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('should only create components that are selected', async () => {
+    createApplicationMock.mockResolvedValue({ metadata: { name: 'test-app' } });
+    createComponentMock.mockResolvedValue({ metadata: { name: 'test-component' } });
+    await createResources(
+      {
+        application: 'test-app',
+        components: [
+          {
+            componentStub: {
+              application: 'test-app',
+              componentName: 'comp1',
+              source: { git: { url: 'example.com' } },
+            },
+          },
+          {
+            componentStub: {
+              application: 'test-app',
+              componentName: 'comp2',
+              source: { git: { url: 'example.com' } },
+            },
+          },
+        ],
+        selectedComponents: [false, true],
         namespace: 'test-ns',
         source: {
           git: {
@@ -70,6 +109,7 @@ describe('Submit Utils: createResources', () => {
             },
           },
         ],
+        selectedComponents: [true],
         namespace: 'test-ns',
         source: {
           git: {
@@ -100,6 +140,7 @@ describe('Submit Utils: createResources', () => {
               },
             },
           ],
+          selectedComponents: [true],
           namespace: 'test-ns',
           source: {
             git: {
@@ -132,6 +173,7 @@ describe('Submit Utils: createResources', () => {
               },
             },
           ],
+          selectedComponents: [true],
           namespace: 'test-ns',
           source: {
             git: {

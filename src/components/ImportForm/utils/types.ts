@@ -50,6 +50,7 @@ export type ImportFormValues = {
   inAppContext?: boolean;
   detectedComponents?: DetectedFormComponent[];
   components?: DetectedFormComponent[];
+  selectedComponents?: boolean[];
   pipelinesascode?: 'manual' | 'automatic';
   source: {
     git: {
