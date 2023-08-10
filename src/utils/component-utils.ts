@@ -108,7 +108,7 @@ export const startNewBuild = (component: ComponentKind) =>
  * https://github.com/redhat-appstudio/build-service/pull/164
  */
 export const getComponentBuildStatus = (component: ComponentKind) => {
-  const buildStatusJSON = component.metadata.annotations?.[BUILD_STATUS_ANNOTATION];
+  const buildStatusJSON = component.metadata?.annotations?.[BUILD_STATUS_ANNOTATION];
   if (!buildStatusJSON) {
     return null;
   }
