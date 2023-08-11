@@ -13,6 +13,7 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
+import { debounce } from 'lodash-es';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useComponents } from '../../hooks/useComponents';
 import { usePipelineRuns } from '../../hooks/usePipelineRuns';
@@ -33,8 +34,18 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
   const { namespace } = useWorkspaceInfo();
   const [components, componentsLoaded] = useComponents(namespace, applicationName);
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
+  const [name, setName] = React.useState('');
   const [statusFilterExpanded, setStatusFilterExpanded] = React.useState<boolean>(false);
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
+  const requestQueue = React.useRef<Function[]>([]);
+  const [onLoadName, setOnLoadName] = React.useState(nameFilter);
+  React.useEffect(() => {
+    if (nameFilter) {
+      setOnLoadName(nameFilter);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [pipelineRuns, loaded, , getNextPage] = usePipelineRuns(
     componentsLoaded ? namespace : null,
     React.useMemo(
@@ -43,16 +54,19 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
           matchLabels: {
             [PipelineRunLabel.APPLICATION]: applicationName,
           },
-          matchExpressions: [
-            {
-              key: `${PipelineRunLabel.COMPONENT}`,
-              operator: 'In',
-              values: components?.map((c) => c.metadata?.name),
-            },
-          ],
+          ...(!onLoadName && {
+            matchExpressions: [
+              {
+                key: `${PipelineRunLabel.COMPONENT}`,
+                operator: 'In',
+                values: components?.map((c) => c.metadata?.name),
+              },
+            ],
+          }),
+          ...(onLoadName && { filterByName: onLoadName.trim().toLowerCase() }),
         },
       }),
-      [applicationName, components],
+      [applicationName, components, onLoadName],
     ),
   );
 
@@ -94,20 +108,31 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
     [nameFilter, pipelineRuns, statusFilters],
   );
 
-  const vulnerabilities = usePLRVulnerabilities(filteredPLRs);
+  const vulnerabilities = usePLRVulnerabilities(name ? filteredPLRs : pipelineRuns);
+
+  React.useEffect(() => {
+    if (
+      vulnerabilities.fetchedPipelineRuns.length === pipelineRuns.length &&
+      requestQueue.current.length
+    ) {
+      const [nextPage] = requestQueue.current;
+      nextPage?.();
+      requestQueue.current = [];
+    }
+  }, [vulnerabilities, pipelineRuns.length]);
 
   const onClearFilters = () => {
+    onLoadName.length && setOnLoadName('');
     setNameFilter('');
+    setName('');
     setStatusFilters([]);
   };
-  const onNameInput = (name: string) => setNameFilter(name);
+  const onNameInput = debounce((n: string) => {
+    n.length === 0 && onLoadName.length && setOnLoadName('');
 
-  // using client side filtering requires continuous fetching of results in an attempt to find a match
-  React.useEffect(() => {
-    if (loaded && filteredPLRs.length === 0) {
-      getNextPage?.();
-    }
-  }, [loaded, filteredPLRs.length, getNextPage]);
+    setNameFilter(n);
+    setName(n);
+  }, 600);
 
   if (!loaded && pipelineRuns.length === 0) {
     return (
@@ -117,7 +142,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
     );
   }
 
-  if (pipelineRuns.length === 0) {
+  if (!nameFilter && pipelineRuns.length === 0) {
     return <PipelineRunEmptyState applicationName={applicationName} />;
   }
 
@@ -133,7 +158,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
                 type="search"
                 aria-label="name filter"
                 placeholder="Filter by name..."
-                onChange={(e, name) => onNameInput(name)}
+                onChange={(e, n) => onNameInput(n)}
                 value={nameFilter}
               />
             </ToolbarItem>
@@ -187,8 +212,14 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
             id: obj.metadata.name,
           })}
           onRowsRendered={({ stopIndex }) => {
-            if (loaded && stopIndex === filteredPLRs.length - 1) {
-              getNextPage?.();
+            if (loaded && stopIndex === filteredPLRs.length - 1 && !nameFilter) {
+              if (vulnerabilities.fetchedPipelineRuns.length === filteredPLRs.length) {
+                getNextPage?.();
+              } else {
+                if (requestQueue.current.length === 0) {
+                  getNextPage && requestQueue.current.push(getNextPage);
+                }
+              }
             }
           }}
         />

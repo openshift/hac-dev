@@ -37,7 +37,7 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
   // reset token if namespace or options change
   React.useEffect(() => {
     setNextPageToken(null);
-  }, [namespace, options]);
+  }, [namespace, options, cacheKey]);
 
   React.useEffect(() => {
     let disposed = false;
@@ -55,27 +55,28 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
             const token = tkPipelineRuns[1].nextPageToken;
             const callInflight = !!tkPipelineRuns?.[2];
             const loaded = callInflight ? false : true;
-
-            setResult((cur) => [
-              nextPageToken ? [...cur[0], ...tkPipelineRuns[0]] : tkPipelineRuns[0],
-              loaded,
-              undefined,
-              token
-                ? (() => {
-                    // ensure we can only call this once
-                    let executed = false;
-                    return () => {
-                      if (!disposed && !executed) {
-                        executed = true;
-                        // trigger the update
-                        setNextPageToken(token);
-                        return true;
-                      }
-                      return false;
-                    };
-                  })()
-                : undefined,
-            ]);
+            if (!callInflight) {
+              setResult((cur) => [
+                nextPageToken ? [...cur[0], ...tkPipelineRuns[0]] : tkPipelineRuns[0],
+                loaded,
+                undefined,
+                token
+                  ? (() => {
+                      // ensure we can only call this once
+                      let executed = false;
+                      return () => {
+                        if (!disposed && !executed) {
+                          executed = true;
+                          // trigger the update
+                          setNextPageToken(token);
+                          return true;
+                        }
+                        return false;
+                      };
+                    })()
+                  : undefined,
+              ]);
+            }
           }
         } catch (e) {
           if (!disposed) {

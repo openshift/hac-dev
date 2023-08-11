@@ -163,7 +163,7 @@ export const usePLRScanResults = (
   const { namespace } = useWorkspaceInfo();
   // Fetch directly from tekton-results because a task result is only present on completed tasks runs.
   const [taskRuns, loaded] = useTRTaskRuns(
-    pipelineRunNames.length ? namespace : null,
+    pipelineRunNames.length > 0 ? namespace : null,
     React.useMemo(
       () => ({
         filter: OR(
@@ -198,13 +198,13 @@ export const usePLRScanResults = (
 };
 
 export const usePLRVulnerabilities = (
-  filteredPLRs: PipelineRunKind[],
+  pipelineRuns: PipelineRunKind[],
 ): {
   vulnerabilities: { [key: string]: ScanResults };
   fetchedPipelineRuns: string[];
 } => {
   const pageSize = 30;
-  const completePLRnames = React.useRef([]);
+  const processedPipelineruns = React.useRef([]);
 
   const loadedPipelineRunNames = React.useRef([]);
   const [currentPage, setCurrentPage] = React.useState(0);
@@ -217,32 +217,38 @@ export const usePLRVulnerabilities = (
   // enable cache only if the pipeline run has completed
   const [vulnerabilities, vloaded, vlist] = usePLRScanResults(
     difference(
-      completePLRnames.current.slice((currentPage - 1) * pageSize, completePLRnames.current.length),
+      processedPipelineruns.current.slice(
+        (currentPage - 1) * pageSize,
+        processedPipelineruns.current.length,
+      ),
       loadedPipelineRunNames.current,
     ),
     true,
   );
-  pipelineRunVulnerabilities.current = merge(
-    {},
-    vulnerabilities,
-    pipelineRunVulnerabilities.current,
-  );
+  if (vloaded && vulnerabilities) {
+    pipelineRunVulnerabilities.current = merge(
+      {},
+      vulnerabilities,
+      pipelineRunVulnerabilities.current,
+    );
+  }
+
   if (vloaded && vlist.length > 0) {
     addLoadedPipelineruns(vlist);
   }
 
   React.useEffect(() => {
-    const totalPlrs = filteredPLRs.length;
-    const noOfPendingPLRS = totalPlrs - completePLRnames.current.length;
-    if (totalPlrs > 0 && noOfPendingPLRS > 0) {
-      const completedPipelineRuns = filteredPLRs
+    const totalPlrs = pipelineRuns.length;
+    const noOfPendingPLRS = totalPlrs - processedPipelineruns.current.length;
+    if (totalPlrs > 0) {
+      const completedPipelineRuns = pipelineRuns
         .filter((plr) => !!plr?.status?.completionTime)
         .slice(noOfPendingPLRS > pageSize ? noOfPendingPLRS : 0, totalPlrs);
-      completePLRnames.current = completedPipelineRuns.map(({ metadata: { name } }) => name);
+      processedPipelineruns.current = completedPipelineRuns.map(({ metadata: { name } }) => name);
 
       setCurrentPage(Math.round(totalPlrs / pageSize));
     }
-  }, [filteredPLRs]);
+  }, [pipelineRuns]);
 
   return {
     vulnerabilities: pipelineRunVulnerabilities.current,

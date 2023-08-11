@@ -85,6 +85,9 @@ export const labelsToFilter = (labels?: MatchLabels): string =>
       )
     : '';
 
+export const nameFilter = (name?: string): string =>
+  name ? AND(`data.metadata.name.startsWith("${name.trim().toLowerCase()}")`) : '';
+
 export const expressionsToFilter = (expressions: Omit<MatchExpression, 'value'>[]): string =>
   AND(
     ...expressions
@@ -137,7 +140,12 @@ export const expressionsToFilter = (expressions: Omit<MatchExpression, 'value'>[
 export const selectorToFilter = (selector?: Selector) => {
   let filter = '';
   if (selector) {
-    const { matchLabels, matchExpressions } = selector;
+    const { matchLabels, matchExpressions, filterByName } = selector;
+
+    if (filterByName) {
+      filter = AND(filter, nameFilter(filterByName as string));
+    }
+
     if (matchLabels || matchExpressions) {
       if (matchLabels) {
         filter = AND(filter, labelsToFilter(matchLabels));

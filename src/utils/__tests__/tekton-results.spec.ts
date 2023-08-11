@@ -16,6 +16,8 @@ import {
   OR,
   RecordsList,
   getTaskRunLog,
+  nameFilter,
+  selectorToFilter,
 } from '../tekton-results';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
@@ -180,6 +182,50 @@ describe('tekton-results', () => {
       ).toStrictEqual('data.metadata.labels["test"] != "a" && data.metadata.labels["test"] != "b"');
     });
 
+    describe('selectorToFilter', () => {
+      it('should return the name filters', () => {
+        expect(
+          selectorToFilter({
+            filterByName: 'resource-name',
+          }),
+        ).toStrictEqual('data.metadata.labels["filterByName"] == "resource-name"');
+      });
+
+      it('should return the label filter', () => {
+        expect(
+          selectorToFilter({
+            matchLabels: {
+              'test-label': 'resource-label',
+            },
+          }),
+        ).toStrictEqual('data.metadata.labels["test-label"] == "resource-label"');
+      });
+
+      it('should return the expression filter', () => {
+        expect(
+          selectorToFilter({
+            matchExpressions: [
+              {
+                key: 'names',
+                operator: 'In',
+                values: ['resource-name-1', 'resource-name-2'],
+              },
+            ],
+          }),
+        ).toStrictEqual('data.metadata.labels["names"] in ["resource-name-1","resource-name-2"]');
+      });
+    });
+
+    describe('nameFilter', () => {
+      it('should return the name filter', () => {
+        expect(nameFilter('test-resource-name')).toStrictEqual(
+          'data.metadata.name.startsWith("test-resource-name")',
+        );
+        expect(nameFilter('TEST-RESOURCE-name')).toStrictEqual(
+          'data.metadata.name.startsWith("test-resource-name")',
+        );
+      });
+    });
     it('should convert In operator', () => {
       expect(
         expressionsToFilter([
