@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty';
 import { FormFooter } from '../../shared';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
-import { ReviewComponentCard } from '../ImportForm/ReviewSection/ReviewComponentCard';
+import ReviewComponentCard from '../ImportForm/ReviewSection/ReviewComponentCard';
 import PageLayout from '../PageLayout/PageLayout';
 
 import '../../shared/style.scss';

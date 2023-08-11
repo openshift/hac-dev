@@ -8,11 +8,11 @@ import {
   FlexItem,
   HelperText,
   HelperTextItem,
-  Badge,
   Backdrop,
   Bullseye,
   Card,
   CardBody,
+  Label,
 } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
 import gitUrlParse from 'git-url-parse';
@@ -25,7 +25,7 @@ import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues } from '../utils/types';
 import { useValidApplicationName } from '../utils/useValidApplicationName';
 import { containerImageRegex, gitUrlRegex } from '../utils/validation-utils';
-import { ReviewComponentCard } from './ReviewComponentCard';
+import ReviewComponentCard from './ReviewComponentCard';
 
 const ComponentLoadingState: React.FC = () => {
   return (
@@ -55,7 +55,9 @@ const ReviewSection: React.FunctionComponent = () => {
       },
       secret,
       resourceLimits: { min: defaultResourceLimits } = {},
+      selectedComponents,
     },
+    errors: { selectedComponents: selectedComponentsError },
     isSubmitting,
     setFieldValue,
     setFieldTouched,
@@ -87,6 +89,7 @@ const ReviewSection: React.FunctionComponent = () => {
   React.useEffect(() => {
     let unmounted = false;
     let components;
+    let selectedComponentsArray;
 
     if (unmounted) return;
 
@@ -123,8 +126,11 @@ const ReviewSection: React.FunctionComponent = () => {
       );
       setFieldValue('isDetected', true);
 
+      selectedComponentsArray = new Array(transformedComponents.length).fill(true);
+
       setFieldValue('detectedComponents', transformedComponents, true);
       setFieldValue('components', transformedComponents, true);
+      setFieldValue('selectedComponents', selectedComponentsArray);
       cachedComponents.current = transformedComponents;
     }
 
@@ -143,8 +149,11 @@ const ReviewSection: React.FunctionComponent = () => {
         defaultResourceLimits,
       );
 
+      selectedComponentsArray = new Array(transformedComponents.length).fill(true);
+
       setFieldValue('detectedComponents', undefined);
       setFieldValue('components', transformedComponents);
+      setFieldValue('selectedComponents', selectedComponentsArray);
       cachedComponents.current = transformedComponents;
       setFieldValue('isDetected', false);
       setFieldValue('detectionFailed', true);
@@ -166,6 +175,11 @@ const ReviewSection: React.FunctionComponent = () => {
     setFieldTouched,
     defaultResourceLimits,
   ]);
+
+  const selectedComponentsCount = React.useMemo(
+    () => selectedComponents?.filter(Boolean).length ?? 0,
+    [selectedComponents],
+  );
 
   if (!cachedComponentsLoaded.current) {
     return <ComponentLoadingState />;
@@ -193,7 +207,16 @@ const ReviewSection: React.FunctionComponent = () => {
         <Flex flex={{ default: 'flex_4' }} direction={{ default: 'column' }}>
           <FlexItem>
             <Title size="md" headingLevel="h4">
-              Components <Badge isRead>{cachedComponents.current.length}</Badge>
+              Components{' '}
+              <Label isCompact color={selectedComponentsError ? 'red' : 'grey'}>
+                {cachedComponents.current.length > 1 ? (
+                  <>
+                    {selectedComponentsCount} of {cachedComponents.current.length} selected
+                  </>
+                ) : (
+                  cachedComponents.current.length
+                )}
+              </Label>
             </Title>
             <HelperText className="pf-u-mb-sm">
               <HelperTextItem>

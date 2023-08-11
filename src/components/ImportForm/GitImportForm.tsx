@@ -48,6 +48,7 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
     application: applicationName || '',
     inAppContext: applicationName ? true : false,
     components: [],
+    selectedComponents: [],
     source: {
       git: {
         url: '',

@@ -21,6 +21,33 @@ const resourceLimits = {
 };
 
 describe('Review form validation schema', () => {
+  it('should fail when no component is selected', async () => {
+    await expect(
+      reviewValidationSchema.validate({
+        application: 'my-app',
+        components: [
+          {
+            componentStub: {
+              componentName: 'test-comp',
+              resources: {
+                cpu: 1,
+                memory: 255,
+              },
+              source: {
+                git: {
+                  dockerfileUrl: './Dockerfile',
+                },
+              },
+            },
+          },
+        ],
+        selectedComponents: [false],
+        isDetected: true,
+        resourceLimits,
+      }),
+    ).rejects.toThrow(' ');
+  });
+
   it('should fail when component name is missing', async () => {
     await expect(
       reviewValidationSchema.validate({
@@ -32,6 +59,7 @@ describe('Review form validation schema', () => {
             },
           },
         ],
+        selectedComponents: [true],
         isDetected: true,
         resourceLimits,
       }),
@@ -49,6 +77,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      selectedComponents: [true],
       isDetected: true,
       resourceLimits,
     };
@@ -82,6 +111,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      selectedComponents: [true],
       isDetected: true,
       resourceLimits,
     };
@@ -99,6 +129,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      selectedComponents: [true],
       isDetected: true,
       resourceLimits,
     };
@@ -116,6 +147,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      selectedComponents: [true],
       isDetected: true,
       resourceLimits,
     };
@@ -135,6 +167,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      selectedComponents: [true],
       isDetected: true,
       resourceLimits,
     };
@@ -157,6 +190,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      selectedComponents: [true],
       isDetected: true,
       resourceLimits,
     };
@@ -183,6 +217,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      selectedComponents: [true],
       isDetected: true,
       resourceLimits,
     };
@@ -207,6 +242,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      selectedComponents: [true],
       isDetected: true,
       resourceLimits,
     };
@@ -243,6 +279,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      selectedComponents: [true],
       isDetected: true,
       resourceLimits,
     };
@@ -302,6 +339,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      selectedComponents: [true],
       isDetected: true,
       resourceLimits,
     };
@@ -346,6 +384,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      selectedComponents: [true],
       isDetected: true,
       resourceLimits,
     };
@@ -409,6 +448,7 @@ describe('Review form validation schema', () => {
           },
         },
       ],
+      selectedComponents: [true],
       isDetected: true,
       resourceLimits,
     };

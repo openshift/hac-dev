@@ -6,7 +6,7 @@ import { useField } from 'formik';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { useComponentDetection } from '../../utils/cdq-utils';
 import { useDevfileSamples } from '../../utils/useDevfileSamples';
-import { ReviewComponentCard } from '../ReviewComponentCard';
+import ReviewComponentCard from '../ReviewComponentCard';
 
 jest.mock('../../utils/cdq-utils', () => ({ useComponentDetection: jest.fn() }));
 
@@ -92,7 +92,7 @@ describe('ReviewComponentCard', () => {
         detectedComponentIndex={0}
         showRuntimeSelector
       />,
-      { isDetected: true, source: { git: {} } },
+      { isDetected: true, source: { git: {} }, components: [] },
     );
 
     expect(
@@ -108,10 +108,53 @@ describe('ReviewComponentCard', () => {
         detectedComponentIndex={0}
         showRuntimeSelector
       />,
-      { isDetected: true, source: { git: {} } },
+      { isDetected: true, source: { git: {} }, components: [] },
     );
 
     expect(screen.getByText('quay.io/sbudhwar/demo:latest')).toBeInTheDocument();
+  });
+
+  it('should render checkbox to select or unselect a component', () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+      />,
+      { isDetected: true, source: { git: {} }, components: [{}, {}] },
+    );
+
+    expect(screen.getByTestId('select-component-toggle-0')).toBeInTheDocument();
+  });
+
+  it('should not render checkbox to select or unselect a component if in editMode', () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+        editMode
+      />,
+      { isDetected: true, source: { git: {} }, components: [{}, {}] },
+    );
+
+    expect(screen.queryByTestId('select-component-toggle-0')).toBeNull();
+  });
+
+  it('should not render checkbox if only one component detected', () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+      />,
+      { isDetected: true, source: { git: {} }, components: [{}] },
+    );
+
+    expect(screen.queryByTestId('select-component-toggle-0')).toBeNull();
   });
 
   it('should show build and deploy config options when components are detected', async () => {
@@ -122,7 +165,7 @@ describe('ReviewComponentCard', () => {
         detectedComponentIndex={0}
         showRuntimeSelector
       />,
-      { isDetected: true, source: { git: {} } },
+      { isDetected: true, source: { git: {} }, components: [] },
     );
     await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
 
@@ -140,7 +183,7 @@ describe('ReviewComponentCard', () => {
         detectedComponentIndex={0}
         showRuntimeSelector
       />,
-      { source: { git: {} } },
+      { source: { git: {} }, components: [] },
     );
     await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
     expect(screen.queryByText('Build & deploy configuration')).toBeInTheDocument();
@@ -151,7 +194,7 @@ describe('ReviewComponentCard', () => {
     useDevfileSamplesMock.mockReturnValue([[], true]);
     formikRenderer(
       <ReviewComponentCard detectedComponent={gitRepoComponent} detectedComponentIndex={0} />,
-      { isDetected: true, source: { git: {} } },
+      { isDetected: true, source: { git: {} }, components: [] },
     );
     expect(screen.queryByRole('button', { name: 'Select a runtime' })).not.toBeInTheDocument();
   });

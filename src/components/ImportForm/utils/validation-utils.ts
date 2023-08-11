@@ -157,6 +157,11 @@ export const reviewSectionValidationSchema = (formValues: ImportFormValues) =>
         }),
       }),
     ),
+    selectedComponents: yup
+      .array()
+      .test('selected-components-test', ' ', (value) =>
+        value ? value.filter(Boolean).length > 0 : true,
+      ),
     runtime: yup.string().when('detectionFailed', {
       is: true,
       then: yup.string().required('Runtime not detected'),

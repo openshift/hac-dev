@@ -23,6 +23,7 @@ import {
   NumberSpinnerField,
   ResourceLimitField,
   SwitchField,
+  CheckboxField,
 } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import GitRepoLink from '../../GitLink/GitRepoLink';
@@ -42,7 +43,7 @@ type ReviewComponentCardProps = {
   showRuntimeSelector?: boolean;
 };
 
-export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
+const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
   detectedComponent,
   detectedComponentIndex,
   editMode = false,
@@ -75,6 +76,14 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
         }}
       >
         <Flex className="pf-u-flex-1" direction={{ default: 'column', sm: 'row' }}>
+          {!editMode && components?.length > 1 && (
+            <FlexItem>
+              <CheckboxField
+                name={`selectedComponents[${detectedComponentIndex}]`}
+                data-test={`select-component-toggle-${detectedComponentIndex}`}
+              />
+            </FlexItem>
+          )}
           <FlexItem flex={{ default: 'flex_4', md: 'flex_3' }}>
             <InputField
               name={`${fieldPrefix}.componentName`}
@@ -223,3 +232,5 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
     </Card>
   );
 };
+
+export default ReviewComponentCard;
