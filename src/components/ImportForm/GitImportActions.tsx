@@ -31,7 +31,6 @@ const GitImportActions: React.FunctionComponent<GitImportActionsProps> = ({
     isValid,
     dirty,
     isSubmitting,
-    isValidating,
     setErrors,
     handleSubmit,
   } = useFormikContext<ImportFormValues>();
@@ -54,8 +53,8 @@ const GitImportActions: React.FunctionComponent<GitImportActionsProps> = ({
             <Button
               type="submit"
               onClick={() => handleSubmit()}
-              isDisabled={!isValid || !dirty || isSubmitting || isValidating}
-              isLoading={isSubmitting || isValidating}
+              isDisabled={!isValid || !dirty || isSubmitting}
+              isLoading={isSubmitting}
             >
               {reviewMode ? (inAppContext ? 'Add component' : 'Create application') : 'Import code'}
             </Button>
