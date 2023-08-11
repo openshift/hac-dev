@@ -43,7 +43,7 @@ type ReviewComponentCardProps = {
   showRuntimeSelector?: boolean;
 };
 
-export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
+const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
   detectedComponent,
   detectedComponentIndex,
   editMode = false,
@@ -76,7 +76,7 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
         }}
       >
         <Flex className="pf-u-flex-1" direction={{ default: 'column', sm: 'row' }}>
-          {!editMode && (
+          {!editMode && components?.length > 1 && (
             <FlexItem>
               <CheckboxField
                 name={`selectedComponents[${detectedComponentIndex}]`}
@@ -232,3 +232,5 @@ export const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
     </Card>
   );
 };
+
+export default ReviewComponentCard;

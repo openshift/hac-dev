@@ -25,7 +25,7 @@ import { transformComponentValues } from '../utils/transform-utils';
 import { ImportFormValues } from '../utils/types';
 import { useValidApplicationName } from '../utils/useValidApplicationName';
 import { containerImageRegex, gitUrlRegex } from '../utils/validation-utils';
-import { ReviewComponentCard } from './ReviewComponentCard';
+import ReviewComponentCard from './ReviewComponentCard';
 
 const ComponentLoadingState: React.FC = () => {
   return (
@@ -209,7 +209,7 @@ const ReviewSection: React.FunctionComponent = () => {
             <Title size="md" headingLevel="h4">
               Components{' '}
               <Label isCompact color={selectedComponentsError ? 'red' : 'grey'}>
-                {cachedComponents.current.length > 0 ? (
+                {cachedComponents.current.length > 1 ? (
                   <>
                     {selectedComponentsCount} of {cachedComponents.current.length} selected
                   </>
