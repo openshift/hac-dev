@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   ClipboardCopy,
@@ -65,6 +66,7 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
   const [expanded, setExpanded] = React.useState(false);
   const { replicas, targetPort, resources } = component.spec;
   const name = component.metadata.name;
+  const applicationName = component.spec.application;
   const actions = useComponentActions(component, name);
   const resourceRequests = resources?.requests;
   const containerImage = component.status?.containerImage;
@@ -102,7 +104,11 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
               <Flex direction={{ default: 'column' }}>
                 <Flex>
                   <FlexItem data-testid="component-list-item-name" style={{ minWidth: '30%' }}>
-                    <b>{name}</b>
+                    <Link
+                      to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components/${name}`}
+                    >
+                      <b>{name}</b>
+                    </Link>
                   </FlexItem>
                   <FlexItem>
                     <ComponentPACStateLabel
@@ -144,7 +150,6 @@ export const ComponentListItem: React.FC<ComponentListViewItemProps> = ({
             ) : null,
             <DataListCell key="status" alignRight>
               <BuildStatusColumn component={component} />
-
               {podSelector && <PodLogsColumn component={component} podSelector={podSelector} />}
             </DataListCell>,
           ]}

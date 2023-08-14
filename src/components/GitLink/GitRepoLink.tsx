@@ -24,7 +24,7 @@ const GitRepoLink: React.FC<Props> = ({ url, revision, context, dataTestID }) =>
 
   return (
     <Tooltip content={fullUrl} position={TooltipPosition.bottom}>
-      <ExternalLink href={fullUrl} icon={icon} dataTestID={dataTestID}>
+      <ExternalLink href={fullUrl} icon={icon} hideIcon dataTestID={dataTestID}>
         {parsed.owner}/{parsed.name}
         {revision ? (
           <>

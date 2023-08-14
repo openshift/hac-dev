@@ -16,13 +16,13 @@ import {
 import { useSearchParam } from '../../hooks/useSearchParam';
 import emptyStateImgUrl from '../../imgs/Environment.svg';
 import { EnvironmentModel } from '../../models';
+import AppEmptyState from '../../shared/components/empty-state/AppEmptyState';
+import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
 import { EnvironmentKind } from '../../types';
 import { sortEnvironmentsBasedonParent } from '../../utils/environment-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
-import AppEmptyState from '../EmptyState/AppEmptyState';
-import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import EnvironmentCard from './EnvironmentCard';
 
 import './EnvironmentList.scss';

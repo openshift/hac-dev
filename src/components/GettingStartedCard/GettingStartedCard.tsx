@@ -20,6 +20,7 @@ type GettingStartedCardProps = {
   title: string;
   imgSrc?: string;
   imgAlt?: string;
+  isLight?: boolean;
 };
 
 const LOCAL_STORAGE_KEY = 'getting-started-card';
@@ -30,6 +31,7 @@ export const GettingStartedCard: React.FC<GettingStartedCardProps> = ({
   title,
   imgSrc,
   imgAlt,
+  isLight,
   children,
 }) => {
   const [storageKeys, setStorageKeys] =
@@ -40,7 +42,7 @@ export const GettingStartedCard: React.FC<GettingStartedCardProps> = ({
 
   return (
     !isDismissed && (
-      <PageSection>
+      <PageSection variant={isLight ? 'light' : 'default'}>
         <Card>
           <Split>
             {imgSrc && (

@@ -1,11 +1,11 @@
 import React from 'react';
 import ApplicationListView from '../components/ApplicationListView/ApplicationListView';
-import { HeadTitle } from '../components/HeadTitle';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import { FULL_APPLICATION_TITLE } from '../consts/labels';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
 import { ApplicationModel } from '../models';
+import { HeadTitle } from '../shared/components/HeadTitle';
 import { AccessReviewResources } from '../types';
 
 const ApplicationsPage = () => {

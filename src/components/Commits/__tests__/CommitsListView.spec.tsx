@@ -4,10 +4,12 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { useComponents } from '../../../hooks/useComponents';
 import { useTRPipelineRuns } from '../../../hooks/useTektonResults';
 import * as dateTime from '../../../shared/components/timestamp/datetime';
 import { getCommitsFromPLRs } from '../../../utils/commits-utils';
 import { pipelineWithCommits } from '../__data__/pipeline-with-commits';
+import { MockComponents } from '../CommitDetails/visualization/__data__/MockCommitWorkflowData';
 import CommitsListRow from '../CommitsListRow';
 import CommitsListView from '../CommitsListView';
 
@@ -65,15 +67,21 @@ jest.mock('../../../utils/rbac', () => ({
   useAccessReviewForModel: jest.fn(() => [true, true]),
 }));
 
+jest.mock('../../../hooks/useComponents', () => ({
+  useComponents: jest.fn(),
+}));
+
 const mockNavigate = useNavigate as jest.Mock;
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useTRPipelineRunsMock = useTRPipelineRuns as jest.Mock;
+const useComponentsMock = useComponents as jest.Mock;
 
 const commits = getCommitsFromPLRs(pipelineWithCommits.slice(0, 4));
 
 describe('CommitsListView', () => {
   beforeEach(() => {
     watchResourceMock.mockReturnValue([pipelineWithCommits.slice(0, 4), true]);
+    useComponentsMock.mockReturnValue([MockComponents, true]);
   });
 
   it('should render empty state if no commits are present', () => {

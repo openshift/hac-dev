@@ -6,6 +6,8 @@ import { useComponent } from '../../hooks/useComponents';
 import { usePipelineRun } from '../../hooks/usePipelineRuns';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
 import { ComponentModel, PipelineRunModel } from '../../models';
+import DetailsPage from '../../shared/components/details-page/DetailsPage';
+import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { isPACEnabled, startNewBuild } from '../../utils/component-utils';
@@ -13,8 +15,6 @@ import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
-import DetailsPage from '../ApplicationDetails/DetailsPage';
-import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { SecurityEnterpriseContractTab } from '../EnterpriseContractView/SecurityEnterpriseContractTab';
 import { isResourceEnterpriseContract } from '../EnterpriseContractView/utils';
 import SidePanelHost from '../SidePanel/SidePanelHost';
@@ -39,7 +39,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
   const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
   const [canPatchPipeline] = useAccessReviewForModel(PipelineRunModel, 'patch');
 
-  const [component] = useComponent(
+  const [component, componentLoaded, componentError] = useComponent(
     namespace,
     pipelineRun?.metadata?.labels?.[PipelineRunLabel.COMPONENT],
   );
@@ -61,7 +61,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
     );
   }
 
-  if (!(loaded && taskRunsLoaded)) {
+  if (!(loaded && taskRunsLoaded && componentLoaded)) {
     return (
       <Bullseye>
         <Spinner />
@@ -98,7 +98,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
           {
             key: 'start-new-build',
             label: 'Start new build',
-            hidden: !component || isPACEnabled(component),
+            hidden: !component || !!componentError || isPACEnabled(component),
             isDisabled: !canPatchComponent,
             disabledTooltip: "You don't have access to start a new build",
             onClick: () => {

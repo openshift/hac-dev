@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { Tooltip } from '@patternfly/react-core';
-import { GlobeAmericasIcon } from '@patternfly/react-icons/dist/js/icons';
-import classNames from 'classnames';
 import * as dateTime from './datetime';
 
 export type TimestampProps = {
@@ -56,8 +54,7 @@ export const Timestamp: React.FC<TimestampProps> = ({
   }
 
   return (
-    <div className={classNames('icon-and-text', className)}>
-      <GlobeAmericasIcon className="icon-and-text__icon" />
+    <div className={className}>
       <Tooltip
         content={[
           <span className="nowrap" key={timestamp}>

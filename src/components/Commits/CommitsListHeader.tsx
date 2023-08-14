@@ -1,6 +1,6 @@
 export const commitsTableColumnClasses = {
   name: 'pf-m-width-35 wrap-column',
-  branch: 'pf-m-width-20 pf-m-width-10-on-lg',
+  branch: 'pf-m-width-20 pf-m-width-10-on-lg commits-list__branch',
   component: 'pf-m-width-35 pf-m-width-25-on-lg pf-m-width-15-on-xl',
   byUser: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-10',
   committedAt: 'pf-m-hidden pf-m-visible-on-lg pf-m-width-20 pf-m-width-10-on-xl',

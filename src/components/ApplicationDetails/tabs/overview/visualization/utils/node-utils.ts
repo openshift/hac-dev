@@ -84,17 +84,16 @@ export const getLinkDataForElement = (
   switch (workflowType) {
     case WorkflowNodeType.COMPONENT:
       return {
-        tab: 'components',
-        filter: !groupNode && !isDisabled ? { name: 'name', value: label } : undefined,
+        tab: groupNode ? 'components' : `components/${label}`,
       };
     case WorkflowNodeType.BUILD:
       if (status === runStatus.NeedsMerge) {
         return {
-          tab: 'components',
-          filter:
+          tab: `components/${
             !groupNode && !isDisabled && label
               ? { name: 'name', value: label.replace('Build for ', '') }
-              : undefined,
+              : undefined
+          }`,
         };
       }
       return {

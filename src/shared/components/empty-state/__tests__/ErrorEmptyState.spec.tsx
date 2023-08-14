@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmptyStateBody, Title } from '@patternfly/react-core';
 import { act, render, screen, fireEvent } from '@testing-library/react';
-import { HttpError } from '../../../shared/utils/error/http-error';
+import { HttpError } from '../../../utils/error/http-error';
 import ErrorEmptyState from '../ErrorEmptyState';
 
 jest.mock('react-router-dom', () => {

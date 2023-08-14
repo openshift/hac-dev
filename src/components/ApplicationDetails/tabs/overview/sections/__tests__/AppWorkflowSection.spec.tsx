@@ -198,7 +198,7 @@ describe('useAppWorkflowData hook', () => {
 
     fireEvent.click(clickable);
     expect(mockNavigate).toHaveBeenCalledWith(
-      `/application-pipeline/workspaces/test-ws/applications/test-dev-samples/components?name=${mockComponentsData[0].metadata.name}`,
+      `/application-pipeline/workspaces/test-ws/applications/test-dev-samples/components/${mockComponentsData[0].metadata.name}`,
     );
   });
 });

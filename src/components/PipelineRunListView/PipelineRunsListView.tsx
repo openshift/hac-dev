@@ -22,17 +22,26 @@ import { usePipelineRuns } from '../../hooks/usePipelineRuns';
 import { usePLRVulnerabilities } from '../../hooks/useScanResults';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { Table } from '../../shared';
+import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
 import { PipelineRunKind } from '../../types';
 import { statuses } from '../../utils/commits-utils';
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
-import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import PipelineRunEmptyState from '../PipelineRunDetailsView/PipelineRunEmptyState';
 import { PipelineRunListHeaderWithVulnerabilities } from './PipelineRunListHeader';
 import { PipelineRunListRowWithVulnerabilities } from './PipelineRunListRow';
 
-type PipelineRunsListViewProps = { applicationName: string };
-const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ applicationName }) => {
+type PipelineRunsListViewProps = {
+  applicationName: string;
+  componentName?: string;
+  customFilter?: (plr: PipelineRunKind) => boolean;
+};
+
+const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({
+  applicationName,
+  componentName,
+  customFilter,
+}) => {
   const { namespace } = useWorkspaceInfo();
   const [components, componentsLoaded] = useComponents(namespace, applicationName);
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
@@ -61,17 +70,16 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
               {
                 key: `${PipelineRunLabel.COMPONENT}`,
                 operator: 'In',
-                values: components?.map((c) => c.metadata?.name),
+                values: componentName ? [componentName] : components?.map((c) => c.metadata?.name),
               },
             ],
           }),
           ...(onLoadName && { filterByName: onLoadName.trim().toLowerCase() }),
         },
       }),
-      [applicationName, components, onLoadName],
+      [applicationName, componentName, components, onLoadName],
     ),
   );
-
   const statusFilters = React.useMemo(
     () => (statusFiltersParam ? statusFiltersParam.split(',') : []),
     [statusFiltersParam],
@@ -98,16 +106,18 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
 
   const filteredPLRs = React.useMemo(
     () =>
-      pipelineRuns.filter(
-        (plr) =>
-          (!nameFilter ||
-            plr.metadata.name.indexOf(nameFilter) >= 0 ||
-            plr.metadata.labels?.[PipelineRunLabel.COMPONENT]?.indexOf(
-              nameFilter.trim().toLowerCase(),
-            ) >= 0) &&
-          (!statusFilters.length || statusFilters.includes(pipelineRunStatus(plr))),
-      ),
-    [nameFilter, pipelineRuns, statusFilters],
+      pipelineRuns
+        .filter(
+          (plr) =>
+            (!nameFilter ||
+              plr.metadata.name.indexOf(nameFilter) >= 0 ||
+              plr.metadata.labels?.[PipelineRunLabel.COMPONENT]?.indexOf(
+                nameFilter.trim().toLowerCase(),
+              ) >= 0) &&
+            (!statusFilters.length || statusFilters.includes(pipelineRunStatus(plr))),
+        )
+        .filter((plr) => !customFilter || customFilter(plr)),
+    [customFilter, nameFilter, pipelineRuns, statusFilters],
   );
 
   const vulnerabilities = usePLRVulnerabilities(name ? filteredPLRs : pipelineRuns);

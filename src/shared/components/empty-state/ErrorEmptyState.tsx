@@ -14,8 +14,8 @@ import {
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import { css } from '@patternfly/react-styles';
-import emptySearchImgUrl from '../../imgs/Not-found.svg';
-import { HttpError } from '../../shared/utils/error/http-error';
+import emptySearchImgUrl from '../../../imgs/Not-found.svg';
+import { HttpError } from '../../utils/error/http-error';
 
 import './EmptyState.scss';
 

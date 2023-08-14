@@ -86,7 +86,7 @@ const BasePipelineRunListRow: React.FC<BasePipelineRunListRowProps> = ({
             <Link
               to={`/application-pipeline/workspaces/${workspace}/applications/${
                 obj.metadata?.labels[PipelineRunLabel.APPLICATION]
-              }/components`}
+              }/components/${obj.metadata?.labels[PipelineRunLabel.COMPONENT]}`}
             >
               {obj.metadata?.labels[PipelineRunLabel.COMPONENT]}
             </Link>

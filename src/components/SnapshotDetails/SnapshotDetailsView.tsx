@@ -10,6 +10,8 @@ import {
   SnapshotModel,
 } from '../../models';
 import CommitLabel from '../../shared/components/commit-label/CommitLabel';
+import DetailsPage from '../../shared/components/details-page/DetailsPage';
+import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
 import { LoadingBox } from '../../shared/components/status-box/StatusBox';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { HttpError } from '../../shared/utils/error/http-error';
@@ -19,8 +21,6 @@ import { createCommitObjectFromPLR } from '../../utils/commits-utils';
 import { runStatus } from '../../utils/pipeline-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
-import DetailsPage from '../ApplicationDetails/DetailsPage';
-import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import SnapshotOverviewTab from './tabs/SnapshotOverview';
 

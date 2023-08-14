@@ -14,7 +14,7 @@ import {
 } from '@patternfly/react-core';
 import securityShieldImg from '../../imgs/shield-security.svg';
 
-import './EmptyState.scss';
+import '../../shared/components/empty-state/EmptyState.scss';
 
 const EmptyStateImg = () => (
   <img className="app-empty-state__icon" src={securityShieldImg} alt="" />

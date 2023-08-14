@@ -11,6 +11,7 @@ import { PipelineRunGroupVersionKind } from '../models';
 import { useDeepCompareMemoize } from '../shared';
 import { PipelineRunKind, TaskRunGroupVersionKind, TaskRunKind } from '../types';
 import { getCommitSha } from '../utils/commits-utils';
+import { pipelineRunStatus, runStatus } from '../utils/pipeline-utils';
 import { EQ } from '../utils/tekton-results';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { GetNextPage, useTRPipelineRuns, useTRTaskRuns } from './useTektonResults';
@@ -177,6 +178,41 @@ export const useLatestBuildPipelineRunForComponent = (
   ) as unknown as [PipelineRunKind[], boolean, unknown];
 
   return React.useMemo(() => [result[0]?.[0], result[1], result[2]], [result]);
+};
+
+export const useLatestSuccessfulBuildPipelineRunForComponent = (
+  namespace: string,
+  componentName: string,
+): [PipelineRunKind, boolean, unknown] => {
+  const [pipelines, loaded, error] = usePipelineRuns(
+    namespace,
+    React.useMemo(
+      () => ({
+        selector: {
+          matchLabels: {
+            [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
+            [PipelineRunLabel.COMPONENT]: componentName,
+          },
+        },
+      }),
+      [componentName],
+    ),
+  ) as unknown as [PipelineRunKind[], boolean, unknown];
+
+  return React.useMemo(() => {
+    if (!loaded || error) {
+      return [null, loaded, error];
+    }
+    return [
+      pipelines
+        .filter((pipeline) => pipelineRunStatus(pipeline) === runStatus.Succeeded)
+        .sort((a, b) =>
+          b.metadata.creationTimestamp.localeCompare(a.metadata.creationTimestamp),
+        )[0],
+      loaded,
+      error,
+    ];
+  }, [pipelines, loaded, error]);
 };
 
 export const usePipelineRunsForCommit = (

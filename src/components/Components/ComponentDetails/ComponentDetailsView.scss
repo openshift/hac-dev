@@ -1,0 +1,76 @@
+@import '../../../shared/style/vars';
+
+.component-details {
+  &__gs-image {
+    &.getting-started-card__img {
+      width: 9ch;
+      min-width: unset !important;
+      padding-top: var(--pf-v5-global--spacer--xl);
+      padding-left: var(--pf-v5-global--spacer--xl);
+    }
+  }
+  &__build-completion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pf-v5-global--spacer--sm);
+    &--time {
+      display: flex;
+      gap: var(--pf-v5-global--spacer--xs);
+    }
+  }
+  &__build-deployments {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pf-v5-global--spacer--sm);
+  }
+  &__deployment-settings-table {
+    display: grid;
+    grid-template-columns: 270px 1fr;
+    border-top: 1px solid var(--pf-v5-global--BorderColor--300);
+    &:first-of-type {
+      border-top: none;
+    }
+    &--column {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--pf-v5-global--BorderColor--300);
+      &:last-of-type {
+        border-right: none;
+      }
+    }
+    &--empty-row {
+      padding: var(--pf-v5-global--spacer--sm) var(--pf-v5-global--spacer--lg);
+      border-bottom: 1px solid var(--pf-v5-global--BorderColor--300);
+      font-style: italic;
+
+    }
+    &--header, &--setting, &--value {
+      padding: var(--pf-v5-global--spacer--sm) var(--pf-v5-global--spacer--lg);
+      border-bottom: 1px solid var(--pf-v5-global--BorderColor--300);
+      &.m-is-hidden {
+        color: transparent;
+      }
+    }
+    &--header {
+      font-size: var(--pf-v5-global--FontSize--sm);
+      font-weight: var(--pf-v5-global--FontWeight--bold);
+      line-height: var(--pf-v5-global--LineHeight--md);
+      &.m-is-setting {
+        border-right: 1px solid var(--pf-v5-global--BorderColor--300);
+      }
+    }
+    &--setting {
+      border-right: 1px solid var(--pf-v5-global--BorderColor--300);
+    }
+    &--value {
+      align-items: center;
+      display: flex;
+      gap: var(--pf-v5-global--spacer--xs);
+    }
+  }
+  &__icon-button {
+    &.pf-v5-c-button.pf-m-link {
+      color: var(--pf-v5-global--Color--100);
+    }
+  }
+}

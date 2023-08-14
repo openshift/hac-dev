@@ -22,13 +22,14 @@ import {
 } from '@patternfly/react-core/deprecated';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
+import { useComponents } from '../../hooks/useComponents';
 import { usePipelineRuns } from '../../hooks/usePipelineRuns';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { Table } from '../../shared';
+import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
 import { getCommitsFromPLRs, statuses } from '../../utils/commits-utils';
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
-import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import CommitsEmptyState from './CommitsEmptyState';
 import CommitsListHeader from './CommitsListHeader';
 import CommitsListRow from './CommitsListRow';
@@ -38,18 +39,20 @@ const RECENT_COMMIT_LIMIT = 5;
 interface CommitsListViewProps {
   recentOnly?: boolean;
   applicationName?: string;
+  componentName?: string;
 }
 
 const CommitsListView: React.FC<CommitsListViewProps> = ({
   recentOnly = false,
   applicationName,
+  componentName,
 }) => {
   const navigate = useNavigate();
+  const { namespace, workspace } = useWorkspaceInfo();
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [statusFilterExpanded, setStatusFilterExpanded] = React.useState<boolean>(false);
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
-
-  const { namespace, workspace } = useWorkspaceInfo();
+  const [components, componentsLoaded] = useComponents(namespace, applicationName);
 
   const [pipelineRuns, loaded] = usePipelineRuns(
     namespace,
@@ -60,10 +63,17 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
             [PipelineRunLabel.APPLICATION]: applicationName,
             [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
           },
+          matchExpressions: [
+            {
+              key: `${PipelineRunLabel.COMPONENT}`,
+              operator: 'In',
+              values: componentName ? [componentName] : components?.map((c) => c.metadata?.name),
+            },
+          ],
         },
         limit: recentOnly ? RECENT_COMMIT_LIMIT : undefined,
       }),
-      [applicationName, recentOnly],
+      [applicationName, componentName, components, recentOnly],
     ),
   );
 
@@ -75,6 +85,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
       [],
     [loaded, pipelineRuns, recentOnly],
   );
+
   const statusFilters = React.useMemo(
     () => (statusFiltersParam ? statusFiltersParam.split(',') : []),
     [statusFiltersParam],
@@ -115,7 +126,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
           (!statusFilters.length ||
             statusFilters.includes(pipelineRunStatus(commit.pipelineRuns[0]))),
       ),
-    [nameFilter, commits, statusFilters],
+    [commits, nameFilter, statusFilters],
   );
 
   const onClearFilters = () => setNameFilter('');
@@ -130,7 +141,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
           </Title>
         </>
       ) : null}
-      {!loaded ? (
+      {!loaded || !componentsLoaded ? (
         <Bullseye>
           <Spinner />
         </Bullseye>

@@ -31,6 +31,8 @@ import { useSearchParam } from '../../hooks/useSearchParam';
 import { useSnapshotsEnvironmentBindings } from '../../hooks/useSnapshotsEnvironmentBindings';
 import emptyStateImgUrl from '../../imgs/Components.svg';
 import { ComponentModel } from '../../models';
+import AppEmptyState from '../../shared/components/empty-state/AppEmptyState';
+import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { useURLForComponentPRs } from '../../utils/component-utils';
 import { getGitOpsDeploymentStrategy } from '../../utils/gitops-utils';
@@ -38,8 +40,6 @@ import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
-import AppEmptyState from '../EmptyState/AppEmptyState';
-import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { ComponentListItem } from './ComponentListItem';
 import ComponentsFilterToolbarGroups, {

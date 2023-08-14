@@ -109,7 +109,9 @@ const pipelineRuns: PipelineRunKind[] = [
       ],
       resourceVersion: '497868251',
       uid: '9c1f121c-1eb6-490f-b2d9-befbfc658df1',
-      labels: {},
+      labels: {
+        'appstudio.openshift.io/component': 'sample-component',
+      },
     },
     spec: {
       key: 'key1',
@@ -133,7 +135,9 @@ const pipelineRuns: PipelineRunKind[] = [
       ],
       resourceVersion: '497868252',
       uid: '9c1f121c-1eb6-490f-b2d9-befbfc658dfb',
-      labels: {},
+      labels: {
+        'appstudio.openshift.io/component': 'test-component',
+      },
     },
     spec: {
       key: 'key2',
@@ -157,7 +161,9 @@ const pipelineRuns: PipelineRunKind[] = [
       ],
       resourceVersion: '497868253',
       uid: '9c1f121c-1eb6-490f-b2d9-befbfc658dfc',
-      labels: {},
+      labels: {
+        'appstudio.openshift.io/component': 'sample-component',
+      },
     },
     spec: {
       key: 'key3',
@@ -217,6 +223,7 @@ describe('Pipeline run List', () => {
     usePipelineRunsMock.mockReturnValue([pipelineRuns, true, null, nextPage]);
 
     const r = render(<PipelineRunsListView applicationName={appName} />);
+    expect(screen.getByText('basic-node-js-first'));
 
     const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
     fireEvent.change(filter, {
@@ -238,7 +245,7 @@ describe('Pipeline run List', () => {
     });
   });
 
-  it('should render no pipelineruns and Empty State', async () => {
+  it('should render filtered pipelinerun list', async () => {
     usePipelineRunsMock.mockReturnValue([pipelineRuns, true]);
     const r = render(<PipelineRunsListView applicationName={appName} />);
 

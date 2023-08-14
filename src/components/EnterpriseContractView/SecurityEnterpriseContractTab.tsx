@@ -17,9 +17,9 @@ import {
 } from '@patternfly/react-core';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
 import { useSearchParam } from '../../hooks/useSearchParam';
-import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
-import SecurityTabEmptyState from '../EmptyState/SecurityTabEmptyState';
+import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
 import { EnterpriseContractTable } from './EnterpriseContractTable/EnterpriseContractTable';
+import SecurityTabEmptyState from './SecurityTabEmptyState';
 import { ENTERPRISE_CONTRACT_STATUS } from './types';
 import { useEnterpriseContractResults } from './useEnterpriseContractResultFromLogs';
 import { getRuleStatus } from './utils';

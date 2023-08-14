@@ -388,6 +388,47 @@ const routeExtensions = [
     },
   },
 
+  // Components
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/workspaces/:workspaceName/applications/:appName/components/:componentName',
+      exact: true,
+      component: {
+        $codeRef: 'ComponentDetails',
+      },
+    },
+    flags: {
+      required: ['HACBS', 'SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/workspaces/:workspaceName/applications/:appName/components/:componentName/:activeTab',
+      exact: true,
+      component: {
+        $codeRef: 'ComponentDetails',
+      },
+    },
+    flags: {
+      required: ['HACBS', 'SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/workspaces/:workspaceName/applications/:appName/components/:componentName/:activeTab/:compActivity',
+      exact: true,
+      component: {
+        $codeRef: 'ComponentDetails',
+      },
+    },
+    flags: {
+      required: ['HACBS', 'SIGNUP'],
+    },
+  },
+
   // Component settings
 
   {
@@ -506,6 +547,7 @@ module.exports = {
       Applications: resolve(__dirname, '../src/pages/ApplicationsPage'),
       ApplicationDetails: resolve(__dirname, '../src/pages/ApplicationDetailsPage'),
       Import: resolve(__dirname, '../src/pages/ImportPage'),
+      ComponentDetails: resolve(__dirname, '../src/pages/ComponentDetailsPage'),
       ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
       EnvironmentsListPage: resolve(__dirname, '../src/pages/EnvironmentsListPage'),
       CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),

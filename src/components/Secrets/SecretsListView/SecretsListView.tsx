@@ -12,11 +12,11 @@ import {
 import { useRemoteSecrets } from '../../../hooks/UseRemoteSecrets';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import { RemoteSecretModel } from '../../../models';
+import AppEmptyState from '../../../shared/components/empty-state/AppEmptyState';
+import FilteredEmptyState from '../../../shared/components/empty-state/FilteredEmptyState';
 import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../../ButtonWithAccessTooltip';
-import AppEmptyState from '../../EmptyState/AppEmptyState';
-import FilteredEmptyState from '../../EmptyState/FilteredEmptyState';
 import SecretsList from './SecretsList';
 
 type SecretsListViewProps = {

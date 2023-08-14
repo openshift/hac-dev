@@ -133,9 +133,8 @@ describe('WorkflowNode', () => {
     const link = screen.getByTestId('element-link');
     expect(link).toBeVisible();
     const linkData = getLinkDataForElement(mockElement, 'test-ws');
-    expect(linkData.tab).toBe('components');
-    expect(linkData.filter.name).toBe('name');
-    expect(linkData.filter.value).toBe(mockElement.getLabel());
+    expect(linkData.tab).toBe(`components/${mockElement.getLabel()}`);
+    expect(linkData.filter).toBeUndefined();
     const buildLinkData = getLinkDataForElement(mockBuildElement, 'test-ws');
     expect(buildLinkData.tab).toBe('activity/pipelineruns');
     expect(buildLinkData.filter.name).toBe('name');

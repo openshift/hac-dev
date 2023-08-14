@@ -22,15 +22,15 @@ import {
 } from '@patternfly/react-core/deprecated';
 import { CaretDownIcon } from '@patternfly/react-icons/dist/esm/icons/caret-down-icon';
 import cx from 'classnames';
-import { FULL_APPLICATION_TITLE } from '../../consts/labels';
-import BreadCrumbs from '../../shared/components/breadcrumbs/BreadCrumbs';
-import { HttpError } from '../../shared/utils/error/http-error';
-import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
+import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
+import { HttpError } from '../../utils/error/http-error';
+import BreadCrumbs from '../breadcrumbs/BreadCrumbs';
+import ErrorEmptyState from '../empty-state/ErrorEmptyState';
 import { HeadTitle } from '../HeadTitle';
 
 import './DetailsPage.scss';
 
-type Action = {
+export type Action = {
   type?: string;
   key: string;
   label: React.ReactNode;
@@ -51,6 +51,7 @@ type DetailsPageTabProps = {
 type DetailsPageProps = {
   title: React.ReactNode;
   headTitle: string;
+  preComponent?: React.ReactNode;
   children?: React.ReactNode;
   footer?: React.ReactNode;
   description?: React.ReactNode;
@@ -64,6 +65,7 @@ type DetailsPageProps = {
 const DetailsPage: React.FC<DetailsPageProps> = ({
   title,
   headTitle,
+  preComponent = null,
   footer,
   description,
   breadcrumbs,
@@ -205,6 +207,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
           ) : null}
         </Flex>
       </PageSection>
+      {preComponent}
       {tabs?.length && (
         <PageSection className="app-details__tabs" isFilled variant={PageSectionVariants.light}>
           <Tabs
