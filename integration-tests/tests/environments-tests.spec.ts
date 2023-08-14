@@ -50,7 +50,7 @@ describe('Create Env using Non-OpenShift Cluster', () => {
       Applications.createComponent(publicRepo, componentName, applicationName);
     });
 
-    it('Verify the Pipeline run details', () => {
+    it('Verify the Build Pipeline run details', () => {
       Applications.goToPipelinerunsTab();
       UIhelper.getTableRow('Pipeline run List', /Running|Pending/)
         .contains(`${componentName}-`)
@@ -61,6 +61,14 @@ describe('Create Env using Non-OpenShift Cluster', () => {
           LogsTab.downloadAllTaskLogs();
           UIhelper.verifyLabelAndValue('Status', 'Succeeded');
         });
+    });
+
+    it('Verify Enterprise contract Test pipeline run Details', () => {
+      Applications.clickBreadcrumbLink('Pipeline runs');
+      UIhelper.clickRowCellInTable('Pipeline run List', 'Test', `${applicationName}-`);
+      DetailsTab.waitUntilStatusIsNotRunning();
+      LogsTab.downloadAllTaskLogs(false);
+      UIhelper.verifyLabelAndValue('Status', 'Succeeded');
     });
   });
 

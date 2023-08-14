@@ -179,9 +179,18 @@ describe('Advanced Happy path', () => {
         cy.contains(vulnerabilities).should('be.visible');
       });
     });
+
+    it('Verify Enterprise contract Test pipeline run Details', () => {
+      UIhelper.clickRowCellInTable('Pipeline run List', 'Test', `${applicationName}-`);
+      DetailsTab.waitUntilStatusIsNotRunning();
+      LogsTab.downloadAllTaskLogs(false);
+      UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+    });
   });
+
   describe('Check Component Deployment', () => {
     it('Verify the status code and response body of the deployment URL of each component', () => {
+      Applications.clickBreadcrumbLink('Pipeline runs');
       Applications.goToComponentsTab();
       applicationDetailPage.expandDetails(componentName);
 
