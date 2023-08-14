@@ -110,6 +110,14 @@ describe('Basic Happy Path', () => {
           );
         });
     });
+
+    it('Verify Enterprise contract Test pipeline run Details', () => {
+      Applications.clickBreadcrumbLink('Pipeline runs');
+      UIhelper.clickRowCellInTable('Pipeline run List', 'Test', `${applicationName}-`);
+      DetailsTab.waitUntilStatusIsNotRunning();
+      LogsTab.downloadAllTaskLogs(false);
+      UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+    });
   });
 
   describe('Check Component Deployment, Build logs and Application Status', () => {
