@@ -29,3 +29,4 @@ WORKDIR /tmp/
 COPY --chown=node:root --chmod=775 entrypoint.sh /tmp/
 
 ENTRYPOINT ["/tmp/entrypoint.sh"]
+CMD [""]
