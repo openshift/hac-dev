@@ -61,10 +61,20 @@ describe('usePACState', () => {
     expect(renderHook(() => usePACState(component)).result.current).toBe(PACState.disabled);
   });
 
-  it('should identify requested state', () => {
+  it('should identify confiure requested state', () => {
     const component = createComponent(undefined);
     component.metadata.annotations[BUILD_REQUEST_ANNOTATION] = 'configure-pac';
-    expect(renderHook(() => usePACState(component)).result.current).toBe(PACState.requested);
+    expect(renderHook(() => usePACState(component)).result.current).toBe(
+      PACState.configureRequested,
+    );
+  });
+
+  it('should identify unconfiure requested state', () => {
+    const component = createComponent(undefined);
+    component.metadata.annotations[BUILD_REQUEST_ANNOTATION] = 'unconfigure-pac';
+    expect(renderHook(() => usePACState(component)).result.current).toBe(
+      PACState.unconfigureRequested,
+    );
   });
 
   it('should identify pending state', () => {

@@ -101,6 +101,7 @@ const Row: React.FC<{
   );
   const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
   const buildStatus = useComponentBuildStatus(component);
+  const pacError = buildStatus?.pac?.['error-message'];
   const prURL = buildStatus?.pac?.['merge-url'];
 
   React.useEffect(() => {
@@ -163,10 +164,13 @@ const Row: React.FC<{
                     Send pull request
                   </ButtonWithAccessTooltip>
                 );
-              case PACState.requested:
+              case PACState.configureRequested:
+              case PACState.unconfigureRequested:
                 return (
                   <Button spinnerAriaValueText="Sending pull request" isLoading isDisabled>
-                    Sending pull request
+                    {pacState === PACState.configureRequested
+                      ? 'Sending pull request'
+                      : 'Rolling back'}
                   </Button>
                 );
               case PACState.pending:
@@ -292,9 +296,7 @@ const Row: React.FC<{
                 </>
               }
             >
-              We attempted to send a pull request to your repository containing the default build
-              pipeline, but the pull request never arrived. To try again, install the GitHub
-              application and grant permissions for this component.
+              {pacError}
             </Alert>
           </Td>
         </Tr>

@@ -3,6 +3,7 @@ import { Label, Tooltip } from '@patternfly/react-core';
 import usePACState, { PACState } from '../../hooks/usePACState';
 import { ComponentKind } from '../../types';
 import { useTrackEvent, TrackEvents } from '../../utils/analytics';
+import { useComponentBuildStatus } from '../../utils/component-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { createCustomizeComponentPipelineModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../modal/ModalProvider';
@@ -18,6 +19,8 @@ const ComponentPACStateLabel: React.FC<Props> = ({ component, onStateChange, ena
   const track = useTrackEvent();
   const pacState = usePACState(component);
   const showModal = useModalLauncher();
+  const buildStatus = useComponentBuildStatus(component);
+  const pacError = buildStatus?.pac?.['error-message'];
 
   React.useEffect(() => {
     onStateChange?.(pacState);
@@ -81,11 +84,12 @@ const ComponentPACStateLabel: React.FC<Props> = ({ component, onStateChange, ena
           </Label>
         </Tooltip>
       );
-    case PACState.requested:
+    case PACState.configureRequested:
+    case PACState.unconfigureRequested:
       return (
         <Tooltip content="We sent a pull request to your repository containing the default build pipeline for you to customize. Merge the pull request to set a build pipeline for this component.">
           <Label color="gold" onClick={customizePipeline} aria-role="button" style={style}>
-            Sending pull request
+            {pacState === PACState.configureRequested ? 'Sending pull request' : 'Rolling back'}
           </Label>
         </Tooltip>
       );
@@ -105,7 +109,7 @@ const ComponentPACStateLabel: React.FC<Props> = ({ component, onStateChange, ena
 
     case PACState.error:
       return (
-        <Tooltip content="No build pipeline is set for this component. We attempted to send a pull request to your repository containing the default build pipeline, but the pull request never arrived. To try again, install the GitHub application and grant permissions for this component.">
+        <Tooltip content={pacError}>
           <Label color="red" onClick={customizePipeline} aria-role="button" style={style}>
             Pull request failed
           </Label>

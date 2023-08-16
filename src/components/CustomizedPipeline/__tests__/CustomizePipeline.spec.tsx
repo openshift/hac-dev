@@ -1,11 +1,12 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { k8sPatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { usePipelineRuns } from '../../../hooks/usePipelineRuns';
 import { ComponentKind } from '../../../types';
 import {
+  BuildRequest,
   BUILD_REQUEST_ANNOTATION,
   BUILD_STATUS_ANNOTATION,
   SAMPLE_ANNOTATION,
@@ -44,7 +45,7 @@ const k8sPatchResourceMock = k8sPatchResource as jest.Mock;
 
 let componentCount = 1;
 const createComponent = (
-  pacValue?: 'done' | 'request' | 'error',
+  pacValue?: 'done' | 'request-configure' | 'request-unconfigure' | 'error',
   sample?: boolean,
 ): ComponentKind =>
   ({
@@ -52,14 +53,24 @@ const createComponent = (
       name: `my-component-${componentCount++}`,
       annotations: {
         [SAMPLE_ANNOTATION]: sample ? 'true' : undefined,
-        [BUILD_REQUEST_ANNOTATION]: pacValue === 'request' ? 'configure-pac' : undefined,
+        [BUILD_REQUEST_ANNOTATION]:
+          pacValue === 'request-configure'
+            ? BuildRequest.configurePac
+            : pacValue === 'request-unconfigure'
+            ? BuildRequest.unconfigurePac
+            : undefined,
         [BUILD_STATUS_ANNOTATION]: JSON.stringify(
           pacValue === 'done'
             ? { pac: { state: 'enabled', 'merge-url': 'example.com' } }
-            : pacValue === 'request'
+            : pacValue === 'request-configure'
             ? { pac: { state: 'disabled' } }
             : pacValue === 'error'
-            ? { pac: { state: 'error' } }
+            ? {
+                pac: {
+                  state: 'error',
+                  'error-message': '70: GitHub Application is not installed in user repository',
+                },
+              }
             : undefined,
         ),
       },
@@ -100,12 +111,24 @@ describe('CustomizePipeline', () => {
   it('should render sending pull request', () => {
     const result = render(
       <CustomizePipeline
-        components={[createComponent('request')]}
+        components={[createComponent('request-configure')]}
         onClose={() => {}}
         modalProps={{ isOpen: true }}
       />,
     );
     const button = result.getByRole('button', { name: /Sending pull request/ });
+    expect(button).toBeInTheDocument();
+  });
+
+  it('should render rolling back', () => {
+    const result = render(
+      <CustomizePipeline
+        components={[createComponent('request-unconfigure')]}
+        onClose={() => {}}
+        modalProps={{ isOpen: true }}
+      />,
+    );
+    const button = result.getByRole('button', { name: /Rolling back/ });
     expect(button).toBeInTheDocument();
   });
 
@@ -148,6 +171,19 @@ describe('CustomizePipeline', () => {
     expect(button).toBeInTheDocument();
   });
 
+  it('should render PAC error message', () => {
+    usePipelineRunsMock.mockReturnValue([[{}], true]);
+    render(
+      <CustomizePipeline
+        components={[createComponent('error')]}
+        onClose={() => {}}
+        modalProps={{ isOpen: true }}
+      />,
+    );
+    const message = screen.getByText('70: GitHub Application is not installed in user repository');
+    expect(message).toBeInTheDocument();
+  });
+
   it('should render install GitHub app alert', () => {
     usePipelineRunsMock.mockReturnValue([[{}], true]);
     const result = render(
@@ -167,7 +203,7 @@ describe('CustomizePipeline', () => {
     expect(
       render(
         <CustomizePipeline
-          components={[createComponent('request')]}
+          components={[createComponent('request-configure')]}
           onClose={() => {}}
           modalProps={{ isOpen: true }}
         />,
@@ -179,7 +215,7 @@ describe('CustomizePipeline', () => {
     expect(
       render(
         <CustomizePipeline
-          components={[createComponent('request')]}
+          components={[createComponent('request-configure')]}
           onClose={() => {}}
           modalProps={{ isOpen: true }}
         />,
