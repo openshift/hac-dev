@@ -25,6 +25,12 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
   cacheKey?: string,
 ): [Kind[], boolean, unknown, GetNextPage] => {
   const [nextPageToken, setNextPageToken] = React.useState<string>(null);
+  const [localCacheKey, setLocalCacheKey] = React.useState(cacheKey);
+
+  if (cacheKey !== localCacheKey) {
+    //force update local cache key
+    setLocalCacheKey(cacheKey);
+  }
   const { workspace } = useWorkspaceInfo();
 
   const [result, setResult] = React.useState<[Kind[], boolean, unknown, GetNextPage]>([
@@ -49,7 +55,7 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
             namespace,
             options,
             nextPageToken,
-            cacheKey,
+            localCacheKey,
           );
           if (!disposed) {
             const token = tkPipelineRuns[1].nextPageToken;
@@ -92,7 +98,7 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
         disposed = true;
       };
     }
-  }, [workspace, namespace, options, nextPageToken, cacheKey, getRuns]);
+  }, [workspace, namespace, options, nextPageToken, localCacheKey, getRuns]);
   return result;
 };
 

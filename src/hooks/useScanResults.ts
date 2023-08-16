@@ -157,7 +157,7 @@ export const usePLRScanResults = (
   const cacheKey = React.useRef('');
 
   React.useEffect(() => {
-    cacheKey.current = pipelineRunNames.sort().join('|');
+    if (pipelineRunNames.length) cacheKey.current = pipelineRunNames.sort().join('|');
   }, [pipelineRunNames]);
 
   const { namespace } = useWorkspaceInfo();
@@ -181,7 +181,9 @@ export const usePLRScanResults = (
       }),
       [pipelineRunNames],
     ),
-    cache ? `useScanResults-${pipelineRunNames.sort().join('|')}` : undefined,
+    cache && pipelineRunNames.length
+      ? `useScanResults-${pipelineRunNames.sort().join('|')}`
+      : undefined,
   );
 
   return React.useMemo(() => {
