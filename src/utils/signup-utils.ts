@@ -1,10 +1,11 @@
 import { commonFetch } from '@openshift/dynamic-plugin-sdk-utils';
 
 export enum SignupStatus {
-  SignedUp,
-  NotSignedUp,
-  PendingApproval,
-  Unknown,
+  SignedUp = 'SignedUp',
+  NotSignedUp = 'NotSignedUp',
+  PendingApproval = 'PendingApproval',
+  ProvisioningSpace = 'ProvisioningSpace',
+  Unknown = 'Unknown',
 }
 
 export const fetchSignupStatus = async () => {
@@ -15,8 +16,10 @@ export const fetchSignupStatus = async () => {
         const data = await response.json();
         if (data.status.ready) {
           return SignupStatus.SignedUp;
-        } else if (data.status.reason === 'PendingApproval') {
+        } else if (data.status.reason === SignupStatus.PendingApproval) {
           return SignupStatus.PendingApproval;
+        } else if (data.status.reason === SignupStatus.ProvisioningSpace) {
+          return SignupStatus.ProvisioningSpace;
         }
       } catch (e) {
         // eslint-disable-next-line no-console

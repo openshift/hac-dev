@@ -11,6 +11,7 @@ export const setSignupFeatureFlags = async (setFlag: SetFeatureFlag) => {
       setFlag(SIGNUP_FLAG, true);
       break;
     case SignupStatus.PendingApproval:
+    case SignupStatus.ProvisioningSpace:
       setFlag(SIGNUP_FLAG, false);
       setFlag(SIGNUP_PENDING_FLAG, true);
       break;
