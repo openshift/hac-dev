@@ -47,7 +47,7 @@ export type RemoteSecretKind = K8sResourceCommon & {
 };
 
 export interface RemoteSecretStatus {
-  conditions?: Condition[];
+  conditions?: SecretCondition[];
   secret?: Secret;
   targets?: Target[];
 }
@@ -65,7 +65,7 @@ export enum RemoteSecretStatusType {
   Deployed = 'Deployed',
   DataObtained = 'DataObtained',
 }
-export interface Condition {
+export interface SecretCondition {
   lastTransitionTime: string;
   message: string;
   reason: RemoteSecretStatusReason | string;
@@ -112,33 +112,6 @@ export enum SecretTypeDisplayLabel {
   keyValue = 'Key/value',
 }
 
-export const toTypeAbstraction = (type: string): SecretTypeAbstraction => {
-  switch (type) {
-    case SecretType.basicAuth:
-    case SecretType.sshAuth:
-      return SecretTypeAbstraction.source;
-    case SecretType.dockerconfigjson:
-    case SecretType.dockercfg:
-      return SecretTypeAbstraction.image;
-    default:
-      return SecretTypeAbstraction.generic;
-  }
-};
-
-export const typeToLabel = (type: string) => {
-  switch (type) {
-    case SecretType.dockerconfigjson:
-    case SecretType.dockercfg:
-      return SecretTypeDisplayLabel.imagePull;
-    case SecretType.basicAuth:
-    case SecretType.sshAuth:
-    case SecretType.opaque:
-      return SecretTypeDisplayLabel.keyValue;
-
-    default:
-      return type;
-  }
-};
 export const K8sSecretType = {
   [SecretTypeDropdownLabel.opaque]: 'Opaque',
   [SecretTypeDropdownLabel.image]: 'kubernetes.io/dockerconfigjson',

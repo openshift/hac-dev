@@ -1,7 +1,7 @@
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { PIPELINE_SERVICE_ACCOUNT } from '../../../consts/pipeline';
 import { RemoteSecretModel } from '../../../models/remotesecret';
-import { RemoteSecretStatusReason } from '../../../types';
+import { RemoteSecretStatusReason, SecretType } from '../../../types';
 import {
   createRemoteSecretResource,
   createSecretResource,
@@ -11,6 +11,7 @@ import {
   isPartnerTask,
   statusFromConditions,
   supportedPartnerTasksSecrets,
+  typeToLabel,
 } from '../secret-utils';
 import { sampleImagePullSecret, sampleOpaqueSecret, sampleRemoteSecrets } from './secret-data';
 
@@ -128,7 +129,7 @@ describe('statusFromConditions', () => {
 
 describe('getSecretRowData', () => {
   it('should return the default value', () => {
-    expect(getSecretRowData(null, []).secretName).toBe('');
+    expect(getSecretRowData(null, []).secretName).toBe('-');
   });
 
   it('should return all the row data for a given secret', () => {
@@ -162,5 +163,22 @@ describe('getSecretRowData', () => {
     expect(getSecretRowData(secretWithLabels, ['development']).secretLabels).toEqual(
       'label1=test-label-1, label2=test-label-2',
     );
+  });
+});
+
+describe('typeToLabel', () => {
+  it('should return default type for an unmatched type', () => {
+    expect(typeToLabel('test')).toBe('test');
+  });
+
+  it('should return image type for an docker config type', () => {
+    expect(typeToLabel(SecretType.dockerconfigjson)).toBe('Image pull');
+    expect(typeToLabel(SecretType.dockercfg)).toBe('Image pull');
+  });
+
+  it('should return key/value type for an basic type', () => {
+    expect(typeToLabel(SecretType.basicAuth)).toBe('Key/value');
+    expect(typeToLabel(SecretType.sshAuth)).toBe('Key/value');
+    expect(typeToLabel(SecretType.opaque)).toBe('Key/value');
   });
 });

@@ -383,7 +383,7 @@ export const createSecret = async (
         'appstudio.redhat.com/upload-secret': 'remotesecret',
       },
       annotations: {
-        'appstudio.redhat.com/remotesecret-name': `${secret.secretName}-remote-secret`,
+        'appstudio.redhat.com/remotesecret-name': `${secret.secretName}`,
       },
     },
     type: K8sSecretType[secret.type],

@@ -19,14 +19,14 @@ describe('SecretForm', () => {
     formikRenderer(<SecretTypeSelector onChange={onChange} />, initialValues);
 
     screen.getByText('Secret type');
-    screen.getByText('Opaque secret');
+    screen.getByText('Key/value secret');
   });
 
   it('should call onChange handler with selected value', async () => {
     const onChange = jest.fn();
     formikRenderer(<SecretTypeSelector onChange={onChange} />, initialValues);
 
-    const dropdown = screen.getByRole('button', { name: 'Opaque secret' });
+    const dropdown = screen.getByRole('button', { name: 'Key/value secret' });
 
     act(() => {
       fireEvent.click(dropdown);

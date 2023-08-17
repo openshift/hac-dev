@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Skeleton } from '@patternfly/react-core';
+import { Label, Skeleton } from '@patternfly/react-core';
 import { RowFunctionArgs, TableData } from '../../../shared';
 import ActionMenu from '../../../shared/components/action-menu/ActionMenu';
 import { RemoteSecretKind } from '../../../types/secret';
@@ -20,6 +20,10 @@ const SecretsListRow: React.FC<SecretsListRowProps> = ({ obj, customData }) => {
 
   const { secretName, secretFor, secretTarget, secretLabels, secretType, secretStatus } =
     getSecretRowData(obj, environmentNames);
+  const labels =
+    secretLabels !== '-'
+      ? secretLabels.split(', ').map((s) => <Label key={s}>{s}</Label>)
+      : secretLabels;
   const environmentsTarget = environmentsLoaded ? (
     secretTarget
   ) : (
@@ -32,7 +36,7 @@ const SecretsListRow: React.FC<SecretsListRowProps> = ({ obj, customData }) => {
       <TableData className={secretsTableColumnClasses.secretType}>{secretType}</TableData>
       <TableData className={secretsTableColumnClasses.name}> {secretName} </TableData>
       <TableData className={secretsTableColumnClasses.target}>{environmentsTarget}</TableData>
-      <TableData className={secretsTableColumnClasses.labels}>{secretLabels}</TableData>
+      <TableData className={secretsTableColumnClasses.labels}>{labels}</TableData>
       <TableData className={secretsTableColumnClasses.status}>{secretStatus}</TableData>
       <TableData className={secretsTableColumnClasses.kebab}>
         <ActionMenu actions={actions} />

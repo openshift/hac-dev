@@ -3,15 +3,15 @@ import { PIPELINE_SERVICE_ACCOUNT } from '../../consts/pipeline';
 import { SecretModel } from '../../models';
 import { RemoteSecretModel } from '../../models/remotesecret';
 import {
-  Condition,
   RemoteSecretKind,
   RemoteSecretStatusReason,
   RemoteSecretStatusType,
   SecretByUILabel,
+  SecretCondition,
   SecretFor,
   SecretKind,
+  SecretType,
   SecretTypeDisplayLabel,
-  typeToLabel,
 } from '../../types';
 
 export type PartnerTask = {
@@ -52,8 +52,23 @@ export const getSupportedPartnerTaskKeyValuePairs = (secretName?: string) => {
   return partnerTask ? partnerTask.keyValuePairs : [];
 };
 
+export const typeToLabel = (type: string) => {
+  switch (type) {
+    case SecretType.dockerconfigjson:
+    case SecretType.dockercfg:
+      return SecretTypeDisplayLabel.imagePull;
+    case SecretType.basicAuth:
+    case SecretType.sshAuth:
+    case SecretType.opaque:
+      return SecretTypeDisplayLabel.keyValue;
+
+    default:
+      return type;
+  }
+};
+
 export const statusFromConditions = (
-  conditions: Condition[],
+  conditions: SecretCondition[],
 ): RemoteSecretStatusReason | string => {
   if (!conditions?.length) {
     return RemoteSecretStatusReason.Unknown;
@@ -67,7 +82,8 @@ export const statusFromConditions = (
 
 export const getSecretRowData = (obj: RemoteSecretKind, environmentNames: string[]): any => {
   const type = typeToLabel(obj?.spec?.secret?.type);
-  const secretName = obj?.spec?.secret?.name || '';
+  const keys = obj?.status.secret?.keys;
+  const secretName = obj?.spec?.secret?.name || '-';
   const secretFor = obj?.metadata?.labels?.[SecretByUILabel] ?? SecretFor.deployment;
   const secretTarget =
     obj?.metadata?.labels?.['appstudio.redhat.com/environment'] ?? environmentNames.join(',');
@@ -77,9 +93,7 @@ export const getSecretRowData = (obj: RemoteSecretKind, environmentNames: string
         .join(', ') || '-'
     : '-';
   const secretType =
-    type === SecretTypeDisplayLabel.keyValue
-      ? `${type} (${obj?.status.secret?.keys?.length})`
-      : type || '';
+    type === SecretTypeDisplayLabel.keyValue && keys ? `${type} (${keys?.length})` : type || '-';
   const secretStatus = statusFromConditions(obj?.status?.conditions);
 
   return {
@@ -116,7 +130,7 @@ export const createRemoteSecretResource = (
     apiVersion: `${RemoteSecretModel.apiGroup}/${RemoteSecretModel.apiVersion}`,
     kind: RemoteSecretModel.kind,
     metadata: {
-      name: `${secret.metadata.name}-remote-secret`,
+      name: `${secret.metadata.name}`,
       namespace,
       labels: {
         [SecretByUILabel]: SecretFor.build,
@@ -149,7 +163,7 @@ export const createRemoteSecretResource = (
   return k8sCreateResource({
     model: RemoteSecretModel,
     queryOptions: {
-      name: `${secret.metadata.name}-remote-secret`,
+      name: `${secret.metadata.name}`,
       ns: namespace,
       ...(dryRun && { queryParams: { dryRun: 'All' } }),
     },

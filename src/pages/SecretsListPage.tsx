@@ -28,7 +28,6 @@ const SecretsListPage: React.FC = () => {
               Manage your build and deployment secrets and their related configurations. You can add
               a secret at the workspace level.
               <br /> All secrets are stored using AWS Secrets Manager to keep your data private.
-              Learn more
             </>
           }
         >
