@@ -10,6 +10,7 @@ export const RemoteSecretModel: K8sModelCommon = {
 };
 
 export const RemoteSecretGroupVersionKind: K8sGroupVersionKind = {
+  group: 'appstudio.redhat.com',
   version: 'v1beta1',
   kind: 'RemoteSecret',
 };

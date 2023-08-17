@@ -2,9 +2,17 @@ import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { PIPELINE_SERVICE_ACCOUNT } from '../../consts/pipeline';
 import { SecretModel } from '../../models';
 import { RemoteSecretModel } from '../../models/remotesecret';
-import { RemoteSecretKind, SecretKind } from '../../types';
-
-export const SNYK_SPI_TOKEN_ACCESS_BINDING = 'spi-access-token-binding-for-snyk-secret';
+import {
+  Condition,
+  RemoteSecretKind,
+  RemoteSecretStatusReason,
+  RemoteSecretStatusType,
+  SecretByUILabel,
+  SecretFor,
+  SecretKind,
+  SecretTypeDisplayLabel,
+  typeToLabel,
+} from '../../types';
 
 export type PartnerTask = {
   name: string;
@@ -44,6 +52,46 @@ export const getSupportedPartnerTaskKeyValuePairs = (secretName?: string) => {
   return partnerTask ? partnerTask.keyValuePairs : [];
 };
 
+export const statusFromConditions = (
+  conditions: Condition[],
+): RemoteSecretStatusReason | string => {
+  if (!conditions?.length) {
+    return RemoteSecretStatusReason.Unknown;
+  }
+  const deployedCondition = conditions.find((c) => c.type === RemoteSecretStatusType.Deployed);
+  if (deployedCondition) {
+    return deployedCondition.reason;
+  }
+  return conditions[conditions.length - 1]?.reason || RemoteSecretStatusReason.Unknown;
+};
+
+export const getSecretRowData = (obj: RemoteSecretKind, environmentNames: string[]): any => {
+  const type = typeToLabel(obj?.spec?.secret?.type);
+  const secretName = obj?.spec?.secret?.name || '';
+  const secretFor = obj?.metadata?.labels?.[SecretByUILabel] ?? SecretFor.deployment;
+  const secretTarget =
+    obj?.metadata?.labels?.['appstudio.redhat.com/environment'] ?? environmentNames.join(',');
+  const secretLabels = obj
+    ? Object.keys(obj?.spec?.secret?.labels || {})
+        .map((k) => `${k}=${obj.spec?.secret?.labels[k]}`)
+        .join(', ') || '-'
+    : '-';
+  const secretType =
+    type === SecretTypeDisplayLabel.keyValue
+      ? `${type} (${obj?.status.secret?.keys?.length})`
+      : type || '';
+  const secretStatus = statusFromConditions(obj?.status?.conditions);
+
+  return {
+    secretName,
+    secretFor,
+    secretTarget,
+    secretLabels,
+    secretType,
+    secretStatus,
+  };
+};
+
 export const createSecretResource = async (
   secretResource: SecretKind,
   namespace: string,
@@ -70,6 +118,9 @@ export const createRemoteSecretResource = (
     metadata: {
       name: `${secret.metadata.name}-remote-secret`,
       namespace,
+      labels: {
+        [SecretByUILabel]: SecretFor.build,
+      },
     },
     spec: {
       secret: {

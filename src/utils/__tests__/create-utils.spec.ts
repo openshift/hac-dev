@@ -9,7 +9,11 @@ import { THUMBNAIL_ANNOTATION } from '../../components/ApplicationDetails/Applic
 import { supportedPartnerTasksSecrets } from '../../components/Secrets/secret-utils';
 import { PIPELINE_SERVICE_ACCOUNT } from '../../consts/pipeline';
 import { SPIAccessTokenBindingModel, SecretModel } from '../../models';
-import { ComponentDetectionQueryKind, SPIAccessTokenBindingKind, SecretType } from '../../types';
+import {
+  ComponentDetectionQueryKind,
+  SPIAccessTokenBindingKind,
+  SecretTypeDropdownLabel,
+} from '../../types';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
 import { ComponentKind, ComponentSpecs } from './../../types/component';
@@ -458,7 +462,7 @@ describe('Create Utils', () => {
     createSecret(
       {
         secretName: 'my-snyk-secret',
-        type: SecretType.opaque,
+        type: SecretTypeDropdownLabel.opaque,
         keyValues: [{ key: 'token', value: 'my-token-data' }],
       },
       'test-ws',
@@ -483,7 +487,7 @@ describe('Create Utils', () => {
     createSecret(
       {
         secretName: 'my-snyk-secret',
-        type: SecretType.opaque,
+        type: SecretTypeDropdownLabel.opaque,
         keyValues: [{ key: 'token', value: 'my-token-data' }],
       },
       'test-ws',
@@ -508,7 +512,7 @@ describe('Create Utils', () => {
     createSecret(
       {
         secretName: 'registry-creds',
-        type: SecretType.image,
+        type: SecretTypeDropdownLabel.image,
         keyValues: [{ key: 'token', value: 'my-token-data' }],
       },
       'test-ws',
@@ -533,7 +537,7 @@ describe('Create Utils', () => {
     createSecret(
       {
         secretName: 'registry-creds',
-        type: SecretType.image,
+        type: SecretTypeDropdownLabel.image,
         keyValues: [{ key: 'token', value: 'my-token-data' }],
       },
       'test-ws',
@@ -576,7 +580,7 @@ describe('Create Utils', () => {
     createSecret(
       {
         secretName: 'snyk-secret',
-        type: SecretType.opaque,
+        type: SecretTypeDropdownLabel.opaque,
         keyValues: [{ key: 'token', value: 'my-token-data' }],
       },
       'test-ws',
@@ -598,7 +602,7 @@ describe('Create Utils', () => {
       supportedPartnerTasksSecrets.snyk,
       {
         secretName: 'my-snyk-secret',
-        type: SecretType.opaque,
+        type: SecretTypeDropdownLabel.opaque,
         keyValues: [{ key: 'token', value: 'my-token-data' }],
       },
       'test-ns',

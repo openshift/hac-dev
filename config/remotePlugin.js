@@ -29,6 +29,16 @@ const navExtensions = [
       required: ['SIGNUP'],
     },
   },
+  {
+    type: 'core.navigation/href',
+    properties: {
+      href: '/application-pipeline/secrets',
+      name: 'Secrets',
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
 ];
 
 const flagExtensions = [
@@ -424,6 +434,19 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
+      path: '/application-pipeline/secrets',
+      exact: true,
+      component: {
+        $codeRef: 'SecretsListPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
       path: '/application-pipeline/environments/workspaces/:workspaceName/create',
       exact: true,
       component: {
@@ -473,6 +496,7 @@ module.exports = {
       WorkspaceContext: resolve(__dirname, '../src/utils/workspace-context-utils'),
       WorkspacedPage: resolve(__dirname, '../src/pages/WorkspacedPage'),
       OverviewPage: resolve(__dirname, '../src/pages/OverviewPage'),
+      SecretsListPage: resolve(__dirname, '../src/pages/SecretsListPage'),
       FlagUtils: resolve(__dirname, '../src/utils/flag-utils'),
       Redirect: resolve(__dirname, '../src/pages/RedirectPage'),
       NotFound: resolve(__dirname, '../src/pages/NotFoundPage'),

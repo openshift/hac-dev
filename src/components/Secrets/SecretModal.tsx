@@ -8,7 +8,7 @@ import {
   ModalVariant,
 } from '@patternfly/react-core';
 import { Formik } from 'formik';
-import { SecretType } from '../../types';
+import { SecretTypeDropdownLabel } from '../../types';
 import { ImportSecret } from '../ImportForm/utils/types';
 import { SecretFromSchema } from '../ImportForm/utils/validation-utils';
 import { RawComponentProps } from '../modal/createModalLauncher';
@@ -38,7 +38,7 @@ const SecretModal: React.FC<SecretModalProps> = ({ modalProps, onSubmit, existin
   const defaultKeyValues = [{ key: '', value: '', readOnlyKey: false }];
   const initialValues: SecretModalValues = {
     secretName: '',
-    type: SecretType.opaque,
+    type: SecretTypeDropdownLabel.opaque,
     keyValues: defaultKeyValues,
     existingSecrets,
   };

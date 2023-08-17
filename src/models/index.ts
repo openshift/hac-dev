@@ -18,3 +18,4 @@ export * from './snapshot-environment-binding';
 export * from './rbac';
 export * from './secret';
 export * from './limit-range';
+export * from './remotesecret';
