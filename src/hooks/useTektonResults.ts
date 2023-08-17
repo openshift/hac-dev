@@ -25,6 +25,12 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
   cacheKey?: string,
 ): [Kind[], boolean, unknown, GetNextPage] => {
   const [nextPageToken, setNextPageToken] = React.useState<string>(null);
+  const [localCacheKey, setLocalCacheKey] = React.useState(cacheKey);
+
+  if (cacheKey !== localCacheKey) {
+    //force update local cache key
+    setLocalCacheKey(cacheKey);
+  }
   const { workspace } = useWorkspaceInfo();
 
   const [result, setResult] = React.useState<[Kind[], boolean, unknown, GetNextPage]>([
@@ -37,7 +43,7 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
   // reset token if namespace or options change
   React.useEffect(() => {
     setNextPageToken(null);
-  }, [namespace, options]);
+  }, [namespace, options, cacheKey]);
 
   React.useEffect(() => {
     let disposed = false;
@@ -49,33 +55,34 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
             namespace,
             options,
             nextPageToken,
-            cacheKey,
+            localCacheKey,
           );
           if (!disposed) {
             const token = tkPipelineRuns[1].nextPageToken;
             const callInflight = !!tkPipelineRuns?.[2];
             const loaded = callInflight ? false : true;
-
-            setResult((cur) => [
-              nextPageToken ? [...cur[0], ...tkPipelineRuns[0]] : tkPipelineRuns[0],
-              loaded,
-              undefined,
-              token
-                ? (() => {
-                    // ensure we can only call this once
-                    let executed = false;
-                    return () => {
-                      if (!disposed && !executed) {
-                        executed = true;
-                        // trigger the update
-                        setNextPageToken(token);
-                        return true;
-                      }
-                      return false;
-                    };
-                  })()
-                : undefined,
-            ]);
+            if (!callInflight) {
+              setResult((cur) => [
+                nextPageToken ? [...cur[0], ...tkPipelineRuns[0]] : tkPipelineRuns[0],
+                loaded,
+                undefined,
+                token
+                  ? (() => {
+                      // ensure we can only call this once
+                      let executed = false;
+                      return () => {
+                        if (!disposed && !executed) {
+                          executed = true;
+                          // trigger the update
+                          setNextPageToken(token);
+                          return true;
+                        }
+                        return false;
+                      };
+                    })()
+                  : undefined,
+              ]);
+            }
           }
         } catch (e) {
           if (!disposed) {
@@ -91,7 +98,7 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
         disposed = true;
       };
     }
-  }, [workspace, namespace, options, nextPageToken, cacheKey, getRuns]);
+  }, [workspace, namespace, options, nextPageToken, localCacheKey, getRuns]);
   return result;
 };
 

@@ -1,9 +1,10 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table';
-import { render, screen, fireEvent, configure } from '@testing-library/react';
+import { render, screen, fireEvent, configure, waitFor } from '@testing-library/react';
 import { useComponents } from '../../../hooks/useComponents';
 import { usePipelineRuns } from '../../../hooks/usePipelineRuns';
+import { usePLRVulnerabilities } from '../../../hooks/useScanResults';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import { PipelineRunKind } from '../../../types';
 import { mockComponentsData } from '../../ApplicationDetails/__data__';
@@ -25,6 +26,10 @@ jest.mock('../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
+jest.mock('../../../hooks/useScanResults', () => ({
+  usePLRVulnerabilities: jest.fn(() => ({ vulnerabilities: {}, fetchedPipelineRuns: [] })),
+}));
+
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
@@ -43,6 +48,11 @@ jest.mock('../../../shared/components/table', () => {
       const { data, filters, selected, match, kindObj } = props;
       const cProps = { data, filters, selected, match, kindObj };
       const columns = props.Header(cProps);
+
+      React.useEffect(() => {
+        props?.onRowsRendered({ stopIndex: data.length - 1 });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [data]);
       return (
         <PfTable role="table" aria-label="table" cells={columns} variant="compact" borders={false}>
           <TableHeader role="rowgroup" />
@@ -65,7 +75,7 @@ jest.mock('../../../utils/rbac', () => ({
 
 const useSearchParamMock = useSearchParam as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
-
+const usePLRVulnerabilitiesMock = usePLRVulnerabilities as jest.Mock;
 const params: any = {};
 
 const mockUseSearchParam = (name: string) => {
@@ -202,8 +212,10 @@ describe('Pipeline run List', () => {
     expect(filter.value).toBe('');
   });
 
-  it('should render filtered pipelinerun list', async () => {
-    usePipelineRunsMock.mockReturnValue([pipelineRuns, true]);
+  it('should render filtered pipelinerun list and should call nextPage', async () => {
+    const nextPage = jest.fn();
+    usePipelineRunsMock.mockReturnValue([pipelineRuns, true, null, nextPage]);
+
     const r = render(<PipelineRunsListView applicationName={appName} />);
 
     const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
@@ -211,13 +223,19 @@ describe('Pipeline run List', () => {
       target: { value: 'basic-node-js-second' },
     });
 
+    usePLRVulnerabilitiesMock.mockReturnValue({
+      vulnerabilities: {},
+      fetchedPipelineRuns: pipelineRuns.map((plr) => plr.metadata.name),
+    });
     expect(filter.value).toBe('basic-node-js-second');
 
     r.rerender(<PipelineRunsListView applicationName={appName} />);
-
-    expect(screen.queryByText('basic-node-js-first')).not.toBeInTheDocument();
-    expect(screen.queryByText('basic-node-js-second')).toBeInTheDocument();
-    expect(screen.queryByText('basic-node-js-third')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText('basic-node-js-first')).not.toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-second')).toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-third')).not.toBeInTheDocument();
+      expect(nextPage).toHaveBeenCalled();
+    });
   });
 
   it('should render no pipelineruns and Empty State', async () => {
@@ -233,13 +251,50 @@ describe('Pipeline run List', () => {
     expect(filter.value).toBe('no-match');
 
     r.rerender(<PipelineRunsListView applicationName={appName} />);
+    await waitFor(() => {
+      expect(screen.queryByText('basic-node-js-first')).not.toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-second')).not.toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-third')).not.toBeInTheDocument();
+      expect(screen.queryByText('No results found')).toBeInTheDocument();
+      expect(
+        screen.queryByText(
+          'No results match this filter criteria. Clear all filters and try again.',
+        ),
+      ).toBeInTheDocument();
+    });
+  });
 
-    expect(screen.queryByText('basic-node-js-first')).not.toBeInTheDocument();
-    expect(screen.queryByText('basic-node-js-second')).not.toBeInTheDocument();
-    expect(screen.queryByText('basic-node-js-third')).not.toBeInTheDocument();
-    expect(screen.queryByText('No results found')).toBeInTheDocument();
-    expect(
-      screen.queryByText('No results match this filter criteria. Clear all filters and try again.'),
-    ).toBeInTheDocument();
+  it('should clear the filters and render the list again in the table', async () => {
+    usePipelineRunsMock.mockReturnValue([pipelineRuns, true]);
+    const r = render(<PipelineRunsListView applicationName={appName} />);
+
+    const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
+
+    fireEvent.change(filter, {
+      target: { value: 'no-match' },
+    });
+
+    expect(filter.value).toBe('no-match');
+
+    r.rerender(<PipelineRunsListView applicationName={appName} />);
+    await waitFor(() => {
+      expect(screen.queryByText('basic-node-js-first')).not.toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-second')).not.toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-third')).not.toBeInTheDocument();
+      expect(screen.queryByText('No results found')).toBeInTheDocument();
+      expect(
+        screen.queryByText(
+          'No results match this filter criteria. Clear all filters and try again.',
+        ),
+      ).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.queryByRole('button', { name: 'Clear all filters' }));
+    await waitFor(() => {
+      expect(screen.queryByText('basic-node-js-first')).toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-second')).toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-third')).toBeInTheDocument();
+      screen.debug();
+    });
   });
 });
