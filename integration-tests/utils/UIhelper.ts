@@ -3,17 +3,17 @@ import { Common } from './Common';
 
 export class UIhelper {
   static clickTab(tabName: string) {
-    cy.xpath(
-      `//div[@data-ouia-component-type="PF4/Tabs"]//button[child::span[text()='${tabName}']]`,
-    ).click();
+    cy.contains(UIhelperPO.tabs, new RegExp(`^\\s*${tabName}\\s*$`)).click();
     Common.waitForLoad();
   }
 
   static inputValueInTextBoxByLabelName(label: string, value: string) {
     return cy
-      .xpath(
-        `//div[contains(@class,"pf-c-form__group") and descendant::*[text()='${label}']]//input`,
-      )
+      .contains(UIhelperPO.formGroupLabelText, new RegExp(`^\\s*${label}\\s*$`))
+      .parentsUntil(UIhelperPO.formGroup)
+      .eq(-1)
+      .parent()
+      .find('input')
       .clear()
       .type(value);
   }
@@ -28,35 +28,31 @@ export class UIhelper {
   static verifyLabelAndValue(label: string, value: string) {
     cy.log(`Validate Label : "${label}" should have value : "${value}"`);
     return cy
-      .xpath(
-        `//div[contains(@class,"list__group") and descendant::dt//*[text()="${label}"]]/dd//*[text()="${value}"]`,
-      )
+      .contains(UIhelperPO.listGroup_dt, new RegExp(`^\\s*${label}\\s*$`))
+      .siblings('dd')
+      .contains(new RegExp(`^\\s*${value}\\s*$`))
       .scrollIntoView()
       .should('be.visible');
   }
 
   static clickButton(label: string, options?: { invoke?: boolean; force?: boolean }) {
     if (options?.invoke) {
-      return cy
-        .xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`)
-        .invoke('click');
+      return cy.contains(UIhelperPO.pf4_button, new RegExp(`^\\s*${label}\\s*$`)).invoke('click');
     } else if (options?.force) {
       return cy
-        .xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`)
+        .contains(UIhelperPO.pf4_button, new RegExp(`^\\s*${label}\\s*$`))
         .click({ force: true });
     }
-
-    return cy.xpath(`//*[@data-ouia-component-type="PF4/Button" and text()='${label}']`).click();
+    return cy.contains(UIhelperPO.pf4_button, new RegExp(`^\\s*${label}\\s*$`)).click();
   }
 
   static clickLink(link: string, options?: { invoke?: boolean; force?: boolean }) {
     if (options?.invoke) {
-      return cy.xpath(`//a[text()='${link}']`).invoke('click');
+      return cy.contains('a', new RegExp(`^\\s*${link}\\s*$`)).invoke('click');
     } else if (options?.force) {
-      return cy.xpath(`//a[text()='${link}']`).click({ force: true });
+      return cy.contains('a', new RegExp(`^\\s*${link}\\s*$`)).click({ force: true });
     }
-
-    return cy.xpath(`//a[text()='${link}']`).click();
+    return cy.contains('a', new RegExp(`^\\s*${link}\\s*$`)).click();
   }
 
   static getTableRow(tableAriaLabel: string, uniqueRowText: string | RegExp) {
