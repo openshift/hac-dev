@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Flex, FlexItem, Tooltip } from '@patternfly/react-core';
+import { Button, Flex, FlexItem, TextInput, Tooltip } from '@patternfly/react-core';
 import MinusCircleIcon from '@patternfly/react-icons/dist/js/icons/minus-circle-icon';
 import PlusCircleIcon from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
 import cloneDeep from 'lodash/cloneDeep';
@@ -50,26 +50,22 @@ const PairElement: React.FC<PairElementProps> = ({
     <div className="pairs-list__row" data-test="pairs-list-row">
       <div className="pairs-list__row--name">
         <span className="pairs-list__row--label">Name</span>
-        <input
-          type="text"
+        <TextInput
           data-test="pairs-list-name"
-          className="pf-c-form-control"
           placeholder={nameString}
           value={pair[NameValueEditorPair.Name]}
           onChange={onChangeName}
-          disabled={readOnly}
+          isDisabled={readOnly}
         />
       </div>
       <div className="pairs-list__row--value">
         <span className="pairs-list__row--label">Value</span>
-        <input
-          type="text"
+        <TextInput
           data-test="pairs-list-value"
-          className="pf-c-form-control"
           placeholder={valueString}
           value={pair[NameValueEditorPair.Value] || ''}
           onChange={onChangeValue}
-          disabled={readOnly}
+          isDisabled={readOnly}
         />
       </div>
       {!readOnly && (

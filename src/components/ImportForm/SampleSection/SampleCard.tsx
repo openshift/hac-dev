@@ -3,7 +3,6 @@ import { CatalogItem } from '@openshift/dynamic-plugin-sdk-extensions';
 import {
   Card,
   CardHeader,
-  CardActions,
   CardTitle,
   CardBody,
   CardFooter,
@@ -39,16 +38,19 @@ const SampleCard: React.FC<SampleCardProps> = ({ sample, onSampleImport }) => {
 
   return (
     <Card isFlat style={{ height: '100%' }} data-test={`${sample.type}-${sample.name}`}>
-      <CardHeader>
+      <CardHeader
+        {...(badges.length > 0 && {
+          actions: { actions: <>{badges}</>, hasNoOffset: false, className: undefined },
+        })}
+      >
         {icon?.url && (
           <img
             className="catalog-tile-pf-icon"
             src={icon.url}
             alt={name}
-            style={{ maxWidth: '60px', fontSize: 'var(--pf-global--FontSize--md)' }}
+            style={{ maxWidth: '60px', fontSize: 'var(--pf-v5-global--FontSize--md)' }}
           />
         )}
-        {badges.length > 0 && <CardActions>{badges}</CardActions>}
       </CardHeader>
       <CardTitle>{name}</CardTitle>
       <CardBody>

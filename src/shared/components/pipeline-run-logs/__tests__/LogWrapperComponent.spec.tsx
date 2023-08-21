@@ -203,7 +203,7 @@ describe('LogWrapperComponent', () => {
     );
 
     const downloadButton = screen.getByText('Download');
-    expect(downloadButton).toHaveClass('pf-c-button');
+    expect(downloadButton).toHaveClass('pf-v5-c-button');
 
     act(() => {
       fireEvent.click(downloadButton);
@@ -277,7 +277,7 @@ describe('LogWrapperComponent', () => {
     );
 
     const downloadAllButton = screen.getByText('Download all task logs');
-    expect(downloadAllButton).toHaveClass('pf-c-button');
+    expect(downloadAllButton).toHaveClass('pf-v5-c-button');
 
     act(() => {
       fireEvent.click(screen.getByText('Download all task logs'));

@@ -82,7 +82,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
         ]}
         title={
           <Text component={TextVariants.h2}>
-            <span className="pf-u-mr-sm">
+            <span className="pf-v5-u-mr-sm">
               <CommitIcon isPR={commit.isPullRequest} className="commit-details__title-icon" />{' '}
               <b>{commit.shaTitle}</b>
             </span>

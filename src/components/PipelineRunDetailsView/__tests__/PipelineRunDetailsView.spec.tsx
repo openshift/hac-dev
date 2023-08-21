@@ -308,7 +308,9 @@ describe('PipelineRunDetailsView', () => {
     let detailsPage = routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
 
     let appDetails = screen.getByTestId('details');
-    let activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    let activeTab = appDetails.querySelector(
+      '.pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__item-text',
+    );
     expect(activeTab).toHaveTextContent('Details');
     detailsPage.unmount();
 
@@ -316,7 +318,9 @@ describe('PipelineRunDetailsView', () => {
     watchResourceMock.mockReturnValueOnce([mockPipelineRun, true]).mockReturnValue([[], true]);
     detailsPage = routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     appDetails = detailsPage.getByTestId('details');
-    activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    activeTab = appDetails.querySelector(
+      '.pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__item-text',
+    );
     expect(activeTab).toHaveTextContent('Task runs');
     detailsPage.unmount();
 
@@ -324,7 +328,9 @@ describe('PipelineRunDetailsView', () => {
     watchResourceMock.mockReturnValueOnce([mockPipelineRun, true]).mockReturnValue([[], true]);
     detailsPage = routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     appDetails = detailsPage.getByTestId('details');
-    activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    activeTab = appDetails.querySelector(
+      '.pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__item-text',
+    );
     expect(activeTab).toHaveTextContent('Logs');
     detailsPage.unmount();
   });

@@ -3,6 +3,7 @@ import { FormGroup } from '@patternfly/react-core';
 import { useField } from 'formik';
 import { CheckboxFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
+import FieldHelperText from './FieldHelperText';
 
 type ToggleableFieldBaseProps = CheckboxFieldProps & {
   children: (props) => React.ReactNode;
@@ -24,14 +25,7 @@ const ToggleableFieldBase: React.FC<ToggleableFieldBaseProps> = ({
   const isValid = !(touched && error);
   const errorMessage = !isValid ? error : '';
   return (
-    <FormGroup
-      fieldId={fieldId}
-      label={formLabel}
-      helperText={helpText}
-      helperTextInvalid={errorMessage}
-      validated={isValid ? 'default' : 'error'}
-      isRequired={required}
-    >
+    <FormGroup fieldId={fieldId} label={formLabel} isRequired={required}>
       {children({
         ...field,
         ...props,
@@ -41,11 +35,12 @@ const ToggleableFieldBase: React.FC<ToggleableFieldBaseProps> = ({
         isChecked: field.checked,
         isValid,
         'aria-describedby': helpText ? `${fieldId}-helper` : undefined,
-        onChange: (val, event) => {
+        onChange: (event, val) => {
           field.onChange(event);
           onChange && onChange(val);
         },
       })}
+      <FieldHelperText isValid={isValid} errorMessage={errorMessage} helpText={helpText} />
     </FormGroup>
   );
 };

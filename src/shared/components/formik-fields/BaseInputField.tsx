@@ -1,5 +1,12 @@
 import React from 'react';
-import { FormGroup, ValidatedOptions } from '@patternfly/react-core';
+import {
+  FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+  ValidatedOptions,
+} from '@patternfly/react-core';
+import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import { useField } from 'formik';
 import { BaseInputFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
@@ -32,9 +39,6 @@ const BaseInputField: React.FC<
       fieldId={fieldId}
       label={label}
       labelIcon={labelIcon}
-      helperText={helpText}
-      helperTextInvalid={errorMessage || helpTextInvalid}
-      validated={!isValid ? ValidatedOptions.error : validated}
       isRequired={required}
       data-test={dataTest}
       className="hac-input-field"
@@ -47,11 +51,24 @@ const BaseInputField: React.FC<
         label,
         validated: !isValid ? ValidatedOptions.error : validated,
         'aria-describedby': helpText ? `${fieldId}-helper` : undefined,
-        onChange: (value, event) => {
+        onChange: (event) => {
           field.onChange(event);
           onChange && onChange(event);
         },
       })}
+      {!isValid || validated === ValidatedOptions.error || helpText ? (
+        <FormHelperText>
+          <HelperText>
+            {!isValid || validated === ValidatedOptions.error ? (
+              <HelperTextItem icon={<ExclamationCircleIcon />} variant="error">
+                {errorMessage || helpTextInvalid}
+              </HelperTextItem>
+            ) : (
+              <HelperTextItem>{helpText}</HelperTextItem>
+            )}
+          </HelperText>
+        </FormHelperText>
+      ) : null}
     </FormGroup>
   );
 };

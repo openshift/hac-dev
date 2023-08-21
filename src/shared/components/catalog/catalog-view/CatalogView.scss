@@ -1,6 +1,6 @@
 .catalog-page {
-  background: var(--pf-global--palette--white);
-  border: 1px solid var(--pf-global--BorderColor--300);
+  background: var(--pf-v5-global--palette--white);
+  border: 1px solid var(--pf-v5-global--BorderColor--300);
   display: flex;
   flex: 1;
   padding-top: math.div($grid-gutter-width, 2);

@@ -35,7 +35,7 @@ const ReleaseSidePanel: React.FC<ReleaseSidePanelBodyProps> = ({ workflowNode, o
             {release ? workflowNode.getLabel() : 'Release'}
             {release ? <StatusIconWithTextLabel status={workflowNode.getData().status} /> : null}
           </span>
-          <span className="pf-u-mt-xs commit-side-panel__subtext">
+          <span className="pf-v5-u-mt-xs commit-side-panel__subtext">
             <img src={PipelineIcon} alt="pipeline run" /> Release
           </span>
           <DrawerActions>

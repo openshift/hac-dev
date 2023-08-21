@@ -2,7 +2,14 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Popover } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
-import { Node, observer, PipelineNodeModel, TaskNode, useHover } from '@patternfly/react-topology';
+import {
+  Node,
+  observer,
+  PipelineNodeModel,
+  TaskNode,
+  useCombineRefs,
+  useHover,
+} from '@patternfly/react-topology';
 import { useWorkspaceInfo } from '../../../../../../utils/workspace-context-utils';
 import { runStatusToRunStatus } from '../../../../../topology/utils';
 import { WorkflowNodeModelData } from '../types';
@@ -24,6 +31,8 @@ const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
   const [hover, hoverRef] = useHover();
   const { isDisabled, workflowType, status, children, hidden } = element.getData();
   const childNodes = children?.filter((n) => !n.data.isDisabled) || [];
+  const triggerRef = React.useRef<Element>();
+  const outerRef = useCombineRefs(hoverRef, triggerRef);
 
   const setActiveTab = React.useCallback(() => {
     navigate(getLinksForElement(element, workspace).elementRef);
@@ -54,6 +63,7 @@ const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
       isVisible={tipVisible}
       className="workload-node__popover"
       showClose={false}
+      triggerRef={triggerRef}
       bodyContent={
         <div onMouseEnter={() => setTipHover(true)} onMouseLeave={() => setTipHover(false)}>
           <WorkflowNodeTipContent element={element} />
@@ -61,7 +71,7 @@ const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
       }
       appendTo={() => document.querySelector('#hacDev-modal-container')}
     >
-      <g ref={hoverRef}>
+      <g ref={outerRef}>
         <TaskNode
           truncateLength={element.getLabel().length}
           element={element}

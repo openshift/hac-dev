@@ -71,7 +71,7 @@ const IntroBanner: React.FC = () => {
                   data-test="create-application"
                   isDisabled={!(canCreateApplication && canCreateComponent)}
                   tooltip="You don't have access to create an application"
-                  isLarge
+                  size="lg"
                   analytics={{
                     link_name: 'create-application',
                   }}
@@ -84,7 +84,7 @@ const IntroBanner: React.FC = () => {
                     component={(props) => <Link {...props} to="/application-pipeline/workspaces" />}
                     variant="secondary"
                     data-test="view-my-applications"
-                    isLarge
+                    size="lg"
                   >
                     View my applications
                   </Button>

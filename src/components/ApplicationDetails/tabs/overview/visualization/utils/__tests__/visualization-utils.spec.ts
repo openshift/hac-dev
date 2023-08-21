@@ -41,6 +41,15 @@ describe('getMaxName', () => {
 
 describe('getNodeWidth', () => {
   test('should return the max length resources', () => {
+    const createElement = document.createElement.bind(document);
+    document.createElement = (tagName) => {
+      if (tagName === 'canvas') {
+        return {
+          getContext: () => null,
+        };
+      }
+      return createElement(tagName);
+    };
     const plainWidth = getNodeWidth('test');
     const statusWidth = getNodeWidth('test', 'danger');
     const badgedWidth = getNodeWidth('test', 'danger', 2);

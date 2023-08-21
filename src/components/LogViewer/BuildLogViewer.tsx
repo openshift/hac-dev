@@ -46,8 +46,8 @@ export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => 
 
   return (
     <>
-      <div className="pf-c-modal-box__title build-log-viewer__title">
-        <span className="pf-c-modal-box__title-text">{`Build pipeline run log for ${component.metadata.name}`}</span>
+      <div className="pf-v5-c-modal-box__title build-log-viewer__title">
+        <span className="pf-v5-c-modal-box__title-text">{`Build pipeline run log for ${component.metadata.name}`}</span>
         <StatusIconWithTextLabel status={plrStatus} />
       </div>
       <div>

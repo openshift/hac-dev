@@ -61,7 +61,7 @@ const SampleSection: React.FunctionComponent<SampleSectionProp> = ({ onSampleImp
                 placeholder="Filter by keyword..."
               />
             </ToolbarItem>
-            <ToolbarItem alignment={{ default: 'alignRight' }}>
+            <ToolbarItem align={{ default: 'alignRight' }}>
               <TextContent>
                 <Text component={TextVariants.h5}>
                   {`${filteredSamples.length} of ${pluralize(samples.length, 'item', 'items')}`}

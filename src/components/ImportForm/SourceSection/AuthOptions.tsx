@@ -3,6 +3,7 @@ import {
   Button,
   ButtonVariant,
   FormGroup,
+  FormHelperText,
   HelperText,
   HelperTextItem,
   Spinner,
@@ -36,11 +37,12 @@ const AuthOptions: React.FC = () => {
   }, [oAuthUrl]);
 
   return (
-    <FormGroup
-      label="Authorization"
-      helperText="To connect to a private repository, sign in."
-      isHelperTextBeforeField
-    >
+    <FormGroup label="Authorization">
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem>To connect to a private repository, sign in.</HelperTextItem>
+        </HelperText>
+      </FormHelperText>
       {secret ? (
         <HelperText>
           <HelperTextItem variant="success" icon={<CheckIcon />}>
@@ -48,7 +50,7 @@ const AuthOptions: React.FC = () => {
           </HelperTextItem>
         </HelperText>
       ) : !loaded ? (
-        <Spinner size="lg" aria-label="Creating access token binding" isSVG />
+        <Spinner size="lg" aria-label="Creating access token binding" />
       ) : (
         <>
           <br />

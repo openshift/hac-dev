@@ -152,7 +152,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
         <>
           {allComponents?.length > 0 ? (
             <>
-              <Title headingLevel="h3" className="pf-u-mt-lg pf-u-mb-sm">
+              <Title headingLevel="h3" className="pf-v5-u-mt-lg pf-v5-u-mb-sm">
                 Components
               </Title>
               <TextContent>
@@ -163,7 +163,7 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
               </TextContent>
               {pendingCount > 0 && !mergeAlertHidden ? (
                 <Alert
-                  className="pf-u-mt-md"
+                  className="pf-v5-u-mt-md"
                   variant={AlertVariant.warning}
                   isInline
                   title={`${pluralize(
@@ -193,7 +193,6 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                   component.
                 </Alert>
               ) : null}
-
               <Toolbar
                 data-testid="component-list-toolbar"
                 clearFiltersButtonText="Clear filters"
@@ -238,18 +237,20 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
                       Add component
                     </ButtonWithAccessTooltip>
                   </ToolbarItem>
-                  <ToolbarGroup alignment={{ default: 'alignRight' }}>
+                  <ToolbarGroup align={{ default: 'alignRight' }}>
                     {!gitOpsDeploymentError && gitOpsDeploymentLoaded ? (
                       Array.isArray(gitOpsDeployments) &&
                       gitOpsDeployments.length > 0 &&
                       gitOpsDeployments[0] ? (
                         <ToolbarItem>
-                          Deployment strategy:{' '}
-                          <Label>{getGitOpsDeploymentStrategy(gitOpsDeployments[0])}</Label>
+                          Deployment strategy:
+                          <Label className="pf-v5-u-ml-xs">
+                            {getGitOpsDeploymentStrategy(gitOpsDeployments[0])}
+                          </Label>
                         </ToolbarItem>
                       ) : null
                     ) : (
-                      <Spinner isSVG size="md" />
+                      <Spinner size="md" />
                     )}
                   </ToolbarGroup>
                 </ToolbarContent>

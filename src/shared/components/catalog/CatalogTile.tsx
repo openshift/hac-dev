@@ -59,7 +59,7 @@ const CatalogTile: React.FC<CatalogTileProps> = ({
     <PfCatalogTile
       featured={featured}
       className="catalog-tile"
-      onClick={(e: React.SyntheticEvent<HTMLElement>) => {
+      onClick={(e: React.MouseEvent<Element, MouseEvent> | React.FormEvent<HTMLInputElement>) => {
         if (isModifiedEvent(e as React.MouseEvent<HTMLElement>)) return;
         e.preventDefault();
         if (onClick) {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { Table as PfTable, TableHeader } from '@patternfly/react-table';
+import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
 import { render, screen, fireEvent, configure, waitFor } from '@testing-library/react';
 import { useComponents } from '../../../hooks/useComponents';
 import { usePipelineRuns } from '../../../hooks/usePipelineRuns';

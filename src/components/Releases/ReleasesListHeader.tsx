@@ -3,7 +3,7 @@ export const releasesTableColumnClasses = {
   status: 'pf-m-width-20',
   releasePlan: 'pf-m-width-25',
   releaseSnapshot: 'pf-m-hidden pf-m-width-25 pf-m-visible-on-xl',
-  kebab: 'pf-c-table__action',
+  kebab: 'pf-v5-c-table__action',
 };
 
 const ReleasesListHeader = () => {

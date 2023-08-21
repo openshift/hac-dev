@@ -1,20 +1,20 @@
 .workload-node__tooltip {
   display: flex;
   flex-direction: column;
-  gap: var(--pf-global--spacer--md);
+  gap: var(--pf-v5-global--spacer--md);
   text-align: left;
-  padding: var(--pf-global--spacer--md);
+  padding: var(--pf-v5-global--spacer--md);
 
   &-title {
-    font-size: var(--pf-global--icon--FontSize--md);
+    font-size: var(--pf-v5-global--icon--FontSize--md);
   }
 
   &-status {
     &-area {
       display: grid;
       grid-template-columns: auto auto auto;
-      column-gap: var(--pf-global--spacer--md);
-      row-gap: var(--pf-global--spacer--sm);
+      column-gap: var(--pf-v5-global--spacer--md);
+      row-gap: var(--pf-v5-global--spacer--sm);
       .pf-topology-pipelines__status-icon.pf-m-spin {
         > svg {
           filter: blur(0);
@@ -28,6 +28,6 @@
   }
   &-links {
     display: flex;
-    gap: var(--pf-global--spacer--md);
+    gap: var(--pf-v5-global--spacer--md);
   }
 }

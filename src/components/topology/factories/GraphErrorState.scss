@@ -1,9 +1,9 @@
 .graph-error-state {
-  background-color: var(--pf-global--BackgroundColor--200);
+  background-color: var(--pf-v5-global--BackgroundColor--200);
   border-radius: 1rem;
   height: 150px;
   &__inline-errors {
-    margin-bottom: var(--pf-global--spacer--md);
+    margin-bottom: var(--pf-v5-global--spacer--md);
   }
 
   &.m-full-height {

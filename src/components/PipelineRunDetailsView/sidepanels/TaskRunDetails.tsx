@@ -37,7 +37,7 @@ const TaskRunDetails: React.FC<Props> = ({ taskRun, status }) => (
             </DescriptionListDescription>
           </DescriptionListGroup>
         </DescriptionList>
-        <DescriptionList className="pf-u-mt-lg">
+        <DescriptionList className="pf-v5-u-mt-lg">
           <DescriptionListGroup>
             <DescriptionListTerm>Description</DescriptionListTerm>
             <DescriptionListDescription>

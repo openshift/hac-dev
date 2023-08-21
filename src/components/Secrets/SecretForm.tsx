@@ -1,5 +1,6 @@
 import React from 'react';
-import { Form, SelectVariant } from '@patternfly/react-core';
+import { Form } from '@patternfly/react-core';
+import { SelectVariant } from '@patternfly/react-core/deprecated';
 import { useFormikContext } from 'formik';
 import { SelectInputField } from '../../shared';
 import KeyValueFileInputField from '../../shared/components/formik-fields/key-value-file-input-field/KeyValueFileInputField';

@@ -1,11 +1,11 @@
 .catalog-page {
   &__header {
-    margin: 0 var(--pf-global--spacer--lg) 0 0;
+    margin: 0 var(--pf-v5-global--spacer--lg) 0 0;
   }
 
   &__heading {
     font-size: 16px;
-    margin: 0 0 20px var(--pf-global--spacer--lg);
+    margin: 0 0 20px var(--pf-v5-global--spacer--lg);
   }
 
   &__filter {
@@ -15,22 +15,22 @@
 
   &__input {
     display: inline-flex !important;
-    margin: 0 0 20px var(--pf-global--spacer--lg);
+    margin: 0 0 20px var(--pf-v5-global--spacer--lg);
     width: auto !important;
   }
 
   &__sort {
     display: inline;
-    margin-left: var(--pf-global--spacer--md);
+    margin-left: var(--pf-v5-global--spacer--md);
   }
 
   &__btn-group__group-by {
     display: inline;
-    margin-left: var(--pf-global--spacer--md);
+    margin-left: var(--pf-v5-global--spacer--md);
   }
 
   &__num-items {
-    font-weight: var(--pf-global--FontWeight--bold);
+    font-weight: var(--pf-v5-global--FontWeight--bold);
     padding: 0 0 20px;
   }
 }

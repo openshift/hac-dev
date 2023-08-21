@@ -11,13 +11,15 @@ import {
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
+  Bullseye,
+  Spinner,
+} from '@patternfly/react-core';
+import {
   Select,
   SelectVariant,
   SelectGroup,
   SelectOption,
-  Bullseye,
-  Spinner,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
 import { usePipelineRuns } from '../../hooks/usePipelineRuns';
@@ -123,7 +125,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
     <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light} isFilled>
       {recentOnly ? (
         <>
-          <Title size="lg" headingLevel="h3" className="pf-c-title pf-u-mt-lg pf-u-mb-sm">
+          <Title size="lg" headingLevel="h3" className="pf-v5-c-title pf-v5-u-mt-lg pf-v5-u-mb-sm">
             Latest commits
           </Title>
         </>
@@ -138,14 +140,14 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
             <CommitsEmptyState applicationName={applicationName} />
           ) : (
             <>
-              <Text className="pf-u-mb-lg">
+              <Text className="pf-v5-u-mb-lg">
                 Monitor your commits and their pipeline progression across all components.
               </Text>
               {!recentOnly ? (
                 <Toolbar data-test="commit-list-toolbar" clearAllFilters={onClearFilters}>
                   <ToolbarContent>
-                    <ToolbarGroup alignment={{ default: 'alignLeft' }}>
-                      <ToolbarItem className="pf-u-ml-0">
+                    <ToolbarGroup align={{ default: 'alignLeft' }}>
+                      <ToolbarItem className="pf-v5-u-ml-0">
                         <SearchInput
                           name="nameInput"
                           data-test="name-input-filter"
@@ -163,7 +165,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
                           toggleAriaLabel="Status filter menu"
                           variant={SelectVariant.checkbox}
                           isOpen={statusFilterExpanded}
-                          onToggle={setStatusFilterExpanded}
+                          onToggle={(_event, expanded) => setStatusFilterExpanded(expanded)}
                           onSelect={(event, selection) => {
                             const checked = (event.target as HTMLInputElement).checked;
                             setStatusFilters(
@@ -211,7 +213,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
               )}
               {recentOnly && applicationName && (
                 <Button
-                  className="pf-u-mt-md"
+                  className="pf-v5-u-mt-md"
                   variant="secondary"
                   onClick={() =>
                     navigate(

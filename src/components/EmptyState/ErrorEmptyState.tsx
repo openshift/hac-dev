@@ -9,6 +9,8 @@ import {
   EmptyStateProps,
   EmptyStateVariant,
   Title,
+  EmptyStateHeader,
+  EmptyStateFooter,
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import { css } from '@patternfly/react-styles';
@@ -21,22 +23,27 @@ export const NotFoundEmptyState: React.FC<{ className?: string }> = ({ className
   const navigate = useNavigate();
   return (
     <EmptyState className={css('app-empty-state', className)} variant={EmptyStateVariant.full}>
-      <EmptyStateIcon
-        className={css('app-empty-state__icon m-is-error')}
-        icon={() => <img className="app-empty-state__icon" src={emptySearchImgUrl} alt="" />}
+      <EmptyStateHeader
+        titleText="404: Page not found"
+        icon={
+          <EmptyStateIcon
+            className={css('app-empty-state__icon m-is-error')}
+            icon={() => <img className="app-empty-state__icon" src={emptySearchImgUrl} alt="" />}
+          />
+        }
+        headingLevel="h2"
       />
-      <Title className="pf-u-mt-lg" headingLevel="h2" size="lg">
-        404: Page not found
-      </Title>
       <EmptyStateBody>
         {`Looks like that page doesn't exist. Let's get you back to your applications list.`}
       </EmptyStateBody>
-      <Button
-        variant={ButtonVariant.primary}
-        onClick={() => navigate('/application-pipeline/workspaces')}
-      >
-        Go to applications list
-      </Button>
+      <EmptyStateFooter>
+        <Button
+          variant={ButtonVariant.primary}
+          onClick={() => navigate('/application-pipeline/workspaces')}
+        >
+          Go to applications list
+        </Button>
+      </EmptyStateFooter>
     </EmptyState>
   );
 };
@@ -65,17 +72,23 @@ const ErrorEmptyState: React.FC<ErrorEmptyStateProps> = ({
       variant={EmptyStateVariant.full}
       {...props}
     >
-      <EmptyStateIcon
-        className={css('app-empty-state__icon m-is-error')}
-        icon={ExclamationCircleIcon}
+      <EmptyStateHeader
+        icon={
+          <EmptyStateIcon
+            className={css('app-empty-state__icon m-is-error')}
+            icon={ExclamationCircleIcon}
+          />
+        }
       />
-      {title ? (
-        <Title className="pf-u-mt-lg" headingLevel="h2" size="lg">
-          {title}
-        </Title>
-      ) : null}
-      {body ? <EmptyStateBody>{body}</EmptyStateBody> : null}
-      {children}
+      <EmptyStateFooter>
+        {title ? (
+          <Title className="pf-v5-u-mt-lg" headingLevel="h2" size="lg">
+            {title}
+          </Title>
+        ) : null}
+        {body ? <EmptyStateBody>{body}</EmptyStateBody> : null}
+        {children}
+      </EmptyStateFooter>
     </EmptyState>
   );
 };

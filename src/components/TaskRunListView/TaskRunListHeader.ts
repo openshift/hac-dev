@@ -3,7 +3,7 @@ export const taskRunTableColumnClasses = {
   task: 'pf-m-width-25',
   started: 'pf-m-width-25',
   status: 'pf-m-width-20',
-  kebab: 'pf-c-table__action',
+  kebab: 'pf-v5-c-table__action',
 };
 
 export const TaskRunListHeader = () => {

@@ -8,6 +8,7 @@ import lodashValues from 'lodash/values';
 import { BasicNameValueEditor } from '../name-value-editor';
 import { EnvironmentFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
+import FieldHelperText from './FieldHelperText';
 
 const EnvironmentField: React.FC<EnvironmentFieldProps> = ({
   label,
@@ -52,14 +53,8 @@ const EnvironmentField: React.FC<EnvironmentFieldProps> = ({
   }, [values.formReloadCount]);
 
   return (
-    <FormGroup
-      fieldId={fieldId}
-      label={label}
-      labelIcon={labelIcon}
-      helperText={helpText}
-      isRequired={required}
-    >
-      {description && <div className="pf-c-form__helper-text">{description}</div>}
+    <FormGroup fieldId={fieldId} label={label} labelIcon={labelIcon} isRequired={required}>
+      {description && <div className="pf-v5-c-form__helper-text">{description}</div>}
       <BasicNameValueEditor
         nameValuePairs={nameValue}
         valueString="Value"
@@ -68,6 +63,7 @@ const EnvironmentField: React.FC<EnvironmentFieldProps> = ({
         readOnly={false}
         updateParentData={handleNameValuePairs}
       />
+      <FieldHelperText helpText={helpText} />
     </FormGroup>
   );
 };

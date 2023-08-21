@@ -59,7 +59,7 @@ const BuildSidePanel: React.FC<PipelineSidePanelBodyProps> = ({ workflowNode, on
             </Link>
             <StatusIconWithTextLabel status={workflowNode.getData().status} />
           </span>
-          <span className="pf-u-mt-xs commit-side-panel__subtext">
+          <span className="pf-v5-u-mt-xs commit-side-panel__subtext">
             <img src={PipelineIcon} alt="pipeline run" /> Pipeline run
           </span>
           <DrawerActions>
@@ -95,7 +95,7 @@ const BuildSidePanel: React.FC<PipelineSidePanelBodyProps> = ({ workflowNode, on
             </DescriptionListGroup>
           </DescriptionList>
           <DescriptionList
-            className="pf-u-mt-lg"
+            className="pf-v5-u-mt-lg"
             data-test="pipeline-run-details"
             columnModifier={{
               default: '1Col',
@@ -133,7 +133,7 @@ const BuildSidePanel: React.FC<PipelineSidePanelBodyProps> = ({ workflowNode, on
             </DescriptionListGroup>
           </DescriptionList>
           {pipelineRun.status?.pipelineResults ? (
-            <div className="pf-u-mt-lg">
+            <div className="pf-v5-u-mt-lg">
               <RunResultsList
                 results={pipelineRun.status.pipelineResults}
                 status={pipelineStatus}

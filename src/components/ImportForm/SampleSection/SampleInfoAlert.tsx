@@ -12,8 +12,8 @@ const SamplesInfoAlert: React.FC = ({ children }) => {
     <Alert
       isInline
       data-testid="samples-info-alert"
-      className="pf-u-mt-md"
-      variant="default"
+      className="pf-v5-u-mt-md"
+      variant="custom"
       title="Fork the sample to your own repository"
       actionClose={
         <AlertActionCloseButton

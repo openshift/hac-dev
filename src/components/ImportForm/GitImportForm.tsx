@@ -185,7 +185,7 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
         <>
           <PageSection variant={PageSectionVariants.light}>
             <Stack>
-              <StackItem className="pf-u-pt-lg">
+              <StackItem className="pf-v5-u-pt-lg">
                 <Bullseye>
                   <img
                     src={reviewMode ? integrationIcon : applicationIcon}
@@ -195,7 +195,7 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
                   />
                 </Bullseye>
                 <Bullseye>
-                  <Title size="lg" headingLevel="h2" className="pf-u-mt-lg pf-u-mb-lg">
+                  <Title size="lg" headingLevel="h2" className="pf-v5-u-mt-lg pf-v5-u-mb-lg">
                     {reviewMode ? 'Review and configure for deployment' : 'Bring in your own code'}
                   </Title>
                 </Bullseye>

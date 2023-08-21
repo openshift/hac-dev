@@ -1,17 +1,17 @@
 import React from 'react';
 import {
-  Dropdown,
-  DropdownToggle,
   Menu,
   MenuContent,
   MenuFooter,
-  MenuInput,
+  MenuSearch,
   MenuList,
   Tab,
   Tabs,
   TabTitleText,
   TextInput,
+  MenuSearchInput,
 } from '@patternfly/react-core';
+import { Dropdown, DropdownToggle } from '@patternfly/react-core/deprecated';
 import EllipsisHIcon from '@patternfly/react-icons/dist/js/icons/ellipsis-h-icon';
 import '././ContextSwitcher.scss';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -158,7 +158,7 @@ export const ContextSwitcher: React.FC<ContextSwitcherProps> = ({
           id="toggle-context-switcher"
           className="context-switcher__dropdown"
           aria-label="toggle context switcher menu"
-          onToggle={setIsOpen}
+          onToggle={(_event, val) => setIsOpen(val)}
           toggleIndicator={null}
           isPlain
         >
@@ -183,16 +183,17 @@ export const ContextSwitcher: React.FC<ContextSwitcherProps> = ({
         isScrollable
         isPlain
       >
-        <MenuInput>
-          <TextInput
-            value={searchText}
-            type="search"
-            iconVariant="search"
-            aria-label="name filter"
-            placeholder={`Filter ${resourceType} by name`}
-            onChange={setSearchText}
-          />
-        </MenuInput>
+        <MenuSearch>
+          <MenuSearchInput>
+            <TextInput
+              value={searchText}
+              type="search"
+              aria-label="name filter"
+              placeholder={`Filter ${resourceType} by name`}
+              onChange={(_event, val) => setSearchText(val)}
+            />
+          </MenuSearchInput>
+        </MenuSearch>
         <MenuContent menuHeight={`${menuHeights[activeMenu]}px`}>
           <Tabs activeKey={activeTab} onSelect={onTabChange} isFilled>
             <Tab eventKey={ContextTab.Recent} title={<TabTitleText>Recent</TabTitleText>}>

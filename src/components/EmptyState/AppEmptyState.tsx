@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { EmptyState, EmptyStateIcon, EmptyStateProps, Title } from '@patternfly/react-core';
+import {
+  EmptyState,
+  EmptyStateIcon,
+  EmptyStateProps,
+  EmptyStateHeader,
+  EmptyStateFooter,
+} from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
 
 import './EmptyState.scss';
@@ -19,23 +25,22 @@ const AppEmptyState: React.FC<AppEmptyStateProps> = ({
   ...props
 }) => (
   <EmptyState className={css('app-empty-state m-is-top-level', className)} {...props}>
-    <EmptyStateIcon
-      icon={() => (
-        <img
-          className={css('app-empty-state__icon', isXl && 'm-is-xl')}
-          src={emptyStateImg}
-          alt=""
+    <EmptyStateHeader
+      titleText={<>{title}</>}
+      icon={
+        <EmptyStateIcon
+          icon={() => (
+            <img
+              className={css('app-empty-state__icon', isXl && 'm-is-xl')}
+              src={emptyStateImg}
+              alt=""
+            />
+          )}
         />
-      )}
-    />
-    <Title
-      className={isXl ? 'pf-u-mt-xl' : 'pf-u-mt-lg'}
+      }
       headingLevel="h3"
-      size={isXl ? '2xl' : 'lg'}
-    >
-      {title}
-    </Title>
-    {children}
+    />
+    <EmptyStateFooter>{children}</EmptyStateFooter>
   </EmptyState>
 );
 

@@ -2,16 +2,18 @@ import * as React from 'react';
 import {
   Bullseye,
   SearchInput,
-  Select,
-  SelectGroup,
-  SelectOption,
-  SelectVariant,
   Spinner,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
 } from '@patternfly/react-core';
+import {
+  Select,
+  SelectGroup,
+  SelectOption,
+  SelectVariant,
+} from '@patternfly/react-core/deprecated';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { debounce } from 'lodash-es';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
@@ -150,8 +152,8 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
     <>
       <Toolbar data-test="pipelinerun-list-toolbar" clearAllFilters={onClearFilters}>
         <ToolbarContent>
-          <ToolbarGroup alignment={{ default: 'alignLeft' }}>
-            <ToolbarItem className="pf-u-ml-0">
+          <ToolbarGroup align={{ default: 'alignLeft' }}>
+            <ToolbarItem className="pf-v5-u-ml-0">
               <SearchInput
                 name="nameInput"
                 data-test="name-input-filter"
@@ -169,7 +171,7 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({ application
                 toggleAriaLabel="Status filter menu"
                 variant={SelectVariant.checkbox}
                 isOpen={statusFilterExpanded}
-                onToggle={setStatusFilterExpanded}
+                onToggle={(ev, expanded) => setStatusFilterExpanded(expanded)}
                 onSelect={(event, selection) => {
                   const checked = (event.target as HTMLInputElement).checked;
                   setStatusFilters(

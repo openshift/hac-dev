@@ -1,17 +1,17 @@
 .catalog-page {
   &__overlay {
-    border: 0 !important; // Collapse default PF4 modal border-width
+    border: 0 !important; // Collapse default PF5 modal border-width
 
     .properties-side-panel-pf {
       flex: 0 0 auto;
     }
-    &.pf-c-modal-box {
+    &.pf-v5-c-modal-box {
       @media screen and (min-width: $screen-sm) {
-        --pf-c-modal-box--Width: 600px;
+        --pf-v5-c-modal-box--Width: 600px;
       }
-    
+
       @media screen and (min-width: $screen-md) {
-        --pf-c-modal-box--Width: 900px;
+        --pf-v5-c-modal-box--Width: 900px;
       }
     }
   }
@@ -20,16 +20,16 @@
     bottom: 0;
     padding: 0 !important;
     right: 0;
-    top: 4.75rem; // --pf-c-page__header--MinHeight
+    top: 4.75rem; // --pf-v5-c-page__header--MinHeight
 
-    .pf-c-modal-box {
-      --pf-c-modal-box__body--PaddingTop: 0 !important;
-      --pf-c-modal-box__body--PaddingRight: 0 !important;
-      --pf-c-modal-box__body--PaddingLeft: 0 !important;
-      --pf-c-modal-box__body--last-child--PaddingBottom: 0 !important;
+    .pf-v5-c-modal-box {
+      --pf-v5-c-modal-box__body--PaddingTop: 0 !important;
+      --pf-v5-c-modal-box__body--PaddingRight: 0 !important;
+      --pf-v5-c-modal-box__body--PaddingLeft: 0 !important;
+      --pf-v5-c-modal-box__body--last-child--PaddingBottom: 0 !important;
     }
 
-    .pf-c-modal-box__body {
+    .pf-v5-c-modal-box__body {
       // Required to position scroll shadows correctly on Chrome
       display: flex;
       flex-direction: column;
@@ -49,18 +49,18 @@
   &__overlay-action {
     align-items: baseline;
     display: inline-flex !important;
-    margin: var(--pf-global--spacer--sm) var(--pf-global--spacer--sm) 0 0;
+    margin: var(--pf-v5-global--spacer--sm) var(--pf-v5-global--spacer--sm) 0 0;
     overflow-x: hidden;
   }
 
   &__overlay-actions {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: var(--pf-global--spacer--md);
+    margin-bottom: var(--pf-v5-global--spacer--md);
     white-space: normal;
   }
 
   &__overlay-header {
-    margin-bottom: var(--pf-global--spacer--md);
+    margin-bottom: var(--pf-v5-global--spacer--md);
   }
 }

@@ -19,7 +19,7 @@ export class UIhelper {
   }
 
   static selectValueInDropdownbyLabelName(label: string, value: string) {
-    cy.contains('div[class="pf-c-form__group"]', label).within(() => {
+    cy.contains('div[class="pf-v5-c-form__group"]', label).within(() => {
       cy.get('div[data-test="dropdown"] > button').click();
       cy.contains('a', value).click().should('not.exist');
     });
@@ -37,13 +37,13 @@ export class UIhelper {
 
   static clickButton(label: string, options?: { invoke?: boolean; force?: boolean }) {
     if (options?.invoke) {
-      return cy.contains(UIhelperPO.pf4_button, new RegExp(`^\\s*${label}\\s*$`)).invoke('click');
+      return cy.contains(UIhelperPO.pf5_button, new RegExp(`^\\s*${label}\\s*$`)).invoke('click');
     } else if (options?.force) {
       return cy
-        .contains(UIhelperPO.pf4_button, new RegExp(`^\\s*${label}\\s*$`))
+        .contains(UIhelperPO.pf5_button, new RegExp(`^\\s*${label}\\s*$`))
         .click({ force: true });
     }
-    return cy.contains(UIhelperPO.pf4_button, new RegExp(`^\\s*${label}\\s*$`)).click();
+    return cy.contains(UIhelperPO.pf5_button, new RegExp(`^\\s*${label}\\s*$`)).click();
   }
 
   static clickLink(link: string, options?: { invoke?: boolean; force?: boolean }) {

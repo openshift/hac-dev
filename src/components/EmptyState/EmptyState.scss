@@ -1,20 +1,20 @@
 .app-empty-state {
-  &.pf-c-empty-state {
-    padding-top: var(--pf-global--spacer--2xl);
-    padding-bottom: var(--pf-global--spacer--2xl);
+  &.pf-v5-c-empty-state {
+    padding-top: var(--pf-v5-global--spacer--2xl);
+    padding-bottom: var(--pf-v5-global--spacer--2xl);
     &.m-is-top-level {
-      border: var(--pf-global--BorderWidth--sm) var(--pf-global--palette--black-500) dashed;
+      border: var(--pf-v5-global--BorderWidth--sm) var(--pf-v5-global--palette--black-500) dashed;
       border-radius: 3px;
-      margin-top: var(--pf-global--spacer--xl);
+      margin-top: var(--pf-v5-global--spacer--xl);
     }
   }
   &__icon {
-    width: var(--pf-global--spacer--3xl);
+    width: var(--pf-v5-global--spacer--3xl);
     &.m-is-xl {
-      width: var(--pf-global--spacer--4xl);
+      width: var(--pf-v5-global--spacer--4xl);
     }
     &.m-is-error {
-      color: var(--pf-global--danger-color--100);
+      color: var(--pf-v5-global--danger-color--100);
     }
   }
 }

@@ -94,13 +94,13 @@ export const PodLogViewer: React.FC<PodLogViewerProps> = ({
   return (
     <Stack>
       <StackItem>
-        <span style={{ marginRight: 'var(--pf-global--spacer--lg)' }}>
+        <span style={{ marginRight: 'var(--pf-v5-global--spacer--lg)' }}>
           {' '}
           <b>Pod status:</b> {getPodStatus(pod)}
         </span>
 
         {pod?.status.containerStatuses.length > 0 && (
-          <span style={{ marginRight: 'var(--pf-global--spacer--lg)' }}>
+          <span style={{ marginRight: 'var(--pf-v5-global--spacer--lg)' }}>
             {' '}
             <b>Number of restarts:</b> {pod?.status.containerStatuses[0].restartCount}
           </span>

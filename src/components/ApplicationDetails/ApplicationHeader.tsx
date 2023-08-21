@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Flex, FlexItem, Text, Truncate } from '@patternfly/react-core';
+import { Flex, FlexItem, Icon, Text, Truncate } from '@patternfly/react-core';
 import ExternalLinkAltIcon from '@patternfly/react-icons/dist/js/icons/external-link-alt-icon';
 import { useApplicationHealthStatus } from '../../hooks/useApplicationHealthStatus';
 import { useLatestApplicationRouteURL } from '../../hooks/useLatestApplicationRouteURL';
@@ -43,7 +43,9 @@ export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ 
                   />
                 </FlexItem>
                 <FlexItem>
-                  <ExternalLinkAltIcon size="sm" />
+                  <Icon iconSize="sm">
+                    <ExternalLinkAltIcon />
+                  </Icon>
                 </FlexItem>
               </Flex>
             </ExternalLink>

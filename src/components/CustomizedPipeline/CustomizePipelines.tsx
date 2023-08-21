@@ -4,10 +4,6 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
-  Dropdown,
-  DropdownItem,
-  DropdownPosition,
-  KebabToggle,
   Modal,
   ModalBoxBody,
   ModalBoxFooter,
@@ -17,7 +13,13 @@ import {
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
-import { Tbody, Thead, Th, Tr, Td, TableComposable } from '@patternfly/react-table';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownPosition,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
+import { Tbody, Thead, Th, Tr, Td, Table /* data-codemods */ } from '@patternfly/react-table';
 import { useApplicationPipelineGitHubApp } from '../../hooks/useApplicationPipelineGitHubApp';
 import { PACState } from '../../hooks/usePACState';
 import sendIconUrl from '../../imgs/send.svg';
@@ -135,7 +137,7 @@ const Row: React.FC<{
         <Td>
           <ComponentPACStateLabel onStateChange={onComponentStateChange} component={component} />
         </Td>
-        <Td className="pf-u-text-align-right">
+        <Td className="pf-v5-u-text-align-right">
           {(() => {
             switch (pacState) {
               case PACState.disabled:
@@ -355,7 +357,7 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, modalProps })
       <ModalBoxHeader />
       <ModalBoxBody>
         <TextContent
-          className="pf-u-text-align-center pf-u-pt-lg"
+          className="pf-v5-u-text-align-center pf-v5-u-pt-lg"
           style={{ visibility: allLoading ? 'hidden' : undefined }}
         >
           <Text component={TextVariants.p}>
@@ -385,9 +387,9 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, modalProps })
             </ExternalLink>
           </Text>
         </TextContent>
-        <div className="pf-u-mt-lg" />
+        <div className="pf-v5-u-mt-lg" />
         {alert}
-        <TableComposable>
+        <Table>
           <Thead>
             <Tr>
               <Th>Component</Th>
@@ -410,11 +412,11 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, modalProps })
               />
             ))}
           </Tbody>
-        </TableComposable>
+        </Table>
         {totalCount > 0 ? (
           <p
-            className={`pf-u-pt-lg ${
-              count === totalCount ? 'pf-u-success-color-100' : 'pf-u-color-400'
+            className={`pf-v5-u-pt-lg ${
+              count === totalCount ? 'pf-v5-u-success-color-100' : 'pf-v5-u-color-400'
             }`}
           >
             {`${count} of ${pluralize(totalCount, 'component')} upgraded to custom build`}

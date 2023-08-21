@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Tr } from '@patternfly/react-table';
 
 export type TableRowProps = {
   id: React.ReactText;
@@ -18,7 +19,7 @@ export const TableRow: React.FC<TableRowProps> = ({
   ...props
 }) => {
   return (
-    <tr
+    <Tr
       {...props}
       data-id={id}
       data-index={index}

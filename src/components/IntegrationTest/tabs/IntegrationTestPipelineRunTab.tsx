@@ -46,7 +46,7 @@ const IntegrationTestPipelineRunTab: React.FC<IntegrationTestPipelineRunTabProps
 
   return (
     <>
-      <Title headingLevel="h3" className="pf-c-title pf-u-mt-lg pf-u-mb-lg">
+      <Title headingLevel="h3" className="pf-v5-c-title pf-v5-u-mt-lg pf-v5-u-mb-lg">
         Pipeline runs
       </Title>
       <Table

@@ -23,12 +23,12 @@ export const CloseImportFormModal: React.FC<ComponentProps & {}> = ({ onClose })
       <StackItem>
         <Button
           type={ButtonType.button}
-          onClick={() => onClose({ leave: true })}
+          onClick={(event) => onClose(event, { leave: true })}
           data-testid="leave-review-section"
         >
           Leave
         </Button>
-        <Button variant={ButtonVariant.link} onClick={() => onClose({})}>
+        <Button variant={ButtonVariant.link} onClick={(event) => onClose(event, {})}>
           Cancel
         </Button>
       </StackItem>

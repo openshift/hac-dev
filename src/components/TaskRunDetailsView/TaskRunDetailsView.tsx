@@ -77,7 +77,7 @@ export const TaskRunDetailsView: React.FC<TaskRunDetailsViewProps> = ({ taskRunN
       ]}
       title={
         <>
-          <span className="pf-u-mr-sm">{taskRunName}</span>
+          <span className="pf-v5-u-mr-sm">{taskRunName}</span>
           <StatusIconWithTextLabel status={trStatus} />
         </>
       }

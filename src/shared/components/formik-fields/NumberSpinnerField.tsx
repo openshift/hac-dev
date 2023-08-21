@@ -5,6 +5,7 @@ import { toInteger } from 'lodash-es';
 import NumberSpinner from '../spinner/NumberSpinner';
 import { NumberSpinnerFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
+import FieldHelperText from './FieldHelperText';
 
 const NumberSpinnerField: React.FC<NumberSpinnerFieldProps> = ({
   label,
@@ -19,14 +20,7 @@ const NumberSpinnerField: React.FC<NumberSpinnerFieldProps> = ({
   const errorMessage = !isValid ? error : '';
 
   return (
-    <FormGroup
-      fieldId={fieldId}
-      label={label}
-      helperText={helpText}
-      helperTextInvalid={errorMessage}
-      validated={isValid ? 'default' : 'error'}
-      isRequired={required}
-    >
+    <FormGroup fieldId={fieldId} label={label} isRequired={required}>
       <NumberSpinner
         {...field}
         {...props}
@@ -38,6 +32,7 @@ const NumberSpinnerField: React.FC<NumberSpinnerFieldProps> = ({
         }}
         aria-describedby={helpText ? `${fieldId}-helper` : undefined}
       />
+      <FieldHelperText isValid={isValid} errorMessage={errorMessage} helpText={helpText} />
     </FormGroup>
   );
 };

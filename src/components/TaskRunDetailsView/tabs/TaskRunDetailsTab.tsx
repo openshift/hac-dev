@@ -44,7 +44,7 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
 
   return (
     <>
-      <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
+      <Title headingLevel="h4" className="pf-v5-c-title pf-v5-u-mt-lg pf-v5-u-mb-lg" size="lg">
         Task run details
       </Title>
       {!error && (
@@ -213,7 +213,7 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
           </Flex>
           {taskRun.status?.taskResults ? (
             <>
-              <Divider style={{ padding: 'var(--pf-global--spacer--lg) 0' }} />
+              <Divider style={{ padding: 'var(--pf-v5-global--spacer--lg) 0' }} />
               <RunResultsList results={taskRun.status.taskResults} status={status} />
             </>
           ) : null}

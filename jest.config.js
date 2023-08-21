@@ -15,7 +15,7 @@ module.exports = {
     '^.+\\.(ts|tsx|js|jsx)$': 'ts-jest',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!@openshift|@patternfly|@redhat-cloud-services|lodash-es|@popperjs|i18next)',
+    'node_modules/(?!@openshift|@patternfly|@redhat-cloud-services|lodash-es|@popperjs|i18next|d3|d3-array|delaunator|robust-predicates|internmap)',
   ],
   globals: {
     'ts-jest': {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, AlertActionCloseButton, Bullseye } from '@patternfly/react-core';
+import { Alert, AlertActionCloseButton, Bullseye, Icon } from '@patternfly/react-core';
 import { OutlinedEyeSlashIcon } from '@patternfly/react-icons/dist/esm/icons/outlined-eye-slash-icon';
 import { global_palette_black_600 as grayColor } from '@patternfly/react-tokens/dist/js/global_palette_black_600';
 import cx from 'classnames';
@@ -55,7 +55,9 @@ const GraphErrorState: React.FC<GraphErrorStateProps> = ({ errors, fullHeight })
       )}
 
       <Bullseye className={cx('graph-error-state', { 'm-full-height': fullHeight })}>
-        <OutlinedEyeSlashIcon color={grayColor.value} size="md" />
+        <Icon iconSize="md">
+          <OutlinedEyeSlashIcon color={grayColor.value} />
+        </Icon>
       </Bullseye>
     </>
   );

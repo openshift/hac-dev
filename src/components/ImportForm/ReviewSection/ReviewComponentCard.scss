@@ -2,11 +2,11 @@
 
   &__card-body {
 
-    margin-left: var(--pf-global--spacer--lg);
+    margin-left: var(--pf-v5-global--spacer--lg);
   }
   &__limits {
     display: grid;
-    gap: var(--pf-global--spacer--md);
+    gap: var(--pf-v5-global--spacer--md);
     grid-template-columns: auto;
     justify-content: start;
     @media (min-width: 600px) {

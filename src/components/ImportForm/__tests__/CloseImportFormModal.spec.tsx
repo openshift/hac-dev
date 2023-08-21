@@ -2,10 +2,13 @@ import * as React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { CloseImportFormModal } from '../CloseImportFormModal';
 
+const closeMock = jest.fn();
+
 describe('CloseImportFormModal', () => {
-  let closeMock;
+  let closeReason: boolean;
   beforeEach(() => {
-    closeMock = jest.fn();
+    closeReason = false;
+    closeMock.mockImplementation((event, { leave }) => (closeReason = leave === true));
   });
 
   it('should render CloseImportFormModal', () => {
@@ -16,8 +19,8 @@ describe('CloseImportFormModal', () => {
   it('should call closeMock', () => {
     render(<CloseImportFormModal onClose={closeMock} />);
     fireEvent.click(screen.getByText('Leave'));
-    expect(closeMock).toHaveBeenCalledWith({ leave: true });
+    expect(closeReason).toEqual(true);
     fireEvent.click(screen.getByText('Cancel'));
-    expect(closeMock).toHaveBeenCalledWith({});
+    expect(closeReason).toEqual(false);
   });
 });

@@ -1,10 +1,6 @@
 import React from 'react';
-import {
-  ValidatedOptions,
-  TextInputTypes,
-  gridItemSpanValueShape,
-  SelectVariant,
-} from '@patternfly/react-core';
+import { ValidatedOptions, TextInputTypes, gridItemSpanValueShape } from '@patternfly/react-core';
+import { SelectVariant } from '@patternfly/react-core/deprecated';
 import { DropdownItemObject } from '../dropdown/BasicDropdown';
 import { RowRendererProps } from './multi-column-field/MultiColumnFieldRow';
 
@@ -80,7 +76,17 @@ export interface DropdownFieldProps extends FieldProps {
   validateOnChange?: boolean;
   autocompleteFilter?: (text: string, item: object, key?: string) => boolean;
   onChange?: (value: string) => void;
-  dropdownToggle?: (onToggle: (isOpen: boolean) => void) => React.ReactElement;
+  dropdownToggle?: (
+    onToggle: (
+      ev:
+        | MouseEvent
+        | TouchEvent
+        | KeyboardEvent
+        | React.KeyboardEvent<any>
+        | React.MouseEvent<HTMLButtonElement>,
+      isOpen: boolean,
+    ) => void,
+  ) => React.ReactElement;
 }
 
 export type FormSelectFieldOption<T = any> = {

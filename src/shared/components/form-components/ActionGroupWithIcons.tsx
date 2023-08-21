@@ -12,7 +12,7 @@ const ActionGroupWithIcons: React.FC<ActionGroupWithIconsProps> = ({
   className,
 }) => {
   return (
-    <ActionGroup className={classnames('pf-c-form pf-c-form__actions--right', className)}>
+    <ActionGroup className={classnames('pf-v5-c-form pf-v5-c-form__actions--right', className)}>
       {onSubmit && (
         <Button
           type="submit"

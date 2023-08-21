@@ -1,7 +1,7 @@
 .release-policy-item {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-bottom: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+  border-bottom: var(--pf-v5-global--BorderWidth--sm) solid var(--pf-v5-global--BorderColor--100);
   @media (min-width: 769px) {
     grid-template-columns: 400px 1fr;
   }
@@ -9,19 +9,19 @@
     border: 0;
   }
   &__package {
-    --pf-c-data-list__expandable-content--BorderTopWidth: 0;
-    --pf-c-data-list__expandable-content-body--PaddingTop: 0;
-    --pf-c-data-list__item-control--MarginRight: var(--pf-global--spacer--sm);
+    --pf-v5-c-data-list__expandable-content--BorderTopWidth: 0;
+    --pf-v5-c-data-list__expandable-content-body--PaddingTop: 0;
+    --pf-v5-c-data-list__item-control--MarginRight: var(--pf-v5-global--spacer--sm);
     border: 0;
     height: 100%;
     &-details {
-      margin-left: var(--pf-global--spacer--3xl);
+      margin-left: var(--pf-v5-global--spacer--3xl);
     }
     &-annotation-link {
       width: fit-content;
     }
   }
   &__description {
-    padding: var(--pf-global--spacer--lg) 0;
+    padding: var(--pf-v5-global--spacer--lg) 0;
   }
 }

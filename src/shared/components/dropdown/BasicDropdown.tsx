@@ -1,12 +1,11 @@
 import React from 'react';
+import { Badge, ValidatedOptions } from '@patternfly/react-core';
 import {
   Dropdown,
   DropdownToggle,
   DropdownItem,
   DropdownItemProps,
-  Badge,
-  ValidatedOptions,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import './BasicDropdown.scss';
 
 export type DropdownItemObject = {
@@ -22,7 +21,17 @@ type BasicDropdownProps = {
   placeholder?: string;
   fullWidth?: boolean;
   disabled?: boolean;
-  dropdownToggle?: (onToggle: (isOpen: boolean) => void) => React.ReactElement;
+  dropdownToggle?: (
+    onToggle: (
+      ev:
+        | MouseEvent
+        | TouchEvent
+        | KeyboardEvent
+        | React.KeyboardEvent<any>
+        | React.MouseEvent<HTMLButtonElement>,
+      isOpen: boolean,
+    ) => void,
+  ) => React.ReactElement;
   validated?: ValidatedOptions;
 };
 
@@ -37,7 +46,15 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
   validated,
 }) => {
   const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
-  const onToggle = (isOpen: boolean) => setDropdownOpen(isOpen);
+  const onToggle = (
+    ev:
+      | MouseEvent
+      | TouchEvent
+      | KeyboardEvent
+      | React.KeyboardEvent<any>
+      | React.MouseEvent<HTMLButtonElement>,
+    isOpen: boolean,
+  ) => setDropdownOpen(isOpen);
   const onSelect = (event: React.SyntheticEvent<HTMLDivElement>) => {
     onChange && onChange(event.currentTarget.textContent);
     setDropdownOpen(false);

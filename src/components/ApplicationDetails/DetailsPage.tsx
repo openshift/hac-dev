@@ -1,12 +1,6 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-  Dropdown,
-  DropdownGroup,
-  DropdownItem,
-  DropdownItemProps,
-  DropdownSeparator,
-  DropdownToggle,
   Flex,
   FlexItem,
   PageGroup,
@@ -18,6 +12,14 @@ import {
   Text,
   TextContent,
 } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownGroup,
+  DropdownItem,
+  DropdownItemProps,
+  DropdownSeparator,
+  DropdownToggle,
+} from '@patternfly/react-core/deprecated';
 import { CaretDownIcon } from '@patternfly/react-icons/dist/esm/icons/caret-down-icon';
 import cx from 'classnames';
 import { FULL_APPLICATION_TITLE } from '../../consts/labels';
@@ -174,7 +176,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
       <HeadTitle>{`${headTitle} - ${activeTab.label} | ${FULL_APPLICATION_TITLE}`}</HeadTitle>
       <PageSection type="breadcrumb">
         {breadcrumbs && <BreadCrumbs data-test="details__breadcrumbs" breadcrumbs={breadcrumbs} />}
-        <Flex style={{ paddingTop: 'var(--pf-global--spacer--lg)' }}>
+        <Flex style={{ paddingTop: 'var(--pf-v5-global--spacer--lg)' }}>
           <FlexItem>
             <TextContent>
               {renderTitle()}
@@ -190,7 +192,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
                   <DropdownToggle
                     onToggle={() => setIsOpen(!isOpen)}
                     toggleIndicator={CaretDownIcon}
-                    isPrimary
+                    toggleVariant="primary"
                   >
                     Actions
                   </DropdownToggle>
@@ -219,7 +221,7 @@ const DetailsPage: React.FC<DetailsPageProps> = ({
         </PageSection>
       )}
       {footer && (
-        <PageSection variant={PageSectionVariants.light} isFilled={false} sticky="bottom">
+        <PageSection variant={PageSectionVariants.light} isFilled={false}>
           {footer}
         </PageSection>
       )}

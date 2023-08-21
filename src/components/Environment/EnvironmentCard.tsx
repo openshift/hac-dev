@@ -4,7 +4,6 @@ import {
   CardHeader,
   Card,
   CardTitle,
-  CardActions,
   CardBody,
   Text,
   TextVariants,
@@ -45,7 +44,7 @@ const ApplicationEnvironmentStatus: React.FC<{
       <DescriptionListGroup>
         <DescriptionListTerm>Application status</DescriptionListTerm>
         <DescriptionListDescription>
-          <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
+          <Text component={TextVariants.small} style={{ color: 'var(--pf-v5-global--Color--200)' }}>
             {getGitOpsDeploymentHealthStatusIcon(environment.healthStatus)}{' '}
             {environment.healthStatus}
           </Text>
@@ -54,7 +53,7 @@ const ApplicationEnvironmentStatus: React.FC<{
       <DescriptionListGroup>
         <DescriptionListTerm>Last deploy</DescriptionListTerm>
         <DescriptionListDescription>
-          <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
+          <Text component={TextVariants.small} style={{ color: 'var(--pf-v5-global--Color--200)' }}>
             <Timestamp timestamp={environment.lastDeploy} simple />
           </Text>
         </DescriptionListDescription>
@@ -82,24 +81,33 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
 
   return (
     <Card isFlat>
-      <CardHeader>
+      <CardHeader
+        actions={
+          !readOnly && actions?.length
+            ? {
+                actions: (
+                  <>
+                    <ActionMenu actions={actions} />
+                  </>
+                ),
+                hasNoOffset: false,
+                className: undefined,
+              }
+            : undefined
+        }
+      >
         <CardTitle>
           <div className="environment-list__card-title">
             {environment.spec?.displayName ?? environment.metadata.name}
           </div>
           <EnvConnectionStatus environment={environment} />
         </CardTitle>
-        {!readOnly && actions?.length ? (
-          <CardActions>
-            <ActionMenu actions={actions} />
-          </CardActions>
-        ) : null}
       </CardHeader>
 
       <CardBody>
         <DescriptionList>
           <DescriptionListGroup>
-            <DescriptionListTerm className="pf-u-default-color-300">Type</DescriptionListTerm>
+            <DescriptionListTerm className="pf-v5-u-default-color-300">Type</DescriptionListTerm>
             <DescriptionListDescription>
               <Label
                 color={

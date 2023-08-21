@@ -12,7 +12,7 @@ const PipelineRunLogsTab: React.FC<PipelineRunLogsTabProps> = ({ pipelineRun, ta
   const { workspace } = useWorkspaceInfo();
   return (
     <PipelineRunLogs
-      className="pf-u-pt-md"
+      className="pf-v5-u-pt-md"
       obj={pipelineRun}
       taskRuns={taskRuns}
       workspace={workspace}

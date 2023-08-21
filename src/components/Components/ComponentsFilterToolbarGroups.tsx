@@ -1,13 +1,11 @@
 import * as React from 'react';
+import { ToolbarChip, ToolbarFilter, ToolbarGroup } from '@patternfly/react-core';
 import {
   Select,
   SelectGroup,
   SelectOption,
   SelectVariant,
-  ToolbarChip,
-  ToolbarFilter,
-  ToolbarGroup,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { ComponentKind, PipelineRunKind } from '../../types';
@@ -89,7 +87,7 @@ const ComponentsFilterToolbarGroups: React.FC<ComponentsFilterToolbarProps> = ({
   }, [components, pipelineRuns]);
 
   return (
-    <ToolbarGroup alignment={{ default: 'alignLeft' }} variant="filter-group">
+    <ToolbarGroup align={{ default: 'alignLeft' }} variant="filter-group">
       <ToolbarFilter
         chips={statusFilters.map((key) => {
           const option = RunStatusFilters.find((o) => o.id === key);
@@ -113,7 +111,7 @@ const ComponentsFilterToolbarGroups: React.FC<ComponentsFilterToolbarProps> = ({
           toggleIcon={<FilterIcon />}
           toggleAriaLabel="filter menu"
           variant={SelectVariant.checkbox}
-          onToggle={setStatusFilterIsExpanded}
+          onToggle={(ev, expanded) => setStatusFilterIsExpanded(expanded)}
           isOpen={statusFilterIsExpanded}
           onSelect={(event, selection) => {
             const checked = (event.target as HTMLInputElement).checked;

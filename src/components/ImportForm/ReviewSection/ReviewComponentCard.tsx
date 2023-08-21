@@ -75,7 +75,7 @@ const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
           'data-test': `${name}-toggle-button`,
         }}
       >
-        <Flex className="pf-u-flex-1" direction={{ default: 'column', sm: 'row' }}>
+        <Flex className="pf-v5-u-flex-1" direction={{ default: 'column', sm: 'row' }}>
           {!editMode && components?.length > 1 && (
             <FlexItem>
               <CheckboxField

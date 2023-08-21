@@ -11,6 +11,7 @@ import {
   Text,
   TextContent,
   Title,
+  EmptyStateHeader,
 } from '@patternfly/react-core';
 import { ArrowRightIcon } from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
@@ -25,11 +26,12 @@ import { useEnterpriseContractPolicies } from './useEnterpriseContractPolicies';
 import './EnterpriseContractView.scss';
 
 const EnterpriseContractViewEmptyState: React.FC = () => (
-  <EmptyState data-testid="enterprise-contract-view-empty-state" variant={EmptyStateVariant.large}>
-    <EmptyStateIcon icon={CubesIcon} />
-    <Title headingLevel="h4" size="lg">
-      No release policies
-    </Title>
+  <EmptyState data-testid="enterprise-contract-view-empty-state" variant={EmptyStateVariant.lg}>
+    <EmptyStateHeader
+      titleText="No release policies"
+      icon={<EmptyStateIcon icon={CubesIcon} />}
+      headingLevel="h4"
+    />
   </EmptyState>
 );
 
@@ -58,15 +60,15 @@ const EnterpriseContractView: React.FC = () => {
 
   return (
     <>
-      <Text data-testid="enterprise-contract-title" component="p" className="pf-u-mt-lg">
+      <Text data-testid="enterprise-contract-title" component="p" className="pf-v5-u-mt-lg">
         An Enterprise Contract (EC) is a set of release policies applied to your release target,
         also known as a managed environment.{' '}
         <ExternalLink href={ENTERPRISE_CONTRACT_INFO_LINK} text="Learn more" />
       </Text>
-      <Title headingLevel="h3" className="pf-u-mt-md pf-u-mb-md">
+      <Title headingLevel="h3" className="pf-v5-u-mt-md pf-v5-u-mb-md">
         Release Policy
       </Title>
-      <Text component="p" className=" pf-u-mb-lg">
+      <Text component="p" className=" pf-v5-u-mb-lg">
         These rules are applied to pipeline run attestations associated with container images build
         by HACBS. Follow these rules to be able to release successfully.
       </Text>
@@ -75,10 +77,10 @@ const EnterpriseContractView: React.FC = () => {
           {releasePolicies.length ? (
             <>
               <TextContent className="enterprise-contract-view__package-titles">
-                <Text component="h5" className="pf-u-pl-lg pf-u-m-0">
+                <Text component="h5" className="pf-v5-u-pl-lg pf-v5-u-m-0">
                   Rule
                 </Text>
-                <Text component="h5" className="pf-u-m-0">
+                <Text component="h5" className="pf-v5-u-m-0">
                   Description
                 </Text>
               </TextContent>
@@ -101,12 +103,12 @@ const EnterpriseContractView: React.FC = () => {
           )}
         </>
       ) : (
-        <Bullseye className="pf-u-mt-lg">
+        <Bullseye className="pf-v5-u-mt-lg">
           <Spinner />
         </Bullseye>
       )}
       {policyLoaded && enterpriseContractPolicy[0]?.spec.sources[0]?.git?.repository ? (
-        <div data-testid="enterprise-contract-github-link" className="pf-u-mt-md">
+        <div data-testid="enterprise-contract-github-link" className="pf-v5-u-mt-md">
           <ExternalLink href={enterpriseContractPolicy[0].spec.sources[0].git.repository} hideIcon>
             <Flex
               alignItems={{ default: 'alignItemsCenter' }}

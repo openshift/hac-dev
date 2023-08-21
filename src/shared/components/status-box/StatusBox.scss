@@ -11,7 +11,7 @@
     text-align: center;
 
     .cos-error-title {
-      color: $pf-color-red-100;
+      color: var(--pf-v5-global--palette--red-100);
     }
   }
 
@@ -27,7 +27,7 @@
   }
 
   &__loading-message {
-    margin-top: var(--pf-global--spacer--sm);
+    margin-top: var(--pf-v5-global--spacer--sm);
   }
 }
 

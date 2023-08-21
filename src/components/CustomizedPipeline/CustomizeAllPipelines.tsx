@@ -4,8 +4,9 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateVariant,
-  Title,
   Modal,
+  EmptyStateHeader,
+  EmptyStateFooter,
 } from '@patternfly/react-core';
 import { useComponents } from '../../hooks/useComponents';
 import { ComponentModel } from '../../models';
@@ -50,30 +51,30 @@ const CustomizeAllPipelines: React.FC<Props> = ({
 
     return (
       <Modal {...modalProps}>
-        <EmptyState variant={EmptyStateVariant.large}>
-          <Title headingLevel="h4" size="lg">
-            No components
-          </Title>
+        <EmptyState variant={EmptyStateVariant.lg}>
+          <EmptyStateHeader titleText="No components" headingLevel="h4" />
           <EmptyStateBody>To get started, add a component to your application.</EmptyStateBody>
-          <ButtonWithAccessTooltip
-            variant="primary"
-            component={(props) => (
-              <Link
-                {...props}
-                to={`/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`}
-              />
-            )}
-            isDisabled={!canCreateComponent}
-            tooltip="You don't have access to add a component"
-            analytics={{
-              link_name: 'add-component',
-              link_location: 'manage-build-pipelines',
-              app_name: applicationName,
-              workspace,
-            }}
-          >
-            Add component
-          </ButtonWithAccessTooltip>
+          <EmptyStateFooter>
+            <ButtonWithAccessTooltip
+              variant="primary"
+              component={(props) => (
+                <Link
+                  {...props}
+                  to={`/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`}
+                />
+              )}
+              isDisabled={!canCreateComponent}
+              tooltip="You don't have access to add a component"
+              analytics={{
+                link_name: 'add-component',
+                link_location: 'manage-build-pipelines',
+                app_name: applicationName,
+                workspace,
+              }}
+            >
+              Add component
+            </ButtonWithAccessTooltip>
+          </EmptyStateFooter>
         </EmptyState>
       </Modal>
     );

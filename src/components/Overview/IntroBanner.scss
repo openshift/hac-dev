@@ -1,19 +1,19 @@
 .intro-banner {
   &__content {
-    color: var(--pf-global--Color--light-100);
-    background-color: var(--pf-global--BackgroundColor--dark-100);
+    color: var(--pf-v5-global--Color--light-100);
+    background-color: var(--pf-v5-global--BackgroundColor--dark-100);
   }
 
   &__image {
     background: url(/src/imgs/overview/overview-banner.svg);
-    background-color: var(--pf-global--BackgroundColor--dark-100);
+    background-color: var(--pf-v5-global--BackgroundColor--dark-100);
     background-size: cover;
   }
 
   &__cta {
-    margin-top: var(--pf-global--spacer--sm);
-    margin-right: var(--pf-global--spacer--md);
-    color: var(--pf-global--Color--light-100);
+    margin-top: var(--pf-v5-global--spacer--sm);
+    margin-right: var(--pf-v5-global--spacer--md);
+    color: var(--pf-v5-global--Color--light-100);
 
     & + &__cta {
       margin-right: none;

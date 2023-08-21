@@ -5,7 +5,6 @@ import {
   Button,
   ButtonVariant,
   EmptyStateBody,
-  EmptyStateSecondaryActions,
   InputGroup,
   Spinner,
   Text,
@@ -17,6 +16,8 @@ import {
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
+  EmptyStateActions,
+  InputGroupItem,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useIntegrationTestScenarios } from '../../../hooks/useIntegrationTestScenarios';
@@ -54,7 +55,7 @@ const IntegrationTestsEmptyState: React.FC<{
         To add an integration test, link to a GitHub repository containing code that can test how
         your application components work together.
       </EmptyStateBody>
-      <EmptyStateSecondaryActions>
+      <EmptyStateActions>
         <ButtonWithAccessTooltip
           variant={ButtonVariant.primary}
           onClick={handleAddTest}
@@ -64,7 +65,7 @@ const IntegrationTestsEmptyState: React.FC<{
         >
           Add integration test
         </ButtonWithAccessTooltip>
-      </EmptyStateSecondaryActions>
+      </EmptyStateActions>
     </AppEmptyState>
   );
 };
@@ -108,7 +109,7 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
   }, [navigate, applicationName, workspace]);
 
   const loading = (
-    <Bullseye className="pf-u-mt-md" data-test="integration-tests__loading">
+    <Bullseye className="pf-v5-u-mt-md" data-test="integration-tests__loading">
       <Spinner />
     </Bullseye>
   );
@@ -130,7 +131,7 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
 
   return (
     <>
-      <Title headingLevel="h3" className="pf-u-mt-lg pf-u-mb-sm">
+      <Title headingLevel="h3" className="pf-v5-u-mt-lg pf-v5-u-mb-sm">
         Integration tests
       </Title>
       <TextContent>
@@ -141,21 +142,25 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
       <>
         <Toolbar data-testid="component-list-toolbar" clearAllFilters={onClearFilters}>
           <ToolbarContent>
-            <ToolbarGroup alignment={{ default: 'alignLeft' }}>
+            <ToolbarGroup align={{ default: 'alignLeft' }}>
               <ToolbarItem>
                 <InputGroup>
-                  <Button variant="control">
-                    <FilterIcon /> Name
-                  </Button>
-                  <TextInput
-                    name="nameInput"
-                    data-test="name-input-filter"
-                    type="search"
-                    aria-label="name filter"
-                    placeholder="Filter by name..."
-                    onChange={(name) => onNameInput(name)}
-                    value={nameFilter}
-                  />
+                  <InputGroupItem>
+                    <Button variant="control">
+                      <FilterIcon /> Name
+                    </Button>
+                  </InputGroupItem>
+                  <InputGroupItem isFill>
+                    <TextInput
+                      name="nameInput"
+                      data-test="name-input-filter"
+                      type="search"
+                      aria-label="name filter"
+                      placeholder="Filter by name..."
+                      onChange={(_event, name) => onNameInput(name)}
+                      value={nameFilter}
+                    />
+                  </InputGroupItem>
                 </InputGroup>
               </ToolbarItem>
               <ToolbarItem>

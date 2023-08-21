@@ -7,9 +7,10 @@ import {
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateProps,
-  EmptyStateSecondaryActions,
   EmptyStateVariant,
-  Title,
+  EmptyStateActions,
+  EmptyStateHeader,
+  EmptyStateFooter,
 } from '@patternfly/react-core';
 import securityShieldImg from '../../imgs/shield-security.svg';
 
@@ -29,23 +30,26 @@ const SecurityTabEmptyState: React.FC<Omit<EmptyStateProps, 'children'>> = ({ ..
       variant={EmptyStateVariant.full}
       {...props}
     >
-      <EmptyStateIcon icon={EmptyStateImg} />
-      <Title headingLevel="h2" size="lg">
-        Security information unavailable
-      </Title>
+      <EmptyStateHeader
+        titleText="Security information unavailable"
+        icon={<EmptyStateIcon icon={EmptyStateImg} />}
+        headingLevel="h2"
+      />
       <EmptyStateBody>We don&apos;t have any logs to show right now.</EmptyStateBody>
-      <EmptyStateSecondaryActions>
-        <Button
-          variant={ButtonVariant.primary}
-          onClick={() =>
-            navigate(
-              `/application-pipeline/workspaces/${workspaceName}/applications/${appName}/pipelineruns/${plrName}`,
-            )
-          }
-        >
-          Return to pipeline run details
-        </Button>
-      </EmptyStateSecondaryActions>
+      <EmptyStateFooter>
+        <EmptyStateActions>
+          <Button
+            variant={ButtonVariant.primary}
+            onClick={() =>
+              navigate(
+                `/application-pipeline/workspaces/${workspaceName}/applications/${appName}/pipelineruns/${plrName}`,
+              )
+            }
+          >
+            Return to pipeline run details
+          </Button>
+        </EmptyStateActions>
+      </EmptyStateFooter>
     </EmptyState>
   );
 };

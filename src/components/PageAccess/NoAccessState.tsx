@@ -8,7 +8,8 @@ import {
   EmptyStateIcon,
   EmptyStateProps,
   EmptyStateVariant,
-  Title,
+  EmptyStateHeader,
+  EmptyStateFooter,
 } from '@patternfly/react-core';
 import { LockIcon } from '@patternfly/react-icons/dist/esm/icons/lock-icon';
 import { css } from '@patternfly/react-styles';
@@ -40,23 +41,26 @@ const NoAccessState: React.FC<NoAccessStateProps> = ({
       {...props}
       data-test="no-access-state"
     >
-      <EmptyStateIcon className={css('app-empty-state__icon ')} icon={LockIcon} />
-      <Title className="pf-u-mt-lg" headingLevel="h2" size="lg">
-        {title || `Let's get you access`}
-      </Title>
+      <EmptyStateHeader
+        titleText={<>{title || `Let's get you access`}</>}
+        icon={<EmptyStateIcon className={css('app-empty-state__icon ')} icon={LockIcon} />}
+        headingLevel="h2"
+      />
       <EmptyStateBody>
         {body ||
           `Ask the administrator of the ${workspace} workspace for access permissions. We're always here to help, so chat with us if you have any questions in the meantime.`}
       </EmptyStateBody>
-      {children || (
-        <Button
-          variant={ButtonVariant.primary}
-          data-test="no-access-action"
-          onClick={() => navigate('/application-pipeline/workspaces')}
-        >
-          Go to applications list
-        </Button>
-      )}
+      <EmptyStateFooter>
+        {children || (
+          <Button
+            variant={ButtonVariant.primary}
+            data-test="no-access-action"
+            onClick={() => navigate('/application-pipeline/workspaces')}
+          >
+            Go to applications list
+          </Button>
+        )}
+      </EmptyStateFooter>
     </EmptyState>
   );
 };

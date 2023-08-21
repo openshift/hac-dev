@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyStateBody, EmptyStateSecondaryActions } from '@patternfly/react-core';
+import { EmptyStateBody, EmptyStateActions } from '@patternfly/react-core';
 import emptyStateImgUrl from '../../imgs/Pipeline.svg';
 import { ComponentModel } from '../../models';
 import { useAccessReviewForModel } from '../../utils/rbac';
@@ -23,7 +23,7 @@ const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicati
         <br />
         To get started, add a component and merge its pull request for a build pipeline.
       </EmptyStateBody>
-      <EmptyStateSecondaryActions>
+      <EmptyStateActions>
         <ButtonWithAccessTooltip
           component={(props) => (
             <Link
@@ -43,7 +43,7 @@ const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicati
         >
           Add component
         </ButtonWithAccessTooltip>
-      </EmptyStateSecondaryActions>
+      </EmptyStateActions>
     </AppEmptyState>
   );
 };

@@ -19,10 +19,10 @@ import './SecretModal.scss';
 const createPartnerTaskSecret = (
   secret: ImportSecret,
   onSubmit: (v: ImportSecret) => void,
-  onClose: ({ submitClicked }: { submitClicked: boolean }) => void,
+  onClose: (event: KeyboardEvent | React.MouseEvent) => void,
 ) => {
   onSubmit && onSubmit(secret);
-  onClose({ submitClicked: true });
+  onClose(null);
 };
 
 export type SecretModalValues = ImportSecret & {

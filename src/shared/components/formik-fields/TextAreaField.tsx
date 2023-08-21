@@ -3,6 +3,7 @@ import { FormGroup, TextArea } from '@patternfly/react-core';
 import { useField } from 'formik';
 import { TextAreaProps } from './field-types';
 import { getFieldId } from './field-utils';
+import FieldHelperText from './FieldHelperText';
 
 const RenderComponent: React.FC<TextAreaProps & { forwardedRef: React.Ref<HTMLTextAreaElement> }> =
   ({ label, helpText, required, onChange, forwardedRef, ...props }) => {
@@ -11,14 +12,7 @@ const RenderComponent: React.FC<TextAreaProps & { forwardedRef: React.Ref<HTMLTe
     const isValid = !(touched && error);
     const errorMessage = !isValid ? error : '';
     return (
-      <FormGroup
-        fieldId={fieldId}
-        label={label}
-        helperText={helpText}
-        helperTextInvalid={errorMessage}
-        validated={isValid ? 'default' : 'error'}
-        isRequired={required}
-      >
+      <FormGroup fieldId={fieldId} label={label} isRequired={required}>
         <TextArea
           {...field}
           {...props}
@@ -28,11 +22,12 @@ const RenderComponent: React.FC<TextAreaProps & { forwardedRef: React.Ref<HTMLTe
           validated={isValid ? 'default' : 'error'}
           isRequired={required}
           aria-describedby={helpText ? `${fieldId}-helper` : undefined}
-          onChange={(value, event) => {
+          onChange={(event, value) => {
             onChange && onChange(value);
             field.onChange(event);
           }}
         />
+        <FieldHelperText isValid={isValid} errorMessage={errorMessage} helpText={helpText} />
       </FormGroup>
     );
   };

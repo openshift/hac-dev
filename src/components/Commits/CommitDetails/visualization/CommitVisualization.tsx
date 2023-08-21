@@ -42,7 +42,7 @@ const CommitVisualization = ({ commit }) => {
 
   if (!model || !loaded) {
     return (
-      <div className="pf-u-m-lg">
+      <div className="pf-v5-u-m-lg">
         <Spinner />
       </div>
     );

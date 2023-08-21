@@ -5,9 +5,6 @@ import {
   Flex,
   FlexItem,
   SearchInput,
-  Select,
-  SelectOption,
-  SelectVariant,
   Spinner,
   Text,
   TextContent,
@@ -18,6 +15,7 @@ import {
   ToolbarGroup,
   ToolbarItem,
 } from '@patternfly/react-core';
+import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import SecurityTabEmptyState from '../EmptyState/SecurityTabEmptyState';
@@ -153,7 +151,7 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
 
   return (
     <>
-      <TextContent style={{ marginTop: 'var(--pf-global--spacer--lg)' }}>
+      <TextContent style={{ marginTop: 'var(--pf-v5-global--spacer--lg)' }}>
         <Text component={TextVariants.h3}>Testing apps against Enterprise Contract</Text>
         <Text component={TextVariants.p}>
           Enterprise Contract is a set of tools for verifying the provenance of application
@@ -192,14 +190,14 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
           .
         </Text>
       </TextContent>
-      <Flex style={{ marginTop: 'var(--pf-global--spacer--xl)' }}>
-        <FlexItem style={{ marginRight: 'var(--pf-global--spacer--2xl)' }}>
+      <Flex style={{ marginTop: 'var(--pf-v5-global--spacer--xl)' }}>
+        <FlexItem style={{ marginRight: 'var(--pf-v5-global--spacer--2xl)' }}>
           <TextContent>
             <Text component={TextVariants.h3}>Results</Text>
           </TextContent>
           <Toolbar clearAllFilters={onClearAllFilters}>
             <ToolbarContent style={{ padding: 0 }}>
-              <ToolbarGroup alignment={{ default: 'alignLeft' }}>
+              <ToolbarGroup align={{ default: 'alignLeft' }}>
                 <ToolbarItem>
                   <ToolbarFilter
                     chips={componentFilters}
@@ -214,7 +212,7 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
                       data-testid="component-filter-menu"
                       variant={SelectVariant.checkbox}
                       isOpen={componentFilterExpanded}
-                      onToggle={setComponentFilterExpanded}
+                      onToggle={(ev, expanded) => setComponentFilterExpanded(expanded)}
                       onSelect={(event, selection) => {
                         const checked = (event.target as HTMLInputElement).checked;
                         setComponentFilters(
@@ -252,7 +250,7 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
                       data-testid="status-filter-menu"
                       variant={SelectVariant.checkbox}
                       isOpen={statusFilterExpanded}
-                      onToggle={setStatusFilterExpanded}
+                      onToggle={(ev, expanded) => setStatusFilterExpanded(expanded)}
                       onSelect={(event, selection) => {
                         const checked = (event.target as HTMLInputElement).checked;
                         setStatusFilters(
@@ -280,7 +278,7 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
                   </ToolbarFilter>
                 </ToolbarItem>
 
-                <ToolbarItem className="pf-u-ml-0">
+                <ToolbarItem className="pf-v5-u-ml-0">
                   <SearchInput
                     name="nameInput"
                     data-test="rule-input-filter"
@@ -303,19 +301,19 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
           </FlexItem>
           <Flex data-testid="result-summary" spaceItems={{ default: 'spaceItemsXl' }}>
             <FlexItem spacer={{ default: 'spacerXl' }}>
-              <span style={{ marginRight: 'var(--pf-global--spacer--sm)' }}>
+              <span style={{ marginRight: 'var(--pf-v5-global--spacer--sm)' }}>
                 {getRuleStatus(ENTERPRISE_CONTRACT_STATUS.violations)}
               </span>
               <b>{resultSummary[ENTERPRISE_CONTRACT_STATUS.violations]}</b>
             </FlexItem>
             <FlexItem>
-              <span style={{ marginRight: 'var(--pf-global--spacer--sm)' }}>
+              <span style={{ marginRight: 'var(--pf-v5-global--spacer--sm)' }}>
                 {getRuleStatus(ENTERPRISE_CONTRACT_STATUS.warnings)}
               </span>
               <b>{resultSummary[ENTERPRISE_CONTRACT_STATUS.warnings]}</b>
             </FlexItem>
             <FlexItem>
-              <span style={{ marginRight: 'var(--pf-global--spacer--sm)' }}>
+              <span style={{ marginRight: 'var(--pf-v5-global--spacer--sm)' }}>
                 {getRuleStatus(ENTERPRISE_CONTRACT_STATUS.successes)}
               </span>
               <b>{resultSummary[ENTERPRISE_CONTRACT_STATUS.successes]}</b>

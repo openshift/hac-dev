@@ -90,7 +90,7 @@ export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
         ]}
         title={
           <>
-            <span className="pf-u-mr-sm">{pipelineRunName}</span>
+            <span className="pf-v5-u-mr-sm">{pipelineRunName}</span>
             <StatusIconWithTextLabel status={plrStatus} />
           </>
         }

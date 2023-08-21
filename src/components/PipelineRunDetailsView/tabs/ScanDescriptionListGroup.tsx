@@ -46,7 +46,7 @@ const ScanDescriptionListGroup: React.FC<Props> = ({
           to={`/application-pipeline/workspaces/${workspace}/applications/${
             scanTaskRuns[0].metadata.labels[PipelineRunLabel.APPLICATION]
           }/taskruns/${scanTaskRuns[0].metadata.name}/logs`}
-          className="pf-u-font-weight-normal"
+          className="pf-v5-u-font-weight-normal"
         >
           View logs
         </Link>
@@ -74,7 +74,7 @@ const ScanDescriptionListGroup: React.FC<Props> = ({
                   to={`/application-pipeline/workspaces/${workspace}/applications/${
                     scanTaskRun.metadata.labels[PipelineRunLabel.APPLICATION]
                   }/taskruns/${scanTaskRun.metadata.name}/logs`}
-                  className="pf-u-font-weight-normal scan-description-list__tooltip-link"
+                  className="pf-v5-u-font-weight-normal scan-description-list__tooltip-link"
                 >
                   <span
                     data-testid={`${
@@ -92,7 +92,7 @@ const ScanDescriptionListGroup: React.FC<Props> = ({
       >
         <Button
           variant={ButtonVariant.link}
-          className="pf-u-px-0"
+          className="pf-v5-u-px-0"
           data-testid="view-logs-popover-trigger-test-id"
         >
           View logs

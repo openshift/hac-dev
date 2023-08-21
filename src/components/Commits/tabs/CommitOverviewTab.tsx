@@ -26,9 +26,9 @@ type CommitsOverviewTabProps = {
 
 const CommitOverviewTab: React.FC<CommitsOverviewTabProps> = ({ commit, commitStatus }) => (
   <>
-    <Text className="pf-u-my-lg">Events progression triggered by the commit.</Text>
+    <Text className="pf-v5-u-my-lg">Events progression triggered by the commit.</Text>
     <CommitVisualization commit={commit} />
-    <Flex className="pf-u-py-lg">
+    <Flex className="pf-v5-u-py-lg">
       <FlexItem flex={{ default: 'flex_3' }}>
         <DescriptionList
           data-test="commit-details"
