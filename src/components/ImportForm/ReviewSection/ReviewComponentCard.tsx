@@ -137,17 +137,20 @@ const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                   data-test={`${fieldPrefix}.targetPort`}
                   name={`${fieldPrefix}.targetPort`}
                   label="Target port"
-                  helpText="Target port for traffic."
+                  helpText={
+                    targetPortDetected || targetPortTouched
+                      ? 'Target port for traffic.'
+                      : "We can't detect your target port. Check if it's correct."
+                  }
                   type={TextInputTypes.number}
                   min={1}
                   max={65535}
                   onChange={() => setTargetPortTouched(true)}
                   onBlur={() => setTargetPortTouched(true)}
-                  helpTextInvalid="We can't detect your target port. Check if it's correct."
                   validated={
                     targetPortDetected || targetPortTouched
                       ? ValidatedOptions.default
-                      : ValidatedOptions.error
+                      : ValidatedOptions.warning
                   }
                 />
               </GridItem>
