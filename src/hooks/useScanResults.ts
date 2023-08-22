@@ -209,7 +209,7 @@ export const usePLRVulnerabilities = (
   const processedPipelineruns = React.useRef([]);
 
   const loadedPipelineRunNames = React.useRef([]);
-  const [currentPage, setCurrentPage] = React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState(-1);
   const pipelineRunVulnerabilities = React.useRef({});
 
   const addLoadedPipelineruns = (pipelienRunNames: string[]): void => {
@@ -225,7 +225,6 @@ export const usePLRVulnerabilities = (
       ),
       loadedPipelineRunNames.current,
     ),
-    true,
   );
   if (vloaded && vulnerabilities) {
     pipelineRunVulnerabilities.current = merge(
@@ -241,12 +240,11 @@ export const usePLRVulnerabilities = (
 
   React.useEffect(() => {
     const totalPlrs = pipelineRuns.length;
-    const noOfPendingPLRS = totalPlrs - processedPipelineruns.current.length;
     if (totalPlrs > 0) {
-      const completedPipelineRuns = pipelineRuns
-        .filter((plr) => !!plr?.status?.completionTime)
-        .slice(noOfPendingPLRS > pageSize ? noOfPendingPLRS : 0, totalPlrs);
-      processedPipelineruns.current = completedPipelineRuns.map(({ metadata: { name } }) => name);
+      const completedPipelineRuns = pipelineRuns.filter((plr) => !!plr?.status?.completionTime);
+      processedPipelineruns.current = uniq(
+        completedPipelineRuns.map(({ metadata: { name } }) => name),
+      );
 
       setCurrentPage(Math.round(totalPlrs / pageSize));
     }
