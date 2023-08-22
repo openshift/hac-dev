@@ -76,9 +76,10 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     const runtime = samples.find((s) => value.includes(s.name));
 
     if (
-      runtime &&
-      (runtime?.attributes?.git as any)?.remotes?.origin ===
-        selectedRuntime?.attributes?.git?.remotes?.origin
+      (runtime &&
+        (runtime?.attributes?.git as any)?.remotes?.origin ===
+          selectedRuntime?.attributes?.git?.remotes?.origin) ||
+      value.includes(selectedRuntime?.value)
     ) {
       return;
     }
@@ -176,41 +177,48 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
   }, [
     components,
     detectedComponentIndex,
+    detectionFailed,
+    fieldPrefix,
     isDetected,
     samples,
     samplesLoaded,
     selectedRuntime,
-    detectionFailed,
     setFieldValue,
-    fieldPrefix,
   ]);
 
   React.useEffect(() => {
-    if (detectionError) {
-      setDetecting(false);
-      setFieldError(`${fieldPrefix}.runtime`, detectionError);
-    } else if (detectionLoaded && detectedComponents) {
+    // Allow creation when dockerfile runtime is selected even if detection fails
+    if (
+      detectionLoaded &&
+      (detectedComponents || selectedRuntime?.value === dockerFileSample.value)
+    ) {
       setDetecting(false);
       setFieldValue('isDetected', true);
       setFieldValue('detectionFailed', false);
       // To avoid formik validating on old values due to a formik bug - https://github.com/jaredpalmer/formik/issues/2083
       setTimeout(() => setFieldTouched('isDetected', true));
       setTimeout(() => setFieldTouched('detectionFailed', true));
-      const componentValues = transformComponentValues(
-        detectedComponents,
-        originalComponentRef.current,
-        defaultResourceLimits,
-      )[0];
-      const component = patchSourceUrl(componentValues.componentStub, sourceUrl);
-      setFieldValue(`${fieldPrefix}.componentStub`, component);
-      setFieldValue(`${fieldPrefix}.language`, componentValues.language);
+
+      if (detectedComponents) {
+        const componentValues = transformComponentValues(
+          detectedComponents,
+          originalComponentRef.current,
+          defaultResourceLimits,
+        )[0];
+        const component = patchSourceUrl(componentValues.componentStub, sourceUrl);
+        setFieldValue(`${fieldPrefix}.componentStub`, component);
+        setFieldValue(`${fieldPrefix}.language`, componentValues.language);
+      }
+    } else if (detectionError) {
+      setDetecting(false);
+      setFieldError(`${fieldPrefix}.runtime`, detectionError);
     }
   }, [
-    detectedComponentIndex,
     detectedComponents,
     detectionError,
     detectionLoaded,
     fieldPrefix,
+    selectedRuntime,
     setFieldError,
     setFieldTouched,
     setFieldValue,
