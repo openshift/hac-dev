@@ -1,5 +1,6 @@
 import { NavItem, pageTitles } from '../support/constants/PageTitle';
 import { loginPO, kcLoginPO } from '../support/pageObjects/global-po';
+import { GetStartedPage } from '../support/pages/GetStartedPage';
 import { Common } from './Common';
 
 export class Login {
@@ -29,7 +30,7 @@ export class Login {
 
   private static waitForApps() {
     Common.waitForLoad();
-    Common.verifyPageTitle(pageTitles.overviewPage);
+    GetStartedPage.waitForLoad();
     Common.navigateTo(NavItem.applications);
     Common.verifyPageTitle(pageTitles.applications);
     Common.waitForLoad();
