@@ -4,7 +4,7 @@ import { AccessReviewResources } from '../../types';
 import { useAccessReviewForModels } from '../../utils/rbac';
 import NoAccessState from './NoAccessState';
 
-type PageAccessCheckProps = {
+export type PageAccessCheckProps = {
   accessReviewResources: AccessReviewResources;
   children: React.ReactNode;
   accessDeniedTitle?: React.ReactNode & string;
