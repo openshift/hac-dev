@@ -14,7 +14,13 @@ const renderFunction = (
   return (
     <BaseInputField {...baseProps}>
       {(props) => (
-        <FileUpload ref={ref} {...props} id={baseProps.id} type={type}>
+        <FileUpload
+          ref={ref}
+          {...props}
+          id={baseProps.id}
+          value={baseProps.value ?? props.value}
+          type={type}
+        >
           {children}
         </FileUpload>
       )}

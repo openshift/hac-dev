@@ -37,7 +37,6 @@ export const getSupportedPartnerTaskSecrets = () => {
   return Object.values(supportedPartnerTasksSecrets).map((secret) => ({
     label: secret.name,
     value: secret.name,
-    disabled: false,
   }));
 };
 

@@ -113,7 +113,7 @@ const Logs: React.FC<LogsProps> = ({
       ws = new WebSocketFactory(watchURL, wsOpts);
       ws.onMessage((msg) => {
         if (loaded) return;
-        const message = Base64.decode(msg);
+        const message = Base64.decode(msg as string);
         appendMessage.current(message);
       })
         .onClose(() => {
