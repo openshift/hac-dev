@@ -132,6 +132,7 @@ export class Applications {
   static goToLatestCommitsTab() {
     this.goToActivityTab();
     cy.get(latestCommitsTabPO.clickTab, { timeout: 30000 }).click();
+    Common.waitForLoad();
   }
 
   static goToPipelinerunsTab() {

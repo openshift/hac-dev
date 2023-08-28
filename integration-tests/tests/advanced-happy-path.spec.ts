@@ -175,9 +175,11 @@ describe('Advanced Happy path', () => {
 
     it('Verify vulnebralities on pipeline run list', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
-      UIhelper.getTableRow('Pipeline run List', componentInfo.firstPipelineRunName).within(() => {
-        cy.contains(vulnerabilities).should('be.visible');
-      });
+      UIhelper.getTableRowByRowText('Pipeline run List', componentInfo.firstPipelineRunName).within(
+        () => {
+          cy.contains(vulnerabilities).should('be.visible');
+        },
+      );
     });
 
     it('Verify Enterprise contract Test pipeline run Details', () => {
@@ -287,7 +289,7 @@ describe('Advanced Happy path', () => {
 
     it('Verify and wait for the new Pipeline run', () => {
       Applications.goToPipelinerunsTab();
-      UIhelper.getTableRow('Pipeline run List', /Running|Pending/)
+      UIhelper.getTableRowByRowText('Pipeline run List', /Running|Pending/)
         .contains(`${componentName}-on-push`)
         .invoke('text')
         .then((pipelinerunName) => {

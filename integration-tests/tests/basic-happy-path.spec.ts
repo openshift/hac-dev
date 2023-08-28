@@ -84,7 +84,7 @@ describe('Basic Happy Path', () => {
   describe('Explore Pipeline runs Tab', () => {
     it('Verify the Pipeline run details and Node Graph view', () => {
       Applications.goToPipelinerunsTab();
-      UIhelper.getTableRow('Pipeline run List', 'Running')
+      UIhelper.getTableRowByRowText('Pipeline run List', 'Running')
         .contains(`${componentName}-`)
         .invoke('text')
         .then((pipelinerunName) => {

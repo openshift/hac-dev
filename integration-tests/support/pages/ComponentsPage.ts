@@ -3,6 +3,7 @@ import { UIhelper } from '../../utils/UIhelper';
 import { CPUUnit, MemoryUnit } from '../constants/Units';
 import { addComponentPagePO, ComponentsPagePO } from '../pageObjects/createApplication-po';
 import { alertTitle } from '../pageObjects/global-po';
+import { applicationsPagePO } from '../pageObjects/pages-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class ComponentPage extends AbstractWizardPage {
@@ -62,10 +63,10 @@ export class ComponentPage extends AbstractWizardPage {
       if (diff === 0) {
         return;
       }
-      const button = diff > 0 ? ComponentsPagePO.cpuPlusButton : ComponentsPagePO.cpuMinusButton;
+      const button = diff > 0 ? 'Increment' : 'Decrement';
 
       for (let i = 0; i < Math.abs(diff); i++) {
-        cy.get(button).click();
+        this.incrementDecrementInputByLabel('CPU', button);
       }
     });
 
@@ -134,5 +135,11 @@ export class ComponentPage extends AbstractWizardPage {
 
   verifyComponentGHReferenceAndLink(linkText: string, link: string) {
     cy.contains('a', linkText).should('be.visible').and('have.attr', 'href', link);
+  }
+
+  incrementDecrementInputByLabel(label: string, button: 'Decrement' | 'Increment') {
+    cy.contains(applicationsPagePO.formGroup, label).within(() => {
+      cy.get(`button[aria-label="${button}"]`).scrollIntoView().click();
+    });
   }
 }

@@ -41,8 +41,6 @@ export const ComponentsPagePO = {
   closeIcon: '[data-test="close-icon"]',
   showAdvancedSetting: 'Show advanced deployment options',
   cpuInput: 'input[name*="cpuValue"]',
-  cpuPlusButton: 'button[data-ouia-component-id="OUIA-Generated-Button-control-2"]',
-  cpuMinusButton: 'button[data-ouia-component-id="OUIA-Generated-Button-control-1"]',
   memoryInput: 'input[name*="memoryValue"]',
   dropdown: 'button[data-test="dropdown-toggle"]',
   replicaInput: 'input[id*="replicas-field"]',

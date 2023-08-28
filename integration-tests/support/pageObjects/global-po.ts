@@ -53,6 +53,7 @@ export const UIhelperPO = {
   graphNode: 'g[data-kind="node"]',
   pipelineStatusSuccess: 'g[class="pf-topology-pipelines__pill-status pf-m-success"]',
   pipelineNode: 'g[class^="pf-topology__pipelines__task-node"]',
+  tableRows: (tableAriaLabel: string) => `div[aria-label="${tableAriaLabel}"] tr[role="row"]`,
   tabs: 'div[data-ouia-component-type="PF5/Tabs"] button span',
   formGroup: 'div.pf-c-form__group',
   formGroupLabelText: 'div.pf-c-form__group span.pf-c-form__label-text',

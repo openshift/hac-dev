@@ -52,7 +52,7 @@ describe('Create Env using Non-OpenShift Cluster', () => {
 
     it('Verify the Build Pipeline run details', () => {
       Applications.goToPipelinerunsTab();
-      UIhelper.getTableRow('Pipeline run List', /Running|Pending/)
+      UIhelper.getTableRowByRowText('Pipeline run List', /Running|Pending/)
         .contains(`${componentName}-`)
         .invoke('text')
         .then((pipelinerunName) => {
