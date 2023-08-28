@@ -1,14 +1,14 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
-import { SecretType } from '../../../types';
+import { SecretTypeDropdownLabel } from '../../../types';
 import { formikRenderer } from '../../../utils/test-utils';
 import { supportedPartnerTasksSecrets } from '../secret-utils';
 import SecretModal, { SecretModalValues } from '../SecretModal';
 
 const initialValues: SecretModalValues = {
   secretName: '',
-  type: SecretType.opaque,
+  type: SecretTypeDropdownLabel.opaque,
   keyValues: [{ key: '', value: '', readOnlyKey: false }],
   existingSecrets: [],
 };

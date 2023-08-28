@@ -4,7 +4,7 @@ import { SelectVariant } from '@patternfly/react-core/deprecated';
 import { useFormikContext } from 'formik';
 import { SelectInputField } from '../../shared';
 import KeyValueFileInputField from '../../shared/components/formik-fields/key-value-file-input-field/KeyValueFileInputField';
-import { SecretFormValues, SecretType } from '../../types';
+import { SecretFormValues, SecretTypeDropdownLabel } from '../../types';
 import { RawComponentProps } from '../modal/createModalLauncher';
 import {
   getSupportedPartnerTaskKeyValuePairs,
@@ -46,7 +46,7 @@ const SecretForm: React.FC<SecretFormProps> = ({ existingSecrets }) => {
       <SecretTypeSelector
         onChange={(type) => {
           currentTypeRef.current = type;
-          if (type === SecretType.image) {
+          if (type === SecretTypeDropdownLabel.image) {
             resetKeyValues();
             values.secretName &&
               isPartnerTask(values.secretName) &&

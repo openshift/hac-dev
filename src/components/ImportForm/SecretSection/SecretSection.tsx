@@ -5,9 +5,8 @@ import { PlusCircleIcon } from '@patternfly/react-icons/dist/js/icons/plus-circl
 import { useFormikContext } from 'formik';
 import { SPIAccessTokenBindingGroupVersionKind } from '../../../models';
 import { InputField, TextColumnField } from '../../../shared';
-import { SPIAccessTokenBindingKind } from '../../../types';
+import { SNYK_SPI_TOKEN_ACCESS_BINDING, SPIAccessTokenBindingKind } from '../../../types';
 import { useModalLauncher } from '../../modal/ModalProvider';
-import { SNYK_SPI_TOKEN_ACCESS_BINDING } from '../../Secrets/secret-utils';
 import { SecretModalLauncher } from '../../Secrets/SecretModalLauncher';
 import { ImportFormValues } from '../utils/types';
 

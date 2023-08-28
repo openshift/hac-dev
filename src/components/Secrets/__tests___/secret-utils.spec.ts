@@ -1,15 +1,19 @@
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { PIPELINE_SERVICE_ACCOUNT } from '../../../consts/pipeline';
 import { RemoteSecretModel } from '../../../models/remotesecret';
+import { RemoteSecretStatusReason, SecretType } from '../../../types';
 import {
   createRemoteSecretResource,
   createSecretResource,
+  getSecretRowData,
   getSupportedPartnerTaskKeyValuePairs,
   getSupportedPartnerTaskSecrets,
   isPartnerTask,
+  statusFromConditions,
   supportedPartnerTasksSecrets,
+  typeToLabel,
 } from '../secret-utils';
-import { sampleImagePullSecret, sampleOpaqueSecret } from './secret-data';
+import { sampleImagePullSecret, sampleOpaqueSecret, sampleRemoteSecrets } from './secret-data';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
 
@@ -105,5 +109,76 @@ describe('createRemoteSecretResource', () => {
         ]),
       }),
     );
+  });
+});
+
+describe('statusFromConditions', () => {
+  it('should return the default value', () => {
+    expect(statusFromConditions(null)).toBe('-');
+    expect(statusFromConditions(undefined)).toBe('-');
+    expect(statusFromConditions([])).toBe('-');
+  });
+  it('should return the correct status from the conditions', () => {
+    const awaitingSecret = sampleRemoteSecrets[RemoteSecretStatusReason.AwaitingData];
+    const injectedSecret = sampleRemoteSecrets[RemoteSecretStatusReason.Injected];
+
+    expect(statusFromConditions(awaitingSecret.status.conditions)).toBe('AwaitingData');
+    expect(statusFromConditions(injectedSecret.status.conditions)).toBe('Injected');
+  });
+});
+
+describe('getSecretRowData', () => {
+  it('should return the default value', () => {
+    expect(getSecretRowData(null, []).secretName).toBe('-');
+  });
+
+  it('should return all the row data for a given secret', () => {
+    const injectedSecret = sampleRemoteSecrets[RemoteSecretStatusReason.Injected];
+    expect(getSecretRowData(injectedSecret, ['development'])).toEqual({
+      secretFor: 'Build',
+      secretLabels: '-',
+      secretName: 'test-secret-two',
+      secretStatus: 'Injected',
+      secretTarget: 'development',
+      secretType: 'Key/value (1)',
+    });
+  });
+
+  it('should return the labels data for the given secret', () => {
+    const injectedSecret = sampleRemoteSecrets[RemoteSecretStatusReason.Injected];
+
+    const secretWithLabels = {
+      ...injectedSecret,
+      spec: {
+        ...injectedSecret.spec,
+        secret: {
+          ...injectedSecret.spec.secret,
+          labels: {
+            label1: 'test-label-1',
+            label2: 'test-label-2',
+          },
+        },
+      },
+    };
+    expect(getSecretRowData(secretWithLabels, ['development']).secretLabels).toEqual(
+      'label1=test-label-1, label2=test-label-2',
+    );
+  });
+});
+
+describe('typeToLabel', () => {
+  it('should return default type for an unmatched type', () => {
+    expect(typeToLabel('test')).toBe('test');
+  });
+
+  it('should return image type for an docker config type', () => {
+    expect(typeToLabel(SecretType.dockerconfigjson)).toBe('Image pull');
+    expect(typeToLabel(SecretType.dockercfg)).toBe('Image pull');
+  });
+
+  it('should return key/value type for an basic type', () => {
+    expect(typeToLabel(SecretType.basicAuth)).toBe('Key/value');
+    expect(typeToLabel(SecretType.sshAuth)).toBe('Key/value');
+    expect(typeToLabel(SecretType.opaque)).toBe('Key/value');
   });
 });

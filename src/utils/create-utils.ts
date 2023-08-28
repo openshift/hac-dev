@@ -14,7 +14,6 @@ import {
 import { ImportSecret } from '../components/ImportForm/utils/types';
 import {
   PartnerTask,
-  SNYK_SPI_TOKEN_ACCESS_BINDING,
   createRemoteSecretResource,
   createSecretResource,
   supportedPartnerTasksSecrets,
@@ -32,7 +31,8 @@ import {
   ComponentDetectionQueryKind,
   SPIAccessTokenBindingKind,
   K8sSecretType,
-  SecretType,
+  SecretTypeDropdownLabel,
+  SNYK_SPI_TOKEN_ACCESS_BINDING,
 } from '../types';
 import { ComponentSpecs } from './../types/component';
 import { BuildRequest, BUILD_REQUEST_ANNOTATION } from './component-utils';
@@ -383,7 +383,7 @@ export const createSecret = async (
         'appstudio.redhat.com/upload-secret': 'remotesecret',
       },
       annotations: {
-        'appstudio.redhat.com/remotesecret-name': `${secret.secretName}-remote-secret`,
+        'appstudio.redhat.com/remotesecret-name': `${secret.secretName}`,
       },
     },
     type: K8sSecretType[secret.type],
@@ -396,7 +396,12 @@ export const createSecret = async (
   const promiseArray = [];
   // Create RemoteSecrets
   promiseArray.push(
-    createRemoteSecretResource(secretResource, namespace, secret.type === SecretType.image, dryRun),
+    createRemoteSecretResource(
+      secretResource,
+      namespace,
+      secret.type === SecretTypeDropdownLabel.image,
+      dryRun,
+    ),
   );
 
   //Todo: K8sCreateResource appends the resource name and errors out.

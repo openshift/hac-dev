@@ -2,9 +2,17 @@ import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { PIPELINE_SERVICE_ACCOUNT } from '../../consts/pipeline';
 import { SecretModel } from '../../models';
 import { RemoteSecretModel } from '../../models/remotesecret';
-import { RemoteSecretKind, SecretKind } from '../../types';
-
-export const SNYK_SPI_TOKEN_ACCESS_BINDING = 'spi-access-token-binding-for-snyk-secret';
+import {
+  RemoteSecretKind,
+  RemoteSecretStatusReason,
+  RemoteSecretStatusType,
+  SecretByUILabel,
+  SecretCondition,
+  SecretFor,
+  SecretKind,
+  SecretType,
+  SecretTypeDisplayLabel,
+} from '../../types';
 
 export type PartnerTask = {
   name: string;
@@ -44,6 +52,60 @@ export const getSupportedPartnerTaskKeyValuePairs = (secretName?: string) => {
   return partnerTask ? partnerTask.keyValuePairs : [];
 };
 
+export const typeToLabel = (type: string) => {
+  switch (type) {
+    case SecretType.dockerconfigjson:
+    case SecretType.dockercfg:
+      return SecretTypeDisplayLabel.imagePull;
+    case SecretType.basicAuth:
+    case SecretType.sshAuth:
+    case SecretType.opaque:
+      return SecretTypeDisplayLabel.keyValue;
+
+    default:
+      return type;
+  }
+};
+
+export const statusFromConditions = (
+  conditions: SecretCondition[],
+): RemoteSecretStatusReason | string => {
+  if (!conditions?.length) {
+    return RemoteSecretStatusReason.Unknown;
+  }
+  const deployedCondition = conditions.find((c) => c.type === RemoteSecretStatusType.Deployed);
+  if (deployedCondition) {
+    return deployedCondition.reason;
+  }
+  return conditions[conditions.length - 1]?.reason || RemoteSecretStatusReason.Unknown;
+};
+
+export const getSecretRowData = (obj: RemoteSecretKind, environmentNames: string[]): any => {
+  const type = typeToLabel(obj?.spec?.secret?.type);
+  const keys = obj?.status.secret?.keys;
+  const secretName = obj?.spec?.secret?.name || '-';
+  const secretFor = obj?.metadata?.labels?.[SecretByUILabel] ?? SecretFor.deployment;
+  const secretTarget =
+    obj?.metadata?.labels?.['appstudio.redhat.com/environment'] ?? environmentNames.join(',');
+  const secretLabels = obj
+    ? Object.keys(obj?.spec?.secret?.labels || {})
+        .map((k) => `${k}=${obj.spec?.secret?.labels[k]}`)
+        .join(', ') || '-'
+    : '-';
+  const secretType =
+    type === SecretTypeDisplayLabel.keyValue && keys ? `${type} (${keys?.length})` : type || '-';
+  const secretStatus = statusFromConditions(obj?.status?.conditions);
+
+  return {
+    secretName,
+    secretFor,
+    secretTarget,
+    secretLabels,
+    secretType,
+    secretStatus,
+  };
+};
+
 export const createSecretResource = async (
   secretResource: SecretKind,
   namespace: string,
@@ -68,8 +130,11 @@ export const createRemoteSecretResource = (
     apiVersion: `${RemoteSecretModel.apiGroup}/${RemoteSecretModel.apiVersion}`,
     kind: RemoteSecretModel.kind,
     metadata: {
-      name: `${secret.metadata.name}-remote-secret`,
+      name: `${secret.metadata.name}`,
       namespace,
+      labels: {
+        [SecretByUILabel]: SecretFor.build,
+      },
     },
     spec: {
       secret: {
@@ -98,7 +163,7 @@ export const createRemoteSecretResource = (
   return k8sCreateResource({
     model: RemoteSecretModel,
     queryOptions: {
-      name: `${secret.metadata.name}-remote-secret`,
+      name: `${secret.metadata.name}`,
       ns: namespace,
       ...(dryRun && { queryParams: { dryRun: 'All' } }),
     },
