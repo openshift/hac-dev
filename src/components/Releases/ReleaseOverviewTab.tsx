@@ -41,10 +41,10 @@ const ReleaseOverviewTab: React.FC<ReleaseOverviewTabProps> = ({ release }) => {
 
   return (
     <>
-      <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
+      <Title headingLevel="h4" className="pf-v5-c-title pf-v5-u-mt-lg pf-v5-u-mb-lg" size="lg">
         Release details
       </Title>
-      <Flex className="pf-u-py-lg">
+      <Flex className="pf-v5-u-py-lg">
         <FlexItem flex={{ default: 'flex_3' }}>
           <DescriptionList
             data-test="release-details"

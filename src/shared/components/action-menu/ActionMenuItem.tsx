@@ -1,12 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  KEY_CODES,
-  MenuItem,
-  Tooltip,
-  DropdownItemProps,
-  MenuItemProps,
-} from '@patternfly/react-core';
+import { MenuItem, Tooltip, MenuItemProps } from '@patternfly/react-core';
+import { DropdownItemProps } from '@patternfly/react-core/deprecated';
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
 import AnalyticsButton from '../../../components/AnalyticsButton/AnalyticsButton';
@@ -18,6 +13,15 @@ export type ActionMenuItemProps = {
   autoFocus?: boolean;
   onClick?: () => void;
   onEscape?: () => void;
+};
+
+export const KEY_CODES = {
+  ARROW_UP: 38,
+  ARROW_DOWN: 40,
+  ESCAPE_KEY: 27,
+  TAB: 9,
+  ENTER: 13,
+  SPACE: 32,
 };
 
 const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
@@ -81,8 +85,8 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
           variant="plain"
           style={{
             color: isDisabled
-              ? 'var(--pf-global--disabled-color--100)'
-              : 'var(--pf-c-content--Color)',
+              ? 'var(--pf-v5-global--disabled-color--100)'
+              : 'var(--pf-v5-c-content--Color)',
           }}
           isAriaDisabled={isDisabled}
           analytics={action.analytics}

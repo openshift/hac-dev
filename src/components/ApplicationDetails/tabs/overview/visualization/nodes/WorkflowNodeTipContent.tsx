@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { css } from '@patternfly/react-styles';
-import pipelineStyles from '@patternfly/react-styles/css/components/Topology/topology-pipelines';
 import {
   getRunStatusModifier,
   Node,
@@ -10,6 +9,7 @@ import {
   RunStatus,
   PipelineNodeModel,
 } from '@patternfly/react-topology';
+import pipelineStyles from '@patternfly/react-topology/dist/esm/css/topology-pipelines';
 import { useWorkspaceInfo } from '../../../../../../utils/workspace-context-utils';
 import { WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import { getLinksForElement, statusToRunStatus, TYPE_DESCRIPTIONS } from '../utils/node-utils';

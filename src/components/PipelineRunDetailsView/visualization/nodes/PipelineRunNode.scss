@@ -3,42 +3,42 @@
   &__test-status-badge {
     &--failed {
       > rect {
-        fill: var(--pf-global--danger-color--100);
-        stroke: var(--pf-global--Color--light-100);
+        fill: var(--pf-v5-global--danger-color--100);
+        stroke: var(--pf-v5-global--Color--light-100);
       }
       > text {
-        fill: var(--pf-global--Color--light-100);
+        fill: var(--pf-v5-global--Color--light-100);
       }
     }
     &--warning {
       > rect {
-        fill: var(--pf-global--warning-color--100);
-        stroke: var(--pf-global--Color--light-100);
+        fill: var(--pf-v5-global--warning-color--100);
+        stroke: var(--pf-v5-global--Color--light-100);
       }
       > text {
-        fill: var(--pf-global--Color--dark-100);
+        fill: var(--pf-v5-global--Color--dark-100);
       }
     }
   }
   &__tooltip {
-    &.pf-c-tooltip {
+    &.pf-v5-c-tooltip {
       max-width: 350px;
     }
     &--content {
-      color: var(--pf-global--Color--light-100);
+      color: var(--pf-v5-global--Color--light-100);
       display: flex;
       flex-direction: column;
-      gap: var(--pf-global--spacer--sm);
+      gap: var(--pf-v5-global--spacer--sm);
     }
     &--title {
-      font-size: var(--pf-global--FontSize--sm);
-      font-weight: var(--pf-global--FontWeight--bold);
+      font-size: var(--pf-v5-global--FontSize--sm);
+      font-weight: var(--pf-v5-global--FontWeight--bold);
     }
     &--step {
       align-items: flex-start;
       display: grid;
       grid-template-columns: auto 1fr auto;
-      gap: var(--pf-global--spacer--sm);
+      gap: var(--pf-v5-global--spacer--sm);
       &-name {
         text-align: left;
       }
@@ -47,10 +47,10 @@
         .pf-m-in-progress,
         .pf-m-pending,
         .pf-m-idle {
-          color: var(--pf-global--BorderColor--100);
+          color: var(--pf-v5-global--BorderColor--100);
         }
         .pf-m-skipped {
-          color: var(--pf-global--secondary-color--100);
+          color: var(--pf-v5-global--secondary-color--100);
         }
       }
     }

@@ -4,6 +4,7 @@ import { useField, useFormikContext, FormikValues } from 'formik';
 import BasicDropdown from '../dropdown/BasicDropdown';
 import { DropdownFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
+import FieldHelperText from './FieldHelperText';
 
 const DropdownField: React.FC<DropdownFieldProps> = ({
   label,
@@ -33,9 +34,6 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
       fieldId={fieldId}
       label={label}
       labelIcon={labelIcon}
-      helperText={helpText}
-      helperTextInvalid={errorMessage}
-      validated={validated}
       isRequired={required}
       className={className}
     >
@@ -57,6 +55,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
           setFieldTouched(name, true, false);
         }}
       />
+      <FieldHelperText isValid={isValid} errorMessage={errorMessage} helpText={helpText} />
     </FormGroup>
   );
 };

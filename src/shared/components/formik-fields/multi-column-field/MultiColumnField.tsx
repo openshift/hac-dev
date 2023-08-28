@@ -4,6 +4,7 @@ import { FieldArray, useFormikContext, FormikValues } from 'formik';
 import { get } from 'lodash-es';
 import SecondaryStatus from '../../status/SecondaryStatus';
 import { MultiColumnFieldProps } from '../field-types';
+import FieldHelperText from '../FieldHelperText';
 import { getSpans } from './multicolumn-field-utils';
 import MultiColumnFieldFooter from './MultiColumnFieldFooter';
 import MultiColumnFieldHeader from './MultiColumnFieldHeader';
@@ -44,7 +45,6 @@ const MultiColumnField: React.FC<MultiColumnFieldProps> = ({
             data-test={props['data-test'] || 'multicolumn-field'}
             fieldId={`form-multi-column-input-${name.replace(/\./g, '-')}-field`}
             label={label}
-            helperText={helpText}
             isRequired={required}
           >
             {fieldValue.length < 1 ? (
@@ -80,6 +80,7 @@ const MultiColumnField: React.FC<MultiColumnFieldProps> = ({
                 onAdd={() => push(emptyValues)}
               />
             )}
+            <FieldHelperText helpText={helpText} />
           </FormGroup>
         );
       }}

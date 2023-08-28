@@ -131,7 +131,7 @@ describe('SecretForm', () => {
     });
 
     await waitFor(() => {
-      fireEvent.click(secretModal.querySelector('.pf-c-select__toggle-clear'));
+      fireEvent.click(secretModal.querySelector('.pf-v5-c-select__toggle-clear'));
       expect(screen.queryByText('snyk-secret')).not.toBeInTheDocument();
     });
   });

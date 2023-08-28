@@ -5,6 +5,11 @@ import AppBanner from '../AppBanner/AppBanner';
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 import { ModalProvider } from '../modal/ModalProvider';
 
+// PF 5 CSS
+// TODO: Remove when console is at PF 5
+import '@patternfly/patternfly/patternfly.css';
+import '@patternfly/patternfly/patternfly-addons.css';
+
 import './NamespacedPage.scss';
 
 type NamespacedPageProps = {
@@ -16,7 +21,9 @@ const NamespacedPage: React.FunctionComponent<NamespacedPageProps> = ({ children
 
   // TODO work around to https://issues.redhat.com/browse/RHCLOUD-24606
   React.useEffect(() => {
-    const main = document.querySelector<HTMLElement>('main.pf-c-page__main');
+    const main =
+      document.querySelector<HTMLElement>('main.pf-v5-c-page__main') ||
+      document.querySelector<HTMLElement>('main.pf-c-page__main');
     if (main) {
       main.style.position = 'relative';
     }

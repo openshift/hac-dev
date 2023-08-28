@@ -5,7 +5,7 @@ export const commitsTableColumnClasses = {
   byUser: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-10',
   committedAt: 'pf-m-hidden pf-m-visible-on-lg pf-m-width-20 pf-m-width-10-on-xl',
   status: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-10',
-  kebab: 'pf-c-table__action',
+  kebab: 'pf-v5-c-table__action',
 };
 
 const CommitsListHeader = () => {

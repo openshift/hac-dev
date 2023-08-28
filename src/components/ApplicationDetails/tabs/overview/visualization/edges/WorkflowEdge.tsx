@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { css } from '@patternfly/react-styles';
-import styles from '@patternfly/react-styles/css/components/Topology/topology-components';
 import { Edge } from '@patternfly/react-topology';
+import styles from '@patternfly/react-topology/dist/esm/css/topology-components';
 import { observer } from 'mobx-react';
 import { NODE_SEPARATION_HORIZONTAL } from '../const';
 import { integralShapePath } from '../utils/draw-utils';

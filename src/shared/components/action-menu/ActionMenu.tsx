@@ -39,12 +39,11 @@ const MenuRenderer: React.FC<MenuRendererProps> = ({
 
   return (
     <Popper
-      reference={toggleRef}
+      triggerRef={toggleRef}
       popper={menu}
       placement="bottom-end"
       isVisible={isOpen}
       appendTo={containerRef.current}
-      popperMatchesTriggerWidth={false}
     />
   );
 };
@@ -88,4 +87,4 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   );
 };
 
-export default ActionMenu;
+export default React.memo(ActionMenu);

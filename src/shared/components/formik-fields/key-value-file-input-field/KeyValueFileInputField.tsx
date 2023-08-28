@@ -6,6 +6,7 @@ import { FieldArray, FormikValues, useField, useFormikContext } from 'formik';
 import { get, uniqueId } from 'lodash-es';
 import { FieldProps } from '../field-types';
 import { getFieldId } from '../field-utils';
+import FieldHelperText from '../FieldHelperText';
 import FileUploadField from '../FileUploadField';
 import InputField from '../InputField';
 
@@ -45,7 +46,8 @@ const KeyValueFileInputField: React.FC<KeyValueEntryFormProps & FieldProps> = ({
       key={`${name}-${uniqId}`}
       name={name}
       render={(arrayHelpers) => (
-        <FormGroup fieldId={fieldId} label={label} helperText={helpText} isHelperTextBeforeField>
+        <FormGroup fieldId={fieldId} label={label}>
+          <FieldHelperText helpText={helpText} />
           {fieldValues?.map((v, idx) => {
             return (
               <Flex
@@ -90,9 +92,16 @@ const KeyValueFileInputField: React.FC<KeyValueEntryFormProps & FieldProps> = ({
                     label="Value"
                     name={`${name}.${idx.toString()}.value`}
                     filenamePlaceholder="Drag a file here or upload one"
-                    onChange={(data: string) => {
+                    onDataChange={(ev, data: string) => {
                       setFieldValue(`${name}.${idx.toString()}.value`, data);
                       onChange && onChange(data, `${name}.${idx.toString()}.value`);
+                    }}
+                    onTextChange={(ev, text: string) => {
+                      setFieldValue(`${name}.${idx.toString()}.value`, text);
+                      onChange && onChange(text, `${name}.${idx.toString()}.value`);
+                    }}
+                    onClearClick={() => {
+                      setFieldValue(`${name}.${idx.toString()}.value`, '');
                     }}
                     browseButtonText="Upload"
                   />

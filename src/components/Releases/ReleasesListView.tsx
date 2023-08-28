@@ -12,6 +12,7 @@ import {
   InputGroup,
   Button,
   TextInput,
+  InputGroupItem,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useApplicationReleases } from '../../hooks/useApplicationReleases';
@@ -50,27 +51,31 @@ const ReleasesListView: React.FC<ReleasesListViewProps> = ({ applicationName }) 
 
   return (
     <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light} isFilled>
-      <Title size="lg" headingLevel="h3" className="pf-c-title pf-u-mt-lg pf-u-mb-sm">
+      <Title size="lg" headingLevel="h3" className="pf-v5-c-title pf-v5-u-mt-lg pf-v5-u-mb-sm">
         Releases
       </Title>
       <>
         <Toolbar data-testid="release-list-toolbar" clearAllFilters={onClearFilters}>
           <ToolbarContent>
-            <ToolbarGroup alignment={{ default: 'alignLeft' }}>
+            <ToolbarGroup align={{ default: 'alignLeft' }}>
               <ToolbarItem>
                 <InputGroup>
-                  <Button variant="control">
-                    <FilterIcon /> Name
-                  </Button>
-                  <TextInput
-                    name="nameInput"
-                    data-test="name-input-filter"
-                    type="search"
-                    aria-label="name filter"
-                    placeholder="Filter by name..."
-                    onChange={setNameFilter}
-                    value={nameFilter}
-                  />
+                  <InputGroupItem>
+                    <Button variant="control">
+                      <FilterIcon /> Name
+                    </Button>
+                  </InputGroupItem>
+                  <InputGroupItem isFill>
+                    <TextInput
+                      name="nameInput"
+                      data-test="name-input-filter"
+                      type="search"
+                      aria-label="name filter"
+                      placeholder="Filter by name..."
+                      onChange={(ev, value) => setNameFilter(value)}
+                      value={nameFilter}
+                    />
+                  </InputGroupItem>
                 </InputGroup>
               </ToolbarItem>
             </ToolbarGroup>

@@ -95,7 +95,7 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
       content: {
         visualization: (
           <div
-            className="pf-u-display-flex pf-u-justify-content-center"
+            className="pf-v5-u-display-flex pf-v5-u-justify-content-center"
             data-test="onboarding-modal--level1viz"
           >
             <img src={ecUrl} alt="Enterprise Contracts" />
@@ -146,7 +146,7 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
       },
       content: {
         visualization: (
-          <div className="pf-u-display-flex pf-u-justify-content-center">
+          <div className="pf-v5-u-display-flex pf-v5-u-justify-content-center">
             <img src={itUrl} alt="Integration tests" />
           </div>
         ),
@@ -176,18 +176,18 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
   const headerData = levels[currentLevel].header;
   const header = [
     <>
-      <Title className="pf-u-text-align-center" headingLevel="h2">
+      <Title className="pf-v5-u-text-align-center" headingLevel="h2">
         {headerData.title}
       </Title>
       {headerData.subText && (
-        <Text className="pf-u-text-align-center" component={TextVariants.p}>
+        <Text className="pf-v5-u-text-align-center" component={TextVariants.p}>
           {headerData.subText}
         </Text>
       )}
       {headerData.image?.imgSrc && (
         <div
           className={classnames(
-            'pf-u-display-flex pf-u-justify-content-center pf-u-flex-fill',
+            'pf-v5-u-display-flex pf-v5-u-justify-content-center pf-v5-u-flex-fill',
             imgClassName,
           )}
         >
@@ -202,22 +202,29 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
   const content = (
     <React.Fragment>
       {contentData.visualization && (
-        <section className="pf-c-tab-content pf-m-light-300 pf-u-m-xl pf-u-p-xl" role="tabpanel">
-          <div className="pf-c-tab-content__body">{contentData.visualization}</div>
+        <section
+          className="pf-v5-c-tab-content pf-m-light-300 pf-v5-u-m-xl pf-v5-u-p-xl"
+          role="tabpanel"
+        >
+          <div className="pf-v5-c-tab-content__body">{contentData.visualization}</div>
         </section>
       )}
       {contentData.sectionHeading && (
-        <Text className="pf-u-mt-md pf-u-mb-lg" key="heading-text" component={TextVariants.h3}>
+        <Text
+          className="pf-v5-u-mt-md pf-v5-u-mb-lg"
+          key="heading-text"
+          component={TextVariants.h3}
+        >
           <b>{contentData.sectionHeading}</b>
         </Text>
       )}
       {contentData.text.map((line) => (
-        <Text component={TextVariants.p} key={line.key} className="pf-u-mt-sm">
+        <Text component={TextVariants.p} key={line.key} className="pf-v5-u-mt-sm">
           {line.jsx}
         </Text>
       ))}
       {prefooterData && (
-        <div className="pf-u-mt-xl pf-u-mb-md pf-u-text-align-left">{prefooterData}</div>
+        <div className="pf-v5-u-mt-xl pf-v5-u-mb-md pf-v5-u-text-align-left">{prefooterData}</div>
       )}
     </React.Fragment>
   );
@@ -225,7 +232,7 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
   const footerData = levels[currentLevel].footerButton;
   const footer = [
     <>
-      <div className="pf-u-display-flex pf-u-justify-content-center pf-u-flex-fill">
+      <div className="pf-v5-u-display-flex pf-v5-u-justify-content-center pf-v5-u-flex-fill">
         <Button aria-label="get started" onClick={() => footerData.cta()}>
           {footerData.title}
         </Button>
@@ -244,7 +251,7 @@ export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
       showClose={false}
       data-test="getting-started-modal"
     >
-      <div className="pf-u-text-align-center">{content}</div>
+      <div className="pf-v5-u-text-align-center">{content}</div>
     </Modal>
   );
 };

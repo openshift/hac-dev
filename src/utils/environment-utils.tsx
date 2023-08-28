@@ -140,7 +140,7 @@ export const ApplicationEnvironmentStatus: React.FC<{
   return (
     <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsMd' }}>
       <FlexItem>
-        <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
+        <Text component={TextVariants.small} style={{ color: 'var(--pf-v5-global--Color--200)' }}>
           {getGitOpsDeploymentHealthStatusIcon(environment.healthStatus)} Application{' '}
           {environment.healthStatus}
         </Text>
@@ -150,7 +150,7 @@ export const ApplicationEnvironmentStatus: React.FC<{
           <Text component={TextVariants.small}>
             <b>Last Deploy:</b>
           </Text>
-          <Text component={TextVariants.small} style={{ color: 'var(--pf-global--Color--200)' }}>
+          <Text component={TextVariants.small} style={{ color: 'var(--pf-v5-global--Color--200)' }}>
             <Timestamp timestamp={environment.lastDeploy} simple />
           </Text>
         </Flex>

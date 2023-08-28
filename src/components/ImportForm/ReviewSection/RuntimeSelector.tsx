@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Badge, DropdownToggle, Spinner } from '@patternfly/react-core';
+import { Badge, Spinner } from '@patternfly/react-core';
+import { DropdownToggle } from '@patternfly/react-core/deprecated';
 import { DockerIcon } from '@patternfly/react-icons/dist/esm/icons/docker-icon';
 import { ImageIcon } from '@patternfly/react-icons/dist/esm/icons/image-icon';
 import { useFormikContext } from 'formik';
@@ -110,9 +111,8 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
       const toggleIcon = isDetectingRuntime ? (
         <Spinner
           size="md"
-          isSVG
           aria-label="detecting runtime"
-          style={{ marginRight: 'var(--pf-global--spacer--xs)' }}
+          style={{ marginRight: 'var(--pf-v5-global--spacer--xs)' }}
         />
       ) : React.isValidElement(selectedRuntime?.icon) ? (
         selectedRuntime?.icon

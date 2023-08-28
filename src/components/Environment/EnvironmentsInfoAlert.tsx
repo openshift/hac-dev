@@ -12,8 +12,8 @@ const EnvironmentsInfoAlert: React.FC = () => {
     <Alert
       isInline
       data-testid="env-info-alert"
-      className="pf-u-mt-md"
-      variant="default"
+      className="pf-v5-u-mt-md"
+      variant="custom"
       title="Must have available cluster"
       actionClose={
         <AlertActionCloseButton

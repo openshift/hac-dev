@@ -1,10 +1,12 @@
 import React from 'react';
-import { FormGroup, Select, SelectVariant, SelectOption } from '@patternfly/react-core';
+import { FormGroup } from '@patternfly/react-core';
+import { Select, SelectVariant, SelectOption } from '@patternfly/react-core/deprecated';
 import { useField, useFormikContext, FormikValues } from 'formik';
 import { pull } from 'lodash-es';
 import { useDeepCompareMemoize } from '../../hooks';
 import { SelectInputFieldProps, SelectInputOption } from './field-types';
 import { getFieldId } from './field-utils';
+import FieldHelperText from './FieldHelperText';
 
 const SelectInputField: React.FC<SelectInputFieldProps> = ({
   name,
@@ -73,14 +75,7 @@ const SelectInputField: React.FC<SelectInputFieldProps> = ({
   };
 
   return (
-    <FormGroup
-      fieldId={fieldId}
-      validated={isValid ? 'default' : 'error'}
-      label={label}
-      helperText={helpText}
-      helperTextInvalid={errorMessage}
-      isRequired={required}
-    >
+    <FormGroup fieldId={fieldId} label={label} isRequired={required}>
       <Select
         {...restProps}
         name={name}
@@ -100,6 +95,7 @@ const SelectInputField: React.FC<SelectInputFieldProps> = ({
           <SelectOption value={op.value} isDisabled={op.disabled} key={op.value} />
         ))}
       </Select>
+      <FieldHelperText isValid={isValid} errorMessage={errorMessage} helpText={helpText} />
     </FormGroup>
   );
 };

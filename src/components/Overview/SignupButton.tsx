@@ -33,7 +33,7 @@ const SignupButton: React.FC = () => {
             isLoading={isSubmitting}
             isDisabled={isSubmitting}
             style={{ width: 'fit-content' }}
-            isLarge
+            size="lg"
           >
             Join the waitlist
           </Button>

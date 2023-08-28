@@ -94,7 +94,7 @@ const TextColumnItemContent: React.FC<TextColumntItemContentProps> = ({
     <div ref={previewDropRef} style={{ opacity }}>
       <Flex
         alignItems={{ default: 'alignItemsFlexStart' }}
-        style={{ marginBottom: 'var(--pf-global--spacer--sm)' }}
+        style={{ marginBottom: 'var(--pf-v5-global--spacer--sm)' }}
       >
         {dndEnabled && (
           <FlexItem style={{ cursor: 'move' }}>
@@ -110,7 +110,7 @@ const TextColumnItemContent: React.FC<TextColumntItemContentProps> = ({
           )}
         </FlexItem>
         {
-          <FlexItem style={{ minWidth: 'var(--pf-global--spacer--2xl)' }}>
+          <FlexItem style={{ minWidth: 'var(--pf-v5-global--spacer--2xl)' }}>
             {!isReadOnly && removeButton}
           </FlexItem>
         }

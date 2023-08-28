@@ -1,11 +1,11 @@
 .workflow-graph {
   display: inline-block;
-  background: var(--pf-global--BackgroundColor--200);
+  background: var(--pf-v5-global--BackgroundColor--200);
   border-radius: 20px;
-  font-size: var(--pf-global--FontSize--xs);
+  font-size: var(--pf-v5-global--FontSize--xs);
   width: 100%;
   overflow: auto;
   .pf-topology-pipelines__pill-status {
-    font-size: var(--pf-global--FontSize--md);
+    font-size: var(--pf-v5-global--FontSize--md);
   }
 }

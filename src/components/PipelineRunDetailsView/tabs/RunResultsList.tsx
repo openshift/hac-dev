@@ -10,7 +10,7 @@ import {
   EmptyStateVariant,
 } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
-import { TableComposable, Thead, Tbody, Th, Td, Tr } from '@patternfly/react-table';
+import { Table /* data-codemods */, Thead, Tbody, Th, Td, Tr } from '@patternfly/react-table';
 import { TektonResultsRun } from '../../../types';
 import { handleURLs } from '../../../utils/render-utils';
 
@@ -34,7 +34,7 @@ const RunResultsList: React.FC<Props> = ({ results, status, compressed }) => (
       <DescriptionListTerm>Results</DescriptionListTerm>
       <DescriptionListDescription>
         {status !== 'Failed' ? (
-          <TableComposable aria-label="results">
+          <Table aria-label="results">
             <Thead>
               <Tr>
                 <Th>Name</Th>
@@ -49,7 +49,7 @@ const RunResultsList: React.FC<Props> = ({ results, status, compressed }) => (
                 </Tr>
               ))}
             </Tbody>
-          </TableComposable>
+          </Table>
         ) : (
           <Bullseye>
             <EmptyState variant={EmptyStateVariant.full}>

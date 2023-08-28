@@ -73,7 +73,7 @@ const IntegrationTestSidePanel: React.FC<IntegrationTestSidePanelBodyProps> = ({
             )}
             <StatusIconWithTextLabel status={workflowNode.getData().status} />
           </span>
-          <span className="pf-u-mt-xs commit-side-panel__subtext">
+          <span className="pf-v5-u-mt-xs commit-side-panel__subtext">
             <img src={PipelineIcon} alt="pipeline run" /> Integration test
           </span>
           <DrawerActions>
@@ -111,7 +111,7 @@ const IntegrationTestSidePanel: React.FC<IntegrationTestSidePanelBodyProps> = ({
             </DescriptionListGroup>
           </DescriptionList>
           <DescriptionList
-            className="pf-u-mt-lg"
+            className="pf-v5-u-mt-lg"
             data-test="pipeline-run-details"
             columnModifier={{
               default: '1Col',
@@ -145,7 +145,7 @@ const IntegrationTestSidePanel: React.FC<IntegrationTestSidePanelBodyProps> = ({
           </DescriptionList>
           {Object.keys(pipelineRunFailed).length > 0 && (
             <DescriptionList
-              className="pf-u-mt-lg"
+              className="pf-v5-u-mt-lg"
               data-test="pipeline-run-details"
               columnModifier={{
                 default: '1Col',

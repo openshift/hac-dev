@@ -33,7 +33,7 @@ const ComponentLoadingState: React.FC = () => {
       <Bullseye>
         <Card isRounded isCompact>
           <CardBody>
-            <Bullseye style={{ marginBottom: 'var(--pf-global--spacer--md)' }}>
+            <Bullseye style={{ marginBottom: 'var(--pf-v5-global--spacer--md)' }}>
               <Spinner size="lg" />
             </Bullseye>
             <HelperText>
@@ -191,7 +191,7 @@ const ReviewSection: React.FunctionComponent = () => {
       <Flex direction={{ default: 'column', lg: 'row' }}>
         <Flex flex={{ default: 'flex_1' }} direction={{ default: 'column' }}>
           <FlexItem>
-            <Title size="md" headingLevel="h4" className="pf-u-mt-lg pf-u-mb-lg">
+            <Title size="md" headingLevel="h4" className="pf-v5-u-mt-lg pf-v5-u-mb-lg">
               Application details
             </Title>
           </FlexItem>
@@ -218,7 +218,7 @@ const ReviewSection: React.FunctionComponent = () => {
                 )}
               </Label>
             </Title>
-            <HelperText className="pf-u-mb-sm">
+            <HelperText className="pf-v5-u-mb-sm">
               <HelperTextItem>
                 A component is an image built from source code in a repository. One or more
                 components that run together form an application.

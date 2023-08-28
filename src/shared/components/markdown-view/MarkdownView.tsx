@@ -172,7 +172,7 @@ const IFrameMarkdownView: React.FC<InnerSyncMarkdownProps> = ({
   body {
     background-color: transparent !important;
     color: ${isEmpty ? '#999' : '#333'};
-    font-family: var(--pf-global--FontFamily--sans-serif);
+    font-family: var(--pf-v5-global--FontFamily--sans-serif);
     min-width: auto !important;
   }
   table {

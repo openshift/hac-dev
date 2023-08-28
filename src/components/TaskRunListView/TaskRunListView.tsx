@@ -65,8 +65,8 @@ const TaskRunListView: React.FC<Props> = ({ taskRuns, loaded }) => {
     <>
       <Toolbar data-test="taskrun-list-toolbar" clearAllFilters={onClearFilters}>
         <ToolbarContent>
-          <ToolbarGroup alignment={{ default: 'alignLeft' }}>
-            <ToolbarItem className="pf-u-ml-0">
+          <ToolbarGroup align={{ default: 'alignLeft' }}>
+            <ToolbarItem className="pf-v5-u-ml-0">
               <SearchInput
                 name="nameInput"
                 data-test="name-input-filter"

@@ -18,7 +18,7 @@ export const EnvConnectionStatus: React.FC<EnvConnStatusProps> = ({ environment 
 
   const label = (
     <Label
-      className="pf-u-font-weight-normal"
+      className="pf-v5-u-font-weight-normal"
       color={envStatus.status === 'True' ? 'green' : 'red'}
       icon={envStatus.status === 'True' ? <CheckIcon /> : <ExclamationCircleIcon />}
     >

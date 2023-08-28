@@ -48,7 +48,7 @@ const GitImportActions: React.FunctionComponent<GitImportActionsProps> = ({
       hasShadowTop={sticky}
     >
       <Bullseye>
-        <ActionList className="pf-u-pb-lg">
+        <ActionList className="pf-v5-u-pb-lg">
           <ActionListItem>
             <Button
               type="submit"

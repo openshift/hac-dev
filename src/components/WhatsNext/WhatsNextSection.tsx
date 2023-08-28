@@ -37,7 +37,7 @@ type WhatsNextSectionProps = {
 const WhatsNextSection: React.FunctionComponent<WhatsNextSectionProps> = ({ whatsNextItems }) => {
   return (
     <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light} isFilled>
-      <Title size="lg" headingLevel="h3" className="pf-u-mt-lg pf-u-mb-sm">
+      <Title size="lg" headingLevel="h3" className="pf-v5-u-mt-lg pf-v5-u-mb-sm">
         What&apos;s next?
       </Title>
       {whatsNextItems.map((item) => (

@@ -55,7 +55,7 @@ const ApplicationListView: React.FC = () => {
     <>
       {!hacbs && applications.length === 0 && (
         <GettingStartedCard
-          imgClassName="pf-u-px-2xl-on-xl"
+          imgClassName="pf-v5-u-px-2xl-on-xl"
           localStorageKey={GETTING_STARTED_CARD_KEY}
           title="Create and manage your applications"
           imgSrc={imageUrl}
@@ -77,7 +77,7 @@ const ApplicationListView: React.FC = () => {
         >
           {!applications || applications.length === 0 ? (
             <AppEmptyState
-              className="pf-u-mx-lg"
+              className="pf-v5-u-mx-lg"
               isXl
               emptyStateImg={emptyStateImgUrl}
               title="Easily onboard your applications"

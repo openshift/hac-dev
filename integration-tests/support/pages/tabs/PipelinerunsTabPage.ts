@@ -79,7 +79,7 @@ export class DetailsTab {
   }
 
   static checkNodeDrawerPanelResult(section: string, value: string) {
-    cy.contains(pipelinerunsTabPO.PF4TableRow, section)
+    cy.contains(pipelinerunsTabPO.PF5TableRow, section)
       .contains(value)
       .scrollIntoView()
       .should('be.visible');

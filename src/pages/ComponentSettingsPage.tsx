@@ -4,8 +4,9 @@ import {
   EmptyState,
   EmptyStateVariant,
   EmptyStateIcon,
-  Title,
   Button,
+  EmptyStateHeader,
+  EmptyStateFooter,
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import ComponentSettingsView from '../components/ComponentSettingsForm/ComponentSettingsView';
@@ -31,14 +32,17 @@ const ComponentSettingsPage: React.FunctionComponent = () => {
       title="Component settings"
       description="View and edit component settings. Updates will take effect when the component is redeployed."
     >
-      <EmptyState variant={EmptyStateVariant.large}>
-        <EmptyStateIcon icon={CubesIcon} />
-        <Title headingLevel="h4" size="lg">
-          No component specified
-        </Title>
-        <Button variant="primary" onClick={() => navigate(-1)}>
-          Go back
-        </Button>
+      <EmptyState variant={EmptyStateVariant.lg}>
+        <EmptyStateHeader
+          titleText="No component specified"
+          icon={<EmptyStateIcon icon={CubesIcon} />}
+          headingLevel="h4"
+        />
+        <EmptyStateFooter>
+          <Button variant="primary" onClick={() => navigate(-1)}>
+            Go back
+          </Button>
+        </EmptyStateFooter>
       </EmptyState>
     </PageLayout>
   );

@@ -73,11 +73,10 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
       }) => {
         const input = values.resourceName;
         const isValid = input === resourceName;
-        const helpText = (
-          <FormHelperText className="pf-m-warning" isHidden={!(touched && !input)}>
-            {obj.kind} name missing
-          </FormHelperText>
-        );
+        const helpText =
+          touched && !input ? (
+            <FormHelperText className="pf-m-warning">{obj.kind} name missing</FormHelperText>
+          ) : undefined;
         const validatedState = touched
           ? !input
             ? ValidatedOptions.warning

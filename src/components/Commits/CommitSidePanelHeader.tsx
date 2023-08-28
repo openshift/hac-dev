@@ -1,13 +1,6 @@
 import * as React from 'react';
-import {
-  Button,
-  ButtonVariant,
-  DrawerActions,
-  DrawerCloseButton,
-  Dropdown,
-  DropdownItem,
-  DropdownToggle,
-} from '@patternfly/react-core';
+import { Button, ButtonVariant, DrawerActions, DrawerCloseButton } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, DropdownToggle } from '@patternfly/react-core/deprecated';
 import AngleDownIcon from '@patternfly/react-icons/dist/js/icons/angle-down-icon';
 import AngleUpIcon from '@patternfly/react-icons/dist/js/icons/angle-up-icon';
 import { PipelineRunKind } from '../../types';
@@ -64,7 +57,10 @@ const CommitSidePanelHeader: React.FC<CommitSidePanelHeaderProps> = ({
         <Dropdown
           onSelect={onSelect}
           toggle={
-            <DropdownToggle id="toggle-basic" onToggle={onToggle}>
+            <DropdownToggle
+              id="toggle-basic"
+              onToggle={(_event, isDropdownOpen: boolean) => onToggle(isDropdownOpen)}
+            >
               {currentStatus}
             </DropdownToggle>
           }
@@ -72,13 +68,13 @@ const CommitSidePanelHeader: React.FC<CommitSidePanelHeaderProps> = ({
           dropdownItems={dropdownItems}
         />
         {sortedPLRList[currentStatus]?.length > 0 && (
-          <span className="pf-u-ml-xs pf-u-mr-xs" data-test="plr-count">
+          <span className="pf-v5-u-ml-xs pf-v5-u-mr-xs" data-test="plr-count">
             {`${currentIndex + 1}/${sortedPLRList[currentStatus].length}`}
           </span>
         )}
         <Button
           variant={ButtonVariant.control}
-          className="pf-u-p-sm"
+          className="pf-v5-u-p-sm"
           isDisabled={
             sortedPLRList[currentStatus]
               ? currentIndex >= sortedPLRList[currentStatus].length - 1
@@ -91,7 +87,7 @@ const CommitSidePanelHeader: React.FC<CommitSidePanelHeaderProps> = ({
         </Button>
         <Button
           variant={ButtonVariant.control}
-          className="pf-u-p-sm"
+          className="pf-v5-u-p-sm"
           isDisabled={currentIndex < 1}
           onClick={previousTask}
           data-test="previous-plr-button"

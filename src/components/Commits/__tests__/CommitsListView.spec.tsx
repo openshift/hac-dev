@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { Table as PfTable, TableHeader } from '@patternfly/react-table';
+import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useTRPipelineRuns } from '../../../hooks/useTektonResults';

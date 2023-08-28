@@ -7,7 +7,7 @@ export const addComponentPagePO = {
   contextDir: '[data-test="context-dir"]',
   next: 'button[type=submit]',
   cancel: 'button[type=reset]',
-  componentCard: '[data-ouia-component-type="PF4/Card"]',
+  componentCard: '[data-ouia-component-type="PF5/Card"]',
   toggleButton: '[id^="toggle"]',
   username: '[data-testid="auth-username"]',
   token: '[data-testid="auth-token"]',
@@ -52,9 +52,9 @@ export const ComponentsPagePO = {
   loading: '[data-test="loading-indicator"]',
   saveButton: '[data-test="submit-button"]',
   editNameInput: '[data-test="editable-label-input"]',
-  customBuildPipelineRadioBtn: '[for*="defaultBuildPipeline"] .pf-c-switch__toggle',
+  customBuildPipelineRadioBtn: '[for*="defaultBuildPipeline"] .pf-v5-c-switch__toggle',
   customBuildRequestedState: '[data-testid="requested-state"]',
-  label: '[class="pf-c-label__content"]',
+  label: '[class="pf-v5-c-label__content"]',
   customBuildPipelineModalCloseBtn: '[data-test="close-button custom-pipeline-modal"]',
 };
 
@@ -70,16 +70,16 @@ export const applicationDetailPagePO = {
 };
 
 export const componentsListPagePO = {
-  addComponent: '[pf-c-button pf-m-primary]',
-  applicationName: 'pf-c-title pf-m-4xl hacDev-page__heading',
-  items: '[pf-c-data-list__item]',
+  addComponent: '[pf-v5-c-button pf-m-primary]',
+  applicationName: 'pf-v5-c-title pf-m-4xl hacDev-page__heading',
+  items: '[pf-v5-c-data-list__item]',
 };
 
 export const buildLogModalContentPO = {
-  modal: 'div[data-ouia-component-type="PF4/ModalContent"]',
+  modal: 'div[data-ouia-component-type="PF5/ModalContent"]',
   closeButton: '[aria-label="Close"]',
   logText: '[class="logs__content"]',
   logsTasklist: 'div[data-testid="logs-tasklist"]',
   failedPipelineRunLogs: 'div[class="pipeline-run-logs"] [class*="pf-m-danger"]',
-  podLogNavList: '[data-ouia-component-type="PF4/Nav"]',
+  podLogNavList: '[data-ouia-component-type="PF5/Nav"]',
 };

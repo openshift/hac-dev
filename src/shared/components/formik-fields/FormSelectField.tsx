@@ -3,6 +3,7 @@ import { FormGroup, FormSelect, FormSelectOption } from '@patternfly/react-core'
 import { useField, useFormikContext, FormikValues } from 'formik';
 import { FormSelectFieldOption, FormSelectFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
+import FieldHelperText from './FieldHelperText';
 
 const FormSelectField: React.FC<FormSelectFieldProps> = ({
   label,
@@ -30,19 +31,12 @@ const FormSelectField: React.FC<FormSelectFieldProps> = ({
     : field.value;
 
   return (
-    <FormGroup
-      fieldId={fieldId}
-      label={label}
-      helperText={helpText}
-      helperTextInvalid={errorMessage}
-      validated={isValid ? 'default' : 'error'}
-      isRequired={required}
-    >
+    <FormGroup fieldId={fieldId} label={label} isRequired={required}>
       <FormSelect
         {...props}
         id={fieldId}
         aria-describedby={helpText ? `${fieldId}-helper` : undefined}
-        onChange={(value: any) => {
+        onChange={(_event, value: any) => {
           props.onChange && props.onChange(value);
           // Validation is automatically done by the useFormikValidationFix above
           setFieldValue(props.name, value, false);
@@ -54,6 +48,7 @@ const FormSelectField: React.FC<FormSelectFieldProps> = ({
           <FormSelectOption {...option} key={option.label} />
         ))}
       </FormSelect>
+      <FieldHelperText isValid={isValid} errorMessage={errorMessage} helpText={helpText} />
     </FormGroup>
   );
 };

@@ -128,7 +128,7 @@ describe('ComponentListViewPage', () => {
     render(<ComponentListView applicationName="test-app" />);
     expect(screen.getByTestId('component-list-toolbar')).toBeInTheDocument();
     const nameSearchInput = screen.getByTestId('name-input-filter');
-    const searchInput = nameSearchInput.querySelector('.pf-c-text-input-group__text-input');
+    const searchInput = nameSearchInput.querySelector('.pf-v5-c-text-input-group__text-input');
     fireEvent.change(searchInput, { target: { value: 'nodejs' } });
     const componentList = screen.getByTestId('component-list');
     const componentListItems = within(componentList).getAllByTestId('component-list-item');
@@ -215,7 +215,7 @@ describe('ComponentListViewPage', () => {
     expect(screen.getAllByTestId('component-list-item')).toHaveLength(2);
 
     const nameSearchInput = screen.getByTestId('name-input-filter');
-    const textFilterInput = nameSearchInput.querySelector('.pf-c-text-input-group__text-input');
+    const textFilterInput = nameSearchInput.querySelector('.pf-v5-c-text-input-group__text-input');
     fireEvent.change(textFilterInput, { target: { value: 'no match' } });
 
     expect(screen.queryAllByTestId('component-list-item')).toHaveLength(0);

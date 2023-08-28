@@ -4,6 +4,7 @@ import { useField, useFormikContext, FormikValues } from 'formik';
 import { RequestSizeInput } from '../../utils';
 import { ResourceLimitFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
+import FieldHelperText from './FieldHelperText';
 
 const ResourceLimitField: React.FC<ResourceLimitFieldProps> = ({
   label,
@@ -25,9 +26,6 @@ const ResourceLimitField: React.FC<ResourceLimitFieldProps> = ({
       fieldId={fieldId}
       data-test="resource-limit-field"
       label={label}
-      helperText={helpText}
-      helperTextInvalid={errorMessage}
-      validated={isValid ? 'default' : 'error'}
       isRequired={props.required}
     >
       <RequestSizeInput
@@ -42,6 +40,7 @@ const ResourceLimitField: React.FC<ResourceLimitFieldProps> = ({
         defaultRequestSizeValue={field.value}
         describedBy={`${fieldId}-helper`}
       />
+      <FieldHelperText isValid={isValid} errorMessage={errorMessage} helpText={helpText} />
     </FormGroup>
   );
 };

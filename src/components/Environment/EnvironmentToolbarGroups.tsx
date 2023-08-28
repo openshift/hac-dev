@@ -1,13 +1,11 @@
 import * as React from 'react';
+import { ToolbarChip, ToolbarFilter, ToolbarGroup } from '@patternfly/react-core';
 import {
   Select,
   SelectGroup,
   SelectOption,
   SelectVariant,
-  ToolbarChip,
-  ToolbarFilter,
-  ToolbarGroup,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { EnvironmentKind } from '../../types';
 import { GitOpsDeploymentHealthStatus } from '../../types/gitops-deployment';
@@ -124,7 +122,7 @@ const EnvironmentToolbarGroups: React.FC<EnvironmentToolbarGroupsProps> = ({
           toggleIcon={<FilterIcon />}
           variant={SelectVariant.checkbox}
           toggleAriaLabel="filter menu"
-          onToggle={setFilterIsExpanded}
+          onToggle={(ev, expanded) => setFilterIsExpanded(expanded)}
           onSelect={onSelect}
           selections={currentFilters}
           isOpen={filterIsExpanded}

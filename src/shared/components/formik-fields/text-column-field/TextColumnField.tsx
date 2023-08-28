@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, HelperText, HelperTextItem, ValidatedOptions } from '@patternfly/react-core';
+import { FormGroup, HelperText, HelperTextItem } from '@patternfly/react-core';
 import { FieldArray, useField } from 'formik';
 import DragAndDrop from '../../drag-drop/DragAndDrop';
 import { getFieldId } from '../field-utils';
@@ -21,10 +21,9 @@ const TextColumnField: React.FC<TextColumnFieldProps> = (props) => {
     dndEnabled = false,
     noFooter = false,
   } = props;
-  const [field, { touched, error }] = useField<string[]>(name);
+  const [field] = useField<string[]>(name);
   const rowValues = field.value || [];
   const fieldId = getFieldId(name, 'single-column');
-  const isValid = !(touched && error);
   const getTextColumnKey = (index: number) => index.toString();
 
   return (
@@ -35,7 +34,6 @@ const TextColumnField: React.FC<TextColumnFieldProps> = (props) => {
           <FormGroup
             fieldId={fieldId}
             label={label}
-            validated={isValid ? ValidatedOptions.default : ValidatedOptions.error}
             isRequired={required}
             data-test={props['data-test'] || 'text-column-field'}
           >

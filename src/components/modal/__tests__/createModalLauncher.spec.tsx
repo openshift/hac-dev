@@ -25,8 +25,8 @@ describe('createModalLauncher', () => {
 
     expect(props.modalProps.isOpen).toBe(true);
     expect(props.modalProps['data-testid']).toBe('test');
-    props.onClose('foo');
-    expect(onClose).toBeCalledWith('foo');
+    props.onClose();
+    expect(onClose).toHaveBeenCalled();
     expect(onCloseCP).toBeCalled();
   });
 
@@ -55,7 +55,7 @@ describe('createModalLauncher', () => {
     expect(result.queryByRole('dialog')).toBeInTheDocument();
 
     props.onClose('foo');
-    expect(onClose).toBeCalledWith('foo');
+    expect(onClose).toHaveBeenCalled();
     expect(onCloseCP).toBeCalled();
   });
 });

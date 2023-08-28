@@ -56,7 +56,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       </PageGroup>
       {children}
       {footer && (
-        <PageSection variant={PageSectionVariants.light} isFilled={false} sticky="bottom">
+        <PageSection variant={PageSectionVariants.light} isFilled={false}>
           {footer}
         </PageSection>
       )}

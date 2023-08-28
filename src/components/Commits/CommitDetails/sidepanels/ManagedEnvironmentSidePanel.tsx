@@ -38,7 +38,7 @@ const ManagedEnvironmentSidePanel: React.FC<ManagedEnvironmentSidePanelBodyProps
             {workflowNode ? workflowNode.getLabel() : 'Managed environment'}
             {managedEnv ? <StatusIconWithTextLabel status={workflowNode.getData().status} /> : null}
           </span>
-          <span className="pf-u-mt-xs commit-side-panel__subtext">
+          <span className="pf-v5-u-mt-xs commit-side-panel__subtext">
             <ServerIcon /> Environment
           </span>
           <DrawerActions>

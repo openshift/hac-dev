@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyStateBody, EmptyStateSecondaryActions } from '@patternfly/react-core';
+import { EmptyStateBody, EmptyStateActions } from '@patternfly/react-core';
 import emptyStateImgUrl from '../../imgs/Commit.svg';
 import { ComponentModel } from '../../models';
 import { useAccessReviewForModel } from '../../utils/rbac';
@@ -27,7 +27,7 @@ const CommitsEmptyState: React.FC<CommitsEmptyStateProps> = ({ applicationName }
         <br />
         To get started, add a component and merge its pull request for a build pipeline.
       </EmptyStateBody>
-      <EmptyStateSecondaryActions>
+      <EmptyStateActions>
         <ButtonWithAccessTooltip
           component={(props) => (
             <Link
@@ -47,7 +47,7 @@ const CommitsEmptyState: React.FC<CommitsEmptyStateProps> = ({ applicationName }
         >
           Add component
         </ButtonWithAccessTooltip>
-      </EmptyStateSecondaryActions>
+      </EmptyStateActions>
     </AppEmptyState>
   );
 };

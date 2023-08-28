@@ -132,7 +132,7 @@ describe('ApplicationDetails', () => {
     routerRenderer(<ApplicationDetails applicationName="test" />);
     const appDetails = screen.getByTestId('details');
     const activeTab = appDetails.querySelector(
-      '.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text',
+      '.pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__item-text',
     );
     expect(activeTab).toHaveTextContent('Overview');
   });
@@ -140,35 +140,45 @@ describe('ApplicationDetails', () => {
     useParamsMock.mockReturnValue({ activeTab: 'overview' });
     let detailsPage = routerRenderer(<ApplicationDetails applicationName="test" />);
     let appDetails = screen.getByTestId('details');
-    let activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    let activeTab = appDetails.querySelector(
+      '.pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__item-text',
+    );
     expect(activeTab).toHaveTextContent('Overview');
     detailsPage.unmount();
 
     useParamsMock.mockReturnValue({ activeTab: 'activity', activity: 'latest-commits' });
     detailsPage = routerRenderer(<ApplicationDetails applicationName="test" />);
     appDetails = detailsPage.getByTestId('details');
-    activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    activeTab = appDetails.querySelector(
+      '.pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__item-text',
+    );
     expect(activeTab).toHaveTextContent('Activity');
     detailsPage.unmount();
 
     useParamsMock.mockReturnValue({ activeTab: 'components' });
     detailsPage = routerRenderer(<ApplicationDetails applicationName="test" />);
     appDetails = screen.getByTestId('details');
-    activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    activeTab = appDetails.querySelector(
+      '.pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__item-text',
+    );
     expect(activeTab).toHaveTextContent('Components');
     detailsPage.unmount();
 
     useParamsMock.mockReturnValue({ activeTab: 'integrationtests' });
     detailsPage = routerRenderer(<ApplicationDetails applicationName="test" />);
     appDetails = screen.getByTestId('details');
-    activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    activeTab = appDetails.querySelector(
+      '.pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__item-text',
+    );
     expect(activeTab).toHaveTextContent('Integration tests');
     detailsPage.unmount();
 
     useParamsMock.mockReturnValue({ activeTab: 'deployments' });
     routerRenderer(<ApplicationDetails applicationName="test" />);
     appDetails = screen.getByTestId('details');
-    activeTab = appDetails.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    activeTab = appDetails.querySelector(
+      '.pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__item-text',
+    );
     expect(activeTab).toHaveTextContent('Deployments');
   });
 

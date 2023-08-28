@@ -25,7 +25,7 @@ export enum AccessHelpText {
 type SourceSectionProps = {};
 
 const SourceSection: React.FC<SourceSectionProps> = () => {
-  const [, { value: source, touched, error }] = useField<string>({
+  const [, { value: source }] = useField<string>({
     name: 'source.git.url',
     type: 'input',
   });
@@ -47,7 +47,6 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
   const [showGitOptions, setShowGitOptions] = React.useState(isValidated);
 
   const fieldId = getFieldId('source.git.url', 'input');
-  const isValid = !(touched && error);
   const label = 'Git repository URL';
 
   const [{ isGit, isRepoAccessible, serviceProvider }, accessCheckLoaded] = useAccessCheck(
@@ -161,13 +160,8 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
   return (
     <Bullseye>
       <HeadTitle>Import - Add components | {FULL_APPLICATION_TITLE}</HeadTitle>
-      <FormSection className="source-section pf-u-min-width">
-        <FormGroup
-          fieldId={fieldId}
-          label={label}
-          validated={!isValid && ValidatedOptions.error}
-          isRequired
-        >
+      <FormSection className="source-section pf-v5-u-min-width">
+        <FormGroup fieldId={fieldId} label={label} isRequired>
           <InputField
             name="source.git.url"
             placeholder="Enter your source"

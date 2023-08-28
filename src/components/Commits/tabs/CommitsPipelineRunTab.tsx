@@ -29,7 +29,7 @@ const CommitsPipelineRunTab: React.FC<CommitsPipelineRunTabProps> = ({
 
   return (
     <>
-      <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg">
+      <Title headingLevel="h4" className="pf-v5-c-title pf-v5-u-mt-lg pf-v5-u-mb-lg">
         Pipeline runs
       </Title>
       <Table

@@ -61,14 +61,14 @@ describe('Activity Tab', () => {
     useParamsMock.mockReturnValue({ activeTab: 'activity', activity: 'pipelineruns' });
     let activitiesPage = routerRenderer(<ActivityTab applicationName="abcd" />);
     let tabs = activitiesPage.getByTestId('activities-tabs-id');
-    let activeTab = tabs.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    let activeTab = tabs.querySelector('.pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__item-text');
     expect(activeTab).toHaveTextContent('Pipeline runs');
     activitiesPage.unmount();
 
     useParamsMock.mockReturnValue({ activeTab: 'activity', activity: 'latest-commits' });
     activitiesPage = routerRenderer(<ActivityTab applicationName="abcd" />);
     tabs = activitiesPage.getByTestId('activities-tabs-id');
-    activeTab = tabs.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    activeTab = tabs.querySelector('.pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__item-text');
     expect(activeTab).toHaveTextContent('Latest commits');
     activitiesPage.unmount();
   });
@@ -79,7 +79,9 @@ describe('Activity Tab', () => {
     useParamsMock.mockReturnValue({ activeTab: 'activity', activity: null });
     const activitiesPage = routerRenderer(<ActivityTab applicationName="abcd" />);
     const tabs = activitiesPage.getByTestId('activities-tabs-id');
-    const activeTab = tabs.querySelector('.pf-c-tabs__item.pf-m-current .pf-c-tabs__item-text');
+    const activeTab = tabs.querySelector(
+      '.pf-v5-c-tabs__item.pf-m-current .pf-v5-c-tabs__item-text',
+    );
     expect(activeTab).toHaveTextContent('Pipeline runs');
     activitiesPage.unmount();
   });

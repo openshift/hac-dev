@@ -4,7 +4,9 @@ import classNames from 'classnames';
 import { useField } from 'formik';
 import { RadioGroupFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
+import FieldHelperText from './FieldHelperText';
 import RadioButtonField from './RadioButtonField';
+
 import './RadioGroupField.scss';
 
 const RadioGroupField: React.FC<RadioGroupFieldProps> = ({
@@ -26,9 +28,6 @@ const RadioGroupField: React.FC<RadioGroupFieldProps> = ({
         'radio-group-field--inline': isInline,
       })}
       fieldId={fieldId}
-      helperText={helpText}
-      helperTextInvalid={errorMessage}
-      validated={isValid ? 'default' : 'error'}
       isRequired={required}
       label={label}
       isInline={isInline}
@@ -59,6 +58,7 @@ const RadioGroupField: React.FC<RadioGroupFieldProps> = ({
           </React.Fragment>
         );
       })}
+      <FieldHelperText isValid={isValid} errorMessage={errorMessage} helpText={helpText} />
     </FormGroup>
   );
 };

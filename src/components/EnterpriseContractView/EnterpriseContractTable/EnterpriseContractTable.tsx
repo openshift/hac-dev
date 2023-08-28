@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TableComposable, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
+import { Table /* data-codemods */, Th, Thead, ThProps, Tr } from '@patternfly/react-table';
 import { ENTERPRISE_CONTRACT_STATUS, UIEnterpriseContractData } from '../types';
 import { EnterpriseContractRow } from './EnterpriseContractRow';
 
@@ -67,7 +67,7 @@ export const EnterpriseContractTable: React.FC<EnterpriseContractTableProps> = (
     columnIndex,
   });
   return sortedECResult ? (
-    <TableComposable variant="compact">
+    <Table variant="compact">
       <Thead>
         <Tr>
           <Th width={10} />
@@ -88,6 +88,6 @@ export const EnterpriseContractTable: React.FC<EnterpriseContractTableProps> = (
             return <EnterpriseContractRow rowIndex={i} key={i} data={rule} />;
           })
         : null}
-    </TableComposable>
+    </Table>
   ) : null;
 };

@@ -11,4 +11,4 @@ $screen-md-min: $screen-md !default;
 $screen-sm-max: ($screen-md-min - 1) !default;
 $screen-xs-max: ($screen-sm-min - 1) !default;
 $catalog-tile-width: 260px;
-$color-text-muted: $pf-color-black-600;
+$color-text-muted: var(--pf-v5-global--palette--black-600);

@@ -167,7 +167,7 @@ describe('EnvironmentListView', () => {
     expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
 
     const nameSearchInput = screen.getByTestId('env-name-filter-input');
-    const textFilterInput = nameSearchInput.querySelector('.pf-c-text-input-group__text-input');
+    const textFilterInput = nameSearchInput.querySelector('.pf-v5-c-text-input-group__text-input');
     fireEvent.change(textFilterInput, { target: { value: 'd' } });
     expect(screen.getAllByTestId('environment-card')).toHaveLength(2);
     fireEvent.change(textFilterInput, { target: { value: 'dev' } });
@@ -179,7 +179,7 @@ describe('EnvironmentListView', () => {
     expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
 
     const nameSearchInput = screen.getByTestId('env-name-filter-input');
-    const textFilterInput = nameSearchInput.querySelector('.pf-c-text-input-group__text-input');
+    const textFilterInput = nameSearchInput.querySelector('.pf-v5-c-text-input-group__text-input');
     fireEvent.change(textFilterInput, { target: { value: 'no match' } });
 
     expect(screen.queryAllByTestId('environment-card')).toHaveLength(0);

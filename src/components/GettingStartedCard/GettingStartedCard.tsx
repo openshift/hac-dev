@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   Button,
   Card,
-  CardActions,
   CardBody,
   CardHeader,
   CardTitle,
@@ -46,23 +45,30 @@ export const GettingStartedCard: React.FC<GettingStartedCardProps> = ({
           <Split>
             {imgSrc && (
               <SplitItem
-                className={classnames('pf-u-min-width getting-started-card__img', imgClassName)}
+                className={classnames('pf-v5-u-min-width getting-started-card__img', imgClassName)}
               >
                 <img src={imgSrc} alt={imgAlt} />
               </SplitItem>
             )}
             <SplitItem isFilled>
-              <CardHeader>
+              <CardHeader
+                actions={{
+                  actions: (
+                    <>
+                      <Button
+                        variant="plain"
+                        aria-label="Hide card"
+                        onClick={() => setStorageKeys({ ...keys, [localStorageKey]: true })}
+                      >
+                        <CloseIcon />
+                      </Button>
+                    </>
+                  ),
+                  hasNoOffset: false,
+                  className: undefined,
+                }}
+              >
                 <CardTitle>{title}</CardTitle>
-                <CardActions>
-                  <Button
-                    variant="plain"
-                    aria-label="Hide card"
-                    onClick={() => setStorageKeys({ ...keys, [localStorageKey]: true })}
-                  >
-                    <CloseIcon />
-                  </Button>
-                </CardActions>
               </CardHeader>
               <CardBody>{children}</CardBody>
             </SplitItem>

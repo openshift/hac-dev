@@ -1,14 +1,14 @@
 .context-switcher {
-  z-index: var(--pf-global--ZIndex--md);
+  z-index: var(--pf-v5-global--ZIndex--md);
 
   &__dropdown {
     padding-left: 0;
     padding-right: 0.6rem;
   }
   &__menu {
-    --pf-c-menu--Width: 360px;
+    --pf-v5-c-menu--Width: 360px;
 
-  > .pf-c-menu__content {
+  > .pf-v5-c-menu__content {
     min-height: 136px;
   }
 

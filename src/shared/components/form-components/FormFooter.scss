@@ -1,15 +1,15 @@
 .form-footer {
-  padding: var(--pf-global--spacer--md) (--pf-global--gutter/2);
+  padding: var(--pf-v5-global--spacer--md) (--pf-v5-global--gutter/2);
   @media (min-width: 768px) {
-    padding: var(--pf-global--spacer--md) (--pf-global--gutter);
+    padding: var(--pf-v5-global--spacer--md) (--pf-v5-global--gutter);
   }
   &__sticky {
     position: sticky;
-    background: var(--pf-global--palette--white);
+    background: var(--pf-v5-global--palette--white);
     bottom: 0;
   }
   &__shadow {
-    box-shadow: var(--pf-global--BoxShadow--sm-top);
+    box-shadow: var(--pf-v5-global--BoxShadow--sm-top);
   }
 
   &__no-top-margin {

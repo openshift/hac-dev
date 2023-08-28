@@ -116,7 +116,7 @@ const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({ appl
           <Bullseye>
             <Card isRounded isCompact>
               <CardBody>
-                <Bullseye style={{ marginBottom: 'var(--pf-global--spacer--md)' }}>
+                <Bullseye style={{ marginBottom: 'var(--pf-v5-global--spacer--md)' }}>
                   <Spinner size="lg" />
                 </Bullseye>
                 <HelperText>

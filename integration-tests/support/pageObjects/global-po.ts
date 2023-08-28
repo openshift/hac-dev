@@ -2,8 +2,8 @@ export const formPO = {
   create: 'button[type=submit]',
   cancel: '[data-test-id="reset-button"]',
 };
-export const alert = '.pf-c-alert';
-export const alertTitle = '.pf-c-alert__title';
+export const alert = '.pf-v5-c-alert';
+export const alertTitle = '.pf-v5-c-alert__title';
 
 export const consentButton = '[id="truste-consent-button"]';
 
@@ -24,11 +24,11 @@ export const kcLoginPO = {
 
 export const waits = {
   loader: '.loader',
-  spinner: '.pf-c-spinner',
+  spinner: '.pf-v5-c-spinner',
   gridPlaceholder: '.skeleton-catalog--tile',
   tablePlaceholder: '.loading-skeleton--table',
   viewPlaceholder: '[data-test="skeleton-detail-view"]',
-  linkPlaceholder: '.pf-c-skeleton',
+  linkPlaceholder: '.pf-v5-c-skeleton',
 };
 
 export const actions = {
@@ -46,16 +46,16 @@ export const navigation = {
 };
 
 export const breadcrumb = {
-  breadcrumbLink: 'nav[data-ouia-component-type="PF4/Breadcrumb"]',
+  breadcrumbLink: 'nav[data-ouia-component-type="PF5/Breadcrumb"]',
 };
 
 export const UIhelperPO = {
   graphNode: 'g[data-kind="node"]',
   pipelineStatusSuccess: 'g[class="pf-topology-pipelines__pill-status pf-m-success"]',
   pipelineNode: 'g[class^="pf-topology__pipelines__task-node"]',
-  tabs: 'div[data-ouia-component-type="PF4/Tabs"] button span',
+  tabs: 'div[data-ouia-component-type="PF5/Tabs"] button span',
   formGroup: 'div.pf-c-form__group',
   formGroupLabelText: 'div.pf-c-form__group span.pf-c-form__label-text',
   listGroup_dt: 'div[class*="list__group"] dt',
-  pf4_button: '[data-ouia-component-type="PF4/Button"]',
+  pf5_button: '[data-ouia-component-type="PF5/Button"]',
 };

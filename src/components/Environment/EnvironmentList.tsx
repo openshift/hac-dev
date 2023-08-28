@@ -91,7 +91,7 @@ const EnvironmentList: React.FC<EnvironmentListProps> = ({
         <br />
         To get started, create an environment.
       </EmptyStateBody>
-      {!readOnly && <div className="pf-u-mt-xl">{createEnvironmentButton}</div>}
+      {!readOnly && <div className="pf-v5-u-mt-xl">{createEnvironmentButton}</div>}
     </AppEmptyState>
   );
 
@@ -119,7 +119,7 @@ const EnvironmentList: React.FC<EnvironmentListProps> = ({
         clearAllFilters={onClearAllFilters}
         clearFiltersButtonText="Clear filters"
       >
-        <ToolbarContent className="pf-u-pl-0">
+        <ToolbarContent className="pf-v5-u-pl-0">
           {environments.length > 0 ? (
             <>
               {ToolbarGroups}

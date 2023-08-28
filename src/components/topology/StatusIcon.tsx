@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Label } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons/dist/js/icons';
 import { css } from '@patternfly/react-styles';
-import pipelineStyles from '@patternfly/react-styles/css/components/Topology/topology-pipelines';
 import {
   getRunStatusModifier,
   RunStatus,
   StatusIcon as PfStatusIcon,
 } from '@patternfly/react-topology';
+import pipelineStyles from '@patternfly/react-topology/dist/esm/css/topology-pipelines';
 import { getLabelColorFromStatus, runStatus } from '../../utils/pipeline-utils';
 import { runStatusToRunStatus } from './utils';
 
@@ -59,7 +59,7 @@ export const StatusIconWithText: React.FC<
     <>
       <span
         className={css(
-          'pf-u-mr-xs status-icon',
+          'pf-v5-u-mr-xs status-icon',
           pipelineStyles.topologyPipelinesPillStatus,
           (status === runStatus.Running || status === runStatus['In Progress']) && 'icon-spin',
           getRunStatusModifier(runStatusToRunStatus(status)),

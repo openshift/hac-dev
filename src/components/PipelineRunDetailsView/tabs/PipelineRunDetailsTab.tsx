@@ -67,7 +67,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
 
   return (
     <>
-      <Title headingLevel="h4" className="pf-c-title pf-u-mt-lg pf-u-mb-lg" size="lg">
+      <Title headingLevel="h4" className="pf-v5-c-title pf-v5-u-mt-lg pf-v5-u-mb-lg" size="lg">
         Pipeline run details
       </Title>
       <PipelineRunVisualization pipelineRun={pipelineRun} error={error} taskRuns={taskRuns} />
@@ -285,7 +285,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
 
           {pipelineRun.status?.pipelineResults ? (
             <>
-              <Divider style={{ padding: 'var(--pf-global--spacer--lg) 0' }} />
+              <Divider style={{ padding: 'var(--pf-v5-global--spacer--lg) 0' }} />
               <RunResultsList
                 results={pipelineRun.status.pipelineResults}
                 status={pipelineStatus}

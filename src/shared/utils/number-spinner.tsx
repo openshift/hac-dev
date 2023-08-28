@@ -14,7 +14,6 @@ export const NumberSpinner: React.FC<NumberSpinnerProps> = ({
       min={min}
       max={max}
       value={value}
-      allowEmptyInput
       onMinus={() => changeValueBy(-1)}
       onChange={inputProps.onChange}
       onPlus={() => changeValueBy(1)}

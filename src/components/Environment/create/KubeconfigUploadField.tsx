@@ -39,9 +39,9 @@ const KubeconfigUploadField: React.FC<KubeconfigUploadFieldProps> = ({ name }) =
       helpText={helpText}
       filename={filename}
       value={value}
-      onReadFinished={(file) => setFilename(file.name)}
-      onTextChange={onChange}
-      onDataChange={onChange}
+      onReadFinished={(ev, file) => setFilename(file.name)}
+      onTextChange={(ev, updated) => onChange(updated)}
+      onDataChange={(ev, updated) => onChange(updated)}
       onClearClick={() => {
         setValue('');
         setFilename('');
@@ -49,7 +49,7 @@ const KubeconfigUploadField: React.FC<KubeconfigUploadFieldProps> = ({ name }) =
       allowEditingUploadedText
       required
     >
-      <div className="pf-c-form__helper-text">
+      <div className="pf-v5-c-form__helper-text">
         We’ll use the kubeconfig file to connect with your cluster. Credentials are stored in a
         secret until the environment is deleted.
       </div>

@@ -6,7 +6,7 @@ export const pipelineRunTableColumnClasses = {
   type: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-10',
   duration: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-10',
   component: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-15',
-  kebab: 'pf-c-table__action',
+  kebab: 'pf-v5-c-table__action',
 };
 
 const createPipelineRunListHeader = (showVulnerabilities: boolean) => () => {

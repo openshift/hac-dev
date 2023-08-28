@@ -48,7 +48,7 @@ const EnvironmentSidePanel: React.FC<EnvironmentSidePanelBodyProps> = ({
           <span className="commit-side-panel__head-title">
             {environment.spec?.displayName ?? environment.metadata.name}
           </span>
-          <span className="pf-u-mt-xs commit-side-panel__subtext">
+          <span className="pf-v5-u-mt-xs commit-side-panel__subtext">
             <ServerIcon /> Environment
           </span>
           <DrawerActions>

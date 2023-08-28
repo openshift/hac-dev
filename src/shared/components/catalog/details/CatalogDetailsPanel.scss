@@ -1,9 +1,9 @@
 .catalog-page {
   &__overlay-body {
     margin: 0;
-    padding-left: var(--pf-global--spacer--lg);
-    padding-right: var(--pf-global--spacer--lg);
-    padding-top: var(--pf-global--spacer--md);
+    padding-left: var(--pf-v5-global--spacer--lg);
+    padding-right: var(--pf-v5-global--spacer--lg);
+    padding-top: var(--pf-v5-global--spacer--md);
     @media (min-width: $screen-sm-min) {
       display: flex;
     }
