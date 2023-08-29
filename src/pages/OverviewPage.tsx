@@ -6,6 +6,11 @@ import InfoBanner from '../components/Overview/InfoBanner';
 import IntroBanner from '../components/Overview/IntroBanner';
 import { FULL_APPLICATION_TITLE } from '../consts/labels';
 
+// PF 5 CSS
+// TODO: Remove when console is at PF 5
+import '@patternfly/patternfly/patternfly.css';
+import '@patternfly/patternfly/patternfly-addons.css';
+
 const OverviewPage: React.FC = () => {
   return (
     <>
