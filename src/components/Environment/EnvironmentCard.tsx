@@ -78,6 +78,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   const { namespace, workspace } = useWorkspaceInfo();
   const [applications, appsLoaded] = useApplications(namespace);
   const applicationRoute = useLatestApplicationRouteURL(applicationName);
+  const snapshot = (environment as EnvironmentKindWithHealthStatus).snapshot;
 
   return (
     <Card isFlat>
@@ -129,6 +130,19 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
               {getEnvironmentDeploymentStrategyLabel(environment)}
             </DescriptionListDescription>
           </DescriptionListGroup>
+
+          {snapshot && (
+            <DescriptionListGroup>
+              <DescriptionListTerm>Snapshot</DescriptionListTerm>
+              <DescriptionListDescription>
+                <Link
+                  to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/snapshots/${snapshot}`}
+                >
+                  {snapshot}
+                </Link>
+              </DescriptionListDescription>
+            </DescriptionListGroup>
+          )}
 
           <DescriptionListGroup>
             <DescriptionListTerm>Cluster type</DescriptionListTerm>

@@ -118,6 +118,12 @@ export type Snapshot = K8sResourceCommon & {
     components: {
       containerImage: string;
       name: string;
+      source?: {
+        git?: {
+          url: string;
+          revision: string;
+        };
+      };
     }[];
     artifacts?: {
       [key: string]: unknown;

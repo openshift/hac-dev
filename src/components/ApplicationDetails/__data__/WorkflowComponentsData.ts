@@ -282,6 +282,7 @@ export const mockComponentsData = [
           dockerfileUrl:
             'https://raw.githubusercontent.com/test-user-1/devfile-sample-go-basic/main/docker/Dockerfile',
           url: 'https://github.com/test-user-1/devfile-sample-go-basic',
+          revision: 'main',
         },
       },
       targetPort: 8081,
