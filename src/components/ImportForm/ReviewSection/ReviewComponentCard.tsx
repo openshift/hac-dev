@@ -94,11 +94,7 @@ const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
             />
             <br />
             {component.source?.git?.url ? (
-              <GitRepoLink
-                url={component.source.git.url}
-                revision={component.source.git.revision}
-                context={component.source.git.context}
-              />
+              <GitRepoLink url={component.source.git.url} />
             ) : (
               <ExternalLink
                 href={
@@ -131,6 +127,24 @@ const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
               </HelperText>
             </Title>
 
+            <Grid hasGutter>
+              <GridItem sm={12} lg={4}>
+                <InputField
+                  data-test={`${fieldPrefix}.source.git.revision`}
+                  name={`${fieldPrefix}.source.git.revision`}
+                  label="Git reference"
+                  helpText="Optional branch, tag or commit."
+                />
+              </GridItem>
+              <GridItem sm={12} lg={4}>
+                <InputField
+                  data-test={`${fieldPrefix}.source.git.context`}
+                  name={`${fieldPrefix}.source.git.context`}
+                  label="Build context"
+                  helpText="Optional subdirectory for the component's build information."
+                />
+              </GridItem>
+            </Grid>
             <Grid hasGutter>
               <GridItem sm={12} lg={4}>
                 <InputField

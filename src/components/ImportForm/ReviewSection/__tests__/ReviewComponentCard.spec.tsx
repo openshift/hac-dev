@@ -175,6 +175,24 @@ describe('ReviewComponentCard', () => {
     expect(screen.queryByText('Instances')).toBeVisible();
   });
 
+  it('should show git reference and build context options when components are detected', async () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+      />,
+      { isDetected: true, source: { git: {} }, components: [] },
+    );
+    await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
+
+    expect(screen.getByText('Build & deploy configuration')).toBeInTheDocument();
+
+    expect(screen.queryByText('Git reference')).toBeVisible();
+    expect(screen.queryByText('Build context')).toBeVisible();
+  });
+
   it('should not hide expandable config when components are not detected', async () => {
     useComponentDetectionMock.mockReturnValue([]);
     formikRenderer(
