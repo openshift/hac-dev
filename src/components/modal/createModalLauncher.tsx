@@ -25,7 +25,7 @@ export const createRawModalLauncher =
   (componentProps?: P): ModalLauncher<D> =>
   (onModalClose) => {
     const { onClose, ...restModalProps } = modalProps;
-    const handleClose = (ev: any, obj?: D) => {
+    const handleClose = (obj?: any) => {
       onClose?.(null);
       onModalClose(obj);
     };
