@@ -14,8 +14,8 @@ import {
   ToolbarItemVariant,
 } from '@patternfly/react-core';
 import { skeletonTileSelector } from '../../../shared/components/catalog/utils/skeleton-catalog';
+import FilteredEmptyState from '../../../shared/components/empty-state/FilteredEmptyState';
 import { StatusBox } from '../../../shared/components/status-box/StatusBox';
-import FilteredEmptyState from '../../EmptyState/FilteredEmptyState';
 import { useDevfileSamples } from '../utils/useDevfileSamples';
 import SampleCard from './SampleCard';
 

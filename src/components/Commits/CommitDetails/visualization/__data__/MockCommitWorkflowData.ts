@@ -1,3 +1,4 @@
+import { ComponentKind } from '../../../../../types';
 import { Snapshot } from '../../../../../types/coreBuildService';
 
 export const MockCommit = {
@@ -3294,7 +3295,7 @@ export const MockCommit = {
   pullRequestNumber: '6',
 };
 
-export const MockComponents = [
+export const MockComponents: ComponentKind[] = [
   {
     apiVersion: 'appstudio.redhat.com/v1alpha1',
     kind: 'Component',
@@ -3304,7 +3305,7 @@ export const MockComponents = [
         'skip-initial-checks': 'true',
       },
       resourceVersion: '92029137',
-      name: 'stock-app-webshop-jhnj',
+      name: 'sample-component',
       uid: '30ef6d84-09ed-49f1-8a1c-bc6292a8104d',
       creationTimestamp: '2023-03-21T12:29:35Z',
       generation: 2,
@@ -3381,7 +3382,7 @@ export const MockComponents = [
         applicationFailCounter: '0',
       },
       resourceVersion: '59051195',
-      name: 'devfile-sample-go-basic-2cnf',
+      name: 'go-3',
       uid: '30ded9a7-4a6a-41c3-b456-51dc689c33db',
       creationTimestamp: '2023-03-16T10:55:15Z',
       generation: 2,

@@ -5,6 +5,7 @@ import '@testing-library/jest-dom';
 import { configure, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { mockRoutes } from '../../../hooks/__data__/mock-data';
 import { useLatestBuildPipelineRunForComponent } from '../../../hooks/usePipelineRuns';
+import { routerRenderer } from '../../../utils/test-utils';
 import { componentCRMocks } from '../../ApplicationDetails/__data__/mock-data';
 import { mockPipelineRuns } from '../../ApplicationDetails/__data__/mock-pipeline-run';
 import { ComponentListItem } from '../ComponentListItem';
@@ -51,18 +52,18 @@ describe('ComponentListItem', () => {
   });
 
   it('should render display name of the component', () => {
-    render(<ComponentListItem component={componentCRMocks[0]} routes={[]} />);
+    routerRenderer(<ComponentListItem component={componentCRMocks[0]} routes={[]} />);
     screen.getByText('basic-node-js');
   });
 
   it('should render git repository link of the component', () => {
-    render(<ComponentListItem component={componentCRMocks[0]} routes={[]} />);
+    routerRenderer(<ComponentListItem component={componentCRMocks[0]} routes={[]} />);
     screen.getByText('nodeshift-starters/devfile-sample');
     expect(screen.queryByText('Route')).not.toBeInTheDocument();
   });
 
   it('should render component URL link of the component if route exists', () => {
-    render(<ComponentListItem component={componentCRMocks[0]} routes={mockRoutes} />);
+    routerRenderer(<ComponentListItem component={componentCRMocks[0]} routes={mockRoutes} />);
     screen.getAllByText('Route');
   });
 
@@ -112,13 +113,13 @@ describe('ComponentListItem', () => {
   it('should not render Success component condition status on UI', async () => {
     const component = componentCRMocks[0];
     component.status.conditions = [];
-    render(<ComponentListItem component={component} routes={[]} />);
+    routerRenderer(<ComponentListItem component={component} routes={[]} />);
     await waitFor(() => expect(screen.queryByText('Component Created')).not.toBeInTheDocument());
   });
 
   it('should not render Built container image if the containerImage is missing in component status', async () => {
     const component = { ...componentCRMocks[0], status: undefined };
-    render(<ComponentListItem component={component} routes={[]} />);
+    routerRenderer(<ComponentListItem component={component} routes={[]} />);
     await waitFor(() =>
       expect(screen.queryByText('Built container image')).not.toBeInTheDocument(),
     );
@@ -126,19 +127,19 @@ describe('ComponentListItem', () => {
 
   it('should render Built container image if the component status contains the containerImage field', async () => {
     const component = componentCRMocks[0];
-    render(<ComponentListItem component={component} routes={[]} />);
+    routerRenderer(<ComponentListItem component={component} routes={[]} />);
     await waitFor(() => expect(screen.queryByText('Built container image')).toBeInTheDocument());
   });
 
   it('should not render Download SBOM command if the containerImage is missing in component status', async () => {
     const component = { ...componentCRMocks[0], status: undefined };
-    render(<ComponentListItem component={component} routes={[]} />);
+    routerRenderer(<ComponentListItem component={component} routes={[]} />);
     await waitFor(() => expect(screen.queryByText('Download SBOM')).not.toBeInTheDocument());
   });
 
   it('should render Download SBOM command if the component status contains the containerImage field', async () => {
     const component = componentCRMocks[0];
-    render(<ComponentListItem component={component} routes={[]} />);
+    routerRenderer(<ComponentListItem component={component} routes={[]} />);
     await waitFor(() => expect(screen.queryByText('Download SBOM')).toBeInTheDocument());
   });
 });

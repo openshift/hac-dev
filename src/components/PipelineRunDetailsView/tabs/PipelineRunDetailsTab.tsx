@@ -223,9 +223,7 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                         <Link
                           to={`/application-pipeline/workspaces/${workspace}/applications/${
                             pipelineRun.metadata.labels[PipelineRunLabel.APPLICATION]
-                          }/components?name=${
-                            pipelineRun.metadata.labels[PipelineRunLabel.COMPONENT]
-                          }`}
+                          }/components/${pipelineRun.metadata.labels[PipelineRunLabel.COMPONENT]}`}
                         >
                           {pipelineRun.metadata.labels[PipelineRunLabel.COMPONENT]}
                         </Link>

@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { EmptyStateBody, EmptyStateActions } from '@patternfly/react-core';
 import emptyStateImgUrl from '../../../imgs/Commit.svg';
 import { ComponentModel } from '../../../models';
+import AppEmptyState from '../../../shared/components/empty-state/AppEmptyState';
 import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../../ButtonWithAccessTooltip';
-import AppEmptyState from '../../EmptyState/AppEmptyState';
 
 type SnapshotComponentsEmptyStateProps = {
   applicationName: string;

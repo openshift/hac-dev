@@ -2,12 +2,12 @@ import React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner, Text, TextVariants } from '@patternfly/react-core';
 import { ReleaseGroupVersionKind } from '../../models';
+import DetailsPage from '../../shared/components/details-page/DetailsPage';
+import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { ReleaseKind } from '../../types';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
-import DetailsPage from '../ApplicationDetails/DetailsPage';
-import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import ReleaseOverviewTab from './ReleaseOverviewTab';
 
 type ReleaseDetailsViewProps = {

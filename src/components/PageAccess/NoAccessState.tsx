@@ -16,7 +16,7 @@ import { css } from '@patternfly/react-styles';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 
-import '../EmptyState/EmptyState.scss';
+import '../../shared/components/empty-state/EmptyState.scss';
 
 type NoAccessStateProps = {
   httpError?: HttpError;

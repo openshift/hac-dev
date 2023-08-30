@@ -10,12 +10,12 @@ import {
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import ComponentSettingsView from '../components/ComponentSettingsForm/ComponentSettingsView';
-import { HeadTitle } from '../components/HeadTitle';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import PageLayout from '../components/PageLayout/PageLayout';
 import { FULL_APPLICATION_TITLE } from '../consts/labels';
 import { ComponentModel } from '../models';
+import { HeadTitle } from '../shared/components/HeadTitle';
 import { getQueryArgument } from '../shared/utils';
 import { AccessReviewResources } from '../types';
 import { useApplicationBreadcrumbs } from '../utils/breadcrumb-utils';

@@ -12,7 +12,7 @@ import {
 } from '@patternfly/react-core';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import { Table } from '../../../shared';
-import FilteredEmptyState from '../../EmptyState/FilteredEmptyState';
+import FilteredEmptyState from '../../../shared/components/empty-state/FilteredEmptyState';
 import SnapshotComponentsEmptyState from './SnapshotComponentsEmptyState';
 import SnapshotComponentsListHeader from './SnapshotComponentsListHeader';
 import SnapshotComponentsListRow, { SnapshotComponentTableData } from './SnapshotComponentsListRow';

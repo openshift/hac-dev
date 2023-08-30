@@ -46,7 +46,20 @@ const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
         )}
       </TableData>
       <TableData className={commitsTableColumnClasses.component}>
-        {obj.components.length > 0 ? obj.components.map((c) => c.trim()).join(', ') : '-'}
+        <div className="commits-component-list">
+          {obj.components.length > 0
+            ? obj.components.map((c) => (
+                <Link
+                  key={c}
+                  to={`/application-pipeline/workspaces/${workspace}/applications/${
+                    obj.application
+                  }/components/${c.trim()}`}
+                >
+                  {c.trim()}
+                </Link>
+              ))
+            : '-'}
+        </div>
       </TableData>
       <TableData className={commitsTableColumnClasses.byUser}>{obj.user ?? '-'}</TableData>
       <TableData className={commitsTableColumnClasses.committedAt}>

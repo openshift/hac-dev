@@ -25,12 +25,12 @@ import { useSearchParam } from '../../../hooks/useSearchParam';
 import emptyStateImgUrl from '../../../imgs/Integration-test.svg';
 import { IntegrationTestScenarioModel } from '../../../models';
 import { Table } from '../../../shared';
+import AppEmptyState from '../../../shared/components/empty-state/AppEmptyState';
+import FilteredEmptyState from '../../../shared/components/empty-state/FilteredEmptyState';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../../ButtonWithAccessTooltip';
-import AppEmptyState from '../../EmptyState/AppEmptyState';
-import FilteredEmptyState from '../../EmptyState/FilteredEmptyState';
 import { IntegrationTestListHeader } from './IntegrationTestListHeader';
 import IntegrationTestListRow from './IntegrationTestListRow';
 

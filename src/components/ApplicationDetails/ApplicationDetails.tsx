@@ -10,6 +10,8 @@ import {
   EnvironmentModel,
   IntegrationTestScenarioModel,
 } from '../../models';
+import DetailsPage from '../../shared/components/details-page/DetailsPage';
+import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useTrackEvent, TrackEvents } from '../../utils/analytics';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
@@ -18,12 +20,10 @@ import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ActivityTab } from '../Activity/ActivityTab';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
-import ErrorEmptyState from '../EmptyState/ErrorEmptyState';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
 import { ApplicationHeader } from './ApplicationHeader';
 import { applicationQuickstartContent } from './ApplicationQuickstartContent';
-import DetailsPage from './DetailsPage';
 import ApplicationOverviewTab from './tabs/ApplicationOverviewTab';
 import ComponentsTab from './tabs/ComponentsTab';
 import DeploymentsTab from './tabs/DeploymentsTab';

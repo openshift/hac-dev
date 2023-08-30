@@ -2,3 +2,13 @@
   height: 19px;
   max-width: 14px;
 }
+
+.commits-component-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pf-v5-global--spacer--sm)
+}
+
+.commits-list__branch {
+  word-break: break-all;
+}

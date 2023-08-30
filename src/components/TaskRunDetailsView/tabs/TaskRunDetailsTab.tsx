@@ -194,7 +194,7 @@ const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error })
                     {taskRun.metadata?.labels?.[PipelineRunLabel.COMPONENT] ? (
                       applicationName ? (
                         <Link
-                          to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components?name=${
+                          to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components/${
                             taskRun.metadata.labels[PipelineRunLabel.COMPONENT]
                           }`}
                         >

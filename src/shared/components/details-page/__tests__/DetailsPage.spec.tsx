@@ -1,8 +1,8 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { act, configure, fireEvent, screen, waitFor } from '@testing-library/react';
-import { FULL_APPLICATION_TITLE } from '../../..//consts/labels';
-import { routerRenderer } from '../../../utils/test-utils';
+import { FULL_APPLICATION_TITLE } from '../../../../consts/labels';
+import { routerRenderer } from '../../../../utils/test-utils';
 import DetailsPage from '../DetailsPage';
 
 jest.mock('react-router-dom', () => {

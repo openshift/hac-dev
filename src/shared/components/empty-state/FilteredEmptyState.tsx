@@ -10,7 +10,7 @@ import {
   EmptyStateHeader,
   EmptyStateFooter,
 } from '@patternfly/react-core';
-import emptySearchImgUrl from '../../imgs/Not-found.svg';
+import emptySearchImgUrl from '../../../imgs/Not-found.svg';
 
 import './EmptyState.scss';
 

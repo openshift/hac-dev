@@ -17,7 +17,7 @@ import {
 import { useFormikContext } from 'formik';
 import gitUrlParse from 'git-url-parse';
 import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
-import { HeadTitle } from '../../HeadTitle';
+import { HeadTitle } from '../../../shared/components/HeadTitle';
 import ApplicationSection from '../ApplicationSection/ApplicationSection';
 import GitImportErrors from '../GitImportErrors';
 import { useComponentDetection } from '../utils/cdq-utils';

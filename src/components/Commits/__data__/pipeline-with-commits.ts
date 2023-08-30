@@ -152,7 +152,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.openshift.io/version': '0.1',
         'pipelines.appstudio.openshift.io/type': 'build',
         'build.appstudio.openshift.io/build': 'true',
-        'appstudio.openshift.io/component': 'go-3',
+        'appstudio.openshift.io/component': 'governance-policy-propagator-aua5',
         'pipelinesascode.tekton.dev/sender': 'abhi',
         'pipelinesascode.tekton.dev/sha': 'commit14rt',
         'pipelinesascode.tekton.dev/url-org': 'openshift',

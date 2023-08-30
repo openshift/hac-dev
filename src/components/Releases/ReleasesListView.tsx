@@ -18,7 +18,7 @@ import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useApplicationReleases } from '../../hooks/useApplicationReleases';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { Table } from '../../shared';
-import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
+import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
 import ReleasesEmptyState from './ReleasesEmptyState';
 import ReleasesListHeader from './ReleasesListHeader';
 import ReleasesListRow from './ReleasesListRow';

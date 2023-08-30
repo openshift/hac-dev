@@ -12,8 +12,8 @@ import {
 } from '@patternfly/react-core';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { Table } from '../../shared';
+import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
 import { TaskRunKind } from '../../types';
-import FilteredEmptyState from '../EmptyState/FilteredEmptyState';
 import { TaskRunListHeader } from './TaskRunListHeader';
 import TaskRunListRow from './TaskRunListRow';
 

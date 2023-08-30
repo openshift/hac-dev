@@ -125,7 +125,7 @@ const IntegrationTestSidePanel: React.FC<IntegrationTestSidePanelBodyProps> = ({
                     <Link
                       to={`/application-pipeline/workspaces/${workspace}/applications/${
                         integrationTestPipeline.metadata.labels[PipelineRunLabel.APPLICATION]
-                      }/components?name=${
+                      }/components/${
                         integrationTestPipeline.metadata.labels[PipelineRunLabel.COMPONENT]
                       }`}
                     >

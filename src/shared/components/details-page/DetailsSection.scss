@@ -1,0 +1,16 @@
+@import '../../style/vars';
+
+.details-section {
+  margin-top: var(--pf-v5-global--spacer--xl);
+  &:first-of-type {
+    margin-top: var(--pf-v5-global--spacer--lg);
+  }
+
+  &__title {
+    margin-bottom: var(--pf-v5-global--spacer--md);
+  }
+  &__description {
+    margin-bottom: var(--pf-v5-global--spacer--md);
+    color: $color-text-muted;
+  }
+}

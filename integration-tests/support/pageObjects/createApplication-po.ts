@@ -59,7 +59,7 @@ export const ComponentsPagePO = {
 };
 
 export const applicationDetailPagePO = {
-  item: '[data-testid="component-list-item-name"] > b',
+  item: '[data-testid="component-list-item-name"] > a > b',
   componentBuildLog: (param: string) => `[data-testid="view-build-logs-${param}"]`,
   componentPodLog: (param: string) => `[data-test="view-pod-logs-${param}"]`,
   componentSettings: '[data-testid="Edit component settings"]',
