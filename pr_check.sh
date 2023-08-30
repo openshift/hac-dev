@@ -40,6 +40,9 @@ HOSTNAME=$(oc get feenv ${ENV_NAME} -o json | jq ".spec.hostname" | tr -d '"')
 oc patch feenv ${ENV_NAME} --type merge  -p '{"spec":{"sso": "'$HAC_KC_SSO_URL'" }}'
 oc process -f tmp/hac-proxy.yaml -n ${NAMESPACE} -p NAMESPACE=${NAMESPACE} -p ENV_NAME=${ENV_NAME} -p HOSTNAME=${HOSTNAME} | oc create -f -
 
+# Only deploy necessary frontend dependencies
+export BONFIRE_FRONTEND_DEPENDENCIES=chrome-service,insights-chrome
+
 # Deploy hac-dev with PR git ref and mainline hac-core ref
 bonfire deploy \
         hac \
