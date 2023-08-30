@@ -27,12 +27,12 @@ export class ApplicationDetailPage {
       .click();
   }
 
-  openComponentSettings(componentName: string) {
+  openDeploymentSettings(componentName: string) {
     this.openActionList(componentName);
-    cy.get(applicationDetailPagePO.componentSettings).click();
-    Common.verifyPageTitle(pageTitles.componentSettings);
+    cy.get(applicationDetailPagePO.deploymentSettings).click();
+    Common.verifyPageTitle(pageTitles.deploymentSettings);
     Common.waitForLoad();
-    cy.testA11y(`${pageTitles.componentSettings} page`);
+    cy.testA11y(`${pageTitles.deploymentSettings} page`);
   }
 
   checkBuildLog(tasklistItem: string, textToVerify: string, taskTimeout: number = 20000) {

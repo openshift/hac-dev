@@ -3,7 +3,7 @@ export const pageTitles = {
   createApp: 'Grab some code',
   sampleStart: 'Start with a sample',
   reviewComponent: 'Review your new components',
-  componentSettings: 'Component settings',
+  deploymentSettings: 'Edit deployment settings',
   getStartedPage: 'Get started with',
 };
 

@@ -1,0 +1,8 @@
+@import '../../shared/style/vars';
+
+.deployment-settings {
+  &__details-description {
+    margin-top: var(--pf-v5-global--spacer--md);
+    color: $color-text-muted;
+  }
+}

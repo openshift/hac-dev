@@ -70,7 +70,7 @@ describe('Create Component from Public Git Source', () => {
 
     // Skipping due to : https://issues.redhat.com/browse/HAC-3184
     // it('Change Resources Value', () => {
-    //   applicationDetailPage.openComponentSettings(componentPage.componentName);
+    //   applicationDetailPage.openDeploymentSettings(componentPage.componentName);
     //   componentPage.setRam(2, MemoryUnit.gigabyte);
     //   componentPage.setCpuByButton(cpuCount, cpuUnit);
     //   componentPage.saveChanges();

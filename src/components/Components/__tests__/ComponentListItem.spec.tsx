@@ -99,7 +99,7 @@ describe('ComponentListItem', () => {
     await waitFor(() => screen.getByText('Delete component'));
   });
 
-  it('should render Component settings action item', async () => {
+  it('should render deployment settings action item', async () => {
     render(
       <BrowserRouter>
         <ComponentListItem component={componentCRMocks[0]} routes={[]} />
@@ -107,7 +107,7 @@ describe('ComponentListItem', () => {
     );
     const kebabButton = screen.getByTestId('kebab-button');
     fireEvent.click(kebabButton);
-    await waitFor(() => screen.getByText('Edit component settings'));
+    await waitFor(() => screen.getByText('Edit deployment settings'));
   });
 
   it('should not render Success component condition status on UI', async () => {

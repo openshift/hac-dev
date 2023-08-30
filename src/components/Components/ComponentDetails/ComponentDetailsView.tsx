@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Bullseye,
   Button,
@@ -7,20 +8,20 @@ import {
   Text,
   TextVariants,
 } from '@patternfly/react-core';
+import isFunction from 'lodash/isFunction';
+import isObject from 'lodash/isObject';
 import { useComponent } from '../../../hooks/useComponents';
 import pipelineImg from '../../../imgs/Pipeline.svg';
-import { ComponentGroupVersionKind, ComponentModel } from '../../../models';
+import { ComponentGroupVersionKind } from '../../../models';
 import DetailsPage, { Action } from '../../../shared/components/details-page/DetailsPage';
 import ErrorEmptyState from '../../../shared/components/empty-state/ErrorEmptyState';
 import { HttpError } from '../../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../../utils/breadcrumb-utils';
-import { isPACEnabled, startNewBuild } from '../../../utils/component-utils';
-import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
+import { useComponentActions } from '../../ApplicationDetails/component-actions';
 import { createCustomizeAllPipelinesModalLauncher } from '../../CustomizedPipeline/CustomizePipelinesModal';
 import { GettingStartedCard } from '../../GettingStartedCard/GettingStartedCard';
 import { useModalLauncher } from '../../modal/ModalProvider';
-import { componentDeleteModal } from '../../modal/resource-modals';
 import { ComponentActivityTab } from './tabs/ComponentActivityTab';
 import ComponentDetailsTab from './tabs/ComponentDetailsTab';
 
@@ -37,38 +38,32 @@ const ComponentDetailsView: React.FC<ComponentDetailsViewProps> = ({
   componentName,
   applicationName,
 }) => {
+  const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
   const showModal = useModalLauncher();
   const [component, loaded, componentError] = useComponent(namespace, componentName);
-  const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
-  const [canDeleteComponent] = useAccessReviewForModel(ComponentModel, 'delete');
 
-  const actions: Action[] = React.useMemo(() => {
-    if (!loaded || !component || componentError) {
-      return [];
-    }
-    const componentActions: Action[] = [];
-    if (!isPACEnabled(component)) {
-      componentActions.push({
-        onClick: () => startNewBuild(component),
-        key: 'rebuild',
-        id: 'rebuild',
-        label: 'Rebuild',
-        disabled: !canPatchComponent,
-        disabledTooltip: "You don't have access to rebuild the component",
-      });
-    }
-    componentActions.push({
-      onClick: () => showModal(componentDeleteModal(component)),
-      key: `delete-${component.metadata.name.toLowerCase()}`,
-      id: `delete-${component.metadata.name.toLowerCase()}`,
-      label: 'Delete',
-      disabled: !canDeleteComponent,
-      disabledTooltip: "You don't have access to delete the component",
-    });
-    return componentActions;
-  }, [loaded, component, componentError, canDeleteComponent, canPatchComponent, showModal]);
+  const componentActions = useComponentActions(loaded ? component : undefined, componentName);
+  const actions: Action[] = React.useMemo(
+    () =>
+      componentActions.map((compAction) => ({
+        key: compAction.id,
+        label: compAction.label,
+        disabled: compAction.disabled,
+        disabledTooltip: compAction.disabledTooltip,
+        onClick: () => {
+          if (isFunction(compAction.cta)) {
+            compAction.cta();
+          } else if (isObject(compAction.cta)) {
+            if (!compAction.cta.external) {
+              navigate(compAction.cta.href);
+            }
+          }
+        },
+      })),
+    [componentActions, navigate],
+  );
 
   if (componentError || (loaded && !component)) {
     return (

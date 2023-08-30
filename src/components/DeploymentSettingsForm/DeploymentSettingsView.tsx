@@ -8,24 +8,21 @@ import { HttpError } from '../../shared/utils/error/http-error';
 import { useTrackEvent, TrackEvents } from '../../utils/analytics';
 import { createComponent } from '../../utils/create-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
-import { createSecrets } from '../ImportForm/utils/submit-utils';
 import { createResourceData, transformResources } from '../ImportForm/utils/transform-utils';
 import { reviewValidationSchema } from '../ImportForm/utils/validation-utils';
-import ComponentSettingsForm from './ComponentSettingsForm';
+import DeploymentSettingsForm from './DeploymentSettingsForm';
 
-type ComponentSettingsViewProps = {
+type DeploymentSettingsViewProps = {
   componentName: string;
 };
 
-const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps> = ({
+const DeploymentSettingsView: React.FunctionComponent<DeploymentSettingsViewProps> = ({
   componentName,
 }) => {
   const track = useTrackEvent();
   const navigate = useNavigate();
   const { appName } = useParams();
-
   const { namespace, workspace } = useWorkspaceInfo();
-
   const [component, loaded, componentError] = useComponent(namespace, componentName);
 
   if (componentError) {
@@ -81,18 +78,6 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       workspace,
     });
 
-    try {
-      await createSecrets(values.importSecrets, workspace, namespace, true);
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn('Error while submitting secret:', e);
-      actions.setSubmitting(false);
-      actions.setStatus({ submitError: e.message });
-      return;
-    }
-
-    await createSecrets(values.importSecrets, workspace, namespace, false);
-
     return createComponent(
       transformedComponentValues,
       applicationName,
@@ -114,7 +99,7 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
-        console.warn('Error while submitting import form:', error);
+        console.warn('Error while submitting deployment settings form:', error);
         actions.setSubmitting(false);
         actions.setStatus({ submitError: error.message });
       });
@@ -135,9 +120,9 @@ const ComponentSettingsView: React.FunctionComponent<ComponentSettingsViewProps>
       initialValues={initialValues}
       validationSchema={reviewValidationSchema}
     >
-      {(props) => <ComponentSettingsForm {...props} />}
+      {(props) => <DeploymentSettingsForm {...props} />}
     </Formik>
   );
 };
 
-export default ComponentSettingsView;
+export default DeploymentSettingsView;

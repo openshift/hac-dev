@@ -23,6 +23,7 @@ const CustomizeComponentPipeline: React.FC<Props> = ({ namespace, name, onClose,
         components={[watchedComponent]}
         onClose={onClose}
         modalProps={modalProps}
+        singleComponent
       />
     );
   }

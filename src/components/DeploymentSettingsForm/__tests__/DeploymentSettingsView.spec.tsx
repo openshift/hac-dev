@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { useApplications } from '../../../hooks/useApplications';
 import { useRemoteSecrets } from '../../../hooks/UseRemoteSecrets';
 import { componentCRMocks, mockApplication } from '../../ApplicationDetails/__data__/mock-data';
-import ComponentSettingsView from '../ComponentSettingsView';
+import DeploymentSettingsView from '../DeploymentSettingsView';
 
 jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
@@ -45,26 +45,26 @@ const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useApplicationsMock = useApplications as jest.Mock;
 const useRemoteSecretsMock = useRemoteSecrets as jest.Mock;
 
-describe('ComponentSettingsView', () => {
+describe('DeploymentSettingsView', () => {
   beforeEach(() => {
     useApplicationsMock.mockReturnValue([[mockApplication], true]);
     useRemoteSecretsMock.mockReturnValue([[], true]);
   });
   it('should render spinner if component data is not loaded', () => {
     watchResourceMock.mockReturnValue([{}, false]);
-    render(<ComponentSettingsView componentName="test" />);
+    render(<DeploymentSettingsView componentName="test" />);
     screen.getByRole('progressbar');
   });
 
-  it('should render component settings form if component data is loaded', () => {
+  it('should render deployment settings form if component data is loaded', () => {
     watchResourceMock.mockReturnValue([componentCRMocks[1], true]);
-    render(<ComponentSettingsView componentName="nodejs" />);
-    screen.getAllByText('Component settings');
+    render(<DeploymentSettingsView componentName="nodejs" />);
+    screen.getAllByText('Edit deployment settings');
   });
 
-  it('should render error state for component settings form', () => {
+  it('should render error state for deployment settings form', () => {
     watchResourceMock.mockReturnValue([null, true, new Error('404 not found')]);
-    render(<ComponentSettingsView componentName="nodejs" />);
+    render(<DeploymentSettingsView componentName="nodejs" />);
     screen.getAllByText('Unable to load component nodejs');
   });
 });
