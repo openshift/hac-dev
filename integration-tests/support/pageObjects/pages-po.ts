@@ -71,12 +71,12 @@ export const createBuildStepPO = {
 export const addIntegrationTestStepPO = {
   displayNameInput: '[data-test="display-name-input"]',
   optionalreleaseCheckbox: '[data-test="optional-release-checkbox"]',
-  accessValidationMsg: 'div[id="form-input-integrationTest-url-field-helper"]',
+  accessValidationMsg: 'div[class="pf-v5-c-form__helper-text"]',
 };
 
 export const environmentsPagePO = {
   kubconfigTextArea: 'textarea[id="text-file-kubeconfig"]',
-  kubeconfigValidationMsg: 'div[id="form-input-kubeconfig-field-helper"]',
+  kubeconfigValidationMsg: 'div[class="pf-v5-c-form__helper-text"]',
   envCard: '[data-ouia-component-type="PF5/Card"]',
   label: 'div[class*="list__group"]',
   kebabButton: 'button[data-testid="kebab-button"]',

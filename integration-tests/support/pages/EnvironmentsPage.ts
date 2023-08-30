@@ -18,10 +18,10 @@ export class EnvironmentsPage {
     UIhelper.inputValueInTextBoxByLabelName('Ingress domain', ingressDomain);
 
     cy.get(environmentsPagePO.kubconfigTextArea).clear().type(kubeconfig, { log: false });
-    cy.get(environmentsPagePO.kubeconfigValidationMsg).should(
-      'have.text',
+    cy.contains(
+      environmentsPagePO.kubeconfigValidationMsg,
       'Contents verified. Everything looks good.',
-    );
+    ).should('be.visible');
 
     UIhelper.inputValueInTextBoxByLabelName(
       'Target namespace on the selected cluster',
