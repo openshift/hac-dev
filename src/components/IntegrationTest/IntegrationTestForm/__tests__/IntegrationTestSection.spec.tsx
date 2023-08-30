@@ -50,6 +50,7 @@ describe('IntegrationTestSection', () => {
       expect(wrapper.getByTestId('integration-test-section-header')).toBeTruthy();
     });
   });
+
   it('should hide the page header when isInPage is set', async () => {
     const wrapper = formikRenderer(<IntegrationTestSection isInPage />, {
       source: 'test-source',
@@ -64,6 +65,15 @@ describe('IntegrationTestSection', () => {
     }
 
     await waitFor(() => expect(found).toEqual(false));
+  });
+
+  it('should render parameter section', async () => {
+    formikRenderer(<IntegrationTestSection isInPage />, {
+      source: 'test-source',
+      secret: null,
+    });
+
+    screen.queryByTestId('its-param-field');
   });
 
   it('should return show error message if the repo is not accessible', async () => {

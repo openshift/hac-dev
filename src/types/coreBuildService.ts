@@ -43,7 +43,8 @@ export type Environment = {
 
 export type Param = {
   name: string;
-  value: string[];
+  value?: string;
+  values?: string[];
 };
 
 export type EnvironmentKind = K8sResourceCommon & {

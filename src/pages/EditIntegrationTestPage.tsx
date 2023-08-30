@@ -58,7 +58,7 @@ const EditIntegrationTestPage: React.FunctionComponent = () => {
       </Helmet>
       <PageAccessCheck accessReviewResources={accessReviewResources}>
         <IntegrationTestView
-          applicationName={integrationTest.spec.application}
+          applicationName={integrationTest?.spec?.application}
           integrationTest={integrationTest}
         />
       </PageAccessCheck>

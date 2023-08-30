@@ -7,6 +7,7 @@ import {
   createIntegrationTest,
   getLabelForParam,
   getURLForParam,
+  formatParams,
 } from '../create-utils';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -24,6 +25,7 @@ const integrationTestData = {
   },
   spec: {
     application: 'Test Application',
+    params: null,
     environment: {
       name: 'test1',
       type: 'POC',
@@ -111,7 +113,7 @@ describe('Create Utils', () => {
     expect(resource.metadata.labels).not.toBeDefined();
   });
 
-  it('Should not contain the optional label if the test is mandatory', async () => {
+  it('Should contain parameters with correct value', async () => {
     createResourceMock.mockImplementation(({ resource }) => resource);
     const resource = await createIntegrationTest(
       {
@@ -122,11 +124,38 @@ describe('Create Utils', () => {
         optional: false,
         environmentName: 'test1',
         environmentType: 'POC',
+        params: [{ name: 'param1', values: ['value'] }],
       },
       'Test Application',
       'test-ns',
     );
-    expect(resource.metadata.labels).not.toBeDefined();
+    expect(resource.spec.params).toBeDefined();
+    expect(resource.spec.params[0].name).toBe('param1');
+    expect(resource.spec.params[0].value).toBe('value');
+  });
+
+  it('Should contain parameters with multiple values', async () => {
+    createResourceMock.mockImplementation(({ resource }) => resource);
+    const resource = await createIntegrationTest(
+      {
+        name: 'app-test',
+        revision: 'test-revision',
+        url: 'test-url',
+        path: 'test-path',
+        optional: false,
+        environmentName: 'test1',
+        environmentType: 'POC',
+        params: [{ name: 'param1', values: ['value1', 'value2', 'value3'] }],
+      },
+      'Test Application',
+      'test-ns',
+    );
+    expect(resource.spec.params).toBeDefined();
+    expect(resource.spec.params[0].name).toBe('param1');
+    expect(resource.spec.params[0].values).toBeDefined();
+    expect(resource.spec.params[0].values.length).toBe(3);
+    expect(resource.spec.params[0].values[0]).toBe('value1');
+    expect(resource.spec.params[0].values[2]).toBe('value3');
   });
 
   it('Should return correct labels for params', () => {
@@ -160,5 +189,47 @@ describe('Create Utils', () => {
     expect(getURLForParam(k8sResource.spec.resolverRef.params, ResolverRefParams.PATH)).toBe(
       'https://github.com/redhat-appstudio/integration-examples/tree/main/pipelines/integration_pipeline_pass.yaml',
     );
+  });
+});
+
+describe('Create Utils formatParams', () => {
+  it('Should render null if no params or empty array []', () => {
+    const formattedParams = formatParams([]);
+    expect(formattedParams).toBeNull();
+  });
+
+  it('Should render 3 params ', () => {
+    const formattedParams = formatParams([
+      { name: 'apple', values: ['val1', 'val2'] },
+      { name: 'mango', values: ['val1', 'val2'] },
+      { name: 'orange', values: ['val1', 'val2'] },
+    ]);
+    expect(formattedParams.length).toBe(3);
+  });
+
+  it('Should remove empty values ', () => {
+    const formattedParams = formatParams([
+      { name: 'apple', values: ['val1', '', ''] },
+      { name: 'mango', values: ['val1', '', 'val2', ''] },
+      { name: 'orange', values: ['', '', 'val1', '', 'val2'] },
+    ]);
+    expect(formattedParams.length).toBe(3);
+    expect(formattedParams[0].value).toBe('val1');
+    expect(formattedParams[1].values.length).toBe(2);
+    expect(formattedParams[1].values[0]).toBe('val1');
+    expect(formattedParams[1].values[1]).toBe('val2');
+    expect(formattedParams[2].values.length).toBe(2);
+    expect(formattedParams[2].values[0]).toBe('val1');
+    expect(formattedParams[2].values[1]).toBe('val2');
+  });
+
+  it('Should convert Values to value if only 1 entry', () => {
+    const formattedParams = formatParams([
+      { name: 'apple', values: ['val1'] },
+      { name: 'mango', values: ['val1', 'val2'] },
+      { name: 'orange', values: ['val1', 'val2'] },
+    ]);
+    expect(formattedParams.length).toBe(3);
+    expect(formattedParams[0].value).toBe('val1');
   });
 });
