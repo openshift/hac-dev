@@ -54,8 +54,8 @@ export const UIhelperPO = {
   pipelineStatusSuccess: 'g[class="pf-topology-pipelines__pill-status pf-m-success"]',
   pipelineNode: 'g[class^="pf-topology__pipelines__task-node"]',
   tabs: 'div[data-ouia-component-type="PF5/Tabs"] button span',
-  formGroup: 'div.pf-c-form__group',
-  formGroupLabelText: 'div.pf-c-form__group span.pf-c-form__label-text',
+  formGroup: 'div.pf-v5-c-form__group',
+  formGroupLabelText: 'div.pf-v5-c-form__group span.pf-v5-c-form__label-text',
   listGroup_dt: 'div[class*="list__group"] dt',
   pf5_button: '[data-ouia-component-type="PF5/Button"]',
 };
