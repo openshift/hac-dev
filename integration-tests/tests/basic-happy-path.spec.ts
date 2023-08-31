@@ -1,18 +1,18 @@
+import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
 import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
+import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
 import {
   DetailsTab,
   LogsTab,
   PipelinerunsTabPage,
   TaskRunsTab,
 } from '../support/pages/tabs/PipelinerunsTabPage';
+import { githubAPIEndpoints } from '../utils/APIEndpoints';
+import { APIHelper } from '../utils/APIHelper';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
-import { APIHelper } from '../utils/APIHelper';
-import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
-import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
-import { githubAPIEndpoints } from '../utils/APIEndpoints';
 
 describe('Basic Happy Path', () => {
   const applicationName = Common.generateAppName();
@@ -168,12 +168,12 @@ describe('Basic Happy Path', () => {
       )
         .its('body[0].sha')
         .then((commitSHA) => {
-          UIhelper.verifyRowInTable('Commit List', componentName, [
-            /main/,
-            new RegExp(`manual build ${commitSHA.slice(0, 6)}`),
-            /^-$/,
-            /Succeeded/,
-          ]);
+          UIhelper.verifyRowInTable(
+            'Commit List',
+            componentName,
+            [/main/, new RegExp(`manual build ${commitSHA.slice(0, 6)}`), /^-$/, /Succeeded/],
+            false,
+          );
         });
     });
 
