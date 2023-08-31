@@ -1,6 +1,7 @@
 import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
+import { SecretsPage } from '../support/pages/SecretsPage';
 import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
 import { LatestCommitsTabPage } from '../support/pages/tabs/LatestCommitsTabPage';
 import {
@@ -14,6 +15,7 @@ import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
 import { APIHelper } from '../utils/APIHelper';
 import { githubAPIEndpoints } from '../utils/APIEndpoints';
+import { NavItem } from '../support/constants/PageTitle';
 
 describe('Advanced Happy path', () => {
   const applicationName = Common.generateAppName();
@@ -118,10 +120,6 @@ describe('Advanced Happy path', () => {
         'Build Running',
         'Custom',
       );
-    });
-
-    it('Verify Secret Using API', () => {
-      Applications.verifySecretUsingAPI(secret.secretName, secret.key, secret.value);
     });
 
     it('Verify the Pipeline run details and Task runs', () => {
@@ -543,6 +541,21 @@ describe('Advanced Happy path', () => {
         'Succeeded',
         'Build',
       ]);
+    });
+  });
+
+  describe('Validate secrets', () => {
+    it('Verify Secret on Secret List', () => {
+      Common.navigateTo(NavItem.secrets);
+      UIhelper.verifyRowInTable('Secret List', secret.secretName, [
+        'Build',
+        'development',
+        'Injected',
+      ]);
+    });
+
+    it('Delete Secret', () => {
+      SecretsPage.deleteSecret(secret.secretName);
     });
   });
 });
