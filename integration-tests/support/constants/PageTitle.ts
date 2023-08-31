@@ -12,6 +12,7 @@ export enum NavItem {
   applications = 'Applications',
   environments = 'Environments',
   learning = 'Learning Resources',
+  secrets = 'Secrets',
 }
 
 export const FULL_APPLICATION_TITLE = 'Red Hat Trusted Application Pipeline';
