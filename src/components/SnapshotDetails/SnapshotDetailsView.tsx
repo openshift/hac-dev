@@ -119,6 +119,10 @@ const SnapshotDetailsView: React.FC<SnapshotDetailsViewProps> = ({
         breadcrumbs={[
           ...applicationBreadcrumbs,
           {
+            path: `#`,
+            name: 'snapshots',
+          },
+          {
             path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/snapshots/${snapshotName}`,
             name: snapshot.metadata.name,
           },

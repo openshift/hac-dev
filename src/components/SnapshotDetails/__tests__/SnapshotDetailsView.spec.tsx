@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, screen } from '@testing-library/react';
@@ -26,13 +27,15 @@ jest.mock('react-router-dom', () => {
     ...actual,
     Link: (props) => <a href={props.to}>{props.children}</a>,
     useNavigate: () => {},
-    useSearchParams: () => React.useState(() => new URLSearchParams()),
+    useParams: jest.fn(),
   };
 });
 
 jest.mock('../../../utils/rbac', () => ({
   useAccessReviewForModel: jest.fn(() => [true, true]),
 }));
+
+const useParamsMock = useParams as jest.Mock;
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
@@ -41,10 +44,10 @@ configure({ testIdAttribute: 'data-test' });
 const mockSnapshots: IntegrationTestScenarioKind[] = [...MockSnapshots];
 
 const getMockedResources = (params: WatchK8sResource) => {
-  if (params.groupVersionKind === SnapshotGroupVersionKind) {
+  if (params?.groupVersionKind === SnapshotGroupVersionKind) {
     return [mockSnapshots.find((t) => !params.name || t.metadata.name === params.name), true];
   }
-  if (params.groupVersionKind === PipelineRunGroupVersionKind) {
+  if (params?.groupVersionKind === PipelineRunGroupVersionKind) {
     return [[pipelineWithCommits[0]], true];
   }
   return [[], true];
@@ -52,6 +55,7 @@ const getMockedResources = (params: WatchK8sResource) => {
 
 describe('SnapshotDetailsView', () => {
   beforeEach(() => {
+    useParamsMock.mockReturnValue({ activeTab: 'overview' });
     (useCommitStatus as jest.Mock).mockReturnValueOnce(['-', true]);
   });
 
@@ -93,5 +97,15 @@ describe('SnapshotDetailsView', () => {
     screen.getByText('Triggered by');
     expect(screen.getByTestId('snapshot-commit-label')).toBeInTheDocument();
     expect(screen.getByTestId('snapshot-name').innerHTML).toBe('my-test-output-2');
+  });
+
+  it('should show pipelinerun details', () => {
+    useParamsMock.mockReturnValue({ activeTab: 'pipelineruns' });
+    mockSnapshots[0].metadata.deletionTimestamp = '1';
+    watchResourceMock.mockImplementation(getMockedResources);
+    routerRenderer(
+      <SnapshotDetails snapshotName="my-test-output-2" applicationName="my-test-output" />,
+    );
+    expect(screen.getByTestId('snapshot-plr-loading')).toBeInTheDocument();
   });
 });

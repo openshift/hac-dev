@@ -1,52 +1,100 @@
 import * as React from 'react';
+import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, configure } from '@testing-library/react';
 import { mockPipelineRuns } from '../../../../components/Components/__data__/mock-pipeline-run';
 import { PipelineRunLabel } from '../../../../consts/pipelinerun';
+import { useComponents } from '../../../../hooks/useComponents';
 import { usePipelineRuns } from '../../../../hooks/usePipelineRuns';
+import { useSearchParam } from '../../../../hooks/useSearchParam';
+import { mockComponentsData } from '../../../ApplicationDetails/__data__';
 import { PipelineRunListRow } from '../../../PipelineRunListView/PipelineRunListRow';
 import SnapshotPipelineRunsTab from '../SnapshotPipelineRunsTab';
 
-jest.mock('../../../../shared/components/table/VirtualBody', () => {
-  return {
-    VirtualBody: (props) => {
-      return props.data.map((plr, i) => (
-        <PipelineRunListRow key={i} columns={props.columns} obj={plr} />
-      ));
-    },
-  };
-});
-
-jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
-  getActiveWorkspace: jest.fn(() => 'test-ws'),
-}));
-
 jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
-}));
-
-jest.mock('react-router-dom', () => ({
-  Link: (props) => <a href={props.to}>{props.children}</a>,
-}));
-
-jest.mock('../../../../utils/workspace-context-utils', () => ({
-  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
-}));
-
-jest.mock('../../../../utils/rbac', () => ({
-  useAccessReviewForModel: jest.fn(() => [true, true]),
 }));
 
 jest.mock('../../../../hooks/usePipelineRuns', () => ({
   usePipelineRuns: jest.fn(),
 }));
 
+jest.mock('../../../../hooks/useComponents', () => ({
+  useComponents: jest.fn(),
+}));
+
+jest.mock('../../../../utils/workspace-context-utils', () => ({
+  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
+}));
+
+jest.mock('../../../../hooks/useScanResults', () => ({
+  usePLRVulnerabilities: jest.fn(() => ({ vulnerabilities: {}, fetchedPipelineRuns: [] })),
+}));
+
+jest.mock('react-router-dom', () => ({
+  Link: (props) => <a href={props.to}>{props.children}</a>,
+}));
+
+jest.mock('../../../../hooks/useSearchParam', () => ({
+  useSearchParam: jest.fn(),
+}));
+
+configure({ testIdAttribute: 'data-test' });
+
+jest.mock('../../../../shared/components/table', () => {
+  const actual = jest.requireActual('../../../../shared/components/table');
+  return {
+    ...actual,
+    Table: (props) => {
+      const { data, filters, selected, match, kindObj } = props;
+      const cProps = { data, filters, selected, match, kindObj };
+      const columns = props.Header(cProps);
+
+      React.useEffect(() => {
+        props?.onRowsRendered({ stopIndex: data.length - 1 });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [data]);
+      return (
+        <PfTable role="table" aria-label="table" cells={columns} variant="compact" borders={false}>
+          <TableHeader role="rowgroup" />
+          <tbody>
+            {props.data.map((d, i) => (
+              <tr key={i}>
+                <PipelineRunListRow columns={null} obj={d} />
+              </tr>
+            ))}
+          </tbody>
+        </PfTable>
+      );
+    },
+  };
+});
+
+jest.mock('../../../../utils/rbac', () => ({
+  useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
+const useSearchParamMock = useSearchParam as jest.Mock;
+const useComponentsMock = useComponents as jest.Mock;
 const usePipelineRunsMock = usePipelineRuns as jest.Mock;
+
+const params: any = {};
+
+const mockUseSearchParam = (name: string) => {
+  const setter = (value) => {
+    params[name] = value;
+  };
+  const unset = () => {
+    params[name] = '';
+  };
+  return [params[name], setter, unset];
+};
 
 const appName = 'my-test-app';
 
+configure({ testIdAttribute: 'data-test' });
+
 const snapShotPLRs = [
-  mockPipelineRuns[0],
   {
     ...mockPipelineRuns[0],
     metadata: {
@@ -91,7 +139,24 @@ const snapShotPLRs = [
   },
 ];
 
-describe('SnapshotPipelineruns List', () => {
+describe('SnapshotPipelinerunsTab', () => {
+  beforeEach(() => {
+    useSearchParamMock.mockImplementation(mockUseSearchParam);
+    useComponentsMock.mockReturnValue([mockComponentsData, true]);
+  });
+
+  it('should render spinner if pipeline data is not loaded', () => {
+    usePipelineRunsMock.mockReturnValue([[], false]);
+    render(
+      <SnapshotPipelineRunsTab
+        applicationName={appName}
+        namespace="test"
+        snapshotName="test-snapshot"
+      />,
+    );
+    screen.getByRole('progressbar');
+  });
+
   it('should render empty state if no pipelinerun is present', () => {
     usePipelineRunsMock.mockReturnValue([[], true, false]);
     render(
@@ -122,23 +187,19 @@ describe('SnapshotPipelineruns List', () => {
     screen.queryByText('Name');
     screen.queryByText('Started');
     screen.queryByText('Duration');
-    screen.queryByText('Status');
-    screen.queryByText('Type');
+    screen.queryAllByText('Status');
+    screen.queryAllByText('Type');
+    screen.queryByText('Component');
   });
 
   it('should render both Build and Test pipelineruns in the pipelinerun list', () => {
     usePipelineRunsMock.mockReturnValue([[snapShotPLRs], true, false]);
     render(
-      <div style={{ overflow: 'auto' }}>
-        {' '}
-        render(
-        <SnapshotPipelineRunsTab
-          applicationName={appName}
-          namespace="test"
-          snapshotName="test-snapshot"
-        />
-        , );
-      </div>,
+      <SnapshotPipelineRunsTab
+        applicationName={appName}
+        namespace="test"
+        snapshotName="test-snapshot"
+      />,
     );
 
     screen.queryByText('Build');
