@@ -168,7 +168,7 @@ export interface RadioGroupOption {
 
 export interface SelectInputOption {
   value: string;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 export interface SelectInputFieldProps extends FieldProps {

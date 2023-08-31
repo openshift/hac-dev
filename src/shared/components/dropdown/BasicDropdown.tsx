@@ -5,12 +5,14 @@ import {
   DropdownToggle,
   DropdownItem,
   DropdownItemProps,
+  DropdownSeparator,
 } from '@patternfly/react-core/deprecated';
 import './BasicDropdown.scss';
 
 export type DropdownItemObject = {
   key: string;
   value: string;
+  separator?: boolean;
 } & DropdownItemProps;
 
 type BasicDropdownProps = {
@@ -91,7 +93,10 @@ const BasicDropdown: React.FC<BasicDropdownProps> = ({
   const dropdownItems = React.useMemo(
     () =>
       items.map((item) => {
-        const { key, value, ...props } = item;
+        const { key, value, separator, ...props } = item;
+        if (separator) {
+          return <DropdownSeparator key={key} />;
+        }
         return (
           <DropdownItem key={key} {...props}>
             {value}

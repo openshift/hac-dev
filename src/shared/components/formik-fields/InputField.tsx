@@ -11,7 +11,7 @@ const renderFunction = (
   ref: React.Ref<HTMLInputElement>,
 ) => (
   <BaseInputField type={type} {...baseProps}>
-    {(props) => <TextInput ref={ref} {...props} />}
+    {(props) => <TextInput ref={ref} {...props} value={baseProps.value ?? props.value} />}
   </BaseInputField>
 );
 

@@ -12,7 +12,7 @@ import InputField from '../InputField';
 
 import './KeyValueFileInputField.scss';
 
-type KeyValueEntry = {
+export type KeyValueEntry = {
   key: string;
   value: string;
   readOnlyKey?: boolean;
