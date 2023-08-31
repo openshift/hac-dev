@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { RouteMatch } from 'react-router-dom';
 import { TableGridBreakpoint, OnSelect } from '@patternfly/react-table';
-import { Table as PfTable, TableHeader, TableBody } from '@patternfly/react-table/deprecated';
+import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
 import { AutoSizer, WindowScroller } from '@patternfly/react-virtualized-extension';
 import { useDeepCompareMemoize } from '../../hooks';
 import { WithScrollContainer } from '../../utils';
 import { StatusBox } from '../status-box/StatusBox';
+import { TableRow } from './TableRow';
 import { RowFunctionArgs, VirtualBody, VirtualBodyProps } from './VirtualBody';
 import './Table.scss';
 
@@ -154,7 +155,21 @@ const Table: React.FC<TableProps> = ({
           borders={false}
         >
           <TableHeader role="rowgroup" />
-          {!virtualize && <TableBody />}
+          {!virtualize ? (
+            <tbody>
+              {data.map((obj, index) => (
+                <TableRow
+                  id={getRowProps(obj).id}
+                  index={index}
+                  key={`${getRowProps(obj).id}`}
+                  trKey={`${getRowProps(obj).id}`}
+                  style={{}}
+                >
+                  <Row obj={obj} columns={columns} customData={customData} />
+                </TableRow>
+              ))}
+            </tbody>
+          ) : null}
         </PfTable>
         {virtualize && <WithScrollContainer>{renderVirtualizedTable}</WithScrollContainer>}
       </TableWrapper>

@@ -210,6 +210,7 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({
               ) : null}
               {filteredCommits.length > 0 ? (
                 <Table
+                  virtualize={!recentOnly}
                   data={filteredCommits}
                   aria-label="Commit List"
                   Header={CommitsListHeader}

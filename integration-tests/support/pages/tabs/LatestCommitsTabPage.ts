@@ -45,8 +45,8 @@ export class LatestCommitsTabPage {
     });
   }
 
-  clickOnCommit(commit: string) {
-    UIhelper.clickRowCellInTable('Commit List', commit, commit);
+  clickOnCommit(commit: string, isOverview = false) {
+    UIhelper.clickRowCellInTable('Commit List', commit, commit, !isOverview);
   }
 
   verifyCommitsPageTitleAndStatus(commitTitle: string) {

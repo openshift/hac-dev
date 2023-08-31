@@ -55,18 +55,23 @@ export class UIhelper {
     return cy.contains('a', new RegExp(`^\\s*${link}\\s*$`)).click();
   }
 
-  static getTableRow(tableAriaLabel: string, uniqueRowText: string | RegExp) {
-    return cy.contains(`div[aria-label="${tableAriaLabel}"] tr[role="row"]`, uniqueRowText, {
-      timeout: 60000,
-    });
+  static getTableRow(tableAriaLabel: string, uniqueRowText: string | RegExp, isVirtual = true) {
+    return cy.contains(
+      `${isVirtual ? 'div' : 'table'}[aria-label="${tableAriaLabel}"] tr[role="row"]`,
+      uniqueRowText,
+      {
+        timeout: 60000,
+      },
+    );
   }
 
   static verifyRowInTable(
     tableAriaLabel: string,
     uniqueRowText: string | RegExp,
     rowValues: string[] | RegExp[],
+    isVirtual = true,
   ) {
-    UIhelper.getTableRow(tableAriaLabel, uniqueRowText).within(() => {
+    UIhelper.getTableRow(tableAriaLabel, uniqueRowText, isVirtual).within(() => {
       rowValues.forEach((val) => {
         cy.contains(val).should('be.visible');
       });
@@ -77,8 +82,11 @@ export class UIhelper {
     tableAriaLabel: string,
     uniqueRowText: string | RegExp,
     cellTextToClick: string | RegExp,
+    isVirtual = true,
   ) {
-    UIhelper.getTableRow(tableAriaLabel, uniqueRowText).contains(cellTextToClick).click();
+    UIhelper.getTableRow(tableAriaLabel, uniqueRowText, isVirtual)
+      .contains(cellTextToClick)
+      .click();
   }
 
   static verifyGraphNodes(nodeText: string, success = true) {

@@ -506,22 +506,22 @@ describe('Advanced Happy path', () => {
   describe('Verify the Latest Commits section on application overview page', () => {
     it('Verify the Commits List view should have both the commits', () => {
       Applications.goToOverviewTab();
-      UIhelper.verifyRowInTable('Commit List', componentInfo.firstCommitTitle, [
-        'main',
-        componentName,
-        gitHubUser,
-        'Succeeded',
-      ]);
-      UIhelper.verifyRowInTable('Commit List', componentInfo.updatedCommitMessage, [
-        'main',
-        componentName,
-        gitHubUser,
-        'Succeeded',
-      ]);
+      UIhelper.verifyRowInTable(
+        'Commit List',
+        componentInfo.firstCommitTitle,
+        ['main', componentName, gitHubUser, 'Succeeded'],
+        false,
+      );
+      UIhelper.verifyRowInTable(
+        'Commit List',
+        componentInfo.updatedCommitMessage,
+        ['main', componentName, gitHubUser, 'Succeeded'],
+        false,
+      );
     });
 
     it('Verify the Commit Overview Tab of the Last Commit', () => {
-      latestCommitsTabPage.clickOnCommit(componentInfo.updatedCommitMessage);
+      latestCommitsTabPage.clickOnCommit(componentInfo.updatedCommitMessage, true);
       latestCommitsTabPage.verifyCommitsPageTitleAndStatus(componentInfo.updatedCommitMessage);
       latestCommitsTabPage.verifyCommitID(
         Cypress.env(`${componentInfo.updatedCommitMessage}_SHA`),
