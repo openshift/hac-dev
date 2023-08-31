@@ -2,7 +2,6 @@ import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { ImportSecret } from '../components/ImportForm/utils/types';
 
 export const SecretByUILabel = 'ui.appstudio.redhat.com/secret-for';
-export const SNYK_SPI_TOKEN_ACCESS_BINDING = 'spi-access-token-binding-for-snyk-secret';
 
 export enum SecretFor {
   deployment = 'Deployment',

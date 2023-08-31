@@ -1,12 +1,11 @@
 import React from 'react';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { FormGroup, TextInputTypes, Button, GridItem, Grid } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
 import { useFormikContext } from 'formik';
-import { SPIAccessTokenBindingGroupVersionKind } from '../../../models';
+import { useRemoteSecrets } from '../../../hooks/UseRemoteSecrets';
 import { InputField, TextColumnField } from '../../../shared';
-import { SNYK_SPI_TOKEN_ACCESS_BINDING, SPIAccessTokenBindingKind } from '../../../types';
 import { useModalLauncher } from '../../modal/ModalProvider';
+import { getSupportedPartnerTaskSecrets } from '../../Secrets/secret-utils';
 import { SecretModalLauncher } from '../../Secrets/SecretModalLauncher';
 import { ImportFormValues } from '../utils/types';
 
@@ -14,14 +13,15 @@ const SecretSection = () => {
   const showModal = useModalLauncher();
   const { values, setFieldValue } = useFormikContext<ImportFormValues>();
 
-  const [secret] = useK8sWatchResource<SPIAccessTokenBindingKind>({
-    groupVersionKind: SPIAccessTokenBindingGroupVersionKind,
-    namespace: values.namespace,
-    name: SNYK_SPI_TOKEN_ACCESS_BINDING,
-  });
-  const partnerTaskSecrets = secret?.status?.syncedObjectRef?.name
-    ? [secret.status.syncedObjectRef.name]
-    : [];
+  const [remoteSecrets, remoteSecretsLoaded] = useRemoteSecrets(values.namespace);
+
+  const partnerTaskNames = getSupportedPartnerTaskSecrets().map(({ label }) => label);
+  const partnerTaskSecrets: string[] =
+    remoteSecrets && remoteSecretsLoaded
+      ? remoteSecrets
+          ?.filter((rs) => partnerTaskNames.includes(rs.metadata.name))
+          ?.map((s) => s.metadata.name) || []
+      : [];
 
   const onSubmit = React.useCallback(
     (secretValue) => {
@@ -54,7 +54,7 @@ const SecretSection = () => {
           return (
             <Grid>
               <GridItem span={6}>
-                <InputField name={props.name} type={TextInputTypes.text} isReadOnly />
+                <InputField name={props.name} type={TextInputTypes.text} isDisabled />
               </GridItem>
               <GridItem span={6}>{props.removeButton}</GridItem>
             </Grid>

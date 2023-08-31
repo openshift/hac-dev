@@ -6,9 +6,8 @@ import {
 } from '@openshift/dynamic-plugin-sdk-utils';
 import omit from 'lodash/omit';
 import { THUMBNAIL_ANNOTATION } from '../../components/ApplicationDetails/ApplicationThumbnail';
-import { supportedPartnerTasksSecrets } from '../../components/Secrets/secret-utils';
 import { PIPELINE_SERVICE_ACCOUNT } from '../../consts/pipeline';
-import { SPIAccessTokenBindingModel, SecretModel } from '../../models';
+import { RemoteSecretModel, SPIAccessTokenBindingModel } from '../../models';
 import {
   ComponentDetectionQueryKind,
   SPIAccessTokenBindingKind,
@@ -23,7 +22,6 @@ import {
   createComponentDetectionQuery,
   createAccessTokenBinding,
   sanitizeName,
-  createSupportedPartnerSecret,
   createSecret,
 } from './../create-utils';
 
@@ -456,10 +454,10 @@ describe('Create Utils', () => {
   });
 
   it('should call the create secret api with dryRun query string params', async () => {
-    createResourceMock.mockClear();
-    commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
+    createResourceMock.mockClear().mockImplementationOnce((props) => Promise.resolve(props));
+    commonFetchMock.mockClear().mockImplementation((props) => Promise.resolve(props));
 
-    createSecret(
+    await createSecret(
       {
         secretName: 'my-snyk-secret',
         type: SecretTypeDropdownLabel.opaque,
@@ -470,6 +468,7 @@ describe('Create Utils', () => {
       true,
     );
 
+    expect(createResourceMock).toHaveBeenCalledTimes(1);
     expect(commonFetchMock).toHaveBeenCalledTimes(1);
 
     expect(commonFetchMock).toHaveBeenCalledWith(
@@ -484,7 +483,7 @@ describe('Create Utils', () => {
     commonFetchMock.mockClear();
     commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
 
-    createSecret(
+    await createSecret(
       {
         secretName: 'my-snyk-secret',
         type: SecretTypeDropdownLabel.opaque,
@@ -509,7 +508,7 @@ describe('Create Utils', () => {
     commonFetchMock.mockClear();
     commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
 
-    createSecret(
+    await createSecret(
       {
         secretName: 'registry-creds',
         type: SecretTypeDropdownLabel.image,
@@ -534,7 +533,7 @@ describe('Create Utils', () => {
     commonFetchMock.mockClear();
     commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
 
-    createSecret(
+    await createSecret(
       {
         secretName: 'registry-creds',
         type: SecretTypeDropdownLabel.image,
@@ -577,7 +576,7 @@ describe('Create Utils', () => {
       .mockImplementationOnce((props) => Promise.resolve(props))
       .mockImplementationOnce((props) => Promise.resolve(props));
 
-    createSecret(
+    await createSecret(
       {
         secretName: 'snyk-secret',
         type: SecretTypeDropdownLabel.opaque,
@@ -588,41 +587,12 @@ describe('Create Utils', () => {
       false,
     );
 
-    expect(commonFetchMock).not.toHaveBeenCalled();
-    expect(createResourceMock).toHaveBeenCalledTimes(2);
-  });
-
-  it('should create a secret and spiacesstokenbinding for partner secret', async () => {
-    createResourceMock.mockClear();
-    createResourceMock
-      .mockImplementationOnce((props) => Promise.resolve(props))
-      .mockImplementationOnce((props) => Promise.resolve(props));
-
-    createSupportedPartnerSecret(
-      supportedPartnerTasksSecrets.snyk,
-      {
-        secretName: 'my-snyk-secret',
-        type: SecretTypeDropdownLabel.opaque,
-        keyValues: [{ key: 'token', value: 'my-token-data' }],
-      },
-      'test-ns',
-      false,
-    );
-
-    expect(createResourceMock).toHaveBeenCalledTimes(2);
-
+    expect(commonFetchMock).toHaveBeenCalled();
+    expect(createResourceMock).toHaveBeenCalledTimes(1);
     expect(createResourceMock.mock.calls[0]).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          model: expect.objectContaining(SecretModel),
-        }),
-      ]),
-    );
-
-    expect(createResourceMock.mock.calls[1]).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          model: expect.objectContaining(SPIAccessTokenBindingModel),
+          model: expect.objectContaining(RemoteSecretModel),
         }),
       ]),
     );
