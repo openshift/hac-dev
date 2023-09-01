@@ -80,7 +80,7 @@ const KeyValueFileInputField: React.FC<KeyValueEntryFormProps & FieldProps> = ({
                     name={`${name}.${idx.toString()}.key`}
                     label="Key"
                     required
-                    isReadOnly={v.readOnlyKey}
+                    isDisabled={v.readOnlyKey}
                   />
                 </FlexItem>
                 <FlexItem>

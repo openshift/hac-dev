@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen } from '@testing-library/react';
 import { useApplications } from '../../../hooks/useApplications';
+import { useRemoteSecrets } from '../../../hooks/UseRemoteSecrets';
 import { componentCRMocks, mockApplication } from '../../ApplicationDetails/__data__/mock-data';
 import ComponentSettingsView from '../ComponentSettingsView';
 
@@ -36,12 +37,18 @@ jest.mock('../../../utils/rbac', () => ({
   useAccessReviewForModel: jest.fn(() => [true, true]),
 }));
 
+jest.mock('../../../hooks/UseRemoteSecrets', () => ({
+  useRemoteSecrets: jest.fn(),
+}));
+
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useApplicationsMock = useApplications as jest.Mock;
+const useRemoteSecretsMock = useRemoteSecrets as jest.Mock;
 
 describe('ComponentSettingsView', () => {
   beforeEach(() => {
     useApplicationsMock.mockReturnValue([[mockApplication], true]);
+    useRemoteSecretsMock.mockReturnValue([[], true]);
   });
   it('should render spinner if component data is not loaded', () => {
     watchResourceMock.mockReturnValue([{}, false]);
