@@ -9,6 +9,7 @@ import { StatusBox } from '../status-box/StatusBox';
 import { TableRow } from './TableRow';
 import { RowFunctionArgs, VirtualBody, VirtualBodyProps } from './VirtualBody';
 import './Table.scss';
+import '../catalog/utils/skeleton-screen.scss';
 
 export type Filter = { key: string; value: string };
 

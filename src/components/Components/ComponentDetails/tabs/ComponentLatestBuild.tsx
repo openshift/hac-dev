@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   Alert,
   DescriptionList,
@@ -12,22 +11,20 @@ import {
   ClipboardCopy,
   Spinner,
   Button,
-  Tooltip,
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../../consts/pipelinerun';
 import { useAllEnvironments } from '../../../../hooks/useAllEnvironments';
+import { useComponentDeployment } from '../../../../hooks/useComponentDeployment';
 import { useAllGitOpsDeploymentCRs } from '../../../../hooks/useGitOpsDeploymentCR';
 import { useLatestSuccessfulBuildPipelineRunForComponent } from '../../../../hooks/usePipelineRuns';
 import { useSnapshotsEnvironmentBindings } from '../../../../hooks/useSnapshotsEnvironmentBindings';
 import { useTaskRuns } from '../../../../hooks/useTaskRuns';
-import { DeploymentGroupVersionKind } from '../../../../models/deployment';
 import CommitLabel from '../../../../shared/components/commit-label/CommitLabel';
 import ErrorEmptyState from '../../../../shared/components/empty-state/ErrorEmptyState';
 import { Timestamp } from '../../../../shared/components/timestamp/Timestamp';
 import { HttpError } from '../../../../shared/utils/error/http-error';
 import { ComponentKind, EnvironmentKind, GitOpsDeploymentKind } from '../../../../types';
 import { SnapshotEnvironmentBinding } from '../../../../types/coreBuildService';
-import { DeploymentKind } from '../../../../types/deployment';
 import { getCommitsFromPLRs } from '../../../../utils/commits-utils';
 import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
 import { useBuildLogViewerModal } from '../../../LogViewer/BuildLogViewer';
@@ -41,30 +38,14 @@ type DeploymentRowProps = {
   environments: EnvironmentKind[];
 };
 
-const DeploymentRow: React.FC<DeploymentRowProps> = ({
-  component,
-  gitOpsDeployments,
-  snapshotEB,
-  environments,
-}) => {
-  const gitOpsDeploymentData = snapshotEB?.status?.gitopsDeployments?.find(
-    (deployment) => deployment.componentName === component.metadata.name,
-  );
-  const gitOpsDeployment = gitOpsDeployments.find(
-    (deployment) => deployment.metadata.name === gitOpsDeploymentData?.gitopsDeployment,
-  );
-  const deploymentResource = gitOpsDeployment?.status?.resources?.find(
-    (resource) => resource.kind === 'Deployment',
+const DeploymentRow: React.FC<DeploymentRowProps> = ({ component, snapshotEB, environments }) => {
+  const { namespace } = useWorkspaceInfo();
+  const [deployment, deploymentLoaded, deploymentLoadError] = useComponentDeployment(
+    namespace,
+    component.metadata.name,
+    snapshotEB,
   );
   const environmentName = snapshotEB.metadata.labels?.['appstudio.environment'];
-
-  const [deployment, deploymentLoaded, deploymentLoadError] = useK8sWatchResource<DeploymentKind>({
-    groupVersionKind: DeploymentGroupVersionKind,
-    isList: false,
-    name: deploymentResource?.name,
-    namespace: deploymentResource?.namespace,
-  });
-
   const environment = environments.find((env) => env.metadata.name === environmentName);
 
   const podSelector = React.useMemo(
@@ -79,17 +60,7 @@ const DeploymentRow: React.FC<DeploymentRowProps> = ({
   return (
     <div>
       <div>{environment?.spec.displayName || environmentName}</div>
-      {podSelector ? (
-        <PodLogsButton component={component} podSelector={podSelector} />
-      ) : (
-        <Tooltip content="Pod logs are not available">
-          <div style={{ width: 'fit-content' }}>
-            <Button variant="link" isInline isDisabled>
-              View pod logs
-            </Button>
-          </div>
-        </Tooltip>
-      )}
+      <PodLogsButton component={component} podSelector={podSelector} showDisabled />
     </div>
   );
 };

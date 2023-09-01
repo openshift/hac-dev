@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { Button } from '@patternfly/react-core';
+import { Button, Tooltip } from '@patternfly/react-core';
 import { PodGroupVersionKind } from '../../models/pod';
 import { PodKind } from '../../shared/components/types';
 import { ComponentKind } from '../../types';
@@ -10,9 +10,10 @@ import { usePodLogViewerModal } from './PodLogViewer';
 type PodLogsButtonProps = {
   component: ComponentKind;
   podSelector: any;
+  showDisabled?: boolean;
 };
 
-const PodLogsButton: React.FC<PodLogsButtonProps> = ({ component, podSelector }) => {
+const PodLogsButton: React.FC<PodLogsButtonProps> = ({ component, podSelector, showDisabled }) => {
   const { namespace } = useWorkspaceInfo();
 
   const [obj, loaded, error] = useK8sWatchResource<PodKind[]>({
@@ -24,10 +25,9 @@ const PodLogsButton: React.FC<PodLogsButtonProps> = ({ component, podSelector })
 
   const pod = React.useMemo(() => loaded && obj && obj.length > 0 && obj[0], [loaded, obj]);
   const podLogsModal = usePodLogViewerModal(pod);
-  if (!podSelector) {
-    return null;
-  }
-  if (!pod?.metadata) {
+  const disabled = !podSelector || !pod?.metadata;
+
+  if (disabled && !showDisabled) {
     return null;
   }
 
@@ -35,16 +35,22 @@ const PodLogsButton: React.FC<PodLogsButtonProps> = ({ component, podSelector })
     return <>{`${error}`}</>;
   }
 
-  return (
+  const logButton = (
     <Button
       onClick={podLogsModal}
       variant="link"
       data-test={`view-pod-logs-${component.metadata.name}`}
       isInline
+      isDisabled={!podSelector || !pod?.metadata}
     >
       View pod logs
     </Button>
   );
+
+  if (disabled) {
+    return <Tooltip content="Pod logs are not available">{logButton}</Tooltip>;
+  }
+  return logButton;
 };
 
 export default PodLogsButton;

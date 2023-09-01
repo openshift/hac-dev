@@ -41,7 +41,7 @@ const useParamsMock = useParams as jest.Mock;
 
 configure({ testIdAttribute: 'data-testid' });
 
-describe('ComponentDetailsView', () => {
+describe('ComponentActivityTab', () => {
   let navigateMock: jest.Mock;
 
   beforeEach(() => {
