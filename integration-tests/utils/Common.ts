@@ -82,4 +82,10 @@ export class Common {
       cy.contains(`[data-id="${locator}"]`, value, { timeout: 20000 }).should('exist');
     }
   }
+
+  static getGitHub2FAOTP(): string {
+    const secret = Cypress.env('GH_SETUP_KEY');
+    const token = require('otplib').authenticator.generate(secret);
+    return token;
+  }
 }
