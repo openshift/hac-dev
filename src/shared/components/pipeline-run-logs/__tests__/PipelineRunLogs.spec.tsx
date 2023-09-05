@@ -186,4 +186,35 @@ describe('PipelineRunLogs', () => {
       expectTasktoBeOrdered();
     });
   });
+
+  it('should select and render the first failed task log if no active task is given', () => {
+    const failedTaskRun = {
+      ...testTaskRuns[0],
+      metadata: {
+        ...testTaskRuns[0].metadata,
+        name: 'failed-task',
+      },
+      spec: { taskRef: { name: 'failed-task' } },
+      status: {
+        ...testTaskRuns[0].status,
+        conditions: [
+          {
+            ...testTaskRuns[0].status.conditions[0],
+            status: 'False',
+          },
+        ],
+      },
+    };
+
+    render(
+      <PipelineRunLogs
+        workspace="test-ws"
+        obj={pipelineRun}
+        taskRuns={[failedTaskRun, ...testTaskRuns]}
+      />,
+    );
+
+    screen.getByTestId('logs-tasklist');
+    within(screen.getByTestId('logs-taskName')).getByText('failed-task');
+  });
 });
