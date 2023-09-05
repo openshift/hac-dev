@@ -22,6 +22,7 @@ import { Table } from '../../../shared';
 import FilteredEmptyState from '../../../shared/components/empty-state/FilteredEmptyState';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { withPageAccessCheck } from '../../PageAccess/withPageAccessCheck';
+import { ReleaseServiceEmptyState } from '../ReleaseServiceEmptyState';
 import ReleasePlanListHeader from './ReleasePlanListHeader';
 import ReleasePlanListRow from './ReleasePlanListRow';
 
@@ -45,7 +46,7 @@ const ReleasePlanListView: React.FC = () => {
   }
 
   if (!releasePlans?.length) {
-    return <>Empty State</>;
+    return <ReleaseServiceEmptyState title="No Release Plan found" />;
   }
 
   return (

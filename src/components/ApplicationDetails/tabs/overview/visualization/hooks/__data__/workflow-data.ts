@@ -612,14 +612,12 @@ export const sampleComponents: ComponentKind[] = [
     status: {
       conditions: [
         {
-          lastTransitionTime: '2022-05-13T12:39:17Z',
           message: 'Component has been successfully created',
           reason: 'OK',
           status: 'True',
           type: 'Created',
         },
         {
-          lastTransitionTime: '2022-06-06T14:22:46Z',
           message: 'Component has been successfully updated',
           reason: 'OK',
           status: 'True',
@@ -828,9 +826,7 @@ export const sampleReleasePlans: ReleasePlanKind[] = [
     spec: {
       displayName: "Managed Workspace's ReleasePlan",
       application: 'm5-app',
-      target: {
-        namespace: 'demo',
-      },
+      target: 'demo',
       releaseStrategy: 'm5-strategy',
     },
   },
