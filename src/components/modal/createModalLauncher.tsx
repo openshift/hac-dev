@@ -10,7 +10,7 @@ type ModalComponentProps = Omit<ModalProps, 'isOpen' | 'appendTo'> & {
 type OnModalClose<D = unknown> = (obj?: D) => void;
 
 export type ComponentProps<D = unknown> = {
-  onClose?: (event?: any, obj?: D) => void;
+  onClose?: (event?: KeyboardEvent | React.MouseEvent, obj?: D) => void;
 };
 
 export type RawComponentProps<D = unknown> = ComponentProps<D> & { modalProps?: ModalProps };
@@ -25,8 +25,8 @@ export const createRawModalLauncher =
   (componentProps?: P): ModalLauncher<D> =>
   (onModalClose) => {
     const { onClose, ...restModalProps } = modalProps;
-    const handleClose = (obj?: any) => {
-      onClose?.(null);
+    const handleClose = (event: KeyboardEvent | React.MouseEvent, obj?: any) => {
+      onClose?.(event);
       onModalClose(obj);
     };
 

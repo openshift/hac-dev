@@ -8,7 +8,7 @@ describe('CloseImportFormModal', () => {
   let closeReason: boolean;
   beforeEach(() => {
     closeReason = false;
-    closeMock.mockImplementation(({ leave }) => (closeReason = leave === true));
+    closeMock.mockImplementation((event, { leave }) => (closeReason = leave === true));
   });
 
   it('should render CloseImportFormModal', () => {

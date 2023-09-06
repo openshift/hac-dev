@@ -52,14 +52,14 @@ export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
           ns: obj.metadata.namespace,
         },
       });
-      onClose({ submitClicked: true });
+      onClose(null, { submitClicked: true });
     } catch (e) {
       setError(e.message || e.toString());
     }
   };
 
   const onReset = () => {
-    onClose({ submitClicked: false });
+    onClose(null, { submitClicked: false });
   };
 
   return (

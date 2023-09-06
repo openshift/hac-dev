@@ -45,14 +45,14 @@ export const EditStrategyModal: React.FC<DeleteResourceModalProps> = ({ obj, onC
         },
         patches: [{ op: 'replace', path: '/spec/deploymentStrategy', value: selectedStrategy.key }],
       });
-      onClose({ submitClicked: true });
+      onClose(null, { submitClicked: true });
     } catch (e) {
       setError(e.message || e.toString());
     }
   };
 
   const onReset = () => {
-    onClose({ submitClicked: false });
+    onClose(null, { submitClicked: false });
   };
 
   return (
