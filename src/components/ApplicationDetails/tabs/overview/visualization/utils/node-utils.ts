@@ -285,18 +285,20 @@ export const getBuildNodeForComponent = (
       `Build for ${component.metadata.name}`,
     );
   }
+  const label = `Build for ${component.metadata.name}`;
+  const status = isPACEnabled(component, true) ? runStatus.NeedsMerge : runStatus.Pending;
   return {
     id: `${component.metadata.uid}-missing`,
-    label: `Build for ${component.metadata.name}`,
+    label,
     type: NodeType.WORKFLOW_NODE,
     height: DEFAULT_NODE_HEIGHT,
-    width: 0,
+    width: getNodeWidth(label, status),
     runAfterTasks: [component.metadata.uid],
     data: {
       application,
       label: `Build for ${component.metadata.name}`,
       isDisabled: false,
-      status: isPACEnabled(component, true) ? runStatus.NeedsMerge : runStatus.Pending,
+      status,
       workflowType: WorkflowNodeType.BUILD,
     },
   };
