@@ -429,15 +429,15 @@ const routeExtensions = [
     },
   },
 
-  // Component settings
+  // Deployment settings
 
   {
     type: 'core.page/route',
     properties: {
-      path: '/application-pipeline/workspaces/:workspaceName/applications/:appName/component-settings',
+      path: '/application-pipeline/workspaces/:workspaceName/applications/:appName/components/:componentName/deployment-settings',
       exact: true,
       component: {
-        $codeRef: 'ComponentSettings',
+        $codeRef: 'DeploymentSettings',
       },
     },
     flags: {
@@ -548,7 +548,7 @@ module.exports = {
       ApplicationDetails: resolve(__dirname, '../src/pages/ApplicationDetailsPage'),
       Import: resolve(__dirname, '../src/pages/ImportPage'),
       ComponentDetails: resolve(__dirname, '../src/pages/ComponentDetailsPage'),
-      ComponentSettings: resolve(__dirname, '../src/pages/ComponentSettingsPage'),
+      DeploymentSettings: resolve(__dirname, '../src/pages/DeploymentSettingsPage'),
       EnvironmentsListPage: resolve(__dirname, '../src/pages/EnvironmentsListPage'),
       CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
       WorkspaceContext: resolve(__dirname, '../src/utils/workspace-context-utils'),

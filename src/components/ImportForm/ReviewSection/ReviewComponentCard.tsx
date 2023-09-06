@@ -14,23 +14,14 @@ import {
   TextInputTypes,
   Title,
   TitleSizes,
-  ValidatedOptions,
 } from '@patternfly/react-core';
-import { useField, useFormikContext } from 'formik';
-import {
-  EnvironmentField,
-  InputField,
-  NumberSpinnerField,
-  ResourceLimitField,
-  SwitchField,
-  CheckboxField,
-} from '../../../shared';
+import { useFormikContext } from 'formik';
+import { InputField, CheckboxField } from '../../../shared';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import GitRepoLink from '../../GitLink/GitRepoLink';
-import HelpPopover from '../../HelpPopover';
 import SecretSection from '../SecretSection/SecretSection';
-import { convertBaseValueToUnits, convertUnitValueToBaseValue } from '../utils/conversion-utils';
-import { CPUUnits, DetectedFormComponent, ImportFormValues, MemoryUnits } from '../utils/types';
+import { DetectedFormComponent, ImportFormValues } from '../utils/types';
+import { ComponentForm } from './ComponentForm';
 import { RuntimeSelector } from './RuntimeSelector';
 
 import './ReviewComponentCard.scss';
@@ -52,15 +43,10 @@ const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
 }) => {
   const component = detectedComponent.componentStub;
   const name = component.componentName;
-  const targetPortDetected = detectedComponent.targetPortDetected || editMode;
   const fieldPrefix = `components[${detectedComponentIndex}].componentStub`;
   const [expandedComponent, setExpandedComponent] = React.useState(isExpanded);
-  const [targetPortTouched, setTargetPortTouched] = React.useState(false);
-  const [, { value: selectedRuntime }] = useField<string>(
-    `components[${detectedComponentIndex}].selectedRuntime`,
-  );
   const {
-    values: { resourceLimits, components },
+    values: { components },
   } = useFormikContext<ImportFormValues>();
 
   return (
@@ -145,102 +131,10 @@ const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
                 />
               </GridItem>
             </Grid>
-            <Grid hasGutter>
-              <GridItem sm={12} lg={4}>
-                <InputField
-                  data-test={`${fieldPrefix}.targetPort`}
-                  name={`${fieldPrefix}.targetPort`}
-                  label="Target port"
-                  helpText={
-                    targetPortDetected || targetPortTouched
-                      ? 'Target port for traffic.'
-                      : "We can't detect your target port. Check if it's correct."
-                  }
-                  type={TextInputTypes.number}
-                  min={1}
-                  max={65535}
-                  onChange={() => setTargetPortTouched(true)}
-                  onBlur={() => setTargetPortTouched(true)}
-                  validated={
-                    targetPortDetected || targetPortTouched
-                      ? ValidatedOptions.default
-                      : ValidatedOptions.warning
-                  }
-                />
-              </GridItem>
-              {selectedRuntime === 'Dockerfile' && (
-                <GridItem sm={12} lg={4}>
-                  <InputField
-                    name={`${fieldPrefix}.source.git.dockerfileUrl`}
-                    label="Dockerfile"
-                    type={TextInputTypes.text}
-                    placeholder="Dockerfile"
-                    labelIcon={
-                      <HelpPopover bodyContent="You can modify this path to point to your Dockerfile." />
-                    }
-                  />
-                </GridItem>
-              )}
-              {!editMode && (
-                <GridItem sm={12} lg={4} style={{ display: 'flex', alignItems: 'center' }}>
-                  <SwitchField
-                    name={`components[${detectedComponentIndex}].defaultBuildPipeline`}
-                    label="Default build pipeline"
-                  />
-                  &nbsp;
-                  <HelpPopover bodyContent="A default build pipeline skips several advanced tasks to get your application running sooner." />
-                </GridItem>
-              )}
-            </Grid>
-            <div className="review-component-card__limits">
-              <ResourceLimitField
-                name={`${fieldPrefix}.resources.cpu`}
-                unitName={`${fieldPrefix}.resources.cpuUnit`}
-                label="CPU"
-                minValue={0}
-                maxValue={
-                  convertBaseValueToUnits(
-                    convertUnitValueToBaseValue(
-                      resourceLimits?.max?.cpu,
-                      resourceLimits?.max?.cpuUnit,
-                    ).value,
-                    components?.[detectedComponentIndex]?.componentStub?.resources?.cpuUnit,
-                  ).value
-                }
-                unitOptions={CPUUnits}
-                helpText="Amount of CPU the container is guaranteed"
-              />
-              <ResourceLimitField
-                name={`${fieldPrefix}.resources.memory`}
-                unitName={`${fieldPrefix}.resources.memoryUnit`}
-                label="Memory"
-                minValue={0}
-                maxValue={
-                  convertBaseValueToUnits(
-                    convertUnitValueToBaseValue(
-                      resourceLimits?.max?.memory,
-                      resourceLimits?.max?.memoryUnit,
-                    ).value,
-                    components?.[detectedComponentIndex]?.componentStub?.resources?.memoryUnit,
-                  ).value
-                }
-                unitOptions={MemoryUnits}
-                helpText="Amount of memory the container is guaranteed"
-              />
-              <NumberSpinnerField
-                name={`${fieldPrefix}.replicas`}
-                label="Instances"
-                min={0}
-                helpText="Number of instances of your image"
-              />
-            </div>
-            <EnvironmentField
-              name={`${fieldPrefix}.env`}
-              envs={component.env}
-              label="Environment variables"
-              labelIcon={
-                <HelpPopover bodyContent="We use these default values to deploy this component. You can customize the values for each of your environments later by editing the component settings." />
-              }
+            <ComponentForm
+              detectedComponent={detectedComponent}
+              detectedComponentIndex={detectedComponentIndex}
+              editMode={editMode}
             />
             <SecretSection />
           </FormSection>

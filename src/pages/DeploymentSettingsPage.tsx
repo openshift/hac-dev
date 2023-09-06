@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   EmptyState,
   EmptyStateVariant,
@@ -9,28 +9,44 @@ import {
   EmptyStateFooter,
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
-import ComponentSettingsView from '../components/ComponentSettingsForm/ComponentSettingsView';
+import DeploymentSettingsView from '../components/DeploymentSettingsForm/DeploymentSettingsView';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import PageLayout from '../components/PageLayout/PageLayout';
 import { FULL_APPLICATION_TITLE } from '../consts/labels';
 import { ComponentModel } from '../models';
 import { HeadTitle } from '../shared/components/HeadTitle';
-import { getQueryArgument } from '../shared/utils';
 import { AccessReviewResources } from '../types';
 import { useApplicationBreadcrumbs } from '../utils/breadcrumb-utils';
+import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
-const ComponentSettingsPage: React.FunctionComponent = () => {
-  const componentName = getQueryArgument('componentName');
+const DeploymentSettingsPage: React.FunctionComponent = () => {
+  const { workspace } = useWorkspaceInfo();
+  const params = useParams();
+  const { componentName, appName } = params;
   const navigate = useNavigate();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
   const accessReviewResources: AccessReviewResources = [{ model: ComponentModel, verb: 'update' }];
 
   const emptyState = (
     <PageLayout
-      breadcrumbs={[...applicationBreadcrumbs, { path: '#', name: 'Component settings' }]}
-      title="Component settings"
-      description="View and edit component settings. Updates will take effect when the component is redeployed."
+      breadcrumbs={[
+        ...applicationBreadcrumbs,
+        {
+          path: `/application-pipeline/workspaces/${workspace}/applications/${appName}/components`,
+          name: 'components',
+        },
+        {
+          path: `/application-pipeline/workspaces/${workspace}/applications/${appName}/components/${componentName}`,
+          name: componentName,
+        },
+        {
+          path: '#',
+          name: 'Edit deployment settings',
+        },
+      ]}
+      title="Edit deployment settings"
+      description="View and edit deployment settings. Updates will take effect when the component is redeployed."
     >
       <EmptyState variant={EmptyStateVariant.lg}>
         <EmptyStateHeader
@@ -53,12 +69,12 @@ const ComponentSettingsPage: React.FunctionComponent = () => {
 
   return (
     <NamespacedPage>
-      <HeadTitle>{`${componentName} - Component Settings | ${FULL_APPLICATION_TITLE}`}</HeadTitle>
+      <HeadTitle>{`${componentName} - Deployment Settings | ${FULL_APPLICATION_TITLE}`}</HeadTitle>
       <PageAccessCheck accessReviewResources={accessReviewResources}>
-        <ComponentSettingsView componentName={componentName} />
+        <DeploymentSettingsView componentName={componentName} />
       </PageAccessCheck>
     </NamespacedPage>
   );
 };
 
-export default ComponentSettingsPage;
+export default DeploymentSettingsPage;

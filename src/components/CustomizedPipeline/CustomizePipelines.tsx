@@ -39,6 +39,7 @@ import { RawComponentProps } from '../modal/createModalLauncher';
 
 type Props = RawComponentProps & {
   components: ComponentKind[];
+  singleComponent?: boolean;
 };
 
 const ComponentKebab: React.FC<{
@@ -307,7 +308,12 @@ const Row: React.FC<{
   );
 };
 
-const CustomizePipeline: React.FC<Props> = ({ components, onClose, modalProps }) => {
+const CustomizePipeline: React.FC<Props> = ({
+  components,
+  onClose,
+  singleComponent,
+  modalProps,
+}) => {
   const track = useTrackEvent();
   const { workspace } = useWorkspaceInfo();
   const { url: githubAppURL } = useApplicationPipelineGitHubApp();
@@ -363,7 +369,9 @@ const CustomizePipeline: React.FC<Props> = ({ components, onClose, modalProps })
           <Text component={TextVariants.p}>
             <img style={{ width: 100 }} src={completed ? successIconUrl : sendIconUrl} />
           </Text>
-          <Text component={TextVariants.h2}>Manage build pipelines</Text>
+          <Text component={TextVariants.h2}>
+            {singleComponent ? 'Edit build pipeline plan' : 'Manage build pipelines'}
+          </Text>
           <Text component={TextVariants.p}>
             Add some automation by upgrading your default build pipelines to custom build pipelines.
             Custom build pipelines are pipelines as code, set on your component&apos;s repository.

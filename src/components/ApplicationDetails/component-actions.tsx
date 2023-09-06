@@ -12,12 +12,15 @@ import { componentDeleteModal } from '../modal/resource-modals';
 export const useComponentActions = (component: ComponentKind, name: string): Action[] => {
   const { workspace } = useWorkspaceInfo();
   const showModal = useModalLauncher();
-  const applicationName = component.spec.application;
+  const applicationName = component?.spec.application;
   const [canUpdateComponent] = useAccessReviewForModel(ComponentModel, 'update');
   const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
   const [canDeleteComponent] = useAccessReviewForModel(ComponentModel, 'delete');
 
   const actions: Action[] = React.useMemo(() => {
+    if (!component) {
+      return [];
+    }
     const updatedActions: Action[] = [
       {
         cta: () =>
@@ -28,7 +31,7 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
             ),
           ),
         id: 'manage-build-pipeline',
-        label: 'Manage build pipeline',
+        label: 'Edit build pipeline plan',
         analytics: {
           link_name: 'manage-build-pipeline',
           link_location: 'component-list',
@@ -57,14 +60,14 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
     updatedActions.push(
       {
         cta: {
-          href: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/component-settings?componentName=${name}`,
+          href: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components/${name}/deployment-settings`,
         },
-        id: 'component-settings',
-        label: 'Edit component settings',
+        id: 'deployment-settings',
+        label: 'Edit deployment settings',
         disabled: !canUpdateComponent,
-        disabledTooltip: "You don't have access to edit component settings",
+        disabledTooltip: "You don't have access to edit deployment settings",
         analytics: {
-          link_name: 'edit-component',
+          link_name: 'deployment-settings',
           link_location: 'component-actions',
           component_name: name,
           app_name: applicationName,
