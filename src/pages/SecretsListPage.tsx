@@ -10,10 +10,7 @@ import { RemoteSecretModel } from '../models';
 import { AccessReviewResources } from '../types';
 
 const SecretsListPage: React.FC = () => {
-  const accessReviewResources: AccessReviewResources = [
-    { model: RemoteSecretModel, verb: 'list' },
-    { model: RemoteSecretModel, verb: 'create' },
-  ];
+  const accessReviewResources: AccessReviewResources = [{ model: RemoteSecretModel, verb: 'list' }];
 
   return (
     <NamespacedPage>

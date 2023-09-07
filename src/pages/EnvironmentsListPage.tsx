@@ -11,10 +11,7 @@ import { EnvironmentModel } from '../models';
 import { AccessReviewResources } from '../types';
 
 const EnvironmentsListPage: React.FC = () => {
-  const accessReviewResources: AccessReviewResources = [
-    { model: EnvironmentModel, verb: 'patch' },
-    { model: EnvironmentModel, verb: 'create' },
-  ];
+  const accessReviewResources: AccessReviewResources = [{ model: EnvironmentModel, verb: 'list' }];
 
   return (
     <NamespacedPage>
