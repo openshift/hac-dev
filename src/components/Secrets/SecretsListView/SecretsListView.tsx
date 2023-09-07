@@ -11,6 +11,7 @@ import {
 } from '@patternfly/react-core';
 import { useRemoteSecrets } from '../../../hooks/UseRemoteSecrets';
 import { useSearchParam } from '../../../hooks/useSearchParam';
+import secretEmptyStateIcon from '../../../imgs/secret.svg';
 import { RemoteSecretModel } from '../../../models';
 import AppEmptyState from '../../../shared/components/empty-state/AppEmptyState';
 import FilteredEmptyState from '../../../shared/components/empty-state/FilteredEmptyState';
@@ -57,16 +58,20 @@ const SecretsListView: React.FC<SecretsListViewProps> = ({ readOnly = false }) =
 
   const hideCreateButton = true; // to be removed once create Secret form is implemented.
 
-  /**Todo: Update emptystateImage once it is available */
   const emptyState = (
     <AppEmptyState
-      emptyStateImg={null}
-      title="Manage your secrets"
+      emptyStateImg={secretEmptyStateIcon}
+      title="Easily manage your build and deployment secrets"
       data-testid="secrets-empty-state"
     >
       <EmptyStateBody>
+        A secret is a sensitive piece of information, such as a crendential, access token, API key
+        or encryption key,
+        <br /> used to securely access various resources or services. You can easily manage all your
+        secrets from one place.
         <br />
-        To get started, create a secret.
+        {/* Todo: uncomment this once the add secret is implemented */}
+        {/* To get started, add a secret */}
       </EmptyStateBody>
       {!readOnly && <div className="pf-u-mt-xl">{createSecretButton}</div>}
     </AppEmptyState>
