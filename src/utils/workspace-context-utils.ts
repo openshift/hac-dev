@@ -13,16 +13,16 @@ const workspacePathMatcher = new RegExp(/workspaces\/([^/]+)/);
 export type WorkspaceContextData = {
   namespace: string;
   workspace: string;
+  workspaceResource: Workspace;
   workspacesLoaded: boolean;
   workspaces: Workspace[];
-  setWorkspace: React.Dispatch<React.SetStateAction<string>>;
   lastUsedWorkspace: string;
 };
 
 export const WorkspaceContext = React.createContext<WorkspaceContextData>({
   namespace: '',
   workspace: '',
-  setWorkspace: () => {},
+  workspaceResource: undefined,
   workspaces: [],
   workspacesLoaded: false,
   lastUsedWorkspace: getActiveWorkspace(),
@@ -42,7 +42,8 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
   const lastUsedWorkspace = useLastUsedWorkspace();
   const navigate = useNavigate();
   const [, workspaceFromUrl = ''] = window.location.pathname.match(workspacePathMatcher) || [];
-  const [workspace, setWorkspace] = React.useState<string>(getActiveWorkspace);
+  const [workspaceName, setWorkspaceName] = React.useState<string>(getActiveWorkspace);
+  const [workspace, setWorkspace] = React.useState<Workspace>();
   const [namespace, setNamespace] = React.useState<string>('');
   const [workspaces, setWorkspaces] = React.useState<Workspace[]>([]);
   const [workspacesLoaded, setWorkspacesLoaded] = React.useState<boolean>(false);
@@ -56,26 +57,23 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
   );
 
   React.useEffect(() => {
-    if (workspace && workspaces?.length > 0) {
-      setActiveWorkspace(workspace);
-      const ns = getDefaultNsForWorkspace(workspaces, workspace);
+    if (workspaceName && workspaces?.length > 0) {
+      setActiveWorkspace(workspaceName);
+      const ns = getDefaultNsForWorkspace(workspaces, workspaceName);
       if (ns) {
         setNamespace(ns.name);
       }
     }
-  }, [getDefaultNsForWorkspace, setNamespace, workspace, workspaces]);
+  }, [getDefaultNsForWorkspace, setNamespace, workspaceName, workspaces]);
 
   // switch workspace if URL segment has changed
   React.useEffect(() => {
-    if (
-      workspace &&
-      workspaceFromUrl &&
-      workspaceFromUrl !== workspace &&
-      workspaces.some((w) => w.metadata.name === workspaceFromUrl)
-    ) {
-      setWorkspace(workspaceFromUrl);
+    const urlWorkspace = workspaces.find((w) => w.metadata.name === workspaceFromUrl);
+    if (workspaceName && workspaceFromUrl && workspaceFromUrl !== workspaceName && urlWorkspace) {
+      setWorkspaceName(workspaceFromUrl);
+      setWorkspace(urlWorkspace);
     }
-  }, [workspace, workspaceFromUrl, workspaces]);
+  }, [workspaceName, workspaceFromUrl, workspaces]);
 
   React.useEffect(() => {
     let unmounted = false;
@@ -95,24 +93,25 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
         return;
       }
 
-      let ws: string;
+      let ws: Workspace;
       if (Array.isArray(allWorkspaces)) {
-        const workspaceNames = allWorkspaces.map((dataResource) => dataResource.metadata.name);
+        const findWorkspace = (wsName: string) =>
+          allWorkspaces.find((w) => w.metadata.name === wsName);
 
-        const isWorkspaceAvailable = (wsName: string) => workspaceNames.includes(wsName);
-
-        ws = isWorkspaceAvailable(workspaceFromUrl)
-          ? workspaceFromUrl
-          : isWorkspaceAvailable(lastUsedWorkspace)
-          ? lastUsedWorkspace
-          : getHomeWorkspace(allWorkspaces)?.metadata?.name ?? workspaceNames[0];
+        ws =
+          findWorkspace(workspaceFromUrl) ??
+          findWorkspace(lastUsedWorkspace) ??
+          getHomeWorkspace(allWorkspaces) ??
+          allWorkspaces[0];
       }
 
       if (ws) {
+        const wsName = ws.metadata.name;
+        setWorkspaceName(wsName);
         setWorkspace(ws);
         setWorkspaces(allWorkspaces);
         setWorkspacesLoaded(true);
-        const wsBasePath = generatePath('/application-pipeline/workspaces/:ws', { ws });
+        const wsBasePath = generatePath('/application-pipeline/workspaces/:ws', { ws: wsName });
 
         window.location.pathname.includes('/application-pipeline/workspaces') &&
           !window.location.pathname.includes(wsBasePath) &&
@@ -130,9 +129,9 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
   return {
     namespace,
     lastUsedWorkspace,
-    workspace,
+    workspace: workspaceName,
+    workspaceResource: workspace,
     workspaces,
-    setWorkspace,
     workspacesLoaded,
   };
 };

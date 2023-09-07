@@ -116,8 +116,8 @@ const ComponentDetailsViewWrapper = ({ children }) => (
     value={{
       namespace: 'test-ns',
       lastUsedWorkspace: 'test-ws',
-      setWorkspace: () => {},
       workspace: 'test-ws',
+      workspaceResource: undefined,
       workspacesLoaded: true,
       workspaces: [],
     }}

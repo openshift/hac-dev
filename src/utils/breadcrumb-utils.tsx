@@ -6,10 +6,7 @@ import { ApplicationSwitcher } from '../components/ApplicationDetails/Applicatio
 import { WorkspaceSwitcher } from '../components/ApplicationDetails/WorkspaceSwitcher';
 import { useWorkspaceInfo } from './workspace-context-utils';
 
-export const useApplicationBreadcrumbs = (appDisplayName = null, withLink = true) => {
-  const params = useParams();
-  const applicationName = params.appName || appDisplayName;
-
+export const useWorkspaceBreadcrumbs = () => {
   const { workspace } = useWorkspaceInfo();
 
   return [
@@ -26,6 +23,18 @@ export const useApplicationBreadcrumbs = (appDisplayName = null, withLink = true
       </Link>
     </BreadcrumbItem>,
     <WorkspaceSwitcher key="workspace" />,
+  ];
+};
+
+export const useApplicationBreadcrumbs = (appDisplayName = null, withLink = true) => {
+  const params = useParams();
+  const applicationName = params.appName || appDisplayName;
+
+  const { workspace } = useWorkspaceInfo();
+  const workspaceBreadcrumbs = useWorkspaceBreadcrumbs();
+
+  return [
+    ...workspaceBreadcrumbs,
     <span key="workspace-divider" className={styles.breadcrumbItemDivider}>
       |
     </span>,

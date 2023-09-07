@@ -29,6 +29,7 @@ const watchResourceMock = useK8sWatchResource as jest.Mock;
 const navigateMock = jest.fn();
 
 jest.mock('react-router-dom', () => ({
+  useLocation: jest.fn(() => ({})),
   Link: (props) => <a href={props.to}>{props.children}</a>,
   useNavigate: () => navigateMock,
   useParams: jest.fn(() => ({
@@ -96,8 +97,8 @@ const IntegrationTestViewWrapper = ({ children }) => (
     value={{
       namespace: 'test-ns',
       lastUsedWorkspace: 'test-ws',
-      setWorkspace: () => {},
       workspace: 'test-ws',
+      workspaceResource: undefined,
       workspacesLoaded: true,
       workspaces: [],
     }}

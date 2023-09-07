@@ -20,7 +20,7 @@ export type ModalLauncher<Result = {}> = (onClose: OnModalClose<Result>) => Reac
 export const createRawModalLauncher =
   <D extends unknown, P extends ComponentProps<D>>(
     Component: React.ComponentType<P & { modalProps?: ModalProps }>,
-    modalProps?: ModalComponentProps,
+    modalProps: ModalComponentProps,
   ) =>
   (componentProps?: P): ModalLauncher<D> =>
   (onModalClose) => {

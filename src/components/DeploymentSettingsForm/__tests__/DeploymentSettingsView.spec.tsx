@@ -13,6 +13,7 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
+  useLocation: jest.fn(() => ({})),
   useNavigate: jest.fn(),
   useParams: jest.fn(() => ({
     appName: 'test-app',
