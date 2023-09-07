@@ -14,7 +14,6 @@ import {
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
 import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
-import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
 import { OverviewTabPage } from '../support/pages/tabs/OverviewTabPage';
 import { Common } from './Common';
 import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
@@ -121,7 +120,6 @@ export class Applications {
 
   static goToComponentsTab() {
     cy.get(componentsTabPO.clickTab).click();
-    return new ComponentsTabPage();
   }
 
   static goToActivityTab() {

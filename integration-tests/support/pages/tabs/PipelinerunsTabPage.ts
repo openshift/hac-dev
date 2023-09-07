@@ -137,6 +137,12 @@ export class DetailsTab {
         });
       });
   }
+
+  static waitForPLRAndDownloadAllLogs(allTaskLogs = true) {
+    DetailsTab.waitUntilStatusIsNotRunning();
+    LogsTab.downloadAllTaskLogs(allTaskLogs);
+    UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+  }
 }
 
 export class TaskRunsTab {
