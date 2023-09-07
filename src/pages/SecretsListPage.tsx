@@ -34,7 +34,7 @@ const SecretsListPage: React.FC = () => {
           <Divider style={{ background: 'white', paddingTop: 'var(--pf-v5-global--spacer--md)' }} />
 
           <PageSection variant={PageSectionVariants.light} isFilled>
-            <SecretsListView />
+            <SecretsListView readOnly />
           </PageSection>
         </PageLayout>
       </PageAccessCheck>
