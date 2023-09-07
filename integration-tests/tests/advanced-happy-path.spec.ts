@@ -1,12 +1,11 @@
-import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
 import { SecretsPage } from '../support/pages/SecretsPage';
 import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
 import { LatestCommitsTabPage } from '../support/pages/tabs/LatestCommitsTabPage';
+import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
 import {
   DetailsTab,
-  LogsTab,
   PipelinerunsTabPage,
   TaskRunsTab,
 } from '../support/pages/tabs/PipelinerunsTabPage';
@@ -129,9 +128,7 @@ describe('Advanced Happy path', () => {
         .then((pipelinerunName) => {
           componentInfo.firstPipelineRunName = pipelinerunName;
           UIhelper.clickLink(componentInfo.firstPipelineRunName);
-          DetailsTab.waitUntilStatusIsNotRunning();
-          LogsTab.downloadAllTaskLogs();
-          UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+          DetailsTab.waitForPLRAndDownloadAllLogs();
 
           TaskRunsTab.goToTaskrunsTab();
           TaskRunsTab.assertTaskNamesAndTaskRunStatus(
@@ -173,16 +170,14 @@ describe('Advanced Happy path', () => {
 
     it('Verify vulnebralities on pipeline run list', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
-      UIhelper.getTableRow('Pipeline run List', componentInfo.firstPipelineRunName).within(() => {
-        cy.contains(vulnerabilities).should('be.visible');
-      });
+      UIhelper.verifyRowInTable('Pipeline run List', componentInfo.firstPipelineRunName, [
+        vulnerabilities,
+      ]);
     });
 
     it('Verify Enterprise contract Test pipeline run Details', () => {
       UIhelper.clickRowCellInTable('Pipeline run List', 'Test', `${applicationName}-`);
-      DetailsTab.waitUntilStatusIsNotRunning();
-      LogsTab.downloadAllTaskLogs(false);
-      UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+      DetailsTab.waitForPLRAndDownloadAllLogs(false);
     });
   });
 
@@ -190,19 +185,7 @@ describe('Advanced Happy path', () => {
     it('Verify the status code and response body of the deployment URL of each component', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
       Applications.goToComponentsTab();
-      applicationDetailPage.expandDetails(componentName);
-
-      cy.get(applicationDetailPagePO.route(componentName), { timeout: 240000 })
-        .invoke('text')
-        .then((route) => {
-          APIHelper.checkResponseBodyAndStatusCode(
-            route,
-            componentInfo.deploymentBodyOriginal,
-            5000,
-          );
-        });
-
-      Applications.checkComponentStatus(componentName, 'Build Succeeded');
+      ComponentsTabPage.verifyRoute(componentName, componentInfo.deploymentBodyOriginal);
     });
 
     it('Verify SBOM on components tab', () => {
@@ -291,10 +274,7 @@ describe('Advanced Happy path', () => {
         .then((pipelinerunName) => {
           componentInfo.secondPipelineRunName = pipelinerunName;
           UIhelper.clickLink(componentInfo.secondPipelineRunName);
-          DetailsTab.waitUntilStatusIsNotRunning();
-          LogsTab.downloadAllTaskLogs();
-          UIhelper.verifyLabelAndValue('Status', 'Succeeded');
-
+          DetailsTab.waitForPLRAndDownloadAllLogs();
           TaskRunsTab.goToTaskrunsTab();
           TaskRunsTab.assertTaskNamesAndTaskRunStatus(
             TaskRunsTab.getAdvancedTaskNamesList(componentInfo.secondPipelineRunName),
@@ -314,9 +294,7 @@ describe('Advanced Happy path', () => {
         UIhelper.verifyRowInTable('Pipeline run List', testPipelineName, [/^Test$/]);
         UIhelper.clickLink(testPipelineName);
       });
-      DetailsTab.waitUntilStatusIsNotRunning();
-      LogsTab.downloadAllTaskLogs();
-      UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+      DetailsTab.waitForPLRAndDownloadAllLogs();
       UIhelper.verifyLabelAndValue('Related pipelines', '2 pipelines').click();
       PipelinerunsTabPage.verifyRelatedPipelines(componentInfo.secondPipelineRunName);
     });
@@ -360,9 +338,7 @@ describe('Advanced Happy path', () => {
         integrationTestDetails.enterpriseContractITPipelineRunName = testPipelineName;
         UIhelper.verifyRowInTable('Pipeline run List', testPipelineName, [/^Test$/]);
         UIhelper.clickLink(testPipelineName);
-        DetailsTab.waitUntilStatusIsNotRunning();
-        LogsTab.downloadAllTaskLogs(false);
-        UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+        DetailsTab.waitForPLRAndDownloadAllLogs(false);
         UIhelper.verifyLabelAndValue('Pipeline', testPipelineName);
         UIhelper.verifyLabelAndValue('Related pipelines', '2 pipelines').click();
         PipelinerunsTabPage.verifyRelatedPipelines(
@@ -413,22 +389,7 @@ describe('Advanced Happy path', () => {
     it('Verify that the component deployment reflects latest changes', () => {
       Applications.clickBreadcrumbLink(applicationName);
       Applications.goToComponentsTab();
-
-      applicationDetailPage.expandDetails(componentName);
-
-      cy.get(applicationDetailPagePO.route(componentName), { timeout: 240000 })
-        .invoke('text')
-        .then((route) => {
-          APIHelper.checkResponseBodyAndStatusCode(
-            route,
-            componentInfo.deploymentBodyUpdated,
-            20000,
-            0,
-            20,
-          );
-        });
-
-      Applications.checkComponentStatus(componentName, 'Build Succeeded');
+      ComponentsTabPage.verifyRoute(componentName, componentInfo.deploymentBodyUpdated, 20000, 20);
     });
 
     it('Verify view pod logs', () => {
@@ -437,22 +398,41 @@ describe('Advanced Happy path', () => {
       applicationDetailPage.checkPodLog('my-go', 'TEST_ENV_VAR : Test go app');
       applicationDetailPage.closeBuildLog();
     });
+
+    it('Verify Component Details Page', () => {
+      UIhelper.clickLink(componentName);
+      UIhelper.verifyLabelAndValue('Triggered by', componentInfo.updatedCommitMessage);
+      UIhelper.verifyLabelAndValue('Build trigger', 'Automatic');
+    });
+
+    it('verify Commits Tab on component Details page', () => {
+      Applications.goToActivityTab();
+      latestCommitsTabPage.verifyLatestCommits([
+        { name: componentInfo.firstCommitTitle, component: componentName },
+        { name: componentInfo.updatedCommitMessage, component: componentName },
+      ]);
+    });
+
+    it('verify Pipeline runs Tab on component Details page', () => {
+      UIhelper.clickTab('Pipeline runs');
+      UIhelper.verifyRowInTable('Pipeline run List', componentInfo.firstPipelineRunName, [
+        vulnerabilities,
+        /Succeeded/,
+      ]);
+      UIhelper.verifyRowInTable('Pipeline run List', componentInfo.secondPipelineRunName, [
+        vulnerabilities,
+        /Succeeded/,
+      ]);
+    });
   });
 
   describe('Verify Latest commits and Pipeline runs in Activity Tab', () => {
     it('Verify the Commits List view should have both the commits', () => {
+      Applications.clickBreadcrumbLink(applicationName);
       Applications.goToLatestCommitsTab();
-      UIhelper.verifyRowInTable('Commit List', componentInfo.firstCommitTitle, [
-        'main',
-        componentName,
-        gitHubUser,
-        'Succeeded',
-      ]);
-      UIhelper.verifyRowInTable('Commit List', componentInfo.updatedCommitMessage, [
-        'main',
-        componentName,
-        gitHubUser,
-        'Succeeded',
+      latestCommitsTabPage.verifyLatestCommits([
+        { name: componentInfo.firstCommitTitle, component: componentName },
+        { name: componentInfo.updatedCommitMessage, component: componentName },
       ]);
     });
 
@@ -506,22 +486,14 @@ describe('Advanced Happy path', () => {
   describe('Verify the Latest Commits section on application overview page', () => {
     it('Verify the Commits List view should have both the commits', () => {
       Applications.goToOverviewTab();
-      UIhelper.verifyRowInTable(
-        'Commit List',
-        componentInfo.firstCommitTitle,
-        ['main', componentName, gitHubUser, 'Succeeded'],
-        false,
-      );
-      UIhelper.verifyRowInTable(
-        'Commit List',
-        componentInfo.updatedCommitMessage,
-        ['main', componentName, gitHubUser, 'Succeeded'],
-        false,
-      );
+      latestCommitsTabPage.verifyLatestCommits([
+        { name: componentInfo.firstCommitTitle, component: componentName },
+        { name: componentInfo.updatedCommitMessage, component: componentName },
+      ]);
     });
 
     it('Verify the Commit Overview Tab of the Last Commit', () => {
-      latestCommitsTabPage.clickOnCommit(componentInfo.updatedCommitMessage, true);
+      latestCommitsTabPage.clickOnCommit(componentInfo.updatedCommitMessage);
       latestCommitsTabPage.verifyCommitsPageTitleAndStatus(componentInfo.updatedCommitMessage);
       latestCommitsTabPage.verifyCommitID(
         Cypress.env(`${componentInfo.updatedCommitMessage}_SHA`),

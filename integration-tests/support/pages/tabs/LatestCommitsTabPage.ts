@@ -2,6 +2,11 @@ import { UIhelper } from '../../../utils/UIhelper';
 import { APIHelper } from '../../../utils/APIHelper';
 import { githubAPIEndpoints } from '../../../utils/APIEndpoints';
 
+type commitsRow = {
+  name: string;
+  component: string;
+};
+
 // Latest Commits List view page
 export class LatestCommitsTabPage {
   mergePR(
@@ -45,8 +50,8 @@ export class LatestCommitsTabPage {
     });
   }
 
-  clickOnCommit(commit: string, isOverview = false) {
-    UIhelper.clickRowCellInTable('Commit List', commit, commit, !isOverview);
+  clickOnCommit(commit: string) {
+    UIhelper.clickRowCellInTable('Commit List', commit, commit);
   }
 
   verifyCommitsPageTitleAndStatus(commitTitle: string) {
@@ -72,6 +77,17 @@ export class LatestCommitsTabPage {
   verifyNodesOnCommitOverview(nodes: string[]) {
     nodes.forEach((nodetext) => {
       UIhelper.verifyGraphNodes(nodetext);
+    });
+  }
+
+  verifyLatestCommits(commitsRows: commitsRow[]) {
+    commitsRows.forEach((commitsRow) => {
+      UIhelper.verifyRowInTable('Commit List', commitsRow.name, [
+        'main',
+        commitsRow.component,
+        Cypress.env('GH_USERNAME'),
+        'Succeeded',
+      ]);
     });
   }
 }

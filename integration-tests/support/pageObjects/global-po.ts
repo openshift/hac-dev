@@ -58,4 +58,5 @@ export const UIhelperPO = {
   formGroupLabelText: 'div.pf-v5-c-form__group span.pf-v5-c-form__label-text',
   listGroup_dt: 'div[class*="list__group"] dt',
   pf5_button: '[data-ouia-component-type="PF5/Button"]',
+  tableRow: (tableAriaLabel: string) => `[aria-label="${tableAriaLabel}"] tr[role="row"]`,
 };

@@ -57,18 +57,14 @@ describe('Create Env using Non-OpenShift Cluster', () => {
         .invoke('text')
         .then((pipelinerunName) => {
           UIhelper.clickLink(pipelinerunName);
-          DetailsTab.waitUntilStatusIsNotRunning();
-          LogsTab.downloadAllTaskLogs();
-          UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+          DetailsTab.waitForPLRAndDownloadAllLogs();
         });
     });
 
     it('Verify Enterprise contract Test pipeline run Details', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
       UIhelper.clickRowCellInTable('Pipeline run List', 'Test', `${applicationName}-`);
-      DetailsTab.waitUntilStatusIsNotRunning();
-      LogsTab.downloadAllTaskLogs(false);
-      UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+      DetailsTab.waitForPLRAndDownloadAllLogs(false);
     });
   });
 

@@ -1,10 +1,9 @@
 import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
-import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
+import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
 import {
   DetailsTab,
-  LogsTab,
   PipelinerunsTabPage,
   TaskRunsTab,
 } from '../support/pages/tabs/PipelinerunsTabPage';
@@ -63,7 +62,8 @@ describe('Basic Happy Path', () => {
     });
 
     it("Use HACBS 'Components' tabs to start adding a new component", () => {
-      Applications.goToComponentsTab().clickAddComponent();
+      Applications.goToComponentsTab();
+      ComponentsTabPage.clickAddComponent();
       cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
       cy.url().should('include', `/import?application=${applicationName}`);
 
@@ -94,10 +94,8 @@ describe('Basic Happy Path', () => {
           UIhelper.verifyLabelAndValue('Application', applicationName);
           UIhelper.verifyLabelAndValue('Component', componentName);
           UIhelper.verifyLabelAndValue('Related pipelines', '0 pipelines');
-          DetailsTab.waitUntilStatusIsNotRunning();
 
-          LogsTab.downloadAllTaskLogs();
-          UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+          DetailsTab.waitForPLRAndDownloadAllLogs();
 
           //Verify the Pipeline run details Graph
           piplinerunlogsTasks.forEach((item) => {
@@ -114,9 +112,7 @@ describe('Basic Happy Path', () => {
     it('Verify Enterprise contract Test pipeline run Details', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
       UIhelper.clickRowCellInTable('Pipeline run List', 'Test', `${applicationName}-`);
-      DetailsTab.waitUntilStatusIsNotRunning();
-      LogsTab.downloadAllTaskLogs(false);
-      UIhelper.verifyLabelAndValue('Status', 'Succeeded');
+      DetailsTab.waitForPLRAndDownloadAllLogs(false);
     });
   });
 
@@ -124,16 +120,7 @@ describe('Basic Happy Path', () => {
     it('Verify the status code and response body of the deployment URL of each component', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
       Applications.goToComponentsTab();
-
-      applicationDetailPage.expandDetails(componentName);
-
-      cy.get(applicationDetailPagePO.route(componentName), { timeout: 240000 })
-        .invoke('text')
-        .then((route) => {
-          APIHelper.checkResponseBodyAndStatusCode(route, quarkusDeplomentBody, 10000);
-        });
-
-      Applications.checkComponentStatus(componentName, 'Build Succeeded');
+      ComponentsTabPage.verifyRoute(componentName, quarkusDeplomentBody);
     });
 
     it('Verify deployed image exists', () => {
@@ -168,12 +155,12 @@ describe('Basic Happy Path', () => {
       )
         .its('body[0].sha')
         .then((commitSHA) => {
-          UIhelper.verifyRowInTable(
-            'Commit List',
-            componentName,
-            [/main/, new RegExp(`manual build ${commitSHA.slice(0, 6)}`), /^-$/, /Succeeded/],
-            false,
-          );
+          UIhelper.verifyRowInTable('Commit List', componentName, [
+            /main/,
+            new RegExp(`manual build ${commitSHA.slice(0, 6)}`),
+            /^-$/,
+            /Succeeded/,
+          ]);
         });
     });
 
