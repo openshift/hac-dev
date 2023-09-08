@@ -58,6 +58,7 @@ describe('Advanced Happy path', () => {
     integrationTestNameTemp: Common.generateAppName('integration-tests-temp'),
     githubURL: 'https://github.com/redhat-appstudio/integration-examples',
     pathInRepository: 'pipelines/integration_pipeline_pass.yaml',
+    env: 'development',
   };
 
   const integrationTestTaskNames = ['task-success', 'task-success-2', 'task-skipped'];
@@ -202,6 +203,7 @@ describe('Advanced Happy path', () => {
         integrationTestDetails.githubURL,
         'main',
         integrationTestDetails.pathInRepository,
+        integrationTestDetails.env,
         'check',
       );
       integrationTestsTabPage.verifyRowInIntegrationTestsTable({
@@ -219,6 +221,7 @@ describe('Advanced Happy path', () => {
         integrationTestDetails.githubURL,
         'main',
         integrationTestDetails.pathInRepository,
+        'No environment',
       );
       integrationTestsTabPage.verifyRowInIntegrationTestsTable({
         name: integrationTestDetails.integrationTestNameTemp,
@@ -234,6 +237,7 @@ describe('Advanced Happy path', () => {
         'Edit',
       );
       Common.waitForLoad();
+      UIhelper.verifyValueInDropdownbyLabelName('Environment', integrationTestDetails.env, true);
       integrationTestsTabPage.editIntegrationTest(integrationTestDetails.githubURL, 'uncheck');
       integrationTestsTabPage.verifyRowInIntegrationTestsTable({
         name: integrationTestDetails.integrationTestName,

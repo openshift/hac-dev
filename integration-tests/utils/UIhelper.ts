@@ -19,9 +19,19 @@ export class UIhelper {
   }
 
   static selectValueInDropdownbyLabelName(label: string, value: string) {
-    cy.contains('div[class="pf-v5-c-form__group"]', label).within(() => {
+    cy.contains(UIhelperPO.formGroup, label).within(() => {
       cy.get('div[data-test="dropdown"] > button').click();
       cy.contains('a', value).click().should('not.exist');
+    });
+  }
+
+  static verifyValueInDropdownbyLabelName(label: string, value: string, disabled: boolean = false) {
+    cy.contains(UIhelperPO.formGroup, label).within(() => {
+      if (disabled) {
+        cy.contains(UIhelperPO.dropdownToggle, value).should('be.visible').should('be.disabled');
+      } else {
+        cy.contains(UIhelperPO.dropdownToggle, value).should('be.visible').should('be.enabled');
+      }
     });
   }
 
