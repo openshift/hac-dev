@@ -7,12 +7,13 @@ import { useOnMount } from '../../../hooks/useOnMount';
 import { getFieldId, InputField } from '../../../shared';
 import { HeadTitle } from '../../../shared/components/HeadTitle';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
-import { ServiceProviderType } from '../../../types';
-import { useAccessCheck } from '../utils/auth-utils';
+import { SPIAccessCheckAccessibilityStatus, ServiceProviderType } from '../../../types';
+import { useAccessCheck, useAccessTokenBinding } from '../utils/auth-utils';
 import { ImportFormValues } from '../utils/types';
 import { gitUrlRegex } from '../utils/validation-utils';
 import AuthOptions from './AuthOptions';
 import GitOptions from './GitOptions';
+import { useEnablePrivateAuthFlowFlag } from './useEnablePrivateAuthFlowFlag';
 
 import './SourceSection.scss';
 
@@ -25,6 +26,7 @@ export enum AccessHelpText {
 type SourceSectionProps = {};
 
 const SourceSection: React.FC<SourceSectionProps> = () => {
+  const enablePrivateAuth = useEnablePrivateAuthFlowFlag();
   const [, { value: source }] = useField<string>({
     name: 'source.git.url',
     type: 'input',
@@ -49,10 +51,8 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
   const fieldId = getFieldId('source.git.url', 'input');
   const label = 'Git repository URL';
 
-  const [{ isGit, isRepoAccessible, serviceProvider }, accessCheckLoaded] = useAccessCheck(
-    isValidated ? null : sourceUrl,
-    authSecret,
-  );
+  const [{ isGit, isRepoAccessible, serviceProvider, accessibility }, accessCheckLoaded] =
+    useAccessCheck(isValidated ? null : sourceUrl, authSecret);
 
   const setFormValidating = React.useCallback(() => {
     setValidated(ValidatedOptions.default);
@@ -115,7 +115,7 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
           setHelpTextInvalid(
             "Looks like your repository is private, so we're not able to access it.",
           );
-          // setShowAuthOptions(true);
+          enablePrivateAuth && setShowAuthOptions(true);
         } else if (!serviceProvider) {
           setValidated(ValidatedOptions.error);
           setFieldValue('source.isValidated', false);
@@ -131,27 +131,26 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
     setFieldValue,
     setFormValidated,
     sourceUrl,
+    enablePrivateAuth,
   ]);
 
-  // Sections related to auth options. Disabled until we have full private repo support.
+  const isPrivateAuthorized =
+    accessCheckLoaded &&
+    isRepoAccessible &&
+    !showAuthOptions &&
+    accessibility === SPIAccessCheckAccessibilityStatus.private;
 
-  // const isPrivateAuthorized =
-  //   accessCheckLoaded &&
-  //   isRepoAccessible &&
-  //   !showAuthOptions &&
-  //   accessibility === SPIAccessCheckAccessibilityStatus.private;
+  useAccessTokenBinding(isPrivateAuthorized && source);
 
-  // useAccessTokenBinding(isPrivateAuthorized && source);
-
-  // React.useEffect(() => {
-  //   if (isPrivateAuthorized) {
-  //     if (authSecret) {
-  //       setFormValidated();
-  //     } else {
-  //       setFormValidating();
-  //     }
-  //   }
-  // }, [authSecret, isPrivateAuthorized, setFormValidated, setFormValidating]);
+  React.useEffect(() => {
+    if (isPrivateAuthorized && enablePrivateAuth) {
+      if (authSecret) {
+        setFormValidated();
+      } else {
+        setFormValidating();
+      }
+    }
+  }, [authSecret, isPrivateAuthorized, enablePrivateAuth, setFormValidated, setFormValidating]);
 
   useOnMount(() => {
     source && !isValidated && handleSourceChange();
@@ -173,8 +172,8 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
             data-test="enter-source"
           />
         </FormGroup>
-        {showAuthOptions && <AuthOptions />}
-        {showGitOptions && <GitOptions />}
+        {enablePrivateAuth && showAuthOptions ? <AuthOptions /> : null}
+        {showGitOptions ? <GitOptions /> : null}
       </FormSection>
     </Bullseye>
   );

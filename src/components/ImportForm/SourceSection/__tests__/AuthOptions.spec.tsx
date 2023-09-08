@@ -16,6 +16,7 @@ jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
 
 jest.mock('../../utils/auth-utils', () => ({
   useAccessTokenBinding: jest.fn(),
+  initiateSpiAuthSession: jest.fn(),
 }));
 
 (window.open = jest.fn()) as jest.Mock;
@@ -79,10 +80,7 @@ describe('AuthOptions', () => {
       fireEvent.click(button);
     });
 
-    expect(windowOpenMock).toHaveBeenCalledWith(
-      'example.com/auth?state=abcd&k8s_token=token',
-      '_blank',
-    );
+    expect(windowOpenMock).toHaveBeenCalledWith('example.com/auth?state=abcd', '_blank');
   });
 
   afterAll(jest.resetAllMocks);

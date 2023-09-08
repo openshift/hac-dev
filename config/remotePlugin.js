@@ -66,6 +66,14 @@ const flagExtensions = [
       },
     },
   },
+  {
+    type: 'core.flag',
+    properties: {
+      handler: {
+        $codeRef: 'FlagUtils.setDevFeatureFlag',
+      },
+    },
+  },
 ];
 
 const contextProviderExtensions = [

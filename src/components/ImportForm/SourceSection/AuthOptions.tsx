@@ -12,7 +12,7 @@ import { CheckIcon } from '@patternfly/react-icons/dist/js/icons/check-icon';
 import { useFormikContext } from 'formik';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { useModalLauncher } from '../../modal/ModalProvider';
-import { useAccessTokenBinding } from '../utils/auth-utils';
+import { initiateSpiAuthSession, useAccessTokenBinding } from '../utils/auth-utils';
 import { ImportFormValues } from '../utils/types';
 import { createAuthTokenModal } from './AuthTokenModal';
 
@@ -31,7 +31,8 @@ const AuthOptions: React.FC = () => {
   const startAuthorization = React.useCallback(async () => {
     if (oAuthUrl) {
       const token = await getToken();
-      window.open(`${oAuthUrl}&k8s_token=${token}`, '_blank');
+      await initiateSpiAuthSession(oAuthUrl, token);
+      window.open(oAuthUrl, '_blank');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [oAuthUrl]);

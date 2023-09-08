@@ -214,3 +214,17 @@ export const useSpiAPI = () => {
     [getToken],
   );
 };
+
+/**
+ * Initiate SPI Auth session
+ * POST request returns setCookie header in response which is set on oAuthURl domain.
+ */
+export const initiateSpiAuthSession = async (oAuthUrl: string, token: string) => {
+  await fetch(`${oAuthUrl.split('/oauth/')[0]}/login`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
