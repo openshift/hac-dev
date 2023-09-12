@@ -216,6 +216,20 @@ describe('ComponentDetailsView', () => {
     screen.getByText('404: Page not found');
   });
 
+  it('should indicate when there is no container image', async () => {
+    useComponentMock.mockReturnValue([
+      { ...mockComponent, status: { ...mockComponent.status, containerImage: undefined } },
+      true,
+    ]);
+    routerRenderer(
+      <ComponentDetailsViewWrapper>
+        <ComponentDetailsView applicationName="test-application" componentName="human-resources" />,
+      </ComponentDetailsViewWrapper>,
+    );
+    expect(screen.queryByTestId('sbom-test')).toBeNull();
+    expect(screen.queryByTestId('build-container-image-test')).toBeNull();
+  });
+
   it('should indicate when there are no environment variables', async () => {
     useComponentMock.mockReturnValue([mockComponentWithoutEnvs, true]);
     routerRenderer(

@@ -239,17 +239,30 @@ const ComponentLatestBuild: React.FC<ComponentLatestBuildProps> = ({ component }
           <DescriptionListGroup>
             <DescriptionListTerm>SBOM</DescriptionListTerm>
             <DescriptionListDescription>
-              <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
-                {`cosign download sbom ${containerImage}`}
-              </ClipboardCopy>
+              {containerImage ? (
+                <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied" data-test="sbom-test">
+                  {`cosign download sbom ${containerImage}`}
+                </ClipboardCopy>
+              ) : (
+                '-'
+              )}
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>Build container image</DescriptionListTerm>
             <DescriptionListDescription>
-              <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
-                {containerImage}
-              </ClipboardCopy>
+              {containerImage ? (
+                <ClipboardCopy
+                  isReadOnly
+                  hoverTip="Copy"
+                  clickTip="Copied"
+                  data-test="build-container-image-test"
+                >
+                  {containerImage}
+                </ClipboardCopy>
+              ) : (
+                '-'
+              )}
             </DescriptionListDescription>
           </DescriptionListGroup>
           <ScanDescriptionListGroup taskRuns={taskRuns} showLogsLink />
