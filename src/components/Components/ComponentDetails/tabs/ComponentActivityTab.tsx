@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Tab, Tabs, TabTitleText, Title } from '@patternfly/react-core';
+import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../../consts/pipelinerun';
 import { useLocalStorage } from '../../../../hooks/useLocalStorage';
+import DetailsSection from '../../../../shared/components/details-page/DetailsSection';
 import { ComponentKind, PipelineRunKind } from '../../../../types';
 import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
 import PipelineRunsTab from '../../../ApplicationDetails/tabs/PipelineRunsTab';
@@ -65,53 +66,51 @@ export const ComponentActivityTab: React.FC<ComponentActivityTabProps> = ({ comp
     !plr.spec.params?.find((p) => p.name === 'SNAPSHOT');
 
   return (
-    <>
-      <Title size="xl" headingLevel="h3" className="pf-v5-c-title pf-u-mt-lg pf-u-mb-sm">
-        Activity
-      </Title>
-      <div className="component-details__details-description">
-        Monitor CI/CD activity for this component. Each item in the list represents a process that
-        started by a user, generated a snapshot and deployed.
-      </div>
-      <Tabs
-        style={{
-          width: 'fit-content',
-          marginBottom: 'var(--pf-v5-global--spacer--md)',
-        }}
-        activeKey={currentTab}
-        onSelect={(_, k: string) => {
-          setActiveTab(k);
-        }}
-        data-testid="activities-tabs-id"
-        unmountOnExit
+    <div>
+      <DetailsSection
+        title="Activity"
+        description="Monitor CI/CD activity for this component. Each item in the list represents a process that started by a user, generated a snapshot and deployed."
       >
-        <Tab
-          data-testid={`comp__activity__tabItem commits`}
-          title={<TabTitleText>Commits</TabTitleText>}
-          key="commits"
-          eventKey="latest-commits"
-          className="activity-tab"
+        <Tabs
+          style={{
+            width: 'fit-content',
+            marginBottom: 'var(--pf-v5-global--spacer--md)',
+          }}
+          activeKey={currentTab}
+          onSelect={(_, k: string) => {
+            setActiveTab(k);
+          }}
+          data-testid="activities-tabs-id"
+          unmountOnExit
         >
-          <CommitsListView
-            applicationName={applicationName}
-            componentName={component.spec.componentName}
-          />
-        </Tab>
-        <Tab
-          data-testid={`comp__activity__tabItem pipelineruns`}
-          title={<TabTitleText>Pipeline runs</TabTitleText>}
-          key="pipelineruns"
-          eventKey="pipelineruns"
-          className="activity-tab"
-        >
-          <PipelineRunsTab
-            applicationName={applicationName}
-            componentName={component.spec.componentName}
-            customFilter={nonTestSnapShotFilter}
-          />
-        </Tab>
-      </Tabs>
-    </>
+          <Tab
+            data-testid={`comp__activity__tabItem commits`}
+            title={<TabTitleText>Commits</TabTitleText>}
+            key="commits"
+            eventKey="latest-commits"
+            className="activity-tab"
+          >
+            <CommitsListView
+              applicationName={applicationName}
+              componentName={component.spec.componentName}
+            />
+          </Tab>
+          <Tab
+            data-testid={`comp__activity__tabItem pipelineruns`}
+            title={<TabTitleText>Pipeline runs</TabTitleText>}
+            key="pipelineruns"
+            eventKey="pipelineruns"
+            className="activity-tab"
+          >
+            <PipelineRunsTab
+              applicationName={applicationName}
+              componentName={component.spec.componentName}
+              customFilter={nonTestSnapShotFilter}
+            />
+          </Tab>
+        </Tabs>
+      </DetailsSection>
+    </div>
   );
 };
 
