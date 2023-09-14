@@ -23,6 +23,7 @@ import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import SnapshotOverviewTab from './tabs/SnapshotOverview';
+import SnapshotPipelineRunTab from './tabs/SnapshotPipelineRunsTab';
 
 const BUILD_PIPELINE_LABEL = `appstudio.openshift.io/build-pipelinerun`;
 
@@ -118,6 +119,10 @@ const SnapshotDetailsView: React.FC<SnapshotDetailsViewProps> = ({
         breadcrumbs={[
           ...applicationBreadcrumbs,
           {
+            path: `#`,
+            name: 'snapshots',
+          },
+          {
             path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/snapshots/${snapshotName}`,
             name: snapshot.metadata.name,
           },
@@ -188,6 +193,17 @@ const SnapshotDetailsView: React.FC<SnapshotDetailsViewProps> = ({
                 commit={commit}
                 buildPipelineName={buildPipelineName}
                 environments={deployedEnvironments}
+              />
+            ),
+          },
+          {
+            key: 'pipelineruns',
+            label: 'Pipeline runs',
+            component: (
+              <SnapshotPipelineRunTab
+                snapshotName={snapshotName}
+                applicationName={applicationName}
+                namespace={namespace}
               />
             ),
           },

@@ -521,6 +521,19 @@ const routeExtensions = [
       required: ['HACBS', 'SIGNUP'],
     },
   },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/workspaces/:workspaceName/applications/:appName/snapshots/:snapshotName/:activeTab',
+      exact: true,
+      component: {
+        $codeRef: 'SnapshotDetailsPage',
+      },
+    },
+    flags: {
+      required: ['HACBS', 'SIGNUP'],
+    },
+  },
 
   // 404 route
   {

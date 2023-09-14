@@ -21,6 +21,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         'build.appstudio.redhat.com/target_branch': 'branch_1',
         'pipelinesascode.tekton.dev/sha-title': 'test-title',
         'pipelinesascode.tekton.dev/repo-url': 'https://github.com/test/test-repo',
+        'appstudio.openshift.io/snapshot': 'my-test-output-2',
       },
       creationTimestamp: '2022-07-19T11:35:46Z',
       generation: 1,
