@@ -4,6 +4,7 @@ import { Tab, Tabs } from '@patternfly/react-core';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import ReleasePlanListView from './ReleasePlan/ReleasePlanListView';
+import ReleasePlanAdmissionListView from './ReleasePlanAdmission/ReleasePlanAdmissionListView';
 
 const RELEASE_SERVICE_TAB_KEY = 'release-service-tab-key';
 
@@ -41,6 +42,13 @@ export const ReleaseService: React.FC = () => {
     <Tabs activeKey={currentTab} onSelect={(_, k: string) => setActiveTab(k)}>
       <Tab key="release-plan" eventKey="release-plan" title="Release Plan">
         <ReleasePlanListView />
+      </Tab>
+      <Tab
+        key="release-plan-admission"
+        eventKey="release-plan-admission"
+        title="Release Plan Admission"
+      >
+        <ReleasePlanAdmissionListView />
       </Tab>
     </Tabs>
   );
