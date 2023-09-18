@@ -1,14 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner, Text, TextVariants } from '@patternfly/react-core';
 import { useEnvironments } from '../../hooks/useEnvironments';
 import { usePipelineRun } from '../../hooks/usePipelineRuns';
-import {
-  SnapshotEnvironmentBindingGroupVersionKind,
-  SnapshotGroupVersionKind,
-  SnapshotModel,
-} from '../../models';
+import { SnapshotEnvironmentBindingGroupVersionKind, SnapshotGroupVersionKind } from '../../models';
 import CommitLabel from '../../shared/components/commit-label/CommitLabel';
 import DetailsPage from '../../shared/components/details-page/DetailsPage';
 import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
@@ -19,7 +14,6 @@ import { Snapshot, SnapshotEnvironmentBinding } from '../../types/coreBuildServi
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { createCommitObjectFromPLR } from '../../utils/commits-utils';
 import { runStatus } from '../../utils/pipeline-utils';
-import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import SnapshotOverviewTab from './tabs/SnapshotOverview';
@@ -39,7 +33,6 @@ const SnapshotDetailsView: React.FC<SnapshotDetailsViewProps> = ({
   const { namespace, workspace } = useWorkspaceInfo();
 
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
-  const [canUpdateSnapshots] = useAccessReviewForModel(SnapshotModel, 'update');
 
   const [snapshot, loaded, loadErr] = useK8sWatchResource<Snapshot>({
     groupVersionKind: SnapshotGroupVersionKind,
@@ -166,21 +159,6 @@ const SnapshotDetailsView: React.FC<SnapshotDetailsViewProps> = ({
             )}
           </>
         }
-        actions={[
-          {
-            key: 'edit',
-            label: 'Edit',
-            component: (
-              <Link
-                to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/snapshots/${snapshotName}/edit`}
-              >
-                Edit
-              </Link>
-            ),
-            isDisabled: !canUpdateSnapshots,
-            disabledTooltip: "You don't have access to edit this snapshot",
-          },
-        ]}
         baseURL={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/snapshots/${snapshotName}`}
         tabs={[
           {
