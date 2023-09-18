@@ -5,11 +5,17 @@ import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash-es';
 import FormFooter from '../../../shared/components/form-components/FormFooter';
-import { AddSecretFormValues, SecretFor, SecretTypeDropdownLabel } from '../../../types';
+import {
+  AddSecretFormValues,
+  SecretFor,
+  SecretTypeDropdownLabel,
+  TargetDropdownDefaults,
+} from '../../../types';
 import { addSecret } from '../../../utils/create-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
 import PageLayout from '../../PageLayout/PageLayout';
+import { getAddSecretBreadcrumbs } from '../utils/secret-utils';
 import { secretFormValidationSchema } from '../utils/secret-validation';
 import { SecretTypeSubForm } from './SecretTypeSubForm';
 
@@ -22,8 +28,8 @@ const AddSecretForm = () => {
     secretFor: SecretFor.Build,
     targets: {
       application: '',
-      component: 'All components',
-      environment: 'All environments',
+      component: TargetDropdownDefaults.ALL_COMPONENTS,
+      environment: TargetDropdownDefaults.ALL_ENVIRONMENTS,
     },
     opaque: {
       keyValues: [{ key: '', value: '' }],
@@ -65,10 +71,7 @@ const AddSecretForm = () => {
     >
       {({ status, isSubmitting, handleReset, dirty, errors, handleSubmit }) => (
         <PageLayout
-          breadcrumbs={[
-            { path: '/application-pipeline/secrets', name: 'Secrets' },
-            { path: '#', name: 'Add secret' },
-          ]}
+          breadcrumbs={getAddSecretBreadcrumbs()}
           title="Add secret"
           description={
             <>
@@ -80,7 +83,7 @@ const AddSecretForm = () => {
           }
           footer={
             <FormFooter
-              submitLabel="Create secret"
+              submitLabel="Add secret"
               handleSubmit={handleSubmit}
               errorMessage={status && status.submitError}
               handleCancel={handleReset}

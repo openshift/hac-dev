@@ -15,10 +15,12 @@ import {
   SecretCondition,
   SecretFor,
   SecretKind,
+  SecretSPILabel,
   SecretType,
   SecretTypeDisplayLabel,
   SecretTypeDropdownLabel,
   SourceSecretType,
+  TargetDropdownDefaults,
 } from '../../../types';
 
 export type PartnerTask = {
@@ -73,6 +75,21 @@ export const typeToLabel = (type: string) => {
     case SecretType.sshAuth:
     case SecretType.opaque:
       return SecretTypeDisplayLabel.keyValue;
+
+    default:
+      return type;
+  }
+};
+export const typeToDropdownLabel = (type: string) => {
+  switch (type) {
+    case SecretType.dockerconfigjson:
+    case SecretType.dockercfg:
+      return SecretTypeDropdownLabel.image;
+    case SecretType.basicAuth:
+    case SecretType.sshAuth:
+      return SecretTypeDropdownLabel.source;
+    case SecretType.opaque:
+      return SecretTypeDropdownLabel.opaque;
 
     default:
       return type;
@@ -157,13 +174,13 @@ export const getTargetLabelsForRemoteSecret = (
   const labels = {};
   const { application, component, environment } = values.targets;
 
-  if (environment && environment !== 'All environments')
-    labels['appstudio.redhat.com/environment'] = environment;
+  if (environment && environment !== TargetDropdownDefaults.ALL_ENVIRONMENTS)
+    labels[SecretSPILabel.ENVIRONMENT] = environment;
 
-  if (application) labels['appstudio.redhat.com/application'] = application;
+  if (application) labels[SecretSPILabel.APPLICATION] = application;
 
-  if (component && component !== 'All components')
-    labels['appstudio.redhat.com/component'] = component;
+  if (component && component !== TargetDropdownDefaults.ALL_COMPONENTS)
+    labels[SecretSPILabel.COMPONENT] = component;
 
   return labels;
 };
@@ -249,7 +266,7 @@ export const createRemoteSecretResource = (
       namespace,
       labels: {
         [SecretByUILabel]: SecretFor.Build,
-        ...(labels.remoteSecret && { ...labels.remoteSecret }),
+        ...(labels?.remoteSecret && { ...labels.remoteSecret }),
       },
     },
     spec: {
@@ -267,7 +284,7 @@ export const createRemoteSecretResource = (
         }),
         name: secret.metadata.name,
         type: secret.type,
-        ...(labels.secret && { labels: labels.secret }),
+        ...(labels?.secret && { labels: labels.secret }),
       },
       targets: [
         {
@@ -286,4 +303,11 @@ export const createRemoteSecretResource = (
     },
     resource: remoteSecretResource,
   });
+};
+
+export const getAddSecretBreadcrumbs = () => {
+  return [
+    { path: '/application-pipeline/secrets', name: 'Secrets' },
+    { path: '#', name: 'Add secret' },
+  ];
 };

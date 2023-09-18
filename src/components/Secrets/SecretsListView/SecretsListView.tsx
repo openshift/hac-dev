@@ -24,7 +24,7 @@ type SecretsListViewProps = {
   readOnly?: boolean;
 };
 
-const SecretsListView: React.FC<SecretsListViewProps> = ({ readOnly = false }) => {
+const SecretsListView: React.FC<SecretsListViewProps> = () => {
   const { namespace, workspace } = useWorkspaceInfo();
 
   const [secrets, secretsLoaded] = useRemoteSecrets(namespace);
@@ -47,11 +47,11 @@ const SecretsListView: React.FC<SecretsListViewProps> = ({ readOnly = false }) =
         isDisabled={!canCreateRemoteSecret}
         tooltip="You don't have access to create a secret"
         analytics={{
-          link_name: 'create-secret',
+          link_name: 'add-secret',
           workspace,
         }}
       >
-        Create secret
+        Add secret
       </ButtonWithAccessTooltip>
     );
   }, [canCreateRemoteSecret, workspace]);
@@ -70,7 +70,7 @@ const SecretsListView: React.FC<SecretsListViewProps> = ({ readOnly = false }) =
         <br />
         To get started, add a secret
       </EmptyStateBody>
-      {!readOnly && <div className="pf-u-mt-xl">{createSecretButton}</div>}
+      {<div className="pf-u-mt-xl">{createSecretButton}</div>}
     </AppEmptyState>
   );
 

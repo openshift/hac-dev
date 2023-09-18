@@ -17,7 +17,7 @@ import {
   getLabelsForSecret,
   getSecretFormData,
   getTargetLabelsForRemoteSecret,
-  typeToLabel,
+  typeToDropdownLabel,
 } from '../components/Secrets/utils/secret-utils';
 import {
   ApplicationModel,
@@ -312,7 +312,7 @@ export const createSecretResource = async (
     secretResource,
     namespace,
     labels,
-    typeToLabel(secretResource.type) === SecretTypeDropdownLabel.image,
+    typeToDropdownLabel(secretResource.type) === SecretTypeDropdownLabel.image,
     dryRun,
   );
 

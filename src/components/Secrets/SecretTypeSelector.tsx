@@ -15,17 +15,18 @@ const SecretTypeSelector: React.FC<SecretTypeSelectorProps> = ({
   isDisabled,
   dropdownItems,
 }) => {
-  const { values, setFieldValue } = useFormikContext<SecretFormValues>();
+  const { values, setFieldValue, setFieldTouched } = useFormikContext<SecretFormValues>();
 
   const setValues = React.useCallback(
     (type: SecretTypeDropdownLabel) => {
       setFieldValue('type', type);
+      setFieldTouched('type', true);
       onChange && onChange(type);
     },
-    [onChange, setFieldValue],
+    [onChange, setFieldValue, setFieldTouched],
   );
   const title =
-    dropdownItems.find(({ value }) => value === values.type)?.value || dropdownItems[0].value;
+    dropdownItems.find(({ value }) => value === values.type)?.value || dropdownItems[0]?.value;
 
   return (
     <DropdownField

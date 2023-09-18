@@ -23,6 +23,12 @@ jest.mock('../../utils/rbac', () => ({
   useAccessReviewForModels: jest.fn(),
 }));
 
+jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
+  useChrome: () => ({
+    helpTopics: { setActiveTopic: jest.fn(), enableTopics: jest.fn(), disableTopics: jest.fn() },
+  }),
+}));
+
 jest.mock('../../components/Secrets/SecretsListView/SecretsListView', () => () => {
   return <div data-test="secrets-list-view" />;
 });
@@ -32,7 +38,7 @@ const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
-describe('EnvironmentsListPage', () => {
+describe('SecretsListPage', () => {
   beforeEach(() => {
     accessReviewMock.mockReturnValue([true, true]);
   });

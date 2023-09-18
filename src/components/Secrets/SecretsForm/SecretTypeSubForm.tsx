@@ -51,6 +51,7 @@ export const SecretTypeSubForm: React.FC = () => {
       opaque: { keyValues },
     },
     setFieldValue,
+    validateForm,
   } = useFormikContext<AddSecretFormValues>();
 
   const existingSecrets = [];
@@ -116,6 +117,7 @@ export const SecretTypeSubForm: React.FC = () => {
         dropdownItems={dropdownItems}
         isDisabled={secretFor === SecretFor.Deployment}
         onChange={(type) => {
+          setTimeout(() => validateForm());
           currentTypeRef.current = type;
           if (type !== SecretTypeDropdownLabel.opaque) {
             resetKeyValues();

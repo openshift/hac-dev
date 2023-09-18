@@ -18,9 +18,9 @@ import {
 export const secretFormValidationSchema = yup.object({
   name: yup
     .string()
+    .required('Required')
     .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
-    .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
-    .required('Required'),
+    .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG),
   type: yup.string(),
   opaque: yup.object().when('type', {
     is: SecretTypeDropdownLabel.opaque,

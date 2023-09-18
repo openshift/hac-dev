@@ -5,7 +5,9 @@ import { formikRenderer } from '../../../utils/test-utils';
 import { SourceSecretForm } from '../SecretsForm/SourceSecretForm';
 
 const initialValues = {
-  sourceAuthType: 'Basic authentication',
+  source: {
+    authType: 'Basic authentication',
+  },
 };
 
 describe('SourceSecretForm', () => {

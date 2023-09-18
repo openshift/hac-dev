@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
-import { screen, render, fireEvent } from '@testing-library/react';
+import { screen, render, fireEvent, waitFor, act } from '@testing-library/react';
 import { useSortedEnvironments } from '../../../hooks/useEnvironments';
 import { useRemoteSecrets } from '../../../hooks/UseRemoteSecrets';
 import { RemoteSecretStatusReason } from '../../../types';
@@ -116,5 +116,30 @@ describe('Secrets List', () => {
     screen.getByText('Injected');
     screen.getByText('Build');
     screen.getByText('Key/value (1)');
+  });
+
+  it('should remove the search filter string when clear button is clicked', async () => {
+    useRemoteSecretsMock.mockReturnValue([
+      [
+        sampleRemoteSecrets[RemoteSecretStatusReason.AwaitingData],
+        sampleRemoteSecrets[RemoteSecretStatusReason.Injected],
+      ],
+      true,
+    ]);
+    render(<SecretsListView />);
+
+    const filter = screen.getByPlaceholderText<HTMLInputElement>('Search secrets');
+    await act(async () => {
+      fireEvent.change(filter, {
+        target: { value: 'test-secret-three' },
+      });
+    });
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Clear all filters' }));
+    });
+
+    waitFor(() => {
+      expect(filter.value).toBe('');
+    });
   });
 });

@@ -10,19 +10,23 @@ import {
   SecretType,
   SecretTypeDropdownLabel,
   SourceSecretType,
+  TargetDropdownDefaults,
 } from '../../../types';
 import {
   createRemoteSecretResource,
   createSecretResource,
   getKubernetesSecretType,
+  getLabelsForSecret,
   getSecretFormData,
   getSecretRowData,
   getSupportedPartnerTaskKeyValuePairs,
   getSupportedPartnerTaskSecrets,
+  getTargetLabelsForRemoteSecret,
   isPartnerTask,
   isPartnerTaskAvailable,
   statusFromConditions,
   supportedPartnerTasksSecrets,
+  typeToDropdownLabel,
   typeToLabel,
 } from '../utils/secret-utils';
 import { sampleImagePullSecret, sampleOpaqueSecret, sampleRemoteSecrets } from './secret-data';
@@ -195,6 +199,25 @@ describe('typeToLabel', () => {
   });
 });
 
+describe('typeToDropdownLabel', () => {
+  it('should return default type for an unmatched type', () => {
+    expect(typeToDropdownLabel('test')).toBe('test');
+  });
+
+  it('should return image type for an docker config type', () => {
+    expect(typeToDropdownLabel(SecretType.dockerconfigjson)).toBe('Image pull secret');
+    expect(typeToDropdownLabel(SecretType.dockercfg)).toBe('Image pull secret');
+  });
+  it('should return source type for an basic type', () => {
+    expect(typeToDropdownLabel(SecretType.basicAuth)).toBe('Source secret');
+    expect(typeToDropdownLabel(SecretType.sshAuth)).toBe('Source secret');
+  });
+
+  it('should return key/value type for an basic type', () => {
+    expect(typeToDropdownLabel(SecretType.opaque)).toBe('Key/value secret');
+  });
+});
+
 describe('isPartnerTaskAvailable', () => {
   it('should return true if the partner task is available for the given type', () => {
     expect(isPartnerTaskAvailable(SecretTypeDropdownLabel.opaque)).toBe(true);
@@ -212,8 +235,8 @@ const formValues: AddSecretFormValues = {
   secretFor: SecretFor.Build,
   targets: {
     application: 'test-application',
-    component: 'All components',
-    environment: 'All environments',
+    component: TargetDropdownDefaults.ALL_COMPONENTS,
+    environment: TargetDropdownDefaults.ALL_ENVIRONMENTS,
   },
   opaque: {
     keyValues: [
@@ -336,5 +359,74 @@ describe('getSecretFormData', () => {
         data: { ['ssh-privatekey']: expect.anything() },
       }),
     );
+  });
+});
+
+describe('getTargetLabelsForRemoteSecret', () => {
+  it('should return empty target object for remote secret', () => {
+    expect(
+      getTargetLabelsForRemoteSecret({
+        ...formValues,
+        targets: { application: null, component: null, environment: null },
+      }),
+    ).toEqual({});
+  });
+
+  it('should return application target labels for remote secret', () => {
+    expect(getTargetLabelsForRemoteSecret(formValues)).toEqual({
+      'appstudio.redhat.com/application': 'test-application',
+    });
+  });
+
+  it('should return application and component target labels for remote secret', () => {
+    const fValues = {
+      ...formValues,
+      targets: {
+        ...formValues.targets,
+        component: 'test-component',
+      },
+    };
+    expect(getTargetLabelsForRemoteSecret(fValues)).toEqual({
+      'appstudio.redhat.com/application': 'test-application',
+      'appstudio.openshift.io/component': 'test-component',
+    });
+  });
+
+  it('should return application, component and environment target labels for remote secret', () => {
+    const fValues = {
+      ...formValues,
+      targets: {
+        ...formValues.targets,
+        component: 'test-component',
+        environment: 'test-environment',
+      },
+    };
+    expect(getTargetLabelsForRemoteSecret(fValues)).toEqual({
+      'appstudio.redhat.com/application': 'test-application',
+      'appstudio.openshift.io/component': 'test-component',
+      'appstudio.redhat.com/environment': 'test-environment',
+    });
+  });
+});
+
+describe('getLabelsForSecret', () => {
+  it('should return empty target object for remote secret', () => {
+    expect(
+      getLabelsForSecret({
+        ...formValues,
+        labels: null,
+      }),
+    ).toBeNull();
+  });
+
+  it('should return labels for remote secret', () => {
+    expect(
+      getLabelsForSecret({
+        ...formValues,
+        labels: [{ key: 'test', value: 'test-value' }],
+      }),
+    ).toEqual({
+      test: 'test-value',
+    });
   });
 });

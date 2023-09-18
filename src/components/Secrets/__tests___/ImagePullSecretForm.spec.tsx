@@ -5,7 +5,9 @@ import { formikRenderer } from '../../../utils/test-utils';
 import { ImagePullSecretForm } from '../SecretsForm/ImagePullSecretForm';
 
 const initialValues = {
-  imageAuthType: 'Image registry credentials',
+  image: {
+    authType: 'Image registry credentials',
+  },
 };
 
 describe('ImagePullSecretForm', () => {

@@ -20,6 +20,7 @@ export const ImagePullSecretForm: React.FC = () => {
           { key: 'uploadConfigFile', value: ImagePullSecretType.UploadConfigFile },
         ]}
         required
+        validateOnChange
       />
       {type === ImagePullSecretType.ImageRegistryCreds ? (
         <>

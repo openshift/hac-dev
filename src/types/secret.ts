@@ -3,6 +3,17 @@ import { ImportSecret } from '../components/ImportForm/utils/types';
 
 export const SecretByUILabel = 'ui.appstudio.redhat.com/secret-for';
 
+export enum SecretSPILabel {
+  ENVIRONMENT = 'appstudio.redhat.com/environment',
+  APPLICATION = 'appstudio.redhat.com/application',
+  COMPONENT = 'appstudio.openshift.io/component',
+}
+
+export enum TargetDropdownDefaults {
+  ALL_ENVIRONMENTS = 'All environments',
+  ALL_COMPONENTS = 'All components',
+}
+
 export enum SecretFor {
   Deployment = 'Deployment',
   Build = 'Build',
