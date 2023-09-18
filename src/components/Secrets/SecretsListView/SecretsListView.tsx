@@ -68,8 +68,7 @@ const SecretsListView: React.FC<SecretsListViewProps> = ({ readOnly = false }) =
         <br /> used to securely access various resources or services. You can easily manage all your
         secrets from one place.
         <br />
-        {/* Todo: uncomment this once the add secret is implemented */}
-        {/* To get started, add a secret */}
+        To get started, add a secret
       </EmptyStateBody>
       {!readOnly && <div className="pf-u-mt-xl">{createSecretButton}</div>}
     </AppEmptyState>

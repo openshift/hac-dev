@@ -1,6 +1,8 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Divider, PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
+import { HelpTopicLink } from '../components/HelpTopicLink/HelpTopicLink';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import PageLayout from '../components/PageLayout/PageLayout';
@@ -25,6 +27,9 @@ const SecretsListPage: React.FC = () => {
               Manage your build and deployment secrets and their related configurations. You can add
               a secret at the workspace level.
               <br /> All secrets are stored using AWS Secrets Manager to keep your data private.
+              <HelpTopicLink topicId={'rhtap-secrets-secrets'}>
+                Learn more <OpenDrawerRightIcon />
+              </HelpTopicLink>
             </>
           }
         >

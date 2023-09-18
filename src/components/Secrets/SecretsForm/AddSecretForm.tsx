@@ -1,12 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash-es';
 import FormFooter from '../../../shared/components/form-components/FormFooter';
 import { AddSecretFormValues, SecretFor, SecretTypeDropdownLabel } from '../../../types';
 import { addSecret } from '../../../utils/create-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
+import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
 import PageLayout from '../../PageLayout/PageLayout';
 import { secretFormValidationSchema } from '../utils/secret-validation';
 import { SecretTypeSubForm } from './SecretTypeSubForm';
@@ -44,6 +46,9 @@ const AddSecretForm = () => {
   return (
     <Formik
       initialValues={initialValues}
+      onReset={() => {
+        navigate(-1);
+      }}
       onSubmit={(values, actions) => {
         addSecret(values, workspace, namespace)
           .then(() => {
@@ -51,7 +56,7 @@ const AddSecretForm = () => {
           })
           .catch((error) => {
             // eslint-disable-next-line no-console
-            console.warn('Error while submitting import form:', error);
+            console.warn('Error while submitting secret form:', error);
             actions.setSubmitting(false);
             actions.setStatus({ submitError: error.message });
           });
@@ -65,7 +70,14 @@ const AddSecretForm = () => {
             { path: '#', name: 'Add secret' },
           ]}
           title="Add secret"
-          description="Add a new secret to use with any of your environments.."
+          description={
+            <>
+              Add a new secret to use with any of your environments.
+              <HelpTopicLink topicId={'rhtap-secrets-secrets'}>
+                Learn more <OpenDrawerRightIcon />
+              </HelpTopicLink>
+            </>
+          }
           footer={
             <FormFooter
               submitLabel="Create secret"
