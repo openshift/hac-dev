@@ -22,7 +22,7 @@ jest.mock('../../../../utils/workspace-context-utils', () => ({
 
 const mockReleasePlanHook = useReleasePlanAdmissions as jest.Mock;
 
-describe('ReleasePlanListView', () => {
+describe('ReleasePlanAdmissionListView', () => {
   it('should render progress bar while loading', async () => {
     mockReleasePlanHook.mockReturnValue([[], false]);
     const wrapper = render(<ReleasePlanAdmissionListView />);

@@ -15,26 +15,26 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { FULL_APPLICATION_TITLE } from '../../../consts/labels';
-import { useReleasePlanAdmissions } from '../../../hooks/useReleasePlanAdmissions';
+import { useReleaseStrategies } from '../../../hooks/useReleaseStrategies';
 import { useSearchParam } from '../../../hooks/useSearchParam';
-import { ReleasePlanAdmissionModel } from '../../../models/release-plan-admission';
+import { ReleaseStrategyModel } from '../../../models';
 import { Table } from '../../../shared';
 import FilteredEmptyState from '../../../shared/components/empty-state/FilteredEmptyState';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { withPageAccessCheck } from '../../PageAccess/withPageAccessCheck';
 import { ReleaseServiceEmptyState } from '../ReleaseServiceEmptyState';
-import ReleasePlanAdmissionListHeader from './ReleasePlanAdmissionListHeader';
-import ReleasePlanAdmissionListRow from './ReleasePlanAdmissionListRow';
+import ReleaseStrategyListHeader from './ReleaseStrategyListHeader';
+import ReleaseStrategyListRow from './ReleaseStrategyListRow';
 
-const ReleasePlanAdmissionListView: React.FC = () => {
+const ReleaseStrategyListView: React.FC = () => {
   const { namespace } = useWorkspaceInfo();
-  const [releasePlanAdmission, loaded] = useReleasePlanAdmissions(namespace);
+  const [releaseStrategies, loaded] = useReleaseStrategies(namespace);
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const onClearFilters = () => setNameFilter('');
 
-  const filteredReleasePlanAdmission = React.useMemo(
-    () => releasePlanAdmission.filter((r) => r.metadata.name.indexOf(nameFilter) !== -1),
-    [releasePlanAdmission, nameFilter],
+  const filteredReleaseStrategies = React.useMemo(
+    () => releaseStrategies.filter((r) => r.metadata.name.indexOf(nameFilter) !== -1),
+    [releaseStrategies, nameFilter],
   );
 
   if (!loaded) {
@@ -45,16 +45,16 @@ const ReleasePlanAdmissionListView: React.FC = () => {
     );
   }
 
-  if (!releasePlanAdmission?.length) {
-    return <ReleaseServiceEmptyState title="No Release Plan Admission found" />;
+  if (!releaseStrategies?.length) {
+    return <ReleaseServiceEmptyState title="No Release Strategy found" />;
   }
 
   return (
     <PageSection padding={{ default: 'noPadding' }} variant={PageSectionVariants.light} isFilled>
       <Helmet>
-        <title>Release Plan Admission | {FULL_APPLICATION_TITLE}</title>
+        <title>Release Strategy | {FULL_APPLICATION_TITLE}</title>
       </Helmet>
-      <Toolbar data-testid="release-plan-admission-list-toolbar" clearAllFilters={onClearFilters}>
+      <Toolbar data-testid="release-strategy-list-toolbar" clearAllFilters={onClearFilters}>
         <ToolbarContent>
           <ToolbarGroup align={{ default: 'alignLeft' }}>
             <ToolbarItem>
@@ -76,15 +76,15 @@ const ReleasePlanAdmissionListView: React.FC = () => {
           </ToolbarGroup>
         </ToolbarContent>
       </Toolbar>
-      {!filteredReleasePlanAdmission?.length ? (
+      {!filteredReleaseStrategies?.length ? (
         <FilteredEmptyState onClearFilters={onClearFilters} />
       ) : (
         <Table
-          data-test="release-plan-admission__table"
-          data={filteredReleasePlanAdmission}
-          aria-label="Release Plan Admission List"
-          Header={ReleasePlanAdmissionListHeader}
-          Row={ReleasePlanAdmissionListRow}
+          data-test="release-strategy__table"
+          data={filteredReleaseStrategies}
+          aria-label="Release Strategy List"
+          Header={ReleaseStrategyListHeader}
+          Row={ReleaseStrategyListRow}
           loaded
           getRowProps={(obj) => ({
             id: obj.sha,
@@ -95,9 +95,9 @@ const ReleasePlanAdmissionListView: React.FC = () => {
   );
 };
 
-export default withPageAccessCheck(ReleasePlanAdmissionListView)({
+export default withPageAccessCheck(ReleaseStrategyListView)({
   accessReviewResources: [
-    { model: ReleasePlanAdmissionModel, verb: 'patch' },
-    { model: ReleasePlanAdmissionModel, verb: 'create' },
+    { model: ReleaseStrategyModel, verb: 'patch' },
+    { model: ReleaseStrategyModel, verb: 'create' },
   ],
 });

@@ -5,6 +5,7 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import ReleasePlanListView from './ReleasePlan/ReleasePlanListView';
 import ReleasePlanAdmissionListView from './ReleasePlanAdmission/ReleasePlanAdmissionListView';
+import ReleaseStrategyListView from './ReleaseStrategy/ReleaseStrategyListView';
 
 const RELEASE_SERVICE_TAB_KEY = 'release-service-tab-key';
 
@@ -49,6 +50,9 @@ export const ReleaseService: React.FC = () => {
         title="Release Plan Admission"
       >
         <ReleasePlanAdmissionListView />
+      </Tab>
+      <Tab key="release-strategy" eventKey="release-strategy" title="Release Strategy">
+        <ReleaseStrategyListView />
       </Tab>
     </Tabs>
   );
