@@ -10,13 +10,8 @@ import { PlusCircleIcon } from '@patternfly/react-icons/dist/js/icons/plus-circl
 import { FieldArray, useField } from 'formik';
 import { uniqueId } from 'lodash-es';
 import { FieldProps, InputField } from '../../../shared';
+import { KeyValueEntry } from '../../../types';
 import EncodedFileUploadField from './EncodedFileUploadField';
-
-export type KeyValueEntry = {
-  key: string;
-  value: string;
-  readOnlyKey?: boolean;
-};
 
 type EncodedKeyValueEntryFormProps = {
   label?: string;
@@ -75,7 +70,7 @@ const EncodedKeyValueFileInputField: React.FC<EncodedKeyValueEntryFormProps & Fi
                 required
                 data-testid={`file-upload-value-${idx}`}
                 id="value"
-                label="Value"
+                label="Upload the file with value for your key or paste its contents"
                 name={`${name}.${idx.toString()}.value`}
               />
             </FormFieldGroupExpandable>

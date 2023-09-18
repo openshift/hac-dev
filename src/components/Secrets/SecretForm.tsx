@@ -2,16 +2,16 @@ import React from 'react';
 import { Form } from '@patternfly/react-core';
 import { SelectVariant } from '@patternfly/react-core/deprecated';
 import { useFormikContext } from 'formik';
-import { SelectInputField } from '../../shared';
+import { DropdownItemObject, SelectInputField } from '../../shared';
 import KeyValueFileInputField from '../../shared/components/formik-fields/key-value-file-input-field/KeyValueFileInputField';
 import { SecretFormValues, SecretTypeDropdownLabel } from '../../types';
 import { RawComponentProps } from '../modal/createModalLauncher';
+import SecretTypeSelector from './SecretTypeSelector';
 import {
   getSupportedPartnerTaskKeyValuePairs,
   isPartnerTask,
   getSupportedPartnerTaskSecrets,
-} from './secret-utils';
-import SecretTypeSelector from './SecretTypeSelector';
+} from './utils/secret-utils';
 
 type SecretFormProps = RawComponentProps & {
   existingSecrets: string[];
@@ -41,9 +41,18 @@ const SecretForm: React.FC<SecretFormProps> = ({ existingSecrets }) => {
     setFieldValue('keyValues', [...newKeyValues, ...defaultImageKeyValues]);
   };
 
+  const dropdownItems: DropdownItemObject[] = Object.entries(SecretTypeDropdownLabel).reduce(
+    (acc, [key, value]) => {
+      value !== SecretTypeDropdownLabel.source && acc.push({ key, value });
+      return acc;
+    },
+    [],
+  );
+
   return (
     <Form>
       <SecretTypeSelector
+        dropdownItems={dropdownItems}
         onChange={(type) => {
           currentTypeRef.current = type;
           if (type === SecretTypeDropdownLabel.image) {

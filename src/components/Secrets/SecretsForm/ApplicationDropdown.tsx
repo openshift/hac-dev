@@ -1,7 +1,7 @@
 import React from 'react';
+import { useField } from 'formik';
 import { useApplications } from '../../../hooks/useApplications';
 import { DropdownField } from '../../../shared';
-import { LoadingBox } from '../../../shared/components/status-box/StatusBox';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 
 type ApplicationDropdownProps = Omit<
@@ -12,22 +12,20 @@ type ApplicationDropdownProps = Omit<
 export const ApplicationDropdown: React.FC<ApplicationDropdownProps> = (props) => {
   const { namespace } = useWorkspaceInfo();
   const [applications, loaded] = useApplications(namespace);
+  const [, , { setValue }] = useField<string>('targets.application');
 
   const dropdownItems = React.useMemo(
     () => applications.map((a) => ({ key: a.metadata.name, value: a.metadata.name })),
     [applications],
   );
 
-  if (!loaded) {
-    return <LoadingBox />;
-  }
-
   return (
     <DropdownField
       {...props}
       label="Select application"
-      placeholder="Select application"
+      placeholder={!loaded ? 'Loading applications...' : 'Select application'}
       items={dropdownItems}
+      onChange={(app: string) => setValue(app)}
     />
   );
 };

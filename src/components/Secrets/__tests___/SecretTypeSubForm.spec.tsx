@@ -1,8 +1,9 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { act, fireEvent, screen } from '@testing-library/react';
+import { SecretFor } from '../../../types';
 import { formikRenderer } from '../../../utils/test-utils';
-import { SecretTarget, SecretTypeSubForm } from '../SecretTypeSubForm';
+import { SecretTypeSubForm } from '../SecretsForm/SecretTypeSubForm';
 
 jest.mock('../ImagePullSecretForm', () => ({ ImagePullSecretForm: () => 'Image pull sub form' }));
 jest.mock('../KeyValueSecretForm', () => ({ KeyValueSecretForm: () => 'Key value sub form' }));
@@ -11,7 +12,7 @@ jest.mock('../SourceSecretForm', () => ({ SourceSecretForm: () => 'Source secret
 describe('SecretTypeSubForm', () => {
   beforeEach(() => {
     const initialValues = {
-      target: SecretTarget.Build,
+      target: SecretFor.Build,
     };
     formikRenderer(<SecretTypeSubForm />, initialValues);
   });

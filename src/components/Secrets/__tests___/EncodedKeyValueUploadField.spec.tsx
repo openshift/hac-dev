@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { fireEvent, screen } from '@testing-library/react';
 import { Base64 } from 'js-base64';
 import { formikRenderer } from '../../../utils/test-utils';
-import EncodedKeyValueUploadField from '../utils/EncodedKeyValueUploadField';
+import EncodedKeyValueUploadField from '../SecretsForm/EncodedKeyValueUploadField';
 
 describe('EncodedKeyValueUploadField', () => {
   it('should render key value field pair', () => {

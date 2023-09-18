@@ -56,8 +56,6 @@ const SecretsListView: React.FC<SecretsListViewProps> = ({ readOnly = false }) =
     );
   }, [canCreateRemoteSecret, workspace]);
 
-  const hideCreateButton = true; // to be removed once create Secret form is implemented.
-
   const emptyState = (
     <AppEmptyState
       emptyStateImg={secretEmptyStateIcon}
@@ -109,7 +107,7 @@ const SecretsListView: React.FC<SecretsListViewProps> = ({ readOnly = false }) =
               </ToolbarItem>
             </>
           ) : null}
-          {!readOnly && <ToolbarItem>{hideCreateButton ? null : createSecretButton}</ToolbarItem>}
+          <ToolbarItem>{createSecretButton}</ToolbarItem>
         </ToolbarContent>
       </Toolbar>
       {filteredRemoteSecrets.length === 0 ? (

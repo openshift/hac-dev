@@ -4,8 +4,8 @@ import { ImportSecret } from '../components/ImportForm/utils/types';
 export const SecretByUILabel = 'ui.appstudio.redhat.com/secret-for';
 
 export enum SecretFor {
-  deployment = 'Deployment',
-  build = 'Build',
+  Deployment = 'Deployment',
+  Build = 'Build',
 }
 
 export type SecretKind = K8sResourceCommon & {
@@ -88,6 +88,7 @@ export type SecretFormValues = ImportSecret & {
 export enum SecretTypeDropdownLabel {
   opaque = 'Key/value secret',
   image = 'Image pull secret',
+  source = 'Source secret',
 }
 
 export enum SecretType {
@@ -111,7 +112,65 @@ export enum SecretTypeDisplayLabel {
   keyValue = 'Key/value',
 }
 
+export enum ImagePullSecretType {
+  ImageRegistryCreds = 'Image registry credentials',
+  UploadConfigFile = 'Upload configuration file',
+}
+
+export enum SourceSecretType {
+  basic = 'Basic authentication',
+  ssh = 'SSH Key',
+}
 export const K8sSecretType = {
-  [SecretTypeDropdownLabel.opaque]: 'Opaque',
-  [SecretTypeDropdownLabel.image]: 'kubernetes.io/dockerconfigjson',
+  [SecretTypeDropdownLabel.opaque]: SecretType.opaque,
+  [SecretTypeDropdownLabel.image]: SecretType.dockerconfigjson,
+  [ImagePullSecretType.ImageRegistryCreds]: SecretType.dockerconfigjson,
+  [ImagePullSecretType.UploadConfigFile]: SecretType.dockercfg,
+  [SourceSecretType.basic]: SecretType.basicAuth,
+  [SourceSecretType.ssh]: SecretType.sshAuth,
 };
+
+export interface AddSecretFormValues {
+  type: string;
+  name: string;
+  secretFor: SecretFor;
+  targets: Targets;
+  opaque: Opaque;
+  image: Image;
+  source: Source;
+  labels?: KeyValueEntry[];
+}
+
+export interface Image {
+  authType: string;
+  registryCreds?: RegistryCred[];
+  dockerconfig?: string;
+}
+
+export interface RegistryCred {
+  registry: string;
+  username: string;
+  password: string;
+  email: string;
+}
+
+export type KeyValueEntry = {
+  key: string;
+  value: string;
+  readOnlyKey?: boolean;
+};
+export interface Opaque {
+  keyValues: KeyValueEntry[];
+}
+
+export interface Source {
+  authType: string;
+  username?: string;
+  password?: string;
+}
+
+export interface Targets {
+  application: string;
+  component: string;
+  environment: string;
+}

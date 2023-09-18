@@ -1,9 +1,9 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { act, configure, fireEvent, screen } from '@testing-library/react';
+import { act, configure, fireEvent, screen, waitFor } from '@testing-library/react';
 import { useComponents } from '../../../hooks/useComponents';
 import { formikRenderer } from '../../../utils/test-utils';
-import { ComponentDropdown } from '../utils/ComponentDropdown';
+import { ComponentDropdown } from '../SecretsForm/ComponentDropdown';
 
 jest.mock('../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
@@ -19,7 +19,7 @@ describe('ComponentDropdown', () => {
   it('should show loading indicator if components arent loaded', () => {
     useComponentsMock.mockReturnValue([[], false]);
     formikRenderer(<ComponentDropdown name="test" />);
-    expect(screen.getByTestId('loading-indicator')).toBeVisible();
+    expect(screen.getByText('Loading components...')).toBeVisible();
   });
 
   it('should show disable dropdown if application is not selected', () => {
@@ -37,8 +37,11 @@ describe('ComponentDropdown', () => {
     await act(async () => {
       fireEvent.click(screen.getByRole('button'));
     });
-    expect(screen.getByRole('menuitem', { name: 'All components' })).toBeVisible();
-    expect(screen.getByRole('menuitem', { name: 'comp1' })).toBeVisible();
-    expect(screen.getByRole('menuitem', { name: 'comp2' })).toBeVisible();
+
+    waitFor(() => {
+      expect(screen.getByRole('menuitem', { name: 'All components' })).toBeVisible();
+      expect(screen.getByRole('menuitem', { name: 'comp1' })).toBeVisible();
+      expect(screen.getByRole('menuitem', { name: 'comp2' })).toBeVisible();
+    });
   });
 });

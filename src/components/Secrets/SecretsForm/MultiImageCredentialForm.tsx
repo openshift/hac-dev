@@ -15,7 +15,7 @@ type MultiImageCredentialFormProps = {
   name: string;
 };
 
-type Entry = {
+type RegistryCredential = {
   registry: string;
   username: string;
   password: string;
@@ -23,7 +23,7 @@ type Entry = {
 };
 
 export const MultiImageCredentialForm: React.FC<MultiImageCredentialFormProps> = ({ name }) => {
-  const [{ value: fieldValues }] = useField<Entry[]>(name);
+  const [{ value: fieldValues }] = useField<RegistryCredential[]>(name);
   const [uniqId, setUniqId] = React.useState(uniqueId());
 
   return (

@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { act, configure, fireEvent, screen } from '@testing-library/react';
 import { useEnvironments } from '../../../hooks/useEnvironments';
 import { formikRenderer } from '../../../utils/test-utils';
-import { EnvironmentDropdown } from '../utils/EnvironmentDropdown';
+import { EnvironmentDropdown } from '../SecretsForm/EnvironmentDropdown';
 
 jest.mock('../../../hooks/useEnvironments', () => ({
   useEnvironments: jest.fn(),
@@ -19,7 +19,7 @@ describe('EnvironmentDropdown', () => {
   it('should show loading indicator if environments arent loaded', () => {
     useEnvironmentsMock.mockReturnValue([[], false]);
     formikRenderer(<EnvironmentDropdown name="test" />);
-    expect(screen.getByTestId('loading-indicator')).toBeVisible();
+    expect(screen.getByText('Loading environments...')).toBeVisible();
   });
 
   it('should show dropdown if environments are loaded', async () => {

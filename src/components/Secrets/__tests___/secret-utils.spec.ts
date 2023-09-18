@@ -1,18 +1,30 @@
+import '@testing-library/jest-dom';
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { PIPELINE_SERVICE_ACCOUNT } from '../../../consts/pipeline';
 import { RemoteSecretModel } from '../../../models/remotesecret';
-import { RemoteSecretStatusReason, SecretType } from '../../../types';
+import {
+  AddSecretFormValues,
+  ImagePullSecretType,
+  RemoteSecretStatusReason,
+  SecretFor,
+  SecretType,
+  SecretTypeDropdownLabel,
+  SourceSecretType,
+} from '../../../types';
 import {
   createRemoteSecretResource,
   createSecretResource,
+  getKubernetesSecretType,
+  getSecretFormData,
   getSecretRowData,
   getSupportedPartnerTaskKeyValuePairs,
   getSupportedPartnerTaskSecrets,
   isPartnerTask,
+  isPartnerTaskAvailable,
   statusFromConditions,
   supportedPartnerTasksSecrets,
   typeToLabel,
-} from '../secret-utils';
+} from '../utils/secret-utils';
 import { sampleImagePullSecret, sampleOpaqueSecret, sampleRemoteSecrets } from './secret-data';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
@@ -81,7 +93,7 @@ describe('createSecretResource', () => {
 
 describe('createRemoteSecretResource', () => {
   it('should create Remote secret resource', () => {
-    createRemoteSecretResource(sampleOpaqueSecret, 'test-ns', false, false);
+    createRemoteSecretResource(sampleOpaqueSecret, 'test-ns', null, false, false);
 
     expect(createResourceMock).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -94,7 +106,7 @@ describe('createRemoteSecretResource', () => {
 
   it('should link the secret resource to pipeline service account', () => {
     createResourceMock.mockClear();
-    createRemoteSecretResource(sampleOpaqueSecret, 'test-ns', true, false);
+    createRemoteSecretResource(sampleOpaqueSecret, 'test-ns', null, true, false);
 
     expect(createResourceMock.mock.calls[0][0].resource.spec.secret).toEqual(
       expect.objectContaining({
@@ -180,5 +192,149 @@ describe('typeToLabel', () => {
     expect(typeToLabel(SecretType.basicAuth)).toBe('Key/value');
     expect(typeToLabel(SecretType.sshAuth)).toBe('Key/value');
     expect(typeToLabel(SecretType.opaque)).toBe('Key/value');
+  });
+});
+
+describe('isPartnerTaskAvailable', () => {
+  it('should return true if the partner task is available for the given type', () => {
+    expect(isPartnerTaskAvailable(SecretTypeDropdownLabel.opaque)).toBe(true);
+  });
+
+  it('should return false if the partner task is not available for the given type', () => {
+    expect(isPartnerTaskAvailable(SecretTypeDropdownLabel.image)).toBe(false);
+    expect(isPartnerTaskAvailable(SecretTypeDropdownLabel.source)).toBe(false);
+  });
+});
+
+const formValues: AddSecretFormValues = {
+  type: 'Key/value secret',
+  name: 'test',
+  secretFor: SecretFor.Build,
+  targets: {
+    application: 'test-application',
+    component: 'All components',
+    environment: 'All environments',
+  },
+  opaque: {
+    keyValues: [
+      {
+        key: 'test',
+        value: 'dGVzdA==',
+      },
+    ],
+  },
+  image: {
+    authType: 'Image registry credentials',
+    registryCreds: [
+      {
+        registry: 'test.io',
+        username: 'test',
+        password: 'test',
+        email: 'test@test.com',
+      },
+    ],
+  },
+  source: {
+    authType: 'Basic authentication',
+    username: 'test',
+    password: 'test',
+  },
+};
+describe('getKubernetesSecretType', () => {
+  it('should return opaque secret type', () => {
+    const opaqueFormValues = formValues;
+    expect(getKubernetesSecretType(opaqueFormValues)).toBe('Opaque');
+  });
+
+  it('should return image secret type', () => {
+    const imageDockerConfigFormValues = {
+      ...formValues,
+      type: SecretTypeDropdownLabel.image,
+      image: { ...formValues.image, authType: ImagePullSecretType.ImageRegistryCreds },
+    };
+    expect(getKubernetesSecretType(imageDockerConfigFormValues)).toBe(
+      'kubernetes.io/dockerconfigjson',
+    );
+
+    const uploadConfigFormValues = {
+      ...formValues,
+      type: SecretTypeDropdownLabel.image,
+      image: { ...formValues.image, authType: ImagePullSecretType.UploadConfigFile },
+    };
+    expect(getKubernetesSecretType(uploadConfigFormValues)).toBe('kubernetes.io/dockercfg');
+  });
+  it('should return source secret type', () => {
+    const sourceBasiAuthFormValues = { ...formValues, type: SecretTypeDropdownLabel.source };
+    expect(getKubernetesSecretType(sourceBasiAuthFormValues)).toBe('kubernetes.io/basic-auth');
+
+    const sshFormValues = {
+      ...formValues,
+      type: SecretTypeDropdownLabel.source,
+      source: { ...formValues.source, authType: SourceSecretType.ssh },
+    };
+    expect(getKubernetesSecretType(sshFormValues)).toBe('kubernetes.io/ssh-auth');
+  });
+});
+
+describe('getSecretFormData', () => {
+  it('should return opaque secret resource with encoded data', () => {
+    expect(getSecretFormData(formValues, 'test-ns')).toEqual(
+      expect.objectContaining({
+        type: 'Opaque',
+        data: { test: 'dGVzdA==' },
+      }),
+    );
+  });
+
+  it('should return image secret resource with encoded data', () => {
+    const imageFormValues = { ...formValues, type: SecretTypeDropdownLabel.image };
+    expect(getSecretFormData(imageFormValues, 'test-ns')).toEqual(
+      expect.objectContaining({
+        type: 'kubernetes.io/dockerconfigjson',
+        data: { ['.dockerconfigjson']: expect.anything() },
+      }),
+    );
+
+    const dockerConfigFormValues = {
+      ...formValues,
+      type: SecretTypeDropdownLabel.image,
+      image: {
+        ...formValues.image,
+        authType: ImagePullSecretType.UploadConfigFile,
+        dockerconfig: 'eyJ0ZXN0IjoidGVzdCJ9Cg==',
+      },
+    };
+    expect(getSecretFormData(dockerConfigFormValues, 'test-ns')).toEqual(
+      expect.objectContaining({
+        type: 'kubernetes.io/dockercfg',
+        data: { ['.dockercfg']: expect.anything() },
+      }),
+    );
+  });
+
+  it('should return source secret resource with encoded data', () => {
+    const sourceFormValues = { ...formValues, type: SecretTypeDropdownLabel.source };
+    expect(getSecretFormData(sourceFormValues, 'test-ns')).toEqual(
+      expect.objectContaining({
+        type: 'kubernetes.io/basic-auth',
+        data: { username: 'dGVzdA==', password: 'dGVzdA==' },
+      }),
+    );
+
+    const sshFormValues = {
+      ...formValues,
+      type: SecretTypeDropdownLabel.source,
+      source: {
+        ...formValues.source,
+        authType: SourceSecretType.ssh,
+        'ssh-privatekey': 'xxxxxxx',
+      },
+    };
+    expect(getSecretFormData(sshFormValues, 'test-ns')).toEqual(
+      expect.objectContaining({
+        type: 'kubernetes.io/ssh-auth',
+        data: { ['ssh-privatekey']: expect.anything() },
+      }),
+    );
   });
 });

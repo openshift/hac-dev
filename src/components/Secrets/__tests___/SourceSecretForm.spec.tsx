@@ -2,7 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { act, fireEvent, screen } from '@testing-library/react';
 import { formikRenderer } from '../../../utils/test-utils';
-import { SourceSecretForm } from '../SourceSecretForm';
+import { SourceSecretForm } from '../SecretsForm/SourceSecretForm';
 
 const initialValues = {
   sourceAuthType: 'Basic authentication',

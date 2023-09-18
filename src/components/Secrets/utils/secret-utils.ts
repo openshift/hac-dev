@@ -1,8 +1,13 @@
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { PIPELINE_SERVICE_ACCOUNT } from '../../consts/pipeline';
-import { SecretModel } from '../../models';
-import { RemoteSecretModel } from '../../models/remotesecret';
+import { Base64 } from 'js-base64';
+import { pick } from 'lodash-es';
+import { PIPELINE_SERVICE_ACCOUNT } from '../../../consts/pipeline';
+import { SecretModel } from '../../../models';
+import { RemoteSecretModel } from '../../../models/remotesecret';
 import {
+  AddSecretFormValues,
+  ImagePullSecretType,
+  K8sSecretType,
   RemoteSecretKind,
   RemoteSecretStatusReason,
   RemoteSecretStatusType,
@@ -12,9 +17,12 @@ import {
   SecretKind,
   SecretType,
   SecretTypeDisplayLabel,
-} from '../../types';
+  SecretTypeDropdownLabel,
+  SourceSecretType,
+} from '../../../types';
 
 export type PartnerTask = {
+  type: SecretType;
   name: string;
   providerUrl: string;
   tokenKeyName: string;
@@ -26,6 +34,7 @@ export type PartnerTask = {
 };
 export const supportedPartnerTasksSecrets: { [key: string]: PartnerTask } = {
   snyk: {
+    type: SecretType.opaque,
     name: 'snyk-secret',
     providerUrl: 'https://snyk.io/',
     tokenKeyName: 'snyk_token',
@@ -39,6 +48,10 @@ export const getSupportedPartnerTaskSecrets = () => {
     value: secret.name,
   }));
 };
+export const isPartnerTaskAvailable = (type: string) =>
+  !!Object.values(supportedPartnerTasksSecrets).find(
+    (secret) => secret.type === K8sSecretType[type],
+  );
 
 export const isPartnerTask = (secretName: string) => {
   return !!Object.values(supportedPartnerTasksSecrets).find((secret) => secret.name === secretName);
@@ -65,6 +78,108 @@ export const typeToLabel = (type: string) => {
       return type;
   }
 };
+export const getKubernetesSecretType = (values: AddSecretFormValues) => {
+  let type = values.type;
+  if (values.type === SecretTypeDropdownLabel.image) {
+    type = values.image.authType;
+  } else if (values.type === SecretTypeDropdownLabel.source) {
+    type = values.source.authType;
+  }
+  return K8sSecretType[type];
+};
+export const getSecretFormData = (values: AddSecretFormValues, namespace: string): SecretKind => {
+  let data = {};
+  if (values.type === SecretTypeDropdownLabel.opaque) {
+    data = values.opaque.keyValues.reduce((acc, s) => {
+      acc[s.key] = s.value ? s.value : '';
+      return acc;
+    }, {});
+  } else if (values.type === SecretTypeDropdownLabel.image) {
+    if (values.image.authType === ImagePullSecretType.ImageRegistryCreds) {
+      const dockerconfigjson = values.image.registryCreds.reduce(
+        (acc, cred) => {
+          acc.auths[cred.registry] = {
+            ...pick(cred, ['username', 'password', 'email']),
+            auth: Base64.encode(`${cred.username}:${cred.password}`),
+          };
+          return acc;
+        },
+        { auths: {} },
+      );
+
+      data = dockerconfigjson
+        ? { ['.dockerconfigjson']: Base64.btoa(JSON.stringify(dockerconfigjson)) }
+        : '';
+    } else {
+      data = values.image.dockerconfig
+        ? {
+            ['.dockercfg']: Base64.encode(
+              JSON.stringify(JSON.parse(Base64.decode(values.image.dockerconfig))),
+            ),
+          }
+        : '';
+    }
+  } else if (values.type === SecretTypeDropdownLabel.source) {
+    if (values.source.authType === SourceSecretType.basic) {
+      const authObj = pick(values.source, ['username', 'password']);
+      data = Object.entries(authObj).reduce((acc, [key, value]) => {
+        acc[key] = Base64.encode(value);
+        return acc;
+      }, {});
+    } else {
+      const SSH_KEY = 'ssh-privatekey';
+      data[SSH_KEY] = values.source[SSH_KEY];
+    }
+  }
+  const secretResource: SecretKind = {
+    apiVersion: SecretModel.apiVersion,
+    kind: SecretModel.kind,
+    metadata: {
+      name: values.name,
+      namespace,
+      labels: {
+        'appstudio.redhat.com/upload-secret': 'remotesecret',
+      },
+      annotations: {
+        'appstudio.redhat.com/remotesecret-name': `${values.name}`,
+      },
+    },
+    type: getKubernetesSecretType(values),
+    data,
+  };
+
+  return secretResource;
+};
+
+export const getTargetLabelsForRemoteSecret = (
+  values: AddSecretFormValues,
+): { [key: string]: string } => {
+  const labels = {};
+  const { application, component, environment } = values.targets;
+
+  if (environment && environment !== 'All environments')
+    labels['appstudio.redhat.com/environment'] = environment;
+
+  if (application) labels['appstudio.redhat.com/application'] = application;
+
+  if (component && component !== 'All components')
+    labels['appstudio.redhat.com/component'] = component;
+
+  return labels;
+};
+
+export const getLabelsForSecret = (values: AddSecretFormValues): { [key: string]: string } => {
+  if (!values.labels || values.labels.length === 0) {
+    return null;
+  }
+  const labels = {};
+  values.labels.map(({ key, value }) => {
+    if (key && value) {
+      labels[key] = value;
+    }
+  });
+  return labels;
+};
 
 export const statusFromConditions = (
   conditions: SecretCondition[],
@@ -83,7 +198,7 @@ export const getSecretRowData = (obj: RemoteSecretKind, environmentNames: string
   const type = typeToLabel(obj?.spec?.secret?.type);
   const keys = obj?.status.secret?.keys;
   const secretName = obj?.spec?.secret?.name || '-';
-  const secretFor = obj?.metadata?.labels?.[SecretByUILabel] ?? SecretFor.deployment;
+  const secretFor = obj?.metadata?.labels?.[SecretByUILabel] ?? SecretFor.Deployment;
   const secretTarget =
     obj?.metadata?.labels?.['appstudio.redhat.com/environment'] ?? environmentNames.join(',');
   const secretLabels = obj
@@ -122,6 +237,7 @@ export const createSecretResource = async (
 export const createRemoteSecretResource = (
   secret: SecretKind,
   namespace: string,
+  labels: { secret: { [key: string]: string }; remoteSecret: { [key: string]: string } },
   linkServiceAccount: boolean,
   dryRun: boolean,
 ): Promise<RemoteSecretKind> => {
@@ -132,7 +248,8 @@ export const createRemoteSecretResource = (
       name: `${secret.metadata.name}`,
       namespace,
       labels: {
-        [SecretByUILabel]: SecretFor.build,
+        [SecretByUILabel]: SecretFor.Build,
+        ...(labels.remoteSecret && { ...labels.remoteSecret }),
       },
     },
     spec: {
@@ -150,6 +267,7 @@ export const createRemoteSecretResource = (
         }),
         name: secret.metadata.name,
         type: secret.type,
+        ...(labels.secret && { labels: labels.secret }),
       },
       targets: [
         {

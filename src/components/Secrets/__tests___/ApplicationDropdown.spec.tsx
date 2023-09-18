@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { act, configure, fireEvent, screen } from '@testing-library/react';
 import { useApplications } from '../../../hooks/useApplications';
 import { formikRenderer } from '../../../utils/test-utils';
-import { ApplicationDropdown } from '../utils/ApplicationDropdown';
+import { ApplicationDropdown } from '../SecretsForm/ApplicationDropdown';
 
 jest.mock('../../../hooks/useApplications', () => ({
   useApplications: jest.fn(),
@@ -19,7 +19,7 @@ describe('ApplicationDropdown', () => {
   it('should show loading indicator if applications arent loaded', () => {
     useApplicationsMock.mockReturnValue([[], false]);
     formikRenderer(<ApplicationDropdown name="app" />);
-    expect(screen.getByTestId('loading-indicator')).toBeVisible();
+    expect(screen.getByText('Loading applications...')).toBeVisible();
   });
 
   it('should show dropdown if applications are loaded', async () => {
@@ -31,6 +31,7 @@ describe('ApplicationDropdown', () => {
     await act(async () => {
       fireEvent.click(screen.getByRole('button'));
     });
+
     expect(screen.getByRole('menuitem', { name: 'app1' })).toBeVisible();
     expect(screen.getByRole('menuitem', { name: 'app2' })).toBeVisible();
   });
