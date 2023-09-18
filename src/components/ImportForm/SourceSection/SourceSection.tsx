@@ -31,6 +31,9 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
     name: 'source.git.url',
     type: 'input',
   });
+  const [, , { setValue: setRepoAccessibility }] = useField<string>({
+    name: 'repoAccessibility',
+  });
   const [, { value: isValidated }] = useField<boolean>('source.isValidated');
   const {
     values: { secret: authSecret },
@@ -86,6 +89,13 @@ const SourceSection: React.FC<SourceSectionProps> = () => {
   }, [source, setFieldValue, setFormValidating]);
 
   const debouncedHandleSourceChange = useDebounceCallback(handleSourceChange);
+
+  React.useEffect(() => {
+    if (accessCheckLoaded && accessibility) {
+      setRepoAccessibility(accessibility);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessCheckLoaded, accessibility]);
 
   React.useEffect(() => {
     if (accessCheckLoaded) {
