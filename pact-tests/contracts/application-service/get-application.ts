@@ -10,16 +10,16 @@ import { ApplicationGroupVersionKind, ApplicationModel } from '../../../src/mode
 import { ApplicationKind } from '../../../src/types';
 import { matchers } from '../../matchers';
 import { PactContract, getUrlPath } from '../contracts';
+import { ApplicationParams, ComponentsParams } from './state-params';
 
 export const comp1 = 'gh-component';
-export const comp2 = 'quay-component';
 
 const namespace = 'default';
+const repo = 'https://github.com/devfile-samples/devfile-sample-java-springboot-basic';
 const app = 'myapp';
 const path = getUrlPath(ApplicationModel, namespace, app);
 
-const devfileExample =
-  'metadata:\n  attributes:\n    appModelRepository.context: /\n    appModelRepository.url: https://github.com/redhat-appstudio-appdata/asdf-kkanova-match-share\n    gitOpsRepository.context: ./\n    gitOpsRepository.url: https://github.com/redhat-appstudio-appdata/asdf-kkanova-match-share\n  name: asdf\nprojects:\n- git:\n    remotes:\n      origin: https://github.com/sclorg/nodejs-ex\n  name: gh-component\n- git:\n    remotes:\n      origin: https://github.com/devfile-samples/devfile-sample-java-springboot-basic.git\n  name: quay-component\nschemaVersion: 2.1.0\n';
+const devfileExample = `metadata:\n  attributes:\n    appModelRepository.context: /\n    appModelRepository.url: https://github.com/redhat-appstudio-appdata/asdf-kkanova-match-share\n    gitOpsRepository.context: ./\n    gitOpsRepository.url: https://github.com/redhat-appstudio-appdata/asdf-kkanova-match-share\n  name: asdf\nprojects:\n- git:\n    remotes:\n      origin: ${repo}\n  name: ${comp1}\nschemaVersion: 2.1.0\n`;
 const expectedResponseBody = {
   apiVersion: `${ApplicationModel.apiGroup}/${ApplicationModel.apiVersion}`,
   kind: ApplicationModel.kind,
@@ -32,10 +32,7 @@ const expectedResponseBody = {
     uid: regex(matchers.uid, '00fbb7cd-fd2d-48f4-bdc5-3289f8d76c77'),
   },
   status: {
-    devfile: regex(
-      `[\\s\\S]*(gh-component[\\s\\S]*quay-component|quay-component[\\s\\S]*gh-component)[\\s\\S]*`,
-      devfileExample,
-    ),
+    devfile: regex(`[\\s\\S]*${comp1}[\\s\\S]*`, devfileExample),
     conditions: arrayContaining(
       {
         message: like('Application has been successfully created'),
@@ -72,4 +69,19 @@ export const contract: PactContract<ApplicationKind> = {
   namespace,
   resourceName: app,
   groupVersionKind: ApplicationGroupVersionKind,
+};
+
+export const appParams: ApplicationParams = {
+  appName: app,
+  namespace,
+};
+
+export const compParams: ComponentsParams = {
+  components: [
+    {
+      app: appParams,
+      repo,
+      compName: comp1,
+    },
+  ],
 };
