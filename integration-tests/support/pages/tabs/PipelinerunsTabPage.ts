@@ -32,12 +32,22 @@ export class PipelinerunsTabPage {
     applicationName: string,
     label: string,
     annotations?: { key: string; value: string },
+    retries = 4,
   ) {
     return APIHelper.requestHACAPI({
       url: hacAPIEndpoints.pipelinerunsFilter(applicationName, label),
     })
       .its('body.items')
       .then((items) => {
+        if (items.length < 1 && retries > 0) {
+          cy.wait(5000);
+          return PipelinerunsTabPage.getPipelineRunNameByLabel(
+            applicationName,
+            label,
+            annotations,
+            retries--,
+          );
+        }
         if (!annotations) {
           return items[0].metadata.name;
         }
