@@ -59,4 +59,5 @@ export const UIhelperPO = {
   listGroup_dt: 'div[class*="list__group"] dt',
   pf5_button: '[data-ouia-component-type="PF5/Button"]',
   tableRow: (tableAriaLabel: string) => `[aria-label="${tableAriaLabel}"] tr[role="row"]`,
+  dropdownToggle: 'button[data-ouia-component-type="PF5/DropdownToggle"]',
 };
