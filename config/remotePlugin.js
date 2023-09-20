@@ -39,6 +39,16 @@ const navExtensions = [
       required: ['SIGNUP'],
     },
   },
+  {
+    type: 'core.navigation/href',
+    properties: {
+      href: '/application-pipeline/release',
+      name: 'Release services',
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
 ];
 
 const flagExtensions = [
@@ -135,6 +145,19 @@ const routeExtensions = [
     type: 'core.page/route',
     properties: {
       path: '/application-pipeline/environments',
+      exact: true,
+      component: {
+        $codeRef: 'WorkspacedPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/release',
       exact: true,
       component: {
         $codeRef: 'WorkspacedPage',
@@ -535,6 +558,34 @@ const routeExtensions = [
     },
   },
 
+  // Release Page
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/release/workspaces/:workspaceName/:releaseTab',
+      exact: true,
+      component: {
+        $codeRef: 'ReleaseListPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/release/workspaces/:workspaceName',
+      exact: true,
+      component: {
+        $codeRef: 'ReleaseListPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+
   // 404 route
   {
     type: 'core.page/route',
@@ -572,6 +623,7 @@ module.exports = {
       DeploymentSettings: resolve(__dirname, '../src/pages/DeploymentSettingsPage'),
       EnvironmentsListPage: resolve(__dirname, '../src/pages/EnvironmentsListPage'),
       CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
+      ReleaseListPage: resolve(__dirname, '../src/pages/ReleaseServicesListPage'),
       WorkspaceContext: resolve(__dirname, '../src/utils/workspace-context-utils'),
       WorkspacedPage: resolve(__dirname, '../src/pages/WorkspacedPage'),
       OverviewPage: resolve(__dirname, '../src/pages/OverviewPage'),
