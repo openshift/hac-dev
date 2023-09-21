@@ -12,3 +12,9 @@ export type ComponentsParams = {
     },
   ];
 };
+
+export type CDQParams = {
+  url: string;
+  name: string;
+  namespace: string;
+};
