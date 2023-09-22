@@ -5,45 +5,44 @@ import {
   AlertActionCloseButton,
   AlertActionLink,
   AlertVariant,
-  Bullseye,
-  DataList,
+  Button,
+  ButtonVariant,
   EmptyStateBody,
-  Label,
+  Flex,
+  FlexItem,
   pluralize,
-  SearchInput,
-  Spinner,
   Text,
   TextContent,
   TextVariants,
   Title,
-  Toolbar,
-  ToolbarContent,
-  ToolbarGroup,
-  ToolbarItem,
 } from '@patternfly/react-core';
-import { useApplicationRoutes } from '../../hooks/useApplicationRoutes';
+import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useComponents } from '../../hooks/useComponents';
-import { useAllGitOpsDeploymentCRs } from '../../hooks/useGitOpsDeploymentCR';
 import { useLatestBuildPipelines } from '../../hooks/useLatestBuildPipelines';
 import { PACState } from '../../hooks/usePACState';
+import usePACStatesForComponents from '../../hooks/usePACStatesForComponents';
 import { useSearchParam } from '../../hooks/useSearchParam';
-import { useSnapshotsEnvironmentBindings } from '../../hooks/useSnapshotsEnvironmentBindings';
 import emptyStateImgUrl from '../../imgs/Components.svg';
+import pipelineImg from '../../imgs/Pipeline.svg';
 import { ComponentModel } from '../../models';
+import { Table } from '../../shared';
 import AppEmptyState from '../../shared/components/empty-state/AppEmptyState';
 import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { useURLForComponentPRs } from '../../utils/component-utils';
-import { getGitOpsDeploymentStrategy } from '../../utils/gitops-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
+import { GettingStartedCard } from '../GettingStartedCard/GettingStartedCard';
 import { useModalLauncher } from '../modal/ModalProvider';
-import { ComponentListItem } from './ComponentListItem';
-import ComponentsFilterToolbarGroups, {
-  getStatusFilterIdForComponent,
-} from './ComponentsFilterToolbarGroups';
+import ComponentsListHeader from './ComponentsListHeader';
+import ComponentsListRow from './ComponentsListRow';
+import ComponentsToolbar, { pipelineRunStatusFilterId } from './ComponentsToolbar';
+
+import './ComponentListView.scss';
+
+export const COMPONENTS_LIST_GS_LOCAL_STORAGE_KEY = 'components-list-getting-started-modal';
 
 type ComponentListViewProps = {
   applicationName: string;
@@ -52,61 +51,47 @@ type ComponentListViewProps = {
 const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }) => {
   const { namespace, workspace } = useWorkspaceInfo();
 
-  const [routes, loaded] = useApplicationRoutes(applicationName);
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
   const [mergeAlertHidden, setMergeAlertHidden] = React.useState<boolean>(false);
 
-  const [allComponents, componentsLoaded] = useComponents(namespace, applicationName);
+  const [components, componentsLoaded, componentsError] = useComponents(namespace, applicationName);
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 
   const showModal = useModalLauncher();
 
-  const components = React.useMemo(
-    () =>
-      componentsLoaded ? allComponents?.filter((c) => c.spec.application === applicationName) : [],
-    [allComponents, applicationName, componentsLoaded],
-  );
-
   const prURL = useURLForComponentPRs(components);
   const componentNames = React.useMemo(() => components.map((c) => c.metadata.name), [components]);
 
-  const [pipelineRuns, pipelineRunsLoaded] = useLatestBuildPipelines(
+  const [pipelineRuns, pipelineRunsLoaded, pipelineRunsError] = useLatestBuildPipelines(
     namespace,
     applicationName,
     componentNames,
   );
+  const componentPACStates = usePACStatesForComponents(components);
 
-  const [snapshotEBs, snapshotLoaded] = useSnapshotsEnvironmentBindings(namespace, applicationName);
-
-  const [gitOpsDeployments, gitOpsDeploymentLoaded, gitOpsDeploymentError] =
-    useAllGitOpsDeploymentCRs(namespace);
-
-  const allLoaded = React.useMemo(
-    () => snapshotLoaded && gitOpsDeploymentLoaded && !gitOpsDeploymentError,
-    [snapshotLoaded, gitOpsDeploymentLoaded, gitOpsDeploymentError],
-  );
-
-  const allData = React.useMemo(
-    () =>
-      allLoaded &&
-      gitOpsDeployments &&
-      Array.isArray(gitOpsDeployments) &&
-      gitOpsDeployments.length > 0 &&
-      snapshotEBs &&
-      Array.isArray(snapshotEBs) &&
-      snapshotEBs.length > 0,
-    [allLoaded, gitOpsDeployments, snapshotEBs],
-  );
+  const componentsWithLatestBuild = React.useMemo(() => {
+    if (!componentsLoaded || componentsError || !pipelineRunsLoaded || pipelineRunsError) {
+      return [];
+    }
+    return components.map((c) => ({
+      ...c,
+      latestBuildPipelineRun: pipelineRuns.find(
+        (plr) => plr.metadata?.labels?.[PipelineRunLabel.COMPONENT] === c.metadata.name,
+      ),
+    }));
+  }, [
+    components,
+    componentsError,
+    componentsLoaded,
+    pipelineRuns,
+    pipelineRunsError,
+    pipelineRunsLoaded,
+  ]);
 
   const statusFilters = React.useMemo(
     () => (statusFiltersParam ? statusFiltersParam.split(',') : []),
     [statusFiltersParam],
-  );
-
-  const setStatusFilters = React.useCallback(
-    (filters: string[]) => setStatusFiltersParam(filters.join(',')),
-    [setStatusFiltersParam],
   );
 
   const onClearFilters = () => {
@@ -114,235 +99,161 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
     setStatusFiltersParam('');
   };
 
-  const [componentState, setComponentState] = React.useState<{ [name: string]: PACState }>({});
-
   const pendingCount = React.useMemo(
-    () => Object.values(componentState).reduce((p, c) => (c === PACState.pending ? p + 1 : p), 0),
-    [componentState],
+    () => Object.values(componentPACStates).filter((c) => c === PACState.pending).length,
+    [componentPACStates],
   );
 
   const filteredComponents = React.useMemo(
     () =>
-      components.filter((component) => {
+      componentsWithLatestBuild.filter((component) => {
         const compStatus = statusFilters?.length
-          ? getStatusFilterIdForComponent(component, pipelineRuns)
+          ? pipelineRunStatusFilterId(component.latestBuildPipelineRun)
           : '';
         return (
           (!nameFilter || component.metadata.name.indexOf(nameFilter) !== -1) &&
           (!statusFilters?.length || statusFilters.includes(compStatus))
         );
       }),
-    [components, statusFilters, pipelineRuns, nameFilter],
+    [componentsWithLatestBuild, statusFilters, nameFilter],
+  );
+
+  const NoDataEmptyMessage = () => (
+    <AppEmptyState emptyStateImg={emptyStateImgUrl} title="Bring your application to life">
+      <EmptyStateBody>
+        A component is an image built from source code in a repository. One or more components that
+        run together form an application.
+        <br />
+        To get started, add a component to your application.{' '}
+      </EmptyStateBody>
+      <ButtonWithAccessTooltip
+        variant="primary"
+        component={(props) => (
+          <Link
+            {...props}
+            to={`/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`}
+          />
+        )}
+        isDisabled={!canCreateComponent}
+        tooltip="You don't have access to add a component"
+        analytics={{
+          link_name: 'add-component',
+          link_location: 'components-list-empty-state',
+          app_name: applicationName,
+          workspace,
+        }}
+      >
+        Add component
+      </ButtonWithAccessTooltip>
+    </AppEmptyState>
+  );
+  const EmptyMessage = () => (
+    <FilteredEmptyState
+      onClearFilters={onClearFilters}
+      data-test="components-list-view__all-filtered"
+    />
+  );
+
+  const gettingStartedCard = React.useMemo(
+    () => (
+      <GettingStartedCard
+        imgClassName="component-list-view__gs-image"
+        localStorageKey={COMPONENTS_LIST_GS_LOCAL_STORAGE_KEY}
+        title="Upgrade build pipeline plans for your components."
+        imgSrc={pipelineImg}
+        imgAlt="build pipeline plans"
+        isLight
+      >
+        <Flex
+          justifyContent={{ default: 'justifyContentSpaceBetween' }}
+          flexWrap={{ default: 'wrap', md: 'nowrap' }}
+        >
+          <FlexItem>
+            Add additional tasks to your pipelines or merge pipelines to your source to gain
+            complete control over them.
+          </FlexItem>
+          <FlexItem>
+            <Button
+              className="pf-u-mr-2xl"
+              variant={ButtonVariant.secondary}
+              onClick={() =>
+                showModal(createCustomizeAllPipelinesModalLauncher(applicationName, namespace))
+              }
+            >
+              Edit build pipeline plans
+            </Button>
+          </FlexItem>
+        </Flex>
+      </GettingStartedCard>
+    ),
+    [applicationName, namespace, showModal],
   );
 
   return (
     <>
-      {!loaded || !pipelineRunsLoaded ? (
-        <Bullseye>
-          <Spinner />
-        </Bullseye>
-      ) : (
-        <>
-          {allComponents?.length > 0 ? (
+      <Title headingLevel="h3" className="pf-v5-u-mt-lg pf-v5-u-mb-sm">
+        Components
+      </Title>
+      <TextContent>
+        <Text component={TextVariants.p}>
+          A component is an image built from source code in a repository. One or more components
+          that run together form an application.
+        </Text>
+      </TextContent>
+      {gettingStartedCard}
+      {componentsLoaded && pipelineRunsLoaded && pendingCount > 0 && !mergeAlertHidden ? (
+        <Alert
+          className="pf-v5-u-mt-md"
+          variant={AlertVariant.warning}
+          isInline
+          title={`${pluralize(
+            pendingCount,
+            'component is',
+            'components are',
+          )} missing a build pipeline definition`}
+          actionClose={<AlertActionCloseButton onClose={() => setMergeAlertHidden(true)} />}
+          actionLinks={
             <>
-              <Title headingLevel="h3" className="pf-v5-u-mt-lg pf-v5-u-mb-sm">
-                Components
-              </Title>
-              <TextContent>
-                <Text component={TextVariants.p}>
-                  A component is an image built from source code in a repository. One or more
-                  components that run together form an application.
-                </Text>
-              </TextContent>
-              {pendingCount > 0 && !mergeAlertHidden ? (
-                <Alert
-                  className="pf-v5-u-mt-md"
-                  variant={AlertVariant.warning}
-                  isInline
-                  title={`${pluralize(
-                    pendingCount,
-                    'component is',
-                    'components are',
-                  )} missing a build pipeline definition`}
-                  actionClose={<AlertActionCloseButton onClose={() => setMergeAlertHidden(true)} />}
-                  actionLinks={
-                    <>
-                      <AlertActionLink
-                        onClick={() =>
-                          showModal(
-                            createCustomizeAllPipelinesModalLauncher(applicationName, namespace),
-                          )
-                        }
-                      >
-                        Manage build pipelines
-                      </AlertActionLink>
-                      <ExternalLink href={prURL}>View all pull requests in Github</ExternalLink>
-                    </>
-                  }
-                  data-testid="components-unmerged-build-pr"
-                >
-                  We sent a pull request to your repository containing the default build pipeline
-                  for you to customize. Merge the pull request to set up a build pipeline for your
-                  component.
-                </Alert>
-              ) : null}
-              <Toolbar
-                data-testid="component-list-toolbar"
-                clearFiltersButtonText="Clear filters"
-                clearAllFilters={() => setStatusFiltersParam('')}
+              <AlertActionLink
+                onClick={() =>
+                  showModal(createCustomizeAllPipelinesModalLauncher(applicationName, namespace))
+                }
               >
-                <ToolbarContent>
-                  <ComponentsFilterToolbarGroups
-                    components={components}
-                    pipelineRuns={pipelineRuns}
-                    statusFilters={statusFilters}
-                    setStatusFilters={setStatusFilters}
-                  />
-                  <ToolbarItem>
-                    <SearchInput
-                      name="nameInput"
-                      data-testid="name-input-filter"
-                      type="search"
-                      aria-label="name filter"
-                      placeholder="Filter by name..."
-                      onChange={(e, name) => setNameFilter(name)}
-                      value={nameFilter}
-                    />
-                  </ToolbarItem>
-                  <ToolbarItem>
-                    <ButtonWithAccessTooltip
-                      variant="secondary"
-                      component={(p) => (
-                        <Link
-                          {...p}
-                          data-test="add-component-button"
-                          to={`/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`}
-                        />
-                      )}
-                      isDisabled={!canCreateComponent}
-                      tooltip="You don't have access to add a component"
-                      analytics={{
-                        link_name: 'add-component',
-                        app_name: applicationName,
-                        workspace,
-                      }}
-                    >
-                      Add component
-                    </ButtonWithAccessTooltip>
-                  </ToolbarItem>
-                  <ToolbarGroup align={{ default: 'alignRight' }}>
-                    {!gitOpsDeploymentError && gitOpsDeploymentLoaded ? (
-                      Array.isArray(gitOpsDeployments) &&
-                      gitOpsDeployments.length > 0 &&
-                      gitOpsDeployments[0] ? (
-                        <ToolbarItem>
-                          Deployment strategy:
-                          <Label className="pf-v5-u-ml-xs">
-                            {getGitOpsDeploymentStrategy(gitOpsDeployments[0])}
-                          </Label>
-                        </ToolbarItem>
-                      ) : null
-                    ) : (
-                      <Spinner size="md" />
-                    )}
-                  </ToolbarGroup>
-                </ToolbarContent>
-              </Toolbar>
-              <DataList aria-label="Components" data-testid="component-list">
-                {filteredComponents?.length ? (
-                  <>
-                    {filteredComponents?.map((component) => {
-                      if (allData) {
-                        const gitOpsDeploymentData =
-                          snapshotEBs[0]?.status?.gitopsDeployments?.find(
-                            (deployment) => deployment.componentName === component.metadata.name,
-                          );
-                        const gitOpsDeploymentCR = gitOpsDeployments.find(
-                          (deployment) =>
-                            deployment.metadata.name === gitOpsDeploymentData?.gitopsDeployment,
-                        );
-
-                        return gitOpsDeploymentCR ? (
-                          <ComponentListItem
-                            key={component.metadata.uid}
-                            component={component}
-                            routes={routes}
-                            gitOpsDeployment={gitOpsDeploymentCR}
-                            onStateChange={(state) =>
-                              setComponentState((prev) => ({
-                                ...prev,
-                                [component.metadata.name]: state,
-                              }))
-                            }
-                          />
-                        ) : (
-                          <ComponentListItem
-                            key={component.metadata.uid}
-                            component={component}
-                            routes={routes}
-                            onStateChange={(state) =>
-                              setComponentState((prev) => ({
-                                ...prev,
-                                [component.metadata.name]: state,
-                              }))
-                            }
-                          />
-                        );
-                      }
-                      return (
-                        <ComponentListItem
-                          key={component.metadata.uid}
-                          component={component}
-                          routes={routes}
-                          onStateChange={(state) =>
-                            setComponentState((prev) => ({
-                              ...prev,
-                              [component.metadata.name]: state,
-                            }))
-                          }
-                        />
-                      );
-                    })}
-                  </>
-                ) : (
-                  <FilteredEmptyState
-                    onClearFilters={onClearFilters}
-                    data-test="components-list-view__all-filtered"
-                  />
-                )}
-              </DataList>
+                Manage build pipelines
+              </AlertActionLink>
+              <ExternalLink href={prURL}>View all pull requests in Github</ExternalLink>
             </>
-          ) : (
-            <AppEmptyState emptyStateImg={emptyStateImgUrl} title="Bring your application to life">
-              <EmptyStateBody>
-                A component is an image built from source code in a repository. One or more
-                components that run together form an application.
-                <br />
-                To get started, add a component to your application.{' '}
-              </EmptyStateBody>
-              <ButtonWithAccessTooltip
-                variant="primary"
-                component={(props) => (
-                  <Link
-                    {...props}
-                    to={`/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`}
-                  />
-                )}
-                isDisabled={!canCreateComponent}
-                tooltip="You don't have access to add a component"
-                analytics={{
-                  link_name: 'add-component',
-                  link_location: 'components-list-empty-state',
-                  app_name: applicationName,
-                  workspace,
-                }}
-              >
-                Add component
-              </ButtonWithAccessTooltip>
-            </AppEmptyState>
-          )}
-        </>
-      )}
+          }
+          data-testid="components-unmerged-build-pr"
+        >
+          We sent a pull request to your repository containing the default build pipeline for you to
+          customize. Merge the pull request to set up a build pipeline for your component.
+        </Alert>
+      ) : null}
+      <div data-testId="component-list">
+        <Table
+          virtualize={false}
+          data={filteredComponents}
+          unfilteredData={componentsWithLatestBuild}
+          EmptyMsg={EmptyMessage}
+          NoDataEmptyMsg={NoDataEmptyMessage}
+          Toolbar={
+            <ComponentsToolbar
+              applicationName={applicationName}
+              components={componentsWithLatestBuild}
+            />
+          }
+          aria-label="Components List"
+          Header={ComponentsListHeader}
+          Row={ComponentsListRow}
+          loaded={componentsLoaded && pipelineRunsLoaded}
+          customData={{ componentPACStates }}
+          getRowProps={(obj) => ({
+            id: `${obj.metadata.name}-component-list-item`,
+            'aria-label': obj.metadata.name,
+          })}
+        />
+      </div>
     </>
   );
 };

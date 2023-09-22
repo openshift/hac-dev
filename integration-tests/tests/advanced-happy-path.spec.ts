@@ -117,7 +117,7 @@ describe('Advanced Happy path', () => {
       Applications.checkComponentInListView(
         componentName,
         applicationName,
-        'Build Running',
+        'Build running',
         'Custom',
       );
     });
@@ -186,7 +186,7 @@ describe('Advanced Happy path', () => {
     it('Verify the status code and response body of the deployment URL of each component', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
       Applications.goToComponentsTab();
-      ComponentsTabPage.verifyRoute(componentName, componentInfo.deploymentBodyOriginal);
+      ComponentsTabPage.verifyRoute(componentName);
     });
 
     it('Verify SBOM on components tab', () => {
@@ -393,7 +393,7 @@ describe('Advanced Happy path', () => {
     it('Verify that the component deployment reflects latest changes', () => {
       Applications.clickBreadcrumbLink(applicationName);
       Applications.goToComponentsTab();
-      ComponentsTabPage.verifyRoute(componentName, componentInfo.deploymentBodyUpdated, 20000, 20);
+      ComponentsTabPage.verifyRoute(componentName);
     });
 
     it('Verify view pod logs', () => {

@@ -21,12 +21,6 @@ export class ApplicationDetailPage {
     );
   }
 
-  expandDetails(componentName: string) {
-    cy.get(`[aria-label="${componentName}"]`, { timeout: 60000 })
-      .find(applicationDetailPagePO.detailsArrow)
-      .click();
-  }
-
   openDeploymentSettings(componentName: string) {
     this.openActionList(componentName);
     cy.get(applicationDetailPagePO.deploymentSettings).click();

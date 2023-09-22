@@ -1,0 +1,27 @@
+.component-list-view {
+  &__gs-image {
+    &.getting-started-card__img {
+      width: 9ch;
+      min-width: unset !important;
+      padding-top: var(--pf-v5-global--spacer--xl);
+      padding-left: var(--pf-v5-global--spacer--xl);
+    }
+  }
+  &__build-completion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pf-v5-global--spacer--sm);
+    &--time {
+      align-items: center;
+      display: flex;
+      gap: var(--pf-v5-global--spacer--xs);
+    }
+  }
+  &__actions {
+    padding-right: 0;
+  }
+  &__row-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

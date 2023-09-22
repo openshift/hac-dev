@@ -6,9 +6,8 @@ import {
   DescriptionListTerm,
   Flex,
   FlexItem,
-  Skeleton,
 } from '@patternfly/react-core';
-import usePACState, { PACState } from '../../../../hooks/usePACState';
+import usePACState from '../../../../hooks/usePACState';
 import { ComponentKind } from '../../../../types';
 import ComponentBuildTrigger from '../../ComponentBuildTrigger';
 import ComponentPACStateLabel from '../../ComponentPACStateLabel';
@@ -31,11 +30,7 @@ const ComponentBuildSettings: React.FC<ComponentBuildSettingsProps> = ({ compone
           <DescriptionListGroup>
             <DescriptionListTerm>Build pipeline plan</DescriptionListTerm>
             <DescriptionListDescription data-test="edit-build-pipeline">
-              {pacState === PACState.loading ? (
-                <Skeleton width="25%" screenreaderText="Loading component count" />
-              ) : (
-                <ComponentPACStateLabel component={component} enableAction />
-              )}
+              <ComponentPACStateLabel component={component} enableAction />
             </DescriptionListDescription>
           </DescriptionListGroup>
         </DescriptionList>

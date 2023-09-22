@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Label, Tooltip } from '@patternfly/react-core';
+import { Label, Skeleton, Tooltip } from '@patternfly/react-core';
 import usePACState, { PACState } from '../../hooks/usePACState';
 import { ComponentKind } from '../../types';
 import { useTrackEvent, TrackEvents } from '../../utils/analytics';
@@ -12,12 +12,17 @@ type Props = {
   component: ComponentKind;
   onStateChange?: (state: PACState) => void;
   enableAction?: boolean;
+  pacState?: PACState;
 };
 
-const ComponentPACStateLabel: React.FC<Props> = ({ component, onStateChange, enableAction }) => {
+const ComponentPACStateLabelInner: React.FC<Props & { pacState: PACState }> = ({
+  component,
+  onStateChange,
+  enableAction,
+  pacState,
+}) => {
   const { workspace } = useWorkspaceInfo();
   const track = useTrackEvent();
-  const pacState = usePACState(component);
   const showModal = useModalLauncher();
   const buildStatus = useComponentBuildStatus(component);
   const pacError = buildStatus?.pac?.['error-message'];
@@ -115,9 +120,36 @@ const ComponentPACStateLabel: React.FC<Props> = ({ component, onStateChange, ena
           </Label>
         </Tooltip>
       );
+
+    case PACState.loading:
+      return <Skeleton width="100px" screenreaderText="Loading build pipeline plan" />;
+
     default:
       return null;
   }
+};
+
+const ComponentPACStateLabelFetcher: React.FC<Props> = ({
+  component,
+  onStateChange,
+  enableAction,
+}) => {
+  const pacState = usePACState(component);
+  return (
+    <ComponentPACStateLabelInner
+      component={component}
+      pacState={pacState}
+      onStateChange={onStateChange}
+      enableAction={enableAction}
+    />
+  );
+};
+
+const ComponentPACStateLabel: React.FC<Props> = ({ component, pacState, ...rest }) => {
+  if (pacState) {
+    return <ComponentPACStateLabelInner component={component} pacState={pacState} {...rest} />;
+  }
+  return <ComponentPACStateLabelFetcher component={component} {...rest} />;
 };
 
 export default ComponentPACStateLabel;
