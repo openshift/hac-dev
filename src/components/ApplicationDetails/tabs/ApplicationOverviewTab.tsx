@@ -1,5 +1,4 @@
 import * as React from 'react';
-import CommitsListView from '../../Commits/CommitsListView';
 import WhatsNextSection from '../../WhatsNext/WhatsNextSection';
 import AppWorkflowSection from './overview/sections/AppWorkflowSection';
 import { useWhatsNextItems } from './useWhatsNextItems';
@@ -13,7 +12,6 @@ const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applica
   return (
     <>
       <AppWorkflowSection applicationName={applicationName} />
-      <CommitsListView applicationName={applicationName} recentOnly />
       <WhatsNextSection whatsNextItems={whatsNextItems} />
     </>
   );

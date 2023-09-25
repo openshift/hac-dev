@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Bullseye,
   Button,
   ButtonVariant,
   EmptyStateBody,
   InputGroup,
-  Spinner,
   Text,
   TextContent,
   TextInput,
@@ -108,26 +106,55 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
     );
   }, [navigate, applicationName, workspace]);
 
-  const loading = (
-    <Bullseye className="pf-v5-u-mt-md" data-test="integration-tests__loading">
-      <Spinner />
-    </Bullseye>
-  );
-
-  if (!integrationTestsLoaded) {
-    return loading;
-  }
-
-  if (!applicationIntegrationTests?.length) {
-    return (
-      <IntegrationTestsEmptyState
-        handleAddTest={handleAddTest}
-        canCreateIntegrationTest={canCreateIntegrationTest}
-      />
-    );
-  }
   const onClearFilters = () => setNameFilter('');
   const onNameInput = (name: string) => setNameFilter(name);
+
+  const EmptyMsg = () => <FilteredEmptyState onClearFilters={() => setNameFilter('')} />;
+  const NoDataEmptyMsg = () => (
+    <IntegrationTestsEmptyState
+      handleAddTest={handleAddTest}
+      canCreateIntegrationTest={canCreateIntegrationTest}
+    />
+  );
+  const DataToolbar = (
+    <Toolbar data-testid="component-list-toolbar" clearAllFilters={onClearFilters}>
+      <ToolbarContent>
+        <ToolbarGroup align={{ default: 'alignLeft' }}>
+          <ToolbarItem>
+            <InputGroup>
+              <InputGroupItem>
+                <Button variant="control">
+                  <FilterIcon /> Name
+                </Button>
+              </InputGroupItem>
+              <InputGroupItem isFill>
+                <TextInput
+                  name="nameInput"
+                  data-test="name-input-filter"
+                  type="search"
+                  aria-label="name filter"
+                  placeholder="Filter by name..."
+                  onChange={(_event, name) => onNameInput(name)}
+                  value={nameFilter}
+                />
+              </InputGroupItem>
+            </InputGroup>
+          </ToolbarItem>
+          <ToolbarItem>
+            <ButtonWithAccessTooltip
+              variant={ButtonVariant.secondary}
+              onClick={handleAddTest}
+              isDisabled={!canCreateIntegrationTest}
+              tooltip="You don't have access to add an integration test"
+              data-test="add-integration-test"
+            >
+              Add integration test
+            </ButtonWithAccessTooltip>
+          </ToolbarItem>
+        </ToolbarGroup>
+      </ToolbarContent>
+    </Toolbar>
+  );
 
   return (
     <>
@@ -139,60 +166,22 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
           Add an integration test to test all your components after you commit code.
         </Text>
       </TextContent>
-      <>
-        <Toolbar data-testid="component-list-toolbar" clearAllFilters={onClearFilters}>
-          <ToolbarContent>
-            <ToolbarGroup align={{ default: 'alignLeft' }}>
-              <ToolbarItem>
-                <InputGroup>
-                  <InputGroupItem>
-                    <Button variant="control">
-                      <FilterIcon /> Name
-                    </Button>
-                  </InputGroupItem>
-                  <InputGroupItem isFill>
-                    <TextInput
-                      name="nameInput"
-                      data-test="name-input-filter"
-                      type="search"
-                      aria-label="name filter"
-                      placeholder="Filter by name..."
-                      onChange={(_event, name) => onNameInput(name)}
-                      value={nameFilter}
-                    />
-                  </InputGroupItem>
-                </InputGroup>
-              </ToolbarItem>
-              <ToolbarItem>
-                <ButtonWithAccessTooltip
-                  variant={ButtonVariant.secondary}
-                  onClick={handleAddTest}
-                  isDisabled={!canCreateIntegrationTest}
-                  tooltip="You don't have access to add an integration test"
-                  data-test="add-integration-test"
-                >
-                  Add integration test
-                </ButtonWithAccessTooltip>
-              </ToolbarItem>
-            </ToolbarGroup>
-          </ToolbarContent>
-        </Toolbar>
-        {filteredIntegrationTests.length ? (
-          <Table
-            data-test="integration-tests__table"
-            data={filteredIntegrationTests}
-            aria-label="Integration tests"
-            Header={IntegrationTestListHeader}
-            Row={IntegrationTestListRow}
-            loaded
-            getRowProps={(obj: IntegrationTestScenarioKind) => ({
-              id: obj.metadata.name,
-            })}
-          />
-        ) : (
-          <FilteredEmptyState onClearFilters={onClearFilters} />
-        )}
-      </>
+      <Table
+        virtualize={false}
+        data-test="integration-tests__table"
+        data={filteredIntegrationTests}
+        unfilteredData={applicationIntegrationTests}
+        aria-label="Integration tests"
+        EmptyMsg={EmptyMsg}
+        NoDataEmptyMsg={NoDataEmptyMsg}
+        Toolbar={DataToolbar}
+        Header={IntegrationTestListHeader}
+        Row={IntegrationTestListRow}
+        loaded={integrationTestsLoaded}
+        getRowProps={(obj: IntegrationTestScenarioKind) => ({
+          id: obj.metadata.name,
+        })}
+      />
     </>
   );
 };

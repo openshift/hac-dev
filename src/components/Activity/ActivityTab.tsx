@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Tab, Tabs, TabTitleText, Title } from '@patternfly/react-core';
+import { Tab, Tabs, TabTitleText, Text, Title } from '@patternfly/react-core';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import PipelineRunsTab from '../ApplicationDetails/tabs/PipelineRunsTab';
@@ -51,6 +51,9 @@ export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicatio
       <Title size="xl" headingLevel="h3" className="pf-v5-c-title pf-v5-u-mt-lg pf-v5-u-mb-sm">
         Activity By
       </Title>
+      <Text className="pf-v5-u-mb-sm">
+        Monitor your commits and their pipeline progression across all components.
+      </Text>
       <Tabs
         style={{
           width: 'fit-content',

@@ -123,6 +123,7 @@ AccessDenied.displayName = 'AccessDenied';
 const Data: React.FC<DataProps> = ({
   NoDataEmptyMsg,
   EmptyMsg,
+  Toolbar,
   label,
   data,
   unfilteredData,
@@ -139,11 +140,17 @@ const Data: React.FC<DataProps> = ({
   if (!data || isEmpty(data)) {
     return (
       <div className="loading-box loading-box__loaded">
+        {Toolbar}
         {EmptyMsg ? <EmptyMsg /> : <EmptyBox label={label} />}
       </div>
     );
   }
-  return <div className="loading-box loading-box__loaded">{children}</div>;
+  return (
+    <div className="loading-box loading-box__loaded">
+      {Toolbar}
+      {children}
+    </div>
+  );
 };
 Data.displayName = 'Data';
 
@@ -170,6 +177,7 @@ export const StatusBox: React.FC<StatusBoxProps> = (props) => {
           <div className="timeout-error text-muted">
             {t('public~Timed out fetching new data. The data below is stale.')}
           </div>
+          {props.Toolbar}
           {props.children}
         </Data>
       );
@@ -229,6 +237,7 @@ type AccessDeniedProps = {
 type DataProps = {
   NoDataEmptyMsg?: React.ComponentType;
   EmptyMsg?: React.ComponentType;
+  Toolbar?: React.ReactNode;
   label?: string;
   unfilteredData?: any;
   data?: any;
@@ -244,5 +253,6 @@ type StatusBoxProps = {
   skeleton?: React.ReactNode;
   NoDataEmptyMsg?: React.ComponentType;
   EmptyMsg?: React.ComponentType;
+  Toolbar?: React.ReactNode;
   children?: React.ReactNode;
 };

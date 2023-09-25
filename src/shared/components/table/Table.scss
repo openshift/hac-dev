@@ -200,3 +200,8 @@
   }
 }
 
+.table-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pf-v5-global--spacer--md);
+}
