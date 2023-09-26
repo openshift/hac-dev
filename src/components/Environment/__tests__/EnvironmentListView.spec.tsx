@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { render, screen, configure, cleanup, fireEvent, within } from '@testing-library/react';
 import { getMockWorkflows } from '../../../components/ApplicationDetails/__data__/WorkflowTestUtils';
+import { useAllApplicationEnvironmentsWithHealthStatus } from '../../../hooks/useAllApplicationEnvironmentsWithHealthStatus';
 import { useAllEnvironments } from '../../../hooks/useAllEnvironments';
 import { mockLocation } from '../../../utils/test-utils';
 import { mockAppEnvWithHealthStatus } from '../__data__/mockAppEnvWithHealthStatus';
@@ -36,12 +37,18 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
 
+jest.mock('../../../hooks/useAllApplicationEnvironmentsWithHealthStatus', () => ({
+  useAllApplicationEnvironmentsWithHealthStatus: jest.fn(),
+}));
+
 jest.mock('../../../hooks/useAllEnvironments', () => ({
   useAllEnvironments: jest.fn(),
 }));
 
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 const useAllEnvironmentsMock = useAllEnvironments as jest.Mock;
+const useAllApplicationEnvironmentsWithHealthStatusMock =
+  useAllApplicationEnvironmentsWithHealthStatus as jest.Mock;
 
 const { workflowMocks, applyWorkflowMocks } = getMockWorkflows();
 
@@ -59,6 +66,10 @@ describe('EnvironmentListView', () => {
   beforeEach(() => {
     applyWorkflowMocks(workflowMocks);
 
+    useAllApplicationEnvironmentsWithHealthStatusMock.mockReturnValue([
+      mockAppEnvWithHealthStatus,
+      true,
+    ]);
     useAllEnvironmentsMock.mockReturnValue([mockAppEnvWithHealthStatus, true]);
     useFeatureFlagMock.mockReturnValue([false]);
   });
@@ -94,7 +105,10 @@ describe('EnvironmentListView', () => {
   });
 
   it('should render environment(s) in order based on parentEnvironments', () => {
-    useAllEnvironmentsMock.mockReturnValue([mockAppEnvWithHealthStatus.slice(0, 3), true]);
+    useAllApplicationEnvironmentsWithHealthStatusMock.mockReturnValue([
+      mockAppEnvWithHealthStatus.slice(0, 3),
+      true,
+    ]);
 
     render(<EnvironmentListView validTypes={[EnvironmentType.default, EnvironmentType.static]} />);
     const environmentCards = screen.getAllByTestId('environment-card');
@@ -202,13 +216,13 @@ describe('EnvironmentListView', () => {
     }) as HTMLInputElement;
     fireEvent.click(missingFilter);
     await expect(missingFilter.checked).toBe(true);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(2);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
 
     const degradedFilter = screen.getByLabelText(/Degraded/i, {
       selector: 'input',
     }) as HTMLInputElement;
     fireEvent.click(degradedFilter);
-    expect(screen.getAllByTestId('environment-card')).toHaveLength(2);
+    expect(screen.getAllByTestId('environment-card')).toHaveLength(3);
 
     fireEvent.click(missingFilter);
     expect(screen.queryAllByTestId('environment-card')).toHaveLength(0);
@@ -220,13 +234,19 @@ describe('EnvironmentListView', () => {
   });
 
   it('should contain Healthy application status', () => {
-    useAllEnvironmentsMock.mockReturnValue([mockAppEnvWithHealthStatus, true]);
+    useAllApplicationEnvironmentsWithHealthStatusMock.mockReturnValue([
+      mockAppEnvWithHealthStatus,
+      true,
+    ]);
     render(<EnvironmentListView applicationName="test" />);
     screen.getByText('Healthy');
   });
 
   it('should contain application Missing status', () => {
-    useAllEnvironmentsMock.mockReturnValue([[mockAppEnvWithHealthStatus[0]], true]);
+    useAllApplicationEnvironmentsWithHealthStatusMock.mockReturnValue([
+      [mockAppEnvWithHealthStatus[0]],
+      true,
+    ]);
     render(<EnvironmentListView applicationName="test" />);
     screen.queryByText('Missing');
   });

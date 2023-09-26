@@ -144,6 +144,8 @@ export interface GitopsRepository {
 export interface GitopsDeployment {
   componentName: string;
   gitopsDeployment: string;
+  health?: string;
+  syncStatus?: string;
 }
 
 export type SnapshotEnvironmentBinding = K8sResourceCommon & {

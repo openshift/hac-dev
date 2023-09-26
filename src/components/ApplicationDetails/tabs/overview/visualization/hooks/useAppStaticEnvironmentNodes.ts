@@ -5,7 +5,7 @@ import {
 } from '../../../../../../components/Environment/environment-utils';
 import { useEnvironments } from '../../../../../../hooks/useEnvironments';
 import { useSnapshotsEnvironmentBindings } from '../../../../../../hooks/useSnapshotsEnvironmentBindings';
-import { getComponentDeploymentRunStatus } from '../../../../../../utils/environment-utils';
+import { getEnvironmentRunStatus } from '../../../../../../utils/environment-utils';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import {
   emptyPipelineNode,
@@ -63,7 +63,7 @@ export const useAppStaticEnvironmentNodes = (
             applicationName,
             WorkflowNodeType.STATIC_ENVIRONMENT,
             prevEnv ? [prevEnv.metadata.uid] : previousTasks,
-            getComponentDeploymentRunStatus(snapshotEB),
+            getEnvironmentRunStatus(snapshotEB),
           );
         })
       : [

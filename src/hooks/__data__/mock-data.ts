@@ -83,6 +83,26 @@ export const mockSnapshotEnvironmentBindings: {
             type: 'GitOpsResourcesGenerated',
           },
         ],
+        gitopsDeployments: [
+          {
+            componentName: 'comp1',
+            gitopsDeployment: 'test-app-prod-binding-dxbcz-test-app-prod-comp1-ccgs',
+            health: 'Progressing',
+            syncStatus: 'Unknown',
+          },
+          {
+            componentName: 'comp2',
+            gitopsDeployment: 'test-app-prod-binding-dxbcz-test-app-prod-comp2-xdss',
+            health: 'Healthy',
+            syncStatus: 'Unknown',
+          },
+          {
+            componentName: 'comp3',
+            gitopsDeployment: 'test-app-prod-binding-dxbcz-test-app-prod-comp3-jkkl',
+            health: 'Healthy',
+            syncStatus: 'Unknown',
+          },
+        ],
       },
     },
   ],
@@ -123,9 +143,22 @@ export const mockSnapshotEnvironmentBindings: {
         ],
         gitopsDeployments: [
           {
-            componentName: 'devfile-sample-guhp',
-            gitopsDeployment:
-              'my-app-development-binding-w8plb-my-app-development-devfile-sample-guhp',
+            componentName: 'comp1',
+            gitopsDeployment: 'test-app-prod-binding-dxbcz-test-app-prod-comp1-ccgs',
+            health: 'Healthy',
+            syncStatus: 'Unknown',
+          },
+          {
+            componentName: 'comp2',
+            gitopsDeployment: 'test-app-prod-binding-dxbcz-test-app-prod-comp2-xdss',
+            health: 'Healthy',
+            syncStatus: 'Unknown',
+          },
+          {
+            componentName: 'comp3',
+            gitopsDeployment: 'test-app-prod-binding-dxbcz-test-app-prod-comp3-jkkl',
+            health: 'Healthy',
+            syncStatus: 'Unknown',
           },
         ],
         gitopsRepoConditions: [
@@ -179,9 +212,22 @@ export const mockSnapshotEnvironmentBindings: {
         ],
         gitopsDeployments: [
           {
-            componentName: 'test-nodeapp',
-            gitopsDeployment:
-              'test-application-development-binding-8h9wl-test-application-development-test-nodeapp',
+            componentName: 'comp1',
+            gitopsDeployment: 'test-app-prod-binding-dxbcz-test-app-prod-comp1-ccgs',
+            health: 'Healthy',
+            syncStatus: 'Unknown',
+          },
+          {
+            componentName: 'comp2',
+            gitopsDeployment: 'test-app-prod-binding-dxbcz-test-app-prod-comp2-xdss',
+            health: 'Healthy',
+            syncStatus: 'Unknown',
+          },
+          {
+            componentName: 'comp3',
+            gitopsDeployment: 'test-app-prod-binding-dxbcz-test-app-prod-comp3-jkkl',
+            health: 'Progressing',
+            syncStatus: 'Unknown',
           },
         ],
         gitopsRepoConditions: [
@@ -235,9 +281,22 @@ export const mockSnapshotEnvironmentBindings: {
         ],
         gitopsDeployments: [
           {
-            componentName: 'test-nodeapp',
-            gitopsDeployment:
-              'test-application-development-binding-8h9wl-test-application-development-test-nodeapp',
+            componentName: 'comp1',
+            gitopsDeployment: 'test-app-prod-binding-dxbcz-test-app-prod-comp1-ccgs',
+            health: 'Healthy',
+            syncStatus: 'Unknown',
+          },
+          {
+            componentName: 'comp2',
+            gitopsDeployment: 'test-app-prod-binding-dxbcz-test-app-prod-comp2-xdss',
+            health: 'Degraded',
+            syncStatus: 'Unknown',
+          },
+          {
+            componentName: 'comp3',
+            gitopsDeployment: 'test-app-prod-binding-dxbcz-test-app-prod-comp3-jkkl',
+            health: 'Progressing',
+            syncStatus: 'Unknown',
           },
         ],
         gitopsRepoConditions: [

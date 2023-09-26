@@ -94,6 +94,42 @@ export const sortEnvironmentsBasedonParent = (
 export const getComponentDeploymentStatus = (
   snapshotEnvironmentBinding: SnapshotEnvironmentBinding,
 ): GitOpsDeploymentHealthStatus => {
+  if (!snapshotEnvironmentBinding?.status?.gitopsDeployments?.length) {
+    return GitOpsDeploymentHealthStatus.Missing;
+  }
+
+  return snapshotEnvironmentBinding.status.gitopsDeployments.reduce((acc, compDeployment) => {
+    if (
+      compDeployment.health &&
+      Object.keys(GitOpsDeploymentHealthStatus).indexOf(compDeployment.health) >
+        Object.keys(GitOpsDeploymentHealthStatus).indexOf(acc)
+    ) {
+      return GitOpsDeploymentHealthStatus[compDeployment.health];
+    }
+    return acc;
+  }, GitOpsDeploymentHealthStatus.Healthy);
+};
+
+export const healthStatusToRunStatus = (healthStatus: GitOpsDeploymentHealthStatus): runStatus => {
+  switch (healthStatus) {
+    case GitOpsDeploymentHealthStatus.Healthy:
+      return runStatus.Succeeded;
+    case GitOpsDeploymentHealthStatus.Progressing:
+      return runStatus.Running;
+    case GitOpsDeploymentHealthStatus.Degraded:
+      return runStatus.Failed;
+    default:
+      return runStatus.Pending;
+  }
+};
+
+export const getComponentDeploymentRunStatus = (
+  snapshotEnvironmentBinding: SnapshotEnvironmentBinding,
+): runStatus => healthStatusToRunStatus(getComponentDeploymentStatus(snapshotEnvironmentBinding));
+
+export const getEnvironmentStatus = (
+  snapshotEnvironmentBinding: SnapshotEnvironmentBinding,
+): GitOpsDeploymentHealthStatus => {
   if (!snapshotEnvironmentBinding || !snapshotEnvironmentBinding.status) {
     return GitOpsDeploymentHealthStatus.Missing;
   } else if (
@@ -117,22 +153,9 @@ export const getComponentDeploymentStatus = (
   return GitOpsDeploymentHealthStatus.Progressing;
 };
 
-export const getComponentDeploymentRunStatus = (
+export const getEnvironmentRunStatus = (
   snapshotEnvironmentBinding: SnapshotEnvironmentBinding,
-): runStatus => {
-  const status = getComponentDeploymentStatus(snapshotEnvironmentBinding);
-
-  switch (status) {
-    case GitOpsDeploymentHealthStatus.Healthy:
-      return runStatus.Succeeded;
-    case GitOpsDeploymentHealthStatus.Progressing:
-      return runStatus.Running;
-    case GitOpsDeploymentHealthStatus.Degraded:
-      return runStatus.Failed;
-    default:
-      return runStatus.Pending;
-  }
-};
+): runStatus => healthStatusToRunStatus(getEnvironmentStatus(snapshotEnvironmentBinding));
 
 export const ApplicationEnvironmentStatus: React.FC<{
   environment: EnvironmentKindWithHealthStatus;
