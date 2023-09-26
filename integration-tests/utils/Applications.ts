@@ -183,10 +183,17 @@ export class Applications {
       UIhelper.clickButton('Add secret');
       cy.contains(applicationsPagePO.formGroup, 'Select or enter name').within(() => {
         cy.get('input').clear().type(secret.secretName);
-        cy.contains('button', `Create "${secret.secretName}"`).click();
+        cy.contains(
+          'button',
+          `${secret.secretName === 'snyk-secret' ? '' : 'Create "'}${secret.secretName}`,
+        ).click();
       });
-      cy.get(applicationsPagePO.secretKey).clear().type(secret.key);
-      cy.get(applicationsPagePO.secretValue).clear().type(secret.value);
+      if (secret.secretName === 'snyk-secret') {
+        cy.get(applicationsPagePO.secretValue).clear().type(secret.value);
+      } else {
+        cy.get(applicationsPagePO.secretKey).clear().type(secret.key);
+        cy.get(applicationsPagePO.secretValue).clear().type(secret.value);
+      }
       UIhelper.clickButton('Create').should('not.exist');
     }
     componentPage.clickCreateApplication();

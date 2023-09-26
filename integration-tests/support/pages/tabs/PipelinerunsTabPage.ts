@@ -165,7 +165,11 @@ export class TaskRunsTab {
       { name: `${pipelineName}-init`, task: 'init', status: 'Succeeded' },
       { name: `${pipelineName}-clone-repository`, task: 'clone-repository', status: 'Succeeded' },
       { name: `${pipelineName}-build-container`, task: 'build-container', status: 'Succeeded' },
-      { name: `${pipelineName}-sast-snyk-check`, task: 'sast-snyk-check', status: 'Succeeded' },
+      {
+        name: `${pipelineName}-sast-snyk-check`,
+        task: 'sast-snyk-check',
+        status: 'Succeeded|Test Failures',
+      },
       { name: `${pipelineName}-inspect-image`, task: 'inspect-image', status: 'Succeeded' },
       {
         name: `${pipelineName}-deprecated-base-image-check`,
