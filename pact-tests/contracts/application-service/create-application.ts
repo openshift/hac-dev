@@ -3,6 +3,7 @@ import { ApplicationGroupVersionKind, ApplicationModel } from '../../../src/mode
 import { ApplicationKind } from '../../../src/types';
 import { matchers } from '../../matchers';
 import { PactContract, getUrlPath } from '../contracts';
+import { ApplicationParams } from './state-params';
 
 const namespace = 'default';
 const app = 'app-to-create';
@@ -66,4 +67,9 @@ export const contract: PactContract<ApplicationKind> = {
     body: expectedResponse,
   },
   model: ApplicationModel,
+};
+
+export const params: ApplicationParams = {
+  appName: app,
+  namespace,
 };
