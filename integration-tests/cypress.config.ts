@@ -146,6 +146,7 @@ export default defineConfig({
         PERIODIC_RUN: false,
         resolution: 'high',
         REMOVE_APP_ON_FAIL: false,
+        SNYK_TOKEN: '',
       };
 
       for (const key in defaultValues) {

@@ -64,9 +64,9 @@ describe('Advanced Happy path', () => {
   const integrationTestTaskNames = ['task-success', 'task-success-2', 'task-skipped'];
   const vulnerabilities = /Critical(\d+).*High(\d+).*Medium(\d+).*Low(\d+)/g;
   const secret = {
-    secretName: Common.generateAppName('secret'),
-    key: 'secretKey',
-    value: 'secretValue',
+    secretName: 'snyk-secret',
+    key: 'snyk_token',
+    value: `${Cypress.env('SNYK_TOKEN')}`,
   };
 
   before(() => {
