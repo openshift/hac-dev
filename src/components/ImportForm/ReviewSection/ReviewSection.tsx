@@ -81,7 +81,7 @@ const ReviewSection: React.FunctionComponent = () => {
   const [validAppName] = useValidApplicationName(sourceUrl);
 
   React.useEffect(() => {
-    if (sourceUrl && gitUrlRegex.test(sourceUrl) && !inAppContext && !isSubmitting) {
+    if (sourceUrl && gitUrlRegex.test(sourceUrl.trim()) && !inAppContext && !isSubmitting) {
       setFieldValue('application', validAppName);
     }
   }, [sourceUrl, inAppContext, validAppName, setFieldValue, isSubmitting]);
