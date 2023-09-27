@@ -37,7 +37,22 @@ describe('validation-utils', () => {
         },
       }),
     ).rejects.toThrow(
-      'Must start with a letter or number and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
+      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
+    );
+  });
+
+  it('should fail when component name has extra spaces', async () => {
+    await expect(
+      integrationTestValidationSchema.validate({
+        integrationTest: {
+          name: ' test-first  ',
+          url: 'test-url',
+          path: 'test-path',
+          revision: 'revision',
+        },
+      }),
+    ).rejects.toThrow(
+      'Must start with a letter and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
     );
   });
 
