@@ -1,17 +1,12 @@
 import * as yup from 'yup';
-
-const k8sResourceNameRegex =
-  /^\s*?[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*\s*?$/;
+import {
+  RESOURCE_NAME_REGEX_MSG,
+  resourceNameRegex,
+} from '../../../ImportForm/utils/validation-utils';
 
 export const integrationTestValidationSchema = yup.object({
   integrationTest: yup.object({
-    name: yup
-      .string()
-      .required('Required')
-      .matches(
-        k8sResourceNameRegex,
-        'Must start with a letter or number and end with a letter or number. Valid characters include lowercase letters from a to z, numbers from 0 to 9, and hyphens ( - ).',
-      ),
+    name: yup.string().matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG).required('Required'),
     url: yup
       .string()
       .required('Required')
