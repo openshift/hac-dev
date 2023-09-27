@@ -1,10 +1,16 @@
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, configure } from '@testing-library/react';
+import { useModalLauncher } from '../../../modal/ModalProvider';
 import {
   MockIntegrationTestsWithBundles,
   MockIntegrationTestsWithGit,
+  MockIntegrationTestsWithParams,
 } from '../../IntegrationTestsListView/__data__/mock-integration-tests';
 import IntegrationTestOverviewTab from '../IntegrationTestOverviewTab';
+
+jest.mock('../../../modal/ModalProvider', () => ({
+  useModalLauncher: jest.fn(),
+}));
 
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
@@ -13,6 +19,8 @@ jest.mock('react-router-dom', () => ({
 jest.mock('../../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
+
+configure({ testIdAttribute: 'data-test' });
 
 describe('IntegrationTestOverviewTab', () => {
   it('should render correct details', () => {
@@ -68,5 +76,28 @@ describe('IntegrationTestOverviewTab', () => {
     screen.getByText('test-namespace'); // namespace
     screen.getByText('Optional'); // optional for release
     screen.getByText('Bundle');
+  });
+
+  it('should display multiple parameters', () => {
+    render(<IntegrationTestOverviewTab integrationTest={MockIntegrationTestsWithParams[0]} />);
+    screen.getByText('example-git'); // name
+    screen.getByText('3 parameters'); // Params
+  });
+
+  it('should not pluralize when only one param', () => {
+    render(<IntegrationTestOverviewTab integrationTest={MockIntegrationTestsWithParams[2]} />);
+    screen.getByText('test-app-test-3'); // name
+    screen.getByText('1 parameter'); // Params
+  });
+
+  it('should show Modal when edit param is clicked', () => {
+    const showModal = jest.fn();
+    (useModalLauncher as jest.Mock).mockImplementation(() => {
+      return showModal;
+    });
+    render(<IntegrationTestOverviewTab integrationTest={MockIntegrationTestsWithParams[0]} />);
+    const editParambtn = screen.getByTestId('edit-param-button'); // Params
+    fireEvent.click(editParambtn);
+    expect(showModal).toHaveBeenCalled();
   });
 });

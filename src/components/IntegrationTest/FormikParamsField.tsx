@@ -182,7 +182,7 @@ const IntegrationTestParams: React.FC<IntegrationTestParamsProps> = ({
                                                     <InputField
                                                       key={`value${i}${j}`}
                                                       name={`${fieldName}[${i}].values[${j}]`}
-                                                      data-test={`param-${i}-value=${j}`}
+                                                      data-test={`param-${i}-value-${j}`}
                                                     />
                                                     <Button
                                                       className="pf-v5-u-ml-md"
