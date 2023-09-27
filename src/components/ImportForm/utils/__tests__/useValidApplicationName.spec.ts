@@ -23,6 +23,20 @@ describe('useValidApplicationName', () => {
     const { result } = renderHook(() => useValidApplicationName());
     expect(result.current[0]).toBe('my-app-3');
   });
+
+  it('returns the repo name based on given git url', () => {
+    const { result } = renderHook(() =>
+      useValidApplicationName('https://github.com/testapp/testrepo'),
+    );
+    expect(result.current[0]).toBe('testrepo');
+  });
+
+  it('should handle extra space in the start and end of the git url ', () => {
+    const { result } = renderHook(() =>
+      useValidApplicationName('  https://github.com/testapp/testrepo  '),
+    );
+    expect(result.current[0]).toBe('testrepo');
+  });
 });
 
 describe('incrementNameCount', () => {
