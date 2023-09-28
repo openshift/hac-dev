@@ -2,15 +2,14 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { render, screen } from '@testing-library/react';
-import { useBuildPipelines } from '../../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../../hooks/useComponents';
 import { useEnvironments } from '../../../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../../../hooks/useIntegrationTestScenarios';
+import { usePipelineRunsForCommit } from '../../../../../hooks/usePipelineRuns';
 import { useReleasePlans } from '../../../../../hooks/useReleasePlans';
 import { useReleases } from '../../../../../hooks/useReleases';
 import { useSnapshots } from '../../../../../hooks/useSnapshots';
 import { useSnapshotsEnvironmentBindings } from '../../../../../hooks/useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from '../../../../../hooks/useTestPipelines';
 import { CustomError } from '../../../../../shared/utils/error/custom-error';
 import {
   MockBuildPipelines,
@@ -37,8 +36,8 @@ jest.mock('../../../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
-jest.mock('../../../../../hooks/useBuildPipelines', () => ({
-  useBuildPipelines: jest.fn(),
+jest.mock('../../../../../hooks/usePipelineRuns', () => ({
+  usePipelineRunsForCommit: jest.fn(),
 }));
 jest.mock('../../../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
@@ -61,15 +60,12 @@ jest.mock('../../../../../hooks/useSnapshotsEnvironmentBindings', () => ({
 jest.mock('../../../../../hooks/useSnapshots', () => ({
   useSnapshots: jest.fn(),
 }));
-jest.mock('../../../../../hooks/useTestPipelines', () => ({
-  useTestPipelines: jest.fn(),
-}));
 
 jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
 }));
 
-const mockUseBuildPipelines = useBuildPipelines as jest.Mock;
+const mockUsePipelineRunsForCommit = usePipelineRunsForCommit as jest.Mock;
 const mockUseComponents = useComponents as jest.Mock;
 const mockUseEnvironments = useEnvironments as jest.Mock;
 const mockUseIntegrationTestScenarios = useIntegrationTestScenarios as jest.Mock;
@@ -77,14 +73,16 @@ const mockUseReleasePlans = useReleasePlans as jest.Mock;
 const mockUseReleases = useReleases as jest.Mock;
 const mockUseSnapshots = useSnapshots as jest.Mock;
 const mockUseSnapshotsEnvironmentBindings = useSnapshotsEnvironmentBindings as jest.Mock;
-const mockUseTestPipelines = useTestPipelines as jest.Mock;
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
 const commit = MockCommit;
 
 describe('CommitVisualization', () => {
   beforeEach(() => {
-    mockUseBuildPipelines.mockReturnValue([MockBuildPipelines, true]);
+    mockUsePipelineRunsForCommit.mockReturnValue([
+      [...MockBuildPipelines, ...MockTestPipelines],
+      true,
+    ]);
     mockUseComponents.mockReturnValue([MockComponents, true]);
     mockUseEnvironments.mockReturnValue([MockEnvironments, true]);
     mockUseIntegrationTestScenarios.mockReturnValue([MockIntegrationTests, true]);
@@ -92,7 +90,6 @@ describe('CommitVisualization', () => {
     mockUseReleases.mockReturnValue([MockReleases, true]);
     mockUseSnapshots.mockReturnValue([MockSnapshots, true]);
     mockUseSnapshotsEnvironmentBindings.mockReturnValue([MockSnapshotsEB, true]);
-    mockUseTestPipelines.mockReturnValue([MockTestPipelines, true]);
     useFeatureFlagMock.mockReturnValue([false]);
 
     (window.SVGElement as any).prototype.getBBox = () => ({
@@ -109,7 +106,7 @@ describe('CommitVisualization', () => {
   });
 
   it('should not render the commit visualization graph', () => {
-    mockUseBuildPipelines.mockReturnValue([[], false]);
+    mockUsePipelineRunsForCommit.mockReturnValue([[], false]);
     mockUseComponents.mockReturnValue([[], false]);
     mockUseEnvironments.mockReturnValue([[], false]);
     mockUseIntegrationTestScenarios.mockReturnValue([[], false]);
@@ -117,7 +114,6 @@ describe('CommitVisualization', () => {
     mockUseReleases.mockReturnValue([[], false]);
     mockUseSnapshots.mockReturnValue([[], false]);
     mockUseSnapshotsEnvironmentBindings.mockReturnValue([[], false]);
-    mockUseTestPipelines.mockReturnValue([[], false]);
     render(<CommitVisualization commit={commit} />);
     expect(screen.queryByTestId('commit-graph')).not.toBeInTheDocument();
   });
@@ -128,7 +124,11 @@ describe('CommitVisualization', () => {
   });
 
   it('should render the commit visualization graph', () => {
-    mockUseBuildPipelines.mockReturnValue([[], true, new CustomError('Model does not exist')]);
+    mockUsePipelineRunsForCommit.mockReturnValue([
+      [],
+      true,
+      new CustomError('Model does not exist'),
+    ]);
     mockUseComponents.mockReturnValue([[], true]);
     mockUseEnvironments.mockReturnValue([[], true]);
     mockUseIntegrationTestScenarios.mockReturnValue([[], true]);
@@ -136,7 +136,6 @@ describe('CommitVisualization', () => {
     mockUseReleases.mockReturnValue([[], true]);
     mockUseSnapshots.mockReturnValue([[], true]);
     mockUseSnapshotsEnvironmentBindings.mockReturnValue([[], true]);
-    mockUseTestPipelines.mockReturnValue([[], true]);
 
     render(<CommitVisualization commit={commit} />);
     screen.getByText('Model does not exist');

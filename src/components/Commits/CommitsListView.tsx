@@ -13,9 +13,8 @@ import {
   SelectOption,
 } from '@patternfly/react-core/deprecated';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
-import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
+import { useBuildPipelines } from '../../hooks/useBuildPipelines';
 import { useComponents } from '../../hooks/useComponents';
-import { usePipelineRuns } from '../../hooks/usePipelineRuns';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
 import Table from '../../shared/components/table/Table';
@@ -36,28 +35,17 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({ applicationName, comp
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [statusFilterExpanded, setStatusFilterExpanded] = React.useState<boolean>(false);
   const [statusFiltersParam, setStatusFiltersParam] = useSearchParam('status', '');
-  const [components, componentsLoaded] = useComponents(namespace, applicationName);
+  const [components, componentsLoaded] = useComponents(
+    componentName ? null : namespace,
+    applicationName,
+  );
 
-  const [pipelineRuns, loaded] = usePipelineRuns(
+  const [pipelineRuns, loaded, , getNextPage] = useBuildPipelines(
     namespace,
-    React.useMemo(
-      () => ({
-        selector: {
-          matchLabels: {
-            [PipelineRunLabel.APPLICATION]: applicationName,
-            [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
-          },
-          matchExpressions: [
-            {
-              key: `${PipelineRunLabel.COMPONENT}`,
-              operator: 'In',
-              values: componentName ? [componentName] : components?.map((c) => c.metadata?.name),
-            },
-          ],
-        },
-      }),
-      [applicationName, componentName, components],
-    ),
+    applicationName,
+    undefined,
+    true,
+    componentName ? [componentName] : componentsLoaded && components?.map((c) => c.metadata.name),
   );
 
   const commits = React.useMemo(
@@ -187,6 +175,11 @@ const CommitsListView: React.FC<CommitsListViewProps> = ({ applicationName, comp
       getRowProps={(obj) => ({
         id: obj.sha,
       })}
+      onRowsRendered={({ stopIndex }) => {
+        if (loaded && stopIndex === filteredCommits.length - 1) {
+          getNextPage?.();
+        }
+      }}
     />
   );
 };

@@ -93,6 +93,7 @@ export const useAppWorkflowData = (
     managedEnvironmentsLoaded,
     managedEnvironmentsError,
   ] = useAppReleasePlanNodes(namespace, applicationName, releaseTasks, expanded);
+
   const allResourcesLoaded: boolean =
     componentsLoaded &&
     buildsLoaded &&

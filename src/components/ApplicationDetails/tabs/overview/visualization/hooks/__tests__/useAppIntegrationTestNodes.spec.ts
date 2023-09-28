@@ -2,6 +2,7 @@ import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import '@testing-library/jest-dom';
 import { renderHook } from '@testing-library/react-hooks';
 import { useComponents } from '../../../../../../../hooks/useComponents';
+import { useLatestIntegrationTestPipelines } from '../../../../../../../hooks/useLatestIntegrationTestPipelines';
 import { mockIntegrationTestScenariosData } from '../../../../../__data__';
 import { testPipelineRuns } from '../__data__/test-pipeline-data';
 import { useAppApplicationTestNodes } from '../useAppApplicationTestNodes';
@@ -16,18 +17,20 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
 jest.mock('../../../../../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
 }));
-
+jest.mock('../../../../../../../hooks/useLatestIntegrationTestPipelines', () => ({
+  useLatestIntegrationTestPipelines: jest.fn(),
+}));
 jest.mock('../../../../../../../hooks/useTektonResults');
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
+const useLatestIntegrationTestPipelinesMock = useLatestIntegrationTestPipelines as jest.Mock;
 
 describe('useAppApplicationTestNodes', () => {
   beforeEach(() => {
     useK8sWatchResourceMock.mockReset();
-    useK8sWatchResourceMock
-      .mockReturnValueOnce([[mockIntegrationTestScenariosData[0]], true])
-      .mockReturnValueOnce([testPipelineRuns, true]);
+    useK8sWatchResourceMock.mockReturnValue([mockIntegrationTestScenariosData, true]);
+    useLatestIntegrationTestPipelinesMock.mockReturnValue([testPipelineRuns, true]);
     useComponentsMock.mockReturnValue([[], true]);
   });
 
@@ -37,9 +40,9 @@ describe('useAppApplicationTestNodes', () => {
     );
     const [nodes, appTests, resources, loaded] = result.current;
 
-    expect(nodes).toHaveLength(1);
+    expect(nodes).toHaveLength(4);
     expect(appTests).toHaveLength(0);
-    expect(resources).toHaveLength(1);
+    expect(resources).toHaveLength(4);
     expect(loaded).toBe(true);
   });
 
@@ -65,7 +68,6 @@ describe('useAppApplicationTestNodes', () => {
       useAppApplicationTestNodes('test-ns', 'test-dev-samples', [], false),
     );
     const [nodes] = result.current;
-
-    expect(nodes[0].data.status).toBe('Succeeded');
+    expect(nodes[1].data.status).toBe('Succeeded');
   });
 });

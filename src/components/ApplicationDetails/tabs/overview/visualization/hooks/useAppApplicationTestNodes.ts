@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
 import { useIntegrationTestScenarios } from '../../../../../../hooks/useIntegrationTestScenarios';
-import { useTestPipelines } from '../../../../../../hooks/useTestPipelines';
+import { useLatestIntegrationTestPipelines } from '../../../../../../hooks/useLatestIntegrationTestPipelines';
 import { IntegrationTestScenarioKind } from '../../../../../../types/coreBuildService';
 import { pipelineRunStatus, runStatus } from '../../../../../../utils/pipeline-utils';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
 import { emptyPipelineNode, resourceToPipelineNode } from '../utils/node-utils';
-import { getLatestResource, updateParallelNodeWidths } from '../utils/visualization-utils';
+import { updateParallelNodeWidths } from '../utils/visualization-utils';
 
 export const useAppApplicationTestNodes = (
   namespace: string,
@@ -25,12 +25,14 @@ export const useAppApplicationTestNodes = (
     applicationName,
   );
 
-  // TODO this is inefficient to get all unbounded test pipelines in an application
-  const [testPipelines, testPipelinesLoaded, testPipelinesError] = useTestPipelines(
-    namespace,
-    applicationName,
-    true,
+  const integrationTestNames = React.useMemo(
+    () => (testsLoaded && !testsError ? integrationTests.map((test) => test.metadata.name) : []),
+    [integrationTests, testsError, testsLoaded],
   );
+
+  const [testPipelines, testPipelinesLoaded, testPipelinesError] =
+    useLatestIntegrationTestPipelines(namespace, applicationName, integrationTestNames);
+
   const allLoaded = testsLoaded && testPipelinesLoaded;
   const allErrors = [testsError, testPipelinesError].filter((e) => !!e);
 
@@ -40,12 +42,10 @@ export const useAppApplicationTestNodes = (
     }
     const nodes = integrationTests?.length
       ? integrationTests.map((test) => {
-          const testPipeline = getLatestResource(
-            testPipelines?.filter(
-              (pipeline) =>
-                pipeline.metadata.labels[PipelineRunLabel.TEST_SERVICE_SCENARIO] ===
-                test.metadata.name,
-            ),
+          const testPipeline = testPipelines?.find(
+            (pipeline) =>
+              pipeline.metadata.labels[PipelineRunLabel.TEST_SERVICE_SCENARIO] ===
+              test.metadata.name,
           );
           return resourceToPipelineNode(
             test,

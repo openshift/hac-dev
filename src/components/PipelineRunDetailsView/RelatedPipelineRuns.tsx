@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, Popover, Skeleton } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { usePipelineRunsForCommit } from '../../hooks/usePipelineRuns';
+import { PipelineRunGroupVersionKind } from '../../models';
 import { PipelineRunKind } from '../../types';
 import { getCommitSha } from '../../utils/commits-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
@@ -20,8 +21,11 @@ const RelatedPipelineRuns = ({ pipelineRun }) => {
   );
 
   const relatedPipelineRuns = React.useMemo(
-    () => pipelineRuns?.filter((plr) => plr.metadata.name !== pipelineRun.metadata.name),
-    [pipelineRuns, pipelineRun.metadata.name],
+    () =>
+      pipelineRuns
+        ?.filter((plr) => plr.metadata.name !== pipelineRun.metadata.name)
+        .filter((plr) => plr.kind === PipelineRunGroupVersionKind.kind),
+    [pipelineRun.metadata.name, pipelineRuns],
   );
 
   return relatedPipelineRunsLoaded || !sha ? (

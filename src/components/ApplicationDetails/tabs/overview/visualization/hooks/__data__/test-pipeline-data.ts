@@ -368,7 +368,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
         'pac.test.appstudio.openshift.io/event-type': 'pull_request',
         'pac.test.appstudio.openshift.io/original-prname':
           'node-express-hello-hwnl-on-pull-request',
-        'test.appstudio.openshift.io/scenario': 'one-more-test',
+        'test.appstudio.openshift.io/scenario': 'test-again',
         'pac.test.appstudio.openshift.io/sha': 'ce8657402a4e0983776cf1188772a67e1822e70f',
         'tekton.dev/pipeline': 'integration-pipeline-pass',
         'pac.test.appstudio.openshift.io/sender': 'stonesoup-pac__bot',

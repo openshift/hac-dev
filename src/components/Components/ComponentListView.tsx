@@ -21,12 +21,11 @@ import {
   ToolbarGroup,
   ToolbarItem,
 } from '@patternfly/react-core';
-import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useApplicationRoutes } from '../../hooks/useApplicationRoutes';
 import { useComponents } from '../../hooks/useComponents';
 import { useAllGitOpsDeploymentCRs } from '../../hooks/useGitOpsDeploymentCR';
+import { useLatestBuildPipelines } from '../../hooks/useLatestBuildPipelines';
 import { PACState } from '../../hooks/usePACState';
-import { usePipelineRuns } from '../../hooks/usePipelineRuns';
 import { useSearchParam } from '../../hooks/useSearchParam';
 import { useSnapshotsEnvironmentBindings } from '../../hooks/useSnapshotsEnvironmentBindings';
 import emptyStateImgUrl from '../../imgs/Components.svg';
@@ -70,18 +69,12 @@ const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }
   );
 
   const prURL = useURLForComponentPRs(components);
+  const componentNames = React.useMemo(() => components.map((c) => c.metadata.name), [components]);
 
-  // TODO this is inefficient to fetch all unbounded pipeline runs for the sake of creating filters
-  const [pipelineRuns, pipelineRunsLoaded] = usePipelineRuns(
+  const [pipelineRuns, pipelineRunsLoaded] = useLatestBuildPipelines(
     namespace,
-    React.useMemo(
-      () => ({
-        selector: {
-          matchLabels: { [PipelineRunLabel.APPLICATION]: applicationName },
-        },
-      }),
-      [applicationName],
-    ),
+    applicationName,
+    componentNames,
   );
 
   const [snapshotEBs, snapshotLoaded] = useSnapshotsEnvironmentBindings(namespace, applicationName);

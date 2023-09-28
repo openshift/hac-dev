@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PipelineRunLabel } from '../../../../../../consts/pipelinerun';
-import { useBuildPipelines } from '../../../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../../../hooks/useComponents';
+import { useLatestBuildPipelines } from '../../../../../../hooks/useLatestBuildPipelines';
 import { PipelineRunKind } from '../../../../../../types';
 import { runStatus } from '../../../../../../utils/pipeline-utils';
 import { WorkflowNodeModel, WorkflowNodeModelData, WorkflowNodeType } from '../types';
@@ -26,12 +26,15 @@ export const useAppBuildNodes = (
   errors: unknown[],
 ] => {
   const [components, componentsLoaded, componentsError] = useComponents(namespace, applicationName);
-  // TODO this is inefficient to get all builds just to find the latest component builds
-  const [buildPipelines, buildPipelinesLoaded, buildPipelinesError] = useBuildPipelines(
+  const componentNames = React.useMemo(
+    () => componentsLoaded && components?.map((c) => c.metadata.name),
+    [componentsLoaded, components],
+  );
+
+  const [buildPipelines, buildPipelinesLoaded, buildPipelinesError] = useLatestBuildPipelines(
     namespace,
     applicationName,
-    null,
-    true,
+    componentNames,
   );
   const allResourcesLoaded: boolean = componentsLoaded && buildPipelinesLoaded;
   const allErrors: unknown[] = [componentsError, buildPipelinesError].filter((e) => !!e);
@@ -41,13 +44,9 @@ export const useAppBuildNodes = (
       return [];
     }
     return components.reduce((acc, component) => {
-      const latestBuild = buildPipelines
-        .filter((p) => p.metadata.labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name)
-        ?.sort?.(
-          (a, b) =>
-            new Date(b.metadata.creationTimestamp).getTime() -
-            new Date(a.metadata.creationTimestamp).getTime(),
-        )?.[0];
+      const latestBuild = buildPipelines.find(
+        (p) => p.metadata.labels?.[PipelineRunLabel.COMPONENT] === component.metadata.name,
+      );
       if (latestBuild) {
         acc.push(latestBuild);
       }

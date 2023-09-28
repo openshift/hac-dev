@@ -1,4 +1,3 @@
-import { getLatestResource } from '../components/ApplicationDetails/tabs/overview/visualization/utils/visualization-utils';
 import { getSourceUrl } from '../components/PipelineRunDetailsView/utils/pipelinerun-utils';
 import { PipelineRunEventType, PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { PipelineRunKind, Commit } from '../types';
@@ -109,14 +108,7 @@ export const getLatestCommitFromPipelineRuns = (pipelineruns?: PipelineRunKind[]
   if (!pipelineruns.length) {
     return null;
   }
-  return createCommitObjectFromPLR(
-    getLatestResource(
-      pipelineruns?.filter(
-        (plr) =>
-          plr.metadata?.labels?.[PipelineRunLabel.COMMIT_TYPE_LABEL] === PipelineRunType.BUILD,
-      ),
-    ),
-  );
+  return createCommitObjectFromPLR(pipelineruns[0]);
 };
 
 export const getCommitDisplayName = (commit: Commit): string => commit.sha.slice(0, 7);

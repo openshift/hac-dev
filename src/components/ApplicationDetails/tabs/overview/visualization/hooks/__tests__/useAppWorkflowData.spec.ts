@@ -1,14 +1,14 @@
 import '@testing-library/jest-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { renderHook } from '@testing-library/react-hooks';
-import { useBuildPipelines } from '../../../../../../../hooks/useBuildPipelines';
 import { useComponents } from '../../../../../../../hooks/useComponents';
 import { useEnvironments } from '../../../../../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../../../../../hooks/useIntegrationTestScenarios';
+import { useLatestBuildPipelines } from '../../../../../../../hooks/useLatestBuildPipelines';
+import { useLatestIntegrationTestPipelines } from '../../../../../../../hooks/useLatestIntegrationTestPipelines';
 import { useReleasePlans } from '../../../../../../../hooks/useReleasePlans';
 import { useReleases } from '../../../../../../../hooks/useReleases';
 import { useSnapshotsEnvironmentBindings } from '../../../../../../../hooks/useSnapshotsEnvironmentBindings';
-import { useTestPipelines } from '../../../../../../../hooks/useTestPipelines';
 import { useWorkspaceInfo } from '../../../../../../../utils/workspace-context-utils';
 import { WorkflowNodeType } from '../../types';
 import {
@@ -33,8 +33,8 @@ jest.mock('../../../../../../../hooks/useComponents', () => ({
 jest.mock('../../../../../../../hooks/useIntegrationTestScenarios', () => ({
   useIntegrationTestScenarios: jest.fn(),
 }));
-jest.mock('../../../../../../../hooks/useBuildPipelines', () => ({
-  useBuildPipelines: jest.fn(),
+jest.mock('../../../../../../../hooks/useLatestBuildPipelines', () => ({
+  useLatestBuildPipelines: jest.fn(),
 }));
 jest.mock('../../../../../../../hooks/useEnvironments', () => ({
   useEnvironments: jest.fn(),
@@ -45,8 +45,8 @@ jest.mock('../../../../../../../hooks/useReleases', () => ({
 jest.mock('../../../../../../../hooks/useReleasePlans', () => ({
   useReleasePlans: jest.fn(),
 }));
-jest.mock('../../../../../../../hooks/useTestPipelines', () => ({
-  useTestPipelines: jest.fn(),
+jest.mock('../../../../../../../hooks/useLatestIntegrationTestPipelines', () => ({
+  useLatestIntegrationTestPipelines: jest.fn(),
 }));
 jest.mock('../../../../../../../hooks/useSnapshotsEnvironmentBindings', () => ({
   useSnapshotsEnvironmentBindings: jest.fn(),
@@ -60,11 +60,11 @@ const useWorkspaceInfoMock = useWorkspaceInfo as jest.Mock;
 
 const useComponentsMock = useComponents as jest.Mock;
 const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
-const useBuildPipelinesMock = useBuildPipelines as jest.Mock;
+const useLatestBuildPipelinesMock = useLatestBuildPipelines as jest.Mock;
 const useEnvironmentsMock = useEnvironments as jest.Mock;
 const useReleasesMock = useReleases as jest.Mock;
 const useReleasePlansMock = useReleasePlans as jest.Mock;
-const useTestPipelinesMock = useTestPipelines as jest.Mock;
+const useLatestIntegrationTestPipelinesMock = useLatestIntegrationTestPipelines as jest.Mock;
 const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
 
@@ -73,11 +73,11 @@ describe('useAppWorkflowData hook', () => {
     useWorkspaceInfoMock.mockReturnValue({ namespace: 'test-ns' });
     useComponentsMock.mockReturnValue([[], true]);
     useIntegrationTestScenariosMock.mockReturnValue([[], true]);
-    useBuildPipelinesMock.mockReturnValue([[], true]);
+    useLatestBuildPipelinesMock.mockReturnValue([[], true]);
     useEnvironmentsMock.mockReturnValue([[], true]);
     useReleasePlansMock.mockReturnValue([[], true]);
     useReleasesMock.mockReturnValue([[], true]);
-    useTestPipelinesMock.mockReturnValue([[], true]);
+    useLatestIntegrationTestPipelinesMock.mockReturnValue([[], true]);
     useSnapshotsEnvironmentBindingsMock.mockReturnValue([[], true]);
     useFeatureFlagMock.mockReturnValue([false]);
 
@@ -125,7 +125,7 @@ describe('useAppWorkflowData hook', () => {
 
   it('Abstract nodes should contain static name', () => {
     useComponentsMock.mockReturnValue([sampleComponents, true]);
-    useBuildPipelinesMock.mockReturnValue([sampleBuildPipelines, true]);
+    useLatestBuildPipelinesMock.mockReturnValue([sampleBuildPipelines, true]);
 
     const { result } = renderHook(() => useAppWorkflowData('test', false));
     const [model] = result.current;

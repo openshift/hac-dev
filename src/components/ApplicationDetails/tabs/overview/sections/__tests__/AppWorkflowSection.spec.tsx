@@ -64,8 +64,8 @@ jest.mock('../../../../../../hooks/useComponents', () => ({
 jest.mock('../../../../../../hooks/useIntegrationTestScenarios', () => ({
   useIntegrationTestScenarios: jest.fn(),
 }));
-jest.mock('../../../../../../hooks/useBuildPipelines', () => ({
-  useBuildPipelines: jest.fn(),
+jest.mock('../../../../../../hooks/useLatestBuildPipelines', () => ({
+  useLatestBuildPipelines: jest.fn(),
 }));
 jest.mock('../../../../../../hooks/useEnvironments', () => ({
   useEnvironments: jest.fn(),
@@ -76,8 +76,8 @@ jest.mock('../../../../../../hooks/useReleases', () => ({
 jest.mock('../../../../../../hooks/useReleasePlans', () => ({
   useReleasePlans: jest.fn(),
 }));
-jest.mock('../../../../../../hooks/useTestPipelines', () => ({
-  useTestPipelines: jest.fn(),
+jest.mock('../../../../../../hooks/useLatestIntegrationTestPipelines', () => ({
+  useLatestIntegrationTestPipelines: jest.fn(),
 }));
 jest.mock('../../../../../../hooks/useSnapshotsEnvironmentBindings', () => ({
   useSnapshotsEnvironmentBindings: jest.fn(),

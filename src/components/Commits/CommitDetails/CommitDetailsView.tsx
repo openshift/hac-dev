@@ -6,7 +6,7 @@ import DetailsPage from '../../../shared/components/details-page/DetailsPage';
 import ErrorEmptyState from '../../../shared/components/empty-state/ErrorEmptyState';
 import { HttpError } from '../../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../../utils/breadcrumb-utils';
-import { getCommitShortName, getLatestCommitFromPipelineRuns } from '../../../utils/commits-utils';
+import { createCommitObjectFromPLR, getCommitShortName } from '../../../utils/commits-utils';
 import { runStatus } from '../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import SidePanelHost from '../../SidePanel/SidePanelHost';
@@ -33,14 +33,11 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
     namespace,
     applicationName,
     commitName,
+    1,
   );
 
   const commit = React.useMemo(
-    () =>
-      loaded &&
-      Array.isArray(pipelineruns) &&
-      pipelineruns.length > 0 &&
-      getLatestCommitFromPipelineRuns(pipelineruns),
+    () => loaded && pipelineruns?.length && createCommitObjectFromPLR(pipelineruns[0]),
     [loaded, pipelineruns],
   );
 
@@ -108,10 +105,7 @@ const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, appli
             key: 'pipelineruns',
             label: 'Pipeline runs',
             component: (
-              <CommitsPipelineRunTab
-                pipelineRuns={pipelineruns}
-                applicationName={applicationName}
-              />
+              <CommitsPipelineRunTab commitName={commitName} applicationName={applicationName} />
             ),
           },
         ]}

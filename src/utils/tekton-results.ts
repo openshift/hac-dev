@@ -6,6 +6,7 @@ import {
   Selector,
 } from '@openshift/dynamic-plugin-sdk-utils';
 // import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
+import { PipelineRunLabel } from '../consts/pipelinerun';
 import { PipelineRunKind, TaskRunKind } from '../types';
 
 // REST API spec
@@ -88,6 +89,13 @@ export const labelsToFilter = (labels?: MatchLabels): string =>
 export const nameFilter = (name?: string): string =>
   name ? AND(`data.metadata.name.startsWith("${name.trim().toLowerCase()}")`) : '';
 
+export const commitShaFilter = (commitSha: string): string =>
+  OR(
+    EQ(`data.metadata.labels["${PipelineRunLabel.COMMIT_LABEL}"]`, commitSha),
+    EQ(`data.metadata.labels["${PipelineRunLabel.TEST_SERVICE_COMMIT}"]`, commitSha),
+    EQ(`data.metadata.annotations["${PipelineRunLabel.COMMIT_ANNOTATION}"]`, commitSha),
+  );
+
 export const expressionsToFilter = (expressions: Omit<MatchExpression, 'value'>[]): string =>
   AND(
     ...expressions
@@ -140,10 +148,14 @@ export const expressionsToFilter = (expressions: Omit<MatchExpression, 'value'>[
 export const selectorToFilter = (selector?: Selector) => {
   let filter = '';
   if (selector) {
-    const { matchLabels, matchExpressions, filterByName } = selector;
+    const { matchLabels, matchExpressions, filterByName, filterByCommit } = selector;
 
     if (filterByName) {
       filter = AND(filter, nameFilter(filterByName as string));
+    }
+
+    if (filterByCommit) {
+      filter = AND(filter, commitShaFilter(filterByCommit as string));
     }
 
     if (matchLabels || matchExpressions) {
