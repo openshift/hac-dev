@@ -126,6 +126,7 @@ export const mockSnapshotsEnvironmentBindings: SnapshotEnvironmentBinding[] = [
           componentName: 'test-nodeapp',
           gitopsDeployment:
             'test-application-development-binding-8h9wl-test-application-development-test-nodeapp',
+          health: 'Healthy',
         },
       ],
       gitopsRepoConditions: [
@@ -208,6 +209,7 @@ export const mockSnapshotsEnvironmentBindings: SnapshotEnvironmentBinding[] = [
           componentName: 'test-nodeapp',
           gitopsDeployment:
             'test-application-development-binding-8h9wl-test-application-development-test-nodeapp',
+          health: 'Progressing',
         },
       ],
       gitopsRepoConditions: [
@@ -290,6 +292,7 @@ export const mockSnapshotsEnvironmentBindings: SnapshotEnvironmentBinding[] = [
           componentName: 'test-nodeapp',
           gitopsDeployment:
             'test-application-development-binding-8h9wl-test-application-development-test-nodeapp',
+          health: 'Degraded',
         },
       ],
       gitopsRepoConditions: [

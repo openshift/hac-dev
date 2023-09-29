@@ -1,5 +1,5 @@
 export const applicationsPagePO = {
-  appStatus: '[class="pf-v5-c-label__content"]',
+  appStatus: '[data-test="details__status"]',
   formGroup: 'div[class="pf-v5-c-form__group"]',
   secretKey: 'input[label="Key"]',
   secretValue: 'textarea[id="value"]',

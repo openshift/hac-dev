@@ -93,9 +93,7 @@ export class Applications {
     });
   }
   static verifyAppstatusIsSucceeded() {
-    cy.contains(applicationsPagePO.appStatus, 'Succeeded', { timeout: 100000 }).should(
-      'be.visible',
-    );
+    cy.contains(applicationsPagePO.appStatus, 'Healthy', { timeout: 100000 }).should('be.visible');
   }
 
   static getComponentListItem(application: string) {

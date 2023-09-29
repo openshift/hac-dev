@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { getComponentDeploymentRunStatus } from '../utils/environment-utils';
+import { GitOpsDeploymentHealthStatus } from '../types';
+import { getComponentDeploymentStatus } from '../utils/environment-utils';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { useSnapshotsEnvironmentBindings } from './useSnapshotsEnvironmentBindings';
 
@@ -8,7 +9,7 @@ const SNAPSHOT_BINDING_ENV_LABEL = 'appstudio.environment';
 export const useApplicationHealthStatus = (
   applicationName: string,
   envName?: string,
-): [{ status: string; envName: string }, boolean, unknown] => {
+): [{ status: GitOpsDeploymentHealthStatus; envName: string }, boolean, unknown] => {
   const { namespace } = useWorkspaceInfo();
   const [snapshotEBs, loaded, error] = useSnapshotsEnvironmentBindings(namespace, applicationName);
   const healthStatus = useMemo(() => {
@@ -17,7 +18,7 @@ export const useApplicationHealthStatus = (
         const seb = snapshotEBs.filter(
           (as) => as.metadata?.labels[SNAPSHOT_BINDING_ENV_LABEL] === envName,
         );
-        return seb ? { status: getComponentDeploymentRunStatus(seb[0]), envName } : null;
+        return seb ? { status: getComponentDeploymentStatus(seb[0]), envName } : null;
       }
       const seb = snapshotEBs.sort(
         (a, b) =>
@@ -27,7 +28,7 @@ export const useApplicationHealthStatus = (
 
       return seb
         ? {
-            status: getComponentDeploymentRunStatus(seb),
+            status: getComponentDeploymentStatus(seb),
             envName: seb.metadata.labels[SNAPSHOT_BINDING_ENV_LABEL],
           }
         : null;

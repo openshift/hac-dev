@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { Flex, FlexItem, Icon, Text, Truncate } from '@patternfly/react-core';
+import { Flex, FlexItem, Icon, Text, TextVariants, Truncate } from '@patternfly/react-core';
 import ExternalLinkAltIcon from '@patternfly/react-icons/dist/js/icons/external-link-alt-icon';
 import { useApplicationHealthStatus } from '../../hooks/useApplicationHealthStatus';
 import { useLatestApplicationRouteURL } from '../../hooks/useLatestApplicationRouteURL';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ApplicationKind } from '../../types';
-import { runStatus } from '../../utils/pipeline-utils';
-import { StatusIconWithTextLabel } from '../topology/StatusIcon';
+import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { ApplicationThumbnail } from './ApplicationThumbnail';
 
 export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ application }) => {
@@ -27,7 +26,13 @@ export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ 
           </FlexItem>
           {healthStatusloaded && healthStatus ? (
             <FlexItem>
-              <StatusIconWithTextLabel status={healthStatus.status as runStatus} />
+              <Text
+                data-test="details__status"
+                component={TextVariants.small}
+                style={{ color: 'var(--pf-v5-global--Color--200)' }}
+              >
+                {getGitOpsDeploymentHealthStatusIcon(healthStatus.status)} {healthStatus.status}
+              </Text>
             </FlexItem>
           ) : null}
         </Flex>
