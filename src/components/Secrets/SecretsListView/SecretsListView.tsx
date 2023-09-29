@@ -24,7 +24,7 @@ type SecretsListViewProps = {
   readOnly?: boolean;
 };
 
-const SecretsListView: React.FC<SecretsListViewProps> = ({ readOnly = false }) => {
+const SecretsListView: React.FC<SecretsListViewProps> = () => {
   const { namespace, workspace } = useWorkspaceInfo();
 
   const [secrets, secretsLoaded] = useRemoteSecrets(namespace);
@@ -47,16 +47,14 @@ const SecretsListView: React.FC<SecretsListViewProps> = ({ readOnly = false }) =
         isDisabled={!canCreateRemoteSecret}
         tooltip="You don't have access to create a secret"
         analytics={{
-          link_name: 'create-secret',
+          link_name: 'add-secret',
           workspace,
         }}
       >
-        Create secret
+        Add secret
       </ButtonWithAccessTooltip>
     );
   }, [canCreateRemoteSecret, workspace]);
-
-  const hideCreateButton = true; // to be removed once create Secret form is implemented.
 
   const emptyState = (
     <AppEmptyState
@@ -70,10 +68,9 @@ const SecretsListView: React.FC<SecretsListViewProps> = ({ readOnly = false }) =
         <br /> used to securely access various resources or services. You can easily manage all your
         secrets from one place.
         <br />
-        {/* Todo: uncomment this once the add secret is implemented */}
-        {/* To get started, add a secret */}
+        To get started, add a secret
       </EmptyStateBody>
-      {!readOnly && <div className="pf-u-mt-xl">{createSecretButton}</div>}
+      {<div className="pf-u-mt-xl">{createSecretButton}</div>}
     </AppEmptyState>
   );
 
@@ -109,7 +106,7 @@ const SecretsListView: React.FC<SecretsListViewProps> = ({ readOnly = false }) =
               </ToolbarItem>
             </>
           ) : null}
-          {!readOnly && <ToolbarItem>{hideCreateButton ? null : createSecretButton}</ToolbarItem>}
+          <ToolbarItem>{createSecretButton}</ToolbarItem>
         </ToolbarContent>
       </Toolbar>
       {filteredRemoteSecrets.length === 0 ? (

@@ -1,12 +1,13 @@
 import React from 'react';
+import { useField } from 'formik';
 import { useEnvironments } from '../../../hooks/useEnvironments';
 import { DropdownField } from '../../../shared';
-import { LoadingBox } from '../../../shared/components/status-box/StatusBox';
 
 type EnvironmentDropdownTypes = Omit<React.ComponentProps<typeof DropdownField>, 'items' | 'label'>;
 
 export const EnvironmentDropdown: React.FC<EnvironmentDropdownTypes> = (props) => {
   const [environments, loaded] = useEnvironments();
+  const [, , { setValue }] = useField<string>(props.name);
 
   const dropdownItems = React.useMemo(
     () => [
@@ -17,9 +18,13 @@ export const EnvironmentDropdown: React.FC<EnvironmentDropdownTypes> = (props) =
     [environments],
   );
 
-  if (!loaded) {
-    return <LoadingBox />;
-  }
-
-  return <DropdownField {...props} label="Select environemnt" items={dropdownItems} />;
+  return (
+    <DropdownField
+      {...props}
+      label="Select environment"
+      placeholder={!loaded ? 'Loading environments...' : 'All environments'}
+      onChange={(environment: string) => setValue(environment)}
+      items={dropdownItems}
+    />
+  );
 };

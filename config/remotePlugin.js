@@ -519,6 +519,19 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
+      path: '/application-pipeline/secrets/workspaces/:workspaceName/create',
+      exact: true,
+      component: {
+        $codeRef: 'CreateSecret',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
       path: '/application-pipeline/environments/workspaces/:workspaceName/create',
       exact: true,
       component: {
@@ -628,6 +641,8 @@ module.exports = {
       WorkspacedPage: resolve(__dirname, '../src/pages/WorkspacedPage'),
       OverviewPage: resolve(__dirname, '../src/pages/OverviewPage'),
       SecretsListPage: resolve(__dirname, '../src/pages/SecretsListPage'),
+      CreateSecret: resolve(__dirname, '../src/pages/CreateSecretPage'),
+
       FlagUtils: resolve(__dirname, '../src/utils/flag-utils'),
       Redirect: resolve(__dirname, '../src/pages/RedirectPage'),
       NotFound: resolve(__dirname, '../src/pages/NotFoundPage'),

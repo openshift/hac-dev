@@ -38,6 +38,10 @@ const SelectInputField: React.FC<SelectInputFieldProps> = ({
     validateForm();
   }, [memoizedValue, validateForm]);
 
+  React.useEffect(() => {
+    setNewOptions(options);
+  }, [options]);
+
   const onToggle = () => {
     setIsOpen(!isOpen);
   };

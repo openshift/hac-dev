@@ -2,7 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { fireEvent, screen } from '@testing-library/react';
 import { formikRenderer } from '../../../utils/test-utils';
-import { MultiImageCredentialForm } from '../utils/MultiImageCredentialForm';
+import { MultiImageCredentialForm } from '../SecretsForm/MultiImageCredentialForm';
 
 describe('MultiImageCredentialForm', () => {
   it('should not display remove button for one set', () => {

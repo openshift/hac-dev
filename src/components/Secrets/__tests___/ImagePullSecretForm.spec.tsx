@@ -2,10 +2,12 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { act, fireEvent, screen } from '@testing-library/react';
 import { formikRenderer } from '../../../utils/test-utils';
-import { ImagePullSecretForm } from '../ImagePullSecretForm';
+import { ImagePullSecretForm } from '../SecretsForm/ImagePullSecretForm';
 
 const initialValues = {
-  imageAuthType: 'Image registry credentials',
+  image: {
+    authType: 'Image registry credentials',
+  },
 };
 
 describe('ImagePullSecretForm', () => {

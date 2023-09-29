@@ -5,8 +5,8 @@ import { useFormikContext } from 'formik';
 import { useRemoteSecrets } from '../../../hooks/UseRemoteSecrets';
 import { InputField, TextColumnField } from '../../../shared';
 import { useModalLauncher } from '../../modal/ModalProvider';
-import { getSupportedPartnerTaskSecrets } from '../../Secrets/secret-utils';
 import { SecretModalLauncher } from '../../Secrets/SecretModalLauncher';
+import { getSupportedPartnerTaskSecrets } from '../../Secrets/utils/secret-utils';
 import { ImportFormValues } from '../utils/types';
 
 const SecretSection = () => {

@@ -9,9 +9,12 @@ import { THUMBNAIL_ANNOTATION } from '../../components/ApplicationDetails/Applic
 import { PIPELINE_SERVICE_ACCOUNT } from '../../consts/pipeline';
 import { RemoteSecretModel, SPIAccessTokenBindingModel } from '../../models';
 import {
+  AddSecretFormValues,
   ComponentDetectionQueryKind,
   SPIAccessTokenBindingKind,
+  SecretFor,
   SecretTypeDropdownLabel,
+  TargetDropdownDefaults,
 } from '../../types';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
@@ -23,6 +26,8 @@ import {
   createAccessTokenBinding,
   sanitizeName,
   createSecret,
+  createSecretResource,
+  addSecret,
 } from './../create-utils';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
@@ -159,6 +164,41 @@ const mockAccessTokenBinding: SPIAccessTokenBindingKind = {
   },
 };
 
+const addSecretFormValues: AddSecretFormValues = {
+  type: 'Image pull secret',
+  name: 'test',
+  secretFor: SecretFor.Build,
+  targets: {
+    application: 'test-application',
+    component: TargetDropdownDefaults.ALL_COMPONENTS,
+    environment: TargetDropdownDefaults.ALL_ENVIRONMENTS,
+  },
+  opaque: {
+    keyValues: [
+      {
+        key: 'test',
+        value: 'dGVzdA==',
+      },
+    ],
+  },
+  image: {
+    authType: 'Image registry credentials',
+    registryCreds: [
+      {
+        registry: 'test.io',
+        username: 'test',
+        password: 'test',
+        email: 'test@test.com',
+      },
+    ],
+  },
+  source: {
+    authType: 'Basic authentication',
+    username: 'test',
+    password: 'test',
+  },
+  labels: [{ key: 'test', value: 'test' }],
+};
 describe('Create Utils', () => {
   it('Should call k8s create util with correct model and data for application', async () => {
     await createApplication('test-application', 'test-ns');
@@ -593,6 +633,62 @@ describe('Create Utils', () => {
       expect.arrayContaining([
         expect.objectContaining({
           model: expect.objectContaining(RemoteSecretModel),
+        }),
+      ]),
+    );
+  });
+  it('createSecretResource', async () => {
+    await createSecretResource(addSecretFormValues, 'test-ws', 'test-ns', false);
+
+    expect(createResourceMock.mock.calls[1]).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          resource: expect.objectContaining({
+            spec: expect.objectContaining({
+              secret: expect.objectContaining({
+                labels: expect.objectContaining({
+                  test: 'test',
+                }),
+                linkedTo: expect.arrayContaining([
+                  expect.objectContaining({
+                    serviceAccount: expect.objectContaining({
+                      reference: expect.objectContaining({
+                        name: PIPELINE_SERVICE_ACCOUNT,
+                      }),
+                    }),
+                  }),
+                ]),
+              }),
+            }),
+          }),
+        }),
+      ]),
+    );
+  });
+  it('should add secret', async () => {
+    await addSecret(addSecretFormValues, 'test-ws', 'test-ns');
+
+    expect(createResourceMock.mock.calls[1]).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          resource: expect.objectContaining({
+            spec: expect.objectContaining({
+              secret: expect.objectContaining({
+                labels: expect.objectContaining({
+                  test: 'test',
+                }),
+                linkedTo: expect.arrayContaining([
+                  expect.objectContaining({
+                    serviceAccount: expect.objectContaining({
+                      reference: expect.objectContaining({
+                        name: PIPELINE_SERVICE_ACCOUNT,
+                      }),
+                    }),
+                  }),
+                ]),
+              }),
+            }),
+          }),
         }),
       ]),
     );

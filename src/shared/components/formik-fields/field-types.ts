@@ -189,6 +189,11 @@ export interface EnvironmentFieldProps extends FieldProps {
   description?: string;
 }
 
+export interface KeyValueFieldProps extends FieldProps {
+  entries?: NameValuePair[];
+  description?: string;
+}
+
 export interface NumberSpinnerFieldProps extends FieldProps {
   min?: number;
 }

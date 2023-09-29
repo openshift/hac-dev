@@ -1,9 +1,9 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { fireEvent, screen } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { Base64 } from 'js-base64';
 import { formikRenderer } from '../../../utils/test-utils';
-import EncodedKeyValueUploadField from '../utils/EncodedKeyValueUploadField';
+import EncodedKeyValueUploadField from '../SecretsForm/EncodedKeyValueUploadField';
 
 describe('EncodedKeyValueUploadField', () => {
   it('should render key value field pair', () => {
@@ -60,5 +60,27 @@ describe('EncodedKeyValueUploadField', () => {
       keyValues: [{ key: 'key1', value: Base64.encode('test') }],
     });
     expect(screen.getByRole('textbox', { name: 'File upload' })).toHaveValue('test');
+  });
+
+  it('should decode formik value', async () => {
+    formikRenderer(<EncodedKeyValueUploadField name="keyValues" />, {
+      keyValues: [{ key: 'key1', value: Base64.encode('test') }],
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Add another key/value'));
+    });
+
+    await waitFor(() => {
+      screen.getByText('Key/value 2');
+    });
+  });
+
+  it('should not render key/value pair if the initial value is missing', async () => {
+    formikRenderer(<EncodedKeyValueUploadField name="keyValues" />, {});
+    await waitFor(() => {
+      expect(screen.queryByText('Key/value 1')).toBeNull();
+      screen.getByText('Add another key/value');
+    });
   });
 });

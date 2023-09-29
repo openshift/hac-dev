@@ -12,7 +12,13 @@ import {
   THUMBNAIL_ANNOTATION,
 } from '../components/ApplicationDetails/ApplicationThumbnail';
 import { ImportSecret } from '../components/ImportForm/utils/types';
-import { createRemoteSecretResource } from '../components/Secrets/secret-utils';
+import {
+  createRemoteSecretResource,
+  getLabelsForSecret,
+  getSecretFormData,
+  getTargetLabelsForRemoteSecret,
+  typeToDropdownLabel,
+} from '../components/Secrets/utils/secret-utils';
 import {
   ApplicationModel,
   ComponentModel,
@@ -27,6 +33,8 @@ import {
   SPIAccessTokenBindingKind,
   K8sSecretType,
   SecretTypeDropdownLabel,
+  SecretKind,
+  AddSecretFormValues,
 } from '../types';
 import { ComponentSpecs } from './../types/component';
 import { BuildRequest, BUILD_REQUEST_ANNOTATION } from './component-utils';
@@ -288,6 +296,44 @@ export const initiateAccessTokenBinding = async (url: string, namespace: string)
   return createAccessTokenBinding(url, namespace);
 };
 
+export const createSecretResource = async (
+  values: AddSecretFormValues,
+  workspace: string,
+  namespace: string,
+  dryRun: boolean,
+) => {
+  const secretResource: SecretKind = getSecretFormData(values, namespace);
+
+  const labels = {
+    secret: getLabelsForSecret(values),
+    remoteSecret: getTargetLabelsForRemoteSecret(values),
+  };
+  await createRemoteSecretResource(
+    secretResource,
+    namespace,
+    labels,
+    typeToDropdownLabel(secretResource.type) === SecretTypeDropdownLabel.image,
+    dryRun,
+  );
+
+  //Todo: K8sCreateResource appends the resource name and errors out.
+  // Fix the below code when this sdk-utils issue is resolved https://issues.redhat.com/browse/RHCLOUD-21655.
+  return await commonFetch(
+    `/workspaces/${workspace}/api/v1/namespaces/${namespace}/secrets${dryRun ? '?dryRun=All' : ''}`,
+    {
+      method: 'POST',
+      body: JSON.stringify(secretResource),
+      headers: { 'Content-type': 'application/json' },
+    },
+  );
+};
+
+export const addSecret = async (values: any, workspace: string, namespace: string) => {
+  await createSecretResource(values, workspace, namespace, true);
+
+  return await createSecretResource(values, workspace, namespace, false);
+};
+
 export const createSecret = async (
   secret: ImportSecret,
   workspace: string,
@@ -317,6 +363,7 @@ export const createSecret = async (
   await createRemoteSecretResource(
     secretResource,
     namespace,
+    null,
     secret.type === SecretTypeDropdownLabel.image,
     dryRun,
   );

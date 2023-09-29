@@ -4,7 +4,7 @@ import { RowFunctionArgs, TableData } from '../../../shared';
 import ActionMenu from '../../../shared/components/action-menu/ActionMenu';
 import { RemoteSecretKind } from '../../../types/secret';
 import { useSecretActions } from '../secret-actions';
-import { getSecretRowData } from '../secret-utils';
+import { getSecretRowData } from '../utils/secret-utils';
 import { secretsTableColumnClasses } from './SecretsListHeader';
 
 type SecretsListRowProps = RowFunctionArgs<RemoteSecretKind>;
