@@ -88,47 +88,47 @@ const ComponentDeploymentsListView: React.FC<ComponentDeploymentsListViewProps> 
     [environments, nameFilter],
   );
 
+  const NoDataEmptyMsg = () => (
+    <AppEmptyState
+      emptyStateImg={emptyStateImgUrl}
+      title="Monitor the component builds that are currently deployed to your environments."
+    >
+      <EmptyStateBody>
+        Monitor any activity that happens once you push a commit. We’ll build and test your source
+        code, for both pull requests and merged code.
+        <br />
+        To get started, add a component and merge its pull request for a build pipeline.
+      </EmptyStateBody>
+    </AppEmptyState>
+  );
+  const EmptyMsg = () => <FilteredEmptyState onClearFilters={() => setNameFilter('')} />;
+
+  const DataToolbar = <DeploymentsToolbar nameFilter={nameFilter} onNameInput={setNameFilter} />;
+
   return (
     <div data-testid="component-deployments-list-view">
-      {loaded && (!environments || environments.length === 0) ? (
-        <AppEmptyState
-          emptyStateImg={emptyStateImgUrl}
-          title="Monitor the component builds that are currently deployed to your environments."
-        >
-          <EmptyStateBody>
-            Monitor any activity that happens once you push a commit. We’ll build and test your
-            source code, for both pull requests and merged code.
-            <br />
-            To get started, add a component and merge its pull request for a build pipeline.
-          </EmptyStateBody>
-        </AppEmptyState>
-      ) : (
-        <>
-          <DeploymentsToolbar nameFilter={nameFilter} onNameInput={setNameFilter} />
-          {filteredEnvironments.length > 0 || !loaded ? (
-            <Table
-              data-testid="test-test-test"
-              data={filteredEnvironments}
-              aria-label="Deployments List"
-              Header={ComponentDeploymentsListHeader}
-              Row={ComponentDeploymentsListRow}
-              loaded={loaded}
-              customData={{
-                component,
-                snapshotEBs,
-                commit,
-                pipelineRunName: pipelineRun?.metadata?.name,
-                routes,
-              }}
-              getRowProps={(obj) => ({
-                id: obj.sha,
-              })}
-            />
-          ) : (
-            <FilteredEmptyState onClearFilters={() => setNameFilter('')} />
-          )}
-        </>
-      )}
+      <Table
+        data-testid="test-test-test"
+        data={filteredEnvironments}
+        unfilteredData={environments}
+        aria-label="Deployments List"
+        EmptyMsg={EmptyMsg}
+        NoDataEmptyMsg={NoDataEmptyMsg}
+        Toolbar={DataToolbar}
+        Header={ComponentDeploymentsListHeader}
+        Row={ComponentDeploymentsListRow}
+        loaded={loaded}
+        customData={{
+          component,
+          snapshotEBs,
+          commit,
+          pipelineRunName: pipelineRun?.metadata?.name,
+          routes,
+        }}
+        getRowProps={(obj) => ({
+          id: obj.sha,
+        })}
+      />
     </div>
   );
 };

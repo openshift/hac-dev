@@ -26,6 +26,7 @@ export const useWhatsNextItems = (applicationName: string) => {
         href: `/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`,
         disabled: !canCreateComponent,
         disabledTooltip: "You don't have access to add a component",
+        testId: 'add-component',
         analytics: {
           link_name: 'add-component',
           link_location: 'whats-next',

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import {
   Grid,
   GridItem,
@@ -14,23 +13,18 @@ import {
   ButtonVariant,
 } from '@patternfly/react-core';
 import { useSearchParam } from '../../../../../hooks/useSearchParam';
-import { ComponentModel } from '../../../../../models';
-import { useAccessReviewForModel } from '../../../../../utils/rbac';
-import { useWorkspaceInfo } from '../../../../../utils/workspace-context-utils';
-import { ButtonWithAccessTooltip } from '../../../../ButtonWithAccessTooltip';
 import GraphErrorState from '../../../../topology/factories/GraphErrorState';
 import { WorkflowGraph } from '../visualization';
 import { useAppWorkflowData } from '../visualization/hooks/useAppWorkflowData';
 
 import './AppWorkflowSection.scss';
+
 type AppWorkflowSectionProps = {
   applicationName: string;
 };
 
 const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName }) => {
   const [expanded, setExpanded] = useSearchParam('expanded', '');
-  const { workspace } = useWorkspaceInfo();
-  const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 
   const [workflowModel, loaded, errors] = useAppWorkflowData(applicationName, expanded === 'true');
 
@@ -77,28 +71,6 @@ const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName
                   expanded={expanded === 'true'}
                 />
               )}
-            </GridItem>
-            <GridItem>
-              <ButtonWithAccessTooltip
-                variant="secondary"
-                component={(props) => (
-                  <Link
-                    {...props}
-                    to={`/application-pipeline/workspaces/${workspace}/import?application=${applicationName}`}
-                  />
-                )}
-                tooltip="You don't have access to add a component"
-                isDisabled={!canCreateComponent}
-                data-test="add-component"
-                analytics={{
-                  link_name: 'add-component',
-                  link_location: 'lifecycle-visualization',
-                  app_name: applicationName,
-                  workspace,
-                }}
-              >
-                Add component
-              </ButtonWithAccessTooltip>
             </GridItem>
           </>
         )}

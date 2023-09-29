@@ -148,22 +148,6 @@ describe('Basic Happy Path', () => {
       Applications.verifyAppstatusIsSucceeded();
     });
 
-    it('Verify manual build commit in Latest Commit on Overview Tab', () => {
-      APIHelper.githubRequest(
-        'GET',
-        githubAPIEndpoints.commits(publicRepo.split('/')[3], publicRepo.split('/')[4]),
-      )
-        .its('body[0].sha')
-        .then((commitSHA) => {
-          UIhelper.verifyRowInTable('Commit List', componentName, [
-            /main/,
-            new RegExp(`manual build ${commitSHA.slice(0, 6)}`),
-            /^-$/,
-            /Succeeded/,
-          ]);
-        });
-    });
-
     it('Validate the graph views for the created application', () => {
       UIhelper.verifyGraphNodes('Components', false);
       UIhelper.verifyGraphNodes('Builds');

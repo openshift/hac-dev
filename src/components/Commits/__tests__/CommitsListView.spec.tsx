@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
@@ -20,9 +19,12 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 jest.mock('../../../hooks/useTektonResults');
 
+jest.mock('react-i18next', () => ({
+  useTranslation: jest.fn(() => ({ t: (x) => x })),
+}));
+
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
-  useNavigate: jest.fn(),
   useSearchParams: () => React.useState(() => new URLSearchParams()),
 }));
 
@@ -34,27 +36,24 @@ jest.mock('../commit-status', () => ({
   useCommitStatus: () => ['-', true],
 }));
 
-jest.mock('../../../shared/components/table', () => {
-  const actual = jest.requireActual('../../../shared/components/table');
-  return {
-    ...actual,
-    Table: (props) => {
-      const { data, filters, selected, match, kindObj } = props;
-      const cProps = { data, filters, selected, match, kindObj };
-      const columns = props.Header(cProps);
-      return (
-        <PfTable role="table" aria-label="table" cells={columns} variant="compact" borders={false}>
-          <TableHeader role="rowgroup" />
-          <tbody>
-            {props.data.map((d, i) => (
-              <tr key={i}>
-                <CommitsListRow columns={null} obj={d} />
-              </tr>
-            ))}
-          </tbody>
-        </PfTable>
-      );
-    },
+jest.mock('../../../shared/components/table/TableComponent', () => {
+  return (props) => {
+    const { data, filters, selected, match, kindObj } = props;
+    const cProps = { data, filters, selected, match, kindObj };
+    const columns = props.Header(cProps);
+
+    return (
+      <PfTable role="table" aria-label="table" cells={columns} variant="compact" borders={false}>
+        <TableHeader role="rowgroup" />
+        <tbody>
+          {props.data.map((d, i) => (
+            <tr key={i}>
+              <CommitsListRow columns={null} obj={d} />
+            </tr>
+          ))}
+        </tbody>
+      </PfTable>
+    );
   };
 });
 
@@ -71,7 +70,6 @@ jest.mock('../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
 }));
 
-const mockNavigate = useNavigate as jest.Mock;
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useTRPipelineRunsMock = useTRPipelineRuns as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
@@ -117,30 +115,6 @@ describe('CommitsListView', () => {
     await waitFor(() => screen.getAllByPlaceholderText<HTMLInputElement>('Filter by name...'));
   });
 
-  it('should show Latest commits heading based on the props', () => {
-    const { rerender } = render(<CommitsListView applicationName="purple-mermaid-app" />);
-    expect(screen.queryByText('Latest commits')).not.toBeInTheDocument();
-    rerender(<CommitsListView applicationName="purple-mermaid-app" recentOnly />);
-    expect(screen.queryByText('Latest commits')).toBeInTheDocument();
-  });
-
-  it('should navigate to activity tab', () => {
-    const navigate = jest.fn();
-    mockNavigate.mockImplementation(() => navigate);
-    render(<CommitsListView applicationName="purple-mermaid-app" recentOnly />);
-    fireEvent.click(screen.getByText('View More'));
-    expect(navigate).toHaveBeenCalledWith(
-      `/application-pipeline/workspaces/test-ws/applications/purple-mermaid-app/activity/latest-commits`,
-    );
-  });
-
-  it('should contain the list of commits', () => {
-    render(<CommitsListView applicationName="purple-mermaid-app" recentOnly />);
-
-    screen.getByText('#11 test-title');
-    screen.getByText('#11 test-title-2');
-  });
-
   it('should match the commit if it is filtered by name', () => {
     render(<CommitsListView applicationName="purple-mermaid-app" />);
 
@@ -150,7 +124,7 @@ describe('CommitsListView', () => {
         target: { value: 'test-title-2' },
       });
     });
-    expect(screen.queryByText('#11 test-title-2')).toBeInTheDocument();
+    expect(screen.getByText('#11 test-title-2')).toBeInTheDocument();
     expect(screen.queryByText('#11 test-title')).not.toBeInTheDocument();
   });
 
@@ -181,7 +155,7 @@ describe('CommitsListView', () => {
   });
 
   it('should not match the commit if filtered by unmatched name', () => {
-    render(<CommitsListView applicationName="purple-mermaid-app" />);
+    const view = render(<CommitsListView applicationName="purple-mermaid-app" />);
 
     const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
     act(() => {
@@ -191,12 +165,35 @@ describe('CommitsListView', () => {
     });
     expect(screen.queryByText('#11 test-title')).not.toBeInTheDocument();
     expect(screen.queryByText('#11 test-title-2')).not.toBeInTheDocument();
+
+    // clear the filter
+    const clearFilterButton = view.getAllByRole('button', { name: 'Clear all filters' })[0];
+    fireEvent.click(clearFilterButton);
+    expect(screen.queryByText('#11 test-title')).toBeInTheDocument();
+    expect(screen.queryByText('#11 test-title-2')).toBeInTheDocument();
   });
 
-  it('should render spinner while data is not loaded', () => {
+  it('should filter by commit status', () => {
+    const view = render(<CommitsListView applicationName="purple-mermaid-app" />);
+
+    const filterMenuButton = view.getByRole('button', { name: /filter/i });
+    fireEvent.click(filterMenuButton);
+
+    const successCb = view.getByLabelText(/succeeded/i, {
+      selector: 'input',
+    }) as HTMLInputElement;
+    fireEvent.click(successCb);
+    expect(successCb.checked).toBe(true);
+
+    expect(screen.queryByText('#11 test-title')).toBeInTheDocument();
+    expect(screen.queryByText('#11 test-title-2')).not.toBeInTheDocument();
+  });
+
+  it('should render skeleton while data is not loaded', () => {
     watchResourceMock.mockReturnValue([[], false]);
     useTRPipelineRunsMock.mockReturnValue([[], false]);
+    useComponentsMock.mockReturnValue([[], false]);
     render(<CommitsListView applicationName="purple-mermaid-app" />);
-    expect(screen.getByRole('progressbar')).toBeVisible();
+    expect(screen.getByTestId('data-table-skeleton')).toBeVisible();
   });
 });

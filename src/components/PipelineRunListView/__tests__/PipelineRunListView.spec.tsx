@@ -40,32 +40,28 @@ jest.mock('../../../hooks/useSearchParam', () => ({
 
 configure({ testIdAttribute: 'data-test' });
 
-jest.mock('../../../shared/components/table', () => {
-  const actual = jest.requireActual('../../../shared/components/table');
-  return {
-    ...actual,
-    Table: (props) => {
-      const { data, filters, selected, match, kindObj } = props;
-      const cProps = { data, filters, selected, match, kindObj };
-      const columns = props.Header(cProps);
+jest.mock('../../../shared/components/table/TableComponent', () => {
+  return (props) => {
+    const { data, filters, selected, match, kindObj } = props;
+    const cProps = { data, filters, selected, match, kindObj };
+    const columns = props.Header(cProps);
 
-      React.useEffect(() => {
-        props?.onRowsRendered({ stopIndex: data.length - 1 });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [data]);
-      return (
-        <PfTable role="table" aria-label="table" cells={columns} variant="compact" borders={false}>
-          <TableHeader role="rowgroup" />
-          <tbody>
-            {props.data.map((d, i) => (
-              <tr key={i}>
-                <PipelineRunListRow columns={null} obj={d} />
-              </tr>
-            ))}
-          </tbody>
-        </PfTable>
-      );
-    },
+    React.useEffect(() => {
+      props?.onRowsRendered({ stopIndex: data.length - 1 });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data]);
+    return (
+      <PfTable role="table" aria-label="table" cells={columns} variant="compact" borders={false}>
+        <TableHeader role="rowgroup" />
+        <tbody>
+          {props.data.map((d, i) => (
+            <tr key={i}>
+              <PipelineRunListRow columns={null} obj={d} />
+            </tr>
+          ))}
+        </tbody>
+      </PfTable>
+    );
   };
 });
 
@@ -173,6 +169,8 @@ const pipelineRuns: PipelineRunKind[] = [
 
 const usePipelineRunsMock = usePipelineRuns as jest.Mock;
 
+configure({ testIdAttribute: 'data-testId' });
+
 describe('Pipeline run List', () => {
   beforeEach(() => {
     useSearchParamMock.mockImplementation(mockUseSearchParam);
@@ -182,7 +180,7 @@ describe('Pipeline run List', () => {
   it('should render spinner if application data is not loaded', () => {
     usePipelineRunsMock.mockReturnValue([[], false]);
     render(<PipelineRunsListView applicationName={appName} />);
-    screen.getByRole('progressbar');
+    screen.getByTestId('data-table-skeleton');
   });
 
   it('should render empty state if no application is present', () => {

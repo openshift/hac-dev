@@ -1,8 +1,6 @@
 import * as React from 'react';
 import {
-  Bullseye,
   SearchInput,
-  Spinner,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
@@ -146,99 +144,90 @@ const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({
     setName(n);
   }, 600);
 
-  if (!loaded && pipelineRuns.length === 0) {
-    return (
-      <Bullseye>
-        <Spinner />
-      </Bullseye>
-    );
-  }
-
-  if (!nameFilter && pipelineRuns.length === 0) {
-    return <PipelineRunEmptyState applicationName={applicationName} />;
-  }
+  const EmptyMsg = () => <FilteredEmptyState onClearFilters={onClearFilters} />;
+  const NoDataEmptyMsg = () => <PipelineRunEmptyState applicationName={applicationName} />;
+  const DataToolbar = (
+    <Toolbar data-test="pipelinerun-list-toolbar" clearAllFilters={onClearFilters}>
+      <ToolbarContent>
+        <ToolbarGroup align={{ default: 'alignLeft' }}>
+          <ToolbarItem className="pf-v5-u-ml-0">
+            <SearchInput
+              name="nameInput"
+              data-test="name-input-filter"
+              type="search"
+              aria-label="name filter"
+              placeholder="Filter by name..."
+              onChange={(e, n) => onNameInput(n)}
+              value={nameFilter}
+            />
+          </ToolbarItem>
+          <ToolbarItem>
+            <Select
+              placeholderText="Status"
+              toggleIcon={<FilterIcon />}
+              toggleAriaLabel="Status filter menu"
+              variant={SelectVariant.checkbox}
+              isOpen={statusFilterExpanded}
+              onToggle={(ev, expanded) => setStatusFilterExpanded(expanded)}
+              onSelect={(event, selection) => {
+                const checked = (event.target as HTMLInputElement).checked;
+                setStatusFilters(
+                  checked
+                    ? [...statusFilters, String(selection)]
+                    : statusFilters.filter((value) => value !== selection),
+                );
+              }}
+              selections={statusFilters}
+              isGrouped
+            >
+              {[
+                <SelectGroup label="Status" key="status">
+                  {Object.keys(statusFilterObj).map((filter) => (
+                    <SelectOption
+                      key={filter}
+                      value={filter}
+                      isChecked={statusFilters.includes(filter)}
+                      itemCount={statusFilterObj[filter] ?? 0}
+                    >
+                      {filter}
+                    </SelectOption>
+                  ))}
+                </SelectGroup>,
+              ]}
+            </Select>
+          </ToolbarItem>
+        </ToolbarGroup>
+      </ToolbarContent>
+    </Toolbar>
+  );
 
   return (
-    <>
-      <Toolbar data-test="pipelinerun-list-toolbar" clearAllFilters={onClearFilters}>
-        <ToolbarContent>
-          <ToolbarGroup align={{ default: 'alignLeft' }}>
-            <ToolbarItem className="pf-v5-u-ml-0">
-              <SearchInput
-                name="nameInput"
-                data-test="name-input-filter"
-                type="search"
-                aria-label="name filter"
-                placeholder="Filter by name..."
-                onChange={(e, n) => onNameInput(n)}
-                value={nameFilter}
-              />
-            </ToolbarItem>
-            <ToolbarItem>
-              <Select
-                placeholderText="Status"
-                toggleIcon={<FilterIcon />}
-                toggleAriaLabel="Status filter menu"
-                variant={SelectVariant.checkbox}
-                isOpen={statusFilterExpanded}
-                onToggle={(ev, expanded) => setStatusFilterExpanded(expanded)}
-                onSelect={(event, selection) => {
-                  const checked = (event.target as HTMLInputElement).checked;
-                  setStatusFilters(
-                    checked
-                      ? [...statusFilters, String(selection)]
-                      : statusFilters.filter((value) => value !== selection),
-                  );
-                }}
-                selections={statusFilters}
-                isGrouped
-              >
-                {[
-                  <SelectGroup label="Status" key="status">
-                    {Object.keys(statusFilterObj).map((filter) => (
-                      <SelectOption
-                        key={filter}
-                        value={filter}
-                        isChecked={statusFilters.includes(filter)}
-                        itemCount={statusFilterObj[filter] ?? 0}
-                      >
-                        {filter}
-                      </SelectOption>
-                    ))}
-                  </SelectGroup>,
-                ]}
-              </Select>
-            </ToolbarItem>
-          </ToolbarGroup>
-        </ToolbarContent>
-      </Toolbar>
-      {filteredPLRs.length > 0 ? (
-        <Table
-          data={filteredPLRs}
-          aria-label="Pipeline run List"
-          customData={vulnerabilities}
-          Header={PipelineRunListHeaderWithVulnerabilities}
-          Row={PipelineRunListRowWithVulnerabilities}
-          loaded
-          getRowProps={(obj: PipelineRunKind) => ({
-            id: obj.metadata.name,
-          })}
-          onRowsRendered={({ stopIndex }) => {
-            if (loaded && stopIndex === filteredPLRs.length - 1 && !nameFilter) {
-              if (vulnerabilities.fetchedPipelineRuns.length === filteredPLRs.length) {
-                getNextPage?.();
-              } else {
-                if (requestQueue.current.length === 0) {
-                  getNextPage && requestQueue.current.push(getNextPage);
-                }
-              }
+    <Table
+      data={filteredPLRs}
+      unfilteredData={pipelineRuns}
+      NoDataEmptyMsg={NoDataEmptyMsg}
+      EmptyMsg={EmptyMsg}
+      Toolbar={DataToolbar}
+      aria-label="Pipeline run List"
+      customData={vulnerabilities}
+      Header={PipelineRunListHeaderWithVulnerabilities}
+      Row={PipelineRunListRowWithVulnerabilities}
+      loaded={loaded}
+      getRowProps={(obj: PipelineRunKind) => ({
+        id: obj.metadata.name,
+      })}
+      onRowsRendered={({ stopIndex }) => {
+        if (loaded && stopIndex === filteredPLRs.length - 1 && !nameFilter) {
+          if (vulnerabilities.fetchedPipelineRuns.length === filteredPLRs.length) {
+            getNextPage?.();
+          } else {
+            if (requestQueue.current.length === 0) {
+              getNextPage && requestQueue.current.push(getNextPage);
             }
-          }}
-        />
-      ) : (
-        <FilteredEmptyState onClearFilters={onClearFilters} />
-      )}
-    </>
+          }
+        }
+      }}
+    />
   );
 };
 

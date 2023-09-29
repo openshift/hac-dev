@@ -26,6 +26,7 @@ export type WhatsNextItem = {
     onClick?: () => void;
     disabled?: boolean;
     disabledTooltip?: string;
+    testId?: string;
     analytics?: React.ComponentProps<typeof ButtonWithAccessTooltip>['analytics'];
   };
 };
@@ -49,7 +50,7 @@ const WhatsNextSection: React.FunctionComponent<WhatsNextSectionProps> = ({ what
             <Title headingLevel="h4">{item.title}</Title>
             <HelperText>{item.description}</HelperText>
           </SplitItem>
-          <SplitItem className="whats-next-card__cta">
+          <SplitItem className="whats-next-card__cta" data-test={item.cta.testId}>
             <ButtonWithAccessTooltip
               {...(item.cta.onClick
                 ? { onClick: item.cta.onClick }

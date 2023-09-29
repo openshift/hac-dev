@@ -8,7 +8,7 @@ export const applicationsPagePO = {
 export const overviewTabPO = {
   clickTab: '[data-test="details__tabItem overview"]',
   goToComponents: '[data-test="go-to-components-tab"]',
-  addComponent: '[data-test="add-component"]',
+  addComponent: '[data-test="add-component"] > a',
 };
 
 export const activityTabPO = {
