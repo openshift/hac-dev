@@ -92,7 +92,7 @@ export const getLinkDataForElement = (
           tab: `components/${
             !groupNode && !isDisabled && label
               ? { name: 'name', value: label.replace('Build for ', '') }
-              : undefined
+              : ''
           }`,
         };
       }
