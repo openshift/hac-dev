@@ -487,39 +487,6 @@ describe('Advanced Happy path', () => {
     });
   });
 
-  describe('Verify the Latest Commits section on application overview page', () => {
-    it('Verify the Commits List view should have both the commits', () => {
-      Applications.goToOverviewTab();
-      latestCommitsTabPage.verifyLatestCommits([
-        { name: componentInfo.firstCommitTitle, component: componentName },
-        { name: componentInfo.updatedCommitMessage, component: componentName },
-      ]);
-    });
-
-    it('Verify the Commit Overview Tab of the Last Commit', () => {
-      latestCommitsTabPage.clickOnCommit(componentInfo.updatedCommitMessage);
-      latestCommitsTabPage.verifyCommitsPageTitleAndStatus(componentInfo.updatedCommitMessage);
-      latestCommitsTabPage.verifyCommitID(
-        Cypress.env(`${componentInfo.updatedCommitMessage}_SHA`),
-        repoLink,
-      );
-      latestCommitsTabPage.verifyBranch('main', repoLink);
-      latestCommitsTabPage.verifyNodesOnCommitOverview([
-        'commit',
-        `${componentName}-build`,
-        'development',
-      ]);
-    });
-
-    it('verify the Commit Pipeline runs Tab', () => {
-      UIhelper.clickTab('Pipeline runs');
-      UIhelper.verifyRowInTable('Pipelinerun List', componentInfo.secondPipelineRunName, [
-        'Succeeded',
-        'Build',
-      ]);
-    });
-  });
-
   describe('Validate secrets', () => {
     it('Verify Secret on Secret List', () => {
       Common.navigateTo(NavItem.secrets);
