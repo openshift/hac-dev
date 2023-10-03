@@ -11,8 +11,15 @@ import {
   ResolverType,
 } from '../../../../types/coreBuildService';
 import {
+  EC_INTEGRATION_TEST_KIND,
+  EC_INTEGRATION_TEST_PATH,
+  EC_INTEGRATION_TEST_REVISION,
+  EC_INTEGRATION_TEST_URL,
+} from '../const';
+import {
   ENVIRONMENTS,
   FormValues,
+  IntegrationTestAnnotations,
   IntegrationTestFormValues,
   IntegrationTestLabels,
 } from '../types';
@@ -110,6 +117,10 @@ export const createIntegrationTest = (
 ): Promise<IntegrationTestScenarioKind> => {
   const { name, url, revision, path, optional, environmentName, environmentType, params } =
     integrationTestValues;
+  const isEC =
+    url === EC_INTEGRATION_TEST_URL &&
+    revision === EC_INTEGRATION_TEST_REVISION &&
+    path === EC_INTEGRATION_TEST_PATH;
   const integrationTestResource: IntegrationTestScenarioKind = {
     apiVersion: `${IntegrationTestScenarioGroupVersionKind.group}/${IntegrationTestScenarioGroupVersionKind.version}`,
     kind: IntegrationTestScenarioGroupVersionKind.kind,
@@ -117,6 +128,7 @@ export const createIntegrationTest = (
       name,
       namespace,
       ...(optional && { labels: { [IntegrationTestLabels.OPTIONAL]: optional.toString() } }),
+      ...(isEC && { annotations: { [IntegrationTestAnnotations.KIND]: EC_INTEGRATION_TEST_KIND } }),
     },
     spec: {
       application,

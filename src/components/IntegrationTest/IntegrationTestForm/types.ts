@@ -16,6 +16,7 @@ export type IntegrationTestFormValues = {
 
 export enum IntegrationTestAnnotations {
   DISPLAY_NAME = 'app.kubernetes.io/display-name',
+  KIND = 'test.appstudio.openshift.io/kind',
 }
 
 export enum IntegrationTestLabels {
