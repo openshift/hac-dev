@@ -1,6 +1,12 @@
 import { githubAPIEndpoints } from './APIEndpoints';
 
 export class APIHelper {
+  static readonly githubHeaders = {
+    Accept: 'application/vnd.github+json',
+    Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
+    'X-GitHub-Api-Version': '2022-11-28',
+  };
+
   static requestHACAPI(options: object) {
     return cy
       .getCookie('cs_jwt')
@@ -19,11 +25,7 @@ export class APIHelper {
     const options = {
       method: method,
       url: url,
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
+      headers: this.githubHeaders,
     };
     if (body) {
       options['body'] = body;
@@ -72,6 +74,14 @@ export class APIHelper {
   static createGitHubRepository(repoName: string) {
     const body = { name: repoName };
     this.githubRequest('POST', githubAPIEndpoints.orgRepos, body);
+    this.checkResponseBodyAndStatusCode(
+      githubAPIEndpoints.qeRepos(repoName),
+      `"name":"${repoName}"`,
+      2000,
+      0,
+      3,
+      this.githubHeaders,
+    );
   }
 
   static deleteGitHubRepository(repoName: string) {
@@ -84,18 +94,13 @@ export class APIHelper {
       vcs_url: fromRepoLink,
     };
     this.githubRequest('PUT', githubAPIEndpoints.repoImport(toRepoName), body);
-    const headers = {
-      Accept: 'application/vnd.github+json',
-      Authorization: `Bearer ${Cypress.env('GH_TOKEN')}`,
-      'X-GitHub-Api-Version': '2022-11-28',
-    };
     this.checkResponseBodyAndStatusCode(
       githubAPIEndpoints.repoImport(toRepoName),
       '"status":"complete"',
       5000,
       0,
       20,
-      headers,
+      this.githubHeaders,
     );
   }
 }
