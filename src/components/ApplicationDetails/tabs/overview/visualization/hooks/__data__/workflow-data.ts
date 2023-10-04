@@ -757,7 +757,7 @@ export const sampleIntegrationTestScenarios: IntegrationTestScenarioKind[] = [
       params: [
         {
           name: 'test-param',
-          value: ['test'],
+          value: 'test',
         },
       ],
       resolverRef: null,
@@ -786,7 +786,7 @@ export const sampleIntegrationTestScenarios: IntegrationTestScenarioKind[] = [
       params: [
         {
           name: 'test-param',
-          value: ['test'],
+          value: 'test',
         },
       ],
       resolverRef: null,

@@ -38,6 +38,21 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
     (param) => param.name === ResolverRefParams.PATH,
   );
 
+  const getFormParamValues = (params) => {
+    if (!params || !Array.isArray(params) || params?.length === 0) {
+      return [];
+    }
+    const formParams = [];
+    params.forEach((param) => {
+      if (param.value) {
+        formParams.push({ name: param.name, values: [param.value] });
+      } else {
+        formParams.push(param);
+      }
+    });
+    return formParams;
+  };
+
   const initialValues = {
     integrationTest: {
       name: integrationTest?.metadata.name ?? '',
@@ -46,6 +61,7 @@ const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = (
       path: path?.value ?? '',
       environmentName: integrationTest?.spec?.environment?.name ?? '',
       environmentType: integrationTest?.spec?.environment?.type ?? '',
+      params: getFormParamValues(integrationTest?.spec?.params),
       optional:
         integrationTest?.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true' ?? false,
     },

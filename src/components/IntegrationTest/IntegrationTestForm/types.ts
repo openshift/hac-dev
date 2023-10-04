@@ -1,5 +1,6 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { ImportFormValues } from '../../../components/ImportForm/utils/types';
+import { Param } from '../../../types/coreBuildService';
 
 export type IntegrationTestFormValues = {
   name: string;
@@ -10,6 +11,7 @@ export type IntegrationTestFormValues = {
   secret?: string;
   environmentName?: string;
   environmentType?: string;
+  params?: Param[];
 };
 
 export enum IntegrationTestAnnotations {

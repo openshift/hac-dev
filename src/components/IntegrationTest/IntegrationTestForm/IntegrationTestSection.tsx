@@ -15,6 +15,7 @@ import { EnvironmentType, getEnvironmentType } from '../../Environment/environme
 import { AccessHelpText } from '../../ImportForm/SourceSection/SourceSection';
 import { useAccessCheck } from '../../ImportForm/utils/auth-utils';
 import { gitUrlRegex, RESOURCE_NAME_REGEX_MSG } from '../../ImportForm/utils/validation-utils';
+import FormikParamsField from '../FormikParamsField';
 import { ENVIRONMENTS, IntegrationTestFormValues } from './types';
 import './IntegrationTestSection.scss';
 
@@ -31,9 +32,6 @@ const IntegrationTestSection: React.FC<Props> = ({ isInPage, edit }) => {
     type: 'dropdown',
   });
   const [environments, environmentsLoaded] = useAllEnvironments();
-  // const [currentEnvironment, setCurrentEnvironment] = React.useState<string>(
-  //   ITSEnvName ?? ENVIRONMENTS.DEFAULT,
-  // );
 
   const dropdownItems = React.useMemo(() => {
     const items = [{ key: 'none', value: 'No environment' }];
@@ -195,6 +193,8 @@ const IntegrationTestSection: React.FC<Props> = ({ isInPage, edit }) => {
           isDisabled={edit}
           className="integration-test-section__dropdown"
         />
+        <FormikParamsField fieldName="integrationTest.params" />
+
         <CheckboxField
           name="integrationTest.optional"
           aria-label="Mark as optional for release"

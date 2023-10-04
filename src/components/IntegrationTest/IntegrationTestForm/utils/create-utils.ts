@@ -6,6 +6,7 @@ import {
 } from '../../../../models';
 import {
   IntegrationTestScenarioKind,
+  Param,
   ResolverParam,
   ResolverType,
 } from '../../../../types/coreBuildService';
@@ -22,12 +23,28 @@ export enum ResolverRefParams {
   REVISION = 'revision',
 }
 
+export const formatParams = (params): Param[] => {
+  if (!params || !Array.isArray(params) || params.length === 0) return null;
+  const newParams = [];
+  params.forEach((param) => {
+    const formattedValues = param.values?.filter((v) => !!v);
+    if (formattedValues?.length === 1) {
+      newParams.push({ name: param.name, value: formattedValues[0] });
+    } else {
+      newParams.push({ name: param.name, values: formattedValues });
+    }
+  });
+
+  return newParams.length > 0 ? newParams : null;
+};
+
 export const editIntegrationTest = (
   integrationTest: IntegrationTestScenarioKind,
   integrationTestValues: IntegrationTestFormValues,
   dryRun?: boolean,
 ): Promise<IntegrationTestScenarioKind> => {
-  const { url, revision, path, optional, environmentName, environmentType } = integrationTestValues;
+  const { url, revision, path, optional, environmentName, environmentType, params } =
+    integrationTestValues;
   const integrationTestResource: IntegrationTestScenarioKind = {
     ...integrationTest,
     metadata: {
@@ -54,6 +71,7 @@ export const editIntegrationTest = (
           { name: ResolverRefParams.PATH, value: path },
         ],
       },
+      params: formatParams(params),
       contexts: [
         {
           description: 'Application testing',
@@ -90,7 +108,7 @@ export const createIntegrationTest = (
   namespace: string,
   dryRun?: boolean,
 ): Promise<IntegrationTestScenarioKind> => {
-  const { name, url, revision, path, optional, environmentName, environmentType } =
+  const { name, url, revision, path, optional, environmentName, environmentType, params } =
     integrationTestValues;
   const integrationTestResource: IntegrationTestScenarioKind = {
     apiVersion: `${IntegrationTestScenarioGroupVersionKind.group}/${IntegrationTestScenarioGroupVersionKind.version}`,
@@ -120,6 +138,7 @@ export const createIntegrationTest = (
           { name: ResolverRefParams.PATH, value: path },
         ],
       },
+      params: formatParams(params),
       contexts: [
         {
           description: 'Application testing',
