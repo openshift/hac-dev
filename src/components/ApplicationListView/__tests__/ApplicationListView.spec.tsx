@@ -34,6 +34,7 @@ jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
   return {
     ...actual,
+    useLocation: jest.fn(() => ({})),
     Link: (props) => <a href={props.to}>{props.children}</a>,
     useNavigate: jest.fn(),
   };
@@ -114,8 +115,8 @@ const ApplicationList = () => (
     value={{
       namespace: 'test-ns',
       lastUsedWorkspace: 'test-ws',
-      setWorkspace: () => {},
       workspace: 'test-ws',
+      workspaceResource: undefined,
       workspacesLoaded: true,
       workspaces: [],
     }}

@@ -116,8 +116,8 @@ describe('useActiveWorkspace', () => {
       namespace: '',
       lastUsedWorkspace: 'test-ws',
       workspace: '',
+      workspaceResource: undefined,
       workspaces: [],
-      setWorkspace: expect.any(Function),
       workspacesLoaded: false,
     });
   });
@@ -144,6 +144,21 @@ describe('useActiveWorkspace', () => {
     await waitForNextUpdate();
 
     expect(result.current.workspace).toBe('workspace-two');
+  });
+
+  it('should use first available workspace when home workspace is not found for first time user', async () => {
+    const workspaces = [
+      { ...mockWorkspaces[0], status: { ...mockWorkspaces[0].status, type: 'default' } },
+      mockWorkspaces[1],
+    ];
+
+    k8sListResourceItemsMock.mockReturnValue(workspaces);
+    getActiveWorkspaceMock.mockReturnValue('');
+
+    const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
+    await waitForNextUpdate();
+
+    expect(result.current.workspace).toBe('workspace-one');
   });
 
   it('should return default values if the workspace API errors out ', async () => {

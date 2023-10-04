@@ -32,8 +32,8 @@ export const namespaceRenderer = (
           namespace,
           lastUsedWorkspace: 'test-ws',
           workspace: '',
+          workspaceResource: undefined,
           workspaces: [],
-          setWorkspace: () => {},
           workspacesLoaded: false,
           ...contextValues,
         }}

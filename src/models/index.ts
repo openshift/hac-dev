@@ -19,3 +19,5 @@ export * from './rbac';
 export * from './secret';
 export * from './limit-range';
 export * from './remotesecret';
+export * from './workspace';
+export * from './space-binding-request';

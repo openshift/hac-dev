@@ -49,6 +49,16 @@ const navExtensions = [
       required: ['SIGNUP'],
     },
   },
+  {
+    type: 'core.navigation/href',
+    properties: {
+      href: '/application-pipeline/access',
+      name: 'User access',
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
 ];
 
 const flagExtensions = [
@@ -158,6 +168,19 @@ const routeExtensions = [
     type: 'core.page/route',
     properties: {
       path: '/application-pipeline/release',
+      exact: true,
+      component: {
+        $codeRef: 'WorkspacedPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/access',
       exact: true,
       component: {
         $codeRef: 'WorkspacedPage',
@@ -599,6 +622,60 @@ const routeExtensions = [
     },
   },
 
+  // user access
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/access',
+      exact: true,
+      component: {
+        $codeRef: 'UserAccessPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/access/workspaces/:workspaceName',
+      exact: true,
+      component: {
+        $codeRef: 'UserAccessPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/access/workspaces/:workspaceName/grant',
+      exact: true,
+      component: {
+        $codeRef: 'GrantAccessPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/access/workspaces/:workspaceName/edit/:name',
+      exact: true,
+      component: {
+        $codeRef: 'EditAccessPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+
   // 404 route
   {
     type: 'core.page/route',
@@ -642,7 +719,9 @@ module.exports = {
       OverviewPage: resolve(__dirname, '../src/pages/OverviewPage'),
       SecretsListPage: resolve(__dirname, '../src/pages/SecretsListPage'),
       CreateSecret: resolve(__dirname, '../src/pages/CreateSecretPage'),
-
+      UserAccessPage: resolve(__dirname, '../src/pages/UserAccessPage'),
+      GrantAccessPage: resolve(__dirname, '../src/pages/GrantAccessPage'),
+      EditAccessPage: resolve(__dirname, '../src/pages/EditAccessPage'),
       FlagUtils: resolve(__dirname, '../src/utils/flag-utils'),
       Redirect: resolve(__dirname, '../src/pages/RedirectPage'),
       NotFound: resolve(__dirname, '../src/pages/NotFoundPage'),
