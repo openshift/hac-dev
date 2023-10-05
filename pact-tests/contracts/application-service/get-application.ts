@@ -9,8 +9,8 @@ import {
 import { ApplicationGroupVersionKind, ApplicationModel } from '../../../src/models/application';
 import { ApplicationKind } from '../../../src/types';
 import { matchers } from '../../matchers';
+import { ApplicationParams, ComponentsParams } from '../../states/state-params';
 import { PactContract, getUrlPath } from '../contracts';
-import { ApplicationParams, ComponentsParams } from './state-params';
 
 export const comp1 = 'gh-component';
 
