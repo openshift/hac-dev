@@ -2,8 +2,8 @@ import { like, regex } from '@pact-foundation/pact/src/v3/matchers';
 import { ApplicationGroupVersionKind, ApplicationModel } from '../../../src/models/application';
 import { ApplicationKind } from '../../../src/types';
 import { matchers } from '../../matchers';
+import { ApplicationParams } from '../../states/state-params';
 import { PactContract, getUrlPath } from '../contracts';
-import { ApplicationParams } from './state-params';
 
 const namespace = 'default';
 const app = 'app-to-create';

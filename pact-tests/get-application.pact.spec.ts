@@ -6,13 +6,13 @@ import {
   compParams,
 } from './contracts/application-service/get-application';
 import { mockK8sWatchResource } from './contracts/contracts';
+import { ProviderStates, setState } from './states/states';
 
 pactWith({ consumer: 'HACdev', provider: 'HAS' }, (interaction) => {
   interaction('Getting application', ({ provider, execute }) => {
     beforeEach(() => {
-      provider
-        .given(`Application exists`, appParams)
-        .given(`Application has components`, compParams)
+      setState(provider, ProviderStates.appExists, appParams);
+      setState(provider, ProviderStates.appHasComponent, compParams)
         .uponReceiving('Get app with its components.')
         .withRequest(contract.request)
         .willRespondWith(contract.response);

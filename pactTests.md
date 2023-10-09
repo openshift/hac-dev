@@ -54,13 +54,49 @@ Let's demonstrate that on the `Get application` test. The contract specifies the
 
 Now it's the provider's turn to interpret this state. In our example, the provider would have StateHandler defined with the description same as in the consumer and the actual code, that has to be done to fulfill this state. In the code, it can look like this:
 
-```
+```golang
 pactTypes.StateHandlers{
         "App MyApp exists and has component MyComp": createAppAndComponents(myAppNamespace, "MyApp", "MyComp"),
     }
 ```
 
 With the state and logic defined, Pact knows what to execute before that particular Pact verification.
+
+### Defining provider states
+Pact provides a simple API to define arbitrary states along with any parameters imaginable. However, in order to keep a comprehensive list of all states and parameters in a single place, we have slightly extended this functionality.
+
+In the `pact-tests/states` folder you will find two files. `state-params.ts` is where we define types/interfaces for different kinds of state parameters, to ensure type safety. 
+
+`states.ts` serves as the single source of truth for provider states of our consumer. As such it contains:
+  - `ProviderStates` enum: this is the list of state descriptions, when a new state needs to be defined, add it here
+  - `stateParams` record: this maps entries from `ProviderStates` to their sample parameters. State parameters may be any JSON or `undefined`, but we do prefer them being cast to a more specific type (such as those defined in `state-params.ts`). When adding a new state, make sure to add a sample with parameters here, since it also serves as basic validation of the params at runtime.
+  - `setState` function: extended version of pact provider state API. We recommend using this function to declare provider states in pact tests, since it will check your state against the existing `ProviderStates` and enforce any new state be added there.
+
+For example, given we have the following state defined in our `states.ts` file:
+```typescript
+export enum ProviderStates {
+    appExists = "Application exists",
+}
+
+const stateParams: Record<ProviderStates, JsonMap | undefined> = {
+    "Application exists": { appName: 'app', namespace: 'default' } as ApplicationParams,
+}
+```
+
+We can then utilize it in the tests as follows, using the `setState` function:
+```typescript
+pactWith({ consumer: 'HACdev', provider: 'HAS' }, (interaction) => {
+  interaction('Getting application', ({ provider, execute }) => {
+    beforeEach(() => {
+      setState(provider, ProviderStates.appExists, { appName: 'x', namespace: 'foo' });
+      setState(provider, ProviderStates.appExists, { appName: 'y', namespace: 'foo' })
+      .uponReceiving('Get app with its components.')
+      .withRequest(contract.request)
+      .willRespondWith(contract.response);
+    });
+```
+
+Here we set two states for different applications to exist. Pact is going to combine any declared states together, until it encounters the `withRequest` and `willRespondWith` calls. At that point, the interaction is complete.
 
 ### When does the test run
 The tables below describe when the tests are running and what is tested/published. 
