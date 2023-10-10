@@ -1,7 +1,13 @@
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { IntegrationTestScenarioModel } from '../../../../../models';
 import { MockIntegrationTestsWithGit } from '../../../IntegrationTestsListView/__data__/mock-integration-tests';
-import { IntegrationTestLabels } from '../../types';
+import {
+  EC_INTEGRATION_TEST_KIND,
+  EC_INTEGRATION_TEST_PATH,
+  EC_INTEGRATION_TEST_REVISION,
+  EC_INTEGRATION_TEST_URL,
+} from '../../const';
+import { IntegrationTestAnnotations, IntegrationTestLabels } from '../../types';
 import {
   ResolverRefParams,
   createIntegrationTest,
@@ -189,6 +195,24 @@ describe('Create Utils', () => {
     expect(getURLForParam(k8sResource.spec.resolverRef.params, ResolverRefParams.PATH)).toBe(
       'https://github.com/redhat-appstudio/integration-examples/tree/main/pipelines/integration_pipeline_pass.yaml',
     );
+  });
+
+  it('Should set EC kind annotation', async () => {
+    createResourceMock.mockImplementation(({ resource }) => resource);
+    const resource = await createIntegrationTest(
+      {
+        name: 'app-enterprise-contract',
+        revision: EC_INTEGRATION_TEST_REVISION,
+        url: EC_INTEGRATION_TEST_URL,
+        path: EC_INTEGRATION_TEST_PATH,
+        optional: false,
+      },
+      'Test Application',
+      'test-ns',
+    );
+    expect(resource.metadata.annotations).toStrictEqual({
+      [IntegrationTestAnnotations.KIND]: EC_INTEGRATION_TEST_KIND,
+    });
   });
 });
 
