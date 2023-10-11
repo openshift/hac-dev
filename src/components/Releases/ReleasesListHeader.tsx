@@ -1,16 +1,47 @@
+import { SortByDirection, ThProps } from '@patternfly/react-table';
+import { HeaderFunc } from '../../shared/components/table/Table';
+
 export const releasesTableColumnClasses = {
-  name: 'pf-m-width-25 wrap-column',
+  name: 'pf-m-width-30 pf-m-width-20-on-xl wrap-column',
+  created: 'pf-m-width-30 pf-m-width-20-on-xl',
   status: 'pf-m-width-20',
   releasePlan: 'pf-m-width-25',
   releaseSnapshot: 'pf-m-hidden pf-m-width-25 pf-m-visible-on-xl',
   kebab: 'pf-v5-c-table__action',
 };
 
-const ReleasesListHeader = () => {
+type CreateHeader = (
+  activeIndex: number,
+  activeDirection: SortByDirection,
+  onSort: ThProps['sort']['onSort'],
+) => HeaderFunc;
+
+export const enum SortableHeaders {
+  name,
+  created,
+}
+
+const getReleasesListHeader: CreateHeader = (activeIndex, activeDirection, onSort) => () => {
+  const getSortParams = (columnIndex: number) => ({
+    columnIndex,
+    sortBy: { index: activeIndex, direction: activeDirection },
+    onSort,
+  });
+
   return [
     {
       title: 'Name',
-      props: { className: releasesTableColumnClasses.name },
+      props: {
+        className: releasesTableColumnClasses.name,
+        sort: getSortParams(SortableHeaders.name),
+      },
+    },
+    {
+      title: 'Created',
+      props: {
+        className: releasesTableColumnClasses.created,
+        sort: getSortParams(SortableHeaders.created),
+      },
     },
     {
       title: 'Status',
@@ -26,11 +57,9 @@ const ReleasesListHeader = () => {
     },
     {
       title: ' ',
-      props: {
-        className: releasesTableColumnClasses.kebab,
-      },
+      props: { className: releasesTableColumnClasses.kebab },
     },
   ];
 };
 
-export default ReleasesListHeader;
+export default getReleasesListHeader;

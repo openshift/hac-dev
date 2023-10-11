@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RouteMatch } from 'react-router-dom';
-import { TableGridBreakpoint, OnSelect } from '@patternfly/react-table';
+import { TableGridBreakpoint, OnSelect, ThProps } from '@patternfly/react-table';
 import { StatusBox } from '../status-box/StatusBox';
 import TableComponent from './TableComponent';
 import { RowFunctionArgs, VirtualBodyProps } from './VirtualBody';
@@ -19,7 +19,7 @@ export type ComponentProps<D = any> = {
   kindObj: any;
 };
 
-export type HeaderFunc = (componentProps: ComponentProps) => any[];
+export type HeaderFunc = (componentProps: ComponentProps) => { title: string; props: ThProps }[];
 
 export type TableProps<D = any, C = any> = Partial<ComponentProps<D>> & {
   customData?: C;

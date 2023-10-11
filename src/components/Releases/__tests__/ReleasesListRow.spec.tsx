@@ -13,6 +13,7 @@ const mockRelease = {
   kind: 'Release',
   metadata: {
     name: 'test-release',
+    creationTimestamp: '2023-01-20T14:13:29Z',
   },
   spec: {
     releasePlan: 'test-plan',
@@ -44,8 +45,8 @@ describe('ReleasesListRow', () => {
     const status = wrapper.getAllByTestId('release-status');
 
     expect(cells[0].children[0].innerHTML).toBe(mockRelease.metadata.name);
-    expect(cells[2].innerHTML).toBe('test-plan');
-    expect(cells[3].innerHTML).toBe('test-snapshot');
+    expect(cells[3].innerHTML).toBe('test-plan');
+    expect(cells[4].innerHTML).toBe('test-snapshot');
     expect(status[0].innerHTML).toBe('Succeeded');
   });
 });
