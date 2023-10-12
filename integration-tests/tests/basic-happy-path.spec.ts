@@ -90,7 +90,7 @@ describe('Basic Happy Path', () => {
         .then((pipelinerunName) => {
           PipelinerunsTabPage.clickOnRunningPipelinerun(componentName);
           UIhelper.verifyLabelAndValue('Namespace', Cypress.env('HAC_NAMESPACE'));
-          UIhelper.verifyLabelAndValue('Pipeline', 'docker-build');
+          UIhelper.verifyLabelAndValue('Pipeline', pipelinerunName);
           UIhelper.verifyLabelAndValue('Application', applicationName);
           UIhelper.verifyLabelAndValue('Component', componentName);
           UIhelper.verifyLabelAndValue('Related pipelines', '0 pipelines');

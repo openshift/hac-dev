@@ -56,12 +56,12 @@ describe('Advanced Happy path', () => {
   const integrationTestDetails: { [key: string]: string } = {
     integrationTestName: Common.generateAppName('integration-tests'),
     integrationTestNameTemp: Common.generateAppName('integration-tests-temp'),
-    githubURL: 'https://github.com/redhat-appstudio/integration-examples',
+    githubURL: 'https://github.com/redhat-hac-qe/integration-examples',
     pathInRepository: 'pipelines/integration_pipeline_pass.yaml',
     env: 'development',
   };
 
-  const integrationTestTaskNames = ['task-success', 'task-success-2', 'task-skipped'];
+  const integrationTestTaskNames = ['task-success', 'task-green', 'task-skipped'];
   const vulnerabilities = /Critical(\d+).*High(\d+).*Medium(\d+).*Low(\d+)/g;
   const secret = {
     secretName: 'snyk-secret',
@@ -314,12 +314,12 @@ describe('Advanced Happy path', () => {
       TaskRunsTab.assertTaskNamesAndTaskRunStatus([
         {
           name: new RegExp(`${applicationName}-.*-${integrationTestTaskNames[0]}`),
-          task: 'test-output',
+          task: integrationTestTaskNames[0],
           status: 'Succeeded',
         },
         {
           name: new RegExp(`${applicationName}-.*-${integrationTestTaskNames[1]}`),
-          task: 'test-output',
+          task: integrationTestTaskNames[1],
           status: 'Succeeded',
         },
       ]);
