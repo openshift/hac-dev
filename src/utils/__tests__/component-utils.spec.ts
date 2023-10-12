@@ -28,9 +28,7 @@ describe('component-utils', () => {
     };
     expect(isPACEnabled(createComponent(undefined))).toBe(false);
     expect(isPACEnabled(createComponent('enabled'))).toBe(true);
-    expect(isPACEnabled(createComponent('disabled'), true)).toBe(false);
-    expect(isPACEnabled(createComponent('disabled'), false)).toBe(true);
-    expect(isPACEnabled(createComponent('enabled'), true)).toBe(true);
+    expect(isPACEnabled(createComponent('disabled'))).toBe(false);
   });
 
   it('should create github URL for component PRs', () => {

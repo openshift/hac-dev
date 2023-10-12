@@ -125,10 +125,8 @@ export const getComponentBuildStatus = (component: ComponentKind) => {
 export const getPACProvision = (component: ComponentKind) =>
   getComponentBuildStatus(component)?.pac?.state;
 
-export const isPACEnabled = (component: ComponentKind, done?: boolean) => {
-  const state = getPACProvision(component);
-  return done ? state === ComponentBuildState.enabled : !!state;
-};
+export const isPACEnabled = (component: ComponentKind) =>
+  getPACProvision(component) === ComponentBuildState.enabled;
 
 const GIT_URL_PREFIX = 'https://github.com/';
 

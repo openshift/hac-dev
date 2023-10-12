@@ -286,7 +286,7 @@ export const getBuildNodeForComponent = (
     );
   }
   const label = `Build for ${component.metadata.name}`;
-  const status = isPACEnabled(component, true) ? runStatus.NeedsMerge : runStatus.Pending;
+  const status = isPACEnabled(component) ? runStatus.NeedsMerge : runStatus.Pending;
   return {
     id: `${component.metadata.uid}-missing`,
     label,
