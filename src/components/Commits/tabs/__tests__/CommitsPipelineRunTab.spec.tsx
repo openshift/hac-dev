@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render, screen } from '@testing-library/react';
 import { PipelineRunLabel } from '../../../../consts/pipelinerun';
+import { usePipelineRunsForCommit } from '../../../../hooks/usePipelineRuns';
 import { PipelineRunListRow } from '../../../PipelineRunListView/PipelineRunListRow';
 import { pipelineWithCommits } from '../../__data__/pipeline-with-commits';
 import CommitsPipelineRunTab from '../CommitsPipelineRunTab';
@@ -34,6 +35,10 @@ jest.mock('../../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
+jest.mock('../../../../hooks/usePipelineRuns', () => ({
+  usePipelineRunsForCommit: jest.fn(),
+}));
+
 jest.mock('../../../../utils/rbac', () => ({
   useAccessReviewForModel: jest.fn(() => [true, true]),
 }));
@@ -41,6 +46,7 @@ jest.mock('../../../../utils/rbac', () => ({
 const appName = 'my-test-app';
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
+const usePipelineRunsForCommitMock = usePipelineRunsForCommit as jest.Mock;
 
 const commitPlrs = [
   pipelineWithCommits[0],
@@ -58,8 +64,9 @@ const commitPlrs = [
 
 describe('Commit Pipelinerun List', () => {
   it('should render empty state if no pipelinerun is present', () => {
+    usePipelineRunsForCommitMock.mockReturnValue([[], true]);
     watchResourceMock.mockReturnValue([[], true]);
-    render(<CommitsPipelineRunTab applicationName={appName} pipelineRuns={[]} />);
+    render(<CommitsPipelineRunTab applicationName={appName} commitName="test-sha" />);
     screen.getByText(/Keep tabs on components and activity/);
     screen.getByText(/Monitor your components with pipelines and oversee CI\/CD activity./);
     const button = screen.getByText('Add component');
@@ -70,7 +77,8 @@ describe('Commit Pipelinerun List', () => {
   });
 
   it('should render pipelineRuns list when pipelineRuns are present', () => {
-    render(<CommitsPipelineRunTab applicationName={appName} pipelineRuns={commitPlrs} />);
+    usePipelineRunsForCommitMock.mockReturnValue([commitPlrs, true]);
+    render(<CommitsPipelineRunTab applicationName={appName} commitName="test-sha" />);
     screen.getByText(/Pipeline runs/);
     screen.getByText('Name');
     screen.getByText('Started');
@@ -82,7 +90,7 @@ describe('Commit Pipelinerun List', () => {
   it('should render both Build and Test pipelineruns in the pipelinerun list', () => {
     render(
       <div style={{ overflow: 'auto' }}>
-        <CommitsPipelineRunTab applicationName={appName} pipelineRuns={commitPlrs} />
+        <CommitsPipelineRunTab applicationName={appName} commitName="test-sha" />
       </div>,
     );
 

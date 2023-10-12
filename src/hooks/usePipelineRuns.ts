@@ -14,6 +14,7 @@ import { getCommitSha } from '../utils/commits-utils';
 import { pipelineRunStatus, runStatus } from '../utils/pipeline-utils';
 import { EQ } from '../utils/tekton-results';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
+import { useComponents } from './useComponents';
 import { GetNextPage, useTRPipelineRuns, useTRTaskRuns } from './useTektonResults';
 
 const useRuns = <Kind extends K8sResourceCommon>(
@@ -47,10 +48,22 @@ const useRuns = <Kind extends K8sResourceCommon>(
 
   const [resources, loaded, error] = useK8sWatchResource(watchOptions);
   // if a pipeline run was removed from etcd, we want to still include it in the return value without re-querying tekton-results
-  const etcdRuns = React.useMemo(
-    () => (isList ? resources : loaded && !error ? [resources] : []) as Kind[],
-    [isList, resources, loaded, error],
-  );
+  const etcdRuns = React.useMemo(() => {
+    if (!loaded || error) {
+      return [];
+    }
+    const resourcesArray = (isList ? resources : [resources]) as Kind[];
+
+    if (!options?.selector?.filterByCommit) {
+      return resourcesArray;
+    }
+
+    return (
+      resourcesArray?.filter(
+        (plr) => getCommitSha(plr as any) === options.selector.filterByCommit,
+      ) ?? []
+    );
+  }, [isList, options?.selector?.filterByCommit, resources, loaded, error]);
 
   const runs = React.useMemo(() => {
     if (!etcdRuns) {
@@ -184,7 +197,7 @@ export const useLatestSuccessfulBuildPipelineRunForComponent = (
   namespace: string,
   componentName: string,
 ): [PipelineRunKind, boolean, unknown] => {
-  const [pipelines, loaded, error] = usePipelineRuns(
+  const [pipelines, loaded, error, getNextPage] = usePipelineRuns(
     namespace,
     React.useMemo(
       () => ({
@@ -197,55 +210,84 @@ export const useLatestSuccessfulBuildPipelineRunForComponent = (
       }),
       [componentName],
     ),
-  ) as unknown as [PipelineRunKind[], boolean, unknown];
+  );
 
-  return React.useMemo(() => {
-    if (!loaded || error) {
-      return [null, loaded, error];
+  const latestSuccess = React.useMemo(
+    () =>
+      loaded &&
+      !error &&
+      pipelines?.find((pipeline) => pipelineRunStatus(pipeline) === runStatus.Succeeded),
+    [error, loaded, pipelines],
+  );
+
+  React.useEffect(() => {
+    if (loaded && !error && !latestSuccess && getNextPage) {
+      getNextPage();
     }
-    return [
-      pipelines
-        .filter((pipeline) => pipelineRunStatus(pipeline) === runStatus.Succeeded)
-        .sort((a, b) =>
-          b.metadata.creationTimestamp.localeCompare(a.metadata.creationTimestamp),
-        )[0],
-      loaded,
-      error,
-    ];
-  }, [pipelines, loaded, error]);
+  }, [loaded, error, getNextPage, latestSuccess]);
+
+  return [latestSuccess, loaded, error];
 };
 
 export const usePipelineRunsForCommit = (
   namespace: string,
   applicationName: string,
   commit: string,
-): [PipelineRunKind[], boolean, unknown] => {
-  // TODO filter by label and annotation (?)
-  const [results, loaded, error] = usePipelineRuns(
-    namespace && applicationName && commit ? namespace : null,
+  limit?: number,
+): [PipelineRunKind[], boolean, unknown, GetNextPage] => {
+  const [components, componentsLoaded] = useComponents(namespace, applicationName);
+
+  const componentNames = React.useMemo(
+    () => (componentsLoaded ? components.map((c) => c.metadata?.name) : []),
+    [components, componentsLoaded],
+  );
+
+  const [pipelineRuns, plrsLoaded, plrError, getNextPage] = usePipelineRuns(
+    namespace && applicationName && commit && componentsLoaded ? namespace : null,
     React.useMemo(
       () => ({
         selector: {
           matchLabels: {
             [PipelineRunLabel.APPLICATION]: applicationName,
           },
+          ...(componentsLoaded &&
+            componentNames?.length > 0 && {
+              matchExpressions: [
+                {
+                  key: PipelineRunLabel.COMPONENT,
+                  operator: 'In',
+                  values: componentNames,
+                },
+              ],
+            }),
+          filterByCommit: commit,
         },
-        // arbitrary large limit since the number of pipeline runs for a commit should be limited
-        limit: 100,
+        // TODO: Add limit when filtering by component name AND only PLRs are returned
+        // limit,
       }),
-      [applicationName],
+      [applicationName, commit, componentNames, componentsLoaded],
     ),
   );
 
-  const pipelineRuns = React.useMemo(
-    () =>
-      (results ?? [])
-        .filter((plr) => getCommitSha(plr) === commit)
-        .sort((a, b) => b.metadata.creationTimestamp.localeCompare(a.metadata.creationTimestamp)),
-    [commit, results],
-  );
+  const loaded = plrsLoaded && componentsLoaded;
 
-  return React.useMemo(() => [pipelineRuns, loaded, error], [pipelineRuns, loaded, error]);
+  // TODO: Remove this if/when tekton results are really filtered by component names above
+  return React.useMemo(() => {
+    if (!loaded || plrError) {
+      return [[], loaded, plrError, getNextPage];
+    }
+    return [
+      pipelineRuns
+        .filter((plr) =>
+          componentNames.includes(plr.metadata?.labels?.[PipelineRunLabel.COMPONENT]),
+        )
+        .filter((plr) => plr.kind === PipelineRunGroupVersionKind.kind)
+        .slice(0, limit ? limit : undefined),
+      true,
+      undefined,
+      getNextPage,
+    ];
+  }, [componentNames, getNextPage, limit, loaded, pipelineRuns, plrError]);
 };
 
 export const usePipelineRun = (

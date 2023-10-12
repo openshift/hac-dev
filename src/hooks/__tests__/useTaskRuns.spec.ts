@@ -53,6 +53,6 @@ describe('useTaskRuns', () => {
     useTRTaskRunsMock.mockReturnValue([null, false, undefined]);
     const { result } = renderHook(() => useTaskRuns('test-ns', 'test'));
 
-    expect(result.current).toEqual([undefined, false, undefined]);
+    expect(result.current).toEqual([[], false, undefined]);
   });
 });

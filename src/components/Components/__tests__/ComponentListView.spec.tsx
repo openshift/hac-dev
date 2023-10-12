@@ -7,6 +7,7 @@ import { mockRoutes } from '../../../hooks/__data__/mock-data';
 import { useApplicationRoutes } from '../../../hooks/useApplicationRoutes';
 import { useAllGitOpsDeploymentCRs } from '../../../hooks/useGitOpsDeploymentCR';
 import { PACState } from '../../../hooks/usePACState';
+import { useTRPipelineRuns } from '../../../hooks/useTektonResults';
 import { ComponentGroupVersionKind, PipelineRunGroupVersionKind } from '../../../models';
 import { componentCRMocks } from '../__data__/mock-data';
 import { mockPipelineRuns } from '../__data__/mock-pipeline-run';
@@ -84,6 +85,7 @@ jest.mock('../../../hooks/usePACState', () => {
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const applicationRoutesMock = useApplicationRoutes as jest.Mock;
 const gitOpsDeploymentMock = useAllGitOpsDeploymentCRs as jest.Mock;
+const useTRPipelineRunsMock = useTRPipelineRuns as jest.Mock;
 
 const getMockedResources = (kind: WatchK8sResource) => {
   if (!kind) {
@@ -115,7 +117,6 @@ describe('ComponentListViewPage', () => {
   });
 
   it('should render button to add components', () => {
-    useK8sWatchResourceMock.mockReturnValue([[], true]);
     render(<ComponentListView applicationName="test-app" />);
     const button = screen.getByText('Add component');
     expect(button).toBeInTheDocument();
@@ -223,5 +224,13 @@ describe('ComponentListViewPage', () => {
     const clearFilterButton = screen.getByRole('button', { name: 'Clear all filters' });
     fireEvent.click(clearFilterButton);
     expect(screen.getAllByTestId('component-list-item')).toHaveLength(2);
+  });
+
+  it('should get more data if there is another page', () => {
+    const getNextPageMock = jest.fn();
+    applicationRoutesMock.mockReturnValue([[], true]);
+    useTRPipelineRunsMock.mockReturnValue([[], true, undefined, getNextPageMock]);
+    render(<ComponentListView applicationName="test-app" />);
+    expect(getNextPageMock).toHaveBeenCalled();
   });
 });

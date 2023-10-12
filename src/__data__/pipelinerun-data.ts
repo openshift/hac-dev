@@ -131,6 +131,7 @@ const sampleLabels = {
   'appstudio.openshift.io/application': 'test-application',
   'appstudio.openshift.io/component': 'devfile-sample-node',
   'pipelines.appstudio.openshift.io/type': 'build',
+  'test.appstudio.openshift.io/scenario': 'test-caseqfvdj',
   'pipelines.openshift.io/runtime': 'generic',
   'pipelines.openshift.io/strategy': 'docker',
   'pipelines.openshift.io/used-by': 'build-cloud',

@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { PipelineRunEventType, PipelineRunLabel } from '../../../../consts/pipelinerun';
-import { useBuildPipelines } from '../../../../hooks/useBuildPipelines';
+import {
+  PipelineRunEventType,
+  PipelineRunLabel,
+  PipelineRunType,
+} from '../../../../consts/pipelinerun';
 import { useComponents } from '../../../../hooks/useComponents';
 import { useEnvironments } from '../../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../../hooks/useIntegrationTestScenarios';
@@ -52,15 +55,29 @@ export const useCommitWorkflowData = (
   const [environments, environmentsLoaded, environmentsError] = useEnvironments();
   const [releasePlans, releasePlansLoaded, releasePlansError] = useReleasePlans(namespace);
   const [releases, releasesLoaded, releasesError] = useReleases(namespace);
-  const [buildPipelines, buildPipelinesLoaded, buildPipelinesError] = useBuildPipelines(
+  const [pipelines, pipelinesLoaded, pipelinesError] = usePipelineRunsForCommit(
     namespace,
     applicationName,
     commit.sha,
   );
-  const [testPipelines, testPipelinesLoaded, testPipelinesError] = usePipelineRunsForCommit(
-    namespace,
-    applicationName,
-    commit.sha,
+
+  const buildPipelines = React.useMemo(
+    () =>
+      pipelinesLoaded
+        ? pipelines.filter(
+            (plr) => plr.metadata?.labels[PipelineRunLabel.PIPELINE_TYPE] === PipelineRunType.BUILD,
+          )
+        : [],
+    [pipelines, pipelinesLoaded],
+  );
+  const testPipelines = React.useMemo(
+    () =>
+      pipelinesLoaded
+        ? pipelines.filter(
+            (plr) => plr.metadata?.labels[PipelineRunLabel.PIPELINE_TYPE] === PipelineRunType.TEST,
+          )
+        : [],
+    [pipelines, pipelinesLoaded],
   );
 
   const [snapshotsEB, snapshotsEBLoaded, snapshotsEBError] = useSnapshotsEnvironmentBindings(
@@ -73,8 +90,7 @@ export const useCommitWorkflowData = (
   const allResourcesLoaded: boolean =
     componentsLoaded &&
     integrationTestsLoaded &&
-    buildPipelinesLoaded &&
-    testPipelinesLoaded &&
+    pipelinesLoaded &&
     environmentsLoaded &&
     snapshotsEBLoaded &&
     releasesLoaded &&
@@ -84,8 +100,7 @@ export const useCommitWorkflowData = (
     environmentsError,
     releasePlansError,
     releasesError,
-    buildPipelinesError,
-    testPipelinesError,
+    pipelinesError,
     snapshotsEBError,
     serror,
   ].filter((e) => !!e);

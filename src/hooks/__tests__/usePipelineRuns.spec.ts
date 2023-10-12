@@ -2,8 +2,10 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { renderHook } from '@testing-library/react-hooks';
 import { PipelineRunGroupVersionKind, TaskRunGroupVersionKind } from '../../models';
+import { useComponents } from '../useComponents';
 import {
   useLatestBuildPipelineRunForComponent,
+  useLatestSuccessfulBuildPipelineRunForComponent,
   usePipelineRun,
   usePipelineRuns,
   usePipelineRunsForCommit,
@@ -14,6 +16,7 @@ import { useTRPipelineRuns, useTRTaskRuns } from '../useTektonResults';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
 jest.mock('../useTektonResults');
+jest.mock('../useComponents');
 
 jest.mock('../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
@@ -22,23 +25,28 @@ jest.mock('../../utils/workspace-context-utils', () => ({
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const useTRPipelineRunsMock = useTRPipelineRuns as jest.Mock;
 const useTRTaskRunsMock = useTRTaskRuns as jest.Mock;
+const useComponentsMock = useComponents as jest.Mock;
 
 const resultMock = [
   {
+    kind: PipelineRunGroupVersionKind.kind,
     metadata: {
       name: 'first',
       creationTimestamp: '2023-04-11T19:36:25Z',
       labels: {
         'pipelinesascode.tekton.dev/sha': 'sample-sha',
+        'appstudio.openshift.io/component': 'test-component',
       },
     },
   },
   {
+    kind: PipelineRunGroupVersionKind.kind,
     metadata: {
       name: 'second',
       creationTimestamp: '2022-04-11T19:36:25Z',
       labels: {
         'pac.test.appstudio.openshift.io/sha': 'sample-sha',
+        'appstudio.openshift.io/component': 'test-component',
       },
     },
   },
@@ -46,18 +54,26 @@ const resultMock = [
 
 const resultMock2 = [
   {
+    kind: PipelineRunGroupVersionKind.kind,
     metadata: {
       name: 'third',
       creationTimestamp: '2021-04-11T19:36:25Z',
+      labels: {
+        'appstudio.openshift.io/component': 'test-component',
+      },
       annotations: {
         'build.appstudio.redhat.com/commit_sha': 'sample-sha',
       },
     },
   },
   {
+    kind: PipelineRunGroupVersionKind.kind,
     metadata: {
       name: 'fourth',
       creationTimestamp: '2020-04-11T19:36:25Z',
+      labels: {
+        'appstudio.openshift.io/component': 'test-component',
+      },
       annotations: {
         'build.appstudio.redhat.com/commit_sha': 'sample-sha',
       },
@@ -66,9 +82,13 @@ const resultMock2 = [
 ];
 const resultMock3 = [
   {
+    kind: PipelineRunGroupVersionKind.kind,
     metadata: {
       name: 'third',
       creationTimestamp: '2021-04-11T19:36:25Z',
+      labels: {
+        'appstudio.openshift.io/component': 'test-component',
+      },
       annotations: {
         'build.appstudio.redhat.com/commit_sha': 'other-sha',
       },
@@ -313,6 +333,7 @@ describe('usePipelineRuns', () => {
 
   describe('usePipelineRunsForCommit', () => {
     it('should create specific selector', () => {
+      useComponentsMock.mockReturnValue([[], true]);
       renderHook(() => usePipelineRunsForCommit('test-ns', 'test-app', 'sample-sha'));
 
       expect(useK8sWatchResourceMock).toHaveBeenCalledTimes(1);
@@ -323,6 +344,7 @@ describe('usePipelineRuns', () => {
             namespace: 'test-ns',
             isList: true,
             selector: {
+              filterByCommit: 'sample-sha',
               matchLabels: {
                 'appstudio.openshift.io/application': 'test-app',
               },
@@ -335,8 +357,8 @@ describe('usePipelineRuns', () => {
         [
           'test-ns',
           {
-            limit: 100,
             selector: {
+              filterByCommit: 'sample-sha',
               matchLabels: {
                 'appstudio.openshift.io/application': 'test-app',
               },
@@ -347,6 +369,7 @@ describe('usePipelineRuns', () => {
     });
 
     it('should return pipeline runs', () => {
+      useComponentsMock.mockReturnValue([[{ metadata: { name: 'test-component' } }], true]);
       useK8sWatchResourceMock.mockReturnValueOnce([
         [...resultMock, ...resultMock2, ...resultMock3],
         true,
@@ -355,7 +378,7 @@ describe('usePipelineRuns', () => {
       const { result } = renderHook(() =>
         usePipelineRunsForCommit('test-ns', 'test-app', 'sample-sha'),
       );
-      expect(result.current).toEqual([[...resultMock, ...resultMock2], true, undefined]);
+      expect(result.current).toEqual([[...resultMock, ...resultMock2], true, undefined, undefined]);
     });
   });
 
@@ -448,5 +471,159 @@ describe('usePipelineRuns', () => {
         expect(result.current).toEqual([undefined, false, error]);
       });
     });
+  });
+});
+
+describe('useLatestSuccessfulBuildPipelineRunForComponent', () => {
+  const mockK8sPipelines = [
+    {
+      kind: 'PipelineRun',
+      status: {
+        startTime: '2023-09-14T14:30:19Z',
+        conditions: [
+          {
+            type: 'Succeeded',
+            reason: 'Failed',
+            status: 'False',
+            message: 'Tasks Completed: 10 (Failed: 1, Cancelled 0), Skipped: 4',
+            lastTransitionTime: '2023-09-14T14:34:31Z',
+          },
+        ],
+        completionTime: '2023-09-14T14:34:31Z',
+      },
+      metadata: {
+        name: 'human-resources-on-pull-request-4v598',
+        namespace: 'test-ns',
+        creationTimestamp: '2023-09-14T14:30:19Z',
+      },
+      apiVersion: 'tekton.dev/v1beta1',
+    },
+    {
+      kind: 'PipelineRun',
+      status: {
+        startTime: '2023-09-07T16:50:31Z',
+        conditions: [
+          {
+            type: 'Succeeded',
+            reason: 'Failed',
+            status: 'False',
+            message: 'Tasks Completed: 10 (Failed: 1, Cancelled 0), Skipped: 4',
+            lastTransitionTime: '2023-09-07T17:00:50Z',
+          },
+        ],
+      },
+      metadata: {
+        name: 'human-resources-on-pull-request-x29ql',
+        namespace: 'test-ns',
+        creationTimestamp: '2023-09-07T16:50:30Z',
+      },
+      apiVersion: 'tekton.dev/v1beta1',
+    },
+    {
+      kind: 'PipelineRun',
+      status: {
+        startTime: '2023-08-31T17:24:16Z',
+        conditions: [
+          {
+            type: 'Succeeded',
+            reason: 'Completed',
+            status: 'True',
+            message: 'Tasks Completed: 11 (Failed: 0, Cancelled 0), Skipped: 3',
+            lastTransitionTime: '2023-08-31T17:27:45Z',
+          },
+        ],
+      },
+      metadata: {
+        name: 'human-resources-on-pull-request-hh28p',
+        namespace: 'test-ns',
+        creationTimestamp: '2023-08-31T17:24:13Z',
+      },
+      apiVersion: 'tekton.dev/v1beta1',
+    },
+  ];
+
+  const mockTrPipelines = [
+    {
+      kind: 'PipelineRun',
+      status: {
+        startTime: '2023-08-31T17:05:23Z',
+        conditions: [
+          {
+            type: 'Succeeded',
+            reason: 'Completed',
+            status: 'True',
+            message: 'Tasks Completed: 11 (Failed: 0, Cancelled 0), Skipped: 3',
+            lastTransitionTime: '2023-08-31T17:10:50Z',
+          },
+        ],
+        completionTime: '2023-08-31T17:10:50Z',
+      },
+      metadata: {
+        name: 'human-resources-on-push-x2kjc',
+        namespace: 'test-ns',
+      },
+      apiVersion: 'tekton.dev/v1beta1',
+    },
+    {
+      kind: 'PipelineRun',
+      status: {
+        startTime: '2023-08-25T14:56:28Z',
+        conditions: [
+          {
+            type: 'Succeeded',
+            reason: 'Completed',
+            status: 'True',
+            message: 'Tasks Completed: 11 (Failed: 0, Cancelled 0), Skipped: 3',
+            lastTransitionTime: '2023-08-25T15:01:09Z',
+          },
+        ],
+        completionTime: '2023-08-25T15:01:09Z',
+      },
+      metadata: {
+        name: 'human-resources-on-pull-request-rlrj8',
+        namespace: 'test-ns',
+      },
+      apiVersion: 'tekton.dev/v1beta1',
+    },
+    {
+      kind: 'PipelineRun',
+      status: {
+        startTime: '2023-08-25T14:11:56Z',
+        conditions: [
+          {
+            type: 'Succeeded',
+            reason: 'Completed',
+            status: 'True',
+            message: 'Tasks Completed: 11 (Failed: 0, Cancelled 0), Skipped: 3',
+            lastTransitionTime: '2023-08-25T14:16:47Z',
+          },
+        ],
+        completionTime: '2023-08-25T14:16:47Z',
+      },
+      metadata: {
+        name: 'human-resources-on-push-4w46w',
+        namespace: 'test-ns',
+        creationTimestamp: '2023-08-25T14:11:56Z',
+      },
+      apiVersion: 'tekton.dev/v1beta1',
+    },
+  ];
+
+  it('should a pipeline run', () => {
+    useK8sWatchResourceMock.mockReturnValueOnce([mockK8sPipelines, true]);
+    useTRPipelineRunsMock.mockReturnValue([mockTrPipelines, true]);
+    const { result } = renderHook(() =>
+      useLatestSuccessfulBuildPipelineRunForComponent('test-ns', 'test-app'),
+    );
+    expect(result.current).toEqual([mockK8sPipelines[2], true, undefined]);
+  });
+
+  it('should use paging results when no initially found', () => {
+    const getNextPageMock = jest.fn();
+    useK8sWatchResourceMock.mockReturnValueOnce([[mockK8sPipelines[0]], true]);
+    useTRPipelineRunsMock.mockReturnValue([[], true, undefined, getNextPageMock]);
+
+    renderHook(() => useLatestSuccessfulBuildPipelineRunForComponent('test-ns', 'test-app'));
+    expect(getNextPageMock).toHaveBeenCalled();
   });
 });

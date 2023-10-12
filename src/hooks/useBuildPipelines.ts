@@ -1,21 +1,20 @@
 import * as React from 'react';
 import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
+import { PipelineRunGroupVersionKind } from '../models';
 import { PipelineRunKind } from '../types';
-import { getCommitSha } from '../utils/commits-utils';
-import { useComponents } from './useComponents';
 import { usePipelineRuns } from './usePipelineRuns';
+import { GetNextPage } from './useTektonResults';
 
 export const useBuildPipelines = (
   namespace: string,
   applicationName: string,
-  // TODO inefficient to get all builds without a commit
   commit?: string,
   includeComponents?: boolean,
-): [PipelineRunKind[], boolean, unknown] => {
-  const [components, componentsLoaded] = useComponents(namespace, applicationName);
-
-  const [pipelines, loaded, error] = usePipelineRuns(
-    includeComponents ? (componentsLoaded ? namespace : null) : namespace,
+  componentNames?: string[],
+  limit?: number,
+): [PipelineRunKind[], boolean, unknown, GetNextPage] => {
+  const [pipelineRuns, loaded, plrError, getNextPage] = usePipelineRuns(
+    includeComponents && !componentNames?.length ? null : namespace,
     React.useMemo(
       () => ({
         selector: {
@@ -24,31 +23,45 @@ export const useBuildPipelines = (
             [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
           },
           ...(includeComponents &&
-            componentsLoaded && {
+            componentNames?.length > 0 && {
               matchExpressions: [
                 {
-                  key: `${PipelineRunLabel.COMPONENT}`,
+                  key: PipelineRunLabel.COMPONENT,
                   operator: 'In',
-                  values: components?.map((c) => c.metadata?.name),
+                  values: componentNames,
                 },
               ],
             }),
+          filterByCommit: commit ? commit : undefined,
         },
-
-        limit: includeComponents ? components.length : 50,
+        // TODO: Add limit when filtering by component name AND only PLRs are returned: https://github.com/tektoncd/results/issues/620
+        // limit,
       }),
-      [applicationName, includeComponents, components, componentsLoaded],
+      [applicationName, includeComponents, componentNames, commit],
     ),
   );
 
+  // TODO: Remove this if/when tekton results are really filtered by component names above: https://github.com/tektoncd/results/issues/620
   return React.useMemo(() => {
-    if (!commit) {
-      return [pipelines, loaded, error];
+    if (!loaded || plrError) {
+      return [[], loaded, plrError, getNextPage];
+    }
+
+    // when filtering by commit, both PipelineRun and TaskRun objects are returned: https://github.com/tektoncd/results/issues/620
+    const runs = pipelineRuns.filter((plr) => plr.kind === PipelineRunGroupVersionKind.kind);
+
+    if (!includeComponents || !componentNames?.length) {
+      return [runs.slice(0, limit ? limit : undefined), loaded, plrError, getNextPage];
     }
     return [
-      loaded ? pipelines.filter((pipeline) => getCommitSha(pipeline) === commit) : [],
-      loaded,
-      error,
+      runs
+        .filter((plr) =>
+          componentNames.includes(plr.metadata?.labels?.[PipelineRunLabel.COMPONENT]),
+        )
+        .slice(0, limit ? limit : undefined),
+      true,
+      undefined,
+      getNextPage,
     ];
-  }, [commit, error, loaded, pipelines]);
+  }, [loaded, plrError, includeComponents, componentNames, pipelineRuns, limit, getNextPage]);
 };
