@@ -19,7 +19,6 @@
     "cypress-mochawesome-reporter": "^3.4.0",
     "cypress-multi-reporters": "^1.6.0",
     "cypress-terminal-report": "^5.0.2",
-    "cypress-v10-preserve-cookie": "^1.2.1",
     "deepmerge": "^4.2.2",
     "fs-extra": "^10.1.0",
     "glob": "^9.3.0",
