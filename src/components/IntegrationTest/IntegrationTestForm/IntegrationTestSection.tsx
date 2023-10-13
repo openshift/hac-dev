@@ -179,7 +179,7 @@ const IntegrationTestSection: React.FC<Props> = ({ isInPage, edit }) => {
         <InputField
           name="integrationTest.path"
           label="Path in repository"
-          helpText="Subdirectory for the application source code."
+          helpText="Where to find the file in your repository."
           data-test="git-path-repo"
           required
         />
