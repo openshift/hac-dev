@@ -1,5 +1,5 @@
 import { FormikHelpers } from 'formik';
-import { ApplicationKind } from '../../../types';
+import { ApplicationKind, SPIAccessCheckAccessibilityStatus } from '../../../types';
 import { SAMPLE_ANNOTATION } from '../../../utils/component-utils';
 import { createApplication, createComponent, createSecret } from '../../../utils/create-utils';
 import {
@@ -89,6 +89,15 @@ export const createResources = async (
       resourceLimits?.min,
     );
     componentAnnotations = { [SAMPLE_ANNOTATION]: 'true' };
+  }
+
+  if (formValues.repoAccessibility !== SPIAccessCheckAccessibilityStatus.unknown) {
+    componentAnnotations = {
+      ...(componentAnnotations ?? {}),
+      ['image.redhat.com/generate']: JSON.stringify({
+        visibility: formValues.repoAccessibility,
+      }),
+    };
   }
 
   const integrationTestValues: IntegrationTestFormValues = {

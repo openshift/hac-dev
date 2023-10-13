@@ -1,4 +1,4 @@
-import { ComponentSpecs } from '../../../types';
+import { ComponentSpecs, SPIAccessCheckAccessibilityStatus } from '../../../types';
 
 export const enum ImportStrategy {
   GIT = 'git',
@@ -74,4 +74,5 @@ export type ImportFormValues = {
     min: FormResources;
     max: FormResources;
   };
+  repoAccessibility?: SPIAccessCheckAccessibilityStatus;
 };
