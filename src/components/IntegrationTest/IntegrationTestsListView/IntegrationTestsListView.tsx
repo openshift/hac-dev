@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Button,
   ButtonVariant,
   EmptyStateBody,
-  InputGroup,
   Text,
   TextContent,
-  TextInput,
   TextVariants,
   Title,
   Toolbar,
@@ -15,9 +12,8 @@ import {
   ToolbarGroup,
   ToolbarItem,
   EmptyStateActions,
-  InputGroupItem,
+  SearchInput,
 } from '@patternfly/react-core';
-import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useIntegrationTestScenarios } from '../../../hooks/useIntegrationTestScenarios';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import emptyStateImgUrl from '../../../imgs/Integration-test.svg';
@@ -121,24 +117,15 @@ const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ app
       <ToolbarContent>
         <ToolbarGroup align={{ default: 'alignLeft' }}>
           <ToolbarItem>
-            <InputGroup>
-              <InputGroupItem>
-                <Button variant="control">
-                  <FilterIcon /> Name
-                </Button>
-              </InputGroupItem>
-              <InputGroupItem isFill>
-                <TextInput
-                  name="nameInput"
-                  data-test="name-input-filter"
-                  type="search"
-                  aria-label="name filter"
-                  placeholder="Filter by name..."
-                  onChange={(_event, name) => onNameInput(name)}
-                  value={nameFilter}
-                />
-              </InputGroupItem>
-            </InputGroup>
+            <SearchInput
+              name="nameInput"
+              data-test="name-input-filter"
+              type="search"
+              aria-label="name filter"
+              placeholder="Filter by name..."
+              onChange={(_event, name) => onNameInput(name)}
+              value={nameFilter}
+            />
           </ToolbarItem>
           <ToolbarItem>
             <ButtonWithAccessTooltip
