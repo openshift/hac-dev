@@ -5,34 +5,21 @@ import {
 } from '../../../src/models';
 import { ComponentDetectionQueryKind } from '../../../src/types';
 import { matchers } from '../../matchers';
+import { CDQParams } from '../../states/state-params';
 import { PactContract, getUrlPath } from '../contracts';
-import { CDQParams } from './state-params';
 
 const namespace = 'default';
 const cdq = 'mycdq';
 const path = getUrlPath(ComponentDetectionQueryModel, namespace, cdq);
+const gitRepoUrl = 'https://github.com/nodeshift-starters/devfile-sample.git';
 
 export const cdqParams: CDQParams = {
-  url: 'https://github.com/nodeshift-starters/devfile-sample.git',
+  url: gitRepoUrl,
   name: cdq,
   namespace,
 };
 
-const requestBody = {
-  apiVersion: `${ComponentDetectionQueryModel.apiGroup}/${ComponentDetectionQueryModel.apiVersion}`,
-  kind: ComponentDetectionQueryModel.kind,
-  metadata: {
-    name: cdq,
-    namespace,
-  },
-  spec: {
-    git: {
-      url: 'https://github.com/nodeshift-starters/devfile-sample.git',
-    },
-  },
-};
-
-const expectedResponse = {
+const expectedGetResponse = {
   apiVersion: `${ComponentDetectionQueryModel.apiGroup}/${ComponentDetectionQueryModel.apiVersion}`,
   kind: ComponentDetectionQueryModel.kind,
   metadata: {
@@ -43,7 +30,7 @@ const expectedResponse = {
   },
   spec: {
     git: {
-      url: 'https://github.com/nodeshift-starters/devfile-sample.git',
+      url: gitRepoUrl,
     },
   },
   status: {
@@ -58,19 +45,18 @@ const expectedResponse = {
   },
 };
 
-export const contract: PactContract<ComponentDetectionQueryKind> = {
+export const getContract: PactContract<ComponentDetectionQueryKind> = {
   namespace,
   groupVersionKind: ComponentDetectionQueryGroupVersionKind,
   resourceName: cdq,
   request: {
-    method: 'POST',
+    method: 'GET',
     path,
-    body: requestBody,
     headers: { 'Content-Type': 'application/json' },
   },
   response: {
-    status: 201,
-    body: expectedResponse,
+    status: 200,
+    body: expectedGetResponse,
   },
   model: ComponentDetectionQueryModel,
 };

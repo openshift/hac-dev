@@ -63,7 +63,7 @@ const response: V3Response = {
   body: expectedResponseBody,
 };
 
-export const contract: PactContract<ApplicationKind> = {
+export const getContract: PactContract<ApplicationKind> = {
   request,
   response,
   namespace,
@@ -71,7 +71,7 @@ export const contract: PactContract<ApplicationKind> = {
   groupVersionKind: ApplicationGroupVersionKind,
 };
 
-export const appParams: ApplicationParams = {
+export const getAppParams: ApplicationParams = {
   appName: app,
   namespace,
 };
@@ -79,7 +79,7 @@ export const appParams: ApplicationParams = {
 export const compParams: ComponentsParams = {
   components: [
     {
-      app: appParams,
+      app: getAppParams,
       repo,
       compName: comp1,
     },

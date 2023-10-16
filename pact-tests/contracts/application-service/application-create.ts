@@ -52,7 +52,7 @@ const expectedResponse = {
   },
 };
 
-export const contract: PactContract<ApplicationKind> = {
+export const createContract: PactContract<ApplicationKind> = {
   namespace,
   groupVersionKind: ApplicationGroupVersionKind,
   resourceName: app,
@@ -69,7 +69,7 @@ export const contract: PactContract<ApplicationKind> = {
   model: ApplicationModel,
 };
 
-export const params: ApplicationParams = {
+export const createParams: ApplicationParams = {
   appName: app,
   namespace,
 };
