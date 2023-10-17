@@ -11,11 +11,13 @@ import {
   Title,
 } from '@patternfly/react-core';
 import { ScanStatus } from '../../../components/PipelineRunListView/ScanStatus';
+import { SnapshotLabels } from '../../../consts/pipelinerun';
 import { useScanResults } from '../../../hooks/useScanResults';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../../types';
 import { Snapshot } from '../../../types/coreBuildService';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
+import EnvironmentProvisionErrorAlert from '../../IntegrationTest/EnvironmentProvisionErrorAlert';
 import SnapshotComponentsList from './SnapshotComponentsList';
 import { SnapshotComponentTableData } from './SnapshotComponentsListRow';
 
@@ -35,6 +37,26 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
   const { workspace } = useWorkspaceInfo();
   const [scanResults, scanLoaded] = useScanResults(buildPipelineName, true);
 
+  const getEnvironmentProvisionError = (snpsht) => {
+    const ENV_PROVISION_ERR = 'EnvironmentProvisionError';
+    const itsStatus =
+      snpsht.metadata?.annotations &&
+      snpsht.metadata?.annotations[SnapshotLabels.ITS_STATUS_ANNOTATION];
+
+    if (!itsStatus) {
+      return null;
+    }
+    let errorStatus = null;
+
+    const formattedItsStatus = JSON.parse(itsStatus);
+    if (Array.isArray(formattedItsStatus) && formattedItsStatus.length > 0) {
+      errorStatus = formattedItsStatus?.find((status) => status.Status === ENV_PROVISION_ERR);
+    } else if (formattedItsStatus?.Status === ENV_PROVISION_ERR) {
+      errorStatus = formattedItsStatus;
+    }
+    return errorStatus;
+  };
+
   const componentsTableData: SnapshotComponentTableData[] = React.useMemo(
     () =>
       snapshot.spec.components.map((component) => {
@@ -46,6 +68,8 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
       }),
     [snapshot.spec],
   );
+
+  const errorStatus = getEnvironmentProvisionError(snapshot);
 
   return (
     <>
@@ -105,6 +129,17 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
                         </Link>
                       </div>
                     ))}
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+              )}
+              {errorStatus && (
+                <DescriptionListGroup>
+                  <DescriptionListTerm>{errorStatus.scenario}</DescriptionListTerm>
+                  <DescriptionListDescription>
+                    <EnvironmentProvisionErrorAlert
+                      errMsg={errorStatus.details}
+                      timeStamp={errorStatus.timestamp}
+                    />
                   </DescriptionListDescription>
                 </DescriptionListGroup>
               )}
