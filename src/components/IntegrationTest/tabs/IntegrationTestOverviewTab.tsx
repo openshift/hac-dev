@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
+  Button,
+  ButtonVariant,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -8,12 +10,17 @@ import {
   Flex,
   FlexItem,
   Title,
+  Tooltip,
+  pluralize,
 } from '@patternfly/react-core';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons/dist/js/icons/outlined-question-circle-icon';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
+import { useModalLauncher } from '../../modal/ModalProvider';
 import MetadataList from '../../PipelineRunDetailsView/MetadataList';
+import { createEditParamsModal } from '../EditParamsModal';
 import { IntegrationTestLabels } from '../IntegrationTestForm/types';
 import {
   ResolverRefParams,
@@ -31,6 +38,10 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
   const { workspace } = useWorkspaceInfo();
   const optionalReleaseLabel =
     integrationTest.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true';
+
+  const showModal = useModalLauncher();
+
+  const params = integrationTest?.spec?.params;
 
   return (
     <>
@@ -123,6 +134,36 @@ const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
                     );
                   })}
                 </>
+              )}
+              {params && (
+                <DescriptionListGroup data-test="its-overview-params">
+                  <DescriptionListTerm>
+                    Parameters{' '}
+                    <Tooltip content="Parameters which will be added to the integration Tekton pipeline run.">
+                      <OutlinedQuestionCircleIcon />
+                    </Tooltip>
+                  </DescriptionListTerm>
+                  <DescriptionListDescription>
+                    {pluralize(params.length, 'parameter')}
+                    <div>
+                      {' '}
+                      <Button
+                        variant={ButtonVariant.link}
+                        className="pf-v5-u-pl-0"
+                        onClick={() =>
+                          showModal(
+                            createEditParamsModal({
+                              intTest: integrationTest,
+                            }),
+                          )
+                        }
+                        data-test="edit-param-button"
+                      >
+                        Edit parameters
+                      </Button>
+                    </div>
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
               )}
               <DescriptionListGroup>
                 <DescriptionListTerm>Optional for release</DescriptionListTerm>

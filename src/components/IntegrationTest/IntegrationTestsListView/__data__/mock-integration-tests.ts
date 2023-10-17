@@ -199,3 +199,118 @@ export const MockIntegrationTestsWithGit: IntegrationTestScenarioKind[] = [
     },
   },
 ];
+
+export const MockIntegrationTestsWithParams: IntegrationTestScenarioKind[] = [
+  {
+    apiVersion: 'appstudio.redhat.com/v1beta1',
+    kind: 'IntegrationTestScenario',
+    metadata: {
+      creationTimestamp: '2023-04-26T11:16:32Z',
+      generation: 1,
+      managedFields: [],
+      name: 'example-git',
+      namespace: 'default',
+      resourceVersion: '1031539',
+      uid: '19b590b6-c583-4651-8342-a60d98a1bcb1',
+    },
+    spec: {
+      params: [
+        { name: 'colors', values: ['red', 'green'] },
+        { name: 'fruits', values: ['apple', 'mango', 'banana'] },
+        { name: 'animal', value: 'tiger' },
+      ],
+      application: 'example-app',
+      resolverRef: {
+        params: [
+          {
+            name: 'url',
+            value: 'https://github.com/redhat-appstudio/integration-examples.git',
+          },
+          {
+            name: 'revision',
+            value: 'main',
+          },
+          {
+            name: 'pathInRepo',
+            value: 'pipelines/integration_pipeline_pass.yaml',
+          },
+        ],
+        resolver: ResolverType.GIT,
+      },
+    },
+    status: {
+      conditions: [
+        {
+          lastTransitionTime: '2023-04-26T11:16:32Z',
+          message: 'Failed to get application for scenario.',
+          reason: 'Invalid',
+          status: 'False',
+          type: 'IntegrationTestScenarioValid',
+        },
+      ],
+    },
+  },
+  {
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    kind: 'IntegrationTestScenario',
+    metadata: {
+      annotations: {
+        'app.kubernetes.io/display-name': 'Test 2',
+      },
+      name: 'test-app-test-2',
+      namespace: 'test-namespace',
+      uid: 'ed722704-74bc-4152-b27b-bee29cc7bfd3',
+    },
+    spec: {
+      params: [
+        { name: 'colors', values: ['red', 'green', 'orange'] },
+        { name: 'animal', value: 'tiger' },
+      ],
+      application: 'test-app',
+      resolverRef: {
+        resolver: ResolverType.GIT,
+        params: [
+          { name: 'url', value: 'test-url2' },
+          { name: 'revision', value: 'main2' },
+          { name: 'pathInRepo', value: 'test-path2' },
+        ],
+      },
+      contexts: [
+        {
+          description: 'Application testing 2',
+          name: 'application',
+        },
+      ],
+    },
+  },
+  {
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    kind: 'IntegrationTestScenario',
+    metadata: {
+      annotations: {
+        'app.kubernetes.io/display-name': 'Test 2',
+      },
+      name: 'test-app-test-3',
+      namespace: 'test-namespace',
+      uid: 'ed722704-74bc-4152-b27b-bee29cc7bfd3',
+    },
+    spec: {
+      params: [{ name: 'colors', values: ['red', 'green', 'orange'] }],
+      application: 'test-app',
+      resolverRef: {
+        resolver: ResolverType.GIT,
+        params: [
+          { name: 'url', value: 'test-url2' },
+          { name: 'revision', value: 'main2' },
+          { name: 'pathInRepo', value: 'test-path2' },
+        ],
+      },
+      contexts: [
+        {
+          description: 'Application testing 2',
+          name: 'application',
+        },
+      ],
+    },
+  },
+];
