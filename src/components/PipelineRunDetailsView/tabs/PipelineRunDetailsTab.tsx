@@ -64,6 +64,9 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
   const pipelineStatus = !error ? pipelineRunStatus(pipelineRun) : null;
   const sbomTaskRun = React.useMemo(() => getSbomTaskRun(taskRuns), [taskRuns]);
   const integrationTestName = pipelineRun.metadata.labels[PipelineRunLabel.TEST_SERVICE_SCENARIO];
+  const snapshot =
+    pipelineRun.metadata?.annotations?.[PipelineRunLabel.SNAPSHOT] ||
+    pipelineRun.metadata?.labels?.[PipelineRunLabel.SNAPSHOT];
 
   return (
     <>
@@ -171,6 +174,18 @@ const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
                     {pipelineRun.metadata?.labels[PipelineRunLabel.PIPELINE_NAME] ?? '-'}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
+                {snapshot && (
+                  <DescriptionListGroup>
+                    <DescriptionListTerm>Snapshot</DescriptionListTerm>
+                    <DescriptionListDescription>
+                      <Link
+                        to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/snapshots/${snapshot}`}
+                      >
+                        {snapshot}
+                      </Link>
+                    </DescriptionListDescription>
+                  </DescriptionListGroup>
+                )}
                 {buildImage && (
                   <DescriptionListGroup>
                     <DescriptionListTerm>Download SBOM</DescriptionListTerm>
