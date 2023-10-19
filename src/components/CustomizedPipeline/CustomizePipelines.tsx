@@ -379,8 +379,8 @@ const CustomizePipeline: React.FC<Props> = ({
             automatically rebuild. You can always roll back to default.
           </Text>
           <Text component={TextVariants.p}>
-            Ready to upgrade? To get started, install our GitHub application and grant permission to
-            your repositories.
+            Ready to use custom build pipelines? Make sure you have the GitHub application installed
+            and grant permissions to your repositories.
           </Text>
           <Text component={TextVariants.p}>
             <ExternalLink
