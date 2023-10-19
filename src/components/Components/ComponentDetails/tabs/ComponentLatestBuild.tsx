@@ -38,7 +38,11 @@ type DeploymentRowProps = {
   environments: EnvironmentKind[];
 };
 
-const DeploymentRow: React.FC<DeploymentRowProps> = ({ component, snapshotEB, environments }) => {
+const DeploymentRow: React.FC<React.PropsWithChildren<DeploymentRowProps>> = ({
+  component,
+  snapshotEB,
+  environments,
+}) => {
   const { namespace } = useWorkspaceInfo();
   const [deployment, deploymentLoaded, deploymentLoadError] = useComponentDeployment(
     namespace,
@@ -69,7 +73,9 @@ type ComponentLatestBuildProps = {
   component: ComponentKind;
 };
 
-const ComponentLatestBuild: React.FC<ComponentLatestBuildProps> = ({ component }) => {
+const ComponentLatestBuild: React.FC<React.PropsWithChildren<ComponentLatestBuildProps>> = ({
+  component,
+}) => {
   const { namespace, workspace } = useWorkspaceInfo();
   const [pipelineRun, pipelineRunLoaded, error] = useLatestSuccessfulBuildPipelineRunForComponent(
     namespace,

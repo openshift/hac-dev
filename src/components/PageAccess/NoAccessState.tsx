@@ -25,7 +25,7 @@ type NoAccessStateProps = {
   children?: React.ReactNode;
 } & Omit<EmptyStateProps, 'children'>;
 
-const NoAccessState: React.FC<NoAccessStateProps> = ({
+const NoAccessState: React.FC<React.PropsWithChildren<NoAccessStateProps>> = ({
   title,
   body,
   className,

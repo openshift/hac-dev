@@ -19,10 +19,9 @@ type IntegrationTestDetailsViewProps = {
   testName: string;
 };
 
-const IntegrationTestDetailsView: React.FC<IntegrationTestDetailsViewProps> = ({
-  testName,
-  applicationName,
-}) => {
+const IntegrationTestDetailsView: React.FC<
+  React.PropsWithChildren<IntegrationTestDetailsViewProps>
+> = ({ testName, applicationName }) => {
   const { namespace, workspace } = useWorkspaceInfo();
 
   const showModal = useModalLauncher();

@@ -12,7 +12,11 @@ type WorkflowGraphProps = {
   expanded: boolean;
 };
 
-const WorkflowGraph: React.FC<WorkflowGraphProps> = ({ nodes, edges, expanded }) => {
+const WorkflowGraph: React.FC<React.PropsWithChildren<WorkflowGraphProps>> = ({
+  nodes,
+  edges,
+  expanded,
+}) => {
   return (
     <div className="workflow-graph" data-test="workflow-graph">
       <WorkflowVisualizationSurface

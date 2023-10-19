@@ -32,7 +32,7 @@ type DeleteResourceModalProps = ComponentProps & {
   description?: React.ReactNode;
 };
 
-export const DeleteResourceModal: React.FC<DeleteResourceModalProps> = ({
+export const DeleteResourceModal: React.FC<React.PropsWithChildren<DeleteResourceModalProps>> = ({
   obj,
   model,
   onClose,

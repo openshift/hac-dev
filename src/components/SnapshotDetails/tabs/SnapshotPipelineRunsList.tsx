@@ -36,7 +36,7 @@ type SnapshotPipelineRunListProps = {
   getNextPage;
   customFilter?: (plr: PipelineRunKind) => boolean;
 };
-const SnapshotPipelineRunsList: React.FC<SnapshotPipelineRunListProps> = ({
+const SnapshotPipelineRunsList: React.FC<React.PropsWithChildren<SnapshotPipelineRunListProps>> = ({
   snapshotPipelineRuns,
   applicationName,
   loaded,

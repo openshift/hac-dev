@@ -4,7 +4,9 @@ import { Label, Tooltip } from '@patternfly/react-core';
 import { SpaceBindingRequestGroupVersionKind } from '../../models';
 import { SpaceBindingRequest, WorkspaceBinding } from '../../types';
 
-export const SBRStatusLabel: React.FC<{ sbr: WorkspaceBinding['bindingRequest'] }> = ({ sbr }) => {
+export const SBRStatusLabel: React.FC<
+  React.PropsWithChildren<{ sbr: WorkspaceBinding['bindingRequest'] }>
+> = ({ sbr }) => {
   const [binding, loaded] = useK8sWatchResource<SpaceBindingRequest>(
     sbr
       ? {

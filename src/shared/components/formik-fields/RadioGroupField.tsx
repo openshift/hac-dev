@@ -9,7 +9,7 @@ import RadioButtonField from './RadioButtonField';
 
 import './RadioGroupField.scss';
 
-const RadioGroupField: React.FC<RadioGroupFieldProps> = ({
+const RadioGroupField: React.FC<React.PropsWithChildren<RadioGroupFieldProps>> = ({
   label,
   options,
   helpText,

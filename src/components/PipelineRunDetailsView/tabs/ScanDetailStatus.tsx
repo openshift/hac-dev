@@ -26,7 +26,10 @@ type ScanDetailStatusProps = {
   condensed?: boolean;
 };
 
-export const ScanDetailStatus: React.FC<ScanDetailStatusProps> = ({ scanResults, condensed }) => (
+export const ScanDetailStatus: React.FC<React.PropsWithChildren<ScanDetailStatusProps>> = ({
+  scanResults,
+  condensed,
+}) => (
   <div className="scan-detail-status">
     <div className="scan-detail-status__severity" data-testid="scan-status-critical-test-id">
       <span className="scan-detail-status__severity-status">

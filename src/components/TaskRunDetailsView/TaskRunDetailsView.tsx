@@ -19,7 +19,9 @@ type TaskRunDetailsViewProps = {
   taskRunName: string;
 };
 
-export const TaskRunDetailsView: React.FC<TaskRunDetailsViewProps> = ({ taskRunName }) => {
+export const TaskRunDetailsView: React.FC<React.PropsWithChildren<TaskRunDetailsViewProps>> = ({
+  taskRunName,
+}) => {
   const { namespace, workspace } = useWorkspaceInfo();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
 

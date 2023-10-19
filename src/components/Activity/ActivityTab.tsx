@@ -10,7 +10,9 @@ import './ActivityTab.scss';
 
 export const ACTIVITY_SECONDARY_TAB_KEY = 'activity-secondary-tab';
 
-export const ActivityTab: React.FC<{ applicationName?: string }> = ({ applicationName }) => {
+export const ActivityTab: React.FC<React.PropsWithChildren<{ applicationName?: string }>> = ({
+  applicationName,
+}) => {
   const params = useParams();
   const { workspace } = useWorkspaceInfo();
   const { activeTab: parentTab, activity: activeTab } = params;

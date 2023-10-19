@@ -9,7 +9,9 @@ export interface CommitSidePanelBodyProps {
   selectedPipelineRun?: PipelineRunKind;
 }
 
-const CommitSidePanelBody: React.FC<CommitSidePanelBodyProps> = ({ selectedPipelineRun }) => {
+const CommitSidePanelBody: React.FC<React.PropsWithChildren<CommitSidePanelBodyProps>> = ({
+  selectedPipelineRun,
+}) => {
   return selectedPipelineRun ? (
     <>
       <Text component="h3">

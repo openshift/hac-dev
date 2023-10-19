@@ -18,7 +18,10 @@ type Props = {
   workflowNode: GraphElement<ElementModel, CommitWorkflowNodeModelData>;
 };
 
-const CommitWorkflowSidePanel: React.FC<Props> = ({ workflowNode, onClose }) => {
+const CommitWorkflowSidePanel: React.FC<React.PropsWithChildren<Props>> = ({
+  workflowNode,
+  onClose,
+}) => {
   switch (workflowNode.getData().workflowType) {
     case CommitWorkflowNodeType.COMMIT:
       return <CommitSidePanel workflowNode={workflowNode} onClose={onClose} />;

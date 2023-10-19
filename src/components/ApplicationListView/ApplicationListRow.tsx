@@ -11,7 +11,9 @@ import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { useApplicationActions } from './application-actions';
 import { applicationTableColumnClasses } from './ApplicationListHeader';
 
-const ApplicationListRow: React.FC<RowFunctionArgs<ApplicationKind>> = ({ obj }) => {
+const ApplicationListRow: React.FC<React.PropsWithChildren<RowFunctionArgs<ApplicationKind>>> = ({
+  obj,
+}) => {
   const [components, loaded] = useComponents(obj.metadata.namespace, obj.metadata.name);
 
   const [allEnvironments, environmentsLoaded] = useAllApplicationEnvironmentsWithHealthStatus(

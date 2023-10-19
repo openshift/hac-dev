@@ -17,7 +17,7 @@ type PipelineRunListRowProps = RowFunctionArgs<PipelineRunKind>;
 
 type BasePipelineRunListRowProps = PipelineRunListRowProps & { showVulnerabilities?: boolean };
 
-const BasePipelineRunListRow: React.FC<BasePipelineRunListRowProps> = ({
+const BasePipelineRunListRow: React.FC<React.PropsWithChildren<BasePipelineRunListRowProps>> = ({
   obj,
   showVulnerabilities,
   customData,
@@ -104,10 +104,10 @@ const BasePipelineRunListRow: React.FC<BasePipelineRunListRowProps> = ({
   );
 };
 
-export const PipelineRunListRow: React.FC<PipelineRunListRowProps> = (props) => (
-  <BasePipelineRunListRow {...props} showVulnerabilities={false} />
-);
+export const PipelineRunListRow: React.FC<React.PropsWithChildren<PipelineRunListRowProps>> = (
+  props,
+) => <BasePipelineRunListRow {...props} showVulnerabilities={false} />;
 
-export const PipelineRunListRowWithVulnerabilities: React.FC<PipelineRunListRowProps> = (props) => (
-  <BasePipelineRunListRow {...props} showVulnerabilities />
-);
+export const PipelineRunListRowWithVulnerabilities: React.FC<
+  React.PropsWithChildren<PipelineRunListRowProps>
+> = (props) => <BasePipelineRunListRow {...props} showVulnerabilities />;

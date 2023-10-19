@@ -2,7 +2,7 @@ import React from 'react';
 import { Drawer, DrawerContent, DrawerPanelContent } from '@patternfly/react-core';
 import SidePanelContext, { SidePanelProps } from './SidePanelContext';
 
-const SidePanelHost: React.FC = ({ children }) => {
+const SidePanelHost: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [props, setProps] = React.useState<SidePanelProps>({ isExpanded: false, isInline: true });
   const propsRef = React.useRef(props);
   propsRef.current = props;

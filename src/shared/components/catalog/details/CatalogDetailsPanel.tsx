@@ -13,7 +13,9 @@ type CatalogDetailsPanelProps = {
   item: CatalogItem;
 };
 
-const CatalogDetailsPanel: React.FC<CatalogDetailsPanelProps> = ({ item }) => {
+const CatalogDetailsPanel: React.FC<React.PropsWithChildren<CatalogDetailsPanelProps>> = ({
+  item,
+}) => {
   const { t } = useTranslation();
   const { description, provider, creationTimestamp, supportUrl, documentationUrl, details } = item;
   // const created = Date.parse(creationTimestamp) ? (

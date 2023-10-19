@@ -5,7 +5,7 @@ import { DropdownField, InputField } from '../../../shared';
 import { SourceSecretType } from '../../../types';
 import EncodedFileUploadField from './EncodedFileUploadField';
 
-export const SourceSecretForm: React.FC = () => {
+export const SourceSecretForm: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [{ value: type }] = useField<SourceSecretType>('source.authType');
 
   return (

@@ -7,7 +7,7 @@ export type TaskRunLogProps = {
   taskRun: TaskRunKind;
 };
 
-const TaskRunLogsTab: React.FC<TaskRunLogProps> = ({ taskRun }) => {
+const TaskRunLogsTab: React.FC<React.PropsWithChildren<TaskRunLogProps>> = ({ taskRun }) => {
   const status = taskRunStatus(taskRun);
   const namespace = taskRun.metadata?.namespace;
 

@@ -4,7 +4,7 @@ import { useSortedEnvironments } from '../../../hooks/useEnvironments';
 import { DropdownField } from '../../../shared';
 import { CreateEnvironmentFormValues } from './CreateEnvironmentForm';
 
-export const ParentEnvironmentField: React.FC = () => {
+export const ParentEnvironmentField: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [environments, loaded] = useSortedEnvironments();
   const { values, setFieldValue } = useFormikContext<CreateEnvironmentFormValues>();
 

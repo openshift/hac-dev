@@ -22,7 +22,10 @@ export interface ReleaseSidePanelBodyProps {
   workflowNode: GraphElement<ElementModel, CommitWorkflowNodeModelData>;
 }
 
-const ReleaseSidePanel: React.FC<ReleaseSidePanelBodyProps> = ({ workflowNode, onClose }) => {
+const ReleaseSidePanel: React.FC<React.PropsWithChildren<ReleaseSidePanelBodyProps>> = ({
+  workflowNode,
+  onClose,
+}) => {
   const { workspace } = useWorkspaceInfo();
   const workflowData = workflowNode.getData();
   const release = workflowData.resource;

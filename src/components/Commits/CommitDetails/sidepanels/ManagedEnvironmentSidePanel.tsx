@@ -22,10 +22,9 @@ export interface ManagedEnvironmentSidePanelBodyProps {
   workflowNode: GraphElement<ElementModel, CommitWorkflowNodeModelData>;
 }
 
-const ManagedEnvironmentSidePanel: React.FC<ManagedEnvironmentSidePanelBodyProps> = ({
-  workflowNode,
-  onClose,
-}) => {
+const ManagedEnvironmentSidePanel: React.FC<
+  React.PropsWithChildren<ManagedEnvironmentSidePanelBodyProps>
+> = ({ workflowNode, onClose }) => {
   const { workspace } = useWorkspaceInfo();
   const workflowData = workflowNode.getData();
   const managedEnv = workflowData.resource;

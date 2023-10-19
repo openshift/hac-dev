@@ -10,7 +10,11 @@ type FieldHelperTextProps = {
   helpText?: React.ReactNode;
 };
 
-const FieldHelperText: React.FC<FieldHelperTextProps> = ({ isValid, errorMessage, helpText }) => {
+const FieldHelperText: React.FC<React.PropsWithChildren<FieldHelperTextProps>> = ({
+  isValid,
+  errorMessage,
+  helpText,
+}) => {
   if ((isValid || !errorMessage) && !helpText) {
     return null;
   }

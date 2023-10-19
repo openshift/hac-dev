@@ -5,7 +5,7 @@ import { Form, Button, ButtonVariant, ButtonType } from '@patternfly/react-core'
 import { Formik } from 'formik';
 import { SIGNUP_PENDING_FLAG } from '../../utils/flag-utils';
 
-const SignupButton: React.FC = () => {
+const SignupButton: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [, setSignupPending] = useFeatureFlag(SIGNUP_PENDING_FLAG);
 
   const onSubmit = (values, actions) => {

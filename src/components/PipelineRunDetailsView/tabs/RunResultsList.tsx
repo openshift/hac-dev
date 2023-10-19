@@ -22,7 +22,11 @@ type Props = {
   compressed?: boolean;
 };
 
-const RunResultsList: React.FC<Props> = ({ results, status, compressed }) => (
+const RunResultsList: React.FC<React.PropsWithChildren<Props>> = ({
+  results,
+  status,
+  compressed,
+}) => (
   <DescriptionList
     className={css('run-results-list', compressed && 'm-compressed')}
     data-test="pipeline-run-details"

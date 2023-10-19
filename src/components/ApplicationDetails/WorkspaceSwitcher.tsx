@@ -3,7 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { WorkspaceContext } from '../../utils/workspace-context-utils';
 import { ContextMenuItem, ContextSwitcher } from '../ContextSwitcher';
 
-export const WorkspaceSwitcher: React.FC<{ selectedWorkspace?: string }> = () => {
+export const WorkspaceSwitcher: React.FC<
+  React.PropsWithChildren<{ selectedWorkspace?: string }>
+> = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { workspace, workspaces } = React.useContext(WorkspaceContext);

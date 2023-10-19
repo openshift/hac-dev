@@ -7,7 +7,9 @@ type KubeconfigUploadFieldProps = {
   name: string;
 };
 
-const KubeconfigUploadField: React.FC<KubeconfigUploadFieldProps> = ({ name }) => {
+const KubeconfigUploadField: React.FC<React.PropsWithChildren<KubeconfigUploadFieldProps>> = ({
+  name,
+}) => {
   const [filename, setFilename] = React.useState<string>();
   const [, { value, touched, error }, { setValue, setTouched }] = useField<string>(name);
 

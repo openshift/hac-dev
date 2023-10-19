@@ -8,7 +8,9 @@ import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { useReleasePlanActions } from './releaseplan-actions';
 import { releasesPlanTableColumnClasses } from './ReleasePlanListHeader';
 
-const ReleasePlanListRow: React.FC<RowFunctionArgs<ReleasePlanKind>> = ({ obj }) => {
+const ReleasePlanListRow: React.FC<React.PropsWithChildren<RowFunctionArgs<ReleasePlanKind>>> = ({
+  obj,
+}) => {
   const actions = useReleasePlanActions(obj);
   const { workspace } = useWorkspaceInfo();
   return (

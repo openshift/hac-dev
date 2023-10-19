@@ -27,7 +27,7 @@ type Size = {
   width: number;
 };
 
-const VisualizationFactory: React.FC<VisualizationFactoryProps> = ({
+const VisualizationFactory: React.FC<React.PropsWithChildren<VisualizationFactoryProps>> = ({
   model,
   layoutFactory,
   componentFactory,

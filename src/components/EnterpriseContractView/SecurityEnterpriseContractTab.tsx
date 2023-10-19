@@ -42,9 +42,9 @@ const getResultsSummary = (ECs, ecLoaded) => {
     : statusFilter;
 };
 
-export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = ({
-  pipelineRun,
-}) => {
+export const SecurityEnterpriseContractTab: React.FC<
+  React.PropsWithChildren<{ pipelineRun: string }>
+> = ({ pipelineRun }) => {
   const [ecResult, ecResultLoaded] = useEnterpriseContractResults(pipelineRun);
 
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
@@ -98,7 +98,7 @@ export const SecurityEnterpriseContractTab: React.FC<{ pipelineRun: string }> = 
   // Filter Toolbar chips
 
   const onDeleteChip = React.useCallback(
-    (category, chip) => {
+    (category: any, chip: any) => {
       if (category === 'Component') {
         setComponentFilters(componentFilters.filter((comp) => comp !== chip));
       } else if (category === 'Status') {

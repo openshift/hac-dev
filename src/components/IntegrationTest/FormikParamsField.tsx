@@ -32,7 +32,7 @@ interface IntegrationTestParamsProps {
   initExpanded?: boolean;
 }
 
-const IntegrationTestParams: React.FC<IntegrationTestParamsProps> = ({
+const IntegrationTestParams: React.FC<React.PropsWithChildren<IntegrationTestParamsProps>> = ({
   heading,
   fieldName,
   initExpanded = false,

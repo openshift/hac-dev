@@ -8,7 +8,7 @@ export interface MultiColumnFieldHeader {
   disableAddRow?: boolean;
 }
 
-const MultiColumnFieldFooter: React.FC<MultiColumnFieldHeader> = ({
+const MultiColumnFieldFooter: React.FC<React.PropsWithChildren<MultiColumnFieldHeader>> = ({
   addLabel,
   onAdd,
   disableAddRow = false,

@@ -77,7 +77,7 @@ const DEFAULT_ROW_RENDERER = ({
   );
 };
 
-const MultiColumnFieldRow: React.FC<MultiColumnFieldRowProps> = ({
+const MultiColumnFieldRow: React.FC<React.PropsWithChildren<MultiColumnFieldRowProps>> = ({
   name,
   toolTip,
   rowIndex,

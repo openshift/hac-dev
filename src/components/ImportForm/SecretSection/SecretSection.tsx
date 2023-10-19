@@ -24,7 +24,7 @@ const SecretSection = () => {
       : [];
 
   const onSubmit = React.useCallback(
-    (secretValue) => {
+    (secretValue: any) => {
       const secrets = [...values.importSecrets, secretValue];
       const secretNames = [...values.newSecrets, secretValue.secretName];
       setFieldValue('importSecrets', secrets);

@@ -16,7 +16,7 @@ import { commitsTableColumnClasses } from './CommitsListHeader';
 
 import './CommitsListRow.scss';
 
-const CommitsListRow: React.FC<RowFunctionArgs<Commit>> = ({ obj }) => {
+const CommitsListRow: React.FC<React.PropsWithChildren<RowFunctionArgs<Commit>>> = ({ obj }) => {
   const actions = useCommitActions(obj);
   const { workspace } = useWorkspaceInfo();
   const status = pipelineRunStatus(obj.pipelineRuns[0]);

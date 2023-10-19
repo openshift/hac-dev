@@ -34,7 +34,11 @@ type SecretModalProps = RawComponentProps & {
   onSubmit: (value: SecretModalValues) => void;
 };
 
-const SecretModal: React.FC<SecretModalProps> = ({ modalProps, onSubmit, existingSecrets }) => {
+const SecretModal: React.FC<React.PropsWithChildren<SecretModalProps>> = ({
+  modalProps,
+  onSubmit,
+  existingSecrets,
+}) => {
   const defaultKeyValues = [{ key: '', value: '', readOnlyKey: false }];
   const initialValues: SecretModalValues = {
     secretName: '',

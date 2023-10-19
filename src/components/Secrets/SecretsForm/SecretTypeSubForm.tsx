@@ -42,7 +42,7 @@ const secretTypes = [
 const supportedPartnerTaskSecrets = getSupportedPartnerTaskSecrets();
 const defaultKeyValues = [{ key: '', value: '' }];
 
-export const SecretTypeSubForm: React.FC = () => {
+export const SecretTypeSubForm: React.FC<React.PropsWithChildren<unknown>> = () => {
   const {
     values: {
       name,

@@ -23,7 +23,7 @@ type WorkflowNodeProps = {
   element: Node<PipelineNodeModel, WorkflowNodeModelData>;
 };
 
-const WorkflowNode: React.FC<WorkflowNodeProps> = ({ element }) => {
+const WorkflowNode: React.FC<React.PropsWithChildren<WorkflowNodeProps>> = ({ element }) => {
   const navigate = useNavigate();
   const { workspace } = useWorkspaceInfo();
   const [tipHover, setTipHover] = React.useState<boolean>(false);

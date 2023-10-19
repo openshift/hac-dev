@@ -12,7 +12,9 @@ interface PipelineRunEmptyStateProps {
   applicationName: string;
 }
 
-const PipelineRunEmptyState: React.FC<PipelineRunEmptyStateProps> = ({ applicationName }) => {
+const PipelineRunEmptyState: React.FC<React.PropsWithChildren<PipelineRunEmptyStateProps>> = ({
+  applicationName,
+}) => {
   const { workspace } = useWorkspaceInfo();
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 

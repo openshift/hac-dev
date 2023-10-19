@@ -12,7 +12,12 @@ type Props = {
   dataTestID?: string;
 };
 
-const GitRepoLink: React.FC<Props> = ({ url, revision, context, dataTestID }) => {
+const GitRepoLink: React.FC<React.PropsWithChildren<Props>> = ({
+  url,
+  revision,
+  context,
+  dataTestID,
+}) => {
   const parsed = gitUrlParse(url);
   const icon = getGitIcon(parsed.source);
   const path = context?.replace(/^(\.?\/)?/g, '');

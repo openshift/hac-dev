@@ -3,7 +3,7 @@ import { Banner, Button, Popover } from '@patternfly/react-core';
 
 import './AppBanner.scss';
 
-const AppBanner: React.FC = () => {
+const AppBanner: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <div data-test="dev-preview-banner">
       <Banner variant="blue" className="app-banner" isSticky>

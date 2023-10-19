@@ -2,7 +2,9 @@ import React from 'react';
 import { Divider, DrilldownMenu, MenuItem } from '@patternfly/react-core';
 import { ContextMenuItem } from './ContextSwitcher';
 
-export const ContextMenuListItem: React.FC<{ item: ContextMenuItem }> = ({ item }) => {
+export const ContextMenuListItem: React.FC<React.PropsWithChildren<{ item: ContextMenuItem }>> = ({
+  item,
+}) => {
   if (item.subItems) {
     return (
       <MenuItem

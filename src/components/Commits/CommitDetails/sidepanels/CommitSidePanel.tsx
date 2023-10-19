@@ -27,7 +27,10 @@ export interface CommitSidePanelBodyProps {
   workflowNode: GraphElement<ElementModel, CommitWorkflowNodeModelData>;
 }
 
-const CommitSidePanel: React.FC<CommitSidePanelBodyProps> = ({ workflowNode, onClose }) => {
+const CommitSidePanel: React.FC<React.PropsWithChildren<CommitSidePanelBodyProps>> = ({
+  workflowNode,
+  onClose,
+}) => {
   const { workspace } = useWorkspaceInfo();
   const workflowData = workflowNode.getData();
   const commit = workflowData.resource as Commit;

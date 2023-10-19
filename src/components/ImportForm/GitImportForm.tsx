@@ -34,7 +34,7 @@ type GitImportFormProps = {
   setReviewMode: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
+const GitImportForm: React.FunctionComponent<React.PropsWithChildren<GitImportFormProps>> = ({
   applicationName,
   reviewMode,
   setReviewMode,
@@ -70,7 +70,7 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
   const showModal = useModalLauncher();
 
   const handleSubmit = React.useCallback(
-    (values: ImportFormValues, formikHelpers) => {
+    (values: ImportFormValues, formikHelpers: any) => {
       track(TrackEvents.ButtonClicked, { link_name: 'import-submit', workspace });
       return createResources(values, ImportStrategy.GIT, workspace)
         .then(({ applicationName: appName, application, components, componentNames }) => {

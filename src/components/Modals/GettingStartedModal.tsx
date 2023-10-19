@@ -46,7 +46,7 @@ type Level = {
 
 export const LOCAL_STORAGE_KEY = 'getting-started-modal';
 
-export const GettingStartedModal: React.FC<GettingStartedModalProps> = ({
+export const GettingStartedModal: React.FC<React.PropsWithChildren<GettingStartedModalProps>> = ({
   imgClassName,
   imgSrc,
   imgAlt,

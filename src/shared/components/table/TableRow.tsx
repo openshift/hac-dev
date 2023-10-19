@@ -10,7 +10,7 @@ export type TableRowProps = {
   className?: string;
 };
 
-export const TableRow: React.FC<TableRowProps> = ({
+export const TableRow: React.FC<React.PropsWithChildren<TableRowProps>> = ({
   id,
   index,
   trKey,

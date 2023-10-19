@@ -6,7 +6,7 @@ import { ResourceLimitFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
 import FieldHelperText from './FieldHelperText';
 
-const ResourceLimitField: React.FC<ResourceLimitFieldProps> = ({
+const ResourceLimitField: React.FC<React.PropsWithChildren<ResourceLimitFieldProps>> = ({
   label,
   unitName,
   unitOptions,

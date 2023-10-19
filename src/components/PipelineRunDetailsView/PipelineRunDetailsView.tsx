@@ -27,9 +27,9 @@ type PipelineRunDetailsViewProps = {
   pipelineRunName: string;
 };
 
-export const PipelineRunDetailsView: React.FC<PipelineRunDetailsViewProps> = ({
-  pipelineRunName,
-}) => {
+export const PipelineRunDetailsView: React.FC<
+  React.PropsWithChildren<PipelineRunDetailsViewProps>
+> = ({ pipelineRunName }) => {
   const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();

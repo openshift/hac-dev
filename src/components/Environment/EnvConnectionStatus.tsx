@@ -9,7 +9,9 @@ type EnvConnStatusProps = {
   environment: EnvironmentKind;
 };
 
-export const EnvConnectionStatus: React.FC<EnvConnStatusProps> = ({ environment }) => {
+export const EnvConnectionStatus: React.FC<React.PropsWithChildren<EnvConnStatusProps>> = ({
+  environment,
+}) => {
   const envStatus = useEnvConnectionStatus(environment);
 
   if (!envStatus) {

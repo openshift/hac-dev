@@ -3,7 +3,7 @@ import { InputGroup, TextInput, TextArea } from '@patternfly/react-core';
 import BaseInputField from './BaseInputField';
 import { GroupInputProps, GroupTextType } from './field-types';
 
-const InputGroupField: React.FC<GroupInputProps> = ({
+const InputGroupField: React.FC<React.PropsWithChildren<GroupInputProps>> = ({
   beforeInput,
   afterInput,
   groupTextType,

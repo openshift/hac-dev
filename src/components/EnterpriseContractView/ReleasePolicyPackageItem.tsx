@@ -20,10 +20,9 @@ type ReleasePolicyPackageItemProps = {
   releasePackageAnnotations: ReleaseAnnotation[];
 };
 
-const ReleasePolicyPackageItem: React.FC<ReleasePolicyPackageItemProps> = ({
-  releasePackageInfo,
-  releasePackageAnnotations,
-}) => {
+const ReleasePolicyPackageItem: React.FC<
+  React.PropsWithChildren<ReleasePolicyPackageItemProps>
+> = ({ releasePackageInfo, releasePackageAnnotations }) => {
   const [expanded, setExpanded] = React.useState<boolean>(false);
   return (
     <div className="release-policy-item">

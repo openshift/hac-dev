@@ -11,7 +11,7 @@ import { FULL_APPLICATION_TITLE } from '../consts/labels';
 import { RemoteSecretModel } from '../models';
 import { AccessReviewResources } from '../types';
 
-const SecretsListPage: React.FC = () => {
+const SecretsListPage: React.FC<React.PropsWithChildren<unknown>> = () => {
   const accessReviewResources: AccessReviewResources = [{ model: RemoteSecretModel, verb: 'list' }];
 
   return (

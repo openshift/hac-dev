@@ -16,7 +16,7 @@ import { initiateSpiAuthSession, useAccessTokenBinding } from '../utils/auth-uti
 import { ImportFormValues } from '../utils/types';
 import { createAuthTokenModal } from './AuthTokenModal';
 
-const AuthOptions: React.FC = () => {
+const AuthOptions: React.FC<React.PropsWithChildren<unknown>> = () => {
   const {
     values: { secret, source },
   } = useFormikContext<ImportFormValues>();

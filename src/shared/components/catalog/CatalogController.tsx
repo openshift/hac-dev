@@ -34,7 +34,7 @@ type CatalogControllerProps = CatalogService & {
   categories?: CatalogCategory[];
 };
 
-const CatalogController: React.FC<CatalogControllerProps> = ({
+const CatalogController: React.FC<React.PropsWithChildren<CatalogControllerProps>> = ({
   type,
   items,
   itemsMap,

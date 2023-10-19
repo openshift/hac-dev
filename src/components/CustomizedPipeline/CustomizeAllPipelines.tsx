@@ -23,7 +23,7 @@ type Props = RawComponentProps & {
   filter?: (component: ComponentKind) => boolean;
 };
 
-const CustomizeAllPipelines: React.FC<Props> = ({
+const CustomizeAllPipelines: React.FC<React.PropsWithChildren<Props>> = ({
   applicationName,
   namespace,
   filter,

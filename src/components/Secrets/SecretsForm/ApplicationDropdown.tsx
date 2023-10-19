@@ -9,7 +9,9 @@ type ApplicationDropdownProps = Omit<
   'items' | 'label' | 'placeholder'
 >;
 
-export const ApplicationDropdown: React.FC<ApplicationDropdownProps> = (props) => {
+export const ApplicationDropdown: React.FC<React.PropsWithChildren<ApplicationDropdownProps>> = (
+  props,
+) => {
   const { namespace } = useWorkspaceInfo();
   const [applications, loaded] = useApplications(namespace);
   const [, , { setValue }] = useField<string>('targets.application');

@@ -15,7 +15,7 @@ type CatalogCategoriesProp = {
   onSelectCategory: (category: string) => void;
 };
 
-const CatalogCategories: React.FC<CatalogCategoriesProp> = ({
+const CatalogCategories: React.FC<React.PropsWithChildren<CatalogCategoriesProp>> = ({
   categories,
   categorizedIds,
   selectedCategory,

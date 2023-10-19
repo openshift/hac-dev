@@ -14,7 +14,7 @@ type EncodedFileUploadFieldProps = {
   required?: boolean;
 };
 
-const EncodedFileUploadField: React.FC<EncodedFileUploadFieldProps> = ({
+const EncodedFileUploadField: React.FC<React.PropsWithChildren<EncodedFileUploadFieldProps>> = ({
   id,
   name,
   label,

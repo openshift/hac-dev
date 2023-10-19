@@ -13,7 +13,9 @@ type ImportFormProps = {
   applicationName?: string;
 };
 
-const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName }) => {
+const ImportForm: React.FunctionComponent<React.PropsWithChildren<ImportFormProps>> = ({
+  applicationName,
+}) => {
   const [reviewMode, setReviewMode] = React.useState(false);
 
   const applicationBreadcrumbs = useApplicationBreadcrumbs(applicationName);

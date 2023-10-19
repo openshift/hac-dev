@@ -8,7 +8,10 @@ type PipelineRunLogsTabProps = {
   taskRuns: TaskRunKind[];
 };
 
-const PipelineRunLogsTab: React.FC<PipelineRunLogsTabProps> = ({ pipelineRun, taskRuns }) => {
+const PipelineRunLogsTab: React.FC<React.PropsWithChildren<PipelineRunLogsTabProps>> = ({
+  pipelineRun,
+  taskRuns,
+}) => {
   const { workspace } = useWorkspaceInfo();
   return (
     <PipelineRunLogs

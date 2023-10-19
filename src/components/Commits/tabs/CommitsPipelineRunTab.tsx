@@ -13,7 +13,7 @@ type CommitsPipelineRunTabProps = {
   commitName: string;
   applicationName: string;
 };
-const CommitsPipelineRunTab: React.FC<CommitsPipelineRunTabProps> = ({
+const CommitsPipelineRunTab: React.FC<React.PropsWithChildren<CommitsPipelineRunTabProps>> = ({
   commitName,
   applicationName,
 }) => {

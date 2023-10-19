@@ -7,7 +7,7 @@ import { FULL_APPLICATION_TITLE } from '../consts/labels';
 import { RemoteSecretModel } from '../models';
 import { AccessReviewResources } from '../types';
 
-const CreateSecretpage: React.FC = () => {
+const CreateSecretpage: React.FC<React.PropsWithChildren<unknown>> = () => {
   const accessReviewResources: AccessReviewResources = [
     { model: RemoteSecretModel, verb: 'create' },
   ];

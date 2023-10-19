@@ -26,7 +26,7 @@ import { ReleaseServiceEmptyState } from '../ReleaseServiceEmptyState';
 import ReleaseStrategyListHeader from './ReleaseStrategyListHeader';
 import ReleaseStrategyListRow from './ReleaseStrategyListRow';
 
-const ReleaseStrategyListView: React.FC = () => {
+const ReleaseStrategyListView: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { namespace } = useWorkspaceInfo();
   const [releaseStrategies, loaded] = useReleaseStrategies(namespace);
   const [nameFilter, setNameFilter] = useSearchParam('name', '');

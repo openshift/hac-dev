@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { CloseButton } from '../close-button';
 import { ActionGroupWithIconsProps } from './form-component-types';
 
-const ActionGroupWithIcons: React.FC<ActionGroupWithIconsProps> = ({
+const ActionGroupWithIcons: React.FC<React.PropsWithChildren<ActionGroupWithIconsProps>> = ({
   onSubmit,
   onClose,
   isDisabled,

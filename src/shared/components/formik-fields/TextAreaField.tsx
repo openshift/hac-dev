@@ -5,32 +5,33 @@ import { TextAreaProps } from './field-types';
 import { getFieldId } from './field-utils';
 import FieldHelperText from './FieldHelperText';
 
-const RenderComponent: React.FC<TextAreaProps & { forwardedRef: React.Ref<HTMLTextAreaElement> }> =
-  ({ label, helpText, required, onChange, forwardedRef, ...props }) => {
-    const [field, { touched, error }] = useField(props.name);
-    const fieldId = getFieldId(props.name, 'input');
-    const isValid = !(touched && error);
-    const errorMessage = !isValid ? error : '';
-    return (
-      <FormGroup fieldId={fieldId} label={label} isRequired={required}>
-        <TextArea
-          {...field}
-          {...props}
-          ref={forwardedRef}
-          id={fieldId}
-          style={{ resize: 'vertical' }}
-          validated={isValid ? 'default' : 'error'}
-          isRequired={required}
-          aria-describedby={helpText ? `${fieldId}-helper` : undefined}
-          onChange={(event, value) => {
-            onChange && onChange(value);
-            field.onChange(event);
-          }}
-        />
-        <FieldHelperText isValid={isValid} errorMessage={errorMessage} helpText={helpText} />
-      </FormGroup>
-    );
-  };
+const RenderComponent: React.FC<
+  React.PropsWithChildren<TextAreaProps & { forwardedRef: React.Ref<HTMLTextAreaElement> }>
+> = ({ label, helpText, required, onChange, forwardedRef, ...props }) => {
+  const [field, { touched, error }] = useField(props.name);
+  const fieldId = getFieldId(props.name, 'input');
+  const isValid = !(touched && error);
+  const errorMessage = !isValid ? error : '';
+  return (
+    <FormGroup fieldId={fieldId} label={label} isRequired={required}>
+      <TextArea
+        {...field}
+        {...props}
+        ref={forwardedRef}
+        id={fieldId}
+        style={{ resize: 'vertical' }}
+        validated={isValid ? 'default' : 'error'}
+        isRequired={required}
+        aria-describedby={helpText ? `${fieldId}-helper` : undefined}
+        onChange={(event, value) => {
+          onChange && onChange(value);
+          field.onChange(event);
+        }}
+      />
+      <FieldHelperText isValid={isValid} errorMessage={errorMessage} helpText={helpText} />
+    </FormGroup>
+  );
+};
 
 const renderFunction = (props: TextAreaProps, ref: React.Ref<HTMLTextAreaElement>) => (
   <RenderComponent forwardedRef={ref} {...props} />

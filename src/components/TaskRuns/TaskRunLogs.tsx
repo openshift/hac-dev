@@ -10,7 +10,7 @@ type Props = {
   status: runStatus;
 };
 
-const TaskRunLogs: React.FC<Props> = ({ taskRun, namespace, status }) => {
+const TaskRunLogs: React.FC<React.PropsWithChildren<Props>> = ({ taskRun, namespace, status }) => {
   const podName = taskRun?.status?.podName;
 
   if (!podName) {

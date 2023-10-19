@@ -9,10 +9,9 @@ import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { StatusIconWithText } from '../topology/StatusIcon';
 import { releasesTableColumnClasses } from './ReleasesListHeader';
 
-const ReleasesListRow: React.FC<RowFunctionArgs<ReleaseKind, { applicationName: string }>> = ({
-  obj,
-  customData: { applicationName },
-}) => {
+const ReleasesListRow: React.FC<
+  React.PropsWithChildren<RowFunctionArgs<ReleaseKind, { applicationName: string }>>
+> = ({ obj, customData: { applicationName } }) => {
   const { workspace } = useWorkspaceInfo();
   const status = useReleaseStatus(obj);
 

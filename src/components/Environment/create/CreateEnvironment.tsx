@@ -6,7 +6,7 @@ import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { createEnvironment, environmentFormSchema } from '../environment-utils';
 import CreateEnvironmentForm, { CreateEnvironmentFormValues } from './CreateEnvironmentForm';
 
-const CreateEnvironment: React.FC = () => {
+const CreateEnvironment: React.FC<React.PropsWithChildren<unknown>> = () => {
   const navigate = useNavigate();
   const track = useTrackEvent();
   const { namespace, workspace } = useWorkspaceInfo();
@@ -21,7 +21,7 @@ const CreateEnvironment: React.FC = () => {
   };
 
   const handleSubmit = React.useCallback(
-    (values: CreateEnvironmentFormValues, actions) => {
+    (values: CreateEnvironmentFormValues, actions: any) => {
       track(TrackEvents.ButtonClicked, { link_name: 'create-environment-submit', workspace });
       createEnvironment(values, namespace, true)
         .then(() => createEnvironment(values, namespace))

@@ -19,7 +19,9 @@ import { HttpError } from '../../utils/error/http-error';
 
 import './EmptyState.scss';
 
-export const NotFoundEmptyState: React.FC<{ className?: string }> = ({ className }) => {
+export const NotFoundEmptyState: React.FC<React.PropsWithChildren<{ className?: string }>> = ({
+  className,
+}) => {
   const navigate = useNavigate();
   return (
     <EmptyState className={css('app-empty-state', className)} variant={EmptyStateVariant.full}>
@@ -55,7 +57,7 @@ type ErrorEmptyStateProps = {
   children?: React.ReactNode;
 } & Omit<EmptyStateProps, 'children'>;
 
-const ErrorEmptyState: React.FC<ErrorEmptyStateProps> = ({
+const ErrorEmptyState: React.FC<React.PropsWithChildren<ErrorEmptyStateProps>> = ({
   title,
   body,
   httpError,

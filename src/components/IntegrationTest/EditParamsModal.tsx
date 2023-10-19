@@ -21,7 +21,10 @@ type EditParamsModalProps = ComponentProps & {
   intTest: IntegrationTestScenarioKind;
 };
 
-export const EditParamsModal: React.FC<EditParamsModalProps> = ({ intTest, onClose }) => {
+export const EditParamsModal: React.FC<React.PropsWithChildren<EditParamsModalProps>> = ({
+  intTest,
+  onClose,
+}) => {
   const [error, setError] = React.useState<string>();
 
   const getFormParamValues = (params: Param[]) => {

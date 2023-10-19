@@ -9,10 +9,9 @@ type PipelineRunNodeTooltipProps = {
   steps?: StepStatus[];
 };
 
-const Duration: React.FC<{ startTime?: string | number; endTime?: string | number }> = ({
-  startTime,
-  endTime,
-}) => {
+const Duration: React.FC<
+  React.PropsWithChildren<{ startTime?: string | number; endTime?: string | number }>
+> = ({ startTime, endTime }) => {
   const [updatedEndTime, setEndTime] = React.useState<string | number>();
   React.useEffect(() => {
     if (endTime == null) {
@@ -25,10 +24,9 @@ const Duration: React.FC<{ startTime?: string | number; endTime?: string | numbe
   return <>{startTime != null ? calculateDuration(startTime, endTime || updatedEndTime) : ''}</>;
 };
 
-const PipelineRunNodeTooltip: React.FunctionComponent<PipelineRunNodeTooltipProps> = ({
-  label,
-  steps,
-}) => (
+const PipelineRunNodeTooltip: React.FunctionComponent<
+  React.PropsWithChildren<PipelineRunNodeTooltipProps>
+> = ({ label, steps }) => (
   <div className="pipelinerun-node__tooltip--content" data-testid="pipeline-run-tip">
     <div className="pipelinerun-node__tooltip--title">{label}</div>
     {steps?.map((step) => (

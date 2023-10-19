@@ -23,7 +23,10 @@ type AuthTokenModalProps = ComponentProps & {
   uploadUrl: string;
 };
 
-export const AuthTokenModal: React.FC<AuthTokenModalProps> = ({ onClose, uploadUrl }) => {
+export const AuthTokenModal: React.FC<React.PropsWithChildren<AuthTokenModalProps>> = ({
+  onClose,
+  uploadUrl,
+}) => {
   const [error, setError] = React.useState<string>();
   const { uploadToken } = useSpiAPI();
 

@@ -9,7 +9,7 @@ import { KeyValueFieldProps } from '../field-types';
 import { getFieldId } from '../field-utils';
 import FieldHelperText from '../FieldHelperText';
 
-const KeyValueField: React.FC<KeyValueFieldProps> = ({
+const KeyValueField: React.FC<React.PropsWithChildren<KeyValueFieldProps>> = ({
   label,
   helpText,
   description,
@@ -25,7 +25,7 @@ const KeyValueField: React.FC<KeyValueFieldProps> = ({
   }, [entries]);
   const [keyValue, setKeyValue] = React.useState(keyValues);
   const onChangeKeyValuePair = React.useCallback(
-    ({ nameValuePairs: keyValuePairs }) => {
+    ({ nameValuePairs: keyValuePairs }: any) => {
       if (keyValuePairs) {
         const updatedNameValuePairs = compact(
           keyValuePairs.map(([key, value]) => (value.length ? { key, value } : null)),

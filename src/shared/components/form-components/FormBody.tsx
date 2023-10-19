@@ -9,14 +9,9 @@ type FormBodyProps = {
   disablePaneBody?: boolean;
 };
 
-const FormBody: React.FC<FormBodyProps & React.HTMLProps<HTMLDivElement>> = ({
-  children,
-  className,
-  style,
-  disablePaneBody = false,
-  flexLayout = false,
-  ...props
-}) => (
+const FormBody: React.FC<
+  React.PropsWithChildren<FormBodyProps & React.HTMLProps<HTMLDivElement>>
+> = ({ children, className, style, disablePaneBody = false, flexLayout = false, ...props }) => (
   <div
     {...props}
     className={classNames('pf-v5-c-form', { 'pane-body': !disablePaneBody }, className)}

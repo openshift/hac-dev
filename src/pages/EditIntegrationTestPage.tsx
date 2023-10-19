@@ -13,7 +13,7 @@ import { AccessReviewResources } from '../types';
 import { IntegrationTestScenarioKind } from '../types/coreBuildService';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
-const EditIntegrationTestPage: React.FunctionComponent = () => {
+const EditIntegrationTestPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
   const { name } = useParams();
 
   const { namespace } = useWorkspaceInfo();

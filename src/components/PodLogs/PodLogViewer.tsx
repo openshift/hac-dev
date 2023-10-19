@@ -24,7 +24,7 @@ type PodLogViewerProps = ComponentProps & {
   onDownloadAll?: () => Promise<Error>;
 };
 
-export const PodLogViewer: React.FC<PodLogViewerProps> = ({
+export const PodLogViewer: React.FC<React.PropsWithChildren<PodLogViewerProps>> = ({
   pod,
   downloadAllLabel,
   onDownloadAll,
@@ -42,7 +42,7 @@ export const PodLogViewer: React.FC<PodLogViewerProps> = ({
   const dataRef = React.useRef(null);
   dataRef.current = containers;
 
-  const handleComplete = React.useCallback((containerName) => {
+  const handleComplete = React.useCallback((containerName: any) => {
     const index = dataRef.current.findIndex(({ name }) => name === containerName);
     completedRef.current[index] = true;
     const newRenderTo = dataRef.current.findIndex((c, i) => completedRef.current[i] !== true);

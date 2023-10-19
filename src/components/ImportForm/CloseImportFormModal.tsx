@@ -12,7 +12,9 @@ import {
 } from '@patternfly/react-core';
 import { ComponentProps, createModalLauncher } from '../modal/createModalLauncher';
 
-export const CloseImportFormModal: React.FC<ComponentProps & {}> = ({ onClose }) => {
+export const CloseImportFormModal: React.FC<React.PropsWithChildren<ComponentProps & {}>> = ({
+  onClose,
+}) => {
   return (
     <Stack hasGutter>
       <StackItem>

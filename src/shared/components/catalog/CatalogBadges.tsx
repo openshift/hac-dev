@@ -7,7 +7,7 @@ type CatalogBadgesProps = {
   badges: CatalogItemBadge[];
 };
 
-const CatalogBadges: React.FC<CatalogBadgesProps> = ({ badges }) => (
+const CatalogBadges: React.FC<React.PropsWithChildren<CatalogBadgesProps>> = ({ badges }) => (
   <div className="catalog-badges" data-test="catalog-badges">
     {badges?.map((badge, index) => (
       <Label

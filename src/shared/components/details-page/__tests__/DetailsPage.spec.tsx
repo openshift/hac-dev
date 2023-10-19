@@ -115,7 +115,7 @@ describe('DetailsPage', () => {
           {
             key: 'disabled-section',
             label: 'Disabled Section',
-            component: componentMock,
+            component: componentMock as any,
             isDisabled: true,
             disabledTooltip: 'disabled link',
           },
@@ -147,7 +147,7 @@ describe('DetailsPage', () => {
           {
             key: 'disabled-section',
             label: 'Disabled Section',
-            component: componentMock,
+            component: componentMock as any,
             isDisabled: true,
             disabledTooltip: 'This link is disabled',
           },

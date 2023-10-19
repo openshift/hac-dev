@@ -25,11 +25,11 @@ export type TableProps<D = any, C = any> = Partial<ComponentProps<D>> & {
   customData?: C;
   Header: HeaderFunc;
   loadError?: string | Object;
-  Row?: React.FC<RowFunctionArgs<D, C>>;
+  Row?: React.FC<React.PropsWithChildren<RowFunctionArgs<D, C>>>;
   'aria-label': string;
   onSelect?: OnSelect;
-  NoDataEmptyMsg?: React.ComponentType<{}>;
-  EmptyMsg?: React.ComponentType<{}>;
+  NoDataEmptyMsg?: React.ComponentType<React.PropsWithChildren<{}>>;
+  EmptyMsg?: React.ComponentType<React.PropsWithChildren<{}>>;
   Toolbar?: React.ReactNode;
   loaded?: boolean;
   reduxID?: string;
@@ -47,7 +47,7 @@ export type TableProps<D = any, C = any> = Partial<ComponentProps<D>> & {
   onRowsRendered?: VirtualBodyProps<D>['onRowsRendered'];
 };
 
-const Table: React.FC<TableProps> = ({
+const Table: React.FC<React.PropsWithChildren<TableProps>> = ({
   data,
   unfilteredData,
   loaded,

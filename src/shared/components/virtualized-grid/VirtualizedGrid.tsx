@@ -41,7 +41,7 @@ type VirtualizedGridProps = {
   headerHeight?: number;
 };
 
-const VirtualizedGrid: React.FC<VirtualizedGridProps> = ({
+const VirtualizedGrid: React.FC<React.PropsWithChildren<VirtualizedGridProps>> = ({
   items,
   className,
   isItemsGrouped = false,
@@ -77,7 +77,7 @@ const VirtualizedGrid: React.FC<VirtualizedGridProps> = ({
             {({ registerChild, ...props }) => (
               <AutoSizer disableHeight>
                 {({ width }: Size) => (
-                  <div ref={registerChild}>
+                  <div ref={registerChild as any}>
                     {isItemsGrouped ? (
                       <GroupByFilterGrid {...props} width={width} items={items as GroupedItems}>
                         {(gridProps: GridChildrenProps) => {

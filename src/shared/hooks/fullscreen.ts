@@ -63,7 +63,7 @@ export const useFullscreen = <T extends HTMLElement>(): [
   fullscreenRef.current = isFullscreen;
   const elementRef = React.useRef<any>();
 
-  const listener = React.useCallback((event) => {
+  const listener = React.useCallback((event: any) => {
     setIsFullscreen(document[nativeAPI.fullscreenElement] === event.target);
   }, []);
 

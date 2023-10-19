@@ -10,7 +10,7 @@ import { FULL_APPLICATION_TITLE } from '../consts/labels';
 import { EnvironmentModel } from '../models';
 import { AccessReviewResources } from '../types';
 
-const EnvironmentsListPage: React.FC = () => {
+const EnvironmentsListPage: React.FC<React.PropsWithChildren<unknown>> = () => {
   const accessReviewResources: AccessReviewResources = [{ model: EnvironmentModel, verb: 'list' }];
 
   return (

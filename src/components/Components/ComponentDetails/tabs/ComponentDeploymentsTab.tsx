@@ -7,7 +7,9 @@ type ComponentDeploymentsTabProps = {
   component: ComponentKind;
 };
 
-export const ComponentDeploymentsTab: React.FC<ComponentDeploymentsTabProps> = ({ component }) => (
+export const ComponentDeploymentsTab: React.FC<
+  React.PropsWithChildren<ComponentDeploymentsTabProps>
+> = ({ component }) => (
   <div>
     <DetailsSection
       title="Deployments"

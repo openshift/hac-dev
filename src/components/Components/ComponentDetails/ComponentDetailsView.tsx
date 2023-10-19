@@ -35,7 +35,7 @@ type ComponentDetailsViewProps = {
 
 export const COMPONENTS_GS_LOCAL_STORAGE_KEY = 'components-getting-started-modal';
 
-const ComponentDetailsView: React.FC<ComponentDetailsViewProps> = ({
+const ComponentDetailsView: React.FC<React.PropsWithChildren<ComponentDetailsViewProps>> = ({
   componentName,
   applicationName,
 }) => {

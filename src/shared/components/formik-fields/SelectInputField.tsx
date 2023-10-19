@@ -8,7 +8,7 @@ import { SelectInputFieldProps, SelectInputOption } from './field-types';
 import { getFieldId } from './field-utils';
 import FieldHelperText from './FieldHelperText';
 
-const SelectInputField: React.FC<SelectInputFieldProps> = ({
+const SelectInputField: React.FC<React.PropsWithChildren<SelectInputFieldProps>> = ({
   name,
   label,
   options,

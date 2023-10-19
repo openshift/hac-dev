@@ -20,7 +20,10 @@ type CommitWorkflowNodeProps = {
   element: Node<NodeModel, CommitWorkflowNodeModelData>;
 } & WithSelectionProps;
 
-const CommitWorkflowNode: React.FC<CommitWorkflowNodeProps> = ({ element, ...rest }) => {
+const CommitWorkflowNode: React.FC<React.PropsWithChildren<CommitWorkflowNodeProps>> = ({
+  element,
+  ...rest
+}) => {
   const { workflowType, status } = element.getData();
 
   return (

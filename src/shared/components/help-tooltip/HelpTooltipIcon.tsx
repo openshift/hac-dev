@@ -6,7 +6,7 @@ type HelpTooltipProps = {
   content: React.ReactNode;
 };
 
-const HelpTooltipIcon: React.FC<HelpTooltipProps> = ({ content }) => (
+const HelpTooltipIcon: React.FC<React.PropsWithChildren<HelpTooltipProps>> = ({ content }) => (
   <Tooltip content={content}>
     <OutlinedQuestionCircleIcon />
   </Tooltip>

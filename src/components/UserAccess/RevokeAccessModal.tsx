@@ -23,12 +23,17 @@ type Props = RawComponentProps & {
   username: string;
 };
 
-export const RevokeAccessModal: React.FC<Props> = ({ sbr, username, onClose, modalProps }) => {
+export const RevokeAccessModal: React.FC<React.PropsWithChildren<Props>> = ({
+  sbr,
+  username,
+  onClose,
+  modalProps,
+}) => {
   const { updateWorkspace } = React.useContext(WorkspaceContext);
   const [error, setError] = React.useState<string>();
   const [submitting, setSubmitting] = React.useState(false);
   const handleSubmit = React.useCallback(
-    async (e) => {
+    async (e: any) => {
       e.preventDefault();
       setSubmitting(false);
       setError(null);

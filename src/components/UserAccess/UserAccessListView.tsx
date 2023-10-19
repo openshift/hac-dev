@@ -29,9 +29,11 @@ import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import { SBRListHeader } from './SBRListHeader';
 import { SBRListRow } from './SBRListRow';
 
-const UserAccessEmptyState: React.FC<{
-  canCreateSBR: boolean;
-}> = ({ canCreateSBR }) => {
+const UserAccessEmptyState: React.FC<
+  React.PropsWithChildren<{
+    canCreateSBR: boolean;
+  }>
+> = ({ canCreateSBR }) => {
   const { workspace } = useWorkspaceInfo();
 
   return (
@@ -63,7 +65,7 @@ const UserAccessEmptyState: React.FC<{
   );
 };
 
-export const UserAccessListView: React.FC = () => {
+export const UserAccessListView: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { workspace, workspaceResource } = React.useContext(WorkspaceContext);
   const [canCreateSBR] = useAccessReviewForModel(SpaceBindingRequestModel, 'create');
   const [usernameFilter, setUsernameFilter, clearFilters] = useSearchParam('name', '');

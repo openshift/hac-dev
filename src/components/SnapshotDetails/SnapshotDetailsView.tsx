@@ -25,7 +25,7 @@ type SnapshotDetailsViewProps = {
   snapshotName: string;
 };
 
-const SnapshotDetailsView: React.FC<SnapshotDetailsViewProps> = ({
+const SnapshotDetailsView: React.FC<React.PropsWithChildren<SnapshotDetailsViewProps>> = ({
   snapshotName,
   applicationName,
 }) => {

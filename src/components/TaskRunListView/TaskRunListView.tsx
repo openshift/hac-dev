@@ -19,7 +19,7 @@ import TaskRunListRow from './TaskRunListRow';
 
 type Props = { taskRuns: TaskRunKind[]; loaded: boolean };
 
-const TaskRunListView: React.FC<Props> = ({ taskRuns, loaded }) => {
+const TaskRunListView: React.FC<React.PropsWithChildren<Props>> = ({ taskRuns, loaded }) => {
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
 
   const sortedTaskRuns = React.useMemo(

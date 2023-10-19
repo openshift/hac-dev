@@ -9,7 +9,7 @@ import { CatalogQueryParams, CatalogService } from './utils/types';
 
 type CatalogPageProps = RoutesProps;
 
-const CatalogPage: React.FC<CatalogPageProps> = () => {
+const CatalogPage: React.FC<React.PropsWithChildren<CatalogPageProps>> = () => {
   const { t } = useTranslation();
   const queryParams = useQueryParams();
   const catalogType = queryParams.get(CatalogQueryParams.TYPE);

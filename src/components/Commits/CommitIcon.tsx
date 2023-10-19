@@ -4,7 +4,9 @@ import codePullRequestImg from '../../imgs/code-pull-request.svg';
 
 import './CommitIcon.scss';
 
-export const CommitIcon: React.FC<{ isPR: boolean; className?: string }> = ({ isPR, className }) =>
+export const CommitIcon: React.FC<
+  React.PropsWithChildren<{ isPR: boolean; className?: string }>
+> = ({ isPR, className }) =>
   isPR ? (
     <img className={`commit-icon ${className}`} src={codePullRequestImg} alt="Pull request icon" />
   ) : (

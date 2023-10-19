@@ -20,7 +20,7 @@ type ComponentFormProps = {
   editMode?: boolean;
 };
 
-export const ComponentForm: React.FC<ComponentFormProps> = ({
+export const ComponentForm: React.FC<React.PropsWithChildren<ComponentFormProps>> = ({
   detectedComponent,
   detectedComponentIndex,
   editMode = false,

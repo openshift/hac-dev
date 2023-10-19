@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik';
 import { InputField } from '../../../shared';
 import { ImportFormValues } from '../utils/types';
 
-const ApplicationSection: React.FunctionComponent = () => {
+const ApplicationSection: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
   const {
     values: { inAppContext },
   } = useFormikContext<ImportFormValues>();

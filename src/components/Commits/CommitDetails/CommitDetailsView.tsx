@@ -25,7 +25,10 @@ type CommitDetailsViewProps = {
 
 export const COMMITS_GS_LOCAL_STORAGE_KEY = 'commits-getting-started-modal';
 
-const CommitDetailsView: React.FC<CommitDetailsViewProps> = ({ commitName, applicationName }) => {
+const CommitDetailsView: React.FC<React.PropsWithChildren<CommitDetailsViewProps>> = ({
+  commitName,
+  applicationName,
+}) => {
   const { namespace, workspace } = useWorkspaceInfo();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
 

@@ -6,10 +6,9 @@ import KeyValueFileInputField from '../KeyValueFileInputField';
 configure({ testIdAttribute: 'data-test' });
 
 const onSubmit = jest.fn();
-const TestKeyValueInputField: React.FC<FormikConfig<any> & { disableRemoveAction?: boolean }> = ({
-  initialValues,
-  disableRemoveAction,
-}) => (
+const TestKeyValueInputField: React.FC<
+  React.PropsWithChildren<FormikConfig<any> & { disableRemoveAction?: boolean }>
+> = ({ initialValues, disableRemoveAction }) => (
   <Formik
     onSubmit={onSubmit}
     initialValues={initialValues}

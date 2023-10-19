@@ -6,7 +6,9 @@ import { sbrTableColumnClasses } from './SBRListHeader';
 import { SBRStatusLabel } from './SBRStatusLabel';
 import { useSBRActions } from './user-access-actions';
 
-export const SBRListRow: React.FC<RowFunctionArgs<WorkspaceBinding>> = ({ obj }) => {
+export const SBRListRow: React.FC<React.PropsWithChildren<RowFunctionArgs<WorkspaceBinding>>> = ({
+  obj,
+}) => {
   const actions = useSBRActions(obj);
 
   return (

@@ -3,7 +3,7 @@ import { Alert, AlertActionCloseButton } from '@patternfly/react-core';
 
 const ENV_ALERT_KEY = 'env-list-instruction';
 
-const EnvironmentsInfoAlert: React.FC = () => {
+const EnvironmentsInfoAlert: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [showAlertInfo, setShowAlertInfo] = React.useState<boolean>(
     window.localStorage.getItem(ENV_ALERT_KEY) !== 'false',
   );

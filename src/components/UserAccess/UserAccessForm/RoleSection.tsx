@@ -14,7 +14,7 @@ const dropdownItems = [
   { key: 'admin', value: 'admin' },
 ];
 
-export const RoleSection: React.FC = () => {
+export const RoleSection: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [{ value: role }] = useField<WorkspaceRole>('role');
 
   return (

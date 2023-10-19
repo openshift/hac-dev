@@ -39,7 +39,7 @@ const deploymentStrategyItems = Object.entries(EnvironmentDeploymentStrategy).ma
   value: key,
 }));
 
-const CreateEnvironmentForm: React.FC<CreateEnvironmentFormProps> = ({
+const CreateEnvironmentForm: React.FC<React.PropsWithChildren<CreateEnvironmentFormProps>> = ({
   dirty,
   errors,
   status,

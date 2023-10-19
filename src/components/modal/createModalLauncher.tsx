@@ -19,7 +19,7 @@ export type ModalLauncher<Result = {}> = (onClose: OnModalClose<Result>) => Reac
 
 export const createRawModalLauncher =
   <D extends unknown, P extends ComponentProps<D>>(
-    Component: React.ComponentType<P & { modalProps?: ModalProps }>,
+    Component: React.ComponentType<React.PropsWithChildren<P & { modalProps?: ModalProps }>>,
     modalProps: ModalComponentProps,
   ) =>
   (componentProps?: P): ModalLauncher<D> =>
@@ -46,7 +46,7 @@ export const createRawModalLauncher =
   };
 
 export const createModalLauncher = <D extends unknown, P extends ComponentProps<D>>(
-  Component: React.ComponentType<P>,
+  Component: React.ComponentType<React.PropsWithChildren<P>>,
   inModalProps: ModalComponentProps,
 ) =>
   createRawModalLauncher(

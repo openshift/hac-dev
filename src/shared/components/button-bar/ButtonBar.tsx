@@ -29,7 +29,7 @@ type ButtonBarProps = {
   inProgress?: boolean;
 };
 
-const ButtonBar: React.FC<ButtonBarProps> = ({
+const ButtonBar: React.FC<React.PropsWithChildren<ButtonBarProps>> = ({
   children,
   className,
   errorMessage,

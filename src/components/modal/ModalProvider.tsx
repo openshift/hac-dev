@@ -12,7 +12,9 @@ type ModalProviderProps = {
 
 export const useModalLauncher = () => React.useContext<ModalContextType>(ModalContext);
 
-export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
+export const ModalProvider: React.FC<React.PropsWithChildren<ModalProviderProps>> = ({
+  children,
+}) => {
   const [modal, setModal] = React.useState<React.ReactElement>();
 
   const showModal = React.useCallback(

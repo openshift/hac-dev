@@ -7,7 +7,7 @@ import { ApplicationModel, ComponentModel } from '../models';
 import { getQueryArgument } from '../shared/utils';
 import { AccessReviewResources } from '../types';
 
-const ImportPage: React.FunctionComponent = () => {
+const ImportPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
   useQuickstartCloseOnUnmount();
 
   const applicationName = getQueryArgument('application');

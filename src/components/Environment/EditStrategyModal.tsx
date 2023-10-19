@@ -30,7 +30,10 @@ type DeleteResourceModalProps = ComponentProps & {
   obj: EnvironmentKind;
 };
 
-export const EditStrategyModal: React.FC<DeleteResourceModalProps> = ({ obj, onClose }) => {
+export const EditStrategyModal: React.FC<React.PropsWithChildren<DeleteResourceModalProps>> = ({
+  obj,
+  onClose,
+}) => {
   const [error, setError] = React.useState<string>();
   const initialStrategy = dropdownItems.find((i) => i.key === obj.spec.deploymentStrategy).value;
 

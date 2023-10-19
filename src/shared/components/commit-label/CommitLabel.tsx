@@ -22,7 +22,11 @@ type CommitLabelProps = {
   sha: string;
   shaURL: string;
 };
-const CommitLabel: React.FC<CommitLabelProps> = ({ gitProvider, sha, shaURL }) => {
+const CommitLabel: React.FC<React.PropsWithChildren<CommitLabelProps>> = ({
+  gitProvider,
+  sha,
+  shaURL,
+}) => {
   const commitShortName = getCommitShortName(sha);
   const label = (
     <Label

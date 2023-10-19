@@ -30,7 +30,10 @@ interface CommitsListViewProps {
   componentName?: string;
 }
 
-const CommitsListView: React.FC<CommitsListViewProps> = ({ applicationName, componentName }) => {
+const CommitsListView: React.FC<React.PropsWithChildren<CommitsListViewProps>> = ({
+  applicationName,
+  componentName,
+}) => {
   const { namespace } = useWorkspaceInfo();
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [statusFilterExpanded, setStatusFilterExpanded] = React.useState<boolean>(false);

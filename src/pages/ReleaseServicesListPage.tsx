@@ -4,7 +4,7 @@ import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageLayout from '../components/PageLayout/PageLayout';
 import { ReleaseService } from '../components/ReleaseService/ReleaseService';
 
-const ReleaseListPage: React.FC = () => {
+const ReleaseListPage: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <NamespacedPage>
       <PageLayout title="Release services">

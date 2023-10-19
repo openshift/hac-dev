@@ -5,7 +5,7 @@ type ReleasesProps = {
   applicationName: string;
 };
 
-const ReleasesTab: React.FC<ReleasesProps> = ({ applicationName }) => (
+const ReleasesTab: React.FC<React.PropsWithChildren<ReleasesProps>> = ({ applicationName }) => (
   <ReleasesListView applicationName={applicationName} />
 );
 

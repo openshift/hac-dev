@@ -12,7 +12,9 @@ import {
 import PageLayout from '../PageLayout/PageLayout';
 import { ErrorBoundaryFallbackProps } from './ErrorBoundary';
 
-export const ErrorBoundaryFallback: React.FC<ErrorBoundaryFallbackProps> = (props) => {
+export const ErrorBoundaryFallback: React.FC<
+  React.PropsWithChildren<ErrorBoundaryFallbackProps>
+> = (props) => {
   return (
     <PageSection variant={PageSectionVariants.light}>
       <PageLayout title="Oh no! Something went wrong.">

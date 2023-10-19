@@ -5,7 +5,9 @@ import { DropdownField } from '../../../shared';
 
 type EnvironmentDropdownTypes = Omit<React.ComponentProps<typeof DropdownField>, 'items' | 'label'>;
 
-export const EnvironmentDropdown: React.FC<EnvironmentDropdownTypes> = (props) => {
+export const EnvironmentDropdown: React.FC<React.PropsWithChildren<EnvironmentDropdownTypes>> = (
+  props,
+) => {
   const [environments, loaded] = useEnvironments();
   const [, , { setValue }] = useField<string>(props.name);
 

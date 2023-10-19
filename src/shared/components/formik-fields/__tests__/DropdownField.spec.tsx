@@ -8,7 +8,10 @@ import '@testing-library/jest-dom';
 type FormData = {
   dropdownValue: string;
 };
-const Wrapper: React.FC<FormikConfig<FormData>> = ({ children, ...formikConfig }) => (
+const Wrapper: React.FC<React.PropsWithChildren<FormikConfig<FormData>>> = ({
+  children,
+  ...formikConfig
+}) => (
   <Formik {...formikConfig}>
     {(formikProps) => (
       <form onSubmit={formikProps.handleSubmit}>

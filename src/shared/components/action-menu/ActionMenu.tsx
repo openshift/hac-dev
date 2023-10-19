@@ -20,7 +20,7 @@ type MenuRendererProps = {
   toggleRef: React.RefObject<HTMLButtonElement>;
 } & React.ComponentProps<typeof ActionMenuContent>;
 
-const MenuRenderer: React.FC<MenuRendererProps> = ({
+const MenuRenderer: React.FC<React.PropsWithChildren<MenuRendererProps>> = ({
   isOpen,
   containerRef,
   menuRef,
@@ -48,7 +48,7 @@ const MenuRenderer: React.FC<MenuRendererProps> = ({
   );
 };
 
-const ActionMenu: React.FC<ActionMenuProps> = ({
+const ActionMenu: React.FC<React.PropsWithChildren<ActionMenuProps>> = ({
   variant = ActionMenuVariant.KEBAB,
   label,
   isDisabled,

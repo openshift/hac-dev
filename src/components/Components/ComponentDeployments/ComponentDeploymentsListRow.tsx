@@ -20,17 +20,19 @@ type ScanResultsColumnProps = {
   pipelineRunName: string;
 };
 
-const ScanResultsColumn: React.FC<ScanResultsColumnProps> = ({ namespace, pipelineRunName }) => {
+const ScanResultsColumn: React.FC<React.PropsWithChildren<ScanResultsColumnProps>> = ({
+  namespace,
+  pipelineRunName,
+}) => {
   const [taskRuns, taskRunsLoaded] = useTaskRuns(namespace, pipelineRunName);
   const [scanResults] = taskRunsLoaded ? getScanResults(taskRuns) : [undefined];
 
   return <ScanStatus scanResults={scanResults} />;
 };
 
-const ComponentDeploymentsListRow: React.FC<RowFunctionArgs<EnvironmentKind>> = ({
-  obj: environment,
-  customData,
-}) => {
+const ComponentDeploymentsListRow: React.FC<
+  React.PropsWithChildren<RowFunctionArgs<EnvironmentKind>>
+> = ({ obj: environment, customData }) => {
   const { workspace, namespace } = useWorkspaceInfo();
   const { component, snapshotEBs, commit, pipelineRunName, routes } = customData;
   const application = component.spec.application;

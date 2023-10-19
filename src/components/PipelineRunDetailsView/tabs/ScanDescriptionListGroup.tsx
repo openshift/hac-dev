@@ -23,7 +23,7 @@ type Props = {
   popoverAppendTo?: boolean;
 };
 
-const ScanDescriptionListGroup: React.FC<Props> = ({
+const ScanDescriptionListGroup: React.FC<React.PropsWithChildren<Props>> = ({
   taskRuns,
   hideIfNotFound,
   showLogsLink,

@@ -21,7 +21,7 @@ import './IntegrationTestSection.scss';
 
 type Props = { isInPage?: boolean; edit?: boolean };
 
-const IntegrationTestSection: React.FC<Props> = ({ isInPage, edit }) => {
+const IntegrationTestSection: React.FC<React.PropsWithChildren<Props>> = ({ isInPage, edit }) => {
   const [, { value: source }] = useField<string>({
     name: 'integrationTest.url',
     type: 'input',

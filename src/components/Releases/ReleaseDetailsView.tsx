@@ -15,7 +15,7 @@ type ReleaseDetailsViewProps = {
   releaseName: string;
 };
 
-const ReleaseDetailsView: React.FC<ReleaseDetailsViewProps> = ({
+const ReleaseDetailsView: React.FC<React.PropsWithChildren<ReleaseDetailsViewProps>> = ({
   applicationName,
   releaseName,
 }) => {

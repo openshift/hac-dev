@@ -3,7 +3,7 @@ import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { setActiveWorkspaceLocalStorage as setActiveWorkspace } from '@openshift/dynamic-plugin-sdk-utils';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
-const WorkspacedPage: React.FunctionComponent = () => {
+const WorkspacedPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
   const { pathname } = useLocation();
   const name = useParams()?.workspaceName;
   const mainPath = pathname.split('/').pop();

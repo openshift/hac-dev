@@ -25,7 +25,7 @@ export enum AccessHelpText {
 
 type SourceSectionProps = {};
 
-const SourceSection: React.FC<SourceSectionProps> = () => {
+const SourceSection: React.FC<React.PropsWithChildren<SourceSectionProps>> = () => {
   const enablePrivateAuth = useEnablePrivateAuthFlowFlag();
   const [, { value: source }] = useField<string>({
     name: 'source.git.url',

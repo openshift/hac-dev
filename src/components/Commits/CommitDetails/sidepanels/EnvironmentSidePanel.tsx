@@ -29,7 +29,7 @@ export interface EnvironmentSidePanelBodyProps {
   workflowNode: GraphElement<ElementModel, CommitWorkflowNodeModelData>;
 }
 
-const EnvironmentSidePanel: React.FC<EnvironmentSidePanelBodyProps> = ({
+const EnvironmentSidePanel: React.FC<React.PropsWithChildren<EnvironmentSidePanelBodyProps>> = ({
   workflowNode,
   onClose,
 }) => {

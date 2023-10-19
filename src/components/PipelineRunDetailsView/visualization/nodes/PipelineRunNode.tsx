@@ -22,7 +22,10 @@ type PipelineRunNodeProps = {
 } & WithContextMenuProps &
   WithSelectionProps;
 
-const PipelineRunNode: React.FunctionComponent<PipelineRunNodeProps> = ({ element, ...rest }) => {
+const PipelineRunNode: React.FunctionComponent<React.PropsWithChildren<PipelineRunNodeProps>> = ({
+  element,
+  ...rest
+}) => {
   const data = element.getData();
   const status = runStatusToRunStatus(data.status);
   const badgeCount = getTaskBadgeCount(data);

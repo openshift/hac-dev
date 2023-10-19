@@ -10,7 +10,7 @@ import { EnvironmentFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
 import FieldHelperText from './FieldHelperText';
 
-const EnvironmentField: React.FC<EnvironmentFieldProps> = ({
+const EnvironmentField: React.FC<React.PropsWithChildren<EnvironmentFieldProps>> = ({
   label,
   helpText,
   description,
@@ -26,7 +26,7 @@ const EnvironmentField: React.FC<EnvironmentFieldProps> = ({
   }, [envs]);
   const [nameValue, setNameValue] = React.useState(environmentVariables);
   const handleNameValuePairs = React.useCallback(
-    ({ nameValuePairs }) => {
+    ({ nameValuePairs }: any) => {
       const updatedNameValuePairs = compact(
         nameValuePairs.map(([name, value]) => {
           if (isObject(value)) {

@@ -9,7 +9,7 @@ import { Action } from './types';
 
 export type ActionMenuItemProps = {
   action: Action;
-  component?: React.ComponentType<MenuItemProps | DropdownItemProps>;
+  component?: React.ComponentType<React.PropsWithChildren<MenuItemProps | DropdownItemProps>>;
   autoFocus?: boolean;
   onClick?: () => void;
   onEscape?: () => void;
@@ -24,21 +24,16 @@ export const KEY_CODES = {
   SPACE: 32,
 };
 
-const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
-  action,
-  onClick,
-  onEscape,
-  autoFocus,
-  isAllowed,
-  component,
-}) => {
+const ActionItem: React.FC<
+  React.PropsWithChildren<ActionMenuItemProps & { isAllowed: boolean }>
+> = ({ action, onClick, onEscape, autoFocus, isAllowed, component }) => {
   const { label, icon, disabled, cta } = action;
   const { href, external } = cta as { href: string; external?: boolean };
   const isDisabled = !isAllowed || disabled;
   const navigate = useNavigate();
 
   const handleClick = React.useCallback(
-    (event) => {
+    (event: any) => {
       event.preventDefault();
       if (isFunction(cta)) {
         cta();
@@ -98,7 +93,7 @@ const ActionItem: React.FC<ActionMenuItemProps & { isAllowed: boolean }> = ({
   );
 };
 
-const ActionMenuItem: React.FC<ActionMenuItemProps> = (props) => {
+const ActionMenuItem: React.FC<React.PropsWithChildren<ActionMenuItemProps>> = (props) => {
   const { action } = props;
   const item = <ActionItem {...props} isAllowed />;
 

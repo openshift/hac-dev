@@ -8,7 +8,7 @@ import { SpaceBindingRequestModel } from '../models';
 import { AccessReviewResources } from '../types';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
-const GrantAccessPage: React.FC = () => {
+const GrantAccessPage: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { workspace } = useWorkspaceInfo();
   const accessReviewResources: AccessReviewResources = [
     { model: SpaceBindingRequestModel, verb: 'create' },

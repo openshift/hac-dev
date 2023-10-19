@@ -35,7 +35,7 @@ type PipelineRunsListViewProps = {
   customFilter?: (plr: PipelineRunKind) => boolean;
 };
 
-const PipelineRunsListView: React.FC<PipelineRunsListViewProps> = ({
+const PipelineRunsListView: React.FC<React.PropsWithChildren<PipelineRunsListViewProps>> = ({
   applicationName,
   componentName,
   customFilter,

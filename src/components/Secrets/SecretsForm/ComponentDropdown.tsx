@@ -7,7 +7,9 @@ import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 
 type ComponentDropdownProps = Omit<React.ComponentProps<typeof DropdownField>, 'items' | 'label'>;
 
-export const ComponentDropdown: React.FC<ComponentDropdownProps> = (props) => {
+export const ComponentDropdown: React.FC<React.PropsWithChildren<ComponentDropdownProps>> = (
+  props,
+) => {
   const { namespace } = useWorkspaceInfo();
   const [{ value: application }] = useField<string>('targets.application');
   const [, , { setValue, setTouched }] = useField<string>(props.name);

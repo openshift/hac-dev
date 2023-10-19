@@ -43,7 +43,9 @@ export const getSortColumnFuntion = (key: string, activeSortDirection: string) =
   }
 };
 
-export const EnterpriseContractTable: React.FC<EnterpriseContractTableProps> = ({ ecResult }) => {
+export const EnterpriseContractTable: React.FC<
+  React.PropsWithChildren<EnterpriseContractTableProps>
+> = ({ ecResult }) => {
   const [activeSortIndex, setActiveSortIndex] = React.useState<number | null>(2);
   const [activeSortDirection, setActiveSortDirection] = React.useState<'asc' | 'desc' | null>(
     'asc',

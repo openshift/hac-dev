@@ -9,7 +9,7 @@ import { FormFooterProps } from './form-component-types';
 
 import './FormFooter.scss';
 
-const FormFooter: React.FC<FormFooterProps> = ({
+const FormFooter: React.FC<React.PropsWithChildren<FormFooterProps>> = ({
   handleSubmit,
   handleReset,
   handleCancel,

@@ -9,7 +9,7 @@ import ReleaseStrategyListView from './ReleaseStrategy/ReleaseStrategyListView';
 
 const RELEASE_SERVICE_TAB_KEY = 'release-service-tab-key';
 
-export const ReleaseService: React.FC = () => {
+export const ReleaseService: React.FC<React.PropsWithChildren<unknown>> = () => {
   const params = useParams();
   const { workspace } = useWorkspaceInfo();
   const { releaseTab: activeTab } = params;

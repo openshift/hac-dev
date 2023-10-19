@@ -19,7 +19,9 @@ type EnterpriseContractRowType = {
   rowIndex: number;
 };
 
-export const EnterpriseContractRow: React.FC<EnterpriseContractRowType> = ({ data, rowIndex }) => {
+export const EnterpriseContractRow: React.FC<
+  React.PropsWithChildren<EnterpriseContractRowType>
+> = ({ data, rowIndex }) => {
   const [rowExpanded, setRowExpanded] = React.useState<boolean>(false);
   const { workspace } = useWorkspaceInfo();
   const { appName } = useParams();

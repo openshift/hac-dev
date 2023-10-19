@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { configure, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 import { SPIAccessCheckAccessibilityStatus, ServiceProviderType } from '../../../../types';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { useAccessCheck, useAccessTokenBinding } from '../../utils/auth-utils';

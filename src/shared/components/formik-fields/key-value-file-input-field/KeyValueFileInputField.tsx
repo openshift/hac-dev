@@ -26,7 +26,9 @@ type KeyValueEntryFormProps = {
   onChange?: (value: string, keyIndex: string) => void;
 };
 
-const KeyValueFileInputField: React.FC<KeyValueEntryFormProps & FieldProps> = ({
+const KeyValueFileInputField: React.FC<
+  React.PropsWithChildren<KeyValueEntryFormProps & FieldProps>
+> = ({
   name,
   label = '',
   helpText = '',

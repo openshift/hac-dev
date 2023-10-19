@@ -7,7 +7,7 @@ import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import { IntegrationTestScenarioModel } from '../models';
 import { AccessReviewResources } from '../types';
 
-const IntegrationTestPage: React.FunctionComponent = () => {
+const IntegrationTestPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
   const { appName } = useParams();
 
   const accessReviewResources: AccessReviewResources = [

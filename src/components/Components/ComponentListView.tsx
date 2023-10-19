@@ -48,7 +48,9 @@ type ComponentListViewProps = {
   applicationName: string;
 };
 
-const ComponentListView: React.FC<ComponentListViewProps> = ({ applicationName }) => {
+const ComponentListView: React.FC<React.PropsWithChildren<ComponentListViewProps>> = ({
+  applicationName,
+}) => {
   const { namespace, workspace } = useWorkspaceInfo();
 
   const [nameFilter, setNameFilter] = useSearchParam('name', '');

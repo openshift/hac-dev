@@ -5,8 +5,8 @@ type IntegrationTestsTabProps = {
   applicationName: string;
 };
 
-const IntegrationTestsTab: React.FC<IntegrationTestsTabProps> = ({ applicationName }) => (
-  <IntegrationTestsListView applicationName={applicationName} />
-);
+const IntegrationTestsTab: React.FC<React.PropsWithChildren<IntegrationTestsTabProps>> = ({
+  applicationName,
+}) => <IntegrationTestsListView applicationName={applicationName} />;
 
 export default IntegrationTestsTab;

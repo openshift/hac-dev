@@ -94,7 +94,7 @@ type RenderExtensionProps = {
   docContext?: HTMLDocument;
 };
 
-const RenderExtension: React.FC<RenderExtensionProps> = ({
+const RenderExtension: React.FC<React.PropsWithChildren<RenderExtensionProps>> = ({
   renderExtension,
   selector,
   markup,
@@ -124,7 +124,7 @@ const RenderExtension: React.FC<RenderExtensionProps> = ({
   );
 };
 
-const IFrameMarkdownView: React.FC<InnerSyncMarkdownProps> = ({
+const IFrameMarkdownView: React.FC<React.PropsWithChildren<InnerSyncMarkdownProps>> = ({
   exactHeight,
   markup,
   isEmpty,
@@ -212,7 +212,7 @@ const IFrameMarkdownView: React.FC<InnerSyncMarkdownProps> = ({
   );
 };
 
-const InlineMarkdownView: React.FC<InnerSyncMarkdownProps> = ({
+const InlineMarkdownView: React.FC<React.PropsWithChildren<InnerSyncMarkdownProps>> = ({
   markup,
   isEmpty,
   renderExtension,
@@ -226,7 +226,7 @@ const InlineMarkdownView: React.FC<InnerSyncMarkdownProps> = ({
   );
 };
 
-export const SyncMarkdownView: React.FC<SyncMarkdownProps> = ({
+export const SyncMarkdownView: React.FC<React.PropsWithChildren<SyncMarkdownProps>> = ({
   truncateContent,
   content,
   emptyMsg,

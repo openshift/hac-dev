@@ -14,7 +14,7 @@ type SnapshotPipelineRunTabProps = {
   namespace: string;
   customFilter?: (plr: PipelineRunKind) => boolean;
 };
-const SnapshotPipelineRunTab: React.FC<SnapshotPipelineRunTabProps> = ({
+const SnapshotPipelineRunTab: React.FC<React.PropsWithChildren<SnapshotPipelineRunTabProps>> = ({
   snapshotName,
   applicationName,
   namespace,

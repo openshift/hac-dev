@@ -25,7 +25,9 @@ type SampleSectionProp = {
   onSampleImport: (url: string, name: string) => void;
 };
 
-const SampleSection: React.FunctionComponent<SampleSectionProp> = ({ onSampleImport }) => {
+const SampleSection: React.FunctionComponent<React.PropsWithChildren<SampleSectionProp>> = ({
+  onSampleImport,
+}) => {
   const [filter, setFilter] = React.useState('');
   const [samples, loaded, loadError] = useDevfileSamples();
 

@@ -57,7 +57,7 @@ const testHeader = () => {
   ];
 };
 
-const TestRow: React.FC<RowFunctionArgs> = ({ obj }) => {
+const TestRow: React.FC<React.PropsWithChildren<RowFunctionArgs>> = ({ obj }) => {
   return (
     <>
       <TableData>{obj.name}</TableData>

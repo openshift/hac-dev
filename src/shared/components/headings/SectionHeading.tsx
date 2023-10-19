@@ -11,7 +11,7 @@ export type SectionHeadingProps = {
   id?: string;
 };
 
-const SectionHeading: React.SFC<SectionHeadingProps> = ({
+const SectionHeading: React.FC<React.PropsWithChildren<SectionHeadingProps>> = ({
   text,
   children,
   style,

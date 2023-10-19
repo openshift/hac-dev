@@ -16,7 +16,9 @@ type ComponentDetailsTabProps = {
   component: ComponentKind;
 };
 
-const ComponentDetailsTab: React.FC<ComponentDetailsTabProps> = ({ component }) => {
+const ComponentDetailsTab: React.FC<React.PropsWithChildren<ComponentDetailsTabProps>> = ({
+  component,
+}) => {
   const navigate = useNavigate();
   const { appName } = useParams();
   const { workspace } = useWorkspaceInfo();

@@ -27,7 +27,7 @@ import { useValidApplicationName } from '../utils/useValidApplicationName';
 import { containerImageRegex, gitUrlRegex } from '../utils/validation-utils';
 import ReviewComponentCard from './ReviewComponentCard';
 
-const ComponentLoadingState: React.FC = () => {
+const ComponentLoadingState: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Backdrop>
       <Bullseye>
@@ -46,7 +46,7 @@ const ComponentLoadingState: React.FC = () => {
   );
 };
 
-const ReviewSection: React.FunctionComponent = () => {
+const ReviewSection: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
   const {
     values: {
       inAppContext,

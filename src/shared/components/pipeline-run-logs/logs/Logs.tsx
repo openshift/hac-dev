@@ -24,7 +24,7 @@ type LogsProps = {
   errorMessage?: string;
 };
 
-const Logs: React.FC<LogsProps> = ({
+const Logs: React.FC<React.PropsWithChildren<LogsProps>> = ({
   resource,
   resourceStatus,
   container,

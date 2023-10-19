@@ -13,7 +13,11 @@ type PodLogsButtonProps = {
   showDisabled?: boolean;
 };
 
-const PodLogsButton: React.FC<PodLogsButtonProps> = ({ component, podSelector, showDisabled }) => {
+const PodLogsButton: React.FC<React.PropsWithChildren<PodLogsButtonProps>> = ({
+  component,
+  podSelector,
+  showDisabled,
+}) => {
   const { namespace } = useWorkspaceInfo();
 
   const [obj, loaded, error] = useK8sWatchResource<PodKind[]>({

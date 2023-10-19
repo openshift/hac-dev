@@ -32,9 +32,9 @@ interface IntegrationTestOverviewTabProps {
   integrationTest: IntegrationTestScenarioKind;
 }
 
-const IntegrationTestOverviewTab: React.FC<IntegrationTestOverviewTabProps> = ({
-  integrationTest,
-}) => {
+const IntegrationTestOverviewTab: React.FC<
+  React.PropsWithChildren<IntegrationTestOverviewTabProps>
+> = ({ integrationTest }) => {
   const { workspace } = useWorkspaceInfo();
   const optionalReleaseLabel =
     integrationTest.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true';

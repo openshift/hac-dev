@@ -37,7 +37,7 @@ type BasicDropdownProps = {
   validated?: ValidatedOptions;
 };
 
-const BasicDropdown: React.FC<BasicDropdownProps> = ({
+const BasicDropdown: React.FC<React.PropsWithChildren<BasicDropdownProps>> = ({
   items,
   selected,
   recommended,

@@ -23,7 +23,9 @@ type AppWorkflowSectionProps = {
   applicationName: string;
 };
 
-const AppWorkflowSection: React.FC<AppWorkflowSectionProps> = ({ applicationName }) => {
+const AppWorkflowSection: React.FC<React.PropsWithChildren<AppWorkflowSectionProps>> = ({
+  applicationName,
+}) => {
   const [expanded, setExpanded] = useSearchParam('expanded', '');
 
   const [workflowModel, loaded, errors] = useAppWorkflowData(applicationName, expanded === 'true');

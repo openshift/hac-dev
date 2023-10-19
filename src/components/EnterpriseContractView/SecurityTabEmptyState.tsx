@@ -20,7 +20,9 @@ const EmptyStateImg = () => (
   <img className="app-empty-state__icon" src={securityShieldImg} alt="" />
 );
 
-const SecurityTabEmptyState: React.FC<Omit<EmptyStateProps, 'children'>> = ({ ...props }) => {
+const SecurityTabEmptyState: React.FC<
+  React.PropsWithChildren<Omit<EmptyStateProps, 'children'>>
+> = ({ ...props }) => {
   const navigate = useNavigate();
   const { appName, plrName, workspaceName } = useParams();
   return (

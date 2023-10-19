@@ -44,7 +44,7 @@ type ContextSwitcherProps = {
   footer?: React.ReactNode;
 };
 
-export const ContextSwitcher: React.FC<ContextSwitcherProps> = ({
+export const ContextSwitcher: React.FC<React.PropsWithChildren<ContextSwitcherProps>> = ({
   menuItems,
   selectedItem,
   onSelect,

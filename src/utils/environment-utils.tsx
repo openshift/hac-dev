@@ -157,9 +157,11 @@ export const getEnvironmentRunStatus = (
   snapshotEnvironmentBinding: SnapshotEnvironmentBinding,
 ): runStatus => healthStatusToRunStatus(getEnvironmentStatus(snapshotEnvironmentBinding));
 
-export const ApplicationEnvironmentStatus: React.FC<{
-  environment: EnvironmentKindWithHealthStatus;
-}> = ({ environment }) => {
+export const ApplicationEnvironmentStatus: React.FC<
+  React.PropsWithChildren<{
+    environment: EnvironmentKindWithHealthStatus;
+  }>
+> = ({ environment }) => {
   return (
     <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsMd' }}>
       <FlexItem>

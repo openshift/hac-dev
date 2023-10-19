@@ -17,7 +17,7 @@ type Props = {
   status: runStatus;
 };
 
-const TaskRunDetails: React.FC<Props> = ({ taskRun, status }) => (
+const TaskRunDetails: React.FC<React.PropsWithChildren<Props>> = ({ taskRun, status }) => (
   <>
     {status !== runStatus.Skipped ? (
       <>

@@ -6,9 +6,9 @@ import { ReleasePlanAdmissionKind } from '../../../types/release-plan-admission'
 import { useReleasePlanAdmissionActions } from './releaseplanadmission-actions';
 import { releasesPlanAdmissionTableColumnClasses } from './ReleasePlanAdmissionListHeader';
 
-const ReleasePlanAdmissionListRow: React.FC<RowFunctionArgs<ReleasePlanAdmissionKind>> = ({
-  obj,
-}) => {
+const ReleasePlanAdmissionListRow: React.FC<
+  React.PropsWithChildren<RowFunctionArgs<ReleasePlanAdmissionKind>>
+> = ({ obj }) => {
   const actions = useReleasePlanAdmissionActions(obj);
   return (
     <>

@@ -16,7 +16,10 @@ type CatalogDetailsModalProps = {
   onClose: () => void;
 };
 
-const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose }) => {
+const CatalogDetailsModal: React.FC<React.PropsWithChildren<CatalogDetailsModalProps>> = ({
+  item,
+  onClose,
+}) => {
   const { t } = useTranslation();
   const [to, label] = useCtaLink(item?.cta);
 

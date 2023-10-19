@@ -16,7 +16,9 @@ type ComponentBuildSettingsProps = {
   component: ComponentKind;
 };
 
-const ComponentBuildSettings: React.FC<ComponentBuildSettingsProps> = ({ component }) => {
+const ComponentBuildSettings: React.FC<React.PropsWithChildren<ComponentBuildSettingsProps>> = ({
+  component,
+}) => {
   const pacState = usePACState(component);
 
   return (

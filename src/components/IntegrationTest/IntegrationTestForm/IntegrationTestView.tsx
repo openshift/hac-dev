@@ -18,10 +18,9 @@ type IntegrationTestViewProps = {
   integrationTest?: IntegrationTestScenarioKind;
 };
 
-const IntegrationTestView: React.FunctionComponent<IntegrationTestViewProps> = ({
-  applicationName,
-  integrationTest,
-}) => {
+const IntegrationTestView: React.FunctionComponent<
+  React.PropsWithChildren<IntegrationTestViewProps>
+> = ({ applicationName, integrationTest }) => {
   const track = useTrackEvent();
   const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
