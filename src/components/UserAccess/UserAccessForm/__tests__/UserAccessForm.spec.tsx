@@ -5,10 +5,6 @@ import { FormikProps } from 'formik';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { UserAccessForm } from '../UserAccessForm';
 
-jest.mock('react-i18next', () => ({
-  useTranslation: jest.fn(() => ({ t: (x) => x })),
-}));
-
 jest.mock('../../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ workspace: 'test-ws' })),
 }));
@@ -35,6 +31,11 @@ describe('UserAccessForm', () => {
     const props = { values } as FormikProps<any>;
     formikRenderer(<UserAccessForm {...props} />, values);
     expect(screen.getByText('Grant access to workspace, test-ws')).toBeVisible();
+    expect(
+      screen.getByText(
+        'Invite users to collaborate with you by granting them access to your workspace.',
+      ),
+    ).toBeVisible();
     expect(screen.getByRole('button', { name: 'Grant access' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Grant access' })).toBeDisabled();
   });
@@ -44,7 +45,13 @@ describe('UserAccessForm', () => {
     const props = { values } as FormikProps<any>;
     formikRenderer(<UserAccessForm {...props} edit />, values);
     expect(screen.getByText('Edit access to workspace, test-ws')).toBeVisible();
+    expect(
+      screen.getByText(
+        'Change permissions for this user by adding a role or removing a current role.',
+      ),
+    ).toBeVisible();
     expect(screen.getByRole('button', { name: 'Save changes' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Save changes' })).toBeDisabled();
+    expect(screen.getByRole('searchbox')).toBeDisabled();
   });
 });

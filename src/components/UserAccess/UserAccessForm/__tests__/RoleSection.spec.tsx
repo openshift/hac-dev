@@ -19,12 +19,12 @@ describe('RoleSection', () => {
     fireEvent.click(screen.getByText('Select role'));
     expect(screen.getByText('contributor')).toBeVisible();
     expect(screen.getByText('maintainer')).toBeVisible();
-    expect(screen.getByText('owner')).toBeVisible();
+    expect(screen.getByText('admin')).toBeVisible();
     fireEvent.click(screen.getByText('maintainer'));
     expect(screen.getByText('Show list of permissions for the maintainer')).toBeVisible();
 
     fireEvent.click(screen.getByText('maintainer'));
-    fireEvent.click(screen.getByText('owner'));
-    expect(screen.getByText('Show list of permissions for the owner')).toBeVisible();
+    fireEvent.click(screen.getByText('admin'));
+    expect(screen.getByText('Show list of permissions for the admin')).toBeVisible();
   });
 });

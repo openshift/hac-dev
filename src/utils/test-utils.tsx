@@ -35,6 +35,7 @@ export const namespaceRenderer = (
           workspaceResource: undefined,
           workspaces: [],
           workspacesLoaded: false,
+          updateWorkspace: jest.fn(),
           ...contextValues,
         }}
       >

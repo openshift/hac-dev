@@ -1,5 +1,6 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render } from '@testing-library/react';
 import { SpaceBindingRequest } from '../../../types';
 import { SBRListRow } from '../SBRListRow';
@@ -7,6 +8,13 @@ import { SBRListRow } from '../SBRListRow';
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
 }));
+
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  useK8sWatchResource: jest.fn(() => [null, false]),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
+}));
+
+const watchMock = useK8sWatchResource as jest.Mock;
 
 const mockSBR: SpaceBindingRequest = {
   apiVersion: 'appstudio.redhat.com/v1alpha1',
@@ -30,9 +38,13 @@ const mockSBR: SpaceBindingRequest = {
 
 describe('SBRListRow', () => {
   it('should render correct user info', () => {
-    const wrapper = render(<SBRListRow obj={mockSBR} columns={[]} />, {
-      container: document.createElement('tr'),
-    });
+    watchMock.mockReturnValueOnce([mockSBR, true]);
+    const wrapper = render(
+      <SBRListRow obj={{ masterUserRecord: 'user', role: 'contributor' }} columns={[]} />,
+      {
+        container: document.createElement('tr'),
+      },
+    );
     const cells = wrapper.container.getElementsByTagName('td');
     wrapper.debug();
 

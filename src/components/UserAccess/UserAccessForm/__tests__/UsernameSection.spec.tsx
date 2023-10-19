@@ -71,4 +71,21 @@ describe('UsernameSection', () => {
     );
     expect(screen.getByText('user1')).toBeVisible();
   });
+
+  it('should not add username again if entry already exists', async () => {
+    validateMock.mockResolvedValue(true);
+    formikRenderer(<UsernameSection />, { usernames: [] });
+    await act(async () => {
+      fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'user1' } });
+    });
+    await waitFor(() =>
+      expect(screen.getByRole('list', { name: 'Chip group category' })).toBeVisible(),
+    );
+    expect(screen.getByText('user1')).toBeVisible();
+
+    await act(async () => {
+      fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'user1' } });
+    });
+    expect(screen.getAllByText('user1')).toHaveLength(1);
+  });
 });

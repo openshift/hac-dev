@@ -1,11 +1,22 @@
 import * as React from 'react';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Label, Tooltip } from '@patternfly/react-core';
-import { SpaceBindingRequest } from '../../types';
+import { SpaceBindingRequestGroupVersionKind } from '../../models';
+import { SpaceBindingRequest, WorkspaceBinding } from '../../types';
 
-export const SBRStatusLabel: React.FC<{ sbr: SpaceBindingRequest }> = ({ sbr }) => {
-  const status = sbr.status?.conditions?.[0];
+export const SBRStatusLabel: React.FC<{ sbr: WorkspaceBinding['bindingRequest'] }> = ({ sbr }) => {
+  const [binding, loaded] = useK8sWatchResource<SpaceBindingRequest>(
+    sbr
+      ? {
+          groupVersionKind: SpaceBindingRequestGroupVersionKind,
+          name: sbr.name,
+          namespace: sbr.namespace,
+        }
+      : null,
+  );
+  const status = binding?.status?.conditions?.[0];
 
-  if (!status) {
+  if (!loaded || !status) {
     return <>-</>;
   }
 

@@ -1,41 +1,40 @@
-import { SpaceBindingRequestModel } from '../../models';
 import { Action } from '../../shared/components/action-menu/types';
-import { SpaceBindingRequest } from '../../types';
-import { useAccessReviewForModel } from '../../utils/rbac';
+import { WorkspaceBinding } from '../../types';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { createRawModalLauncher } from '../modal/createModalLauncher';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { RevokeAccessModal } from './RevokeAccessModal';
 
-const revokeAccessModalLauncher = (sbr: SpaceBindingRequest) =>
+const revokeAccessModalLauncher = (username: string, sbr: WorkspaceBinding['bindingRequest']) =>
   createRawModalLauncher(RevokeAccessModal, {
     'data-testid': 'revoke-access-modal',
     title: 'Revoke access?',
     titleIconVariant: 'warning',
-  })({ sbr });
+  })({ username, sbr });
 
-export const useSBRActions = (sbr: SpaceBindingRequest): Action[] => {
+export const useSBRActions = (binding: WorkspaceBinding): Action[] => {
   const showModal = useModalLauncher();
-  const [canDeleteSBR] = useAccessReviewForModel(SpaceBindingRequestModel, 'delete');
-  const [canUpdateSBR] = useAccessReviewForModel(SpaceBindingRequestModel, 'update');
   const { workspace } = useWorkspaceInfo();
+  const canDeleteSBR = binding.availableActions?.includes('delete') && binding.bindingRequest;
+  const canUpdateSBR = binding.availableActions?.includes('update') && binding.bindingRequest;
 
   return [
     {
       label: 'Edit access',
-      id: `edit-access-${sbr.metadata.name}`,
+      id: `edit-access-${binding.masterUserRecord}`,
       disabled: !canUpdateSBR,
-      disabledTooltip: "You don't have permisison to edit access",
+      disabledTooltip: "You don't have permission to edit access",
       cta: {
-        href: `/application-pipeline/access/workspaces/${workspace}/edit/${sbr.metadata.name}`,
+        href: `/application-pipeline/access/workspaces/${workspace}/edit/${binding.masterUserRecord}`,
       },
     },
     {
-      cta: () => showModal(revokeAccessModalLauncher(sbr)),
-      id: `revoke-access-${sbr.metadata.name}`,
+      cta: () =>
+        showModal(revokeAccessModalLauncher(binding.masterUserRecord, binding.bindingRequest)),
+      id: `revoke-access-${binding.masterUserRecord}`,
       label: 'Revoke access',
       disabled: !canDeleteSBR,
-      disabledTooltip: "You don't have permisison to revoke access",
+      disabledTooltip: "You don't have permission to revoke access",
     },
   ];
 };

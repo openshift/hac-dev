@@ -17,15 +17,14 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
 import { useSearchParam } from '../../hooks/useSearchParam';
-import { useSpaceBindingRequests } from '../../hooks/useSpaceBindingRequests';
 import emptyStateImgUrl from '../../imgs/Integration-test.svg';
 import { SpaceBindingRequestModel } from '../../models';
 import { Table } from '../../shared';
 import AppEmptyState from '../../shared/components/empty-state/AppEmptyState';
 import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
-import { SpaceBindingRequest } from '../../types';
+import { WorkspaceBinding } from '../../types';
 import { useAccessReviewForModel } from '../../utils/rbac';
-import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
+import { useWorkspaceInfo, WorkspaceContext } from '../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import { SBRListHeader } from './SBRListHeader';
 import { SBRListRow } from './SBRListRow';
@@ -65,17 +64,19 @@ const UserAccessEmptyState: React.FC<{
 };
 
 export const UserAccessListView: React.FC = () => {
-  const { namespace, workspace } = useWorkspaceInfo();
-  const [sbrs, loaded] = useSpaceBindingRequests(namespace);
+  const { workspace, workspaceResource } = React.useContext(WorkspaceContext);
   const [canCreateSBR] = useAccessReviewForModel(SpaceBindingRequestModel, 'create');
   const [usernameFilter, setUsernameFilter, clearFilters] = useSearchParam('name', '');
 
   const filteredSBRs = React.useMemo(
-    () => sbrs.filter((sbr) => sbr.spec.masterUserRecord.includes(usernameFilter.toLowerCase())),
-    [sbrs, usernameFilter],
+    () =>
+      workspaceResource?.status?.bindings?.filter((binding) =>
+        binding.masterUserRecord.includes(usernameFilter.toLowerCase()),
+      ),
+    [usernameFilter, workspaceResource],
   );
 
-  if (!loaded) {
+  if (!workspaceResource) {
     return (
       <Bullseye>
         <Spinner />
@@ -83,7 +84,7 @@ export const UserAccessListView: React.FC = () => {
     );
   }
 
-  if (!sbrs.length) {
+  if (!workspaceResource.status?.bindings?.length) {
     return <UserAccessEmptyState canCreateSBR={canCreateSBR} />;
   }
 
@@ -142,8 +143,8 @@ export const UserAccessListView: React.FC = () => {
           Header={SBRListHeader}
           Row={SBRListRow}
           loaded
-          getRowProps={(obj: SpaceBindingRequest) => ({
-            id: obj.metadata.name,
+          getRowProps={(obj: WorkspaceBinding) => ({
+            id: obj.masterUserRecord,
           })}
         />
       ) : (

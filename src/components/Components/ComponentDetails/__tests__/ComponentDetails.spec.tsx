@@ -120,6 +120,7 @@ const ComponentDetailsViewWrapper = ({ children }) => (
       workspaceResource: undefined,
       workspacesLoaded: true,
       workspaces: [],
+      updateWorkspace: jest.fn(),
     }}
   >
     {children}

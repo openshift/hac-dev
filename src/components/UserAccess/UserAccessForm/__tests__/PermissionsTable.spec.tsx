@@ -29,7 +29,7 @@ describe('PermissionsTable', () => {
     expect(appRow.children[1]).toHaveTextContent('Update');
     cleanup();
 
-    render(<PermissionsTable role="owner" />);
+    render(<PermissionsTable role="admin" />);
     rows = screen.getAllByRole('rowgroup')[1];
     wsRow = rows.children[0];
     expect(wsRow.children[0]).toHaveTextContent('Workspace');

@@ -1,9 +1,10 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
+import { WorkspaceRole } from './workspace';
 
 export type SpaceBindingRequest = K8sResourceCommon & {
   spec: {
     masterUserRecord: string;
-    spaceRole: 'contributor' | 'maintainer' | 'owner';
+    spaceRole: WorkspaceRole;
   };
   status?: {
     conditions?: {
