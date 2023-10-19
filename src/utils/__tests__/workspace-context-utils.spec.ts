@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   getActiveWorkspace,
   k8sListResourceItems,
-  setActiveWorkspace,
+  setActiveWorkspaceLocalStorage as setActiveWorkspace,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { waitFor } from '@testing-library/react';
 import { act, renderHook } from '@testing-library/react-hooks';

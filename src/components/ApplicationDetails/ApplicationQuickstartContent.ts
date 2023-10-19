@@ -12,6 +12,7 @@ export const applicationQuickstartContent = {
     introduction: `You created an app and added a component to it. Good job!
 
 To get started using your app, follow the steps in this quick start guide.`,
+    icon: '',
     tasks: [
       {
         title: `Add components and builds`,

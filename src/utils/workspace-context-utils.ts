@@ -3,7 +3,7 @@ import { generatePath, useNavigate } from 'react-router-dom';
 import {
   getActiveWorkspace,
   k8sListResourceItems,
-  setActiveWorkspace,
+  setActiveWorkspaceLocalStorage as setActiveWorkspace,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { WorkspaceModel } from '../models/workspace';
 import { Workspace } from '../types/workspace';

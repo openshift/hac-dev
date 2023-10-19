@@ -34,6 +34,7 @@ export type TektonTaskSpec = {
   params?: TektonParam[];
   resources?: TektonResourceGroup<TektonResource>;
   results?: TaskResult[];
+  volumes?: {};
   workspaces?: TektonWorkspace[];
 };
 
