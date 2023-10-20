@@ -407,4 +407,58 @@ describe('PipelineRunDetailsTab', () => {
       'http://localhost/application-pipeline/workspaces/test-ws/applications/my-app/taskruns/sum-and-multiply-pipeline-8mhx4-show-sbom/logs',
     );
   });
+
+  it('should not render the snapshot section if it is not available for a pipelinerun', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    const simplePipelineRun = {
+      ...testPipelineRun,
+      metadata: {
+        ...testPipelineRun.metadata,
+      },
+    };
+    render(
+      <PipelineRunDetailsTab
+        pipelineRun={simplePipelineRun}
+        taskRuns={getTaskRunsFromPLR(simplePipelineRun)}
+        error={null}
+      />,
+      {
+        wrapper: BrowserRouter,
+      },
+    );
+    expect(screen.queryByText('Snapshot')).not.toBeInTheDocument();
+  });
+
+  it('should render the associated snapshot for a pipelinerun as a clickable link', () => {
+    watchResourceMock.mockReturnValue([[], true]);
+    const simplePipelineRun = {
+      ...testPipelineRun,
+      metadata: {
+        ...testPipelineRun.metadata,
+        labels: {
+          ...testPipelineRun.metadata.labels,
+          [PipelineRunLabel.APPLICATION]: 'my-app',
+        },
+        annotations: {
+          ...testPipelineRun.metadata.annotations,
+          [PipelineRunLabel.SNAPSHOT]: 'test-snapshot',
+        },
+      },
+    };
+    render(
+      <PipelineRunDetailsTab
+        pipelineRun={simplePipelineRun}
+        taskRuns={getTaskRunsFromPLR(simplePipelineRun)}
+        error={null}
+      />,
+      {
+        wrapper: BrowserRouter,
+      },
+    );
+    expect(screen.getByText('Snapshot')).toBeInTheDocument();
+    expect(screen.getByText('test-snapshot')).toHaveProperty(
+      'href',
+      'http://localhost/application-pipeline/workspaces/test-ws/applications/my-app/snapshots/test-snapshot',
+    );
+  });
 });
