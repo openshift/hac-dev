@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { mockRelease } from '../__data__/mock-release-data';
+import { mockReleases } from '../__data__/mock-release-data';
 import ReleaseOverviewTab from '../ReleaseOverviewTab';
 
 jest.mock('react-router-dom', () => ({
@@ -22,7 +22,7 @@ jest.mock('../../../hooks/useWorkspaceResource', () => ({
 
 describe('ReleaseOverviewTab', () => {
   it('should render correct details', () => {
-    render(<ReleaseOverviewTab release={mockRelease} />);
+    render(<ReleaseOverviewTab release={mockReleases[0]} />);
     expect(screen.getByText('Duration')).toBeVisible();
     expect(screen.getByText('10 seconds')).toBeVisible();
 

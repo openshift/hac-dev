@@ -1,40 +1,67 @@
 import * as React from 'react';
-import {
-  PageSection,
-  PageSectionVariants,
-  Title,
-  Spinner,
-  Bullseye,
-  Toolbar,
-  ToolbarContent,
-  ToolbarGroup,
-  ToolbarItem,
-  InputGroup,
-  Button,
-  TextInput,
-  InputGroupItem,
-} from '@patternfly/react-core';
-import { FilterIcon } from '@patternfly/react-icons/dist/js/icons';
+import { PageSection, PageSectionVariants, Title, Spinner, Bullseye } from '@patternfly/react-core';
+import { SortByDirection } from '@patternfly/react-table';
 import { useApplicationReleases } from '../../hooks/useApplicationReleases';
 import { useSearchParam } from '../../hooks/useSearchParam';
+import { useSortedResources } from '../../hooks/useSortedResources';
 import { Table } from '../../shared';
 import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
+import { FilterToolbar } from '../Filter/FilterToolbar';
 import ReleasesEmptyState from './ReleasesEmptyState';
-import ReleasesListHeader from './ReleasesListHeader';
+import getReleasesListHeader, { SortableHeaders } from './ReleasesListHeader';
 import ReleasesListRow from './ReleasesListRow';
 
 interface ReleasesListViewProps {
   applicationName: string;
 }
 
+enum FilterTypes {
+  name = 'name',
+  releasePlan = 'release plan',
+  releaseSnapshot = 'release snapshot',
+}
+
+const sortPaths: Record<SortableHeaders, string> = {
+  [SortableHeaders.name]: 'metadata.name',
+  [SortableHeaders.created]: 'metadata.creationTimestamp',
+};
+
 const ReleasesListView: React.FC<ReleasesListViewProps> = ({ applicationName }) => {
   const [releases, loaded] = useApplicationReleases(applicationName);
-  const [nameFilter, setNameFilter] = useSearchParam('name', '');
-  const onClearFilters = () => setNameFilter('');
+  const [filterType, setFilterType] = React.useState<FilterTypes>(FilterTypes.name);
+  const [searchFilter, setSearchFilter, clearSearchFilter] = useSearchParam(filterType, '');
+  const [activeSortIndex, setActiveSortIndex] = React.useState<number>(SortableHeaders.created);
+  const [activeSortDirection, setActiveSortDirection] = React.useState<SortByDirection>(
+    SortByDirection.desc,
+  );
 
-  const filteredReleases = React.useMemo(
-    () => releases.filter((r) => r.metadata.name.indexOf(nameFilter) !== -1),
-    [releases, nameFilter],
+  const ReleasesListHeader = React.useMemo(
+    () =>
+      getReleasesListHeader(activeSortIndex, activeSortDirection, (_, index, direction) => {
+        setActiveSortIndex(index);
+        setActiveSortDirection(direction);
+      }),
+    [activeSortDirection, activeSortIndex],
+  );
+
+  const filteredReleases = React.useMemo(() => {
+    switch (filterType) {
+      case FilterTypes.name:
+        return releases.filter((r) => r.metadata.name.indexOf(searchFilter) !== -1);
+      case FilterTypes.releasePlan:
+        return releases.filter((r) => r.spec.releasePlan.indexOf(searchFilter) !== -1);
+      case FilterTypes.releaseSnapshot:
+        return releases.filter((r) => r.spec.snapshot.indexOf(searchFilter) !== -1);
+      default:
+        return releases;
+    }
+  }, [filterType, releases, searchFilter]);
+
+  const sortedReleases = useSortedResources(
+    filteredReleases,
+    activeSortIndex,
+    activeSortDirection,
+    sortPaths,
   );
 
   if (!loaded) {
@@ -55,39 +82,22 @@ const ReleasesListView: React.FC<ReleasesListViewProps> = ({ applicationName }) 
         Releases
       </Title>
       <>
-        <Toolbar data-testid="release-list-toolbar" clearAllFilters={onClearFilters}>
-          <ToolbarContent>
-            <ToolbarGroup align={{ default: 'alignLeft' }}>
-              <ToolbarItem>
-                <InputGroup>
-                  <InputGroupItem>
-                    <Button variant="control">
-                      <FilterIcon /> Name
-                    </Button>
-                  </InputGroupItem>
-                  <InputGroupItem isFill>
-                    <TextInput
-                      name="nameInput"
-                      data-test="name-input-filter"
-                      type="search"
-                      aria-label="name filter"
-                      placeholder="Filter by name..."
-                      onChange={(ev, value) => setNameFilter(value)}
-                      value={nameFilter}
-                    />
-                  </InputGroupItem>
-                </InputGroup>
-              </ToolbarItem>
-            </ToolbarGroup>
-          </ToolbarContent>
-        </Toolbar>
-        {!filteredReleases?.length ? (
-          <FilteredEmptyState onClearFilters={onClearFilters} />
+        <FilterToolbar
+          value={searchFilter}
+          dropdownItems={Object.values(FilterTypes)}
+          onInput={setSearchFilter}
+          onFilterTypeChange={(val) => {
+            clearSearchFilter();
+            setFilterType(val as FilterTypes);
+          }}
+        />
+        {!sortedReleases?.length ? (
+          <FilteredEmptyState onClearFilters={clearSearchFilter} />
         ) : (
           <>
             <Table
               data-test="releases__table"
-              data={filteredReleases}
+              data={sortedReleases}
               aria-label="Release List"
               Header={ReleasesListHeader}
               Row={ReleasesListRow}

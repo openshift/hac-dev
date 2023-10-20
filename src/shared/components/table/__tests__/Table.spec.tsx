@@ -48,9 +48,11 @@ const testHeader = () => {
   return [
     {
       title: 'Name',
+      props: {},
     },
     {
       title: 'Value',
+      props: {},
     },
   ];
 };

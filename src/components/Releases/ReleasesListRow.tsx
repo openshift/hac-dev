@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { css } from '@patternfly/react-styles';
 import { useReleaseStatus } from '../../hooks/useReleaseStatus';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
+import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { ReleaseKind } from '../../types';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { StatusIconWithText } from '../topology/StatusIcon';
@@ -23,6 +24,9 @@ const ReleasesListRow: React.FC<RowFunctionArgs<ReleaseKind, { applicationName: 
         >
           {obj.metadata.name}
         </Link>
+      </TableData>
+      <TableData className={releasesTableColumnClasses.created}>
+        <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
       <TableData className={releasesTableColumnClasses.status}>
         <StatusIconWithText dataTestAttribute="release-status" status={status} />
