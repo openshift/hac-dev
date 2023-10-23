@@ -248,11 +248,8 @@ describe('ComponentDetailsView', () => {
       </ComponentDetailsViewWrapper>,
     );
     const buildPipeline = screen.getByTestId('edit-build-pipeline');
-    const editButton = buildPipeline.getElementsByClassName('pf-v5-c-label')[0];
-
-    await act(async () => {
-      fireEvent.click(editButton);
-    });
-    await expect(showModalMock).toHaveBeenCalled();
+    const editButton = buildPipeline.getElementsByClassName('pf-v5-c-label__content')[0];
+    await fireEvent.click(editButton);
+    expect(showModalMock).toHaveBeenCalled();
   });
 });

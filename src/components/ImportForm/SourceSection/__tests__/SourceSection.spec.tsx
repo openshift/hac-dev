@@ -136,6 +136,15 @@ describe('SourceSection', () => {
       expect(screen.queryByText('Git reference')).toBeInTheDocument();
       expect(screen.queryByText('Context directory')).toBeInTheDocument();
     });
+  });
+
+  it('should not show git options for invalid git url', async () => {
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: false, isGit: true, serviceProvider: ServiceProviderType.GitHub },
+      false,
+    ]);
+
+    const { input, user } = renderSourceSection();
 
     await user.type(input, 'dummy text');
 

@@ -135,7 +135,7 @@ describe('ComponentListViewPage', () => {
 
     // interact with filters
     const filterMenuButton = view.getByRole('button', { name: /filter/i });
-    fireEvent.click(filterMenuButton);
+    await fireEvent.click(filterMenuButton);
 
     const successCb = view.getByLabelText(/successful/i, {
       selector: 'input',
@@ -173,7 +173,7 @@ describe('ComponentListViewPage', () => {
     expect(view.queryAllByTestId('component-list-item')).toHaveLength(0);
 
     // clear the filter
-    const clearFilterButton = view.getAllByRole('button', { name: 'Clear filters' })[1];
+    const clearFilterButton = view.getAllByRole('button', { name: 'Clear filters' })[0];
     fireEvent.click(clearFilterButton);
     view.rerender(<ComponentListView applicationName="test-app" />);
 

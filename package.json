@@ -3,8 +3,8 @@
   "version": "0.2.0",
   "private": false,
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   },
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config config/prod.webpack.config.js --env analyze=true",

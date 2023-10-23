@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { useApplicationReleases } from '../../../hooks/useApplicationReleases';
 import { mockReleases } from '../__data__/mock-release-data';
 import ReleasesListRow from '../ReleasesListRow';
@@ -117,9 +117,7 @@ describe('ReleasesListView', () => {
     useMockReleases.mockReturnValue([mockReleases, true]);
     render(<ReleasesListView applicationName="test-app" />);
     const table = screen.getByRole('table');
-    await act(async () => {
-      fireEvent.click(within(table).getByRole('button', { name: 'Name' }));
-    });
+    await fireEvent.click(within(table).getByRole('button', { name: 'Name' }));
     expect(screen.getByRole('columnheader', { name: 'Name' })).toHaveAttribute(
       'aria-sort',
       'ascending',
@@ -133,9 +131,7 @@ describe('ReleasesListView', () => {
     expect(rows[2].children[0]).toHaveTextContent('test-release-2');
     expect(rows[3].children[0]).toHaveTextContent('test-release-3');
 
-    await act(async () => {
-      fireEvent.click(within(table).getByRole('button', { name: 'Name' }));
-    });
+    await fireEvent.click(within(table).getByRole('button', { name: 'Name' }));
     expect(screen.getByRole('columnheader', { name: 'Name' })).toHaveAttribute(
       'aria-sort',
       'descending',
@@ -148,9 +144,7 @@ describe('ReleasesListView', () => {
   it('should allow filtering by name', async () => {
     useMockReleases.mockReturnValue([mockReleases, true]);
     render(<ReleasesListView applicationName="test-app" />);
-    await act(async () => {
-      fireEvent.input(screen.getByRole('textbox'), { target: { value: 'test-release-2' } });
-    });
+    await fireEvent.input(screen.getByRole('textbox'), { target: { value: 'test-release-2' } });
     const rows = screen.getAllByRole('row');
     expect(rows.length).toBe(2);
     expect(rows[1].children[0]).toHaveTextContent('test-release-2');
@@ -159,15 +153,9 @@ describe('ReleasesListView', () => {
   it('should allow filtering by release plan', async () => {
     useMockReleases.mockReturnValue([mockReleases, true]);
     render(<ReleasesListView applicationName="test-app" />);
-    await act(async () => {
-      fireEvent.click(screen.getAllByRole('button')[0], { name: 'Name' });
-    });
-    await act(async () => {
-      fireEvent.click(screen.getByRole('option', { name: 'Release plan' }));
-    });
-    await act(async () => {
-      fireEvent.input(screen.getByRole('textbox'), { target: { value: 'test-plan-2' } });
-    });
+    await fireEvent.click(screen.getAllByRole('button')[0], { name: 'Name' });
+    await fireEvent.click(screen.getByRole('option', { name: 'Release plan' }));
+    await fireEvent.input(screen.getByRole('textbox'), { target: { value: 'test-plan-2' } });
     const rows = screen.getAllByRole('row');
     expect(rows.length).toBe(2);
     expect(rows[1].children[3]).toHaveTextContent('test-plan-2');
@@ -176,15 +164,9 @@ describe('ReleasesListView', () => {
   it('should allow filtering by release snapshot', async () => {
     useMockReleases.mockReturnValue([mockReleases, true]);
     render(<ReleasesListView applicationName="test-app" />);
-    await act(async () => {
-      fireEvent.click(screen.getAllByRole('button')[0], { name: 'Name' });
-    });
-    await act(async () => {
-      fireEvent.click(screen.getByRole('option', { name: 'Release snapshot' }));
-    });
-    await act(async () => {
-      fireEvent.input(screen.getByRole('textbox'), { target: { value: 'test-snapshot-2' } });
-    });
+    await fireEvent.click(screen.getAllByRole('button')[0], { name: 'Name' });
+    await fireEvent.click(screen.getByRole('option', { name: 'Release snapshot' }));
+    await fireEvent.input(screen.getByRole('textbox'), { target: { value: 'test-snapshot-2' } });
     const rows = screen.getAllByRole('row');
     expect(rows.length).toBe(2);
     expect(rows[1].children[4]).toHaveTextContent('test-snapshot-2');

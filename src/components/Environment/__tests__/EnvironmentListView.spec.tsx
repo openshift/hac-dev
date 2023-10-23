@@ -171,8 +171,8 @@ describe('EnvironmentListView', () => {
     expect(screen.queryAllByTestId('environment-card')).toHaveLength(1);
 
     // clear the filter
-    const clearFilterButton = screen.getAllByRole('button', { name: 'Clear filters' })[1];
-    fireEvent.click(clearFilterButton);
+    const clearFilterButton = screen.getAllByRole('button', { name: 'Clear filters' })[0];
+    await fireEvent.click(clearFilterButton);
     expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
   });
 
@@ -228,7 +228,7 @@ describe('EnvironmentListView', () => {
     expect(screen.queryAllByTestId('environment-card')).toHaveLength(0);
 
     // clear the filter
-    const clearFilterButton = screen.getAllByRole('button', { name: 'Clear filters' })[1];
+    const clearFilterButton = screen.getAllByRole('button', { name: 'Clear filters' })[0];
     fireEvent.click(clearFilterButton);
     await expect(screen.getAllByTestId('environment-card')).toHaveLength(4);
   });
