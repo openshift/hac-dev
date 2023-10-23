@@ -133,7 +133,7 @@ export default defineConfig({
       });
 
       const defaultValues: { [key: string]: string | boolean } = {
-        HAC_BASE_URL: 'https://prod.foo.redhat.com:1337/beta/hac/application-pipeline',
+        HAC_BASE_URL: 'https://prod.foo.redhat.com:1337/preview/application-pipeline',
         USERNAME: '',
         PASSWORD: '',
         GH_USERNAME: 'hac-test',

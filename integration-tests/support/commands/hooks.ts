@@ -1,6 +1,5 @@
 import { Common } from '../../utils/Common';
 import { Login } from '../../utils/Login';
-import 'cypress-v10-preserve-cookie';
 
 before(() => {
   //Clear namespace before running the tests
@@ -27,17 +26,4 @@ before(() => {
 after(() => {
   //Clear namespace after running the tests
   Common.cleanNamespace();
-});
-
-beforeEach(() => {
-  //Preserve cookies between tests
-  cy.getCookies().then((cookies) => {
-    const namesOfCookies = cookies.map((c) => c.name);
-    cy.preserveCookieOnce(...namesOfCookies);
-  });
-
-  localStorage.setItem(
-    'getting-started-modal',
-    JSON.stringify({ 'application-list-getting-started-modal': true }),
-  );
 });
