@@ -1,0 +1,46 @@
+{
+    {$CADDY_TLS_MODE}
+    auto_https disable_redirects
+}
+
+:9000 {
+    metrics /metrics
+}
+:8000 {
+    {$CADDY_TLS_CERT}
+    log
+
+    # Setup the regex for a plugins match
+    @plugins_match {
+        path_regexp /api/plugins/hac-dev(.*)
+    }
+    handle @plugins_match {
+        # Substitution for alias from nginx
+        uri strip_prefix /api/plugins/hac-dev
+        uri strip_prefix /beta/api/plugins/hac-dev
+        uri strip_prefix /preview/api/plugins/hac-dev
+        file_server * {
+            root /opt/app-root/src/dist 
+            browse
+        }
+    }
+
+    # Setup the regex for a app match
+    @app_match {
+        path_regexp /apps/hac-dev(.*)
+    }
+    handle @app_match {
+        # Substitution for alias from nginx
+        uri strip_prefix /apps/hac-dev
+        uri strip_prefix /beta/apps/hac-dev
+        uri strip_prefix /preview/apps/hac-dev
+        file_server * {
+            root /opt/app-root/src/dist 
+            browse
+        }
+    }
+
+    handle / {
+        try_files {path} {path}/ /apps/chrome/index.html /beta/apps/chrome/index.html /preview/chrome/index.html
+    }
+}
