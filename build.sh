@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [ ! -d node_modules ]; then
-    npm install
+    yarn install
 fi
 
-npm run build
+yarn build

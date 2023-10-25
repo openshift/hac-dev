@@ -8,13 +8,18 @@ HAC Developer Experience will deliver the UI for App Studio.
 
 ### Run with webpack proxy
 
-1. ```npm install```
+1. ```yarn install```
 
-If this fails try `npm install --legacy-peer-dep`
-
-2. Start webpack - ```npm run start:prod:beta```
+2. Start webpack - ```yarn dev```
 
 3. Open the URL listed in the terminal output.
+
+
+### Run with local HAC Core
+
+1. Start HAC Core locally - ```LOCAL_HAC_DEV=true ENVIRONMENT=prod yarn dev```
+2. Start HAC Dev with module federation - ```yarn federated```
+
 
 ### Update `/etc/hosts`
 
@@ -30,7 +35,7 @@ To use webpack proxy you need to append this to your `/etc/hosts` for auth:
 
 ### Testing
 
-`npm run verify` will run `npm run lint` (eslint) and `npm test` (Jest). To generate contracts using Pact, run `npm run pact` command. Read more about Pact contract tests [here](pactTests.md).
+`yarn verify` will run `yarn lint` (eslint) and `npm test` (Jest). To generate contracts using Pact, run `yarn pact` command. Read more about Pact contract tests [here](pactTests.md).
 
 
 ## Contributing

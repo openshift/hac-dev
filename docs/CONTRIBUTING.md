@@ -106,9 +106,9 @@ This is a rough outline of what a contributor's workflow looks like:
 
 ### Building the Project
 
-1. ```npm install```
+1. ```yarn install```
 
-2. ```npm run start:prod:beta```
+2. ```yarn start:prod:beta```
 
 3. Open the URL listed in the terminal output.
 
@@ -118,7 +118,7 @@ This is a rough outline of what a contributor's workflow looks like:
 If you add code you need to add tests! We’ve learned the hard way that code without tests is undependable. If your pull request reduces our test coverage because it lacks tests then it will be rejected.
 
 
-`npm run verify` will run `npm run lint` (eslint) and `npm test` (Jest)
+`yarn verify` will run `yarn lint` (eslint) and `npm test` (Jest)
 
 ### Style Guidelines
 

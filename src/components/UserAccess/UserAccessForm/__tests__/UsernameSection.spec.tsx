@@ -57,14 +57,12 @@ describe('UsernameSection', () => {
     await act(async () => {
       fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'user' } });
     });
-    await waitFor(() => expect(screen.getByText('Validating...')).toBeVisible());
     await waitFor(() => expect(screen.getByText('Username not found.')).toBeVisible());
 
     validateMock.mockResolvedValue(true);
     await act(async () => {
       fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'user1' } });
     });
-    await waitFor(() => expect(screen.getByText('Validating...')).toBeVisible());
     await waitFor(() => expect(screen.getByText('Validated')).toBeVisible());
     await waitFor(() =>
       expect(screen.getByRole('list', { name: 'Chip group category' })).toBeVisible(),

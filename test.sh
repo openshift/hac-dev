@@ -5,7 +5,7 @@ JOB_TYPE=${JOB_TYPE:-"local"}
 REPO_ROOT=$(git rev-parse --show-toplevel)
 CI_SERVER_URL=https://prow.svc.ci.openshift.org/view/gcs/origin-ci-test
 if [ ! -d node_modules ]; then
-    npm install
+    yarn install
 fi
 GIT_BRANCH=${GIT_BRANCH:-}
 export IS_PR=${IS_PR:-false}
@@ -30,13 +30,13 @@ else
        echo "Coverage not enabled on Job Type :${JOB_TYPE}"
        # let's turn on universal build
       if [ "$IS_PR" == true ]; then
-             npm run verify
+             yarn verify
       else
              export BETA=false
-             npm run verify
+             yarn verify
              mv dist stable
              export BETA=true
-             npm run build
+             yarn build
              mv dist preview
              mkdir -p dist
              mv stable dist/stable
@@ -47,6 +47,6 @@ fi
 if [[ "${JOB_TYPE}" != "local" ]]; then
     curl -Os https://uploader.codecov.io/latest/linux/codecov
     chmod +x codecov
-    npm run verify
+    yarn verify
     ./codecov -t ${CODECOV_TOKEN} -r "${REPO_OWNER}/${REPO_NAME}" ${REF_FLAGS} --dir ./coverage
 fi
