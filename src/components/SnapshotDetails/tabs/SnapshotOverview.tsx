@@ -42,19 +42,23 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
     const itsStatus =
       snpsht.metadata?.annotations &&
       snpsht.metadata?.annotations[SnapshotLabels.ITS_STATUS_ANNOTATION];
-
+    // const itsStatus =
+    //   '[{"scenario":"app-sample-go-basic-enterprise-contract","status":"EnvironmentProvisionError","lastUpdateTime":"2023-09-20T16:00:38.969982048Z","details":"Failed to find deploymentTargetClass with right provisioner for copy of existingEnvironment","startTime":"2023-09-20T16:00:17.970660813Z","completionTime":"2023-09-20T16:00:38.969982048Z"}]';
     if (!itsStatus) {
       return null;
     }
     let errorStatus = null;
-
-    const formattedItsStatus = JSON.parse(itsStatus);
-    if (Array.isArray(formattedItsStatus) && formattedItsStatus.length > 0) {
-      errorStatus = formattedItsStatus?.find((status) => status.Status === ENV_PROVISION_ERR);
-    } else if (formattedItsStatus?.Status === ENV_PROVISION_ERR) {
-      errorStatus = formattedItsStatus;
+    try {
+      const formattedItsStatus = JSON.parse(itsStatus);
+      if (Array.isArray(formattedItsStatus) && formattedItsStatus.length > 0) {
+        errorStatus = formattedItsStatus?.find((status) => status.status === ENV_PROVISION_ERR);
+      } else if (formattedItsStatus?.Status === ENV_PROVISION_ERR) {
+        errorStatus = formattedItsStatus;
+      }
+      return errorStatus;
+    } catch (e) {
+      return null;
     }
-    return errorStatus;
   };
 
   const componentsTableData: SnapshotComponentTableData[] = React.useMemo(
@@ -120,29 +124,27 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
                 <DescriptionListGroup>
                   <DescriptionListTerm>Deployed to</DescriptionListTerm>
                   <DescriptionListDescription>
-                    {environments.map((env) => (
-                      <div key={env}>
-                        <Link
-                          to={`/application-pipeline/workspaces/${workspace}/applications/${snapshot.spec.application}/deployments`}
-                        >
-                          {env}
-                        </Link>
-                      </div>
-                    ))}
+                    {!errorStatus ? (
+                      environments.map((env) => (
+                        <div key={env}>
+                          <Link
+                            to={`/application-pipeline/workspaces/${workspace}/applications/${snapshot.spec.application}/deployments`}
+                          >
+                            {env}
+                          </Link>
+                        </div>
+                      ))
+                    ) : (
+                      <EnvironmentProvisionErrorAlert
+                        errMsg={errorStatus.details}
+                        timeStamp={errorStatus.lastUpdateTime}
+                        scenario={errorStatus.scenario}
+                      />
+                    )}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
               )}
-              {errorStatus && (
-                <DescriptionListGroup>
-                  <DescriptionListTerm>{errorStatus.scenario}</DescriptionListTerm>
-                  <DescriptionListDescription>
-                    <EnvironmentProvisionErrorAlert
-                      errMsg={errorStatus.details}
-                      timeStamp={errorStatus.timestamp}
-                    />
-                  </DescriptionListDescription>
-                </DescriptionListGroup>
-              )}
+
               <DescriptionListGroup>
                 <DescriptionListTerm>Vulnerabilities</DescriptionListTerm>
                 <DescriptionListDescription>

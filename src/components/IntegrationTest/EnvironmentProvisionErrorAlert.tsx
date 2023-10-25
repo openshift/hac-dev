@@ -5,11 +5,13 @@ import { Timestamp } from '../..//shared/components/timestamp/Timestamp';
 interface EnvironmentProvisionErrorAlertProps {
   errMsg: string;
   timeStamp?: string;
+  scenario?: string;
 }
 
 const EnvironmentProvisionErrorAlert: React.FC<EnvironmentProvisionErrorAlertProps> = ({
   errMsg,
   timeStamp,
+  scenario,
 }) => {
   return (
     <Alert
@@ -19,9 +21,21 @@ const EnvironmentProvisionErrorAlert: React.FC<EnvironmentProvisionErrorAlertPro
       variant="danger"
       title={errMsg}
     >
+      {scenario && (
+        <>
+          {' '}
+          for scenario <b data-test="alert-scenario-name">{scenario}</b>
+        </>
+      )}
       {timeStamp && (
         <>
-          at <Timestamp timestamp={timeStamp} />
+          {' '}
+          at{' '}
+          <Timestamp
+            className="pf-v5-u-display-inline"
+            timestamp={timeStamp}
+            data-test="alert-timestamp"
+          />
         </>
       )}
     </Alert>
