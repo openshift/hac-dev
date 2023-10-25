@@ -213,7 +213,8 @@ export const statusFromConditions = (
 
 export const getSecretRowData = (obj: RemoteSecretKind, environmentNames: string[]): any => {
   const type = typeToLabel(obj?.spec?.secret?.type);
-  const keys = obj?.status.secret?.keys;
+
+  const keys = obj?.status?.secret?.keys;
   const secretName = obj?.spec?.secret?.name || '-';
   const secretFor = obj?.metadata?.labels?.[SecretByUILabel] ?? SecretFor.Deployment;
   const secretTarget =

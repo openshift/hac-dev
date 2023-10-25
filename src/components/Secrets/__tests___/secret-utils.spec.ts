@@ -160,6 +160,24 @@ describe('getSecretRowData', () => {
     });
   });
 
+  it('should not throw error when the status field is missing in the newly created secret', () => {
+    const injectedSecret = sampleRemoteSecrets[RemoteSecretStatusReason.Injected];
+
+    const secretWithoutStatus = {
+      ...injectedSecret,
+      status: undefined,
+    };
+
+    expect(getSecretRowData(secretWithoutStatus, ['development'])).toEqual({
+      secretFor: 'Build',
+      secretLabels: '-',
+      secretName: 'test-secret-two',
+      secretStatus: '-',
+      secretTarget: 'development',
+      secretType: 'Key/value',
+    });
+  });
+
   it('should return the labels data for the given secret', () => {
     const injectedSecret = sampleRemoteSecrets[RemoteSecretStatusReason.Injected];
 
