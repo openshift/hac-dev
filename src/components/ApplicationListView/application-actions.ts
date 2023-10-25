@@ -12,7 +12,7 @@ export const useApplicationActions = (application: ApplicationKind): Action[] =>
     {
       cta: () => showModal(applicationDeleteModal(application)),
       id: `delete-${application.metadata.name.toLowerCase()}`,
-      label: 'Delete',
+      label: 'Delete application',
       disabled: !canDelete,
       disabledTooltip: "You don't have access to delete this application",
     },
