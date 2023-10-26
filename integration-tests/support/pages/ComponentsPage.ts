@@ -103,12 +103,6 @@ export class ComponentPage extends AbstractWizardPage {
     cy.contains(alertTitle, message).should('exist');
   }
 
-  expandDetails(componentName: string) {
-    cy.contains(addComponentPagePO.componentCard, componentName)
-      .find(addComponentPagePO.toggleButton)
-      .click();
-  }
-
   selectCustomBuildPipeline() {
     cy.get(ComponentsPagePO.customBuildPipelineRadioBtn).click();
     cy.contains('Default build pipeline').should('be.visible');

@@ -41,7 +41,7 @@ describe('Basic Happy Path', () => {
     Applications.checkComponentInListView(
       componentName,
       applicationName,
-      'Build Running',
+      'Build running',
       'Default',
     );
   });
@@ -120,20 +120,21 @@ describe('Basic Happy Path', () => {
     it('Verify the status code and response body of the deployment URL of each component', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
       Applications.goToComponentsTab();
-      ComponentsTabPage.verifyRoute(componentName, quarkusDeplomentBody);
+      ComponentsTabPage.verifyRoute(componentName);
     });
 
-    it('Verify deployed image exists', () => {
-      cy.get('.component-list-item__details input')
-        .invoke('val')
-        .then((value) => {
-          cy.exec(`skopeo inspect -f "Name: {{.Name}} Digest: {{.Digest}}" docker://${value}`, {
-            timeout: 300000,
-          })
-            .its('code')
-            .should('eq', 0);
-        });
-    });
+    // TODO: Move this to the details page
+    // it('Verify deployed image exists', () => {
+    //   cy.get('.component-list-item__details input')
+    //     .invoke('val')
+    //     .then((value) => {
+    //       cy.exec(`skopeo inspect -f "Name: {{.Name}} Digest: {{.Digest}}" docker://${value}`, {
+    //         timeout: 300000,
+    //       })
+    //         .its('code')
+    //         .should('eq', 0);
+    //     });
+    // });
 
     it('Validate Build Logs are successful', () => {
       applicationDetailPage.openBuildLog(componentName);

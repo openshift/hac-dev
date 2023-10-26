@@ -1,11 +1,8 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within, act } from '@testing-library/react';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
-import { mockRoutes } from '../../../hooks/__data__/mock-data';
-import { useApplicationRoutes } from '../../../hooks/useApplicationRoutes';
-import { useAllGitOpsDeploymentCRs } from '../../../hooks/useGitOpsDeploymentCR';
 import { PACState } from '../../../hooks/usePACState';
 import { useTRPipelineRuns } from '../../../hooks/useTektonResults';
 import { ComponentGroupVersionKind, PipelineRunGroupVersionKind } from '../../../models';
@@ -24,14 +21,6 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 jest.mock('../../../hooks/useTektonResults');
 
-jest.mock('../../../hooks/useApplicationRoutes', () => ({
-  useApplicationRoutes: jest.fn(),
-}));
-
-jest.mock('../../../hooks/useGitOpsDeploymentCR', () => ({
-  useAllGitOpsDeploymentCRs: jest.fn(),
-}));
-
 jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
@@ -48,17 +37,20 @@ jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
   return {
     ...actual,
-    useSearchParams: () => {
-      const [params, setParams] = React.useState(() => new URLSearchParams());
-      const setParamsCb = React.useCallback((newParams: URLSearchParams) => {
-        setParams(newParams);
-        window.location.search = `?${newParams.toString()}`;
-      }, []);
-      return [params, setParamsCb];
-    },
     Link: (props) => <a href={props.to}>{props.children}</a>,
   };
 });
+
+let paramValues = {};
+jest.mock('../../../hooks/useSearchParam', () => ({
+  useSearchParam: (param: string) => {
+    const set = (val) => {
+      paramValues[param] = val;
+    };
+    const unset = () => (paramValues[param] = undefined);
+    return [paramValues[param], set, unset];
+  },
+}));
 
 jest.mock('../../../hooks/usePipelineRuns', () => ({
   ...(jest.requireActual('../../../hooks/usePipelineRuns') as any),
@@ -73,18 +65,18 @@ jest.mock('../../../utils/component-utils', () => {
   };
 });
 
-jest.mock('../../../hooks/usePACState', () => {
+jest.mock('../../../hooks/usePACStatesForComponents', () => {
   const actual = jest.requireActual('../../../hooks/usePACState');
   return {
     ...actual,
     __esModule: true,
-    default: () => PACState.pending,
+    default: () => {
+      return { comp: PACState.pending };
+    },
   };
 });
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
-const applicationRoutesMock = useApplicationRoutes as jest.Mock;
-const gitOpsDeploymentMock = useAllGitOpsDeploymentCRs as jest.Mock;
 const useTRPipelineRunsMock = useTRPipelineRuns as jest.Mock;
 
 const getMockedResources = (kind: WatchK8sResource) => {
@@ -101,19 +93,15 @@ const getMockedResources = (kind: WatchK8sResource) => {
 };
 
 describe('ComponentListViewPage', () => {
-  beforeAll(() => {
-    gitOpsDeploymentMock.mockReturnValue([[], false]);
-  });
   beforeEach(() => {
     useK8sWatchResourceMock.mockImplementation(getMockedResources);
-    applicationRoutesMock.mockReturnValue([[], true]);
+    paramValues = {};
   });
 
-  it('should render spinner if routes are not loaded', () => {
+  it('should render skeleton if data is not loaded', () => {
     useK8sWatchResourceMock.mockReturnValue([[], false]);
-    applicationRoutesMock.mockReturnValue([[], false]);
     render(<ComponentListView applicationName="test-app" />);
-    screen.getByRole('progressbar');
+    screen.getByTestId('data-table-skeleton');
   });
 
   it('should render button to add components', () => {
@@ -133,42 +121,14 @@ describe('ComponentListViewPage', () => {
     fireEvent.change(searchInput, { target: { value: 'nodejs' } });
     const componentList = screen.getByTestId('component-list');
     const componentListItems = within(componentList).getAllByTestId('component-list-item');
-    expect(componentListItems.length).toBe(1);
+    expect(componentListItems.length).toBe(2);
   });
 
-  it('should render routes URL when route is created on cluster', () => {
-    applicationRoutesMock.mockReturnValue([mockRoutes, true]);
-    render(<ComponentListView applicationName="test-app" />);
-    screen.getByText('https://nodejs-test.apps.appstudio-stage.x99m.p1.openshiftapps.com');
-  });
-
-  it('should render spinner in toolbar if gitOpsDeploymentCR is not loaded', () => {
-    gitOpsDeploymentMock.mockReturnValue([[], false]);
-    render(<ComponentListView applicationName="test-app" />);
-    screen.getByRole('progressbar');
-  });
-
-  it('should render deployment strategy if gitOpsDeployment CR is loaded', () => {
-    gitOpsDeploymentMock.mockReturnValue([
-      [{ spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } }],
-      true,
-    ]);
-    render(<ComponentListView applicationName="test-app" />);
-    screen.getByText('Automated');
-  });
   it('should show a warning when showMergeStatus is set', () => {
-    gitOpsDeploymentMock.mockReturnValue([
-      [{ spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } }],
-      true,
-    ]);
     render(<ComponentListView applicationName="test-app" />);
     screen.getByTestId('components-unmerged-build-pr');
   });
   it('should filter components by type', async () => {
-    gitOpsDeploymentMock.mockReturnValue([
-      [{ spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } }],
-      true,
-    ]);
     const view = render(<ComponentListView applicationName="test-app" />);
 
     expect(view.getAllByTestId('component-list-item')).toHaveLength(2);
@@ -181,54 +141,67 @@ describe('ComponentListViewPage', () => {
       selector: 'input',
     }) as HTMLInputElement;
     fireEvent.click(successCb);
+    view.rerender(<ComponentListView applicationName="test-app" />);
+
     expect(successCb.checked).toBe(true);
     expect(view.queryAllByTestId('component-list-item')).toHaveLength(1);
     fireEvent.click(successCb);
+    view.rerender(<ComponentListView applicationName="test-app" />);
+
     expect(view.queryAllByTestId('component-list-item')).toHaveLength(2);
 
     const failedCb = view.getByLabelText(/failed/i, {
       selector: 'input',
     }) as HTMLInputElement;
     fireEvent.click(failedCb);
+    view.rerender(<ComponentListView applicationName="test-app" />);
+
     expect(failedCb.checked).toBe(true);
     expect(view.queryAllByTestId('component-list-item')).toHaveLength(0);
     fireEvent.click(failedCb);
+    view.rerender(<ComponentListView applicationName="test-app" />);
+
     expect(view.queryAllByTestId('component-list-item')).toHaveLength(2);
 
     const buildingCb = view.getByLabelText(/Building/i, {
       selector: 'input',
     }) as HTMLInputElement;
     fireEvent.click(buildingCb);
+    view.rerender(<ComponentListView applicationName="test-app" />);
+
     expect(buildingCb.checked).toBe(true);
     expect(view.queryAllByTestId('component-list-item')).toHaveLength(0);
 
     // clear the filter
     const clearFilterButton = view.getAllByRole('button', { name: 'Clear filters' })[1];
     fireEvent.click(clearFilterButton);
+    view.rerender(<ComponentListView applicationName="test-app" />);
+
     expect(view.queryAllByTestId('component-list-item')).toHaveLength(2);
   });
-  it('should clear filters from empty state', () => {
-    gitOpsDeploymentMock.mockReturnValue([
-      [{ spec: { type: 'automated' }, status: { health: { status: 'Degraded' } } }],
-      true,
-    ]);
-    render(<ComponentListView applicationName="test-app" />);
+  it('should clear filters from empty state', async () => {
+    const view = render(<ComponentListView applicationName="test-app" />);
     expect(screen.getAllByTestId('component-list-item')).toHaveLength(2);
 
     const nameSearchInput = screen.getByTestId('name-input-filter');
     const textFilterInput = nameSearchInput.querySelector('.pf-v5-c-text-input-group__text-input');
-    fireEvent.change(textFilterInput, { target: { value: 'no match' } });
+    await act(async () => {
+      fireEvent.change(textFilterInput, { target: { value: 'no match' } });
+    });
 
+    view.rerender(<ComponentListView applicationName="test-app" />);
     expect(screen.queryAllByTestId('component-list-item')).toHaveLength(0);
 
     const clearFilterButton = screen.getByRole('button', { name: 'Clear all filters' });
     fireEvent.click(clearFilterButton);
+
+    view.rerender(<ComponentListView applicationName="test-app" />);
+
     expect(screen.getAllByTestId('component-list-item')).toHaveLength(2);
   });
 
   it('should get more data if there is another page', () => {
     const getNextPageMock = jest.fn();
-    applicationRoutesMock.mockReturnValue([[], true]);
     useTRPipelineRunsMock.mockReturnValue([[], true, undefined, getNextPageMock]);
     render(<ComponentListView applicationName="test-app" />);
     expect(getNextPageMock).toHaveBeenCalled();

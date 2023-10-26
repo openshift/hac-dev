@@ -102,6 +102,23 @@ const TableComponent: React.FC<TableProps> = ({
     </WindowScroller>
   );
 
+  const rowRenderer = (obj, index) => {
+    const rowProps = getRowProps?.(obj);
+
+    return (
+      <TableRow
+        id={getRowProps(obj).id}
+        index={index}
+        key={`${getRowProps(obj).id}`}
+        trKey={`${getRowProps(obj).id}`}
+        style={{}}
+        {...rowProps}
+      >
+        <Row obj={obj} columns={columns} customData={customData} />
+      </TableRow>
+    );
+  };
+
   return (
     <div className="table">
       <TableWrapper virtualize={virtualize} ariaLabel={ariaLabel} ariaRowCount={ariaRowCount}>
@@ -115,21 +132,7 @@ const TableComponent: React.FC<TableProps> = ({
           borders={false}
         >
           <TableHeader role="rowgroup" />
-          {!virtualize ? (
-            <tbody>
-              {data.map((obj, index) => (
-                <TableRow
-                  id={getRowProps(obj).id}
-                  index={index}
-                  key={`${getRowProps(obj).id}`}
-                  trKey={`${getRowProps(obj).id}`}
-                  style={{}}
-                >
-                  <Row obj={obj} columns={columns} customData={customData} />
-                </TableRow>
-              ))}
-            </tbody>
-          ) : null}
+          {!virtualize ? <tbody>{data.map((obj, index) => rowRenderer(obj, index))}</tbody> : null}
         </PfTable>
         {virtualize && <WithScrollContainer>{renderVirtualizedTable}</WithScrollContainer>}
       </TableWrapper>

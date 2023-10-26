@@ -62,12 +62,12 @@ describe('Create Component from Public Git Source', () => {
   });
 
   describe('Change resources for the existing app', () => {
-    it('Check Resources Value', () => {
-      applicationDetailPage.expandDetails(componentPage.componentName);
-      applicationDetailPage.checkCpuAndMemory(cpuCount + 1, cpuUnit, ramValue, ramUnit);
-      applicationDetailPage.checkReplica(replicaCount);
-    });
-
+    // TODO: Moved to component details page
+    // it('Check Resources Value', () => {
+    //   applicationDetailPage.expandDetails(componentPage.componentName);
+    //   applicationDetailPage.checkCpuAndMemory(cpuCount + 1, cpuUnit, ramValue, ramUnit);
+    //   applicationDetailPage.checkReplica(replicaCount);
+    // });
     // Skipping due to : https://issues.redhat.com/browse/HAC-3184
     // it('Change Resources Value', () => {
     //   applicationDetailPage.openDeploymentSettings(componentPage.componentName);
@@ -75,7 +75,6 @@ describe('Create Component from Public Git Source', () => {
     //   componentPage.setCpuByButton(cpuCount, cpuUnit);
     //   componentPage.saveChanges();
     // });
-
     // it('Check updated resources values', () => {
     //   Applications.goToComponentsTab();
     //   applicationDetailPage.expandDetails(componentPage.componentName);

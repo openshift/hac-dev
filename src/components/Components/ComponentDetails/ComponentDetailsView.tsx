@@ -19,7 +19,7 @@ import { HttpError } from '../../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../../utils/breadcrumb-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { useComponentActions } from '../../ApplicationDetails/component-actions';
-import { createCustomizeAllPipelinesModalLauncher } from '../../CustomizedPipeline/CustomizePipelinesModal';
+import { createCustomizeComponentPipelineModalLauncher } from '../../CustomizedPipeline/CustomizePipelinesModal';
 import { GettingStartedCard } from '../../GettingStartedCard/GettingStartedCard';
 import { useModalLauncher } from '../../modal/ModalProvider';
 import { ComponentActivityTab } from './tabs/ComponentActivityTab';
@@ -106,10 +106,15 @@ const ComponentDetailsView: React.FC<ComponentDetailsViewProps> = ({
               className="pf-u-mt-xl"
               variant={ButtonVariant.secondary}
               onClick={() =>
-                showModal(createCustomizeAllPipelinesModalLauncher(applicationName, namespace))
+                showModal(
+                  createCustomizeComponentPipelineModalLauncher(
+                    component.metadata.name,
+                    component.metadata.namespace,
+                  ),
+                )
               }
             >
-              Manage build pipelines
+              Edit build pipeline plan
             </Button>
           </GettingStartedCard>
         }
