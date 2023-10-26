@@ -8,6 +8,7 @@ if [ ! -d node_modules ]; then
     npm install
 fi
 GIT_BRANCH=${GIT_BRANCH:-}
+export IS_PR=${IS_PR:-false}
 
 ENV_BRANCH=$(sed "s/origin\///" <<< "$GIT_BRANCH")
 if [[ "${ENV_BRANCH}" = "master" ||  "${ENV_BRANCH}" = "main" ]]; then
@@ -27,7 +28,20 @@ elif [[ "${JOB_TYPE}" == "postsubmit" || "${JOB_TYPE}" == "periodic" ]]; then
        JOB_LINK="${CI_SERVER_URL}/logs/${JOB_NAME}/${BUILD_ID}"
 else
        echo "Coverage not enabled on Job Type :${JOB_TYPE}"
-       npm run verify
+       # let's turn on universal build
+      if [ "$IS_PR" == true ]; then
+             npm run verify
+      else
+             export BETA=false
+             npm run verify
+             mv dist stable
+             export BETA=true
+             npm run build
+             mv dist preview
+             mkdir -p dist
+             mv stable dist/stable
+             mv preview dist/preview
+      fi
 fi
 
 if [[ "${JOB_TYPE}" != "local" ]]; then
