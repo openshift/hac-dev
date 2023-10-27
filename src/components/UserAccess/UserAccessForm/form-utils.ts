@@ -10,6 +10,16 @@ export type UserAccessFormValues = {
   role: Role;
 };
 
+export const validateUsername = async (username: string) => {
+  try {
+    const res = await fetch(`/api/k8s/registration/api/v1/usernames/${username}`);
+    const [data]: [{ username: string }] = await res.json();
+    return data.username === username;
+  } catch {
+    return false;
+  }
+};
+
 export const userAccessFormSchema = yup.object({
   usernames: yup
     .array()

@@ -1,6 +1,6 @@
 import { k8sCreateResource, k8sPatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import '@testing-library/jest-dom';
-import { createSBRs, editSBR } from '../form-utils';
+import { createSBRs, editSBR, validateUsername } from '../form-utils';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   k8sPatchResource: jest.fn(),
@@ -55,5 +55,41 @@ describe('editSBR', () => {
         patches: [{ op: 'replace', path: '/spec/spaceRole', value: 'contributor' }],
       }),
     );
+  });
+});
+
+describe('validateUsername', () => {
+  const mockFetch = jest.fn();
+  beforeAll(() => {
+    window.fetch = mockFetch;
+  });
+
+  it('should return true if username is valid', async () => {
+    mockFetch.mockResolvedValue({
+      json: async () => [
+        {
+          username: 'user1',
+        },
+      ],
+    });
+    const result = await validateUsername('user1');
+    expect(mockFetch).toHaveBeenCalledWith('/api/k8s/registration/api/v1/usernames/user1');
+    expect(result).toBe(true);
+  });
+
+  it('should return false if returned username is not the same', async () => {
+    mockFetch.mockResolvedValue({
+      json: async () => {
+        'user';
+      },
+    });
+    const result = await validateUsername('user1');
+    expect(result).toBe(false);
+  });
+
+  it('should return false if api call fails', async () => {
+    mockFetch.mockRejectedValue(null);
+    const result = await validateUsername('user1');
+    expect(result).toBe(false);
   });
 });

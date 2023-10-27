@@ -10,10 +10,12 @@ import {
   TextInputGroup,
   TextInputGroupMain,
 } from '@patternfly/react-core';
-import { ExclamationCircleIcon } from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import { useField } from 'formik';
 import HelpPopover from '../../../components/HelpPopover';
+import { resourceNameRegex } from '../../../components/ImportForm/utils/validation-utils';
 import { getFieldId } from '../../../shared';
+import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
+import { validateUsername } from './form-utils';
 
 import './UsernameSection.scss';
 
@@ -22,9 +24,39 @@ type Props = {
 };
 
 export const UsernameSection: React.FC<Props> = ({ disabled }) => {
-  const [, { value: usernames, error }, { setValue }] = useField<string[]>('usernames');
+  const [, { value: usernames, error }, { setValue, setError }] = useField<string[]>('usernames');
   const fieldId = getFieldId('usernames', 'input');
-  const [fieldValue, setFieldValue] = React.useState('');
+  const [username, setUsername] = React.useState('');
+  const [validHelpText, setValidHelpText] = React.useState('');
+  const [validating, setValidating] = React.useState(false);
+
+  const debouncedValidate = useDebounceCallback(
+    React.useCallback(() => {
+      setValidating(true);
+      setValidHelpText('');
+      setError('');
+      if (!username) {
+        setValidating(false);
+        return;
+      }
+      if (!resourceNameRegex.test(username)) {
+        setValidating(false);
+        setError('Invalid username format.');
+        return;
+      }
+      validateUsername(username).then((valid) => {
+        setValidating(false);
+        if (valid) {
+          setError('');
+          setValidHelpText('Validated');
+          setValue([...usernames, username]);
+          setUsername('');
+        } else {
+          setError('Username not found.');
+        }
+      });
+    }, [setError, setValue, username, usernames]),
+  );
 
   return (
     <FormSection title="Add users">
@@ -46,13 +78,10 @@ export const UsernameSection: React.FC<Props> = ({ disabled }) => {
             placeholder="Enter username"
             data-test="username-input"
             aria-label="Enter username"
-            value={fieldValue}
-            onChange={(_, v) => setFieldValue(v)}
-            onBlur={() => {
-              if (fieldValue) {
-                setValue([...usernames, fieldValue]);
-                setFieldValue('');
-              }
+            value={username}
+            onChange={(_, v) => {
+              setUsername(v);
+              debouncedValidate();
             }}
           >
             <ChipGroup>
@@ -70,9 +99,17 @@ export const UsernameSection: React.FC<Props> = ({ disabled }) => {
         </TextInputGroup>
         <FormHelperText>
           <HelperText>
-            {error ? (
-              <HelperTextItem icon={<ExclamationCircleIcon />} variant="error">
+            {validating ? (
+              <HelperTextItem variant="warning" hasIcon>
+                Validating...
+              </HelperTextItem>
+            ) : error ? (
+              <HelperTextItem variant="error" hasIcon>
                 {error}
+              </HelperTextItem>
+            ) : validHelpText ? (
+              <HelperTextItem variant="success" hasIcon>
+                {validHelpText}
               </HelperTextItem>
             ) : (
               <HelperTextItem>
