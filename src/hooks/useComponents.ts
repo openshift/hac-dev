@@ -29,11 +29,15 @@ export const useComponents = (
   namespace: string,
   applicationName: string,
 ): [ComponentKind[], boolean, unknown] => {
-  const [components, componentsLoaded, error] = useK8sWatchResource<ComponentKind[]>({
-    groupVersionKind: ComponentGroupVersionKind,
-    namespace,
-    isList: true,
-  });
+  const [components, componentsLoaded, error] = useK8sWatchResource<ComponentKind[]>(
+    namespace
+      ? {
+          groupVersionKind: ComponentGroupVersionKind,
+          namespace,
+          isList: true,
+        }
+      : null,
+  );
   const appComponents: ComponentKind[] = React.useMemo(
     () =>
       componentsLoaded
