@@ -9,6 +9,7 @@ import {
   FlexItem,
   Skeleton,
   Title,
+  capitalize,
 } from '@patternfly/react-core';
 import { ScanStatus } from '../../../components/PipelineRunListView/ScanStatus';
 import { useScanResults } from '../../../hooks/useScanResults';
@@ -114,7 +115,7 @@ const SnapshotOverviewTab: React.FC<React.PropsWithChildren<SnapshotOverviewTabP
                           <Link
                             to={`/application-pipeline/workspaces/${workspace}/applications/${snapshot.spec.application}/deployments`}
                           >
-                            {env}
+                            {capitalize(env)}
                           </Link>
                         </div>
                       ))

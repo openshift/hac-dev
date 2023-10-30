@@ -112,7 +112,7 @@ const SnapshotDetailsView: React.FC<React.PropsWithChildren<SnapshotDetailsViewP
           ...applicationBreadcrumbs,
           {
             path: `#`,
-            name: 'snapshots',
+            name: 'Snapshots',
           },
           {
             path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/snapshots/${snapshotName}`,
@@ -146,7 +146,7 @@ const SnapshotDetailsView: React.FC<React.PropsWithChildren<SnapshotDetailsViewP
                       <>
                         <StatusIconWithTextLabel
                           key={env.metadata?.name}
-                          text={env.metadata.name}
+                          text={env.spec.displayName ?? env.metadata.name}
                           dataTestAttribute="snapshot-env-label"
                           status={isDeployed ? runStatus.Succeeded : runStatus.Cancelling}
                         />{' '}

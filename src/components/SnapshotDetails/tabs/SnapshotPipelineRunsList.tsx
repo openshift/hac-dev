@@ -9,6 +9,7 @@ import {
   ToolbarGroup,
   ToolbarItem,
   debounce,
+  capitalize,
 } from '@patternfly/react-core';
 import {
   Select,
@@ -183,7 +184,7 @@ const SnapshotPipelineRunsList: React.FC<React.PropsWithChildren<SnapshotPipelin
                         isChecked={typeFilters.includes(filter)}
                         itemCount={statusFilterObj[filter] ?? 0}
                       >
-                        {filter}
+                        {capitalize(filter)}
                       </SelectOption>
                     ))}
                   </SelectGroup>,

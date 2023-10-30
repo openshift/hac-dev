@@ -88,6 +88,14 @@ describe('SnapshotDetailsView', () => {
     expect(screen.getByTestId('snapshot-name').innerHTML).toBe('my-test-output-1');
   });
 
+  it('should display correct breadcrumbs', () => {
+    watchResourceMock.mockImplementation(getMockedResources);
+    routerRenderer(
+      <SnapshotDetails snapshotName="my-test-output-1" applicationName="my-test-output" />,
+    );
+    screen.getByText(/Snapshots/);
+  });
+
   it('should show correct details', () => {
     mockSnapshots[0].metadata.deletionTimestamp = '1';
     watchResourceMock.mockImplementation(getMockedResources);
