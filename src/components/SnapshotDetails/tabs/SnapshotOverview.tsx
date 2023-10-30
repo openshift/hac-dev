@@ -11,13 +11,13 @@ import {
   Title,
 } from '@patternfly/react-core';
 import { ScanStatus } from '../../../components/PipelineRunListView/ScanStatus';
-import { SnapshotLabels } from '../../../consts/pipelinerun';
 import { useScanResults } from '../../../hooks/useScanResults';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../../types';
 import { Snapshot } from '../../../types/coreBuildService';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
-import EnvironmentProvisionErrorAlert from '../../IntegrationTest/EnvironmentProvisionErrorAlert';
+import EnvironmentProvisionErrorAlert from '../EnvironmentProvisionErrorAlert';
+import { getEnvironmentProvisionError } from '../utils/snapshot-utils';
 import SnapshotComponentsList from './SnapshotComponentsList';
 import { SnapshotComponentTableData } from './SnapshotComponentsListRow';
 
@@ -36,30 +36,6 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
 }) => {
   const { workspace } = useWorkspaceInfo();
   const [scanResults, scanLoaded] = useScanResults(buildPipelineName, true);
-
-  const getEnvironmentProvisionError = (snpsht) => {
-    const ENV_PROVISION_ERR = 'EnvironmentProvisionError';
-    const itsStatus =
-      snpsht.metadata?.annotations &&
-      snpsht.metadata?.annotations[SnapshotLabels.ITS_STATUS_ANNOTATION];
-    // const itsStatus =
-    //   '[{"scenario":"app-sample-go-basic-enterprise-contract","status":"EnvironmentProvisionError","lastUpdateTime":"2023-09-20T16:00:38.969982048Z","details":"Failed to find deploymentTargetClass with right provisioner for copy of existingEnvironment","startTime":"2023-09-20T16:00:17.970660813Z","completionTime":"2023-09-20T16:00:38.969982048Z"}]';
-    if (!itsStatus) {
-      return null;
-    }
-    let errorStatus = null;
-    try {
-      const formattedItsStatus = JSON.parse(itsStatus);
-      if (Array.isArray(formattedItsStatus) && formattedItsStatus.length > 0) {
-        errorStatus = formattedItsStatus?.find((status) => status.status === ENV_PROVISION_ERR);
-      } else if (formattedItsStatus?.Status === ENV_PROVISION_ERR) {
-        errorStatus = formattedItsStatus;
-      }
-      return errorStatus;
-    } catch (e) {
-      return null;
-    }
-  };
 
   const componentsTableData: SnapshotComponentTableData[] = React.useMemo(
     () =>
@@ -124,7 +100,9 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
                 <DescriptionListGroup>
                   <DescriptionListTerm>Deployed to</DescriptionListTerm>
                   <DescriptionListDescription>
-                    {!errorStatus ? (
+                    {errorStatus && Array.isArray(errorStatus) && errorStatus.length > 0 ? (
+                      <EnvironmentProvisionErrorAlert errorStatus={errorStatus} />
+                    ) : (
                       environments.map((env) => (
                         <div key={env}>
                           <Link
@@ -134,12 +112,6 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
                           </Link>
                         </div>
                       ))
-                    ) : (
-                      <EnvironmentProvisionErrorAlert
-                        errMsg={errorStatus.details}
-                        timeStamp={errorStatus.lastUpdateTime}
-                        scenario={errorStatus.scenario}
-                      />
                     )}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
