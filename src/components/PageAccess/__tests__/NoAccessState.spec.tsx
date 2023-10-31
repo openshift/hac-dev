@@ -39,16 +39,16 @@ describe('NoAccessState', () => {
     screen.getByTestId('no-access-state');
     screen.getByText(`Let's get you access`);
     screen.getByText(
-      `Ask the administrator of the test-ws workspace for access permissions. We're always here to help, so chat with us if you have any questions in the meantime.`,
+      `Ask the administrator or the owner of the test-ws workspace for access permissions.`,
     );
-    screen.getByText('Go to applications list');
+    screen.getByText('Go to Overview page');
   });
 
-  it('should navigate to the applications list page', async () => {
+  it('should navigate to the overview page', async () => {
     render(<NoAccessState />);
     fireEvent.click(screen.queryByTestId('no-access-action'));
     await waitFor(() => {
-      expect(navigateMock).toHaveBeenCalledWith('/application-pipeline/workspaces');
+      expect(navigateMock).toHaveBeenCalledWith('/application-pipeline');
     });
   });
 
