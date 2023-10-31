@@ -1,5 +1,5 @@
-import { APIHelper } from '../../utils/APIHelper';
 import { hacAPIEndpoints } from '../../utils/APIEndpoints';
+import { APIHelper } from '../../utils/APIHelper';
 import { UIhelper } from '../../utils/UIhelper';
 import { environmentsPagePO } from '../pageObjects/pages-po';
 
@@ -56,9 +56,7 @@ export class EnvironmentsPage {
   }
 
   static verifyCardLabelAndValue(label: string, value: string, timeout = 40000) {
-    cy.contains(environmentsPagePO.label, label)
-      .contains(value, { timeout: timeout })
-      .should('be.visible');
+    cy.contains(environmentsPagePO.label, label).contains(value, { timeout }).should('be.visible');
   }
 
   static deleteEnvironment(envName) {

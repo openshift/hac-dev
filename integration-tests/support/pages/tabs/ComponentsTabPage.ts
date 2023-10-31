@@ -1,6 +1,5 @@
-import { APIHelper } from '../../../utils/APIHelper';
-import { Applications } from '../../../utils/Applications';
 import { Common } from '../../../utils/Common';
+import { applicationDetailPagePO } from '../../pageObjects/createApplication-po';
 import { componentsTabPO } from '../../pageObjects/pages-po';
 
 export class ComponentsTabPage {
@@ -9,25 +8,13 @@ export class ComponentsTabPage {
     cy.get(componentsTabPO.addComponent).click();
   }
 
-  static verifyRoute(
-    componentName: string,
-    // responseBodyContent: string,
-    // waitInterval: number = 10000,
-    // maxRetryNum: number = 10,
-  ) {
-    // TODO: Route no longer in components view
-    // new ApplicationDetailPage().expandDetails(componentName);
-    // cy.get(applicationDetailPagePO.route(componentName), { timeout: 240000 })
-    //   .invoke('text')
-    //   .then((route) => {
-    //     APIHelper.checkResponseBodyAndStatusCode(
-    //       route,
-    //       responseBodyContent,
-    //       waitInterval,
-    //       0,
-    //       maxRetryNum,
-    //     );
-    //   });
-    Applications.checkComponentStatus(componentName, 'Build completed');
+  static getComponentListItem(name: string) {
+    return cy.contains(applicationDetailPagePO.item, name, { timeout: 60000 });
+  }
+
+  static openComponent(name: string) {
+    this.getComponentListItem(name).click();
+    Common.waitForLoad();
+    cy.contains('h2', name).should('be.visible');
   }
 }

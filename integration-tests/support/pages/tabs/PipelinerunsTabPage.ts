@@ -1,7 +1,7 @@
-import { UIhelper } from '../../../utils/UIhelper';
-import { pipelinerunsTabPO } from '../../pageObjects/pages-po';
 import { hacAPIEndpoints } from '../../../utils/APIEndpoints';
 import { APIHelper } from '../../../utils/APIHelper';
+import { UIhelper } from '../../../utils/UIhelper';
+import { pipelinerunsTabPO } from '../../pageObjects/pages-po';
 
 type taskRunDetailsRow = {
   name: string | RegExp;
@@ -51,7 +51,7 @@ export class PipelinerunsTabPage {
         if (!annotations) {
           return items[0].metadata.name;
         }
-        for (let i in items) {
+        for (const i in items) {
           if (items[i].metadata.annotations[annotations.key] === annotations.value) {
             return items[i].metadata.name;
           }
@@ -127,13 +127,6 @@ export class DetailsTab {
 
   static closeDrawerPanel() {
     cy.get(pipelinerunsTabPO.drawerClose).click().should('not.exist');
-  }
-
-  static checkDownloadSBOM() {
-    cy.contains(pipelinerunsTabPO.listGroup, 'Download SBOM')
-      .find('input')
-      .should('contain.value', `cosign download sbom quay.io/`)
-      .and('be.visible');
   }
 
   static downloadSBOMAndCheckUsingCosign() {

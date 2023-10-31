@@ -33,7 +33,8 @@ export const waits = {
 
 export const actions = {
   kebabButton: '[data-testid="kebab-button"]',
-  deleteItem: '[data-testid="Delete application"]',
+  delete: '[data-testid="Delete"]',
+  deleteApp: '[data-testid="Delete application"]',
   deleteComponent: '[data-testid="Delete component"]',
   deleteModalInput: 'input[name*="resourceName"]',
   deleteModalButton: 'button[data-testid="delete-resource"]',

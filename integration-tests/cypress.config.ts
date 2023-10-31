@@ -1,8 +1,8 @@
 import { defineConfig } from 'cypress';
 import * as fs from 'fs-extra';
 import * as glob from 'glob';
-const registerReportPortalPlugin = require('@reportportal/agent-js-cypress/lib/plugin');
 const { mergeLaunches } = require('@reportportal/agent-js-cypress/lib/mergeLaunches');
+const registerReportPortalPlugin = require('@reportportal/agent-js-cypress/lib/plugin');
 const { beforeRunHook, afterRunHook } = require('cypress-mochawesome-reporter/lib');
 function deleteLaunchFiles() {
   const getLaunchTempFiles = () => {
@@ -54,7 +54,7 @@ export default defineConfig({
     specPattern: 'tests/*.spec.ts',
     testIsolation: false,
     excludeSpecPattern:
-      process.env.CYPRESS_PERIODIC_RUN || process.env.GH_COMMENTBODY?.toLowerCase() == '[test]'
+      process.env.CYPRESS_PERIODIC_RUN || process.env.GH_COMMENTBODY?.toLowerCase() === '[test]'
         ? 'tests/*-private-git-*' // TODO: remove once https://issues.redhat.com/browse/RHTAPBUGS-111 is resolved
         : 'tests/{advanced-happy-path*,environments-tests*,*-private-git-*}',
     setupNodeEvents(on, config) {
@@ -155,8 +155,8 @@ export default defineConfig({
         }
       }
 
-      config.env['HAC_WORKSPACE'] = config.env['USERNAME'].toLowerCase();
-      config.env['HAC_NAMESPACE'] = `${config.env['HAC_WORKSPACE']}-tenant`;
+      config.env.HAC_WORKSPACE = config.env.USERNAME.toLowerCase();
+      config.env.HAC_NAMESPACE = `${config.env.HAC_WORKSPACE}-tenant`;
 
       if (
         config.env.PR_CHECK === true &&

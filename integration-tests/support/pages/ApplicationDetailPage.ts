@@ -1,6 +1,5 @@
 import { Common } from '../../utils/Common';
 import { pageTitles } from '../constants/PageTitle';
-import { CPUUnit, MemoryUnit } from '../constants/Units';
 import {
   addComponentPagePO,
   buildLogModalContentPO,
@@ -9,18 +8,6 @@ import {
 import { actions } from '../pageObjects/global-po';
 
 export class ApplicationDetailPage {
-  checkReplica(replicaCount: number) {
-    cy.contains('div', applicationDetailPagePO.replicaLabel).should('contain.text', replicaCount);
-  }
-
-  checkCpuAndMemory(cpuValue: number, cpuUnit: CPUUnit, ramValue: number, ramUnit: MemoryUnit) {
-    const shortCpuUnit = cpuUnit === CPUUnit.core ? '' : 'm';
-    cy.contains('div', applicationDetailPagePO.cpuRamLabel).should(
-      'contain.text',
-      `${cpuValue}${shortCpuUnit}, ${ramValue}${ramUnit}`,
-    );
-  }
-
   openDeploymentSettings(componentName: string) {
     this.openActionList(componentName);
     cy.get(applicationDetailPagePO.deploymentSettings).click();
@@ -43,13 +30,6 @@ export class ApplicationDetailPage {
 
   openBuildLog(componentName: string) {
     cy.get(applicationDetailPagePO.componentBuildLog(componentName), { timeout: 60000 }).click();
-    cy.get(buildLogModalContentPO.modal).should('exist');
-  }
-
-  openPodLogs(componentName: string) {
-    cy.get(applicationDetailPagePO.componentPodLog(componentName), { timeout: 60000 })
-      .should('have.have.text', 'View pod logs')
-      .click();
     cy.get(buildLogModalContentPO.modal).should('exist');
   }
 

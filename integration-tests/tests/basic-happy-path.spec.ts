@@ -1,14 +1,17 @@
 import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
-import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
+import {
+  ComponentDetailsPage,
+  ComponentPageTabs,
+  DeploymentsTab,
+} from '../support/pages/ComponentDetailsPage';
 import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
+import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
 import {
   DetailsTab,
   PipelinerunsTabPage,
   TaskRunsTab,
 } from '../support/pages/tabs/PipelinerunsTabPage';
-import { githubAPIEndpoints } from '../utils/APIEndpoints';
-import { APIHelper } from '../utils/APIHelper';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
@@ -26,7 +29,7 @@ describe('Basic Happy Path', () => {
     // If some test failed, don't remove the app
     let allTestsSucceeded = true;
     this.test.parent.eachTest((test) => {
-      if (test.state == 'failed') {
+      if (test.state === 'failed') {
         allTestsSucceeded = false;
       }
     });
@@ -52,13 +55,15 @@ describe('Basic Happy Path', () => {
   });
 
   describe('Check different ways to add a component', () => {
+    afterEach(() => {
+      Applications.clickBreadcrumbLink(applicationName);
+      cy.url().should('include', `${applicationName}`);
+    });
+
     it("Use 'Components' tabs to start adding a new component", () => {
       Applications.goToOverviewTab().addComponent();
       cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
       cy.url().should('include', `/import?application=${applicationName}`);
-
-      Applications.clickBreadcrumbLink(applicationName);
-      cy.url().should('include', `${applicationName}`);
     });
 
     it("Use HACBS 'Components' tabs to start adding a new component", () => {
@@ -66,22 +71,20 @@ describe('Basic Happy Path', () => {
       ComponentsTabPage.clickAddComponent();
       cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
       cy.url().should('include', `/import?application=${applicationName}`);
-
-      Applications.clickBreadcrumbLink(applicationName);
-      cy.url().should('include', `${applicationName}`);
     });
 
     it("Click 'Actions' dropdown to add a component", () => {
       Applications.clickActionsDropdown('Add component');
       cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
       cy.url().should('include', `/import?application=${applicationName}`);
-
-      Applications.clickBreadcrumbLink(applicationName);
-      cy.url().should('include', `${applicationName}`);
     });
   });
 
   describe('Explore Pipeline runs Tab', () => {
+    after(() => {
+      Applications.clickBreadcrumbLink(applicationName);
+    });
+
     it('Verify the Pipeline run details and Node Graph view', () => {
       Applications.goToPipelinerunsTab();
       UIhelper.getTableRow('Pipeline run List', 'Running')
@@ -116,25 +119,14 @@ describe('Basic Happy Path', () => {
     });
   });
 
-  describe('Check Component Deployment, Build logs and Application Status', () => {
-    it('Verify the status code and response body of the deployment URL of each component', () => {
-      Applications.clickBreadcrumbLink('Pipeline runs');
+  describe('Check Component in Components tab', () => {
+    before(() => {
       Applications.goToComponentsTab();
-      ComponentsTabPage.verifyRoute(componentName);
     });
 
-    // TODO: Move this to the details page
-    // it('Verify deployed image exists', () => {
-    //   cy.get('.component-list-item__details input')
-    //     .invoke('val')
-    //     .then((value) => {
-    //       cy.exec(`skopeo inspect -f "Name: {{.Name}} Digest: {{.Digest}}" docker://${value}`, {
-    //         timeout: 300000,
-    //       })
-    //         .its('code')
-    //         .should('eq', 0);
-    //     });
-    // });
+    it('Check component build status', () => {
+      Applications.checkComponentStatus(componentName, 'Build completed');
+    });
 
     it('Validate Build Logs are successful', () => {
       applicationDetailPage.openBuildLog(componentName);
@@ -143,9 +135,29 @@ describe('Basic Happy Path', () => {
       applicationDetailPage.checkBuildLog('show-summary', 'Image is in : quay.io');
       applicationDetailPage.closeBuildLog();
     });
+  });
+
+  describe('Check Component Details', () => {
+    before(() => {
+      ComponentsTabPage.openComponent(componentName);
+    });
+
+    it('Verify deployed image exists', () => {
+      ComponentDetailsPage.checkBuildImage();
+    });
+
+    it('Verify the status code and response body of the deployment URL of each component', () => {
+      ComponentDetailsPage.openTab(ComponentPageTabs.deployments);
+      DeploymentsTab.verifyRoute(quarkusDeplomentBody);
+    });
+  });
+
+  describe('Check Application Overview', () => {
+    before(() => {
+      Common.openApplicationURL(applicationName);
+    });
 
     it('Validate Application Status', () => {
-      Applications.goToOverviewTab();
       Applications.verifyAppstatusIsSucceeded();
     });
 

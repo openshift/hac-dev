@@ -1,6 +1,6 @@
-import { UIhelper } from '../../../utils/UIhelper';
-import { APIHelper } from '../../../utils/APIHelper';
 import { githubAPIEndpoints } from '../../../utils/APIEndpoints';
+import { APIHelper } from '../../../utils/APIHelper';
+import { UIhelper } from '../../../utils/UIhelper';
 
 type commitsRow = {
   name: string;

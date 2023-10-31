@@ -1,7 +1,7 @@
 import { Common } from '../../utils/Common';
 import { UIhelper } from '../../utils/UIhelper';
 import { CPUUnit, MemoryUnit } from '../constants/Units';
-import { addComponentPagePO, ComponentsPagePO } from '../pageObjects/createApplication-po';
+import { ComponentsPagePO } from '../pageObjects/createApplication-po';
 import { alertTitle } from '../pageObjects/global-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 

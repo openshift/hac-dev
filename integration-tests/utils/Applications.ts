@@ -1,5 +1,4 @@
-import { pageTitles } from '../support/constants/PageTitle';
-import { applicationDetailPagePO } from '../support/pageObjects/createApplication-po';
+import { pageTitles, FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
 import { actions, breadcrumb } from '../support/pageObjects/global-po';
 import {
   actionsDropdown,
@@ -14,12 +13,12 @@ import {
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
 import { CreateApplicationPage } from '../support/pages/CreateApplicationPage';
+import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
 import { OverviewTabPage } from '../support/pages/tabs/OverviewTabPage';
-import { Common } from './Common';
-import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
-import { UIhelper } from './UIhelper';
 import { hacAPIEndpoints } from '../utils/APIEndpoints';
 import { APIHelper } from '../utils/APIHelper';
+import { Common } from './Common';
+import { UIhelper } from './UIhelper';
 
 export class Applications {
   static deleteApplication(applicationName: string) {
@@ -78,7 +77,7 @@ export class Applications {
 
     Common.verifyPageTitle(applicationName);
     Common.waitForLoad();
-    this.getComponentListItem(componentName).should('exist');
+    ComponentsTabPage.getComponentListItem(componentName).should('exist');
   }
 
   static checkComponentStatus(componentName: string, componentStatus: string) {
@@ -94,10 +93,6 @@ export class Applications {
   }
   static verifyAppstatusIsSucceeded() {
     cy.contains(applicationsPagePO.appStatus, 'Healthy', { timeout: 100000 }).should('be.visible');
-  }
-
-  static getComponentListItem(application: string) {
-    return cy.contains(applicationDetailPagePO.item, application, { timeout: 60000 });
   }
 
   static clickActionsDropdown(dropdownItem: string) {

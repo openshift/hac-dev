@@ -85,7 +85,7 @@ describe('Create component from sample', () => {
   it('Delete application with existing component', () => {
     Common.navigateTo(NavItem.applications);
     Applications.openKebabMenu(Cypress.env('appName'));
-    cy.get(actions.deleteItem).click();
+    cy.get(actions.deleteApp).click();
     cy.get(actions.deleteModalInput).clear().type(Cypress.env('appName'));
     cy.get(actions.deleteModalButton).click();
     cy.get(`[data-id="${Cypress.env('appName')}"]`).should('not.exist');
