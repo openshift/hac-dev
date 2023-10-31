@@ -49,6 +49,7 @@ describe('GitImportForm rendering', () => {
 
     screen.getByTestId('source-section');
     screen.getByText('Bring in your own code');
+    screen.getByText("You provide the code and we'll create an application.");
     screen.getByRole('button', { name: 'Import code' });
   });
 
