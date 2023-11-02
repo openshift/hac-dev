@@ -88,3 +88,8 @@ export const environmentsPagePO = {
 export const getStartedPagePO = {
   createAppButton: '[data-test="create-application"]',
 };
+
+export const componentDetailsPO = {
+  buildImage: '[data-test="build-container-image-test"] input',
+  route: '[data-testid="environment-cell"] > div > a',
+};

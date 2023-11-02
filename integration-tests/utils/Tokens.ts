@@ -1,5 +1,5 @@
-import { APIHelper } from './APIHelper';
 import { hacAPIEndpoints } from './APIEndpoints';
+import { APIHelper } from './APIHelper';
 
 export class Tokens {
   static removeBindingsAndTokens() {

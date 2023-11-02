@@ -13,7 +13,7 @@ export class APIHelper {
       .should('exist')
       .its('value')
       .then((token) => {
-        options['headers'] = {
+        options.headers = {
           authorization: `Bearer ${token}`,
           accept: 'application/json',
         };
@@ -23,12 +23,12 @@ export class APIHelper {
 
   static githubRequest(method: Cypress.HttpMethod, url: string, body?: Cypress.RequestBody) {
     const options = {
-      method: method,
-      url: url,
+      method,
+      url,
       headers: this.githubHeaders,
     };
     if (body) {
-      options['body'] = body;
+      options.body = body;
     }
     return cy.request(options);
   }
@@ -48,7 +48,7 @@ export class APIHelper {
       failOnStatusCode: false,
     };
     if (headers) {
-      options['headers'] = headers;
+      options.headers = headers;
     }
     cy.request(options).then((resp) => {
       if (resp.status === 200 && JSON.stringify(resp.body).includes(responseBodyContent) === true) {

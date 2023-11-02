@@ -1,20 +1,25 @@
+import { NavItem } from '../support/constants/PageTitle';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
+import {
+  ComponentDetailsPage,
+  ComponentPageTabs,
+  DeploymentsTab,
+} from '../support/pages/ComponentDetailsPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
 import { SecretsPage } from '../support/pages/SecretsPage';
+import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
 import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
 import { LatestCommitsTabPage } from '../support/pages/tabs/LatestCommitsTabPage';
-import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
 import {
   DetailsTab,
   PipelinerunsTabPage,
   TaskRunsTab,
 } from '../support/pages/tabs/PipelinerunsTabPage';
+import { githubAPIEndpoints } from '../utils/APIEndpoints';
+import { APIHelper } from '../utils/APIHelper';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
-import { APIHelper } from '../utils/APIHelper';
-import { githubAPIEndpoints } from '../utils/APIEndpoints';
-import { NavItem } from '../support/constants/PageTitle';
 
 describe('Advanced Happy path', () => {
   const applicationName = Common.generateAppName();
@@ -35,7 +40,7 @@ describe('Advanced Happy path', () => {
     // If some test failed, don't remove the app
     let allTestsSucceeded = true;
     this.test.parent.eachTest((test) => {
-      if (test.state == 'failed') {
+      if (test.state === 'failed') {
         allTestsSucceeded = false;
       }
     });
@@ -140,9 +145,11 @@ describe('Advanced Happy path', () => {
   });
 
   describe('Verify SBOM on pipeline run details', () => {
-    it('Verify SBOM and logs', () => {
+    before(() => {
       UIhelper.clickTab('Details');
-      DetailsTab.checkDownloadSBOM();
+    });
+
+    it('Verify SBOM and logs', () => {
       UIhelper.clickLink('View SBOM');
       DetailsTab.verifyLogs('"bomFormat": "CycloneDX"');
     });
@@ -183,20 +190,34 @@ describe('Advanced Happy path', () => {
   });
 
   describe('Check Component Deployment', () => {
-    it('Verify the status code and response body of the deployment URL of each component', () => {
-      Applications.clickBreadcrumbLink('Pipeline runs');
+    before(() => {
+      Applications.clickBreadcrumbLink(applicationName);
       Applications.goToComponentsTab();
-      ComponentsTabPage.verifyRoute(componentName);
+      ComponentsTabPage.openComponent(componentName);
+    });
+
+    after(() => {
+      Applications.clickBreadcrumbLink(applicationName);
+    });
+
+    it('Verify the status code and response body of the deployment URL of each component', () => {
+      ComponentDetailsPage.openTab(ComponentPageTabs.deployments);
+      DeploymentsTab.verifyRoute(componentInfo.deploymentBodyOriginal);
     });
 
     it('Verify SBOM on components tab', () => {
-      DetailsTab.checkDownloadSBOM();
+      ComponentDetailsPage.openTab(ComponentPageTabs.detail);
+      ComponentDetailsPage.checkSBOM();
     });
   });
 
   describe('Add and edit integration test', () => {
-    it('Add integration test and verify', () => {
+    before(() => {
+      Applications.clickBreadcrumbLink(applicationName);
       UIhelper.clickTab('Integration tests');
+    });
+
+    it('Add integration test and verify', () => {
       integrationTestsTabPage.clickOnAddIntegrationTestBtn();
       integrationTestsTabPage.addIntegrationTest(
         integrationTestDetails.integrationTestName,
@@ -256,7 +277,7 @@ describe('Advanced Happy path', () => {
   });
 
   describe('Add a new commit and verify Build Pipeline run', () => {
-    it('Add a new commit with changes to a file', () => {
+    before(() => {
       const goFileUpdated = Buffer.from(componentInfo.goFileBase64Original, 'base64')
         .toString('utf8')
         .replace(componentInfo.deploymentBodyOriginal, componentInfo.deploymentBodyUpdated);
@@ -268,10 +289,10 @@ describe('Advanced Happy path', () => {
         Buffer.from(goFileUpdated).toString('base64'),
         componentInfo.goFileSHAOriginal,
       );
+      Applications.goToPipelinerunsTab();
     });
 
     it('Verify and wait for the new Pipeline run', () => {
-      Applications.goToPipelinerunsTab();
       UIhelper.getTableRow('Pipeline run List', /Running|Pending/)
         .contains(`${componentName}-on-push`)
         .invoke('text')
@@ -288,8 +309,11 @@ describe('Advanced Happy path', () => {
   });
 
   describe('Verify Integration Test Pipeline Runs on Activity Tab', () => {
-    it('Verify Integration Test pipeline run Details', () => {
+    before(() => {
       Applications.clickBreadcrumbLink('Pipeline runs');
+    });
+
+    it('Verify Integration Test pipeline run Details', () => {
       PipelinerunsTabPage.getPipelineRunNameByLabel(
         applicationName,
         `test.appstudio.openshift.io/scenario=${integrationTestDetails.integrationTestName}`,
@@ -329,8 +353,11 @@ describe('Advanced Happy path', () => {
   });
 
   describe('Verify Enterprise Contract Integration Test Pipeline Runs on Activity Tab', () => {
-    it('Verify EC Integration Test pipeline run Details', () => {
+    before(() => {
       Applications.clickBreadcrumbLink('Pipeline runs');
+    });
+
+    it('Verify EC Integration Test pipeline run Details', () => {
       PipelinerunsTabPage.getPipelineRunNameByLabel(
         applicationName,
         `test.appstudio.openshift.io/scenario=${applicationName}-enterprise-contract`,
@@ -370,8 +397,11 @@ describe('Advanced Happy path', () => {
   });
 
   describe('Verify Integration Test Details on Integration tests Tab', () => {
-    it('Verify Integration Tests Overview page', () => {
+    before(() => {
       Applications.clickBreadcrumbLink(applicationName);
+    });
+
+    it('Verify Integration Tests Overview page', () => {
       UIhelper.clickTab('Integration tests');
       UIhelper.clickLink(integrationTestDetails.integrationTestName);
       UIhelper.verifyLabelAndValue('Name', integrationTestDetails.integrationTestName);
@@ -390,27 +420,33 @@ describe('Advanced Happy path', () => {
   });
 
   describe('Verify new commit updates in Components Tab', () => {
-    it('Verify that the component deployment reflects latest changes', () => {
+    before(() => {
       Applications.clickBreadcrumbLink(applicationName);
       Applications.goToComponentsTab();
-      ComponentsTabPage.verifyRoute(componentName);
+      ComponentsTabPage.openComponent(componentName);
+    });
+
+    it('Verify that the component deployment reflects latest changes', () => {
+      ComponentDetailsPage.openTab(ComponentPageTabs.deployments);
+      DeploymentsTab.verifyRoute(componentInfo.deploymentBodyUpdated);
     });
 
     it('Verify view pod logs', () => {
-      applicationDetailPage.openPodLogs(componentName);
+      ComponentDetailsPage.openPodLogs();
       cy.contains('Pod status: Running').should('be.visible');
       applicationDetailPage.checkPodLog('my-go', 'TEST_ENV_VAR : Test go app');
       applicationDetailPage.closeBuildLog();
     });
 
-    it('Verify Component Details Page', () => {
-      UIhelper.clickLink(componentName);
+    it('Verify Commit Trigger', () => {
+      ComponentDetailsPage.openTab(ComponentPageTabs.detail);
       UIhelper.verifyLabelAndValue('Triggered by', componentInfo.updatedCommitMessage);
       UIhelper.verifyLabelAndValue('Build trigger', 'Automatic');
     });
 
-    it('verify Commits Tab on component Details page', () => {
-      Applications.goToActivityTab();
+    it('Verify Commits Tab on component Details page', () => {
+      ComponentDetailsPage.openTab(ComponentPageTabs.activity);
+      UIhelper.clickTab('Commits');
       latestCommitsTabPage.verifyLatestCommits([
         { name: componentInfo.firstCommitTitle, component: componentName },
         { name: componentInfo.updatedCommitMessage, component: componentName },
@@ -431,9 +467,12 @@ describe('Advanced Happy path', () => {
   });
 
   describe('Verify Latest commits and Pipeline runs in Activity Tab', () => {
-    it('Verify the Commits List view should have both the commits', () => {
+    before(() => {
       Applications.clickBreadcrumbLink(applicationName);
       Applications.goToLatestCommitsTab();
+    });
+
+    it('Verify the Commits List view should have both the commits', () => {
       latestCommitsTabPage.verifyLatestCommits([
         { name: componentInfo.firstCommitTitle, component: componentName },
         { name: componentInfo.updatedCommitMessage, component: componentName },
@@ -477,9 +516,11 @@ describe('Advanced Happy path', () => {
   });
 
   describe('Verify application Lifecycle nodes on Overview page', () => {
-    it('check Lifecycle Nodes', () => {
+    before(() => {
       Applications.clickBreadcrumbLink(applicationName);
-      Common.waitForLoad();
+    });
+
+    it('check Lifecycle Nodes', () => {
       UIhelper.verifyGraphNodes('Components', false);
       UIhelper.verifyGraphNodes('Builds');
       UIhelper.verifyGraphNodes('Tests', false);
@@ -488,8 +529,11 @@ describe('Advanced Happy path', () => {
   });
 
   describe('Validate secrets', () => {
-    it('Verify Secret on Secret List', () => {
+    before(() => {
       Common.navigateTo(NavItem.secrets);
+    });
+
+    it('Verify Secret on Secret List', () => {
       UIhelper.verifyRowInTable('Secret List', secret.secretName, [
         'Build',
         'development',

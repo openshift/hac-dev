@@ -1,9 +1,9 @@
 import { NavItem } from '../support/constants/PageTitle';
-import { DetailsTab, LogsTab } from '../support/pages/tabs/PipelinerunsTabPage';
+import { EnvironmentsPage } from '../support/pages/EnvironmentsPage';
+import { DetailsTab } from '../support/pages/tabs/PipelinerunsTabPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
-import { EnvironmentsPage } from '../support/pages/EnvironmentsPage';
 
 describe('Create Env using Non-OpenShift Cluster', () => {
   const applicationName = Common.generateAppName();

@@ -1,7 +1,10 @@
 import { CPUUnit, MemoryUnit } from '../support/constants/Units';
 import { AddComponentPage } from '../support/pages/AddComponentPage';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
+import { ComponentDetailsPage } from '../support/pages/ComponentDetailsPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
+import { DeploymentSettingsPage } from '../support/pages/DeploymentSettingsPage';
+import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 
@@ -23,7 +26,7 @@ describe('Create Component from Public Git Source', () => {
     Applications.deleteApplication(applicationName);
   });
 
-  describe('Creating a Quarkus Component', () => {
+  describe('Creating a Component from git', () => {
     it('Import code', () => {
       Applications.createApplication();
       addComponent.setSource(publicRepo);
@@ -61,24 +64,27 @@ describe('Create Component from Public Git Source', () => {
     });
   });
 
-  describe('Change resources for the existing app', () => {
-    // TODO: Moved to component details page
-    // it('Check Resources Value', () => {
-    //   applicationDetailPage.expandDetails(componentPage.componentName);
-    //   applicationDetailPage.checkCpuAndMemory(cpuCount + 1, cpuUnit, ramValue, ramUnit);
-    //   applicationDetailPage.checkReplica(replicaCount);
-    // });
+  describe('Edit resources for the existing app', () => {
+    before(() => {
+      ComponentsTabPage.openComponent(componentPage.componentName);
+      ComponentDetailsPage.editComponent();
+    });
+
+    it('Check Resources Value', () => {
+      DeploymentSettingsPage.checkCpuAndMemory(cpuCount + 1, cpuUnit, ramValue, ramUnit);
+      DeploymentSettingsPage.checkInstances(replicaCount);
+    });
+
     // Skipping due to : https://issues.redhat.com/browse/HAC-3184
     // it('Change Resources Value', () => {
-    //   applicationDetailPage.openDeploymentSettings(componentPage.componentName);
     //   componentPage.setRam(2, MemoryUnit.gigabyte);
     //   componentPage.setCpuByButton(cpuCount, cpuUnit);
     //   componentPage.saveChanges();
     // });
+
     // it('Check updated resources values', () => {
     //   Applications.goToComponentsTab();
-    //   applicationDetailPage.expandDetails(componentPage.componentName);
-    //   applicationDetailPage.checkCpuAndMemory(cpuCount, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
+    //   DeploymentSettingsPage.checkCpuAndMemory(cpuCount, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
     // });
   });
 });

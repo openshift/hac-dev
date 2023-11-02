@@ -7,7 +7,7 @@ export class Common {
   }
 
   static navigateTo(link: NavItem) {
-    for (let item in NavItem) {
+    for (const item in NavItem) {
       cy.get(navigation.sideNavigation(NavItem[item]), { timeout: 30000 }).should('be.visible');
     }
     cy.get(navigation.sideNavigation(link)).click();
