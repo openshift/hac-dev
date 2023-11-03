@@ -8579,6 +8579,8 @@ export const MockSnapshots: Snapshot[] = [
           'https://github.com/jeff-phillips-18/human-resources/commit/8a1fd02d3fec043b009608ac67350cd4a2e02cd9',
         'pac.test.appstudio.openshift.io/sha-title': 'Update README.md',
         'pac.test.appstudio.openshift.io/git-auth-secret': 'pac-gitauth-vfnr',
+        'test.appstudio.openshift.io/status':
+          '[{"scenario":"app-sample-go-basic-enterprise-contract","status":"EnvironmentProvisionError","lastUpdateTime":"2023-09-19T16:00:38.969982048Z","details":"Failed to find deploymentTargetClass with right provisioner for copy of existingEnvironment","startTime":"2023-09-19T16:00:17.970660813Z","completionTime":"2023-09-20T16:00:38.969982048Z"},{"scenario":"scn 2","status":"EnvironmentProvisionError","lastUpdateTime":"2023-09-20T16:00:38.969982048Z","details":"could not find deployment","startTime":"2023-09-20T16:00:17.970660813Z","completionTime":"2023-09-20T16:00:38.969982048Z"}]',
       },
       resourceVersion: '92260135',
       name: 'my-test-output-1',
@@ -8715,6 +8717,8 @@ export const MockSnapshots: Snapshot[] = [
           'https://github.com/jeff-phillips-18/human-resources/commit/8a1fd02d3fec043b009608ac67350cd4a2e02cd9',
         'pac.test.appstudio.openshift.io/sha-title': 'Update README.md',
         'pac.test.appstudio.openshift.io/git-auth-secret': 'pac-gitauth-vfnr',
+        'test.appstudio.openshift.io/status':
+          '[{"scenario":"app-sample-go-basic-enterprise-contract","status":"EnvironmentProvisionError","lastUpdateTime":"2023-09-19T16:00:38.969982048Z","details":"Failed to find deploymentTargetClass with right provisioner for copy of existingEnvironment","startTime":"2023-09-20T16:00:17.970660813Z","completionTime":"2023-09-20T16:00:38.969982048Z"}]',
       },
       resourceVersion: '92260135',
       name: 'my-test-output-2',
@@ -8818,6 +8822,124 @@ export const MockSnapshots: Snapshot[] = [
           containerImage:
             'quay.io/redhat-appstudio/user-workload@sha256:8161eeea15f71858d88a1d801ce12c63347f1c27f0bd572c1a657fbb0ad0c8ab',
           name: 'devfile-sample-code-with-quarkus-66zm',
+        },
+      ],
+    },
+    status: {
+      conditions: [
+        {
+          lastTransitionTime: '2023-03-27T13:47:16Z',
+          message: 'Snapshot starts being tested by the integrationPipelineRun',
+          reason: 'InProgress',
+          status: 'Unknown',
+          type: 'HACBSIntegrationStatus',
+        },
+      ],
+    },
+  },
+  {
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    kind: 'Snapshot',
+    metadata: {
+      generateName: 'my-test-output-',
+      annotations: {
+        'pac.test.appstudio.openshift.io/on-target-branch': '[main,master]',
+        'pac.test.appstudio.openshift.io/repo-url':
+          'https://github.com/jeff-phillips-18/human-resources',
+        'pac.test.appstudio.openshift.io/installation-id': '34687113',
+        'pac.test.appstudio.openshift.io/sha-url':
+          'https://github.com/jeff-phillips-18/human-resources/commit/8a1fd02d3fec043b009608ac67350cd4a2e02cd9',
+        'pac.test.appstudio.openshift.io/sha-title': 'Update README.md',
+      },
+      resourceVersion: '92260135',
+      name: 'no status snapshot',
+      uid: '406579cb-03dc-4ebd-9d36-aafc9478eb9c',
+      creationTimestamp: '2023-03-27T13:47:16Z',
+      generation: 1,
+      namespace: 'jephilli-tenant',
+      ownerReferences: [
+        {
+          apiVersion: 'appstudio.redhat.com/v1alpha1',
+          blockOwnerDeletion: true,
+          controller: true,
+          kind: 'Application',
+          name: 'my-test-output',
+          uid: '2901ca04-f268-4c04-9ef7-5a46f96a5ab7',
+        },
+      ],
+      labels: {
+        'appstudio.openshift.io/component': 'human-resources-clkq',
+        'pac.test.appstudio.openshift.io/pull-request': '6',
+      },
+    },
+    spec: {
+      application: 'my-test-output',
+      artifacts: {},
+      components: [
+        {
+          containerImage:
+            'quay.io/redhat-appstudio/user-workload@sha256:0afbdd832f28a7de094e6f0771f5b1b7a80bd8f45d282823ae9ef093d29fac52',
+          name: 'devfile-sample-go-basic-kksq',
+        },
+      ],
+    },
+    status: {
+      conditions: [
+        {
+          lastTransitionTime: '2023-03-27T13:47:16Z',
+          message: 'Snapshot starts being tested by the integrationPipelineRun',
+          reason: 'InProgress',
+          status: 'Unknown',
+          type: 'HACBSIntegrationStatus',
+        },
+      ],
+    },
+  },
+  {
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    kind: 'Snapshot',
+    metadata: {
+      generateName: 'my-test-output-',
+      annotations: {
+        'pac.test.appstudio.openshift.io/on-target-branch': '[main,master]',
+        'pac.test.appstudio.openshift.io/repo-url':
+          'https://github.com/jeff-phillips-18/human-resources',
+        'pac.test.appstudio.openshift.io/installation-id': '34687113',
+        'pac.test.appstudio.openshift.io/sha-url':
+          'https://github.com/jeff-phillips-18/human-resources/commit/8a1fd02d3fec043b009608ac67350cd4a2e02cd9',
+        'pac.test.appstudio.openshift.io/sha-title': 'Update README.md',
+        'test.appstudio.openshift.io/status':
+          '[{"scenario":"app-sample-go-basic-enterprise-contract","status":"Pending","lastUpdateTime":"2023-09-20T16:00:38.969982048Z","details":"Failed to find deploymentTargetClass with right provisioner for copy of existingEnvironment","startTime":"2023-09-20T16:00:17.970660813Z","completionTime":"2023-09-20T16:00:38.969982048Z"}]',
+      },
+      resourceVersion: '92260135',
+      name: 'snapshot with diff err',
+      uid: '406579cb-03dc-4ebd-9d36-aafc9478eb9c',
+      creationTimestamp: '2023-03-27T13:47:16Z',
+      generation: 1,
+      namespace: 'jephilli-tenant',
+      ownerReferences: [
+        {
+          apiVersion: 'appstudio.redhat.com/v1alpha1',
+          blockOwnerDeletion: true,
+          controller: true,
+          kind: 'Application',
+          name: 'my-test-output',
+          uid: '2901ca04-f268-4c04-9ef7-5a46f96a5ab7',
+        },
+      ],
+      labels: {
+        'appstudio.openshift.io/component': 'human-resources-clkq',
+        'pac.test.appstudio.openshift.io/pull-request': '6',
+      },
+    },
+    spec: {
+      application: 'my-test-output',
+      artifacts: {},
+      components: [
+        {
+          containerImage:
+            'quay.io/redhat-appstudio/user-workload@sha256:0afbdd832f28a7de094e6f0771f5b1b7a80bd8f45d282823ae9ef093d29fac52',
+          name: 'devfile-sample-go-basic-kksq',
         },
       ],
     },

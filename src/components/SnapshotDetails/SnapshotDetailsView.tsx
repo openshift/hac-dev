@@ -1,6 +1,7 @@
 import React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner, Text, TextVariants } from '@patternfly/react-core';
+import { SnapshotLabels } from '../../consts/pipelinerun';
 import { useEnvironments } from '../../hooks/useEnvironments';
 import { usePipelineRun } from '../../hooks/usePipelineRuns';
 import { SnapshotEnvironmentBindingGroupVersionKind, SnapshotGroupVersionKind } from '../../models';
@@ -18,8 +19,6 @@ import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import SnapshotOverviewTab from './tabs/SnapshotOverview';
 import SnapshotPipelineRunTab from './tabs/SnapshotPipelineRunsTab';
-
-const BUILD_PIPELINE_LABEL = `appstudio.openshift.io/build-pipelinerun`;
 
 type SnapshotDetailsViewProps = {
   applicationName: string;
@@ -42,7 +41,7 @@ const SnapshotDetailsView: React.FC<SnapshotDetailsViewProps> = ({
   });
 
   const buildPipelineName = React.useMemo(
-    () => loaded && !loadErr && snapshot?.metadata?.labels[BUILD_PIPELINE_LABEL],
+    () => loaded && !loadErr && snapshot?.metadata?.labels[SnapshotLabels.BUILD_PIPELINE_LABEL],
     [snapshot, loaded, loadErr],
   );
 

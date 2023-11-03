@@ -16,6 +16,8 @@ import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../../types';
 import { Snapshot } from '../../../types/coreBuildService';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
+import EnvironmentProvisionErrorAlert from '../EnvironmentProvisionErrorAlert';
+import { getEnvironmentProvisionError } from '../utils/snapshot-utils';
 import SnapshotComponentsList from './SnapshotComponentsList';
 import { SnapshotComponentTableData } from './SnapshotComponentsListRow';
 
@@ -46,6 +48,8 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
       }),
     [snapshot.spec],
   );
+
+  const errorStatus = getEnvironmentProvisionError(snapshot);
 
   return (
     <>
@@ -96,18 +100,23 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
                 <DescriptionListGroup>
                   <DescriptionListTerm>Deployed to</DescriptionListTerm>
                   <DescriptionListDescription>
-                    {environments.map((env) => (
-                      <div key={env}>
-                        <Link
-                          to={`/application-pipeline/workspaces/${workspace}/applications/${snapshot.spec.application}/deployments`}
-                        >
-                          {env}
-                        </Link>
-                      </div>
-                    ))}
+                    {errorStatus && Array.isArray(errorStatus) && errorStatus.length > 0 ? (
+                      <EnvironmentProvisionErrorAlert errorStatus={errorStatus} />
+                    ) : (
+                      environments.map((env) => (
+                        <div key={env}>
+                          <Link
+                            to={`/application-pipeline/workspaces/${workspace}/applications/${snapshot.spec.application}/deployments`}
+                          >
+                            {env}
+                          </Link>
+                        </div>
+                      ))
+                    )}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
               )}
+
               <DescriptionListGroup>
                 <DescriptionListTerm>Vulnerabilities</DescriptionListTerm>
                 <DescriptionListDescription>

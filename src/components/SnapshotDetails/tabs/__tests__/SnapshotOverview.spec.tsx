@@ -98,4 +98,30 @@ describe('SnapshotOverview', () => {
     );
     screen.getByText('Components');
   });
+
+  it('should display ErrorAlert when EnvironementProvisionError occurs', () => {
+    watchResourceMock.mockImplementation(getMockedResources);
+    routerRenderer(
+      <SnapshotOverview
+        snapshot={mockSnapshots[1]}
+        buildPipelineName="build-pipeline"
+        commit={mockCommits[0]}
+      />,
+    );
+    screen.queryByTestId('env-provision-err-alert');
+    screen.queryByText('Failed for app-sample-go-basic-enterprise-contract');
+  });
+
+  it('should hide ErrorAlert when different error occurs and display deployment name', () => {
+    watchResourceMock.mockImplementation(getMockedResources);
+    routerRenderer(
+      <SnapshotOverview
+        snapshot={mockSnapshots[3]}
+        buildPipelineName="build-pipeline"
+        commit={mockCommits[0]}
+      />,
+    );
+    expect(screen.queryByText('Failed for')).not.toBeInTheDocument();
+    screen.queryByText('development');
+  });
 });
