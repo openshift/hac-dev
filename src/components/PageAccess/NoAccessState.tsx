@@ -48,16 +48,16 @@ const NoAccessState: React.FC<NoAccessStateProps> = ({
       />
       <EmptyStateBody>
         {body ||
-          `Ask the administrator of the ${workspace} workspace for access permissions. We're always here to help, so chat with us if you have any questions in the meantime.`}
+          `Ask the administrator or the owner of the ${workspace} workspace for access permissions.`}
       </EmptyStateBody>
       <EmptyStateFooter>
         {children || (
           <Button
             variant={ButtonVariant.primary}
             data-test="no-access-action"
-            onClick={() => navigate('/application-pipeline/workspaces')}
+            onClick={() => navigate('/application-pipeline')}
           >
-            Go to applications list
+            Go to Overview page
           </Button>
         )}
       </EmptyStateFooter>
