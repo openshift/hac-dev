@@ -9,13 +9,12 @@ import {
   FlexItem,
   Skeleton,
   Title,
-  capitalize,
 } from '@patternfly/react-core';
 import { ScanStatus } from '../../../components/PipelineRunListView/ScanStatus';
 import { useScanResults } from '../../../hooks/useScanResults';
 import CommitLabel from '../../../shared/components/commit-label/CommitLabel';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
-import { Commit } from '../../../types';
+import { Commit, EnvironmentKind } from '../../../types';
 import { Snapshot } from '../../../types/coreBuildService';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import EnvironmentProvisionErrorAlert from '../EnvironmentProvisionErrorAlert';
@@ -27,7 +26,7 @@ interface SnapshotOverviewTabProps {
   snapshot: Snapshot;
   commit?: Commit;
   buildPipelineName?: string;
-  environments?: string[];
+  environments?: EnvironmentKind[];
 }
 
 const SnapshotOverviewTab: React.FC<React.PropsWithChildren<SnapshotOverviewTabProps>> = ({
@@ -111,11 +110,11 @@ const SnapshotOverviewTab: React.FC<React.PropsWithChildren<SnapshotOverviewTabP
                       <EnvironmentProvisionErrorAlert errorStatus={errorStatus} />
                     ) : (
                       environments.map((env) => (
-                        <div key={env}>
+                        <div key={env.metadata.name}>
                           <Link
                             to={`/application-pipeline/workspaces/${workspace}/applications/${snapshot.spec.application}/deployments`}
                           >
-                            {capitalize(env)}
+                            {env.spec?.displayName ?? env.metadata?.name}
                           </Link>
                         </div>
                       ))

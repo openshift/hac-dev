@@ -14,8 +14,20 @@ describe('snapshot-utils', () => {
   });
 
   it('should return formatted error status', () => {
+    const result = getEnvironmentProvisionError(MockSnapshots[0]);
+    expect(result.length).toBe(2);
+    expect(result[0].scenario).toBe('scn 2');
+  });
+
+  it('should filter out single error ', () => {
     const result = getEnvironmentProvisionError(MockSnapshots[1]);
     expect(result.length).toBe(1);
+  });
+});
+
+describe('snapshot-utils error', () => {
+  it('should show correct scenario', () => {
+    const result = getEnvironmentProvisionError(MockSnapshots[1]);
     expect(result[0].scenario).toBe('app-sample-go-basic-enterprise-contract');
   });
 

@@ -8329,6 +8329,33 @@ export const MockEnvironments = [
   },
 ];
 
+export const MockEnvironmentsWithoutDisplayName = [
+  {
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    kind: 'Environment',
+    metadata: {
+      annotations: {
+        'toolchain.dev.openshift.com/last-applied-configuration':
+          '{"apiVersion":"appstudio.redhat.com/v1alpha1","kind":"Environment","metadata":{"labels":{"toolchain.dev.openshift.com/owner":"jephilli","toolchain.dev.openshift.com/provider":"codeready-toolchain"},"name":"development","namespace":"jephilli-tenant"},"spec":{"deploymentStrategy":"AppStudioAutomated","displayName":"Development","type":"Non-POC"}}',
+      },
+      resourceVersion: '14576436',
+      name: 'test',
+      uid: '68aea4ae-d422-4f73-8baa-9a1f5d8eaee7',
+      creationTimestamp: '2023-03-01T11:47:57Z',
+      generation: 1,
+      namespace: 'jephilli-tenant',
+      labels: {
+        'toolchain.dev.openshift.com/owner': 'jephilli',
+        'toolchain.dev.openshift.com/provider': 'codeready-toolchain',
+      },
+    },
+    spec: {
+      deploymentStrategy: 'AppStudioAutomated',
+      type: 'Non-POC',
+    },
+  },
+];
+
 export const MockSnapshotsEB = [
   {
     apiVersion: 'appstudio.redhat.com/v1alpha1',
