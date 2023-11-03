@@ -18,7 +18,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
 
   const applicationBreadcrumbs = useApplicationBreadcrumbs(applicationName);
 
-  const title = reviewMode ? 'Configure your components for deployment' : 'Grab some code';
+  const title = reviewMode ? 'Configure your components for deployment' : 'Create an application';
   const description = reviewMode
     ? 'Review and define deployment settings and options.'
     : 'Provide a link to your GitHub repository or start with a no-fail sample.';
@@ -26,7 +26,7 @@ const ImportForm: React.FunctionComponent<ImportFormProps> = ({ applicationName 
 
   return (
     <PageLayout
-      breadcrumbs={[...applicationBreadcrumbs, { path: '#', name: 'Import' }]}
+      breadcrumbs={[...applicationBreadcrumbs, { path: '#', name: 'Create an application' }]}
       title={title}
       description={
         <>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, configure, waitFor } from '@testing-library/react';
+import { render, screen, configure, waitFor, within } from '@testing-library/react';
 import { useApplicationBreadcrumbs } from '../../../utils/breadcrumb-utils';
 import ImportForm from '../ImportForm';
 import '@testing-library/jest-dom';
@@ -43,13 +43,13 @@ describe('ImportForm', () => {
 
   it('should render correct title and description for source section', () => {
     render(<ImportForm applicationName="my-app" />);
-    screen.getByText('Grab some code');
+    screen.getByRole('heading', { name: 'Create an application' });
     screen.getByText('Provide a link to your GitHub repository or start with a no-fail sample.');
   });
 
   it('should change the title and description for review mode', async () => {
     render(<ImportForm applicationName="my-app" />);
-    screen.getByText('Grab some code');
+    within(screen.getByRole('navigation')).getByText('Create an application');
     screen.getByText('Provide a link to your GitHub repository or start with a no-fail sample.');
 
     await waitFor(() => screen.getByTestId('submit-button').click());

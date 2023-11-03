@@ -1,6 +1,6 @@
 export const pageTitles = {
   applications: 'Applications',
-  createApp: 'Grab some code',
+  createApp: 'Create an application',
   sampleStart: 'Start with a sample',
   reviewComponent: 'Review your new components',
   deploymentSettings: 'Edit deployment settings',

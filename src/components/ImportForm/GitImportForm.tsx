@@ -7,6 +7,7 @@ import {
   StackItem,
   Bullseye,
   Title,
+  Text,
   Form,
   Divider,
 } from '@patternfly/react-core';
@@ -199,6 +200,11 @@ const GitImportForm: React.FunctionComponent<GitImportFormProps> = ({
                     {reviewMode ? 'Review and configure for deployment' : 'Bring in your own code'}
                   </Title>
                 </Bullseye>
+                {!reviewMode && (
+                  <Bullseye>
+                    <Text>You provide the code and we&apos;ll create an application.</Text>
+                  </Bullseye>
+                )}
               </StackItem>
             </Stack>
           </PageSection>
