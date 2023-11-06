@@ -317,6 +317,10 @@ describe('Advanced Happy path', () => {
       PipelinerunsTabPage.getPipelineRunNameByLabel(
         applicationName,
         `test.appstudio.openshift.io/scenario=${integrationTestDetails.integrationTestName}`,
+        {
+          key: 'pac.test.appstudio.openshift.io/event-type',
+          value: 'push',
+        },
       ).then((testPipelineName) => {
         integrationTestDetails.passIntegrationTestPipelineRunName = testPipelineName;
         UIhelper.verifyRowInTable('Pipeline run List', testPipelineName, [/^Test$/]);
