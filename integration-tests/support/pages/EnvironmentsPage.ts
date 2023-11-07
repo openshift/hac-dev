@@ -17,7 +17,10 @@ export class EnvironmentsPage {
     UIhelper.selectValueInDropdownbyLabelName('Cluster type', clusterType);
     UIhelper.inputValueInTextBoxByLabelName('Ingress domain', ingressDomain);
 
-    cy.get(environmentsPagePO.kubconfigTextArea).clear().type(kubeconfig, { log: false });
+    cy.get(environmentsPagePO.kubconfigTextArea)
+      .clear()
+      .invoke('attr', 'style', 'color: transparent;text-shadow: 0 0 8px rgba(0,0,0,0.5);')
+      .type(kubeconfig, { log: false });
     cy.contains(
       environmentsPagePO.kubeconfigValidationMsg,
       'Contents verified. Everything looks good.',

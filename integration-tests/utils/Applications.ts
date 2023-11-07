@@ -181,12 +181,13 @@ export class Applications {
           `${secret.secretName === 'snyk-secret' ? '' : 'Create "'}${secret.secretName}`,
         ).click();
       });
-      if (secret.secretName === 'snyk-secret') {
-        cy.get(applicationsPagePO.secretValue).clear().type(secret.value);
-      } else {
+      if (secret.secretName !== 'snyk-secret') {
         cy.get(applicationsPagePO.secretKey).clear().type(secret.key);
-        cy.get(applicationsPagePO.secretValue).clear().type(secret.value);
       }
+      cy.get(applicationsPagePO.secretValue)
+        .clear()
+        .invoke('attr', 'style', 'color: transparent;text-shadow: 0 0 8px rgba(0,0,0,0.5);')
+        .type(secret.value, { log: false });
       UIhelper.clickButton('Create').should('not.exist');
     }
     componentPage.clickCreateApplication();
