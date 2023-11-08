@@ -95,7 +95,7 @@ export const createResources = async (
     componentAnnotations = {
       ...(componentAnnotations ?? {}),
       ['image.redhat.com/generate']: JSON.stringify({
-        visibility: formValues.repoAccessibility,
+        visibility: strategy === ImportStrategy.SAMPLE ? 'public' : formValues.repoAccessibility,
       }),
     };
   }
