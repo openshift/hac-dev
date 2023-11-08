@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { screen, fireEvent, act } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useFormikContext } from 'formik';
+import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { namespaceRenderer } from '../../../../utils/test-utils';
 import { useAccessTokenBinding } from '../../utils/auth-utils';
 import AuthOptions from '../AuthOptions';
@@ -11,7 +12,7 @@ jest.mock('formik', () => ({
 }));
 
 jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
-  useChrome: () => ({ auth: { getToken: () => Promise.resolve('token') } }),
+  useChrome: jest.fn(),
 }));
 
 jest.mock('../../utils/auth-utils', () => ({
@@ -25,12 +26,13 @@ const useFormikContextMock = useFormikContext as jest.Mock;
 
 const useAccessTokenBindingMock = useAccessTokenBinding as jest.Mock;
 
-const windowOpenMock = window.open as jest.Mock;
+const useChromeMock = useChrome as jest.Mock;
 
 const renderAuthOptions = () => namespaceRenderer(<AuthOptions />, 'test-ns');
 
 describe('AuthOptions', () => {
   it('should show spinner if auth url is not loaded', () => {
+    useChromeMock.mockReturnValue({ auth: { getToken: () => Promise.resolve('token') } });
     useAccessTokenBindingMock.mockReturnValue([{}, false]);
     useFormikContextMock.mockReturnValue({
       values: { source: { git: { url: 'test-source' } }, secret: null },
@@ -40,6 +42,7 @@ describe('AuthOptions', () => {
   });
 
   it('should show success message if secret is available', () => {
+    useChromeMock.mockReturnValue({ auth: { getToken: () => Promise.resolve('token') } });
     useAccessTokenBindingMock.mockReturnValue([{}, true]);
     useFormikContextMock.mockReturnValue({
       values: { source: { git: { url: 'test-source' } }, secret: 'test-secret' },
@@ -50,37 +53,24 @@ describe('AuthOptions', () => {
     expect(screen.queryByText('Use a token instead')).not.toBeInTheDocument();
   });
 
-  it('should not call window.open if auth url is not available', async () => {
+  it('should show render form once token is resolved', async () => {
+    useChromeMock.mockReturnValue({ auth: { getToken: () => Promise.resolve('token') } });
     useAccessTokenBindingMock.mockReturnValue([{}, true]);
     useFormikContextMock.mockReturnValue({
-      values: { source: { git: { url: 'https://github.com/test/repository' } }, secret: null },
+      values: { source: { git: { url: 'test-source' } } },
     });
-
     renderAuthOptions();
-    const button = screen.getByText('Sign in');
-    expect(button).toBeEnabled();
-
-    await act(async () => {
-      fireEvent.click(button);
-    });
-
-    expect(windowOpenMock).not.toHaveBeenCalled();
+    await waitFor(() => expect(screen.queryByText('Sign in')).toBeInTheDocument());
   });
 
-  it('should call window.open with auth url and token', async () => {
-    useAccessTokenBindingMock.mockReturnValue([{ oAuthUrl: 'example.com/auth?state=abcd' }, true]);
+  it('should not render form if token is null', async () => {
+    useChromeMock.mockReturnValue({ auth: { getToken: () => Promise.resolve(null) } });
+    useAccessTokenBindingMock.mockReturnValue([{}, true]);
     useFormikContextMock.mockReturnValue({
-      values: { source: { git: { url: 'https://github.com/test/repository' } }, secret: null },
+      values: { source: { git: { url: 'test-source' } } },
     });
     renderAuthOptions();
-    const button = screen.getByText('Sign in');
-    expect(button).toBeEnabled();
-
-    await act(async () => {
-      fireEvent.click(button);
-    });
-
-    expect(windowOpenMock).toHaveBeenCalledWith('example.com/auth?state=abcd', '_blank');
+    await waitFor(() => expect(screen.queryByText('Sign in')).not.toBeInTheDocument());
   });
 
   afterAll(jest.resetAllMocks);
