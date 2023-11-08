@@ -6,7 +6,8 @@ import {
   setActiveWorkspace,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
+import { Workspace } from '../../types';
 import { getHomeWorkspace, useActiveWorkspace } from '../workspace-context-utils';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -25,7 +26,7 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-const mockWorkspaces = [
+const mockWorkspaces: Workspace[] = [
   {
     apiVersion: 'toolchain.dev.openshift.com/v1alpha1',
     kind: 'Workspace',
@@ -88,7 +89,8 @@ describe('getHomeWorkspace', () => {
 });
 
 describe('useActiveWorkspace', () => {
-  let navigateMock;
+  const navigateMock = jest.fn(),
+    fetchMock = jest.fn();
   beforeEach(() => {
     Object.defineProperty(window, 'location', {
       value: {
@@ -96,7 +98,7 @@ describe('useActiveWorkspace', () => {
       },
       writable: true,
     });
-    navigateMock = jest.fn();
+    window.fetch = fetchMock;
     useNavigateMock.mockImplementation(() => navigateMock);
     jest.spyOn(console, 'error').mockImplementation(jest.fn());
     k8sListResourceItemsMock.mockReturnValue(mockWorkspaces);
@@ -119,6 +121,7 @@ describe('useActiveWorkspace', () => {
       workspaceResource: undefined,
       workspaces: [],
       workspacesLoaded: false,
+      updateWorkspace: expect.any(Function),
     });
   });
 
@@ -139,11 +142,20 @@ describe('useActiveWorkspace', () => {
 
     k8sListResourceItemsMock.mockReturnValue(workspaces);
     getActiveWorkspaceMock.mockReturnValue('');
+    fetchMock.mockResolvedValue({ json: async () => mockWorkspaces[1] });
 
     const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
     await waitForNextUpdate();
 
     expect(result.current.workspace).toBe('workspace-two');
+    expect(result.current.workspaceResource).toEqual({
+      ...mockWorkspaces[1],
+      status: { ...mockWorkspaces[1].status },
+    });
+    expect(fetchMock).toHaveBeenCalled();
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/k8s/apis/toolchain.dev.openshift.com/v1alpha1/workspaces/workspace-two',
+    );
   });
 
   it('should use first available workspace when home workspace is not found for first time user', async () => {
@@ -159,6 +171,13 @@ describe('useActiveWorkspace', () => {
     await waitForNextUpdate();
 
     expect(result.current.workspace).toBe('workspace-one');
+    expect(result.current.workspaceResource).toEqual({
+      ...mockWorkspaces[0],
+      status: { ...mockWorkspaces[0].status, type: 'default' },
+    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/k8s/apis/toolchain.dev.openshift.com/v1alpha1/workspaces/workspace-one',
+    );
   });
 
   it('should return default values if the workspace API errors out ', async () => {
@@ -236,5 +255,36 @@ describe('useActiveWorkspace', () => {
     rerender();
 
     expect(result.current.workspace).toBe('workspace-two');
+  });
+
+  it('should fetch workspace again if workspace update is requested', async () => {
+    const workspaces = [
+      { ...mockWorkspaces[0], status: { ...mockWorkspaces[0].status, type: 'home' } },
+    ];
+
+    k8sListResourceItemsMock.mockReturnValue(workspaces);
+    getActiveWorkspaceMock.mockReturnValue('');
+    fetchMock.mockResolvedValue({ json: async () => mockWorkspaces[0] });
+
+    const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
+    await waitForNextUpdate();
+
+    expect(fetchMock).toHaveBeenCalled();
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/k8s/apis/toolchain.dev.openshift.com/v1alpha1/workspaces/workspace-one',
+    );
+    expect(result.current.workspace).toBe('workspace-one');
+    fetchMock.mockResolvedValue({
+      json: async () => ({ ...mockWorkspaces[0], status: { type: 'default' } }),
+    });
+
+    await act(async () => {
+      result.current.updateWorkspace();
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(result.current.workspaceResource).toEqual({
+      ...mockWorkspaces[0],
+      status: { type: 'default' },
+    });
   });
 });

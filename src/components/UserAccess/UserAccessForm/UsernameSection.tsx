@@ -49,7 +49,9 @@ export const UsernameSection: React.FC<Props> = ({ disabled }) => {
         if (valid) {
           setError('');
           setValidHelpText('Validated');
-          setValue([...usernames, username]);
+          if (!usernames.includes(username)) {
+            setValue([...usernames, username]);
+          }
           setUsername('');
         } else {
           setError('Username not found.');

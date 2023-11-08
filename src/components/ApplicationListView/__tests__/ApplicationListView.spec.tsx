@@ -119,6 +119,7 @@ const ApplicationList = () => (
       workspaceResource: undefined,
       workspacesLoaded: true,
       workspaces: [],
+      updateWorkspace: jest.fn(),
     }}
   >
     <ApplicationListView />

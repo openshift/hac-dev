@@ -52,7 +52,7 @@ export const VirtualBody: React.FC<VirtualBodyProps> = (props) => {
   const cellMeasurementCache = new CellMeasurerCache({
     fixedWidth: true,
     minHeight: 44,
-    keyMapper: (rowIndex) => props?.data?.[rowIndex]?.metadata.uid ?? rowIndex,
+    keyMapper: (rowIndex) => props?.data?.[rowIndex]?.metadata?.uid ?? rowIndex,
   });
 
   const rowRenderer = ({ index, isVisible, key, style, parent }) => {

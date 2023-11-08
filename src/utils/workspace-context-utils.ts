@@ -17,6 +17,13 @@ export type WorkspaceContextData = {
   workspacesLoaded: boolean;
   workspaces: Workspace[];
   lastUsedWorkspace: string;
+  /**
+   * This is used to trigger a manual re-fetch of the Workspace CR when there
+   * are status updates to the space lister API. Needed because we cannot use
+   * k8s utils to get/watch the resource since k8s utils add workspace context
+   * in url and the workspace API does not like it.
+   */
+  updateWorkspace: () => void;
 };
 
 export const WorkspaceContext = React.createContext<WorkspaceContextData>({
@@ -26,6 +33,7 @@ export const WorkspaceContext = React.createContext<WorkspaceContextData>({
   workspaces: [],
   workspacesLoaded: false,
   lastUsedWorkspace: getActiveWorkspace(),
+  updateWorkspace: () => {},
 });
 
 export const WorkspaceProvider = WorkspaceContext.Provider;
@@ -35,8 +43,14 @@ export const useWorkspaceInfo = () => {
   const { namespace, workspace } = React.useContext(WorkspaceContext);
   return { namespace, workspace };
 };
+
 export const getHomeWorkspace = (workspaces: Workspace[]) =>
   workspaces?.find((w) => w?.status?.type === 'home');
+
+const fetchWorkspace = async (name: string): Promise<Workspace> =>
+  fetch(
+    `/api/k8s/apis/${WorkspaceModel.apiGroup}/${WorkspaceModel.apiVersion}/${WorkspaceModel.plural}/${name}`,
+  ).then((data) => data.json());
 
 export const useActiveWorkspace = (): WorkspaceContextData => {
   const lastUsedWorkspace = useLastUsedWorkspace();
@@ -47,6 +61,7 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
   const [namespace, setNamespace] = React.useState<string>('');
   const [workspaces, setWorkspaces] = React.useState<Workspace[]>([]);
   const [workspacesLoaded, setWorkspacesLoaded] = React.useState<boolean>(false);
+  const [wsUpdateCounter, setWsUpdateCounter] = React.useState(1);
 
   const getDefaultNsForWorkspace = React.useCallback(
     (allWorkspaces: Workspace[], currentWorkspace: string) => {
@@ -89,10 +104,6 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
         console.error('Error fetching workspaces', e);
       }
 
-      if (unmounted) {
-        return;
-      }
-
       let ws: Workspace;
       if (Array.isArray(allWorkspaces)) {
         const findWorkspace = (wsName: string) =>
@@ -103,6 +114,22 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
           findWorkspace(lastUsedWorkspace) ??
           getHomeWorkspace(allWorkspaces) ??
           allWorkspaces[0];
+      }
+
+      // workspace resource needs to be fetched separately because the
+      // workspace api does not populate workspace's status.availableRoles
+      // and status.bindings when fetched with k8sList
+      try {
+        if (ws) {
+          ws = await fetchWorkspace(ws.metadata.name);
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(`Error fetching workspace ${ws.metadata.name}: `, e);
+      }
+
+      if (unmounted) {
+        return;
       }
 
       if (ws) {
@@ -126,6 +153,17 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  React.useEffect(() => {
+    if (wsUpdateCounter) {
+      fetchWorkspace(workspaceName)
+        .then(setWorkspace)
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.error(`Error fetching workspace ${workspaceName}: `, e);
+        });
+    }
+  }, [workspaceName, wsUpdateCounter]);
+
   return {
     namespace,
     lastUsedWorkspace,
@@ -133,5 +171,6 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
     workspaceResource: workspace,
     workspaces,
     workspacesLoaded,
+    updateWorkspace: () => setWsUpdateCounter((i) => i + 1),
   };
 };

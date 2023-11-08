@@ -11,39 +11,42 @@ import { SpaceBindingRequestGroupVersionKind, SpaceBindingRequestModel } from '.
 import ErrorEmptyState from '../shared/components/empty-state/ErrorEmptyState';
 import { HttpError } from '../shared/utils/error/http-error';
 import { AccessReviewResources, SpaceBindingRequest } from '../types';
-import { useWorkspaceInfo } from '../utils/workspace-context-utils';
+import { WorkspaceContext } from '../utils/workspace-context-utils';
 
-const GrantAccessPage: React.FC = () => {
+const EditAccessPage: React.FC = () => {
   const { name } = useParams();
+  const { workspace, workspaceResource } = React.useContext(WorkspaceContext);
+  const binding = workspaceResource.status?.bindings?.find(
+    (b) => b.masterUserRecord === name,
+  )?.bindingRequest;
 
-  const { namespace, workspace } = useWorkspaceInfo();
-  const accessReviewResources: AccessReviewResources = [
-    { model: SpaceBindingRequestModel, verb: 'update' },
-  ];
+  const accessReviewResources: AccessReviewResources = binding
+    ? [{ model: SpaceBindingRequestModel, verb: 'update' }]
+    : [{ model: SpaceBindingRequestModel, verb: 'create' }];
 
-  const [sbr, loaded, loadErr] = useK8sWatchResource<SpaceBindingRequest>(
-    namespace
+  const [existingSBR, loaded, loadErr] = useK8sWatchResource<SpaceBindingRequest>(
+    binding
       ? {
           groupVersionKind: SpaceBindingRequestGroupVersionKind,
           isList: false,
-          name,
-          namespace,
+          name: binding.name,
+          namespace: binding.namespace,
         }
       : null,
   );
 
-  if (loadErr) {
+  if (binding && loadErr) {
     const httpError = HttpError.fromCode((loadErr as any).code);
     return (
       <ErrorEmptyState
         httpError={HttpError.fromCode((loadErr as any).code)}
-        title={`Unable to load space binding request ${name}`}
+        title={`Unable to load space binding request ${binding.name}`}
         body={httpError.message}
       />
     );
   }
 
-  if (!loaded) {
+  if (binding && !loaded) {
     return (
       <Bullseye>
         <Spinner data-test="spinner" />
@@ -59,10 +62,10 @@ const GrantAccessPage: React.FC = () => {
         </title>
       </Helmet>
       <PageAccessCheck accessReviewResources={accessReviewResources}>
-        <UserAccessFormPage sbr={sbr} />
+        <UserAccessFormPage existingSbr={existingSBR} username={name} edit />
       </PageAccessCheck>
     </NamespacedPage>
   );
 };
 
-export default GrantAccessPage;
+export default EditAccessPage;

@@ -18,6 +18,7 @@ describe('useWorkspaceForNamespace', () => {
             { metadata: { name: 'ws3' }, status: { namespaces: [{ name: 'test-ns' }] } },
           ] as any,
           workspacesLoaded: false,
+          updateWorkspace: jest.fn(),
         }}
       >
         {children}

@@ -1,13 +1,11 @@
 import { k8sCreateResource, k8sPatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import * as yup from 'yup';
 import { SpaceBindingRequestGroupVersionKind, SpaceBindingRequestModel } from '../../../models';
-import { SpaceBindingRequest } from '../../../types';
-
-export type Role = SpaceBindingRequest['spec']['spaceRole'];
+import { SpaceBindingRequest, WorkspaceRole } from '../../../types';
 
 export type UserAccessFormValues = {
   usernames: string[];
-  role: Role;
+  role: WorkspaceRole;
 };
 
 export const validateUsername = async (username: string) => {
@@ -28,7 +26,7 @@ export const userAccessFormSchema = yup.object({
     .required('Required.'),
   role: yup
     .string()
-    .matches(/contributor|maintainer|owner/, 'Invalid role.')
+    .matches(/contributor|maintainer|admin/, 'Invalid role.')
     .required('Required.'),
 });
 

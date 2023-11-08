@@ -3,7 +3,7 @@ import { ExpandableSection, FormSection } from '@patternfly/react-core';
 import { useField } from 'formik';
 import HelpPopover from '../../../components/HelpPopover';
 import { DropdownField } from '../../../shared';
-import { Role } from './form-utils';
+import { WorkspaceRole } from '../../../types';
 import { PermissionsTable } from './PermissionsTable';
 
 import './RoleSection.scss';
@@ -11,11 +11,11 @@ import './RoleSection.scss';
 const dropdownItems = [
   { key: 'contributor', value: 'contributor' },
   { key: 'maintainer', value: 'maintainer' },
-  { key: 'owner', value: 'owner' },
+  { key: 'admin', value: 'admin' },
 ];
 
 export const RoleSection: React.FC = () => {
-  const [{ value: role }] = useField<Role>('role');
+  const [{ value: role }] = useField<WorkspaceRole>('role');
 
   return (
     <>

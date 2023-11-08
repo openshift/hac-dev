@@ -1,9 +1,10 @@
 import * as React from 'react';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { useSpaceBindingRequests } from '../../../hooks/useSpaceBindingRequests';
 import { SpaceBindingRequest } from '../../../types';
+import { namespaceRenderer } from '../../../utils/test-utils';
 import { SBRListRow } from '../SBRListRow';
 import { UserAccessListView } from '../UserAccessListView';
 
@@ -12,8 +13,9 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: () => React.useState(() => new URLSearchParams()),
 }));
 
-jest.mock('../../../utils/workspace-context-utils', () => ({
-  useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  useK8sWatchResource: jest.fn(() => [null, false]),
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
 }));
 
 jest.mock('../../../shared/components/table', () => {
@@ -44,9 +46,7 @@ jest.mock('../../../utils/rbac', () => ({
   useAccessReviewForModel: jest.fn(() => [true, true]),
 }));
 
-jest.mock('../../../hooks/useSpaceBindingRequests', () => ({
-  useSpaceBindingRequests: jest.fn(),
-}));
+const watchMock = useK8sWatchResource as jest.Mock;
 
 const mockSBR: SpaceBindingRequest = {
   apiVersion: 'appstudio.redhat.com/v1alpha1',
@@ -68,16 +68,21 @@ const mockSBR: SpaceBindingRequest = {
   },
 };
 
-const useSBRsMock = useSpaceBindingRequests as jest.Mock;
-
 describe('UserAccessListView', () => {
-  beforeEach(() => {
-    useSBRsMock.mockReturnValue([[mockSBR], true]);
-  });
-
-  it('should render empty state if no sbrs are present', () => {
-    useSBRsMock.mockReturnValue([[], true]);
-    render(<UserAccessListView />);
+  it('should render empty state if no bindings are present', () => {
+    namespaceRenderer(<UserAccessListView />, 'my-ns', {
+      workspace: 'test-ws',
+      workspaceResource: {
+        apiVersion: 'v1alpha1',
+        apiGroup: 'toolchain.dev.openshift.com',
+        kind: 'Workspace',
+        status: {
+          namespaces: [],
+          role: 'admin',
+          owner: 'my-user',
+        },
+      },
+    });
     expect(screen.getByText('Grant user access')).toBeVisible();
     const addButton = screen.queryByText('Grant access');
     expect(addButton).toBeInTheDocument();
@@ -86,20 +91,73 @@ describe('UserAccessListView', () => {
     );
   });
 
-  it('should render filter present in the view', async () => {
-    render(<UserAccessListView />);
+  it('should render filter present in the view', () => {
+    namespaceRenderer(<UserAccessListView />, 'my-ns', {
+      workspace: 'test-ws',
+      workspaceResource: {
+        apiVersion: 'v1alpha1',
+        apiGroup: 'toolchain.dev.openshift.com',
+        kind: 'Workspace',
+        status: {
+          namespaces: [],
+          role: 'admin',
+          owner: 'my-user',
+          bindings: [{ masterUserRecord: 'my-user', role: 'admin' }],
+        },
+      },
+    });
     expect(screen.getByPlaceholderText('Search by username...')).toBeVisible();
   });
 
   it('should render row of user data', () => {
-    render(<UserAccessListView />);
+    watchMock.mockReturnValue([mockSBR, true]);
+    namespaceRenderer(<UserAccessListView />, 'my-ns', {
+      workspace: 'test-ws',
+      workspaceResource: {
+        apiVersion: 'v1alpha1',
+        apiGroup: 'toolchain.dev.openshift.com',
+        kind: 'Workspace',
+        status: {
+          namespaces: [],
+          role: 'admin',
+          owner: 'my-user',
+          bindings: [
+            {
+              masterUserRecord: 'user1',
+              role: 'contributor',
+              bindingRequest: { name: 'test-sbr', namespace: 'test-ns' },
+            },
+          ],
+        },
+      },
+    });
     expect(screen.getByText('user1')).toBeVisible();
     expect(screen.getByText('contributor')).toBeVisible();
     expect(screen.getByText('Provisioned')).toBeVisible();
   });
 
   it('should match the user if filtered by name', () => {
-    render(<UserAccessListView />);
+    watchMock.mockReturnValue([mockSBR, true]);
+    namespaceRenderer(<UserAccessListView />, 'my-ns', {
+      workspace: 'test-ws',
+      workspaceResource: {
+        apiVersion: 'v1alpha1',
+        apiGroup: 'toolchain.dev.openshift.com',
+        kind: 'Workspace',
+        status: {
+          namespaces: [],
+          role: 'admin',
+          owner: 'my-user',
+          bindings: [
+            {
+              masterUserRecord: 'user1',
+              role: 'contributor',
+              bindingRequest: { name: 'test-sbr', namespace: 'test-ns' },
+            },
+          ],
+        },
+      },
+    });
 
     const filter = screen.getByPlaceholderText<HTMLInputElement>('Search by username...');
     act(() => {
@@ -111,7 +169,27 @@ describe('UserAccessListView', () => {
   });
 
   it('should perform case insensitive filter by name', () => {
-    render(<UserAccessListView />);
+    watchMock.mockReturnValue([mockSBR, true]);
+    namespaceRenderer(<UserAccessListView />, 'my-ns', {
+      workspace: 'test-ws',
+      workspaceResource: {
+        apiVersion: 'v1alpha1',
+        apiGroup: 'toolchain.dev.openshift.com',
+        kind: 'Workspace',
+        status: {
+          namespaces: [],
+          role: 'admin',
+          owner: 'my-user',
+          bindings: [
+            {
+              masterUserRecord: 'user1',
+              role: 'contributor',
+              bindingRequest: { name: 'test-sbr', namespace: 'test-ns' },
+            },
+          ],
+        },
+      },
+    });
 
     const filter = screen.getByPlaceholderText<HTMLInputElement>('Search by username...');
     act(() => {
@@ -123,7 +201,27 @@ describe('UserAccessListView', () => {
   });
 
   it('should not match the user if filtered by unmatched name', () => {
-    render(<UserAccessListView />);
+    watchMock.mockReturnValue([mockSBR, true]);
+    namespaceRenderer(<UserAccessListView />, 'my-ns', {
+      workspace: 'test-ws',
+      workspaceResource: {
+        apiVersion: 'v1alpha1',
+        apiGroup: 'toolchain.dev.openshift.com',
+        kind: 'Workspace',
+        status: {
+          namespaces: [],
+          role: 'admin',
+          owner: 'my-user',
+          bindings: [
+            {
+              masterUserRecord: 'user1',
+              role: 'contributor',
+              bindingRequest: { name: 'test-sbr', namespace: 'test-ns' },
+            },
+          ],
+        },
+      },
+    });
 
     const filter = screen.getByPlaceholderText<HTMLInputElement>('Search by username...');
     act(() => {
@@ -137,8 +235,10 @@ describe('UserAccessListView', () => {
   });
 
   it('should render spinner while data is not loaded', () => {
-    useSBRsMock.mockReturnValue([[], false]);
-    render(<UserAccessListView />);
+    namespaceRenderer(<UserAccessListView />, 'my-ns', {
+      workspace: 'test-ws',
+      workspaceResource: null,
+    });
     expect(screen.getByRole('progressbar')).toBeVisible();
   });
 });

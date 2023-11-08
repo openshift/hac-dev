@@ -18,3 +18,4 @@ export * from './secret';
 export * from './gitops-deployment';
 export * from './release';
 export * from './space-binding-request';
+export * from './workspace';

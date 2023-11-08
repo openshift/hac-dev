@@ -14,14 +14,17 @@ import {
   ModalVariant,
 } from '@patternfly/react-core';
 import { SpaceBindingRequestModel } from '../../models';
-import { SpaceBindingRequest } from '../../types';
+import { WorkspaceBinding } from '../../types';
+import { WorkspaceContext } from '../../utils/workspace-context-utils';
 import { RawComponentProps } from '../modal/createModalLauncher';
 
 type Props = RawComponentProps & {
-  sbr: SpaceBindingRequest;
+  sbr: WorkspaceBinding['bindingRequest'];
+  username: string;
 };
 
-export const RevokeAccessModal: React.FC<Props> = ({ sbr, onClose, modalProps }) => {
+export const RevokeAccessModal: React.FC<Props> = ({ sbr, username, onClose, modalProps }) => {
+  const { updateWorkspace } = React.useContext(WorkspaceContext);
   const [error, setError] = React.useState<string>();
   const [submitting, setSubmitting] = React.useState(false);
   const handleSubmit = React.useCallback(
@@ -33,16 +36,17 @@ export const RevokeAccessModal: React.FC<Props> = ({ sbr, onClose, modalProps })
         await k8sDeleteResource({
           model: SpaceBindingRequestModel,
           queryOptions: {
-            name: sbr.metadata.name,
-            ns: sbr.metadata.namespace,
+            name: sbr.name,
+            ns: sbr.namespace,
           },
         });
+        updateWorkspace();
         onClose(null, { submitClicked: true });
       } catch (err) {
         setError(err.message || err.toString());
       }
     },
-    [onClose, sbr],
+    [onClose, sbr, updateWorkspace],
   );
 
   return (
@@ -51,8 +55,8 @@ export const RevokeAccessModal: React.FC<Props> = ({ sbr, onClose, modalProps })
         <StackItem>
           <TextContent>
             <Text data-testid="description">
-              The user <strong>{sbr.spec.masterUserRecord}</strong> will lose access to this
-              workspace and all of its applications, environments, and any other dependent items.
+              The user <strong>{username}</strong> will lose access to this workspace and all of its
+              applications, environments, and any other dependent items.
             </Text>
             <Text>You can always grant the user access later.</Text>
           </TextContent>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { Role } from './form-utils';
+import { WorkspaceRole } from '../../../types';
 
 import './PermissionsTable.scss';
 
@@ -13,7 +13,7 @@ enum Permission {
 }
 
 // roles and permissions ADR: https://github.com/redhat-appstudio/book/blob/main/ADR/0011-roles-and-permissions.md
-const permissions: Record<Role, Record<string, Permission[]>> = {
+const permissions: Record<WorkspaceRole, Record<string, Permission[]>> = {
   contributor: {
     Workspace: [Permission.Read],
     Application: [Permission.Read],
@@ -40,7 +40,7 @@ const permissions: Record<Role, Record<string, Permission[]>> = {
     'User (Add user to workspace)': [Permission.Create, Permission.Update, Permission.Delete],
     'Update user group (Including SSO)': [Permission.Update, Permission.Delete],
   },
-  owner: {
+  admin: {
     Workspace: [Permission.Everything],
     Application: [Permission.Everything],
     Component: [Permission.Everything],
@@ -55,7 +55,7 @@ const permissions: Record<Role, Record<string, Permission[]>> = {
   },
 };
 
-export const PermissionsTable = React.memo<{ role: Role }>(({ role }) => {
+export const PermissionsTable = React.memo<{ role: WorkspaceRole }>(({ role }) => {
   const rolePermissions = permissions[role];
 
   return (
