@@ -12,6 +12,7 @@ import {
 } from '@patternfly/react-core';
 import { ScanStatus } from '../../../components/PipelineRunListView/ScanStatus';
 import { useScanResults } from '../../../hooks/useScanResults';
+import CommitLabel from '../../../shared/components/commit-label/CommitLabel';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { Commit } from '../../../types';
 import { Snapshot } from '../../../types/coreBuildService';
@@ -79,7 +80,12 @@ const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
                       to={`/application-pipeline/workspaces/${workspace}/applications/${snapshot.spec.application}/commit/${commit.sha}`}
                       title={commit.displayName || commit.shaTitle}
                     >
-                      {commit.displayName || commit.shaTitle}
+                      {commit.displayName || commit.shaTitle}{' '}
+                      <CommitLabel
+                        gitProvider={commit.gitProvider}
+                        sha={commit.sha}
+                        shaURL={commit.shaURL}
+                      />
                     </Link>
                   </DescriptionListDescription>
                 </DescriptionListGroup>

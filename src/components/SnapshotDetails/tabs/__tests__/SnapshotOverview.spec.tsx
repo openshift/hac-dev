@@ -81,8 +81,10 @@ describe('SnapshotOverview', () => {
     );
     screen.getByText('Triggered by');
     const anchor = screen.getByTestId('snapshot-commit-link').children[0].children[0];
-    expect((anchor as HTMLElement).innerHTML).toBe('comm012');
-    expect((anchor as HTMLElement).getAttribute('href')).toBe(
+    const linkAnchor = anchor as HTMLElement;
+    expect(linkAnchor.innerHTML).toContain('comm012');
+    expect(linkAnchor.children[0].classList).toContain('commit-label'); // commit label
+    expect(linkAnchor.getAttribute('href')).toBe(
       '/application-pipeline/workspaces//applications/my-test-output/commit/comm0123456789abcdefghijklmnopqrstuvwxyz',
     );
   });
