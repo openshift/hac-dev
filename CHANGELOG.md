@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.2.0](https://github.com/openshift/hac-dev/compare/rhtap-ui-v0.1.0...rhtap-ui-v0.2.0) (2023-11-09)
+
+
+### Features
+
+* **components:** update components list view ([a045f0a](https://github.com/openshift/hac-dev/commit/a045f0a7fe65fba80b12d62d332e296192463e4b))
+* **snapshots:** add environmentprovision error to details ([a5bab52](https://github.com/openshift/hac-dev/commit/a5bab523127d02143c3b6c67bfdfccd57a2f6215))
+* **snapshots:** add unit tests and update as per UX ([7c8451e](https://github.com/openshift/hac-dev/commit/7c8451eeb59a075e407e2abf50295eb5f0500637))
+
+
+### Bug Fixes
+
+* **access:** use ws lister api to fetch access ([be9563d](https://github.com/openshift/hac-dev/commit/be9563de1a48566028d143f282ea5d787b184516))
+* **component-activity-tab:** fix commit activity tab in components details page ([f9ee28e](https://github.com/openshift/hac-dev/commit/f9ee28e26017554198b034ee14519be6a13342a2))
+* **e2e:** obscure secrets in video recordings ([1e2426d](https://github.com/openshift/hac-dev/commit/1e2426d15138676d143d4ec096551d917524840d))
+* **e2e:** select the correct itest pipeline ([b03c974](https://github.com/openshift/hac-dev/commit/b03c97490970ecacecdff4acaa231deae0ea1ec9))
+* **snapshot:** add commit label to triggered by ([2d1d691](https://github.com/openshift/hac-dev/commit/2d1d6913c6d96fafaac3f81bf2f0396965386376))
+* update message for no access page ([1d2e5c6](https://github.com/openshift/hac-dev/commit/1d2e5c6069e5cbb0f02f9c7d4b620acacb778816))
+* update text for import page ([bafefbf](https://github.com/openshift/hac-dev/commit/bafefbf3bd4a04febf8054552e564d029d1c0f9a))
+
 ## [0.1.0](https://github.com/openshift/hac-dev/compare/rhtap-ui-v0.0.1...rhtap-ui-v0.1.0) (2023-10-25)
 
 
