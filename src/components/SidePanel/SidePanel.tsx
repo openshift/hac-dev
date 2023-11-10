@@ -1,7 +1,7 @@
 import React from 'react';
 import SidePanelContext, { SidePanelProps } from './SidePanelContext';
 
-const SidePanel: React.FC<SidePanelProps> = ({
+const SidePanel: React.FC<React.PropsWithChildren<SidePanelProps>> = ({
   isExpanded,
   isInline,
   onExpand,

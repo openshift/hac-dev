@@ -36,8 +36,8 @@ export type AccessDeniedProps = {
 };
 
 export type DataProps = {
-  NoDataEmptyMsg?: React.ComponentType;
-  EmptyMsg?: React.ComponentType;
+  NoDataEmptyMsg?: React.ComponentType<React.PropsWithChildren<unknown>>;
+  EmptyMsg?: React.ComponentType<React.PropsWithChildren<unknown>>;
   label?: string;
   unfilteredData?: any;
   data?: any;
@@ -51,7 +51,7 @@ export type StatusBoxProps = {
   data?: any;
   unfilteredData?: any;
   skeleton?: React.ReactNode;
-  NoDataEmptyMsg?: React.ComponentType;
-  EmptyMsg?: React.ComponentType;
+  NoDataEmptyMsg?: React.ComponentType<React.PropsWithChildren<unknown>>;
+  EmptyMsg?: React.ComponentType<React.PropsWithChildren<unknown>>;
   children?: React.ReactNode;
 };

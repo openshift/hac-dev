@@ -8,7 +8,10 @@ type PodLogsColumnProps = {
   podSelector: any;
 };
 
-const PodLogsColumn: React.FC<PodLogsColumnProps> = ({ component, podSelector }) => (
+const PodLogsColumn: React.FC<React.PropsWithChildren<PodLogsColumnProps>> = ({
+  component,
+  podSelector,
+}) => (
   <Flex direction={{ default: 'column' }}>
     <FlexItem align={{ default: 'alignRight' }}>
       <PodLogsButton component={component} podSelector={podSelector} />

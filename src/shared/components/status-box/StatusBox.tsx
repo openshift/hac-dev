@@ -10,11 +10,11 @@ import { TimeoutError } from '../../utils/error/http-error';
 
 import './StatusBox.scss';
 
-export const Box: React.FC<BoxProps> = ({ children, className }) => (
+export const Box: React.FC<React.PropsWithChildren<BoxProps>> = ({ children, className }) => (
   <div className={classNames('status-box', className)}>{children}</div>
 );
 
-export const LoadError: React.FC<LoadErrorProps> = ({
+export const LoadError: React.FC<React.PropsWithChildren<LoadErrorProps>> = ({
   label,
   className,
   message,
@@ -52,7 +52,7 @@ export const LoadError: React.FC<LoadErrorProps> = ({
 };
 LoadError.displayName = 'LoadError';
 
-export const Loading: React.FC<LoadingProps> = ({ className }) => (
+export const Loading: React.FC<React.PropsWithChildren<LoadingProps>> = ({ className }) => (
   <div className={classNames('loader', className)} data-test="loading-indicator">
     <div className="loader-dot__one" />
     <div className="loader-dot__two" />
@@ -61,10 +61,15 @@ export const Loading: React.FC<LoadingProps> = ({ className }) => (
 );
 Loading.displayName = 'Loading';
 
-export const LoadingInline: React.FC<{}> = () => <Loading className="loader--inline" />;
+export const LoadingInline: React.FC<React.PropsWithChildren<{}>> = () => (
+  <Loading className="loader--inline" />
+);
 LoadingInline.displayName = 'LoadingInline';
 
-export const LoadingBox: React.FC<LoadingBoxProps> = ({ className, message }) => (
+export const LoadingBox: React.FC<React.PropsWithChildren<LoadingBoxProps>> = ({
+  className,
+  message,
+}) => (
   <Box className={classNames('status-box--loading', className)}>
     <Loading />
     {message && <div className="status-box__loading-message">{message}</div>}
@@ -72,7 +77,7 @@ export const LoadingBox: React.FC<LoadingBoxProps> = ({ className, message }) =>
 );
 LoadingBox.displayName = 'LoadingBox';
 
-export const EmptyBox: React.FC<EmptyBoxProps> = ({ label }) => {
+export const EmptyBox: React.FC<React.PropsWithChildren<EmptyBoxProps>> = ({ label }) => {
   return (
     <Box>
       <div data-test="empty-message" className="pf-v5-u-text-align-center">
@@ -83,7 +88,11 @@ export const EmptyBox: React.FC<EmptyBoxProps> = ({ label }) => {
 };
 EmptyBox.displayName = 'EmptyBox';
 
-export const MsgBox: React.FC<MsgBoxProps> = ({ title, detail, className = '' }) => (
+export const MsgBox: React.FC<React.PropsWithChildren<MsgBoxProps>> = ({
+  title,
+  detail,
+  className = '',
+}) => (
   <Box className={className}>
     {title && (
       <div className="status-box__title" data-test="msg-box-title">
@@ -99,7 +108,7 @@ export const MsgBox: React.FC<MsgBoxProps> = ({ title, detail, className = '' })
 );
 MsgBox.displayName = 'MsgBox';
 
-export const AccessDenied: React.FC<AccessDeniedProps> = ({ message }) => {
+export const AccessDenied: React.FC<React.PropsWithChildren<AccessDeniedProps>> = ({ message }) => {
   const { t } = useTranslation();
   return (
     <div>
@@ -120,7 +129,7 @@ export const AccessDenied: React.FC<AccessDeniedProps> = ({ message }) => {
 };
 AccessDenied.displayName = 'AccessDenied';
 
-const Data: React.FC<DataProps> = ({
+const Data: React.FC<React.PropsWithChildren<DataProps>> = ({
   NoDataEmptyMsg,
   EmptyMsg,
   Toolbar,
@@ -154,7 +163,7 @@ const Data: React.FC<DataProps> = ({
 };
 Data.displayName = 'Data';
 
-export const StatusBox: React.FC<StatusBoxProps> = (props) => {
+export const StatusBox: React.FC<React.PropsWithChildren<StatusBoxProps>> = (props) => {
   const { loadError, loaded, skeleton, ...dataProps } = props;
   const { t } = useTranslation();
 
@@ -235,8 +244,8 @@ type AccessDeniedProps = {
 };
 
 type DataProps = {
-  NoDataEmptyMsg?: React.ComponentType;
-  EmptyMsg?: React.ComponentType;
+  NoDataEmptyMsg?: React.ComponentType<React.PropsWithChildren<unknown>>;
+  EmptyMsg?: React.ComponentType<React.PropsWithChildren<unknown>>;
   Toolbar?: React.ReactNode;
   label?: string;
   unfilteredData?: any;
@@ -251,8 +260,8 @@ type StatusBoxProps = {
   data?: any;
   unfilteredData?: any;
   skeleton?: React.ReactNode;
-  NoDataEmptyMsg?: React.ComponentType;
-  EmptyMsg?: React.ComponentType;
+  NoDataEmptyMsg?: React.ComponentType<React.PropsWithChildren<unknown>>;
+  EmptyMsg?: React.ComponentType<React.PropsWithChildren<unknown>>;
   Toolbar?: React.ReactNode;
   children?: React.ReactNode;
 };

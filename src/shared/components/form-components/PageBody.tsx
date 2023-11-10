@@ -6,7 +6,7 @@ interface PageBodyProps {
   flexLayout?: boolean;
 }
 
-const PageBody: React.FC<PageBodyProps> = ({ children, flexLayout }) => (
+const PageBody: React.FC<React.PropsWithChildren<PageBodyProps>> = ({ children, flexLayout }) => (
   <div
     className={classnames('pane-body', { 'page-body': flexLayout })}
     style={{ paddingBottom: 0 }}

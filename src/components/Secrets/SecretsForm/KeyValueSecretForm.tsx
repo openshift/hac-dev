@@ -2,7 +2,7 @@ import React from 'react';
 import { HelperText, HelperTextItem, Title, TitleSizes } from '@patternfly/react-core';
 import EncodedKeyValueFileInputField from './EncodedKeyValueUploadField';
 
-export const KeyValueSecretForm: React.FC = () => (
+export const KeyValueSecretForm: React.FC<React.PropsWithChildren<unknown>> = () => (
   <>
     <Title size={TitleSizes.md} headingLevel="h4">
       Key/value secret

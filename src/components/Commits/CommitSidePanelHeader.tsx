@@ -20,7 +20,7 @@ interface CommitSidePanelHeaderProps {
   onPanelCloseClick: () => void;
 }
 
-const CommitSidePanelHeader: React.FC<CommitSidePanelHeaderProps> = ({
+const CommitSidePanelHeader: React.FC<React.PropsWithChildren<CommitSidePanelHeaderProps>> = ({
   drawerRef,
   currentStatus,
   sortedPLRList,

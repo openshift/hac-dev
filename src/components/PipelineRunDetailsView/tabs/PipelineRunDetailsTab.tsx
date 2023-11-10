@@ -41,7 +41,7 @@ type PipelineRunDetailsTabProps = {
   pipelineRun: PipelineRunKind;
   error?: unknown;
 };
-const PipelineRunDetailsTab: React.FC<PipelineRunDetailsTabProps> = ({
+const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetailsTabProps>> = ({
   pipelineRun,
   error,
   taskRuns,

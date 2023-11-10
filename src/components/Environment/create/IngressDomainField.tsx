@@ -10,7 +10,9 @@ const helpText =
   `Enter the domain name to access the cluster's application and services. ` +
   `For non-OpenShift clusters, it looks like $(minikube ip).nip.io and for OpenShift clusters, it looks like apps.xyz.rhcloud.com`;
 
-const IngressDomainField: React.FC<IngressDomainFieldProps> = ({ clusterType }) => {
+const IngressDomainField: React.FC<React.PropsWithChildren<IngressDomainFieldProps>> = ({
+  clusterType,
+}) => {
   if (clusterType !== clusterTypeValues[ClusterType.kubernetes]) {
     return null;
   }

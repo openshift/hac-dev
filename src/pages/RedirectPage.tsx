@@ -5,7 +5,7 @@ const OLD_APP = 'app-studio';
 const INTERIM_APP = 'stonesoup';
 const NEW_APP = 'application-pipeline';
 
-const RedirectPage: React.FunctionComponent = () => {
+const RedirectPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
   const location = useLocation();
 
   const to = {

@@ -23,7 +23,7 @@ export const useLocalStorage = <T>(key: string): [T | string, React.Dispatch<T>]
   });
 
   const updateValue = React.useCallback(
-    (val) => {
+    (val: any) => {
       const serializedValue = typeof val === 'object' ? JSON.stringify(val) : val;
       window.localStorage.setItem(key, serializedValue);
       setValue(val);

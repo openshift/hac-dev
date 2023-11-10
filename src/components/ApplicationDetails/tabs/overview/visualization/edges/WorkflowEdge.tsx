@@ -11,7 +11,10 @@ interface WorkflowEdgeProps {
   className?: string;
 }
 
-const WorkflowEdge: React.FunctionComponent<WorkflowEdgeProps> = ({ element, className }) => {
+const WorkflowEdge: React.FunctionComponent<React.PropsWithChildren<WorkflowEdgeProps>> = ({
+  element,
+  className,
+}) => {
   const startPoint = element.getStartPoint();
   const endPoint = element.getEndPoint();
   const sourceNode = element.getSource();

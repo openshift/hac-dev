@@ -13,7 +13,11 @@ type CatalogGridProps = {
   isGrouped: boolean;
 };
 
-const CatalogGrid: React.FC<CatalogGridProps> = ({ items, renderTile, isGrouped }) => {
+const CatalogGrid: React.FC<React.PropsWithChildren<CatalogGridProps>> = ({
+  items,
+  renderTile,
+  isGrouped,
+}) => {
   const renderGroupHeader = (heading) => (
     <Title className="catalog-page__group-title" headingLevel="h2" size="lg">
       {heading} ({size(items[heading])})

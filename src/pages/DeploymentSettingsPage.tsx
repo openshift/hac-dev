@@ -20,7 +20,7 @@ import { AccessReviewResources } from '../types';
 import { useApplicationBreadcrumbs } from '../utils/breadcrumb-utils';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
-const DeploymentSettingsPage: React.FunctionComponent = () => {
+const DeploymentSettingsPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
   const { workspace } = useWorkspaceInfo();
   const params = useParams();
   const { componentName, appName } = params;

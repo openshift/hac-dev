@@ -12,7 +12,7 @@ type CloseButtonProps = {
   onClick: (e: any) => void;
 };
 
-const CloseButton: React.FC<CloseButtonProps> = ({
+const CloseButton: React.FC<React.PropsWithChildren<CloseButtonProps>> = ({
   additionalClassName,
   ariaLabel,
   dataTestID,

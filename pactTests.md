@@ -2,20 +2,23 @@
 As HAC-dev is communicating with a lot of different components, we want to make sure that the API is valid. That's why we introduced contract tests to our repo. We're using the [Pact](https://docs.pact.io/) framework for our tests. This documentation is describing Pact tests in the context of HAC-dev and RHTAP. It is not going to the very details of a Pact functionality, so consider visiting the official Pact documentation. Once the tests are set up and running, we don't expect them to change often. They would be there mainly to raise our confidence that API is not broken in any way and notify us if some breaking change is coming.
 
 ## Table of content
+- [HAC-dev contract testing using Pact](#hac-dev-contract-testing-using-pact)
+  - [Table of content](#table-of-content)
   - [Overview](#overview)
-    * [Benefits of contract tests](#benefits-of-contract-tests)
-    * [Test flow](#test-flow)
+    - [Benefits of contract tests](#benefits-of-contract-tests)
+    - [Test flow](#test-flow)
   - [Implementation overview](#implementation-overview)
-    * [Contract structure](#contract-structure)
-    * [States](#states)
-    * [When does the test run](#when-does-the-test-run)
-    * [Gating](#gating)
-    * [Pact broker](#pact-broker)
+    - [Contract structure](#contract-structure)
+    - [States](#states)
+    - [Defining provider states](#defining-provider-states)
+    - [When does the test run](#when-does-the-test-run)
+    - [Gating](#gating)
+    - [Pact broker](#pact-broker)
   - [Implementation details](#implementation-details)
-    * [Test structure](#test-structure)
-    * [Contract templates and helper functions](#contract-templates-and-helper-functions)
-    * [Fields matchers](#fields-matchers)
-    * [Pushing to Pact broker](#pushing-to-pact-broker)
+    - [Test structure](#test-structure)
+    - [Contract templates and helper functions](#contract-templates-and-helper-functions)
+    - [Fields matchers](#fields-matchers)
+    - [Pushing to Pact broker](#pushing-to-pact-broker)
   - [Adding new contract](#adding-new-contract)
 
 ## Overview
@@ -105,7 +108,7 @@ Consumer (HAC-dev):
 
 | Event       | What is checked | Pushed to Pact broker | Implemented |
 |-------------|-----------------|-----------------------|-------------|
-| Locally running <br />`npm run pact` | Contract is generated, no verification is running | No | Yes  |
+| Locally running <br />`yarn pact` | Contract is generated, no verification is running | No | Yes  |
 | PR update | Contract is generated, no verification is running | Yes<br /> commit SHA is a version<br />tagged by PR number |  Yes [job](https://prow.ci.openshift.org/job-history/gs/origin-ci-test/pr-logs/directory/pull-ci-openshift-hac-dev-main-pact) |
 | PR merge | Contract is generated, no verification is running | Yes<br /> commit SHA is a version <br />tagged by branch "main"| Yes [job](https://prow.ci.openshift.org/job-history/gs/origin-ci-test/logs/branch-ci-openshift-hac-dev-main-pact-main) |
 
@@ -288,4 +291,4 @@ pact-broker publish \
 ```
 
 ## Adding new contract
-To add a new contract, create a new file in a `pact-tests` folder. In this test file, specify a request and response with appropriate matchers. Create a new interaction by the `provider.addInteraction()` method and specify a state. Mock any `@openshift/dynamic-plugin-sdk-utils` methods that are used during the test. Send a request by calling the appropriate function. Check the response at the end to make sure that the Pact returned the expected data. Run a new test locally by `npm run pact` to see if everything is running well. Once the test passes, you can check the contract file stored in the `pact/pacts` folder. Then you can create a PR and see the job passing also there. If you have any problems, reach out to kfoniok.
+To add a new contract, create a new file in a `pact-tests` folder. In this test file, specify a request and response with appropriate matchers. Create a new interaction by the `provider.addInteraction()` method and specify a state. Mock any `@openshift/dynamic-plugin-sdk-utils` methods that are used during the test. Send a request by calling the appropriate function. Check the response at the end to make sure that the Pact returned the expected data. Run a new test locally by `yarn pact` to see if everything is running well. Once the test passes, you can check the contract file stored in the `pact/pacts` folder. Then you can create a PR and see the job passing also there. If you have any problems, reach out to kfoniok.

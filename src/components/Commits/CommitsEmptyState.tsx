@@ -12,7 +12,9 @@ type CommitsEmptyStateProps = {
   applicationName: string;
 };
 
-const CommitsEmptyState: React.FC<CommitsEmptyStateProps> = ({ applicationName }) => {
+const CommitsEmptyState: React.FC<React.PropsWithChildren<CommitsEmptyStateProps>> = ({
+  applicationName,
+}) => {
   const { workspace } = useWorkspaceInfo();
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 

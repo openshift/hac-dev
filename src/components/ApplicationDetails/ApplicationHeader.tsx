@@ -8,7 +8,9 @@ import { ApplicationKind } from '../../types';
 import { getGitOpsDeploymentHealthStatusIcon } from '../../utils/gitops-utils';
 import { ApplicationThumbnail } from './ApplicationThumbnail';
 
-export const ApplicationHeader: React.FC<{ application: ApplicationKind }> = ({ application }) => {
+export const ApplicationHeader: React.FC<
+  React.PropsWithChildren<{ application: ApplicationKind }>
+> = ({ application }) => {
   const selectedComponentRoute = useLatestApplicationRouteURL(application.metadata.name);
   const [healthStatus, healthStatusloaded] = useApplicationHealthStatus(application.metadata.name);
 

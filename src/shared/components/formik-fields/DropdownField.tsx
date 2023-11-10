@@ -6,7 +6,7 @@ import { DropdownFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
 import FieldHelperText from './FieldHelperText';
 
-const DropdownField: React.FC<DropdownFieldProps> = ({
+const DropdownField: React.FC<React.PropsWithChildren<DropdownFieldProps>> = ({
   label,
   labelIcon,
   helpText,

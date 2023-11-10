@@ -8,7 +8,11 @@ type ModalProps = {
   ref?: React.LegacyRef<PfModal>;
 } & PfModalProps;
 
-const Modal: React.FC<ModalProps> = ({ isFullScreen = false, className, ...props }) => (
+const Modal: React.FC<React.PropsWithChildren<ModalProps>> = ({
+  isFullScreen = false,
+  className,
+  ...props
+}) => (
   <PfModal
     {...props}
     className={cx('modal', className)}

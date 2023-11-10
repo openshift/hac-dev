@@ -29,7 +29,7 @@ interface SnapshotOverviewTabProps {
   environments?: string[];
 }
 
-const SnapshotOverviewTab: React.FC<SnapshotOverviewTabProps> = ({
+const SnapshotOverviewTab: React.FC<React.PropsWithChildren<SnapshotOverviewTabProps>> = ({
   snapshot,
   commit,
   buildPipelineName,

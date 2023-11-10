@@ -15,12 +15,9 @@ type Props = {
   pacState?: PACState;
 };
 
-const ComponentPACStateLabelInner: React.FC<Props & { pacState: PACState }> = ({
-  component,
-  onStateChange,
-  enableAction,
-  pacState,
-}) => {
+const ComponentPACStateLabelInner: React.FC<
+  React.PropsWithChildren<Props & { pacState: PACState }>
+> = ({ component, onStateChange, enableAction, pacState }) => {
   const { workspace } = useWorkspaceInfo();
   const track = useTrackEvent();
   const showModal = useModalLauncher();

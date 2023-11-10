@@ -14,7 +14,7 @@ jest.mock('../../../utils/rbac', () => {
 
 const mockAccessReviewForModels = useAccessReviewForModels as jest.Mock;
 
-const DummyComponent: React.FC = () => <>child component</>;
+const DummyComponent: React.FC<React.PropsWithChildren<unknown>> = () => <>child component</>;
 
 describe('withPageAccessCheck', () => {
   it('should render passed component', () => {

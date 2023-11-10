@@ -5,7 +5,7 @@ import { InputField } from '../../../shared';
 
 type EncodedInputFieldProps = Omit<React.ComponentProps<typeof InputField>, 'value' | 'onChange'>;
 
-const EncodedInputField: React.FC<EncodedInputFieldProps> = (props) => {
+const EncodedInputField: React.FC<React.PropsWithChildren<EncodedInputFieldProps>> = (props) => {
   const [, { value }, { setValue }] = useField<string>(props.name);
 
   const onChange = React.useCallback(

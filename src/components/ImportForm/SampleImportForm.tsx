@@ -30,7 +30,9 @@ type SampleImportFormProps = {
   applicationName: string;
 };
 
-const SampleImportForm: React.FunctionComponent<SampleImportFormProps> = ({ applicationName }) => {
+const SampleImportForm: React.FunctionComponent<React.PropsWithChildren<SampleImportFormProps>> = ({
+  applicationName,
+}) => {
   const navigate = useNavigate();
   const track = useTrackEvent();
   const { namespace, workspace } = useWorkspaceInfo();

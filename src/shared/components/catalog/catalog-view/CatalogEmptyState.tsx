@@ -16,7 +16,9 @@ type CatalogEmptyStateProps = {
   onClear: () => void;
 };
 
-const CatalogEmptyState: React.FC<CatalogEmptyStateProps> = ({ onClear }) => {
+const CatalogEmptyState: React.FC<React.PropsWithChildren<CatalogEmptyStateProps>> = ({
+  onClear,
+}) => {
   const { t } = useTranslation();
   return (
     <EmptyState variant={EmptyStateVariant.full}>

@@ -60,7 +60,7 @@ type CatalogViewProps = {
 
 export const isModalOpen = () => document.body.classList.contains('ReactModal__Body--open');
 
-const CatalogView: React.FC<CatalogViewProps> = ({
+const CatalogView: React.FC<React.PropsWithChildren<CatalogViewProps>> = ({
   items,
   catalogType,
   // catalogTypes,
@@ -104,7 +104,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({
   const catalogToolbarRef = React.useRef<HTMLInputElement>();
 
   const itemsSorter = React.useCallback(
-    (itemsToSort) => orderBy(itemsToSort, ({ name }) => name.toLowerCase(), [sortOrder]),
+    (itemsToSort: any) => orderBy(itemsToSort, ({ name }) => name.toLowerCase(), [sortOrder]),
     [sortOrder],
   );
 
@@ -125,26 +125,26 @@ const CatalogView: React.FC<CatalogViewProps> = ({
   };
 
   const handleFilterChange = React.useCallback(
-    (filterType, id, value) => {
+    (filterType: any, id: any, value: any) => {
       const updatedFilters = set(activeFilters, [filterType, id, 'active'], value);
       updateURLParams(filterType, getFilterSearchParam(updatedFilters[filterType]));
     },
     [activeFilters],
   );
 
-  const handleSearchKeywordChange = React.useCallback((searchKeyword) => {
+  const handleSearchKeywordChange = React.useCallback((searchKeyword: any) => {
     updateURLParams(CatalogQueryParams.KEYWORD, searchKeyword);
   }, []);
 
-  const handleGroupingChange = React.useCallback((grouping) => {
+  const handleGroupingChange = React.useCallback((grouping: any) => {
     updateURLParams(CatalogQueryParams.GROUPING, grouping);
   }, []);
 
-  const handleSortOrderChange = React.useCallback((order) => {
+  const handleSortOrderChange = React.useCallback((order: any) => {
     updateURLParams(CatalogQueryParams.SORT_ORDER, order);
   }, []);
 
-  const handleShowAllToggle = React.useCallback((groupName) => {
+  const handleShowAllToggle = React.useCallback((groupName: any) => {
     setFilterGroupsShowAll((showAll) => {
       const updatedShowAll = clone(showAll);
       set(updatedShowAll, groupName, !(showAll[groupName] ?? false));

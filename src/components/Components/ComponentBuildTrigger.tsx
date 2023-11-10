@@ -6,7 +6,7 @@ type Props = {
   pacState: PACState;
 };
 
-const ComponentBuildTrigger: React.FC<Props> = ({ pacState }) => {
+const ComponentBuildTrigger: React.FC<React.PropsWithChildren<Props>> = ({ pacState }) => {
   if (pacState === PACState.disabled) {
     return (
       <Tooltip

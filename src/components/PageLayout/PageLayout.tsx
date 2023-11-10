@@ -22,7 +22,7 @@ type PageLayoutProps = {
   actions?: Action[];
 };
 
-const PageLayout: React.FC<PageLayoutProps> = ({
+const PageLayout: React.FC<React.PropsWithChildren<PageLayoutProps>> = ({
   title,
   children,
   footer,

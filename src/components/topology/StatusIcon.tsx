@@ -20,7 +20,10 @@ type StatusIconProps = {
   disableSpin?: boolean;
 };
 
-export const StatusIcon: React.FC<StatusIconProps> = ({ status, ...props }) => {
+export const StatusIcon: React.FC<React.PropsWithChildren<StatusIconProps>> = ({
+  status,
+  ...props
+}) => {
   if (status === runStatus.Cancelling) {
     // Interim state required to avoid any other actions on pipelinerun that is currently being cancelled.
     return (
@@ -37,7 +40,10 @@ export const StatusIcon: React.FC<StatusIconProps> = ({ status, ...props }) => {
   return <PfStatusIcon status={runStatusToRunStatus(status)} {...props} />;
 };
 
-export const ColoredStatusIcon: React.FC<StatusIconProps> = ({ status, ...others }) => {
+export const ColoredStatusIcon: React.FC<React.PropsWithChildren<StatusIconProps>> = ({
+  status,
+  ...others
+}) => {
   return (
     <div
       className={css(
@@ -53,7 +59,7 @@ export const ColoredStatusIcon: React.FC<StatusIconProps> = ({ status, ...others
 };
 
 export const StatusIconWithText: React.FC<
-  StatusIconProps & { text?: string; dataTestAttribute?: string }
+  React.PropsWithChildren<StatusIconProps & { text?: string; dataTestAttribute?: string }>
 > = ({ status, text, dataTestAttribute, ...others }) => {
   return (
     <>
@@ -73,7 +79,7 @@ export const StatusIconWithText: React.FC<
 };
 
 export const StatusIconWithTextLabel: React.FC<
-  StatusIconProps & { text?: string; dataTestAttribute?: string }
+  React.PropsWithChildren<StatusIconProps & { text?: string; dataTestAttribute?: string }>
 > = ({ status, ...others }) => {
   return (
     <Label color={getLabelColorFromStatus(status)}>

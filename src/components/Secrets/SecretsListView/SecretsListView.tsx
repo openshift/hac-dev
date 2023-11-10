@@ -24,7 +24,7 @@ type SecretsListViewProps = {
   readOnly?: boolean;
 };
 
-const SecretsListView: React.FC<SecretsListViewProps> = () => {
+const SecretsListView: React.FC<React.PropsWithChildren<SecretsListViewProps>> = () => {
   const { namespace, workspace } = useWorkspaceInfo();
 
   const [secrets, secretsLoaded] = useRemoteSecrets(namespace);

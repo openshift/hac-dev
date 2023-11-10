@@ -11,10 +11,9 @@ import { PipelineRunListRow } from '../../PipelineRunListView/PipelineRunListRow
 import { IntegrationTestLabels } from '../IntegrationTestForm/types';
 
 type IntegrationTestPipelineRunTabProps = { applicationName: string; testName: string };
-const IntegrationTestPipelineRunTab: React.FC<IntegrationTestPipelineRunTabProps> = ({
-  applicationName,
-  testName,
-}) => {
+const IntegrationTestPipelineRunTab: React.FC<
+  React.PropsWithChildren<IntegrationTestPipelineRunTabProps>
+> = ({ applicationName, testName }) => {
   const { namespace } = useWorkspaceInfo();
 
   const [pipelineRuns, loaded, , getNextPage] = usePipelineRuns(

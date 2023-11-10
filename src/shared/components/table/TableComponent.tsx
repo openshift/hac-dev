@@ -17,7 +17,7 @@ export type TableWrapperProps = {
   ariaRowCount: number;
 };
 
-const TableWrapper: React.FC<TableWrapperProps> = ({
+const TableWrapper: React.FC<React.PropsWithChildren<TableWrapperProps>> = ({
   virtualize,
   ariaLabel,
   ariaRowCount,
@@ -49,7 +49,7 @@ const getComponentProps = (
   kindObj,
 });
 
-const TableComponent: React.FC<TableProps> = ({
+const TableComponent: React.FC<React.PropsWithChildren<TableProps>> = ({
   filters: initFilters,
   selected,
   match,
@@ -80,7 +80,7 @@ const TableComponent: React.FC<TableProps> = ({
       {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => (
         <AutoSizer disableHeight>
           {({ width }) => (
-            <div ref={registerChild}>
+            <div ref={registerChild as any}>
               <VirtualBody
                 Row={Row}
                 customData={customData}

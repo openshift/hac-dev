@@ -7,7 +7,10 @@ type BreadCrumbsProps = {
   className?: string;
 };
 
-const BreadCrumbs: React.FC<BreadCrumbsProps> = ({ breadcrumbs, className }) => (
+const BreadCrumbs: React.FC<React.PropsWithChildren<BreadCrumbsProps>> = ({
+  breadcrumbs,
+  className,
+}) => (
   <Breadcrumb className={className}>
     {breadcrumbs.map((crumb, i, { length }) => {
       const isLast = i === length - 1;

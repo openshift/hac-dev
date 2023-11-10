@@ -10,7 +10,12 @@ type Props = RawComponentProps & {
   name: string;
 };
 
-const CustomizeComponentPipeline: React.FC<Props> = ({ namespace, name, onClose, modalProps }) => {
+const CustomizeComponentPipeline: React.FC<React.PropsWithChildren<Props>> = ({
+  namespace,
+  name,
+  onClose,
+  modalProps,
+}) => {
   const [watchedComponent, loaded] = useK8sWatchResource<ComponentKind>({
     groupVersionKind: ComponentGroupVersionKind,
     namespace,

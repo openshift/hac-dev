@@ -9,7 +9,7 @@ type CellProps = {
   style?: React.CSSProperties;
 } & GridChildrenProps;
 
-const Cell: React.FC<CellProps> = ({
+const Cell: React.FC<React.PropsWithChildren<CellProps>> = ({
   data,
   columnCount,
   items,

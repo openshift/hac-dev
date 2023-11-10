@@ -22,7 +22,7 @@ interface SnapshotComponentsListProps {
   components: SnapshotComponentTableData[];
 }
 
-const SnapshotComponentsList: React.FC<SnapshotComponentsListProps> = ({
+const SnapshotComponentsList: React.FC<React.PropsWithChildren<SnapshotComponentsListProps>> = ({
   applicationName,
   components,
 }) => {

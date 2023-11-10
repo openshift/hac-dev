@@ -30,7 +30,7 @@ import ApplicationListRow from './ApplicationListRow';
 
 const GETTING_STARTED_CARD_KEY = 'application-list-getting-started-card';
 
-const ApplicationListView: React.FC = () => {
+const ApplicationListView: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [hacbs] = useFeatureFlag(HACBS_FLAG);
   const { namespace, workspace } = useWorkspaceInfo();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();

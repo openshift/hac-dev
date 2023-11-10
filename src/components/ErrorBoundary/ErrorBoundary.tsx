@@ -9,7 +9,8 @@ export type ErrorBoundaryFallbackProps = {
 };
 
 type ErrorBoundaryProps = {
-  FallbackComponent?: React.ComponentType<ErrorBoundaryFallbackProps>;
+  FallbackComponent?: React.ComponentType<React.PropsWithChildren<ErrorBoundaryFallbackProps>>;
+  children?: React.ReactNode;
 };
 
 type ErrorBoundaryState = {

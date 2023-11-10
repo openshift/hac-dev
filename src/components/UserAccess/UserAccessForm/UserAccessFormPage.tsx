@@ -13,7 +13,11 @@ type Props = {
   edit?: boolean;
 };
 
-export const UserAccessFormPage: React.FC<Props> = ({ existingSbr, edit, username }) => {
+export const UserAccessFormPage: React.FC<React.PropsWithChildren<Props>> = ({
+  existingSbr,
+  edit,
+  username,
+}) => {
   const { workspace, namespace, updateWorkspace } = React.useContext(WorkspaceContext);
   const track = useTrackEvent();
   const navigate = useNavigate();

@@ -24,7 +24,9 @@ export type EnvironmentToolbarGroupsProps = {
   unsetTypesFilter: () => void;
 };
 
-const EnvironmentToolbarGroups: React.FC<EnvironmentToolbarGroupsProps> = ({
+const EnvironmentToolbarGroups: React.FC<
+  React.PropsWithChildren<EnvironmentToolbarGroupsProps>
+> = ({
   environments,
   validTypes,
   envStatusCounts,

@@ -7,7 +7,9 @@ type ApplicationOverviewTabProps = {
   applicationName: string;
 };
 
-const ApplicationOverviewTab: React.FC<ApplicationOverviewTabProps> = ({ applicationName }) => {
+const ApplicationOverviewTab: React.FC<React.PropsWithChildren<ApplicationOverviewTabProps>> = ({
+  applicationName,
+}) => {
   const whatsNextItems = useWhatsNextItems(applicationName);
   return (
     <>

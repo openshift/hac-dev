@@ -2,7 +2,7 @@ import * as React from 'react';
 import { InputField } from '../../../shared';
 import HelpPopover from '../../HelpPopover';
 
-const GitOptions: React.FC = () => {
+const GitOptions: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <>
       <InputField

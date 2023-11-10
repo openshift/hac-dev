@@ -5,7 +5,7 @@ import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons/dist/js/icon
 
 import './field-level-help.scss';
 
-export const FieldLevelHelp: React.FC<FieldLevelHelpProps> = React.memo(
+export const FieldLevelHelp: React.FC<React.PropsWithChildren<FieldLevelHelpProps>> = React.memo(
   ({ children, popoverHasAutoWidth, testId }) => {
     const { t } = useTranslation();
     if (React.Children.count(children) === 0) {

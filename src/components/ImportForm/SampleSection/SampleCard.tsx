@@ -21,7 +21,10 @@ type SampleCardProps = {
   onSampleImport: (url: string, name: string) => void;
 };
 
-const SampleCard: React.FC<SampleCardProps> = ({ sample, onSampleImport }) => {
+const SampleCard: React.FC<React.PropsWithChildren<SampleCardProps>> = ({
+  sample,
+  onSampleImport,
+}) => {
   const { icon, name, tags, description, attributes } = sample;
 
   const sourceUrl = (attributes as SampleAttrs)?.git?.remotes?.origin;

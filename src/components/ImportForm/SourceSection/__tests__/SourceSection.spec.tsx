@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { configure, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 import { SPIAccessCheckAccessibilityStatus, ServiceProviderType } from '../../../../types';
 import { formikRenderer } from '../../../../utils/test-utils';
 import { useAccessCheck, useAccessTokenBinding } from '../../utils/auth-utils';
@@ -136,6 +136,15 @@ describe('SourceSection', () => {
       expect(screen.queryByText('Git reference')).toBeInTheDocument();
       expect(screen.queryByText('Context directory')).toBeInTheDocument();
     });
+  });
+
+  it('should not show git options for invalid git url', async () => {
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: false, isGit: true, serviceProvider: ServiceProviderType.GitHub },
+      false,
+    ]);
+
+    const { input, user } = renderSourceSection();
 
     await user.type(input, 'dummy text');
 

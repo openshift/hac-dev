@@ -14,9 +14,9 @@ export type SnapshotComponentTableData = {
   source?: { git?: { url: string; revision: string } };
 };
 
-const SnapshotComponentsListRow: React.FC<RowFunctionArgs<SnapshotComponentTableData>> = ({
-  obj,
-}) => {
+const SnapshotComponentsListRow: React.FC<
+  React.PropsWithChildren<RowFunctionArgs<SnapshotComponentTableData>>
+> = ({ obj }) => {
   const { workspace } = useWorkspaceInfo();
   return (
     <>

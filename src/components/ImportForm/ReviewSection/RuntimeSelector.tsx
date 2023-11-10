@@ -35,7 +35,9 @@ const dockerFileSample = {
   name: 'Dockerfile',
 };
 
-export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedComponentIndex }) => {
+export const RuntimeSelector: React.FC<React.PropsWithChildren<RuntimeSelectorProps>> = ({
+  detectedComponentIndex,
+}) => {
   const fieldPrefix = `components[${detectedComponentIndex}]`;
   const {
     values: {
@@ -107,7 +109,7 @@ export const RuntimeSelector: React.FC<RuntimeSelectorProps> = ({ detectedCompon
     selectedRuntime?.name === DetectingRuntime;
 
   const detectingRuntimeToggle = React.useCallback(
-    (onToggle) => {
+    (onToggle: any) => {
       const toggleIcon = isDetectingRuntime ? (
         <Spinner
           size="md"

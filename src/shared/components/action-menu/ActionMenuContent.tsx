@@ -16,7 +16,10 @@ type ActionMenuContentProps = {
   focusItem?: MenuOption;
 };
 
-export const GroupMenuContent: React.FC<GroupMenuContentProps> = ({ option, onClick }) => (
+export const GroupMenuContent: React.FC<React.PropsWithChildren<GroupMenuContentProps>> = ({
+  option,
+  onClick,
+}) => (
   <>
     <Divider />
     <MenuGroup label={option.label} translate="no">
@@ -32,7 +35,10 @@ export const GroupMenuContent: React.FC<GroupMenuContentProps> = ({ option, onCl
 );
 
 // Need to keep this in the same file to avoid circular dependency.
-export const SubMenuContent: React.FC<GroupMenuContentProps> = ({ option, onClick }) => (
+export const SubMenuContent: React.FC<React.PropsWithChildren<GroupMenuContentProps>> = ({
+  option,
+  onClick,
+}) => (
   <MenuItem
     data-testid={option.id}
     flyoutMenu={
@@ -53,7 +59,11 @@ export const SubMenuContent: React.FC<GroupMenuContentProps> = ({ option, onClic
   </MenuItem>
 );
 
-const ActionMenuContent: React.FC<ActionMenuContentProps> = ({ options, onClick, focusItem }) => {
+const ActionMenuContent: React.FC<React.PropsWithChildren<ActionMenuContentProps>> = ({
+  options,
+  onClick,
+  focusItem,
+}) => {
   return (
     <>
       {options.map((option) => {

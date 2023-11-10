@@ -42,11 +42,13 @@ type Props = RawComponentProps & {
   singleComponent?: boolean;
 };
 
-const ComponentKebab: React.FC<{
-  state: PACState;
-  component: ComponentKind;
-  canPatchComponent?: boolean;
-}> = ({ component, state, canPatchComponent }) => {
+const ComponentKebab: React.FC<
+  React.PropsWithChildren<{
+    state: PACState;
+    component: ComponentKind;
+    canPatchComponent?: boolean;
+  }>
+> = ({ component, state, canPatchComponent }) => {
   const { workspace } = useWorkspaceInfo();
   const track = useTrackEvent();
   const [isOpen, setOpen] = React.useState(false);
@@ -87,16 +89,18 @@ const ComponentKebab: React.FC<{
   );
 };
 
-const Row: React.FC<{
-  component: ComponentKind;
-  onStateChange: (state: PACState) => void;
-}> = ({ component, onStateChange }) => {
+const Row: React.FC<
+  React.PropsWithChildren<{
+    component: ComponentKind;
+    onStateChange: (state: PACState) => void;
+  }>
+> = ({ component, onStateChange }) => {
   const { workspace } = useWorkspaceInfo();
   const track = useTrackEvent();
   const { url: githubAppURL } = useApplicationPipelineGitHubApp();
   const [pacState, setPacState] = React.useState<PACState>(PACState.loading);
   const onComponentStateChange = React.useCallback(
-    (state) => {
+    (state: any) => {
       setPacState(state);
       onStateChange(state);
     },
@@ -308,7 +312,7 @@ const Row: React.FC<{
   );
 };
 
-const CustomizePipeline: React.FC<Props> = ({
+const CustomizePipeline: React.FC<React.PropsWithChildren<Props>> = ({
   components,
   onClose,
   singleComponent,
@@ -362,74 +366,76 @@ const CustomizePipeline: React.FC<Props> = ({
     <Modal {...modalProps} onClose={trackedOnClose}>
       <ModalBoxHeader />
       <ModalBoxBody>
-        <TextContent
-          className="pf-v5-u-text-align-center pf-v5-u-pt-lg"
-          style={{ visibility: allLoading ? 'hidden' : undefined }}
-        >
-          <Text component={TextVariants.p}>
-            <img style={{ width: 100 }} src={completed ? successIconUrl : sendIconUrl} />
-          </Text>
-          <Text component={TextVariants.h2}>
-            {singleComponent ? 'Edit build pipeline plan' : 'Manage build pipelines'}
-          </Text>
-          <Text component={TextVariants.p}>
-            Add some automation by upgrading your default build pipelines to custom build pipelines.
-            Custom build pipelines are pipelines as code, set on your component&apos;s repository.
-            With custom build pipelines, commits to your main branch and pull requests will
-            automatically rebuild. You can always roll back to default.
-          </Text>
-          <Text component={TextVariants.p}>
-            Ready to use custom build pipelines? Make sure you have the GitHub application installed
-            and grant permissions to your repositories.
-          </Text>
-          <Text component={TextVariants.p}>
-            <ExternalLink
-              href={githubAppURL}
-              analytics={{
-                link_name: 'install-github-app',
-                link_location: 'manage-builds-pipelines',
-                workspace,
-              }}
-            >
-              Install GitHub application
-            </ExternalLink>
-          </Text>
-        </TextContent>
-        <div className="pf-v5-u-mt-lg" />
-        {alert}
-        <Table>
-          <Thead>
-            <Tr>
-              <Th>Component</Th>
-              <Th modifier="fitContent">Build pipeline status</Th>
-              <Th />
-              <Th />
-            </Tr>
-          </Thead>
-          <Tbody>
-            {sortedComponents.map((component) => (
-              <Row
-                key={component.metadata.name}
-                component={component}
-                onStateChange={(pacState) =>
-                  setComponentState((prevState) => ({
-                    ...prevState,
-                    [component.metadata.name]: pacState,
-                  }))
-                }
-              />
-            ))}
-          </Tbody>
-        </Table>
-        {totalCount > 0 ? (
-          <p
-            className={`pf-v5-u-pt-lg ${
-              count === totalCount ? 'pf-v5-u-success-color-100' : 'pf-v5-u-color-400'
-            }`}
+        <>
+          <TextContent
+            className="pf-v5-u-text-align-center pf-v5-u-pt-lg"
+            style={{ visibility: allLoading ? 'hidden' : undefined }}
           >
-            {`${count} of ${pluralize(totalCount, 'component')} upgraded to custom build`}
-          </p>
-        ) : undefined}
+            <Text component={TextVariants.p}>
+              <img style={{ width: 100 }} src={completed ? successIconUrl : sendIconUrl} />
+            </Text>
+            <Text component={TextVariants.h2}>
+              {singleComponent ? 'Edit build pipeline plan' : 'Manage build pipelines'}
+            </Text>
+            <Text component={TextVariants.p}>
+              Add some automation by upgrading your default build pipelines to custom build
+              pipelines. Custom build pipelines are pipelines as code, set on your component&apos;s
+              repository. With custom build pipelines, commits to your main branch and pull requests
+              will automatically rebuild. You can always roll back to default.
+            </Text>
+            <Text component={TextVariants.p}>
+              Ready to use custom build pipelines? Make sure you have the GitHub application
+              installed and grant permissions to your repositories.
+            </Text>
+            <Text component={TextVariants.p}>
+              <ExternalLink
+                href={githubAppURL}
+                analytics={{
+                  link_name: 'install-github-app',
+                  link_location: 'manage-builds-pipelines',
+                  workspace,
+                }}
+              >
+                Install GitHub application
+              </ExternalLink>
+            </Text>
+          </TextContent>
+          <div className="pf-v5-u-mt-lg" />
+          {alert}
+          <Table>
+            <Thead>
+              <Tr>
+                <Th>Component</Th>
+                <Th modifier="fitContent">Build pipeline status</Th>
+                <Th />
+                <Th />
+              </Tr>
+            </Thead>
+            <Tbody>
+              {sortedComponents.map((component) => (
+                <Row
+                  key={component.metadata.name}
+                  component={component}
+                  onStateChange={(pacState) =>
+                    setComponentState((prevState) => ({
+                      ...prevState,
+                      [component.metadata.name]: pacState,
+                    }))
+                  }
+                />
+              ))}
+            </Tbody>
+          </Table>
+          {totalCount > 0 ? (
+            <p
+              className={`pf-v5-u-pt-lg ${
+                count === totalCount ? 'pf-v5-u-success-color-100' : 'pf-v5-u-color-400'
+              }`}
+            >
+              {`${count} of ${pluralize(totalCount, 'component')} upgraded to custom build`}
+            </p>
+          ) : undefined}
+        </>
       </ModalBoxBody>
       <ModalBoxFooter>
         <AnalyticsButton

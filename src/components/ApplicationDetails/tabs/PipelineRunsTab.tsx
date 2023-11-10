@@ -8,7 +8,7 @@ type PipelineRunsTabProps = {
   customFilter?: (plr: PipelineRunKind) => boolean;
 };
 
-const PipelineRunsTab: React.FC<PipelineRunsTabProps> = ({
+const PipelineRunsTab: React.FC<React.PropsWithChildren<PipelineRunsTabProps>> = ({
   applicationName,
   componentName,
   customFilter,

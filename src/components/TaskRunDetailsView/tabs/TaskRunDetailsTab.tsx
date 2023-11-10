@@ -30,7 +30,10 @@ type TaskRunDetailsTabProps = {
   taskRun: TaskRunKind;
   error: unknown;
 };
-const TaskRunDetailsTab: React.FC<TaskRunDetailsTabProps> = ({ taskRun, error }) => {
+const TaskRunDetailsTab: React.FC<React.PropsWithChildren<TaskRunDetailsTabProps>> = ({
+  taskRun,
+  error,
+}) => {
   const { workspace } = useWorkspaceInfo();
   const taskRunFailed = (getTRLogSnippet(taskRun) || {}) as ErrorDetailsWithStaticLog;
   const duration = calculateDuration(

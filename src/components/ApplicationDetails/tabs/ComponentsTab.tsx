@@ -5,8 +5,8 @@ type ComponentTabProps = {
   applicationName: string;
 };
 
-const ComponentsTab: React.FC<ComponentTabProps> = ({ applicationName }) => (
-  <ComponentListView applicationName={applicationName} />
-);
+const ComponentsTab: React.FC<React.PropsWithChildren<ComponentTabProps>> = ({
+  applicationName,
+}) => <ComponentListView applicationName={applicationName} />;
 
 export default ComponentsTab;

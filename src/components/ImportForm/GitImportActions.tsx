@@ -20,7 +20,7 @@ type GitImportActionsProps = {
   sticky?: boolean;
 };
 
-const GitImportActions: React.FunctionComponent<GitImportActionsProps> = ({
+const GitImportActions: React.FunctionComponent<React.PropsWithChildren<GitImportActionsProps>> = ({
   reviewMode,
   onBack,
   onCancel,

@@ -32,10 +32,12 @@ type IntegrationTestsListViewProps = {
   applicationName: string;
 };
 
-const IntegrationTestsEmptyState: React.FC<{
-  handleAddTest: () => void;
-  canCreateIntegrationTest: boolean;
-}> = ({ handleAddTest, canCreateIntegrationTest }) => {
+const IntegrationTestsEmptyState: React.FC<
+  React.PropsWithChildren<{
+    handleAddTest: () => void;
+    canCreateIntegrationTest: boolean;
+  }>
+> = ({ handleAddTest, canCreateIntegrationTest }) => {
   return (
     <AppEmptyState
       data-test="integration-tests__empty"
@@ -64,7 +66,9 @@ const IntegrationTestsEmptyState: React.FC<{
   );
 };
 
-const IntegrationTestsListView: React.FC<IntegrationTestsListViewProps> = ({ applicationName }) => {
+const IntegrationTestsListView: React.FC<
+  React.PropsWithChildren<IntegrationTestsListViewProps>
+> = ({ applicationName }) => {
   const { namespace, workspace } = useWorkspaceInfo();
   const [canCreateIntegrationTest] = useAccessReviewForModel(
     IntegrationTestScenarioModel,

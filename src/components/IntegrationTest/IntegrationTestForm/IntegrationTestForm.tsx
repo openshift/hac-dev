@@ -15,10 +15,9 @@ type IntegrationTestFormProps = {
   edit?: boolean;
 };
 
-const IntegrationTestForm: React.FunctionComponent<IntegrationTestFormProps> = ({
-  applicationName,
-  edit,
-}) => {
+const IntegrationTestForm: React.FunctionComponent<
+  React.PropsWithChildren<IntegrationTestFormProps>
+> = ({ applicationName, edit }) => {
   const { workspace } = useWorkspaceInfo();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
   const { dirty, handleSubmit, handleReset, isSubmitting, status, errors } = useFormikContext();

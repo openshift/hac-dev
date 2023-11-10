@@ -6,7 +6,9 @@ type DeploymentsTabProps = {
   applicationName?: string;
 };
 
-const DeploymentsTab: React.FC<DeploymentsTabProps> = ({ applicationName }) => (
+const DeploymentsTab: React.FC<React.PropsWithChildren<DeploymentsTabProps>> = ({
+  applicationName,
+}) => (
   <>
     <Title size="lg" headingLevel="h3" className="pf-v5-c-title pf-v5-u-mt-lg pf-v5-u-mb-sm">
       Deployments

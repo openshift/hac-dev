@@ -62,7 +62,7 @@ type DetailsPageProps = {
   onTabSelect?: (selectedTabKey: string) => void;
 };
 
-const DetailsPage: React.FC<DetailsPageProps> = ({
+const DetailsPage: React.FC<React.PropsWithChildren<DetailsPageProps>> = ({
   title,
   headTitle,
   preComponent = null,

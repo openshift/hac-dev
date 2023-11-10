@@ -20,14 +20,9 @@ type EnvironmentListViewProps = {
 
 const DEFAULT_VALID_TYPES = Object.keys(EnvironmentType).map((t) => EnvironmentType[t]);
 
-const ApplicationEnvironmentListView: React.FC<EnvironmentListViewProps> = ({
-  applicationName,
-  preFilter,
-  validTypes,
-  typesFilter,
-  setTypesFilter,
-  unsetTypesFilter,
-}) => {
+const ApplicationEnvironmentListView: React.FC<
+  React.PropsWithChildren<EnvironmentListViewProps>
+> = ({ applicationName, preFilter, validTypes, typesFilter, setTypesFilter, unsetTypesFilter }) => {
   const [allEnvironments, environmentsLoaded] =
     useAllApplicationEnvironmentsWithHealthStatus(applicationName);
   const environments = React.useMemo(
@@ -106,7 +101,7 @@ const ApplicationEnvironmentListView: React.FC<EnvironmentListViewProps> = ({
   );
 };
 
-const AllEnvironmentsListView: React.FC<EnvironmentListViewProps> = ({
+const AllEnvironmentsListView: React.FC<React.PropsWithChildren<EnvironmentListViewProps>> = ({
   validTypes,
   preFilter,
   typesFilter,
@@ -153,7 +148,7 @@ type Props = {
   validTypes?: EnvironmentType[];
 };
 
-const EnvironmentListView: React.FC<Props> = ({
+const EnvironmentListView: React.FC<React.PropsWithChildren<Props>> = ({
   applicationName,
   validTypes = DEFAULT_VALID_TYPES,
 }) => {

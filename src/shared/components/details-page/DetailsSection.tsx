@@ -9,7 +9,11 @@ type DetailsSectionProps = {
   children: React.ReactNode;
 };
 
-const DetailsSection: React.FC<DetailsSectionProps> = ({ title, description, children }) => {
+const DetailsSection: React.FC<React.PropsWithChildren<DetailsSectionProps>> = ({
+  title,
+  description,
+  children,
+}) => {
   return (
     <div className="details-section">
       {title ? (

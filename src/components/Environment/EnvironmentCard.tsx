@@ -34,9 +34,11 @@ import {
   getEnvironmentTypeLabel,
 } from './environment-utils';
 
-const ApplicationEnvironmentStatus: React.FC<{
-  environment: EnvironmentKindWithHealthStatus;
-}> = ({ environment }) => {
+const ApplicationEnvironmentStatus: React.FC<
+  React.PropsWithChildren<{
+    environment: EnvironmentKindWithHealthStatus;
+  }>
+> = ({ environment }) => {
   if (!environment.healthStatus) return null;
 
   return (
@@ -68,7 +70,7 @@ type EnvironmentCardProps = {
   applicationName?: string;
 };
 
-const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
+const EnvironmentCard: React.FC<React.PropsWithChildren<EnvironmentCardProps>> = ({
   environment,
   readOnly,
   applicationName,

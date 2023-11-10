@@ -7,10 +7,9 @@ type CommitsGettingStartedModalProps = {
   onHide: () => void;
 };
 
-const CommitsGettingStartedModal: React.FC<CommitsGettingStartedModalProps> = ({
-  shown,
-  onHide,
-}) => {
+const CommitsGettingStartedModal: React.FC<
+  React.PropsWithChildren<CommitsGettingStartedModalProps>
+> = ({ shown, onHide }) => {
   const header = (
     <Title className="pf-v5-u-text-align-center" headingLevel="h2">
       Getting started with Commit view

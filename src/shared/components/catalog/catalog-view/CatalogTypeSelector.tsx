@@ -12,7 +12,7 @@ interface CatalogTypeSelectorProps {
   catalogTypeCounts: CatalogTypeCounts;
 }
 
-const CatalogTypeSelector: React.FC<CatalogTypeSelectorProps> = ({
+const CatalogTypeSelector: React.FC<React.PropsWithChildren<CatalogTypeSelectorProps>> = ({
   catalogTypes,
   catalogTypeCounts,
 }) => {

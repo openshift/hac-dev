@@ -28,7 +28,10 @@ export interface PipelineSidePanelBodyProps {
   workflowNode: GraphElement<ElementModel, CommitWorkflowNodeModelData>;
 }
 
-const BuildSidePanel: React.FC<PipelineSidePanelBodyProps> = ({ workflowNode, onClose }) => {
+const BuildSidePanel: React.FC<React.PropsWithChildren<PipelineSidePanelBodyProps>> = ({
+  workflowNode,
+  onClose,
+}) => {
   const { workspace, namespace } = useWorkspaceInfo();
   const workflowData = workflowNode.getData();
   const pipelineRun = workflowData.resource as PipelineRunKind;

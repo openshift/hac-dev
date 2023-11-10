@@ -9,7 +9,7 @@ type NumberSpinnerProps = {
   min?: number;
 } & React.HTMLProps<HTMLInputElement>;
 
-const NumberSpinner: React.FC<NumberSpinnerProps> = ({
+const NumberSpinner: React.FC<React.PropsWithChildren<NumberSpinnerProps>> = ({
   className,
   changeValueBy,
   min,

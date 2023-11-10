@@ -6,7 +6,7 @@ import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import { EnvironmentModel } from '../models';
 import { AccessReviewResources } from '../types';
 
-const CreateEnvironmentPage: React.FC = () => {
+const CreateEnvironmentPage: React.FC<React.PropsWithChildren<unknown>> = () => {
   const accessReviewResources: AccessReviewResources = [
     { model: EnvironmentModel, verb: 'create' },
   ];

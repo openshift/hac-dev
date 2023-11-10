@@ -11,7 +11,10 @@ type GraphErrorStateProps = {
   fullHeight?: boolean;
 };
 
-const GraphErrorState: React.FC<GraphErrorStateProps> = ({ errors, fullHeight }) => {
+const GraphErrorState: React.FC<React.PropsWithChildren<GraphErrorStateProps>> = ({
+  errors,
+  fullHeight,
+}) => {
   const [closedError, setClosedError] = React.useState<number[]>([]);
 
   const uniqueErrors = React.useMemo(

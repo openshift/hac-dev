@@ -13,7 +13,7 @@ import { HttpError } from '../shared/utils/error/http-error';
 import { AccessReviewResources, SpaceBindingRequest } from '../types';
 import { WorkspaceContext } from '../utils/workspace-context-utils';
 
-const EditAccessPage: React.FC = () => {
+const EditAccessPage: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { name } = useParams();
   const { workspace, workspaceResource } = React.useContext(WorkspaceContext);
   const binding = workspaceResource.status?.bindings?.find(

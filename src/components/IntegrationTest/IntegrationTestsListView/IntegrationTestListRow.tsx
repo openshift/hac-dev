@@ -11,9 +11,9 @@ import { ResolverRefParams, getURLForParam } from '../IntegrationTestForm/utils/
 import { integrationListTableColumnClasses } from './IntegrationTestListHeader';
 import { useIntegrationTestActions } from './useIntegrationTestActions';
 
-const IntegrationTestListRow: React.FC<RowFunctionArgs<IntegrationTestScenarioKind>> = ({
-  obj,
-}) => {
+const IntegrationTestListRow: React.FC<
+  React.PropsWithChildren<RowFunctionArgs<IntegrationTestScenarioKind>>
+> = ({ obj }) => {
   const actions = useIntegrationTestActions(obj);
   const { workspace } = useWorkspaceInfo();
   return (

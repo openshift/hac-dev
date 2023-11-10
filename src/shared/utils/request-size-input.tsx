@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DropdownField } from '../components';
 import { NumberSpinner } from './number-spinner';
 
-export const RequestSizeInput: React.FC<RequestSizeInputProps> = ({
+export const RequestSizeInput: React.FC<React.PropsWithChildren<RequestSizeInputProps>> = ({
   children,
   defaultRequestSizeUnit,
   defaultRequestSizeValue,

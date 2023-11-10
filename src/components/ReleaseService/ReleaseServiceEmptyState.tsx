@@ -7,7 +7,9 @@ type ReleaseServiceEmptyStateProps = {
   title: string;
 };
 
-export const ReleaseServiceEmptyState: React.FC<ReleaseServiceEmptyStateProps> = ({ title }) => {
+export const ReleaseServiceEmptyState: React.FC<
+  React.PropsWithChildren<ReleaseServiceEmptyStateProps>
+> = ({ title }) => {
   return (
     <AppEmptyState emptyStateImg={emptyStateImgUrl} title={title}>
       <ExternalLink href="https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/how-to-guides/proc_release_application/">

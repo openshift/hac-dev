@@ -7,7 +7,11 @@ type HelpTopicLinkProps = {
   isInline?: boolean;
 };
 
-export const HelpTopicLink: React.FC<HelpTopicLinkProps> = ({ topicId, isInline, children }) => {
+export const HelpTopicLink: React.FC<React.PropsWithChildren<HelpTopicLinkProps>> = ({
+  topicId,
+  isInline,
+  children,
+}) => {
   const {
     helpTopics: { setActiveTopic, enableTopics, disableTopics },
   } = useChrome();

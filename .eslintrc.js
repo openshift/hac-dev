@@ -136,6 +136,7 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
     'require-atomic-updates': 0,
+    'rulesdir/forbid-pf-relative-imports': 'off', // We don't need this rule after https://github.com/patternfly/patternfly-react/pull/9298.
   },
   settings: {
     'import/extensions': ['.js', '.jsx'],

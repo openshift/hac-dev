@@ -3,7 +3,9 @@ import { Tooltip } from '@patternfly/react-core';
 import AnalyticsButton from './AnalyticsButton/AnalyticsButton';
 
 export const ButtonWithAccessTooltip: React.FC<
-  React.ComponentProps<typeof AnalyticsButton> & { tooltip: React.ReactNode }
+  React.PropsWithChildren<
+    React.ComponentProps<typeof AnalyticsButton> & { tooltip: React.ReactNode }
+  >
 > = ({ isDisabled, tooltip, ...props }) => {
   if (isDisabled) {
     return (

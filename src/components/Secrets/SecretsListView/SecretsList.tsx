@@ -9,7 +9,7 @@ type SecretsListProps = {
   secrets: RemoteSecretKind[];
 };
 
-const SecretsList: React.FC<SecretsListProps> = ({ secrets }) => {
+const SecretsList: React.FC<React.PropsWithChildren<SecretsListProps>> = ({ secrets }) => {
   const [environments, environmentsLoaded] = useSortedEnvironments();
 
   const environmentNames = React.useMemo(

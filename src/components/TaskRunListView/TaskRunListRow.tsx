@@ -9,7 +9,9 @@ import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { StatusIconWithText } from '../topology/StatusIcon';
 import { taskRunTableColumnClasses } from './TaskRunListHeader';
 
-const TaskRunListRow: React.FC<RowFunctionArgs<TaskRunKind>> = ({ obj }) => {
+const TaskRunListRow: React.FC<React.PropsWithChildren<RowFunctionArgs<TaskRunKind>>> = ({
+  obj,
+}) => {
   const { workspace } = useWorkspaceInfo();
   const applicationName = obj.metadata?.labels[PipelineRunLabel.APPLICATION];
   return (

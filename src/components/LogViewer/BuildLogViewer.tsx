@@ -25,7 +25,9 @@ type BuildLogViewerProps = ComponentProps & {
   component: ComponentKind;
 };
 
-export const BuildLogViewer: React.FC<BuildLogViewerProps> = ({ component }) => {
+export const BuildLogViewer: React.FC<React.PropsWithChildren<BuildLogViewerProps>> = ({
+  component,
+}) => {
   const { workspace } = useWorkspaceInfo();
   const [pipelineRun, loaded] = useLatestBuildPipelineRunForComponent(
     component.metadata.namespace,

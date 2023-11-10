@@ -17,7 +17,7 @@ type SecretFormProps = RawComponentProps & {
   existingSecrets: string[];
 };
 
-const SecretForm: React.FC<SecretFormProps> = ({ existingSecrets }) => {
+const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existingSecrets }) => {
   const { values, setFieldValue } = useFormikContext<SecretFormValues>();
   const defaultKeyValues = [{ key: '', value: '', readOnlyKey: false }];
   const defaultImageKeyValues = [{ key: '.dockerconfigjson', value: '', readOnlyKey: true }];

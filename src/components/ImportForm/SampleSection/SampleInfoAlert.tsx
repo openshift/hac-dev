@@ -3,7 +3,7 @@ import { Alert, AlertActionCloseButton } from '@patternfly/react-core';
 
 const SAMPLES_FLOW_INSTRUCTION_KEY = 'samples-flow-instruction';
 
-const SamplesInfoAlert: React.FC = ({ children }) => {
+const SamplesInfoAlert: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [showAlertInfo, setShowAlertInfo] = React.useState<boolean>(
     window.localStorage.getItem(SAMPLES_FLOW_INSTRUCTION_KEY) !== 'false',
   );

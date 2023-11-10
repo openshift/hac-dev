@@ -7,7 +7,7 @@ import { NumberSpinnerFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
 import FieldHelperText from './FieldHelperText';
 
-const NumberSpinnerField: React.FC<NumberSpinnerFieldProps> = ({
+const NumberSpinnerField: React.FC<React.PropsWithChildren<NumberSpinnerFieldProps>> = ({
   label,
   helpText,
   required,

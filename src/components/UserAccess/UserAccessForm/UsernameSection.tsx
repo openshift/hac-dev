@@ -23,7 +23,7 @@ type Props = {
   disabled?: boolean;
 };
 
-export const UsernameSection: React.FC<Props> = ({ disabled }) => {
+export const UsernameSection: React.FC<React.PropsWithChildren<Props>> = ({ disabled }) => {
   const [, { value: usernames, error }, { setValue, setError }] = useField<string[]>('usernames');
   const fieldId = getFieldId('usernames', 'input');
   const [username, setUsername] = React.useState('');

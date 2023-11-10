@@ -734,6 +734,7 @@ module.exports = {
     ...routeExtensions,
   ],
   sharedModules: {
+    react: { singleton: true },
     'react-router-dom': { singleton: true },
     'react-redux': { singleton: true, import: false },
     '@openshift/dynamic-plugin-sdk-extensions': { singleton: true, import: false },

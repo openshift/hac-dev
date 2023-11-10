@@ -37,7 +37,7 @@ type EnvironmentListProps = {
   applicationName?: string;
 };
 
-const EnvironmentList: React.FC<EnvironmentListProps> = ({
+const EnvironmentList: React.FC<React.PropsWithChildren<EnvironmentListProps>> = ({
   environments,
   environmentsLoaded,
   ToolbarGroups = null,

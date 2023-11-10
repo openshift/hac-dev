@@ -34,7 +34,7 @@ type ReviewComponentCardProps = {
   showRuntimeSelector?: boolean;
 };
 
-const ReviewComponentCard: React.FC<ReviewComponentCardProps> = ({
+const ReviewComponentCard: React.FC<React.PropsWithChildren<ReviewComponentCardProps>> = ({
   detectedComponent,
   detectedComponentIndex,
   editMode = false,

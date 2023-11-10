@@ -19,7 +19,7 @@ const EmptyStateImg = () => (
 );
 
 const FilteredEmptyState: React.FC<
-  Omit<EmptyStateProps, 'children'> & { onClearFilters: () => void }
+  React.PropsWithChildren<Omit<EmptyStateProps, 'children'> & { onClearFilters: () => void }>
 > = ({ onClearFilters, ...props }) => (
   <EmptyState className="app-empty-state" variant={EmptyStateVariant.full} {...props}>
     <EmptyStateHeader

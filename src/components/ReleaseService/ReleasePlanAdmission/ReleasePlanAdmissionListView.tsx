@@ -26,7 +26,7 @@ import { ReleaseServiceEmptyState } from '../ReleaseServiceEmptyState';
 import ReleasePlanAdmissionListHeader from './ReleasePlanAdmissionListHeader';
 import ReleasePlanAdmissionListRow from './ReleasePlanAdmissionListRow';
 
-const ReleasePlanAdmissionListView: React.FC = () => {
+const ReleasePlanAdmissionListView: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { namespace } = useWorkspaceInfo();
   const [releasePlanAdmission, loaded] = useReleasePlanAdmissions(namespace);
   const [nameFilter, setNameFilter] = useSearchParam('name', '');

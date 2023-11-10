@@ -12,9 +12,9 @@ type SnapshotComponentsEmptyStateProps = {
   applicationName: string;
 };
 
-const SnapshotComponentsEmptyState: React.FC<SnapshotComponentsEmptyStateProps> = ({
-  applicationName,
-}) => {
+const SnapshotComponentsEmptyState: React.FC<
+  React.PropsWithChildren<SnapshotComponentsEmptyStateProps>
+> = ({ applicationName }) => {
   const { workspace } = useWorkspaceInfo();
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
 

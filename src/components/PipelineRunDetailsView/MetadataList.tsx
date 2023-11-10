@@ -5,7 +5,7 @@ interface MetadataListProps {
   metadata: Record<string, string>;
 }
 
-const MetadataList: React.FC<MetadataListProps> = ({ metadata }) => {
+const MetadataList: React.FC<React.PropsWithChildren<MetadataListProps>> = ({ metadata }) => {
   if (!metadata) return <>-</>;
   const labelArray = Object.entries(metadata);
 

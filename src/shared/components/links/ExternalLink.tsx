@@ -19,7 +19,7 @@ type ExternalLinkProps = {
   size?: 'sm' | 'md' | 'lg' | 'xl';
 };
 
-const ExternalLink: React.FC<ExternalLinkProps> = ({
+const ExternalLink: React.FC<React.PropsWithChildren<ExternalLinkProps>> = ({
   children,
   href,
   text,

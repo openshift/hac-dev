@@ -18,7 +18,7 @@ type MultiStreamLogsProps = {
   setCurrentLogsGetter: (getter: () => string) => void;
 };
 
-export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
+export const MultiStreamLogs: React.FC<React.PropsWithChildren<MultiStreamLogsProps>> = ({
   resource,
   taskRun,
   resourceName,
@@ -46,7 +46,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
 
   const loadingContainers = resource?.metadata?.name !== resourceName;
 
-  const handleComplete = React.useCallback((containerName) => {
+  const handleComplete = React.useCallback((containerName: any) => {
     const index = dataRef.current.findIndex(({ name }) => name === containerName);
     completedRef.current[index] = true;
     const newRenderTo = dataRef.current.findIndex((c, i) => completedRef.current[i] !== true);

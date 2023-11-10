@@ -13,7 +13,7 @@ type Props = {
   scrollIntoView?: (node: Node) => void;
 };
 
-const PipelineRunSidePanel: React.FC<Props> = ({ scrollIntoView }) => {
+const PipelineRunSidePanel: React.FC<React.PropsWithChildren<Props>> = ({ scrollIntoView }) => {
   const [[selectedId], setSelectedIds] = useVisualizationState<string[]>(SELECTION_STATE, []);
   const controller = useVisualizationController();
 

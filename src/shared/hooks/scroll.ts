@@ -30,7 +30,7 @@ export const useScrollDirection = (): [ScrollDirection, (event) => void] => {
   const scrollPosition = React.useRef<number>(null);
   const [scrollDirection, setScrollDirection] = React.useState<ScrollDirection>(null);
   const handleScroll = React.useCallback(
-    (event) => {
+    (event: any) => {
       const { scrollHeight, scrollTop, clientHeight } = event.target;
       if (scrollPosition.current !== null) {
         const direction = getScrollDirection(

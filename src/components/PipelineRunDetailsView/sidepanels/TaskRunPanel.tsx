@@ -22,7 +22,7 @@ type Props = {
   taskNode: GraphElement<ElementModel, PipelineRunNodeData>;
 };
 
-const TaskRunPanel: React.FC<Props> = ({ taskNode, onClose }) => {
+const TaskRunPanel: React.FC<React.PropsWithChildren<Props>> = ({ taskNode, onClose }) => {
   const task = taskNode.getData().task;
   const taskRun = taskNode.getData().taskRun;
   const { status } = taskNode.getData();

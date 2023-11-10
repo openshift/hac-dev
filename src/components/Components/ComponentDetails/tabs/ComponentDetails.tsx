@@ -15,7 +15,9 @@ type ComponentDetailsProps = {
   component: ComponentKind;
 };
 
-const ComponentDetails: React.FC<ComponentDetailsProps> = ({ component }) => {
+const ComponentDetails: React.FC<React.PropsWithChildren<ComponentDetailsProps>> = ({
+  component,
+}) => {
   const runTime = React.useMemo(() => {
     try {
       const loadedYaml = yamlParser?.load(component.status?.devfile) as {

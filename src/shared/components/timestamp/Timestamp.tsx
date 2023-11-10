@@ -29,7 +29,7 @@ const timestampFor = (mdate: Date, now: Date, omitSuffix: boolean) => {
   return dateTime.dateTimeFormatter.format(mdate);
 };
 
-export const Timestamp: React.FC<TimestampProps> = ({
+export const Timestamp: React.FC<React.PropsWithChildren<TimestampProps>> = ({
   timestamp,
   isUnix,
   omitSuffix,

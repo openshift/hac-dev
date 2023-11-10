@@ -7,7 +7,9 @@ type WorkflowVisualizationSurfaceProps = {
   model: Model;
 };
 
-const WorkflowVisualizationSurface: React.FC<WorkflowVisualizationSurfaceProps> = ({ model }) => {
+const WorkflowVisualizationSurface: React.FC<
+  React.PropsWithChildren<WorkflowVisualizationSurfaceProps>
+> = ({ model }) => {
   return (
     <VisualizationFactory
       model={model}

@@ -36,7 +36,9 @@ type HacbsApplicationDetailsProps = {
   applicationName: string;
 };
 
-const ApplicationDetails: React.FC<HacbsApplicationDetailsProps> = ({ applicationName }) => {
+const ApplicationDetails: React.FC<React.PropsWithChildren<HacbsApplicationDetailsProps>> = ({
+  applicationName,
+}) => {
   const track = useTrackEvent();
   const { namespace, workspace } = useWorkspaceInfo();
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');

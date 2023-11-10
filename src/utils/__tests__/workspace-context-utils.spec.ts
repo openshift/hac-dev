@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   getActiveWorkspace,
   k8sListResourceItems,
-  setActiveWorkspace,
+  setActiveWorkspaceLocalStorage,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { waitFor } from '@testing-library/react';
 import { act, renderHook } from '@testing-library/react-hooks';
@@ -15,7 +15,7 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
     [];
   }),
   getActiveWorkspace: jest.fn(() => 'test-ws'),
-  setActiveWorkspace: jest.fn(),
+  setActiveWorkspaceLocalStorage: jest.fn(),
 }));
 
 jest.mock('react-router-dom', () => {
@@ -215,7 +215,7 @@ describe('useActiveWorkspace', () => {
   });
 
   it('should should honor the workspace from localstorage', async () => {
-    setActiveWorkspace('workspace-one');
+    setActiveWorkspaceLocalStorage('workspace-one');
     const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
     await waitForNextUpdate();
 

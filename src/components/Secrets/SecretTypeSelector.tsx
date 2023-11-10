@@ -10,7 +10,7 @@ type SecretTypeSelectorProps = {
   dropdownItems: DropdownItemObject[];
 };
 
-const SecretTypeSelector: React.FC<SecretTypeSelectorProps> = ({
+const SecretTypeSelector: React.FC<React.PropsWithChildren<SecretTypeSelectorProps>> = ({
   onChange,
   isDisabled,
   dropdownItems,

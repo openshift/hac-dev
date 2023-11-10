@@ -24,7 +24,10 @@ type CommitsOverviewTabProps = {
   commitStatus: string;
 };
 
-const CommitOverviewTab: React.FC<CommitsOverviewTabProps> = ({ commit, commitStatus }) => (
+const CommitOverviewTab: React.FC<React.PropsWithChildren<CommitsOverviewTabProps>> = ({
+  commit,
+  commitStatus,
+}) => (
   <>
     <Text className="pf-v5-u-my-lg">Events progression triggered by the commit.</Text>
     <CommitVisualization commit={commit} />

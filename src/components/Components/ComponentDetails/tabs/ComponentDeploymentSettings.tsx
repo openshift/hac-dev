@@ -9,7 +9,9 @@ type ComponentDeploymentSettingsProps = {
   component: ComponentKind;
 };
 
-const ComponentDeploymentSettings: React.FC<ComponentDeploymentSettingsProps> = ({ component }) => {
+const ComponentDeploymentSettings: React.FC<
+  React.PropsWithChildren<ComponentDeploymentSettingsProps>
+> = ({ component }) => {
   const { targetPort, resources, env: envs, replicas } = component.spec;
   const instances = replicas && Number(replicas);
   const resourceData = createResourceData(resources || {});

@@ -20,7 +20,7 @@ type PairElementProps = {
   alwaysAllowRemove: boolean;
 };
 
-const PairElement: React.FC<PairElementProps> = ({
+const PairElement: React.FC<React.PropsWithChildren<PairElementProps>> = ({
   nameString,
   valueString,
   index,
@@ -99,7 +99,7 @@ type NameValueEditorProps = {
   onLastItemRemoved?: () => void;
 };
 
-const BasicNameValueEditor: React.FC<NameValueEditorProps> = ({
+const BasicNameValueEditor: React.FC<React.PropsWithChildren<NameValueEditorProps>> = ({
   nameString = 'Key',
   valueString = 'Value',
   addString = 'Add more',

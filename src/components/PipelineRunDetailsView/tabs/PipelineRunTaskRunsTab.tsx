@@ -7,8 +7,9 @@ type PipelineRunTaskRunsTabProps = {
   loaded: boolean;
 };
 
-const PipelineRunTaskRunsTab: React.FC<PipelineRunTaskRunsTabProps> = ({ taskRuns, loaded }) => (
-  <TaskRunListView taskRuns={taskRuns} loaded={loaded} />
-);
+const PipelineRunTaskRunsTab: React.FC<React.PropsWithChildren<PipelineRunTaskRunsTabProps>> = ({
+  taskRuns,
+  loaded,
+}) => <TaskRunListView taskRuns={taskRuns} loaded={loaded} />;
 
 export default PipelineRunTaskRunsTab;

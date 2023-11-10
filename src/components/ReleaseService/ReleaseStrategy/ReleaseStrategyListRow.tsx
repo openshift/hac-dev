@@ -5,7 +5,9 @@ import { ReleaseStrategyKind } from '../../../types/release-strategy';
 import { useReleaseStrategyActions } from './releasestrategy-actions';
 import { releasesStrategyTableColumnClasses } from './ReleaseStrategyListHeader';
 
-const ReleaseStrategyListRow: React.FC<RowFunctionArgs<ReleaseStrategyKind>> = ({ obj }) => {
+const ReleaseStrategyListRow: React.FC<
+  React.PropsWithChildren<RowFunctionArgs<ReleaseStrategyKind>>
+> = ({ obj }) => {
   const actions = useReleaseStrategyActions(obj);
   return (
     <>

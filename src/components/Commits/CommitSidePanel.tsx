@@ -14,7 +14,7 @@ interface CommitSidePanelProps {
   setSelectedPipelineRun: (plr: PipelineRunKind) => void;
 }
 
-const CommitSidePanel: React.FC<CommitSidePanelProps> = ({
+const CommitSidePanel: React.FC<React.PropsWithChildren<CommitSidePanelProps>> = ({
   drawerRef,
   onPanelCloseClick,
   commitStatus,

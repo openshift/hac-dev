@@ -90,5 +90,5 @@ export const editSBR = async (
         },
       ],
     }),
-  ]);
+  ]) as Promise<SpaceBindingRequest[]>;
 };

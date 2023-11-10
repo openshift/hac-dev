@@ -28,7 +28,7 @@ type TechnologyTileProps = {
   logo: string;
 };
 
-const TechnologyTile: React.FC<TechnologyTileProps> = ({ name, logo }) => (
+const TechnologyTile: React.FC<React.PropsWithChildren<TechnologyTileProps>> = ({ name, logo }) => (
   <Split hasGutter>
     <SplitItem>
       <img src={logo} alt={`${name} logo`} className="technology-logo" />
@@ -37,7 +37,7 @@ const TechnologyTile: React.FC<TechnologyTileProps> = ({ name, logo }) => (
   </Split>
 );
 
-const AboutSection: React.FC = () => (
+const AboutSection: React.FC<React.PropsWithChildren<unknown>> = () => (
   <Grid hasGutter>
     <GridItem sm={12} lg={8}>
       <Card isLarge>

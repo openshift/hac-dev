@@ -16,7 +16,9 @@ type NamespacedPageProps = {
   children: React.ReactNode;
 };
 
-const NamespacedPage: React.FunctionComponent<NamespacedPageProps> = ({ children }) => {
+const NamespacedPage: React.FunctionComponent<React.PropsWithChildren<NamespacedPageProps>> = ({
+  children,
+}) => {
   const { workspacesLoaded } = React.useContext(WorkspaceContext);
 
   // TODO work around to https://issues.redhat.com/browse/RHCLOUD-24606

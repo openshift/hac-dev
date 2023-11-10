@@ -6,7 +6,7 @@ import { TableRow, TableRowProps } from './TableRow';
 
 export type VirtualBodyProps<D = any, C = any> = {
   customData?: C;
-  Row: React.FC<RowFunctionArgs>;
+  Row: React.FC<React.PropsWithChildren<RowFunctionArgs>>;
   height: number;
   isScrolling: boolean;
   onChildScroll: (params: Scroll) => void;
@@ -34,7 +34,7 @@ const RowMemo = React.memo<RowFunctionArgs & { Row: React.FC<RowFunctionArgs> }>
   ({ Row, ...props }) => <Row {...props} />,
 );
 
-export const VirtualBody: React.FC<VirtualBodyProps> = (props) => {
+export const VirtualBody: React.FC<React.PropsWithChildren<VirtualBodyProps>> = (props) => {
   const {
     customData,
     Row,

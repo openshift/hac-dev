@@ -15,7 +15,9 @@ type ComponentActivityTabProps = {
   component: ComponentKind;
 };
 
-export const ComponentActivityTab: React.FC<ComponentActivityTabProps> = ({ component }) => {
+export const ComponentActivityTab: React.FC<React.PropsWithChildren<ComponentActivityTabProps>> = ({
+  component,
+}) => {
   const params = useParams();
   const { workspace } = useWorkspaceInfo();
   const applicationName = component.spec.application;

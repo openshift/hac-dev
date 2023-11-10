@@ -8,7 +8,11 @@ interface PageHeadingProps {
   description?: string;
 }
 
-const PageHeading: React.FC<PageHeadingProps> = ({ title, breadcrumbs, description }) => {
+const PageHeading: React.FC<React.PropsWithChildren<PageHeadingProps>> = ({
+  title,
+  breadcrumbs,
+  description,
+}) => {
   return (
     <PageHeader>
       {breadcrumbs && <BreadCrumbs breadcrumbs={breadcrumbs} />}

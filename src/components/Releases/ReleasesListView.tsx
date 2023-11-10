@@ -26,7 +26,9 @@ const sortPaths: Record<SortableHeaders, string> = {
   [SortableHeaders.created]: 'metadata.creationTimestamp',
 };
 
-const ReleasesListView: React.FC<ReleasesListViewProps> = ({ applicationName }) => {
+const ReleasesListView: React.FC<React.PropsWithChildren<ReleasesListViewProps>> = ({
+  applicationName,
+}) => {
   const [releases, loaded] = useApplicationReleases(applicationName);
   const [filterType, setFilterType] = React.useState<FilterTypes>(FilterTypes.name);
   const [searchFilter, setSearchFilter, clearSearchFilter] = useSearchParam(filterType, '');

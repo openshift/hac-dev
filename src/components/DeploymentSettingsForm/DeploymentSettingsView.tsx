@@ -16,9 +16,9 @@ type DeploymentSettingsViewProps = {
   componentName: string;
 };
 
-const DeploymentSettingsView: React.FunctionComponent<DeploymentSettingsViewProps> = ({
-  componentName,
-}) => {
+const DeploymentSettingsView: React.FunctionComponent<
+  React.PropsWithChildren<DeploymentSettingsViewProps>
+> = ({ componentName }) => {
   const track = useTrackEvent();
   const navigate = useNavigate();
   const { appName } = useParams();

@@ -25,7 +25,7 @@ import SignupButton from './SignupButton';
 
 import './IntroBanner.scss';
 
-const IntroBanner: React.FC = () => {
+const IntroBanner: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { namespace, workspace } = useWorkspaceInfo();
   const [canCreateApplication] = useAccessReviewForModel(ApplicationModel, 'create');
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');

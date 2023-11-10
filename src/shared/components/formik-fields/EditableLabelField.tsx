@@ -13,7 +13,7 @@ type EditableLabelFieldProps = {
   onEdit?: () => void;
 } & Omit<FormGroupProps, 'fieldId'>;
 
-const EditableLabelField: React.FC<EditableLabelFieldProps> = ({
+const EditableLabelField: React.FC<React.PropsWithChildren<EditableLabelFieldProps>> = ({
   name,
   label,
   type = TextInputTypes.text,

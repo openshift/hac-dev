@@ -14,7 +14,10 @@ export enum RemoteSecretStatus {
   Failed = 'Failed',
 }
 
-const SecretsListRow: React.FC<SecretsListRowProps> = ({ obj, customData }) => {
+const SecretsListRow: React.FC<React.PropsWithChildren<SecretsListRowProps>> = ({
+  obj,
+  customData,
+}) => {
   const { environmentNames = [], environmentsLoaded } = customData;
   const actions = useSecretActions(obj);
 

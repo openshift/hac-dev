@@ -4,7 +4,7 @@ import { useField, useFormikContext, FormikValues } from 'formik';
 import { RadioButtonFieldProps } from './field-types';
 import { getFieldId } from './field-utils';
 
-const RadioButtonField: React.FC<RadioButtonFieldProps> = ({
+const RadioButtonField: React.FC<React.PropsWithChildren<RadioButtonFieldProps>> = ({
   name,
   label,
   value,

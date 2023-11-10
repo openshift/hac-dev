@@ -3,9 +3,11 @@ import { Button, ButtonProps } from '@patternfly/react-core';
 import { AnalyticsButtonProperties, useTrackEvent, TrackEvents } from '../../utils/analytics';
 
 const AnalyticsButton: React.FC<
-  ButtonProps & {
-    analytics?: AnalyticsButtonProperties;
-  }
+  React.PropsWithChildren<
+    ButtonProps & {
+      analytics?: AnalyticsButtonProperties;
+    }
+  >
 > = ({ onClick, analytics, ...props }) => {
   const track = useTrackEvent();
   return (

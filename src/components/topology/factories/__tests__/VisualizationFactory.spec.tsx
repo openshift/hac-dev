@@ -38,7 +38,7 @@ describe('VisualizationFactory', () => {
   });
 
   it('should pass controlBar to TopologyView', async () => {
-    const mockControlBar = () => jest.fn();
+    const mockControlBar = () => jest.fn() as any;
     render(
       <VisualizationFactory
         model={{ graph: { id: 'g1', type: 'graph' } }}
@@ -58,7 +58,7 @@ describe('VisualizationFactory', () => {
   });
 
   it('should contain a wrapper around the visualization', async () => {
-    const mockControlBar = () => jest.fn();
+    const mockControlBar = () => jest.fn() as any;
     render(
       <VisualizationFactory
         model={{ graph: { id: 'g1', type: 'graph' } }}
@@ -71,7 +71,7 @@ describe('VisualizationFactory', () => {
   });
 
   it('should not contain a wrapper around the visualization if fullHeight prop is set', async () => {
-    const mockControlBar = () => jest.fn();
+    const mockControlBar = () => jest.fn() as any;
     render(
       <VisualizationFactory
         model={{ graph: { id: 'g1', type: 'graph' } }}

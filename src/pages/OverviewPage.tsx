@@ -11,7 +11,7 @@ import { FULL_APPLICATION_TITLE } from '../consts/labels';
 import '@patternfly/patternfly/patternfly.css';
 import '@patternfly/patternfly/patternfly-addons.css';
 
-const OverviewPage: React.FC = () => {
+const OverviewPage: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <>
       <Helmet>

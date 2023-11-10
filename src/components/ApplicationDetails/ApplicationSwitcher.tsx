@@ -8,9 +8,9 @@ import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import { ContextMenuItem, ContextSwitcher } from '../ContextSwitcher';
 
-export const ApplicationSwitcher: React.FC<{ selectedApplication?: string }> = ({
-  selectedApplication,
-}) => {
+export const ApplicationSwitcher: React.FC<
+  React.PropsWithChildren<{ selectedApplication?: string }>
+> = ({ selectedApplication }) => {
   const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
   const [canCreateApplication] = useAccessReviewForModel(ApplicationModel, 'create');

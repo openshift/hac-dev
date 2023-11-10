@@ -13,7 +13,7 @@ import { useWorkspaceBreadcrumbs } from '../utils/breadcrumb-utils';
 import { useAccessReviewForModel } from '../utils/rbac';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
-const UserAccessPage: React.FunctionComponent = () => {
+const UserAccessPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
   useQuickstartCloseOnUnmount();
   const breadcrumbs = useWorkspaceBreadcrumbs();
   const { workspace } = useWorkspaceInfo();

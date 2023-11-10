@@ -10,7 +10,7 @@ export type PageAccessCheckProps = {
   accessDeniedTitle?: React.ReactNode & string;
   accessDeniedBody?: React.ReactNode;
 };
-const PageAccessCheck: React.FC<PageAccessCheckProps> = ({
+const PageAccessCheck: React.FC<React.PropsWithChildren<PageAccessCheckProps>> = ({
   accessReviewResources,
   children,
   accessDeniedTitle,

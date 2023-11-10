@@ -9,7 +9,7 @@ export type ColoredIconProps = {
 };
 
 export const GrayPencilAltIcon: React.FC<
-  ColoredIconProps & React.ComponentProps<typeof PencilAltIcon>
+  React.PropsWithChildren<ColoredIconProps & React.ComponentProps<typeof PencilAltIcon>>
 > = ({ className, title, size, ...props }) => (
   <PencilAltIcon
     data-test="pencil-icon"

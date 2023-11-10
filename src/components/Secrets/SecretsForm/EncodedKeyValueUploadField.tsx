@@ -19,9 +19,9 @@ type EncodedKeyValueEntryFormProps = {
   onChange?: (value: string, keyIndex: string) => void;
 };
 
-const EncodedKeyValueFileInputField: React.FC<EncodedKeyValueEntryFormProps & FieldProps> = ({
-  name,
-}) => {
+const EncodedKeyValueFileInputField: React.FC<
+  React.PropsWithChildren<EncodedKeyValueEntryFormProps & FieldProps>
+> = ({ name }) => {
   const [{ value: fieldValues }] = useField<KeyValueEntry[]>(name);
   const [uniqId, setUniqId] = React.useState(uniqueId());
 

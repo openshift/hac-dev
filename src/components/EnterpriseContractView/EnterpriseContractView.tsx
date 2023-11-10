@@ -25,7 +25,7 @@ import { useEnterpriseContractPolicies } from './useEnterpriseContractPolicies';
 
 import './EnterpriseContractView.scss';
 
-const EnterpriseContractViewEmptyState: React.FC = () => (
+const EnterpriseContractViewEmptyState: React.FC<React.PropsWithChildren<unknown>> = () => (
   <EmptyState data-testid="enterprise-contract-view-empty-state" variant={EmptyStateVariant.lg}>
     <EmptyStateHeader
       titleText="No release policies"
@@ -35,7 +35,7 @@ const EnterpriseContractViewEmptyState: React.FC = () => (
   </EmptyState>
 );
 
-const EnterpriseContractView: React.FC = () => {
+const EnterpriseContractView: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { namespace } = useWorkspaceInfo();
   const [contractPolicies, loaded] = useEnterpriseContractPolicies(
     ENTERPRISE_CONTRACT_POLICIES_DATA,

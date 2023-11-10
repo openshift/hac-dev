@@ -22,7 +22,9 @@ type RegistryCredential = {
   email: string;
 };
 
-export const MultiImageCredentialForm: React.FC<MultiImageCredentialFormProps> = ({ name }) => {
+export const MultiImageCredentialForm: React.FC<
+  React.PropsWithChildren<MultiImageCredentialFormProps>
+> = ({ name }) => {
   const [{ value: fieldValues }] = useField<RegistryCredential[]>(name);
   const [uniqId, setUniqId] = React.useState(uniqueId());
 

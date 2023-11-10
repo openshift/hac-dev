@@ -4,7 +4,7 @@ import emptyStateImgUrl from '../../imgs/Commit.svg';
 import AppEmptyState from '../../shared/components/empty-state/AppEmptyState';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 
-const ReleasesEmptyState: React.FC = () => (
+const ReleasesEmptyState: React.FC<React.PropsWithChildren<unknown>> = () => (
   <AppEmptyState emptyStateImg={emptyStateImgUrl} title="Check out all of your releases ">
     <EmptyStateBody>
       <Text component={TextVariants.p}>

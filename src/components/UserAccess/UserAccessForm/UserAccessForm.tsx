@@ -14,7 +14,7 @@ type Props = FormikProps<UserAccessFormValues> & {
   edit?: boolean;
 };
 
-export const UserAccessForm: React.FC<Props> = ({
+export const UserAccessForm: React.FC<React.PropsWithChildren<Props>> = ({
   edit,
   isSubmitting,
   dirty,

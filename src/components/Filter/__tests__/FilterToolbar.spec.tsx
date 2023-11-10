@@ -1,6 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { FilterToolbar } from '../FilterToolbar';
 
 describe('FilterToolbar', () => {
@@ -19,7 +20,7 @@ describe('FilterToolbar', () => {
     expect(screen.getByRole('textbox', { name: 'Name filter' })).toBeVisible();
   });
 
-  it('should update filter type on select', () => {
+  it('should update filter type on select', async () => {
     render(
       <FilterToolbar
         value="test"
@@ -29,16 +30,12 @@ describe('FilterToolbar', () => {
       />,
     );
     expect(screen.getByText('Name')).toBeVisible();
-    act(() => {
-      fireEvent.click(screen.getByRole('button', { name: 'Name' }));
-    });
-    act(() => {
-      fireEvent.click(screen.getByRole('option', { name: 'Date' }));
-    });
+    await fireEvent.click(screen.getByRole('button', { name: 'Name' }));
+    await fireEvent.click(screen.getByRole('option', { name: 'Date' }));
     expect(screen.getByText('Date')).toBeVisible();
   });
 
-  it('should capitalize filter type items', () => {
+  it('should capitalize filter type items', async () => {
     render(
       <FilterToolbar
         value="test"
@@ -48,14 +45,14 @@ describe('FilterToolbar', () => {
       />,
     );
     expect(screen.getByText('Name')).toBeVisible();
-    act(() => {
-      fireEvent.click(screen.getByRole('button', { name: 'Name' }));
-    });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Name' }));
+
     expect(screen.getByRole('option', { name: 'Name' })).toBeVisible();
     expect(screen.getByRole('option', { name: 'Date' })).toBeVisible();
   });
 
-  it('should run callback on enter', () => {
+  it('should run callback on enter', async () => {
     const onInput = jest.fn();
     const onFilterChange = jest.fn();
     render(
@@ -67,21 +64,11 @@ describe('FilterToolbar', () => {
       />,
     );
     expect(screen.getByText('Name')).toBeVisible();
-    act(() => {
-      fireEvent.click(screen.getByRole('button', { name: 'Name' }));
-    });
-    act(() => {
-      fireEvent.click(screen.getByRole('option', { name: 'Date' }));
-    });
+    await userEvent.click(screen.getByRole('button', { name: 'Name' }));
+    await userEvent.click(screen.getByRole('option', { name: 'Date' }));
     expect(onFilterChange).toHaveBeenCalledWith('date');
-    act(() => {
-      fireEvent.input(screen.getByRole('textbox', { name: 'date filter' }), {
-        target: { value: 'test' },
-      });
-    });
-    act(() => {
-      fireEvent.click(screen.getByRole('button', { name: 'Reset' }));
-    });
+    await userEvent.type(screen.getByRole('textbox', { name: 'date filter' }), 'test');
+    await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
     expect(onInput).toHaveBeenCalledWith('');
   });
 });

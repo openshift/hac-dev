@@ -6,7 +6,7 @@ import { ImagePullSecretType } from '../../../types';
 import EncodedFileUploadField from './EncodedFileUploadField';
 import { MultiImageCredentialForm } from './MultiImageCredentialForm';
 
-export const ImagePullSecretForm: React.FC = () => {
+export const ImagePullSecretForm: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [{ value: type }] = useField<ImagePullSecretType>('image.authType');
 
   return (

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { useApplications } from '../../../hooks/useApplications';
 import { useComponents } from '../../../hooks/useComponents';
 import { useEnvironments } from '../../../hooks/useEnvironments';
-import { SecretFor } from '../../../types';
+import { SecretFor, SecretTypeDropdownLabel } from '../../../types';
 import { formikRenderer } from '../../../utils/test-utils';
 import { SecretTypeSubForm } from '../SecretsForm/SecretTypeSubForm';
 
@@ -37,7 +37,8 @@ const useEnvironmentsMock = useEnvironments as jest.Mock;
 describe('SecretTypeSubForm', () => {
   beforeEach(() => {
     const initialValues = {
-      SecretFor: SecretFor.Build,
+      secretFor: SecretFor.Build,
+      type: SecretTypeDropdownLabel.opaque,
       opaque: {
         keyValues: [{ key: '', value: '' }],
       },
@@ -56,54 +57,38 @@ describe('SecretTypeSubForm', () => {
   });
 
   it('should render subforms correctly for specified targets', async () => {
-    await act(async () => {
-      fireEvent.click(screen.getByRole('radio', { name: 'Deployment' }));
-    });
-    waitFor(() => {
+    await fireEvent.click(screen.getByRole('radio', { name: 'Deployment' }));
+    await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Key/value secret' })).toBeDisabled();
       expect(screen.getByText('Key value sub form')).toBeVisible();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByRole('radio', { name: 'Build' }));
-    });
-    waitFor(() => {
+    await fireEvent.click(screen.getByRole('radio', { name: 'Build' }));
+    await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Key/value secret' })).toBeEnabled();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Key/value secret' }));
-    });
-    await act(async () => {
-      fireEvent.click(screen.getByText('Image pull secret'));
-    });
+    await fireEvent.click(screen.getByRole('button', { name: 'Key/value secret' }));
+    await fireEvent.click(screen.getByText('Image pull secret'));
     expect(screen.getByText('Image pull sub form')).toBeVisible();
   });
 
   it('should render correct variant of name field', async () => {
-    await act(async () => {
-      fireEvent.click(screen.getByRole('radio', { name: 'Deployment' }));
-    });
+    await fireEvent.click(screen.getByRole('radio', { name: 'Deployment' }));
     await waitFor(() => {
       expect(screen.getByRole('textbox', { name: 'Secret name' })).toBeVisible();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByRole('radio', { name: 'Build' }));
-    });
-    waitFor(() => {
+    await fireEvent.click(screen.getByRole('radio', { name: 'Build' }));
+    await waitFor(async () => {
       expect(screen.getByRole('button', { name: 'Secret name' })).toBeVisible();
-      act(async () => {
-        fireEvent.click(screen.getByRole('button', { name: 'Secret name' }));
-      });
+      await fireEvent.click(screen.getByRole('button', { name: 'Secret name' }));
       expect(screen.getByText('snyk-secret')).toBeVisible();
     });
   });
 
   it('should render target fields for Deployment secret', async () => {
-    await act(async () => {
-      fireEvent.click(screen.getByRole('radio', { name: 'Deployment' }));
-    });
+    await fireEvent.click(screen.getByRole('radio', { name: 'Deployment' }));
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Select application' })).toBeVisible();

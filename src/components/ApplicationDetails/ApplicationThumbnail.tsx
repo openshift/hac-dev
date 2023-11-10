@@ -22,9 +22,9 @@ const getThumbnailFromApplication = (application: ApplicationKind) => {
   return index ? ICONS[parseInt(index, 10)] : ICONS[0];
 };
 
-export const ApplicationThumbnail: React.FC<{ application: ApplicationKind }> = ({
-  application,
-}) => {
+export const ApplicationThumbnail: React.FC<
+  React.PropsWithChildren<{ application: ApplicationKind }>
+> = ({ application }) => {
   const icon = getThumbnailFromApplication(application);
   return (
     <img style={{ height: '70px', verticalAlign: 'top' }} src={icon} alt="Application thumbnail" />

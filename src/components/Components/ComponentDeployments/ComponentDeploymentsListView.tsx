@@ -27,7 +27,7 @@ type DeploymentsToolbarProps = {
   onNameInput: (value: string) => void;
 };
 
-const DeploymentsToolbar: React.FC<DeploymentsToolbarProps> = React.memo(
+const DeploymentsToolbar: React.FC<React.PropsWithChildren<DeploymentsToolbarProps>> = React.memo(
   ({ nameFilter, onNameInput }) => (
     <Toolbar data-test="commit-list-toolbar" clearAllFilters={() => onNameInput('')}>
       <ToolbarContent>
@@ -53,9 +53,9 @@ interface ComponentDeploymentsListViewProps {
   component: ComponentKind;
 }
 
-const ComponentDeploymentsListView: React.FC<ComponentDeploymentsListViewProps> = ({
-  component,
-}) => {
+const ComponentDeploymentsListView: React.FC<
+  React.PropsWithChildren<ComponentDeploymentsListViewProps>
+> = ({ component }) => {
   const { namespace } = useWorkspaceInfo();
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const application = component.spec.application;
@@ -81,7 +81,7 @@ const ComponentDeploymentsListView: React.FC<ComponentDeploymentsListViewProps> 
             (environment) =>
               !nameFilter ||
               (environment.spec?.displayName || environment.metadata?.name)
-                .toLowerCase()
+                ?.toLowerCase()
                 .indexOf(nameFilter.toLowerCase()) !== -1,
           )
         : [],

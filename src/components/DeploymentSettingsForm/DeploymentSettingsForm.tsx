@@ -13,13 +13,9 @@ import PageLayout from '../PageLayout/PageLayout';
 
 import './DeploymentSettingsForm.scss';
 
-const DeploymentSettingsForm: React.FunctionComponent<FormikProps<FormikValues>> = ({
-  handleSubmit,
-  handleReset,
-  isSubmitting,
-  status,
-  errors,
-}) => {
+const DeploymentSettingsForm: React.FunctionComponent<
+  React.PropsWithChildren<FormikProps<FormikValues>>
+> = ({ handleSubmit, handleReset, isSubmitting, status, errors }) => {
   const {
     values: { components },
   } = useFormikContext<FormikValues>();

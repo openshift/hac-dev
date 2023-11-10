@@ -32,10 +32,9 @@ export interface IntegrationTestSidePanelBodyProps {
   workflowNode: GraphElement<ElementModel, CommitWorkflowNodeModelData>;
 }
 
-const IntegrationTestSidePanel: React.FC<IntegrationTestSidePanelBodyProps> = ({
-  workflowNode,
-  onClose,
-}) => {
+const IntegrationTestSidePanel: React.FC<
+  React.PropsWithChildren<IntegrationTestSidePanelBodyProps>
+> = ({ workflowNode, onClose }) => {
   const { workspace, namespace } = useWorkspaceInfo();
   const workflowData = workflowNode.getData();
   const integrationTestPipeline = workflowData.resource as PipelineRunKind;

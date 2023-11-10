@@ -25,7 +25,7 @@ type GettingStartedCardProps = {
 
 const LOCAL_STORAGE_KEY = 'getting-started-card';
 
-export const GettingStartedCard: React.FC<GettingStartedCardProps> = ({
+export const GettingStartedCard: React.FC<React.PropsWithChildren<GettingStartedCardProps>> = ({
   imgClassName,
   localStorageKey,
   title,
@@ -34,8 +34,9 @@ export const GettingStartedCard: React.FC<GettingStartedCardProps> = ({
   isLight,
   children,
 }) => {
-  const [storageKeys, setStorageKeys] =
-    useLocalStorage<{ [key: string]: boolean }>(LOCAL_STORAGE_KEY);
+  const [storageKeys, setStorageKeys] = useLocalStorage<{ [key: string]: boolean }>(
+    LOCAL_STORAGE_KEY,
+  );
 
   const keys = storageKeys && typeof storageKeys === 'object' ? storageKeys : {};
   const isDismissed = keys[localStorageKey];

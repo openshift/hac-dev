@@ -22,7 +22,7 @@ type CatalogTileProps = {
   href?: string;
 };
 
-const CatalogTile: React.FC<CatalogTileProps> = ({
+const CatalogTile: React.FC<React.PropsWithChildren<CatalogTileProps>> = ({
   item,
   catalogTypes,
   featured,
