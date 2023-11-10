@@ -387,12 +387,15 @@ describe('getTargetLabelsForRemoteSecret', () => {
         ...formValues,
         targets: { application: null, component: null, environment: null },
       }),
-    ).toEqual({});
+    ).toEqual({
+      'ui.appstudio.redhat.com/secret-for': 'Build',
+    });
   });
 
   it('should return application target labels for remote secret', () => {
     expect(getTargetLabelsForRemoteSecret(formValues)).toEqual({
       'appstudio.redhat.com/application': 'test-application',
+      'ui.appstudio.redhat.com/secret-for': 'Build',
     });
   });
 
@@ -407,6 +410,7 @@ describe('getTargetLabelsForRemoteSecret', () => {
     expect(getTargetLabelsForRemoteSecret(fValues)).toEqual({
       'appstudio.redhat.com/application': 'test-application',
       'appstudio.openshift.io/component': 'test-component',
+      'ui.appstudio.redhat.com/secret-for': 'Build',
     });
   });
 
@@ -423,6 +427,31 @@ describe('getTargetLabelsForRemoteSecret', () => {
       'appstudio.redhat.com/application': 'test-application',
       'appstudio.openshift.io/component': 'test-component',
       'appstudio.redhat.com/environment': 'test-environment',
+      'ui.appstudio.redhat.com/secret-for': 'Build',
+    });
+  });
+
+  it('should return correct label for build secret', () => {
+    expect(
+      getTargetLabelsForRemoteSecret({
+        ...formValues,
+        secretFor: SecretFor.Build,
+        targets: { application: null, component: null, environment: null },
+      }),
+    ).toEqual({
+      'ui.appstudio.redhat.com/secret-for': 'Build',
+    });
+  });
+
+  it('should return correct label for deployment secret', () => {
+    expect(
+      getTargetLabelsForRemoteSecret({
+        ...formValues,
+        secretFor: SecretFor.Deployment,
+        targets: { application: null, component: null, environment: null },
+      }),
+    ).toEqual({
+      'ui.appstudio.redhat.com/secret-for': 'Deployment',
     });
   });
 });

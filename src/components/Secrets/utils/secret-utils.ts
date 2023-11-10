@@ -171,8 +171,11 @@ export const getSecretFormData = (values: AddSecretFormValues, namespace: string
 export const getTargetLabelsForRemoteSecret = (
   values: AddSecretFormValues,
 ): { [key: string]: string } => {
-  const labels = {};
-  const { application, component, environment } = values.targets;
+  const { targets, secretFor } = values;
+  const labels = {
+    [SecretByUILabel]: secretFor,
+  };
+  const { application, component, environment } = targets;
 
   if (environment && environment !== TargetDropdownDefaults.ALL_ENVIRONMENTS)
     labels[SecretSPILabel.ENVIRONMENT] = environment;
