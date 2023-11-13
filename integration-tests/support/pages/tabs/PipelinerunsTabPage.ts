@@ -163,7 +163,6 @@ export class TaskRunsTab {
         task: 'sast-snyk-check',
         status: 'Succeeded|Test Failures',
       },
-      { name: `${pipelineName}-inspect-image`, task: 'inspect-image', status: 'Succeeded' },
       {
         name: `${pipelineName}-deprecated-base-image-check`,
         task: 'deprecated-base-image-check',
