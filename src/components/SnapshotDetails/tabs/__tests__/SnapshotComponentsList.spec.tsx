@@ -54,7 +54,14 @@ describe('SnapshotComponentsList', () => {
     screen.getByText('Revision');
   });
 
-  it('should render component list', () => {
+  it('should render component row', () => {
+    render(<SnapshotComponentsList applicationName="test-app" components={mockComponents} />);
+    screen.queryByText('nodejs');
+    screen.queryByText('main');
+    screen.queryByText('https://github.com/nodeshift-starters/devfile-sample.git');
+  });
+
+  it('should render multiple components', () => {
     render(<SnapshotComponentsList applicationName="test-app" components={mockComponents} />);
     screen.queryByText('nodejs');
     screen.queryByText('basic-node-js');
@@ -63,14 +70,19 @@ describe('SnapshotComponentsList', () => {
     screen.queryByText('https://github.com/nodeshift-starters/devfile-sample.git');
   });
 
-  it('should render filter toolbar and filter components based on name', () => {
+  it('should render filter toolbar ', () => {
     render(<SnapshotComponentsList applicationName="test-app" components={mockComponents} />);
     expect(screen.getByTestId('component-list-toolbar')).toBeInTheDocument();
+    expect(screen.getByTestId('name-input-filter')).toBeInTheDocument();
+  });
+
+  it('should filter components based on name', () => {
+    render(<SnapshotComponentsList applicationName="test-app" components={mockComponents} />);
     const nameSearchInput = screen.getByTestId('name-input-filter');
-    screen.debug();
     const searchInput = nameSearchInput.querySelector('.pf-v5-c-text-input-group__text-input');
     fireEvent.change(searchInput, { target: { value: 'node-' } });
     screen.queryByText('basic-node-js');
+    screen.debug();
     expect(screen.queryByText('nodejs')).not.toBeInTheDocument();
   });
 
