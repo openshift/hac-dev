@@ -19,7 +19,7 @@ export const MockCommit = {
   creationTime: '2023-03-27T13:44:03Z',
   pipelineRuns: [
     {
-      apiVersion: 'tekton.dev/v1beta1',
+      apiVersion: 'tekton.dev/v1',
       kind: 'PipelineRun',
       metadata: {
         generateName: 'human-resources-clkq-on-pull-request-',
@@ -651,13 +651,13 @@ export const MockCommit = {
       status: {
         childReferences: [
           {
-            apiVersion: 'tekton.dev/v1beta1',
+            apiVersion: 'tekton.dev/v1',
             kind: 'TaskRun',
             name: 'human-resources-clkq-on-pull-request-fgkpt-init',
             pipelineTaskName: 'init',
           },
           {
-            apiVersion: 'tekton.dev/v1beta1',
+            apiVersion: 'tekton.dev/v1',
             kind: 'TaskRun',
             name: 'human-resources-clkq-on-pull-request-fgkpt-clone-repository',
             pipelineTaskName: 'clone-repository',
@@ -670,7 +670,7 @@ export const MockCommit = {
             ],
           },
           {
-            apiVersion: 'tekton.dev/v1beta1',
+            apiVersion: 'tekton.dev/v1',
             kind: 'TaskRun',
             name: 'human-resources-clkq-on-pull-request-fgkpt-build-container',
             pipelineTaskName: 'build-container',
@@ -683,7 +683,7 @@ export const MockCommit = {
             ],
           },
           {
-            apiVersion: 'tekton.dev/v1beta1',
+            apiVersion: 'tekton.dev/v1',
             kind: 'TaskRun',
             name: 'human-resources-clkq-on-pull-request-fgkpt-sanity-inspect-image',
             pipelineTaskName: 'sanity-inspect-image',
@@ -696,7 +696,7 @@ export const MockCommit = {
             ],
           },
           {
-            apiVersion: 'tekton.dev/v1beta1',
+            apiVersion: 'tekton.dev/v1',
             kind: 'TaskRun',
             name: 'human-resources-clkq-on-pull-request-fgkpt-sanity-label-check',
             pipelineTaskName: 'sanity-label-check',
@@ -709,7 +709,7 @@ export const MockCommit = {
             ],
           },
           {
-            apiVersion: 'tekton.dev/v1beta1',
+            apiVersion: 'tekton.dev/v1',
             kind: 'TaskRun',
             name: 'hume37e6ae40551aef337a9d3f259bba4d3-sanity-optional-label-check',
             pipelineTaskName: 'sanity-optional-label-check',
@@ -722,7 +722,7 @@ export const MockCommit = {
             ],
           },
           {
-            apiVersion: 'tekton.dev/v1beta1',
+            apiVersion: 'tekton.dev/v1',
             kind: 'TaskRun',
             name: 'hume37e6ae40551aef337a9d3f259bba4d3-deprecated-base-image-check',
             pipelineTaskName: 'deprecated-base-image-check',
@@ -735,7 +735,7 @@ export const MockCommit = {
             ],
           },
           {
-            apiVersion: 'tekton.dev/v1beta1',
+            apiVersion: 'tekton.dev/v1',
             kind: 'TaskRun',
             name: 'human-resources-clkq-on-pull-request-fgkpt-clair-scan',
             pipelineTaskName: 'clair-scan',
@@ -748,7 +748,7 @@ export const MockCommit = {
             ],
           },
           {
-            apiVersion: 'tekton.dev/v1beta1',
+            apiVersion: 'tekton.dev/v1',
             kind: 'TaskRun',
             name: 'human-resources-clkq-on-pull-request-fgkpt-clamav-scan',
             pipelineTaskName: 'clamav-scan',
@@ -761,7 +761,7 @@ export const MockCommit = {
             ],
           },
           {
-            apiVersion: 'tekton.dev/v1beta1',
+            apiVersion: 'tekton.dev/v1',
             kind: 'TaskRun',
             name: 'human-resources-clkq-on-pull-request-fgkpt-sbom-json-check',
             pipelineTaskName: 'sbom-json-check',
@@ -774,7 +774,7 @@ export const MockCommit = {
             ],
           },
           {
-            apiVersion: 'tekton.dev/v1beta1',
+            apiVersion: 'tekton.dev/v1',
             kind: 'TaskRun',
             name: 'human-resources-clkq-on-pull-request-fgkpt-show-summary',
             pipelineTaskName: 'show-summary',
@@ -1560,7 +1560,7 @@ export const MockCommit = {
                     image: 'quay.io/redhat-appstudio/clamav-db:latest',
                     imagePullPolicy: 'Always',
                     name: 'database',
-                    resources: {},
+                    computeResources: {},
                     script: '#!/usr/bin/env bash\ncp -r /var/lib/clamav/* /tmp/clamdb\n',
                     volumeMounts: [
                       {
@@ -1922,7 +1922,7 @@ export const MockCommit = {
                     },
                   ],
                   name: '',
-                  resources: {},
+                  computeResources: {},
                 },
                 steps: [
                   {
@@ -4593,7 +4593,7 @@ export const MockIntegrationTests = [
 
 export const MockBuildPipelines = [
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     metadata: {
       generateName: 'human-resources-clkq-on-pull-request-',
@@ -5224,13 +5224,13 @@ export const MockBuildPipelines = [
     status: {
       childReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'human-resources-clkq-on-pull-request-fgkpt-init',
           pipelineTaskName: 'init',
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'human-resources-clkq-on-pull-request-fgkpt-clone-repository',
           pipelineTaskName: 'clone-repository',
@@ -5243,7 +5243,7 @@ export const MockBuildPipelines = [
           ],
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'human-resources-clkq-on-pull-request-fgkpt-build-container',
           pipelineTaskName: 'build-container',
@@ -5256,7 +5256,7 @@ export const MockBuildPipelines = [
           ],
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'human-resources-clkq-on-pull-request-fgkpt-sanity-inspect-image',
           pipelineTaskName: 'sanity-inspect-image',
@@ -5269,7 +5269,7 @@ export const MockBuildPipelines = [
           ],
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'human-resources-clkq-on-pull-request-fgkpt-sanity-label-check',
           pipelineTaskName: 'sanity-label-check',
@@ -5282,7 +5282,7 @@ export const MockBuildPipelines = [
           ],
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'hume37e6ae40551aef337a9d3f259bba4d3-sanity-optional-label-check',
           pipelineTaskName: 'sanity-optional-label-check',
@@ -5295,7 +5295,7 @@ export const MockBuildPipelines = [
           ],
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'hume37e6ae40551aef337a9d3f259bba4d3-deprecated-base-image-check',
           pipelineTaskName: 'deprecated-base-image-check',
@@ -5308,7 +5308,7 @@ export const MockBuildPipelines = [
           ],
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'human-resources-clkq-on-pull-request-fgkpt-clair-scan',
           pipelineTaskName: 'clair-scan',
@@ -5321,7 +5321,7 @@ export const MockBuildPipelines = [
           ],
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'human-resources-clkq-on-pull-request-fgkpt-clamav-scan',
           pipelineTaskName: 'clamav-scan',
@@ -5334,7 +5334,7 @@ export const MockBuildPipelines = [
           ],
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'human-resources-clkq-on-pull-request-fgkpt-sbom-json-check',
           pipelineTaskName: 'sbom-json-check',
@@ -5347,7 +5347,7 @@ export const MockBuildPipelines = [
           ],
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'human-resources-clkq-on-pull-request-fgkpt-show-summary',
           pipelineTaskName: 'show-summary',
@@ -6129,7 +6129,7 @@ export const MockBuildPipelines = [
                   image: 'quay.io/redhat-appstudio/clamav-db:latest',
                   imagePullPolicy: 'Always',
                   name: 'database',
-                  resources: {},
+                  computeResources: {},
                   script: '#!/usr/bin/env bash\ncp -r /var/lib/clamav/* /tmp/clamdb\n',
                   volumeMounts: [
                     {
@@ -6491,7 +6491,7 @@ export const MockBuildPipelines = [
                   },
                 ],
                 name: '',
-                resources: {},
+                computeResources: {},
               },
               steps: [
                 {
@@ -7860,7 +7860,7 @@ export const MockBuildPipelines = [
 ];
 export const MockTestPipelines = [
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     metadata: {
       generateName: 'my-test-output-gwk9q-',
@@ -7955,7 +7955,7 @@ export const MockTestPipelines = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     metadata: {
       generateName: 'my-test-output-gwk9q-',
@@ -8046,7 +8046,7 @@ export const MockTestPipelines = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     metadata: {
       generateName: 'my-test-output-gwk9q-',
@@ -8126,7 +8126,7 @@ export const MockTestPipelines = [
     status: {
       childReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'my-test-output-gwk9q-mfp99-task-1',
           pipelineTaskName: 'task-1',
@@ -8209,7 +8209,7 @@ export const MockTestPipelines = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     metadata: {
       generateName: 'my-test-output-gwk9q-',

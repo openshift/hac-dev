@@ -9,8 +9,18 @@ export type TektonParam = {
   type?: 'string' | 'array';
 };
 
-export type TektonTaskSteps = {
+type TektonTaskSteps = {
   // TODO: Figure out required fields
+  name: string;
+  args?: string[];
+  command?: string[];
+  image?: string;
+  computeResources?: {}[] | {};
+  env?: { name: string; value: string }[];
+  script?: string | string[];
+};
+
+type TektonTaskStepsV1Beta1 = {
   name: string;
   args?: string[];
   command?: string[];
@@ -32,18 +42,33 @@ export type TektonTaskSpec = {
   description?: string;
   steps: TektonTaskSteps[];
   params?: TektonParam[];
+  results?: TaskResult[];
+  volumes?: {};
+  workspaces?: TektonWorkspace[];
+};
+
+type TektonResourceGroup<ResourceType> = {
+  inputs?: ResourceType[];
+  outputs?: ResourceType[];
+};
+
+/**
+ * @deprecated
+ */
+export type TektonTaskSpecV1Beta1 = {
+  metadata?: {};
+  description?: string;
+  steps: TektonTaskStepsV1Beta1[];
+  params?: TektonParam[];
   resources?: TektonResourceGroup<TektonResource>;
   results?: TaskResult[];
   volumes?: {};
   workspaces?: TektonWorkspace[];
 };
 
-export type TektonResourceGroup<ResourceType> = {
-  inputs?: ResourceType[];
-  outputs?: ResourceType[];
-};
-
-/** Deprecated upstream - Workspaces are replacing Resources */
+/**
+ * @deprecated - upstream Workspaces are replacing Resources
+ */
 export type TektonResource = {
   name: string;
   optional?: boolean;
@@ -61,6 +86,7 @@ export type TektonWorkspace = {
 export type TektonResultsRun = {
   name: string;
   value: string;
+  type?: string;
 };
 
 export interface Addon {

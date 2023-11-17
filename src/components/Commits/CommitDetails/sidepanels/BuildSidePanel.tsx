@@ -16,7 +16,11 @@ import { useTaskRuns } from '../../../../hooks/useTaskRuns';
 import PipelineIcon from '../../../../imgs/pipelineIcon.svg';
 import { Timestamp } from '../../../../shared/components/timestamp/Timestamp';
 import { PipelineRunKind } from '../../../../types';
-import { calculateDuration, pipelineRunStatus } from '../../../../utils/pipeline-utils';
+import {
+  calculateDuration,
+  pipelineRunStatus,
+  isPipelineV1Beta1,
+} from '../../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
 import RunResultsList from '../../../PipelineRunDetailsView/tabs/RunResultsList';
 import ScanDescriptionListGroup from '../../../PipelineRunDetailsView/tabs/ScanDescriptionListGroup';
@@ -49,6 +53,10 @@ const BuildSidePanel: React.FC<React.PropsWithChildren<PipelineSidePanelBodyProp
   );
 
   const pipelineStatus = pipelineRunStatus(pipelineRun);
+
+  const results = isPipelineV1Beta1(pipelineRun)
+    ? pipelineRun.status?.pipelineResults
+    : pipelineRun.status?.results;
 
   return (
     <>
@@ -135,13 +143,9 @@ const BuildSidePanel: React.FC<React.PropsWithChildren<PipelineSidePanelBodyProp
               </DescriptionListDescription>
             </DescriptionListGroup>
           </DescriptionList>
-          {pipelineRun.status?.pipelineResults ? (
+          {results ? (
             <div className="pf-v5-u-mt-lg">
-              <RunResultsList
-                results={pipelineRun.status.pipelineResults}
-                status={pipelineStatus}
-                compressed
-              />
+              <RunResultsList results={results} status={pipelineStatus} compressed />
             </div>
           ) : null}
         </DrawerPanelBody>

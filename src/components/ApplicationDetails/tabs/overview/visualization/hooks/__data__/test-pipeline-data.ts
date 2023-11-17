@@ -2,7 +2,7 @@ import { PipelineRunKind } from '../../../../../../../types';
 
 export const testPipelineRuns: PipelineRunKind[] = [
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     metadata: {
       generateName: 'my-app-hr725-',
@@ -52,11 +52,11 @@ export const testPipelineRuns: PipelineRunKind[] = [
         },
       ],
       pipelineRef: {
-        bundle: 'quay.io/redhat-appstudio/example-tekton-bundle:integration-pipeline-pass',
+        resolver: 'quay.io/redhat-appstudio/example-tekton-bundle:integration-pipeline-pass',
         name: 'integration-pipeline-pass',
       },
-      serviceAccountName: 'appstudio-pipeline',
-      timeout: '1h0m0s',
+      taskRunTemplate: { serviceAccountName: 'appstudio-pipeline' },
+      timeouts: { pipeline: '1h0m0s' },
     },
     status: {
       completionTime: '2023-03-07T10:11:46Z',
@@ -75,7 +75,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle: 'quay.io/redhat-appstudio/example-tekton-bundle:test-output',
+              resolver: 'quay.io/redhat-appstudio/example-tekton-bundle:test-output',
               kind: 'Task',
               name: 'test-output',
             },
@@ -89,7 +89,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle: 'quay.io/redhat-appstudio/example-tekton-bundle:test-output',
+              resolver: 'quay.io/redhat-appstudio/example-tekton-bundle:test-output',
               kind: 'Task',
               name: 'test-output',
             },
@@ -103,7 +103,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle: 'quay.io/redhat-appstudio/example-tekton-bundle:test-output',
+              resolver: 'quay.io/redhat-appstudio/example-tekton-bundle:test-output',
               kind: 'Task',
               name: 'test-output',
             },
@@ -145,7 +145,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 type: 'string',
@@ -172,7 +172,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                 {
                   image: 'quay.io/redhat-appstudio/hacbs-test:stable',
                   name: '',
-                  resources: {},
+                  computeResources: {},
                   script:
                     'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SKIPPED --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
@@ -213,7 +213,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 type: 'string',
@@ -240,7 +240,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                 {
                   image: 'quay.io/redhat-appstudio/hacbs-test:stable',
                   name: '',
-                  resources: {},
+                  computeResources: {},
                   script:
                     'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SUCCESS --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
@@ -281,7 +281,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 type: 'string',
@@ -308,7 +308,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                 {
                   image: 'quay.io/redhat-appstudio/hacbs-test:stable',
                   name: '',
-                  resources: {},
+                  computeResources: {},
                   script:
                     'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SUCCESS --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
@@ -320,7 +320,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     metadata: {
       generateName: 'my-app-j7mxd-',
@@ -388,27 +388,27 @@ export const testPipelineRuns: PipelineRunKind[] = [
         },
       ],
       pipelineRef: {
-        bundle: 'quay.io/redhat-appstudio/example-tekton-bundle:integration-pipeline-pass',
+        resolver: 'quay.io/redhat-appstudio/example-tekton-bundle:integration-pipeline-pass',
         name: 'integration-pipeline-pass',
       },
-      serviceAccountName: 'appstudio-pipeline',
+      taskRunTemplate: { serviceAccountName: 'appstudio-pipeline' },
     },
     status: {
       childReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'my-app-j7mxd-sw6t7-task-success',
           pipelineTaskName: 'task-success',
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'my-app-j7mxd-sw6t7-task-success-2',
           pipelineTaskName: 'task-success-2',
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'my-app-j7mxd-sw6t7-task-skipped',
           pipelineTaskName: 'task-skipped',
@@ -435,7 +435,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle: 'quay.io/redhat-appstudio/example-tekton-bundle:test-output',
+              resolver: 'quay.io/redhat-appstudio/example-tekton-bundle:test-output',
               kind: 'Task',
               name: 'test-output',
             },
@@ -449,7 +449,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle: 'quay.io/redhat-appstudio/example-tekton-bundle:test-output',
+              resolver: 'quay.io/redhat-appstudio/example-tekton-bundle:test-output',
               kind: 'Task',
               name: 'test-output',
             },
@@ -463,7 +463,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle: 'quay.io/redhat-appstudio/example-tekton-bundle:test-output',
+              resolver: 'quay.io/redhat-appstudio/example-tekton-bundle:test-output',
               kind: 'Task',
               name: 'test-output',
             },
@@ -505,7 +505,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 type: 'string',
@@ -532,7 +532,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                 {
                   image: 'quay.io/redhat-appstudio/hacbs-test:stable',
                   name: '',
-                  resources: {},
+                  computeResources: {},
                   script:
                     'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SKIPPED --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
@@ -573,7 +573,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 type: 'string',
@@ -600,7 +600,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                 {
                   image: 'quay.io/redhat-appstudio/hacbs-test:stable',
                   name: '',
-                  resources: {},
+                  computeResources: {},
                   script:
                     'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SUCCESS --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
@@ -641,7 +641,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 type: 'string',
@@ -668,7 +668,7 @@ export const testPipelineRuns: PipelineRunKind[] = [
                 {
                   image: 'quay.io/redhat-appstudio/hacbs-test:stable',
                   name: '',
-                  resources: {},
+                  computeResources: {},
                   script:
                     'TEST_OUTPUT=$(jq -rc --arg date $(date +%s) --arg RESULT SUCCESS --null-input \\\n  \'{result: $RESULT, timestamp: $date, failures: 0, successes: 0}\')\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },

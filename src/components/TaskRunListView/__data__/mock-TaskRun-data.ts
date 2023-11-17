@@ -2,7 +2,7 @@ import { TaskRunKind } from '../../../types/task-run';
 
 export const testTaskRuns: TaskRunKind[] = [
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -115,14 +115,14 @@ export const testTaskRuns: TaskRunKind[] = [
             command: ['/bin/bash', '-c', 'echo', '$(inputs.params.appName)'],
             image: 'registry.redhat.io/ubi7/ubi-minimal',
             name: '',
-            resources: {},
+            computeResources: {},
           },
         ],
       },
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -207,7 +207,7 @@ export const testTaskRuns: TaskRunKind[] = [
       timeout: '1h0m0s',
     },
     status: {
-      taskResults: [{ name: 'resultName', value: 'resultValue' }],
+      results: [{ name: 'resultName', value: 'resultValue' }],
       completionTime: '2022-08-15T14:14:08Z',
       conditions: [
         {
@@ -232,7 +232,7 @@ export const testTaskRuns: TaskRunKind[] = [
             command: ['/bin/bash', '-c', 'echo', '$(inputs.params.appName)'],
             image: 'registry.redhat.io/ubi7/ubi-minimal',
             name: '',
-            resources: {},
+            computeResources: {},
           },
         ],
       },

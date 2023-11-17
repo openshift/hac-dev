@@ -3,7 +3,7 @@ import { K8sGroupVersionKind } from '../dynamic-plugin-sdk';
 
 export const TaskRunModel: K8sModelCommon = {
   apiGroup: 'tekton.dev',
-  apiVersion: 'v1beta1',
+  apiVersion: 'v1',
   kind: 'TaskRun',
   plural: 'taskruns',
   namespaced: true,
@@ -11,6 +11,6 @@ export const TaskRunModel: K8sModelCommon = {
 
 export const TaskRunGroupVersionKind: K8sGroupVersionKind = {
   group: 'tekton.dev',
-  version: 'v1beta1',
+  version: 'v1',
   kind: 'TaskRun',
 };

@@ -165,7 +165,7 @@ export const useCommitWorkflowData = (
       };
       nodes.push(buildNode);
 
-      const integrationTestPipelines: PipelineRunKind[] = testPipelines.filter(
+      const integrationTestPipelines = testPipelines.filter(
         (tp) => tp.metadata?.labels[PipelineRunLabel.COMPONENT] === compName,
       );
 

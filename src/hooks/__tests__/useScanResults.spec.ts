@@ -20,7 +20,7 @@ const taskRunData = [
     },
     spec: { taskRef: { name: 'clair-scan' } },
     status: {
-      taskResults: [
+      results: [
         {
           name: 'CVE_SCAN_RESULT',
           value: '{ "vulnerabilities": { "critical": 1, "high": 2, "medium": 3, "low": 4 } }',
@@ -34,7 +34,7 @@ const taskRunData = [
     },
     spec: { taskRef: { name: 'clair-scan' } },
     status: {
-      taskResults: [
+      results: [
         {
           name: 'CLAIR_SCAN_RESULT',
           value: '{ "vulnerabilities": { "critical": 5, "high": 2, "medium": 0, "low": 4 } }',

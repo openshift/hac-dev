@@ -19,7 +19,12 @@ import { ErrorDetailsWithStaticLog } from '../../../shared/components/pipeline-r
 import { getTRLogSnippet } from '../../../shared/components/pipeline-run-logs/logs/pipelineRunLogSnippet';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
 import { TaskRunKind, TektonResourceLabel } from '../../../types';
-import { calculateDuration, taskName, taskRunStatus } from '../../../utils/pipeline-utils';
+import {
+  calculateDuration,
+  isTaskV1Beta1,
+  taskName,
+  taskRunStatus,
+} from '../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import MetadataList from '../../PipelineRunDetailsView/MetadataList';
 import RunResultsList from '../../PipelineRunDetailsView/tabs/RunResultsList';
@@ -36,6 +41,7 @@ const TaskRunDetailsTab: React.FC<React.PropsWithChildren<TaskRunDetailsTabProps
 }) => {
   const { workspace } = useWorkspaceInfo();
   const taskRunFailed = (getTRLogSnippet(taskRun) || {}) as ErrorDetailsWithStaticLog;
+  const results = isTaskV1Beta1(taskRun) ? taskRun.status?.taskResults : taskRun.status?.results;
   const duration = calculateDuration(
     typeof taskRun.status?.startTime === 'string' ? taskRun.status?.startTime : '',
     typeof taskRun.status?.completionTime === 'string' ? taskRun.status?.completionTime : '',
@@ -214,10 +220,10 @@ const TaskRunDetailsTab: React.FC<React.PropsWithChildren<TaskRunDetailsTabProps
               </DescriptionList>
             </FlexItem>
           </Flex>
-          {taskRun.status?.taskResults ? (
+          {results ? (
             <>
               <Divider style={{ padding: 'var(--pf-v5-global--spacer--lg) 0' }} />
-              <RunResultsList results={taskRun.status.taskResults} status={status} />
+              <RunResultsList results={results} status={status} />
             </>
           ) : null}
         </Flex>

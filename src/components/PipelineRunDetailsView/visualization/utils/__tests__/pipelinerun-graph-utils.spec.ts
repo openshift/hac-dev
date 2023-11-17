@@ -1,7 +1,12 @@
 import { GraphElement, Node } from '@patternfly/react-topology';
 import omit from 'lodash/omit';
 import { DataState, testPipelineRuns } from '../../../../../__data__/pipelinerun-data';
-import { PipelineRunKind, TaskRunKind, TektonResourceLabel } from '../../../../../types';
+import {
+  PipelineRunKind,
+  PipelineRunKindV1,
+  TaskRunKind,
+  TektonResourceLabel,
+} from '../../../../../types';
 import { runStatus, SucceedConditionReason } from '../../../../../utils/pipeline-utils';
 import { NodeType } from '../../../../ApplicationDetails/tabs/overview/visualization/const';
 import { testPipelineRun } from '../../../../topology/__data__/pipeline-test-data';
@@ -76,14 +81,14 @@ describe('pipelinerun-graph-utils: ', () => {
 
   describe('getPipelineFromPipelineRun', () => {
     it('should return null, if pipelinerun does not have a pipelineSpec field in status or spec', () => {
-      const plrWithoutPipelineSpec = omit(testPipelineRun, ['status']);
+      const plrWithoutPipelineSpec = omit(testPipelineRun as PipelineRunKindV1, ['status']);
       const pipeline = getPipelineFromPipelineRun(plrWithoutPipelineSpec);
       expect(pipeline).toEqual(null);
     });
 
     it('should return null, if pipelinerun does not have pipeline labels or name in the metadata field', () => {
       const pipeline = getPipelineFromPipelineRun(
-        omit(testPipelineRun, 'metadata.labels', 'metadata.name'),
+        omit(testPipelineRun as PipelineRunKindV1, 'metadata.labels', 'metadata.name'),
       );
       expect(pipeline).toBe(null);
     });
@@ -102,7 +107,9 @@ describe('pipelinerun-graph-utils: ', () => {
     });
 
     it('should return null if the pipelinerun does not contain status ', () => {
-      expect(getPipelineRunDataModel(omit(testPipelineRun, 'status'), [])).toBe(null);
+      expect(
+        getPipelineRunDataModel(omit(testPipelineRun as PipelineRunKindV1, 'status'), []),
+      ).toBe(null);
     });
 
     it('should return graph, nodes and edges for a given pipeline ', () => {
