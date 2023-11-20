@@ -4,6 +4,7 @@ import { Button, Flex, FlexItem } from '@patternfly/react-core';
 import { PACState } from '../../hooks/usePACState';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import CommitLabel from '../../shared/components/commit-label/CommitLabel';
+import ExternalLink from '../../shared/components/links/ExternalLink';
 import PipelineRunStatus from '../../shared/components/pipeline-run-status/PipelineRunStatus';
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { ComponentKind, PipelineRunKind } from '../../types';
@@ -54,13 +55,27 @@ const ComponentsListRow: React.FC<RowFunctionArgs<ComponentWithLatestBuildPipeli
               <b>{name}</b>
             </Link>
           </FlexItem>
-          <FlexItem>
-            <GitRepoLink
-              url={component.spec.source?.git?.url}
-              revision={component.spec.source?.git?.revision}
-              context={component.spec.source?.git?.context}
-            />
-          </FlexItem>
+          {component.spec.source?.git && (
+            <FlexItem>
+              <GitRepoLink
+                url={component.spec.source?.git?.url}
+                revision={component.spec.source?.git?.revision}
+                context={component.spec.source?.git?.context}
+              />
+            </FlexItem>
+          )}
+          {component.spec.containerImage && (
+            <FlexItem>
+              <ExternalLink
+                href={
+                  component.spec.containerImage.startsWith('http')
+                    ? component.spec.containerImage
+                    : `https://${component.spec.containerImage}`
+                }
+                text={component.spec.containerImage}
+              />
+            </FlexItem>
+          )}
         </Flex>
       </TableData>
       <TableData className={componentsTableColumnClasses.buildPipeline}>

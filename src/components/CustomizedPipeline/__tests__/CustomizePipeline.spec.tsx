@@ -247,4 +247,40 @@ describe('CustomizePipeline', () => {
       ).queryByText('1 of 1 component upgraded to custom build'),
     ).toBeInTheDocument();
   });
+
+  it('should show git url when available in component', () => {
+    usePipelineRunsMock.mockReturnValue([[{}], true]);
+    render(
+      <CustomizePipeline
+        components={[createComponent('done')]}
+        onClose={() => {}}
+        modalProps={{ isOpen: true, title: 'test' }}
+      />,
+    );
+    expect(screen.getByText('org/test')).toHaveAttribute('href', 'https://github.com/org/test');
+  });
+
+  it('should show container image url when available in component', () => {
+    usePipelineRunsMock.mockReturnValue([[{}], true]);
+    render(
+      <CustomizePipeline
+        components={[
+          {
+            metadata: {
+              name: 'my-component-test',
+            },
+            spec: {
+              containerImage: 'quay.io/org/test:latest',
+            },
+          } as ComponentKind,
+        ]}
+        onClose={() => {}}
+        modalProps={{ isOpen: true, title: 'test' }}
+      />,
+    );
+    expect(screen.getByText('quay.io/org/test:latest')).toHaveAttribute(
+      'href',
+      'https://quay.io/org/test:latest',
+    );
+  });
 });
