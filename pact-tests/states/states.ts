@@ -1,15 +1,16 @@
 import { inspect } from 'util';
 import { PactV3 } from '@pact-foundation/pact';
 import { JsonMap } from '@pact-foundation/pact/src/common/jsonTypes';
-import { ApplicationParams, ComponentsParams } from './state-params';
+import { ApplicationParams, CDQParams, ComponentsParams } from './state-params';
 
 /**
  * This enum contains definitions for all provider states used by hac-dev
  */
+
 export enum ProviderStates {
   appExists = 'Application exists',
-  appNotExists = "Application doesn't exist",
   appHasComponent = 'Application has components',
+  cdqProgressing = 'ComponentDetectionQuery processing',
 }
 
 /**
@@ -17,10 +18,14 @@ export enum ProviderStates {
  */
 const stateParams: Record<ProviderStates, JsonMap | undefined> = {
   'Application exists': { appName: 'app', namespace: 'default' } as ApplicationParams,
-  "Application doesn't exist": { appName: 'app', namespace: 'default' } as ApplicationParams,
   'Application has components': {
     components: [{ app: { appName: 'app', namespace: 'default' }, repo: 'url', compName: 'comp' }],
   } as ComponentsParams,
+  'ComponentDetectionQuery processing': {
+    url: 'https://example.com',
+    name: 'cdq',
+    namespace: 'default',
+  } as CDQParams,
 };
 
 /**

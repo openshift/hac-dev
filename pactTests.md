@@ -143,26 +143,17 @@ The whole test is wrapped in the `pactWith` function. Make sure to import the fu
 import { pactWith } from 'jest-pact/dist/v3';
 
 pactWith({ consumer: 'HACdev', provider: 'HAS' }, (interaction) => {
-  interaction('API Pact test 2', ({ provider, execute }) => {
+  interaction('Application creation', ({ provider, execute }) => {
     beforeEach(() => {
       provider
-        .given(`App ${app} exists and has component ${comp1} and ${comp2}`)
-        .uponReceiving('Get app with its components.')
-        .withRequest({
-          method: 'GET',
-          path,
-          headers: {
-            'Content-type': 'application/json',
-          },
-        })
-        .willRespondWith({
-          status: 200,
-          body: expectedResponse,
-        });
+        .uponReceiving('Create an application.')
+        .withRequest(createContract.request)
+        .willRespondWith(createContract.response);
     });
 
-    execute('Get App with Components', async (mockserver) => {
-      const returnedApp = await mockK8sWatchResource(contract, mockserver);
+    execute('Create an application.', async (mockserver) => {
+      const product = await mockK8sCreateResource(createContract, mockserver);
+      expect(product.kind).toEqual(createContract.model.kind);
     });
   });
 });
@@ -178,7 +169,7 @@ To generate the contract, the test executes the method that calls the request an
 ### Contract templates and helper functions
 To make writing new pacts a little easier, we introduced a couple of conventions and helper functions.
 
-1) We recommend defining the contract details in a separate file in the `contracts` folder. If for example, I create a spec file called `get-application.pact.spec.ts`, then the contract would be defined in `contracts/application-service/get-application.ts`. Application-service denoting the provider for this contract.
+1) We recommend defining the contract details in a separate file in the `contracts` folder. If for example, I create a spec file called `application.pact.spec.ts` and would like to test getting the application, then the contract would be defined in `contracts/application-service/application-get.ts`. Please note that spec files are created per tested resource, meanwhile the contract files are created per interaction, which should increase the readability. Test file names respect `<resource>.spec.ts` naming convention and contract files respect `<resourece>-<interaction_type>.ts` one. Application-service denoting the provider for this contract.
 2) Make use of the `PactContract` interface defined in `contracts/contracts.ts` when defining a contract. This interface includes all the necessary information for pact tests: name and namespace of the resource in question, request definition, and expected response in pact-friendly format. It is also generic to any `K8sResourceCommon` type, ensuring type safety with the objects being handled.
 3) Use the helper methods for mocking requests. `contracts/contracts.ts` also exports helper methods for the basic CRUD operations on k8s resources.
 4) When importing pact resources, make sure they come from the `v3` package to avoid version mismatches.
@@ -213,7 +204,6 @@ Now we can write a spec file as described above. Don't forget to import the `con
 interaction('API Pact test', ({ provider, execute }) => {
   beforeEach(() => {
     provider
-      .given(`No app with the name ${contract.resourceName} in the ${contract.namespace} namespace exists.`)
       .uponReceiving('Create an application.')
       .withRequest(contract.request)
       .willRespondWith(contract.response);
@@ -231,6 +221,38 @@ Take note of two things:
     - since we are interested in Application creation, we are using the `create` mock method
     - `contract` contains all the information to mock and construct the request, as well as the expected response
     - `mockserver` is provided by pact, it is being used as the target of the request
+
+In same cases we may need to specify a state for the interaction. Usually, the state is setup by using `given` method on provider like this:
+```typescript
+beforeEach(() => {
+  provider
+    .given("Application exists", {appName: "someAppName", namespace: "default"})
+    .uponReceiving('Create an application.')
+    .withRequest(contract.request)
+    .willRespondWith(contract.response);
+});
+```
+
+To make sure we won't do typo in state and use correct parameters, there is a helper method `setState()` that should be used instead. It allows you to specify the state by choosing one from the existing states and then force you to use the corresponding parameters - if any:
+```typescript
+beforeEach(() => {
+  setState(provider, ProviderStates.appExists, getAppParams)
+    .uponReceiving('Get app with its components')
+    .withRequest(getContract.request)
+    .willRespondWith(getContract.response);
+});
+```
+
+In case we need to add more then one state to the interaction, it is possible to call multiple setState() methods:
+```typescript
+beforeEach(() => {
+  setState(provider, ProviderStates.appExists, getAppParams);
+  setState(provider, ProviderStates.appHasComponent, compParams)
+    .uponReceiving('Get app with its components')
+    .withRequest(getContract.request)
+    .willRespondWith(getContract.response);
+});
+```
 
 ### Fields matchers
 The consumer has to specify a field name that should be checked. There are several ways how to check this field's value. Let's take a short example of code and explain the different matchers used in HAC-dev tests. For more information, take a look at the [official documentation](https://docs.pact.io/implementation_guides/javascript/docs/matching).
@@ -291,4 +313,19 @@ pact-broker publish \
 ```
 
 ## Adding new contract
-To add a new contract, create a new file in a `pact-tests` folder. In this test file, specify a request and response with appropriate matchers. Create a new interaction by the `provider.addInteraction()` method and specify a state. Mock any `@openshift/dynamic-plugin-sdk-utils` methods that are used during the test. Send a request by calling the appropriate function. Check the response at the end to make sure that the Pact returned the expected data. Run a new test locally by `yarn pact` to see if everything is running well. Once the test passes, you can check the contract file stored in the `pact/pacts` folder. Then you can create a PR and see the job passing also there. If you have any problems, reach out to kfoniok.
+To add a new contract, create a new test file, new contract file and new states, if needed. You can use some existing test as a template.
+- in a `pact-tests` folder, create a new file named `<resource>.pact.spec.ts`
+  - add new `pactWith()` block including your desired interactions
+  - setup the provider in `beforeEach()` method
+  - call request by `execute()`, using mocked `@openshift/dynamic-plugin-sdk-utils` methods
+  - include some simple check in the `execute()` method to be sure that API worked, e.g.
+    ```expect(response.kind).toEqual(createContract.model.kind);```
+- create new file in `pact-tests/contracts/<provider>` folder named `<resource>-<interaction_type>.ts`
+  - specify the contract using `PactContract` interface
+  - set all parameters needed for the state setup, if any
+- run a new test locally by `yarn pact` 
+- once the test passes, you can check the contract file stored in the `pact/pacts` folder
+- create a PR and see the pact job passing
+- when the PR is merged, the contract should be saved in a Pact Broker on a QE cluster
+
+If you have any problems, reach out to kfoniok.
