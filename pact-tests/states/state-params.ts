@@ -18,3 +18,9 @@ export type CDQParams = {
   name: string;
   namespace: string;
 };
+
+export type SPIAccessCheckParams = {
+  generateName: string;
+  namespace: string;
+  repo: string;
+};
