@@ -3,6 +3,7 @@ import { useTRTaskRunLog } from '../../../../hooks/useTektonResults';
 import { TaskRunKind } from '../../../../types';
 import { HttpError } from '../../../utils/error/http-error';
 import { LoadingInline } from '../../status-box/StatusBox';
+import LogsTaskDuration from './LogsTaskDuration';
 
 import './Logs.scss';
 import './MultiStreamLogs.scss';
@@ -42,6 +43,7 @@ export const TektonTaskRunLog: React.FC<React.PropsWithChildren<TektonTaskRunLog
     <>
       <div className="multi-stream-logs__taskName" data-testid="logs-taskName">
         {taskName}
+        <LogsTaskDuration taskRun={taskRun} />
         {!trLoaded && (
           <span
             className="multi-stream-logs__taskName__loading-indicator"

@@ -8,6 +8,7 @@ import { PodKind } from '../../types';
 import { containerToLogSourceStatus, LOG_SOURCE_WAITING } from '../utils';
 import Logs from './Logs';
 import { getRenderContainers } from './logs-utils';
+import LogsTaskDuration from './LogsTaskDuration';
 
 import './MultiStreamLogs.scss';
 
@@ -64,7 +65,7 @@ export const MultiStreamLogs: React.FC<React.PropsWithChildren<MultiStreamLogsPr
   return (
     <>
       <div className="multi-stream-logs__taskName" data-testid="logs-taskName">
-        {taskName}
+        {taskName} <LogsTaskDuration taskRun={taskRun} />
         {(loadingContainers || stillFetching) && resource && (
           <span className="multi-stream-logs__taskName__loading-indicator">
             <LoadingInline />
