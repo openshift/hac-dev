@@ -129,14 +129,29 @@ const Row: React.FC<
           <div>
             <b>{component.metadata.name}</b>
           </div>
-          <div>
-            Code repository:{' '}
-            <GitRepoLink
-              url={component.spec.source.git.url}
-              revision={component.spec.source.git.revision}
-              context={component.spec.source.git.context}
-            />
-          </div>
+          {component.spec.source?.git && (
+            <div>
+              Code repository:{' '}
+              <GitRepoLink
+                url={component.spec.source?.git?.url}
+                revision={component.spec.source?.git?.revision}
+                context={component.spec.source?.git?.context}
+              />
+            </div>
+          )}
+          {component.spec.containerImage && (
+            <div>
+              Image:{' '}
+              <ExternalLink
+                href={
+                  component.spec.containerImage.startsWith('http')
+                    ? component.spec.containerImage
+                    : `https://${component.spec.containerImage}`
+                }
+                text={component.spec.containerImage}
+              />
+            </div>
+          )}
         </Td>
 
         <Td>
@@ -184,13 +199,13 @@ const Row: React.FC<
                 return (
                   <ExternalLink
                     variant={ButtonVariant.secondary}
-                    href={prURL || component.spec.source.git.url}
+                    href={prURL || component.spec.source?.git?.url}
                     analytics={{
                       link_name: 'merge-pull-request',
                       link_location: 'manage-builds-pipelines',
                       component_name: component.metadata.name,
                       app_name: component.spec.application,
-                      git_url: component.spec.source.git.url,
+                      git_url: component.spec.source?.git?.url,
                       url: prURL,
                       workspace,
                     }}
@@ -202,13 +217,13 @@ const Row: React.FC<
                 return (
                   <ExternalLink
                     variant={ButtonVariant.secondary}
-                    href={component.spec.source.git.url}
+                    href={component.spec.source?.git?.url}
                     analytics={{
                       link_name: 'edit-pipeline-in-github',
                       link_location: 'manage-builds-pipelines',
                       component_name: component.metadata.name,
                       app_name: component.spec.application,
-                      git_url: component.spec.source.git.url,
+                      git_url: component.spec.source?.git?.url,
                       workspace,
                     }}
                   >
@@ -219,13 +234,13 @@ const Row: React.FC<
                 return (
                   <ExternalLink
                     variant={ButtonVariant.secondary}
-                    href={`${component.spec.source.git.url.replace(/\.git$/i, '')}/fork`}
+                    href={`${component.spec.source?.git?.url.replace(/\.git$/i, '')}/fork`}
                     analytics={{
                       link_name: 'fork-sample',
                       link_location: 'manage-builds-pipelines',
                       component_name: component.metadata.name,
                       app_name: component.spec.application,
-                      git_url: component.spec.source.git.url,
+                      git_url: component.spec.source?.git?.url,
                       workspace,
                     }}
                   >

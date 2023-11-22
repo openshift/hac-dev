@@ -38,4 +38,10 @@ describe('SnapshotComponentsListRow', () => {
       'https://github.com/test-user-1/devfile-sample-go-basic',
     );
   });
+
+  it('should not show git section when url is not available ', () => {
+    render(<SnapshotComponentsListRow columns={null} obj={{ ...rowData, source: null }} />);
+    const githubLink = screen.queryByTestId('snapshot-component-git-url');
+    expect(githubLink).toBeNull();
+  });
 });

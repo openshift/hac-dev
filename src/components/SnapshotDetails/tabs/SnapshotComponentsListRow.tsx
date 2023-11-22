@@ -32,9 +32,11 @@ const SnapshotComponentsListRow: React.FC<
           {obj.containerImage}
         </ClipboardCopy>
       </TableData>
-      <TableData className={commitsTableColumnClasses.url}>
-        <GitRepoLink dataTestID="snapshot-component-git-url" url={obj.source?.git?.url} />
-      </TableData>
+      {obj.source?.git && (
+        <TableData className={commitsTableColumnClasses.url}>
+          <GitRepoLink dataTestID="snapshot-component-git-url" url={obj.source?.git?.url} />
+        </TableData>
+      )}
       <TableData className={commitsTableColumnClasses.revision}>
         <span data-test="snapshot-component-revision">{obj.source?.git?.revision}</span>
       </TableData>

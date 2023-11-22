@@ -41,4 +41,9 @@ describe('GitRepoLink', () => {
     );
     expect(result.baseElement).toHaveTextContent('(.hidden_dir)');
   });
+
+  it('should not render if url is missing or invalid', () => {
+    const { container } = render(<GitRepoLink url="" />);
+    expect(container).toBeEmptyDOMElement();
+  });
 });
