@@ -12,11 +12,12 @@ import { CheckIcon } from '@patternfly/react-icons/dist/js/icons/check-icon';
 import { useFormikContext } from 'formik';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { useModalLauncher } from '../../modal/ModalProvider';
-import { initiateSpiAuthSession, useAccessTokenBinding } from '../utils/auth-utils';
+import { useAccessTokenBinding } from '../utils/auth-utils';
 import { ImportFormValues } from '../utils/types';
 import { createAuthTokenModal } from './AuthTokenModal';
 
-const AuthOptions: React.FC<React.PropsWithChildren<unknown>> = () => {
+const AuthOptions: React.FC = () => {
+  const [token, setToken] = React.useState<string>(null);
   const {
     values: { secret, source },
   } = useFormikContext<ImportFormValues>();
@@ -28,14 +29,13 @@ const AuthOptions: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   const [{ oAuthUrl, uploadUrl }, loaded] = useAccessTokenBinding(source.git.url);
 
-  const startAuthorization = React.useCallback(async () => {
-    if (oAuthUrl) {
-      const token = await getToken();
-      await initiateSpiAuthSession(oAuthUrl, token);
-      window.open(oAuthUrl, '_blank');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [oAuthUrl]);
+  React.useEffect(() => {
+    const resolveToken = async () => {
+      const tkn = await getToken();
+      setToken(tkn);
+    };
+    resolveToken();
+  }, [getToken]);
 
   return (
     <FormGroup label="Authorization">
@@ -55,14 +55,14 @@ const AuthOptions: React.FC<React.PropsWithChildren<unknown>> = () => {
       ) : (
         <>
           <br />
-          <Button
-            variant={ButtonVariant.primary}
-            onClick={startAuthorization}
-            isDisabled={!loaded}
-            isInline
-          >
-            Sign in
-          </Button>
+          {token ? (
+            <form style={{ display: 'inline' }} action={oAuthUrl} target="_blank" method="POST">
+              <input style={{ display: 'none' }} name="k8s_token" value={token} />
+              <Button type="submit" variant={ButtonVariant.primary} isDisabled={!loaded} isInline>
+                Sign in
+              </Button>
+            </form>
+          ) : null}
           <Button
             variant={ButtonVariant.link}
             onClick={() => showModal(createAuthTokenModal({ uploadUrl }))}

@@ -40,6 +40,7 @@ export const useAccessCheck = (
 ] => {
   const { namespace } = useWorkspaceInfo();
   const [name, setName] = React.useState<string>();
+  const sourceRef = React.useRef(source);
 
   React.useEffect(() => {
     let resourceName = null;
@@ -48,6 +49,11 @@ export const useAccessCheck = (
       setName(null);
       return;
     }
+
+    if (sourceRef.current !== source) {
+      sourceRef.current = source;
+    }
+
     if (source) {
       k8sCreateResource<K8sResourceCommon>({
         model: SPIAccessCheckModel,
@@ -84,7 +90,7 @@ export const useAccessCheck = (
   }, [namespace, source, dependency]);
 
   const [accessCheck, loaded] = useK8sWatchResource<SPIAccessCheckKind>(
-    name
+    name && sourceRef.current === source
       ? {
           groupVersionKind: SPIAccessCheckGroupVersionKind,
           name,
