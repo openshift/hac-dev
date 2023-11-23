@@ -41,8 +41,9 @@ export interface PactContract<T extends K8sResourceCommon> {
  * @param resourceName name of the k8s resource
  * @returns URL path to the given resource within k8s API
  */
-export function getUrlPath(model: K8sModelCommon, namespace: string, resourceName: string) {
-  return `/apis/${model.apiGroup}/${model.apiVersion}/namespaces/${namespace}/${model.plural}/${resourceName}`;
+export function getUrlPath(model: K8sModelCommon, namespace: string, resourceName?: string) {
+  const sufix = resourceName ? `/${resourceName}` : '';
+  return `/apis/${model.apiGroup}/${model.apiVersion}/namespaces/${namespace}/${model.plural}${sufix}`;
 }
 
 /**
