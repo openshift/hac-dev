@@ -12,7 +12,6 @@ import {
 } from '@patternfly/react-core';
 import { useField } from 'formik';
 import HelpPopover from '../../../components/HelpPopover';
-import { resourceNameRegex } from '../../../components/ImportForm/utils/validation-utils';
 import { getFieldId } from '../../../shared';
 import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
 import { validateUsername } from './form-utils';
@@ -22,6 +21,8 @@ import './UsernameSection.scss';
 type Props = {
   disabled?: boolean;
 };
+
+const usernameRegex = /^[-_a-zA-Z0-9]{5,45}$/;
 
 export const UsernameSection: React.FC<React.PropsWithChildren<Props>> = ({ disabled }) => {
   const [, { value: usernames, error }, { setValue, setError }] = useField<string[]>('usernames');
@@ -39,7 +40,7 @@ export const UsernameSection: React.FC<React.PropsWithChildren<Props>> = ({ disa
         setValidating(false);
         return;
       }
-      if (!resourceNameRegex.test(username)) {
+      if (!usernameRegex.test(username)) {
         setValidating(false);
         setError('Invalid username format.');
         return;

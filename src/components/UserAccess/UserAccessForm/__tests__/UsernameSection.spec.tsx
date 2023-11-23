@@ -55,7 +55,7 @@ describe('UsernameSection', () => {
     await waitFor(() => expect(screen.getByText('Invalid username format.')).toBeVisible());
 
     await act(async () => {
-      fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'user' } });
+      fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'myuser' } });
     });
     await waitFor(() => expect(screen.getByText('Username not found.')).toBeVisible());
 
@@ -85,5 +85,24 @@ describe('UsernameSection', () => {
       fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'user1' } });
     });
     expect(screen.getAllByText('user1')).toHaveLength(1);
+  });
+
+  it('should validate username format', async () => {
+    validateMock.mockResolvedValue(true);
+    formikRenderer(<UsernameSection />, { usernames: [] });
+    await act(async () => {
+      fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'user-123' } });
+    });
+    await waitFor(() => expect(screen.getByText('Validated')).toBeVisible());
+
+    await act(async () => {
+      fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'user1!@#' } });
+    });
+    await waitFor(() => expect(screen.getByText('Invalid username format.')).toBeVisible());
+
+    await act(async () => {
+      fireEvent.input(screen.getByRole('searchbox'), { target: { value: '1test' } });
+    });
+    await waitFor(() => expect(screen.getByText('Validated')).toBeVisible());
   });
 });
