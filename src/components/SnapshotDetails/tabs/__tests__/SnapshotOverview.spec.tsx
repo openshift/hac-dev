@@ -72,7 +72,7 @@ describe('SnapshotOverview', () => {
     expect(screen.getByText('Vulnerabilities')).toBeInTheDocument();
   });
 
-  it('should display commit data and link for snapshots with commit data', () => {
+  it('should display triggered by section for snapshots with commit data', () => {
     watchResourceMock.mockImplementation(getMockedResources);
     routerRenderer(
       <SnapshotOverview
@@ -82,6 +82,17 @@ describe('SnapshotOverview', () => {
       />,
     );
     screen.getByText('Triggered by');
+  });
+
+  it('should display commit data and link', () => {
+    watchResourceMock.mockImplementation(getMockedResources);
+    routerRenderer(
+      <SnapshotOverview
+        snapshot={mockSnapshots[0]}
+        buildPipelineName="build-pipeline"
+        commit={mockCommits[0]}
+      />,
+    );
     const anchor = screen.getByTestId('snapshot-commit-link').children[0].children[0];
     const linkAnchor = anchor as HTMLElement;
     expect(linkAnchor.innerHTML).toContain('comm012');
@@ -103,42 +114,95 @@ describe('SnapshotOverview', () => {
     expect(screen.getByText('Components')).toBeInTheDocument();
   });
 
-  it('should display ErrorAlert when EnvironementProvisionError occurs', async () => {
+  it('should show commit display name instead of shatitle', () => {
     watchResourceMock.mockImplementation(getMockedResources);
     routerRenderer(
       <SnapshotOverview
         snapshot={mockSnapshots[0]}
         buildPipelineName="build-pipeline"
-        commit={mockCommits[0]}
+        commit={{
+          sha: 'abcde123456',
+          shaURL: null,
+          shaTitle: 'sha-title',
+          displayName: 'sha-display-name',
+          metadata: null,
+          user: 'abhid',
+          components: null,
+          branch: null,
+          pipelineRuns: null,
+          application: 'test-app',
+          isPullRequest: true,
+        }}
       />,
     );
-
-    screen.queryByTestId('env-provision-err-alert');
-    screen.queryByText('Failed for app-sample-go-basic-enterprise-contract');
+    expect(screen.getByText('sha-display-name')).toBeInTheDocument();
   });
 
-  it('should display failed scenario', async () => {
+  it('should show commit sha title when display name missing', () => {
     watchResourceMock.mockImplementation(getMockedResources);
     routerRenderer(
       <SnapshotOverview
         snapshot={mockSnapshots[0]}
         buildPipelineName="build-pipeline"
-        commit={mockCommits[0]}
+        commit={{
+          sha: 'abcde123456',
+          shaURL: null,
+          shaTitle: 'sha-title',
+          metadata: null,
+          user: 'abhid',
+          components: null,
+          branch: null,
+          pipelineRuns: null,
+          application: 'test-app',
+          isPullRequest: true,
+        }}
       />,
     );
-    screen.queryByText('scn 2');
+    expect(screen.getByText('sha-title')).toBeInTheDocument();
   });
 
-  it('should hide ErrorAlert when different error occurs and display deployment name', () => {
-    watchResourceMock.mockImplementation(getMockedResources);
-    routerRenderer(
-      <SnapshotOverview
-        snapshot={mockSnapshots[0]}
-        buildPipelineName="build-pipeline"
-        commit={mockCommits[0]}
-      />,
-    );
-    expect(screen.queryByText('Failed for')).not.toBeInTheDocument();
+  describe('SnapshotOverview EnvProvisionError', () => {
+    beforeEach(() => {
+      (useCommitStatus as jest.Mock).mockReturnValueOnce(['-', true]);
+    });
+
+    it('should display ErrorAlert when EnvironementProvisionError occurs', async () => {
+      watchResourceMock.mockImplementation(getMockedResources);
+      routerRenderer(
+        <SnapshotOverview
+          snapshot={mockSnapshots[0]}
+          buildPipelineName="build-pipeline"
+          commit={mockCommits[0]}
+        />,
+      );
+
+      screen.queryByTestId('env-provision-err-alert');
+      screen.queryByText('Failed for app-sample-go-basic-enterprise-contract');
+    });
+
+    it('should display failed scenario', async () => {
+      watchResourceMock.mockImplementation(getMockedResources);
+      routerRenderer(
+        <SnapshotOverview
+          snapshot={mockSnapshots[0]}
+          buildPipelineName="build-pipeline"
+          commit={mockCommits[0]}
+        />,
+      );
+      screen.queryByText('scn 2');
+    });
+
+    it('should hide ErrorAlert when different error occurs and display deployment name', () => {
+      watchResourceMock.mockImplementation(getMockedResources);
+      routerRenderer(
+        <SnapshotOverview
+          snapshot={mockSnapshots[0]}
+          buildPipelineName="build-pipeline"
+          commit={mockCommits[0]}
+        />,
+      );
+      expect(screen.queryByText('Failed for')).not.toBeInTheDocument();
+    });
   });
 });
 

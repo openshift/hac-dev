@@ -64,6 +64,16 @@ const getMockedResources = (params: WatchK8sResource) => {
   return [[], true];
 };
 
+const errorSnapshotResources = (params: WatchK8sResource) => {
+  if (params?.groupVersionKind === SnapshotGroupVersionKind) {
+    return [mockSnapshots[0], true];
+  }
+  if (params?.groupVersionKind === PipelineRunGroupVersionKind) {
+    return [[pipelineWithCommits[0]], true];
+  }
+  return [[], true];
+};
+
 describe('SnapshotDetailsView', () => {
   beforeEach(() => {
     useParamsMock.mockReturnValue({ activeTab: 'overview' });
@@ -148,6 +158,25 @@ describe('SnapshotDetailsView', () => {
     screen.getByText('Triggered by');
     expect(screen.getByTestId('snapshot-commit-label')).toBeInTheDocument();
     expect(screen.getByTestId('snapshot-name').innerHTML).toBe('my-test-output-2');
+  });
+
+  it('should show EnvProvisionError', () => {
+    mockSnapshots[0].metadata.deletionTimestamp = '1';
+    watchResourceMock.mockImplementation(errorSnapshotResources);
+    routerRenderer(
+      <SnapshotDetails snapshotName="my-test-output-2" applicationName="my-test-output" />,
+    );
+    screen.queryByTestId('env-provision-err-alert');
+    screen.queryByText('Failed for app-sample-go-basic-enterprise-contract');
+  });
+
+  it('should show failed scenario on EnvProvisionError', () => {
+    mockSnapshots[0].metadata.deletionTimestamp = '1';
+    watchResourceMock.mockImplementation(errorSnapshotResources);
+    routerRenderer(
+      <SnapshotDetails snapshotName="my-test-output-2" applicationName="my-test-output" />,
+    );
+    screen.queryByText('scn 2');
   });
 
   it('should show pipelinerun details', () => {

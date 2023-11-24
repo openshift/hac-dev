@@ -3,16 +3,6 @@ import { MockSnapshots } from '../../../Commits/CommitDetails/visualization/__da
 import { getEnvironmentProvisionError } from '../snapshot-utils';
 
 describe('snapshot-utils', () => {
-  it('should return null if no status', () => {
-    const result = getEnvironmentProvisionError(MockSnapshots[2]);
-    expect(result).toBeNull();
-  });
-
-  it('should return empty array if no EnvProvisionError', () => {
-    const result = getEnvironmentProvisionError(MockSnapshots[3]);
-    expect(result).toEqual([]);
-  });
-
   it('should return formatted error status', () => {
     const result = getEnvironmentProvisionError(MockSnapshots[0]);
     expect(result.length).toBe(2);
@@ -23,6 +13,23 @@ describe('snapshot-utils', () => {
     const result = getEnvironmentProvisionError(MockSnapshots[1]);
     expect(result.length).toBe(1);
   });
+});
+
+describe('snapshot-utils empty states', () => {
+  it('should return null if no status', () => {
+    const result = getEnvironmentProvisionError(MockSnapshots[2]);
+    expect(result).toBeNull();
+  });
+
+  it('should return null if no EnvProvisionError', () => {
+    const result = getEnvironmentProvisionError(MockSnapshots[2]);
+    expect(result).toBeNull();
+  });
+});
+
+it('should return empty array if some other error', () => {
+  const result = getEnvironmentProvisionError(MockSnapshots[3]);
+  expect(result).toEqual([]);
 });
 
 describe('snapshot-utils error', () => {

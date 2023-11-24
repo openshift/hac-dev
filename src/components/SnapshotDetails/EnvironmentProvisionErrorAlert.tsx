@@ -10,6 +10,9 @@ interface EnvironmentProvisionErrorAlertProps {
 const EnvironmentProvisionErrorAlert: React.FC<EnvironmentProvisionErrorAlertProps> = ({
   errorStatus,
 }) => {
+  if (!Array.isArray(errorStatus) || errorStatus.length === 0) {
+    return null;
+  }
   const title = (
     <>
       Failed for{' '}
@@ -39,7 +42,7 @@ const EnvironmentProvisionErrorAlert: React.FC<EnvironmentProvisionErrorAlertPro
         timestamp={errorStatus[0].lastUpdateTime}
         data-test="alert-timestamp"
       />
-      <ExpandableSection toggleText="Show details">
+      <ExpandableSection toggleText="Show details" data-test="error-expandable-section">
         {errorStatus.map((s, i) => (
           <span key={s.scenario}>
             {i > 0 && ', '}
