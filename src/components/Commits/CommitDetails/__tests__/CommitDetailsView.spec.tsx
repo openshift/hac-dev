@@ -74,4 +74,11 @@ describe('CommitDetailsView', () => {
     routerRenderer(<CommitDetailsView applicationName="test-application" commitName="commit123" />);
     screen.getAllByText(getCommitShortName('commit123'));
   });
+
+  it('should not use integration test pipeline to get details', () => {
+    watchResourceMock.mockReturnValue([[pipelineWithCommits[0], pipelineWithCommits[4]], true]);
+    routerRenderer(<CommitDetailsView applicationName="test-application" commitName="commit123" />);
+    expect(screen.getByText('test-title')).toBeVisible();
+    expect(screen.queryByRole('test-title-4')).toBeNull();
+  });
 });
