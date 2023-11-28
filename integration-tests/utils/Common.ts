@@ -88,4 +88,13 @@ export class Common {
     const token = require('otplib').authenticator.generate(secret);
     return token;
   }
+
+  static switchWorkspace(workspaceName: string) {
+    cy.get('[id="toggle-context-switcher"]').click();
+    cy.get('[id="context-switcher-root-menu"]').within(() => {
+      cy.contains('button', 'All').click();
+      cy.get('input[aria-label="name filter"]').clear().type(workspaceName);
+      cy.contains('button:visible', new RegExp(`^${workspaceName}$`)).click();
+    });
+  }
 }

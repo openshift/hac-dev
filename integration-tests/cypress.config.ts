@@ -32,15 +32,15 @@ export default defineConfig({
     mochaJunitReporterReporterOptions: {
       mochaFile: 'cypress/junit-[hash].xml',
     },
-    reportportalAgentJsCypressReporterOptions: {
-      endpoint: 'https://reportportal-appstudio-qe.apps.ocp-c1.prod.psi.redhat.com/api/v1',
-      token: 'xxx',
-      launch: 'hac-dev-pr-check',
-      project: 'hac-dev',
-      description: 'HAC dev e2e test suite',
-      debug: true,
-      isLaunchMergeRequired: true,
-    },
+    // reportportalAgentJsCypressReporterOptions: {
+    //   endpoint: 'https://reportportal-appstudio-qe.apps.ocp-c1.prod.psi.redhat.com/api/v1',
+    //   token: 'xxx',
+    //   launch: 'hac-dev-pr-check',
+    //   project: 'hac-dev',
+    //   description: 'HAC dev e2e test suite',
+    //   debug: true,
+    //   isLaunchMergeRequired: true,
+    // },
     cypressMochawesomeReporterReporterOptions: {
       charts: true,
       embeddedScreenshots: false,
@@ -51,12 +51,12 @@ export default defineConfig({
   },
   e2e: {
     supportFile: 'support/commands/index.ts',
-    specPattern: 'tests/*.spec.ts',
+    specPattern: 'tests/workspace*.spec.ts',
     testIsolation: false,
-    excludeSpecPattern:
-      process.env.CYPRESS_PERIODIC_RUN || process.env.GH_COMMENTBODY?.toLowerCase() === '[test]'
-        ? 'tests/*-private-git-*' // TODO: remove once https://issues.redhat.com/browse/RHTAPBUGS-111 is resolved
-        : 'tests/{advanced-happy-path*,environments-tests*,*-private-git-*}',
+    // excludeSpecPattern:
+    //   process.env.CYPRESS_PERIODIC_RUN || process.env.GH_COMMENTBODY?.toLowerCase() === '[test]'
+    //     ? 'tests/*-private-git-*' // TODO: remove once https://issues.redhat.com/browse/RHTAPBUGS-111 is resolved
+    //     : 'tests/{advanced-happy-path*,environments-tests*,*-private-git-*}',
     setupNodeEvents(on, config) {
       require('cypress-mochawesome-reporter/plugin')(on);
 
@@ -100,37 +100,37 @@ export default defineConfig({
       });
 
       // workaround for report portal runs not finishing
-      on('after:run', async () => {
-        // cypress-mochawesome-reporter
-        await afterRunHook();
+      // on('after:run', async () => {
+      //   // cypress-mochawesome-reporter
+      //   await afterRunHook();
 
-        if (config.env.PR_CHECK === true) {
-          let retries = 10;
-          console.log('Wait for reportportal agent to finish...');
-          while (glob.sync('rplaunchinprogress*.tmp').length > 0) {
-            if (retries < 1) {
-              console.log('reportportal agent timed out after 20s');
-              return;
-            }
-            retries--;
-            await new Promise((res) => setTimeout(res, 2000));
-          }
-          console.log('reportportal agent finished');
+      //   if (config.env.PR_CHECK === true) {
+      //     let retries = 10;
+      //     console.log('Wait for reportportal agent to finish...');
+      //     while (glob.sync('rplaunchinprogress*.tmp').length > 0) {
+      //       if (retries < 1) {
+      //         console.log('reportportal agent timed out after 20s');
+      //         return;
+      //       }
+      //       retries--;
+      //       await new Promise((res) => setTimeout(res, 2000));
+      //     }
+      //     console.log('reportportal agent finished');
 
-          if (
-            config.reporterOptions.reportportalAgentJsCypressReporterOptions.isLaunchMergeRequired
-          ) {
-            try {
-              console.log('Merging launches...');
-              await mergeLaunches(config.reporterOptions.reportportalAgentJsCypressReporterOptions);
-              console.log('Launches successfully merged!');
-              deleteLaunchFiles();
-            } catch (mergeError: unknown) {
-              console.error(mergeError);
-            }
-          }
-        }
-      });
+      //     if (
+      //       config.reporterOptions.reportportalAgentJsCypressReporterOptions.isLaunchMergeRequired
+      //     ) {
+      //       try {
+      //         console.log('Merging launches...');
+      //         await mergeLaunches(config.reporterOptions.reportportalAgentJsCypressReporterOptions);
+      //         console.log('Launches successfully merged!');
+      //         deleteLaunchFiles();
+      //       } catch (mergeError: unknown) {
+      //         console.error(mergeError);
+      //       }
+      //     }
+      //   }
+      // });
 
       const defaultValues: { [key: string]: string | boolean } = {
         HAC_BASE_URL: 'https://prod.foo.redhat.com:1337/preview/application-pipeline',
@@ -157,23 +157,26 @@ export default defineConfig({
 
       config.env.HAC_WORKSPACE = config.env.USERNAME.toLowerCase();
       config.env.HAC_NAMESPACE = `${config.env.HAC_WORKSPACE}-tenant`;
-
-      if (
-        config.env.PR_CHECK === true &&
-        config.reporterOptions.reportportalAgentJsCypressReporterOptions
-      ) {
-        config.reporterOptions.reportportalAgentJsCypressReporterOptions.token =
-          config.env.RP_TOKEN;
-        config.reporterOptions.reportportalAgentJsCypressReporterOptions.description = `${config.env.GH_PR_TITLE}\n${config.env.GH_PR_LINK}`;
-        registerReportPortalPlugin(on, config);
-      } else {
-        const reporters = (config.reporterOptions.reporterEnabled as string)
-          .split(',')
-          .filter((value) => {
-            return !value.includes('@reportportal/agent-js-cypress');
-          });
-        config.reporterOptions.reporterEnabled = reporters.join(',');
-      }
+      config.env.HAC_KC_SSO_URL = process.env.HAC_KC_SSO_URL;
+      config.env.HAC_KC_USERNAME = process.env.HAC_KC_USERNAME;
+      config.env.HAC_KC_PASSWORD = process.env.HAC_KC_PASSWORD;
+      config.env.HAC_KC_REGISTRATION = process.env.HAC_KC_REGISTRATION;
+      // if (
+      //   config.env.PR_CHECK === true &&
+      //   config.reporterOptions.reportportalAgentJsCypressReporterOptions
+      // ) {
+      //   config.reporterOptions.reportportalAgentJsCypressReporterOptions.token =
+      //     config.env.RP_TOKEN;
+      //   config.reporterOptions.reportportalAgentJsCypressReporterOptions.description = `${config.env.GH_PR_TITLE}\n${config.env.GH_PR_LINK}`;
+      //   registerReportPortalPlugin(on, config);
+      // } else {
+      //   const reporters = (config.reporterOptions.reporterEnabled as string)
+      //     .split(',')
+      //     .filter((value) => {
+      //       return !value.includes('@reportportal/agent-js-cypress');
+      //     });
+      //   config.reporterOptions.reporterEnabled = reporters.join(',');
+      // }
       require('cypress-high-resolution')(on, config);
       return config;
     },

@@ -72,7 +72,11 @@ COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z \
     -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` \
     -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` \
     -e CYPRESS_GH_PR_TITLE=${PR_TITLE} \
-    -e GH_COMMENTBODY=${GH_COMMENTBODY}"
+    -e GH_COMMENTBODY=${GH_COMMENTBODY} \
+    -e HAC_KC_SSO_URL=${HAC_KC_SSO_URL} \
+    -e HAC_KC_USERNAME=${HAC_KC_USERNAME} \
+    -e HAC_KC_PASSWORD=${HAC_KC_PASSWORD} \
+    -e HAC_KC_REGISTRATION=${HAC_KC_REGISTRATION}"
 TEST_IMAGE="quay.io/hacdev/hac-tests:next"
 
 # If test dockerfile changes, rebuild the runner image
@@ -85,6 +89,7 @@ if ! git diff --exit-code --quiet origin/$ghprbTargetBranch HEAD -- integration-
   podman pull docker-daemon:$TEST_IMAGE
   cd ..
 fi
+cp -f tmp/keycloak.py integration-tests/
 
 set +e
 TEST_RUN=0

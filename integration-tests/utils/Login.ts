@@ -28,6 +28,21 @@ export class Login {
     this.waitForApps();
   }
 
+  static logout() {
+    cy.clearLocalStorage('sdk/active-workspace');
+    cy.get('.pf-v5-c-avatar').click();
+    cy.contains('button', 'Log out').click();
+  }
+
+  static switchUser(newName: string, newPass: string) {
+    this.logout();
+    if (Cypress.env('PR_CHECK') || Cypress.env('PERIODIC_RUN')) {
+      this.prCheckLogin(newName, newPass);
+    } else {
+      this.login(newName, newPass);
+    }
+  }
+
   private static waitForApps() {
     Common.waitForLoad();
     GetStartedPage.waitForLoad();
