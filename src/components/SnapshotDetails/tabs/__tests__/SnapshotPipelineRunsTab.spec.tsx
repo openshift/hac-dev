@@ -207,4 +207,37 @@ describe('SnapshotPipelinerunsTab', () => {
     screen.queryByText('python-sample-942fq');
     screen.queryByText('go-sample-s2f4f');
   });
+
+  it('should render pipelineruns with Snapshot label instead of annotation as well', () => {
+    usePipelineRunsMock.mockReturnValue([
+      [
+        {
+          ...mockPipelineRuns[0],
+          metadata: {
+            ...mockPipelineRuns[0].metadata,
+            labels: {
+              ...mockPipelineRuns[0].metadata.labels,
+              [PipelineRunLabel.PIPELINE_TYPE]: 'test',
+              [PipelineRunLabel.SNAPSHOT]: 'test-snapshot',
+            },
+            annotations: {
+              ...mockPipelineRuns[2].metadata.annotations,
+            },
+          },
+        },
+      ],
+      true,
+      false,
+    ]);
+    render(
+      <SnapshotPipelineRunsTab
+        applicationName={appName}
+        namespace="test"
+        snapshotName="test-snapshot"
+      />,
+    );
+
+    screen.queryByText('Test');
+    screen.queryByText('go-sample-s2f4f');
+  });
 });

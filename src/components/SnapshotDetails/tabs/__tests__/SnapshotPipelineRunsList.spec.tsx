@@ -138,6 +138,25 @@ const snapShotPLRs = [
     spec: null,
     status: null,
   },
+
+  {
+    apiVersion: mockPipelineRuns[0].apiVersion,
+    kind: mockPipelineRuns[0].kind,
+    metadata: {
+      ...mockPipelineRuns[2].metadata,
+      name: 'plr-with snapshot-label-only',
+      labels: {
+        ...mockPipelineRuns[2].metadata.labels,
+        [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.TEST,
+        [PipelineRunLabel.SNAPSHOT]: 'test-snapshot',
+      },
+      annotations: {
+        ...mockPipelineRuns[2].metadata.annotations,
+      },
+    },
+    spec: null,
+    status: null,
+  },
 ];
 
 describe('SnapshotPipelinerunsTab', () => {
@@ -173,6 +192,18 @@ describe('SnapshotPipelinerunsTab', () => {
     expect(button.closest('a').href).toContain(
       `http://localhost/application-pipeline/workspaces/test-ws/import?application=my-test-app`,
     );
+  });
+
+  it('should render pipelineruns with snapshot labels instead of annotations', () => {
+    render(
+      <SnapshotPipelineRunsList
+        applicationName={appName}
+        getNextPage={null}
+        snapshotPipelineRuns={snapShotPLRs}
+        loaded={true}
+      />,
+    );
+    expect(screen.queryByText('plr-with snapshot-label-only')).toBeInTheDocument();
   });
 
   it('should render entire pipelineRuns list when no filter value', () => {

@@ -36,8 +36,9 @@ const SnapshotPipelineRunTab: React.FC<React.PropsWithChildren<SnapshotPipelineR
     if (loaded && !LoadError) {
       return pipelineRuns.filter(
         (plr) =>
-          plr.metadata?.annotations &&
-          plr.metadata.annotations[PipelineRunLabel.SNAPSHOT] === snapshotName,
+          (plr.metadata?.annotations &&
+            plr.metadata.annotations[PipelineRunLabel.SNAPSHOT] === snapshotName) ||
+          (plr.metadata?.labels && plr.metadata.labels[PipelineRunLabel.SNAPSHOT] === snapshotName),
       );
     }
     return [];

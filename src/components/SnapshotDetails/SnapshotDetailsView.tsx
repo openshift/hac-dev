@@ -11,6 +11,7 @@ import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState
 import { LoadingBox } from '../../shared/components/status-box/StatusBox';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { HttpError } from '../../shared/utils/error/http-error';
+import { EnvironmentKind } from '../../types';
 import { Snapshot, SnapshotEnvironmentBinding } from '../../types/coreBuildService';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { createCommitObjectFromPLR } from '../../utils/commits-utils';
@@ -63,7 +64,7 @@ const SnapshotDetailsView: React.FC<React.PropsWithChildren<SnapshotDetailsViewP
     isList: true,
   });
 
-  const deployedEnvironments = React.useMemo(() => {
+  const deployedEnvironments: EnvironmentKind[] = React.useMemo(() => {
     const envList = [];
     sebLoaded &&
       !sebLoadError &&
@@ -76,7 +77,7 @@ const SnapshotDetailsView: React.FC<React.PropsWithChildren<SnapshotDetailsViewP
             seb.spec?.snapshot === snapshot?.metadata?.name,
         );
         if (snapshotWithEnvironment) {
-          envList.push(env?.metadata.name);
+          envList.push(env);
         }
       });
     return envList;
@@ -112,7 +113,7 @@ const SnapshotDetailsView: React.FC<React.PropsWithChildren<SnapshotDetailsViewP
           ...applicationBreadcrumbs,
           {
             path: `#`,
-            name: 'snapshots',
+            name: 'Snapshots',
           },
           {
             path: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/snapshots/${snapshotName}`,
@@ -141,12 +142,14 @@ const SnapshotDetailsView: React.FC<React.PropsWithChildren<SnapshotDetailsViewP
                 </Text>
                 <Text component={TextVariants.p} data-test="snapshot-commit-label">
                   {environments?.map((env) => {
-                    const isDeployed = deployedEnvironments.includes(env.metadata?.name);
+                    const isDeployed = deployedEnvironments.find(
+                      (e) => e.metadata.name === env.metadata?.name,
+                    );
                     return (
                       <>
                         <StatusIconWithTextLabel
                           key={env.metadata?.name}
-                          text={env.metadata.name}
+                          text={env.spec.displayName ?? env.metadata.name}
                           dataTestAttribute="snapshot-env-label"
                           status={isDeployed ? runStatus.Succeeded : runStatus.Cancelling}
                         />{' '}

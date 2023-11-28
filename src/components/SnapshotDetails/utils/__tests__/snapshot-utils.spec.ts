@@ -3,19 +3,38 @@ import { MockSnapshots } from '../../../Commits/CommitDetails/visualization/__da
 import { getEnvironmentProvisionError } from '../snapshot-utils';
 
 describe('snapshot-utils', () => {
+  it('should return formatted error status', () => {
+    const result = getEnvironmentProvisionError(MockSnapshots[0]);
+    expect(result.length).toBe(2);
+    expect(result[0].scenario).toBe('scn 2');
+  });
+
+  it('should filter out single error ', () => {
+    const result = getEnvironmentProvisionError(MockSnapshots[1]);
+    expect(result.length).toBe(1);
+  });
+});
+
+describe('snapshot-utils empty states', () => {
   it('should return null if no status', () => {
     const result = getEnvironmentProvisionError(MockSnapshots[2]);
     expect(result).toBeNull();
   });
 
-  it('should return empty array if no EnvProvisionError', () => {
-    const result = getEnvironmentProvisionError(MockSnapshots[3]);
-    expect(result).toEqual([]);
+  it('should return null if no EnvProvisionError', () => {
+    const result = getEnvironmentProvisionError(MockSnapshots[2]);
+    expect(result).toBeNull();
   });
+});
 
-  it('should return formatted error status', () => {
+it('should return empty array if some other error', () => {
+  const result = getEnvironmentProvisionError(MockSnapshots[3]);
+  expect(result).toEqual([]);
+});
+
+describe('snapshot-utils error', () => {
+  it('should show correct scenario', () => {
     const result = getEnvironmentProvisionError(MockSnapshots[1]);
-    expect(result.length).toBe(1);
     expect(result[0].scenario).toBe('app-sample-go-basic-enterprise-contract');
   });
 
