@@ -1,5 +1,6 @@
 import React from 'react';
 import { Bullseye, Spinner, Text, TextVariants } from '@patternfly/react-core';
+import { PipelineRunLabel, PipelineRunType } from '../../../consts/pipelinerun';
 import { usePipelineRunsForCommit } from '../../../hooks/usePipelineRuns';
 import { PipelineRunGroupVersionKind } from '../../../models';
 import DetailsPage from '../../../shared/components/details-page/DetailsPage';
@@ -36,11 +37,17 @@ const CommitDetailsView: React.FC<React.PropsWithChildren<CommitDetailsViewProps
     namespace,
     applicationName,
     commitName,
-    1,
   );
 
   const commit = React.useMemo(
-    () => loaded && pipelineruns?.length && createCommitObjectFromPLR(pipelineruns[0]),
+    () =>
+      loaded &&
+      pipelineruns?.length &&
+      createCommitObjectFromPLR(
+        pipelineruns.find(
+          (p) => p.metadata.labels[PipelineRunLabel.PIPELINE_TYPE] === PipelineRunType.BUILD,
+        ),
+      ),
     [loaded, pipelineruns],
   );
 
