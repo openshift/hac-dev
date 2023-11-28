@@ -87,11 +87,13 @@ objects:
             - env:
                 - name: HJ_K8S
                   value: https://api-toolchain-host-operator.apps.hac-devsandbox.5unc.p1.openshiftapps.com
+                - name: HJ_REG
+                  value: https://registration-service-toolchain-host-operator.apps.hac-devsandbox.5unc.p1.openshiftapps.com/
                 - name: HJ_SERVE
                   value: :8080
                 - name: HJ_SSL
                   value: 'false'
-              image: quay.io/psav/hac-proxy:098a9d8
+              image: quay.io/jrichter/hac-proxy:acc07c5
               imagePullPolicy: Always
               name: hac-proxy
               ports:
