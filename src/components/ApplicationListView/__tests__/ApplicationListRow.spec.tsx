@@ -131,6 +131,13 @@ describe('Application List Row', () => {
     expect(getByText('Loading component count')).toBeInTheDocument();
   });
 
+  it('renders skeleton in the last deploy column if the snapshots are not loaded', () => {
+    watchResourceMock.mockReturnValue([components, true]);
+    useSnapshotsEnvironmentBindingsMock.mockReturnValue([[], false]);
+    const { getByText } = render(<ApplicationListRow columns={null} obj={application} />);
+    expect(getByText('Loading deploy time')).toBeInTheDocument();
+  });
+
   it('should render metadata name if there is no display name', () => {
     watchResourceMock.mockReturnValue([[], false]);
     const { getByRole } = render(
