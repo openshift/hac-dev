@@ -22,6 +22,11 @@ export type ComponentSource = {
   };
 };
 
+export enum NudgeStats {
+  NUDGES = 'build-nudges-ref',
+  NUDGED_BY = 'build-nudged-by',
+}
+
 export type ComponentSpecs = {
   componentName: string;
   application: string;
@@ -33,6 +38,7 @@ export type ComponentSpecs = {
   releaseStrategies?: string[];
   targetPort?: number;
   route?: string;
+  [NudgeStats.NUDGES]?: string[];
   env?: {
     name: string;
     value: string;
@@ -47,5 +53,6 @@ export type ComponentKind = K8sResourceCommon & {
     devfile?: string;
     gitops?: { repositoryURL?: string; branch?: string; context?: string };
     webhook?: string;
+    [NudgeStats.NUDGED_BY]?: string[];
   };
 };

@@ -252,4 +252,13 @@ describe('ComponentDetailsView', () => {
     await fireEvent.click(editButton);
     expect(showModalMock).toHaveBeenCalled();
   });
+
+  it('should render Component Nudges dependencies', async () => {
+    routerRenderer(
+      <ComponentDetailsViewWrapper>
+        <ComponentDetailsView applicationName="test-application" componentName="human-resources" />,
+      </ComponentDetailsViewWrapper>,
+    );
+    expect(screen.getByTestId('component-nudges-dependencies')).toBeInTheDocument();
+  });
 });
