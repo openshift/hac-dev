@@ -70,7 +70,7 @@ describe('GitImportForm actions', () => {
     const formikProps = FormikMock.mock.calls[0][0] as React.ComponentProps<typeof Formik>;
 
     expect(formikProps.initialValues.inAppContext).toBe(false);
-    expect(formikProps.initialValues.application).toBe('');
+    expect(formikProps.initialValues.application).toBeFalsy();
   });
 
   it('should set inAppContext if application name is passed', () => {

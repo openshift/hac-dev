@@ -49,6 +49,7 @@ const ComponentLoadingState: React.FC<React.PropsWithChildren<unknown>> = () => 
 const ReviewSection: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
   const {
     values: {
+      application,
       inAppContext,
       source: {
         git: { url: sourceUrl, revision, context },
@@ -81,10 +82,17 @@ const ReviewSection: React.FunctionComponent<React.PropsWithChildren<unknown>> =
   const [validAppName] = useValidApplicationName(sourceUrl);
 
   React.useEffect(() => {
-    if (sourceUrl && gitUrlRegex.test(sourceUrl.trim()) && !inAppContext && !isSubmitting) {
+    if (
+      sourceUrl &&
+      gitUrlRegex.test(sourceUrl.trim()) &&
+      !inAppContext &&
+      !isSubmitting &&
+      // we only need to set app when it's unset and not when it's cleared
+      application === undefined
+    ) {
       setFieldValue('application', validAppName);
     }
-  }, [sourceUrl, inAppContext, validAppName, setFieldValue, isSubmitting]);
+  }, [sourceUrl, inAppContext, validAppName, setFieldValue, isSubmitting, application]);
 
   React.useEffect(() => {
     let unmounted = false;
