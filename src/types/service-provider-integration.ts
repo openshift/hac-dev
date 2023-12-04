@@ -40,6 +40,7 @@ export enum SPIAccessCheckAccessibilityStatus {
 
 export enum ServiceProviderType {
   GitHub = 'GitHub',
+  GitLab = 'GitLab',
   Quay = 'Quay',
 }
 

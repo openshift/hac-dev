@@ -52,6 +52,13 @@ const renderSourceSection = (formikData?: Omit<ImportFormValues, 'application' |
 afterEach(jest.resetAllMocks);
 
 describe('SourceSection', () => {
+  beforeEach(() =>
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation((fn) => {
+      fn(0);
+      return 0;
+    }),
+  );
+
   it('renders input field', () => {
     useAccessCheckMock.mockReturnValue([{}, false]);
     renderSourceSection();
@@ -74,8 +81,20 @@ describe('SourceSection', () => {
     ).toBeVisible();
   });
 
-  it('displays error when provider is not supported', async () => {
+  it('displays error when provider is not returned', async () => {
     useAccessCheckMock.mockReturnValue([{ isRepoAccessible: false, serviceProvider: '' }, true]);
+
+    renderSourceSection();
+
+    expect(screen.getByPlaceholderText('Enter your source')).toBeInvalid();
+    expect(screen.getByText('This provider is not supported')).toBeVisible();
+  });
+
+  it('displays error when provider is not supported', async () => {
+    useAccessCheckMock.mockReturnValue([
+      { isRepoAccessible: false, serviceProvider: 'invalid-provider' },
+      true,
+    ]);
 
     renderSourceSection();
 

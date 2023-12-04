@@ -116,19 +116,18 @@ const SourceSection: React.FC<React.PropsWithChildren<SourceSectionProps>> = () 
         isGit && setShowGitOptions(true);
       } else {
         setShowGitOptions(false);
+        setValidated(ValidatedOptions.error);
+        setFieldValue('source.isValidated', false);
         if (
           serviceProvider === ServiceProviderType.GitHub ||
+          serviceProvider === ServiceProviderType.GitLab ||
           serviceProvider === ServiceProviderType.Quay
         ) {
-          setValidated(ValidatedOptions.error);
-          setFieldValue('source.isValidated', false);
           setHelpTextInvalid(
             "Looks like your repository is private, so we're not able to access it.",
           );
           enablePrivateAuth && setShowAuthOptions(true);
-        } else if (!serviceProvider) {
-          setValidated(ValidatedOptions.error);
-          setFieldValue('source.isValidated', false);
+        } else {
           setHelpTextInvalid('This provider is not supported');
         }
       }
