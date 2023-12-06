@@ -50,6 +50,10 @@ export enum BuildRequest {
    * requests Pipelines-as-Code clean up for the Component
    */
   unconfigurePac = 'unconfigure-pac',
+  /**
+   * submits a rerun request.
+   */
+  rerunBuild = 'trigger-simple-build',
 }
 
 export const enablePAC = (component: ComponentKind) =>
@@ -96,6 +100,22 @@ export const startNewBuild = (component: ComponentKind) =>
         op: 'add',
         path: `/metadata/annotations/${BUILD_REQUEST_ANNOTATION.replace('/', '~1')}`,
         value: BuildRequest.triggerBuild,
+      },
+    ],
+  });
+
+export const rerunBuildPipeline = (component: ComponentKind) =>
+  k8sPatchResource({
+    model: ComponentModel,
+    queryOptions: {
+      name: component.metadata.name,
+      ns: component.metadata.namespace,
+    },
+    patches: [
+      {
+        op: 'add',
+        path: `/metadata/annotations/${BUILD_REQUEST_ANNOTATION.replace('/', '~1')}`,
+        value: BuildRequest.rerunBuild,
       },
     ],
   });

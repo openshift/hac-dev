@@ -1,20 +1,48 @@
-import { PipelineRunModel } from '../../models';
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
+import { useComponent } from '../../hooks/useComponents';
+import { ComponentModel, PipelineRunModel } from '../../models';
 import { Action } from '../../shared/components/action-menu/types';
 import { PipelineRunKind } from '../../types';
+import { isPACEnabled, rerunBuildPipeline } from '../../utils/component-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
 import { pipelineRunStatus, runStatus } from '../../utils/pipeline-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
+import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 
 export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] => {
+  const navigate = useNavigate();
+  const { namespace, workspace } = useWorkspaceInfo();
   const [canPatchPipelineRun] = useAccessReviewForModel(PipelineRunModel, 'patch');
+  const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
+
+  const [component, componentLoaded, componentError] = useComponent(
+    namespace,
+    pipelineRun?.metadata?.labels?.[PipelineRunLabel.COMPONENT],
+  );
+
+  const runType = React.useMemo(
+    () => pipelineRun?.metadata?.labels[PipelineRunLabel.PIPELINE_TYPE],
+    [pipelineRun.metadata?.labels],
+  );
 
   return [
-    // Todo: will re enable this after finding the proper solution to rerun post mvp.
-    // {
-    //   cta: () => pipelineRunRerun(pipelineRun),
-    //   id: 'pipelinerun-rerun',
-    //   label: 'Rerun',
-    // },
+    {
+      id: 'pipelinerun-rerun',
+      label: 'Rerun',
+      disabled: !canPatchComponent || !isPACEnabled || runType !== PipelineRunType.BUILD,
+      disabledTooltip: !canPatchPipelineRun ? "You don't have access to start a new build" : null,
+      cta: () =>
+        componentLoaded &&
+        !componentError &&
+        runType === PipelineRunType.BUILD &&
+        rerunBuildPipeline(component).then(() => {
+          navigate(
+            `/application-pipeline/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
+          );
+        }),
+    },
     {
       cta: () => pipelineRunStop(pipelineRun),
       id: 'pipelinerun-stop',
