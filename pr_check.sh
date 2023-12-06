@@ -72,6 +72,7 @@ COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z \
     -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` \
     -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` \
     -e CYPRESS_GH_PR_TITLE=${PR_TITLE} \
+    -e CYPRESS_SSO_URL=${HAC_KC_SSO_URL} \
     -e GH_COMMENTBODY=${GH_COMMENTBODY}"
 TEST_IMAGE="quay.io/hacdev/hac-tests:next"
 

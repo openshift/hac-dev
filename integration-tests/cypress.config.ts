@@ -147,6 +147,7 @@ export default defineConfig({
         resolution: 'high',
         REMOVE_APP_ON_FAIL: false,
         SNYK_TOKEN: '',
+        SSO_URL: 'https://sso.redhat.com/auth/',
       };
 
       for (const key in defaultValues) {
