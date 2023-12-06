@@ -7,22 +7,22 @@ export class APIHelper {
     'X-GitHub-Api-Version': '2022-11-28',
   };
 
-  static requestHACAPI(options: object) {
-    return cy
-      .getCookie('cs_jwt')
-      .should('exist')
-      .its('value')
-      .then((token) => {
-        options.headers = {
-          authorization: `Bearer ${token}`,
-          accept: 'application/json',
-        };
-        return cy.request(options);
-      });
+  static requestHACAPI(options: Partial<Cypress.RequestOptions>) {
+    const oidcUser = JSON.parse(
+      localStorage.getItem(`oidc.user:${Cypress.env('SSO_URL')}:cloud-services`),
+    );
+    const token = oidcUser.access_token as string;
+
+    options.headers = {
+      authorization: `Bearer ${token}`,
+      accept: 'application/json',
+    };
+
+    return cy.request(options);
   }
 
   static githubRequest(method: Cypress.HttpMethod, url: string, body?: Cypress.RequestBody) {
-    const options = {
+    const options: Partial<Cypress.RequestOptions> = {
       method,
       url,
       headers: this.githubHeaders,
@@ -42,7 +42,7 @@ export class APIHelper {
     headers?: object,
   ) {
     expect(retryNum).to.be.lessThan(maxRetryNum);
-    const options = {
+    const options: Partial<Cypress.RequestOptions> = {
       url,
       timeout: 30000,
       failOnStatusCode: false,
