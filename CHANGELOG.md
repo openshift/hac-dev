@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.3.0](https://github.com/openshift/hac-dev/compare/rhtap-ui-v0.2.0...rhtap-ui-v0.3.0) (2023-12-01)
+
+
+### Features
+
+* **dependencies:** update package dependencies and related fixes ([18b77b1](https://github.com/openshift/hac-dev/commit/18b77b1cab1c0841f3103350f8ad3fc8b055a5cf))
+* **private-auth:** add a form to initiate private auth flow ([5ccfa07](https://github.com/openshift/hac-dev/commit/5ccfa07f7934358d4909fe47aa44eace166f8aab))
+
+
+### Bug Fixes
+
+* **access:** fix username validation regex ([2c31890](https://github.com/openshift/hac-dev/commit/2c31890c7abb602173f26b8371aa4d62d02c9cbb))
+* **applications:** use SEB for app deploy date ([a23368d](https://github.com/openshift/hac-dev/commit/a23368d108c40b6881a26d23451406421d531ec4))
+* **commit:** avoid using test pipeline for commit ([4ea8d22](https://github.com/openshift/hac-dev/commit/4ea8d22914471d6b2f2c51e9cca8cb5721d58d49))
+* **components:** show url for image components ([dd2eac5](https://github.com/openshift/hac-dev/commit/dd2eac54914fee3220ce8b15de7fc8380d728007))
+* **deps:** replace npm with yarn package manager ([6a37e4f](https://github.com/openshift/hac-dev/commit/6a37e4f4221cc9862c6c54ae62d35d6e582fa96b))
+* **e2e:** delete component after it refreshes ([ead67e9](https://github.com/openshift/hac-dev/commit/ead67e9a415c5ac7e75c53a1ccbd90e309577e98))
+* **e2e:** remove inspect-image from task list ([369451a](https://github.com/openshift/hac-dev/commit/369451a05cac234903d2ae2e2fa46fa6fc54aa0d))
+* **snapshot:** add test pipelinerun list and capitalize breadcrumbs ([#847](https://github.com/openshift/hac-dev/issues/847)) ([b7359d4](https://github.com/openshift/hac-dev/commit/b7359d4aa2074d45563c883455119814ef718719))
+* **tests:** fix unit tests after react 18 upgrade ([bbf16c3](https://github.com/openshift/hac-dev/commit/bbf16c3000a8192ee4dcda006ba35f4a63a7cb7b))
+* **type:** fix children type for react 18 and linting issues ([d4b5a4f](https://github.com/openshift/hac-dev/commit/d4b5a4f2292bfa35e139ab687cada1230131d262))
+
 ## [0.2.0](https://github.com/openshift/hac-dev/compare/rhtap-ui-v0.1.0...rhtap-ui-v0.2.0) (2023-11-09)
 
 
