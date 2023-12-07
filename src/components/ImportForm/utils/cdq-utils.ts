@@ -148,10 +148,15 @@ export const detectComponents = async (
       throw new Error(completeCondition.message);
     }
   } finally {
-    await k8sDeleteResource({
-      model: ComponentDetectionQueryModel,
-      queryOptions: { name: cdq.metadata.name, ns: namespace },
-    });
+    try {
+      await k8sDeleteResource({
+        model: ComponentDetectionQueryModel,
+        queryOptions: { name: cdq.metadata.name, ns: namespace },
+      });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(`Unable to delete CDQ ${cdq.metadata.name}: `, e);
+    }
   }
 
   return cdq.status.componentDetected;

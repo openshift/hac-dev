@@ -14,10 +14,15 @@ import {
 } from '@patternfly/react-core';
 import { FULL_APPLICATION_TITLE } from '../../consts/labels';
 import { useSignupStatus } from '../../hooks/useSignupStatus';
-import { ApplicationGroupVersionKind, ApplicationModel, ComponentModel } from '../../models';
+import {
+  ApplicationGroupVersionKind,
+  ApplicationModel,
+  ComponentDetectionQueryModel,
+  ComponentModel,
+} from '../../models';
 import ExternalLink from '../../shared/components/links/ExternalLink';
-import { ApplicationKind } from '../../types';
-import { useAccessReviewForModel } from '../../utils/rbac';
+import { AccessReviewResources, ApplicationKind } from '../../types';
+import { useAccessReviewForModels } from '../../utils/rbac';
 import { SignupStatus } from '../../utils/signup-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
@@ -25,10 +30,15 @@ import SignupButton from './SignupButton';
 
 import './IntroBanner.scss';
 
+const accessReviewResources: AccessReviewResources = [
+  { model: ApplicationModel, verb: 'create' },
+  { model: ComponentModel, verb: 'create' },
+  { model: ComponentDetectionQueryModel, verb: 'create' },
+];
+
 const IntroBanner: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { namespace, workspace } = useWorkspaceInfo();
-  const [canCreateApplication] = useAccessReviewForModel(ApplicationModel, 'create');
-  const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
+  const [canCreate] = useAccessReviewForModels(accessReviewResources);
 
   const signupStatus = useSignupStatus();
 
@@ -69,7 +79,7 @@ const IntroBanner: React.FC<React.PropsWithChildren<unknown>> = () => {
                   )}
                   variant="primary"
                   data-test="create-application"
-                  isDisabled={!(canCreateApplication && canCreateComponent)}
+                  isDisabled={!canCreate}
                   tooltip="You don't have access to create an application"
                   size="lg"
                   analytics={{
