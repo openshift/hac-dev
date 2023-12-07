@@ -124,7 +124,7 @@ describe('LogWrapperComponent', () => {
           {
             image: 'alpine',
             name: 'do-something',
-            resources: {},
+            computeResources: {},
             script: 'echo "prefix:suffix" | grep "prefix:suffix"\n',
           },
         ],

@@ -114,7 +114,7 @@ export const useTRTaskRuns = (
   options?: TektonResultsOptions,
   cacheKey?: string,
 ): [TaskRunKind[], boolean, unknown, GetNextPage] =>
-  useTRRuns<TaskRunKind>(getTaskRuns, namespace, options, cacheKey);
+  useTRRuns(getTaskRuns, namespace, options, cacheKey);
 
 export const useTRTaskRunLog = (
   namespace: string,

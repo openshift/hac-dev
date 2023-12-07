@@ -7,9 +7,9 @@ import {
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { differenceBy, uniqBy } from 'lodash-es';
 import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
-import { PipelineRunGroupVersionKind } from '../models';
+import { PipelineRunGroupVersionKind, TaskRunGroupVersionKind } from '../models';
 import { useDeepCompareMemoize } from '../shared';
-import { PipelineRunKind, TaskRunGroupVersionKind, TaskRunKind } from '../types';
+import { PipelineRunKind, TaskRunKind } from '../types';
 import { getCommitSha } from '../utils/commits-utils';
 import { pipelineRunStatus, runStatus } from '../utils/pipeline-utils';
 import { EQ } from '../utils/tekton-results';

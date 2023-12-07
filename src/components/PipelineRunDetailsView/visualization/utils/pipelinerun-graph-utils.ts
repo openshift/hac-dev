@@ -21,7 +21,12 @@ import {
   PipelineRunKind,
   PLRTaskRunStep,
 } from '../../../../types';
-import { pipelineRunStatus, runStatus, taskRunStatus } from '../../../../utils/pipeline-utils';
+import {
+  pipelineRunStatus,
+  runStatus,
+  taskRunStatus,
+  isTaskV1Beta1,
+} from '../../../../utils/pipeline-utils';
 import { NodeType } from '../../../ApplicationDetails/tabs/overview/visualization/const';
 import {
   PipelineEdgeModel,
@@ -177,6 +182,9 @@ export const appendStatus = (
       (tr) => tr.metadata.labels[TektonResourceLabel.pipelineTask] === task.name,
     );
     const taskStatus: TaskRunStatus = taskRun?.status;
+    const taskResults = isTaskV1Beta1(taskRun)
+      ? taskRun?.status?.taskResults
+      : taskRun?.status?.results;
 
     const mTask: PipelineTaskWithStatus = {
       ...task,
@@ -203,8 +211,8 @@ export const appendStatus = (
     }
 
     // Determine any task test status
-    if (taskRun?.status?.taskResults) {
-      const testOutput = taskRun?.status?.taskResults.find(
+    if (taskResults) {
+      const testOutput = taskResults.find(
         (result) => result.name === 'HACBS_TEST_OUTPUT' || result.name === 'TEST_OUTPUT',
       );
       if (testOutput) {
@@ -216,7 +224,7 @@ export const appendStatus = (
           // ignore
         }
       }
-      const scanResult = taskRun?.status?.taskResults?.find((result) => isCVEScanResult(result));
+      const scanResult = taskResults?.find((result) => isCVEScanResult(result));
 
       if (scanResult) {
         try {

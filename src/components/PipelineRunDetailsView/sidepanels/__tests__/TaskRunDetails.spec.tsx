@@ -23,7 +23,12 @@ describe('TaskRunDetails', () => {
     const result = render(
       <TaskRunDetails
         status={runStatus.Running}
-        taskRun={{ status: { taskSpec: { description: 'test' } } } as TaskRunKind}
+        taskRun={
+          {
+            apiVersion: 'tekton.dev/v1',
+            status: { taskSpec: { description: 'test' } },
+          } as TaskRunKind
+        }
       />,
     );
     expect(result.queryByText('Description')).toBeInTheDocument();
@@ -36,10 +41,11 @@ describe('TaskRunDetails', () => {
         status={runStatus.Succeeded}
         taskRun={
           {
+            apiVersion: 'tekton.dev/v1',
             status: {
               startTime: '2023-03-15T20:12:55Z',
               completionTime: '2023-03-15T20:13:13Z',
-              taskResults: [{ name: 'test-name', value: 'test-value' }],
+              results: [{ name: 'test-name', value: 'test-value' }],
             },
           } as TaskRunKind
         }
@@ -60,13 +66,14 @@ describe('TaskRunDetails', () => {
         status={runStatus.Succeeded}
         taskRun={
           {
+            apiVersion: 'tekton.dev/v1',
             metadata: {
               labels: {
                 'tekton.dev/pipelineTask': 'clair-scan',
               },
             },
             status: {
-              taskResults: [
+              results: [
                 {
                   name: 'CLAIR_SCAN_RESULTS',
                   value: '{"vulnerabilities":{"critical":0,"high":0,"medium":1,"low":0}}',

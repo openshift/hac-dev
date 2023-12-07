@@ -342,7 +342,7 @@ describe('PipelineRunDetailsTab', () => {
       ...testPipelineRun,
       status: {
         ...testPipelineRun.status,
-        pipelineResults: [
+        results: [
           {
             name: 'IMAGE_URL',
             value: 'quay.io/test/user-workload:test-image',

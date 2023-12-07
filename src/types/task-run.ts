@@ -1,6 +1,10 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
-import { K8sGroupVersionKind } from '../dynamic-plugin-sdk';
-import { TektonResource, TektonResultsRun, TektonTaskSpec } from './coreTekton';
+import {
+  TektonResource,
+  TektonResultsRun,
+  TektonTaskSpec,
+  TektonTaskSpecV1Beta1,
+} from './coreTekton';
 import { PipelineTaskParam, PipelineTaskRef } from './pipeline';
 import {
   Condition,
@@ -27,25 +31,49 @@ export type TaskRunStatus = {
   podName?: string;
   startTime?: string;
   steps?: PLRTaskRunStep[];
-  taskResults?: TektonResultsRun[];
+  results?: TektonResultsRun[];
   taskSpec?: TaskKind['spec'];
 };
 
-export type TaskRunKind = K8sResourceCommon & {
+export type TaskRunKindV1 = K8sResourceCommon & {
   spec: {
     taskRef?: PipelineTaskRef;
     taskSpec?: TektonTaskSpec;
     serviceAccountName?: string;
     params?: PipelineTaskParam[];
-    resources?: TektonResource[];
     timeout?: string;
     workspaces?: TaskRunWorkspace[];
   };
   status?: TaskRunStatus;
 };
 
-export const TaskRunGroupVersionKind: K8sGroupVersionKind = {
-  group: 'tekton.dev',
-  version: 'v1beta1',
-  kind: 'TaskRun',
+/**
+ * @deprecated
+ */
+export type TaskRunStatusV1Beta1 = {
+  completionTime?: string;
+  conditions?: Condition[];
+  podName?: string;
+  startTime?: string;
+  steps?: PLRTaskRunStep[];
+  taskResults?: TektonResultsRun[];
+  taskSpec?: TaskKind['spec'];
 };
+
+/**
+ * @deprecated
+ */
+export type TaskRunKindV1Beta1 = K8sResourceCommon & {
+  spec: {
+    taskRef?: PipelineTaskRef;
+    taskSpec?: TektonTaskSpecV1Beta1;
+    serviceAccountName?: string;
+    params?: PipelineTaskParam[];
+    resources?: TektonResource[];
+    timeout?: string;
+    workspaces?: TaskRunWorkspace[];
+  };
+  status?: TaskRunStatusV1Beta1;
+};
+
+export type TaskRunKind = TaskRunKindV1 | TaskRunKindV1Beta1;

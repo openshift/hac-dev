@@ -2,6 +2,7 @@ import * as React from 'react';
 import { difference, merge, uniq } from 'lodash-es';
 import { PipelineRunLabel } from '../consts/pipelinerun';
 import { TektonResourceLabel, TaskRunKind, TektonResultsRun, PipelineRunKind } from '../types';
+import { isTaskV1Beta1 } from '../utils/pipeline-utils';
 import { OR } from '../utils/tekton-results';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { useTRTaskRuns } from './useTektonResults';
@@ -33,9 +34,10 @@ export type ScanResults = {
 export const getScanResults = (taskRuns: TaskRunKind[]): [ScanResults, TaskRunKind[]] => {
   const scanResults = taskRuns.reduce(
     (acc, scanTaskRun) => {
-      const taskScanResult = scanTaskRun?.status?.taskResults?.find((result) =>
-        isCVEScanResult(result),
-      );
+      const results = isTaskV1Beta1(scanTaskRun)
+        ? scanTaskRun?.status?.taskResults
+        : scanTaskRun?.status?.results;
+      const taskScanResult = results?.find((result) => isCVEScanResult(result));
       if (taskScanResult) {
         acc[1].push(scanTaskRun);
         try {
@@ -108,9 +110,10 @@ export const getScanResultsMap = (
   taskRuns: TaskRunKind[],
 ): { [key: string]: [ScanResults, TaskRunKind[]] } => {
   const scanResults = taskRuns.reduce((acc, scanTaskRun) => {
-    const taskScanResult = scanTaskRun?.status?.taskResults?.find((result) =>
-      isCVEScanResult(result),
-    );
+    const results = isTaskV1Beta1(scanTaskRun)
+      ? scanTaskRun?.status?.taskResults
+      : scanTaskRun?.status?.results;
+    const taskScanResult = results?.find((result) => isCVEScanResult(result));
     const pipelineRunName = scanTaskRun.metadata?.labels?.[PipelineRunLabel.PIPELINERUN_NAME];
     if (!acc[pipelineRunName]) {
       acc[pipelineRunName] = [

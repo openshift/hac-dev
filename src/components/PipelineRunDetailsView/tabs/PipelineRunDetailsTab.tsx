@@ -25,6 +25,7 @@ import {
   calculateDuration,
   getSbomTaskRun,
   pipelineRunStatus,
+  isPipelineV1Beta1,
 } from '../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import GitRepoLink from '../../GitLink/GitRepoLink';
@@ -47,6 +48,9 @@ const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetails
   taskRuns,
 }) => {
   const { workspace } = useWorkspaceInfo();
+  const results = isPipelineV1Beta1(pipelineRun)
+    ? pipelineRun.status?.pipelineResults
+    : pipelineRun.status?.results;
   const pipelineRunFailed = (getPLRLogSnippet(pipelineRun, taskRuns) ||
     {}) as ErrorDetailsWithStaticLog;
   const duration = calculateDuration(
@@ -59,7 +63,7 @@ const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetails
   const applicationName = pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION];
   const buildImage =
     pipelineRun.metadata?.annotations?.[PipelineRunLabel.BUILD_IMAGE_ANNOTATION] ||
-    pipelineRun.status?.pipelineResults?.find(({ name }) => name === `IMAGE_URL`)?.value;
+    results?.find(({ name }) => name === `IMAGE_URL`)?.value;
   const sourceUrl = getSourceUrl(pipelineRun);
   const pipelineStatus = !error ? pipelineRunStatus(pipelineRun) : null;
   const sbomTaskRun = React.useMemo(() => getSbomTaskRun(taskRuns), [taskRuns]);
@@ -296,13 +300,10 @@ const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetails
             </FlexItem>
           </Flex>
 
-          {pipelineRun.status?.pipelineResults ? (
+          {results ? (
             <>
               <Divider style={{ padding: 'var(--pf-v5-global--spacer--lg) 0' }} />
-              <RunResultsList
-                results={pipelineRun.status.pipelineResults}
-                status={pipelineStatus}
-              />
+              <RunResultsList results={results} status={pipelineStatus} />
             </>
           ) : null}
         </>

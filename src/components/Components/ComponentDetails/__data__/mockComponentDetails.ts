@@ -1734,13 +1734,13 @@ export const mockLatestSuccessfulBuild = {
       {
         kind: 'TaskRun',
         name: 'human-resources-on-push-z79cl-init',
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         pipelineTaskName: 'init',
       },
       {
         kind: 'TaskRun',
         name: 'human-resources-on-push-z79cl-clone-repository',
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         whenExpressions: [
           {
             input: '$(tasks.init.results.build)',
@@ -1753,7 +1753,7 @@ export const mockLatestSuccessfulBuild = {
       {
         kind: 'TaskRun',
         name: 'human-resources-on-push-z79cl-build-container',
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         whenExpressions: [
           {
             input: '$(tasks.init.results.build)',
@@ -1766,7 +1766,7 @@ export const mockLatestSuccessfulBuild = {
       {
         kind: 'TaskRun',
         name: 'human-resources-on-push-z79cl-inspect-image',
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         whenExpressions: [
           {
             input: 'false',
@@ -1779,7 +1779,7 @@ export const mockLatestSuccessfulBuild = {
       {
         kind: 'TaskRun',
         name: 'human-resources-on-push-z79cl-label-check',
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         whenExpressions: [
           {
             input: 'false',
@@ -1792,7 +1792,7 @@ export const mockLatestSuccessfulBuild = {
       {
         kind: 'TaskRun',
         name: 'human-resources-on-push-z79cl-deprecated-base-image-check',
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         whenExpressions: [
           {
             input: 'false',
@@ -1805,7 +1805,7 @@ export const mockLatestSuccessfulBuild = {
       {
         kind: 'TaskRun',
         name: 'human-resources-on-push-z79cl-clair-scan',
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         whenExpressions: [
           {
             input: 'false',
@@ -1818,7 +1818,7 @@ export const mockLatestSuccessfulBuild = {
       {
         kind: 'TaskRun',
         name: 'human-resources-on-push-z79cl-clamav-scan',
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         whenExpressions: [
           {
             input: 'false',
@@ -1831,7 +1831,7 @@ export const mockLatestSuccessfulBuild = {
       {
         kind: 'TaskRun',
         name: 'human-resources-on-push-z79cl-sbom-json-check',
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         whenExpressions: [
           {
             input: 'false',
@@ -1844,13 +1844,13 @@ export const mockLatestSuccessfulBuild = {
       {
         kind: 'TaskRun',
         name: 'human-resources-on-push-z79cl-show-sbom',
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         pipelineTaskName: 'show-sbom',
       },
       {
         kind: 'TaskRun',
         name: 'human-resources-on-push-z79cl-show-summary',
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         pipelineTaskName: 'show-summary',
       },
     ],
@@ -1941,7 +1941,7 @@ export const mockLatestSuccessfulBuild = {
     deletionTimestamp: '2023-07-31T09:58:10Z',
     deletionGracePeriodSeconds: 0,
   },
-  apiVersion: 'tekton.dev/v1beta1',
+  apiVersion: 'tekton.dev/v1',
 };
 
 export const mockTaskRuns = [
@@ -2192,7 +2192,7 @@ export const mockTaskRuns = [
       resourceVersion: '515798791',
       creationTimestamp: '2023-07-31T09:54:38Z',
     },
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
   },
   {
     kind: 'TaskRun',
@@ -2619,7 +2619,7 @@ export const mockTaskRuns = [
       resourceVersion: '515799373',
       creationTimestamp: '2023-07-31T09:54:43Z',
     },
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
   },
   {
     kind: 'TaskRun',
@@ -3388,7 +3388,7 @@ export const mockTaskRuns = [
             },
           ],
           name: '',
-          resources: {},
+          computeResources: {},
           volumeMounts: [
             {
               name: 'ws-l7xqq',
@@ -3501,7 +3501,7 @@ export const mockTaskRuns = [
       resourceVersion: '515803336',
       creationTimestamp: '2023-07-31T09:55:02Z',
     },
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
   },
   {
     kind: 'TaskRun',
@@ -3736,7 +3736,7 @@ export const mockTaskRuns = [
       resourceVersion: '515804201',
       creationTimestamp: '2023-07-31T09:56:32Z',
     },
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
   },
   {
     kind: 'TaskRun',
@@ -3980,7 +3980,7 @@ export const mockTaskRuns = [
       resourceVersion: '515804205',
       creationTimestamp: '2023-07-31T09:56:32Z',
     },
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
   },
   {
     kind: 'TaskRun',
@@ -4184,7 +4184,7 @@ export const mockTaskRuns = [
       resourceVersion: '515804512',
       creationTimestamp: '2023-07-31T09:56:33Z',
     },
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
   },
   {
     kind: 'TaskRun',
@@ -4380,7 +4380,7 @@ export const mockTaskRuns = [
       resourceVersion: '515804495',
       creationTimestamp: '2023-07-31T09:56:46Z',
     },
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
   },
   {
     kind: 'TaskRun',
@@ -4631,7 +4631,7 @@ export const mockTaskRuns = [
       resourceVersion: '515804610',
       creationTimestamp: '2023-07-31T09:56:32Z',
     },
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
   },
   {
     kind: 'TaskRun',
@@ -4819,7 +4819,7 @@ export const mockTaskRuns = [
             image: 'quay.io/redhat-appstudio/clamav-db:latest',
             script:
               '#!/usr/bin/env bash\nclamscan --version\ncp -r /var/lib/clamav/* /tmp/clamdb\n',
-            resources: {},
+            computeResources: {},
             volumeMounts: [
               {
                 name: 'dbfolder',
@@ -4909,7 +4909,7 @@ export const mockTaskRuns = [
       resourceVersion: '515803802',
       creationTimestamp: '2023-07-31T09:56:32Z',
     },
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
   },
 ];
 

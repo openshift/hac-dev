@@ -1,15 +1,9 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
-import {
-  TektonParam,
-  TektonResource,
-  TektonResourceGroup,
-  TektonTaskSpec,
-  TektonWorkspace,
-} from './coreTekton';
+import { TektonParam, TektonTaskSpec, TektonWorkspace } from './coreTekton';
 import { TaskRunStatus } from './task-run';
 
 export type PipelineTaskRef = {
-  bundle?: string;
+  resolver?: string;
   kind?: string;
   name?: string;
   params?: {
@@ -50,7 +44,6 @@ export type PipelineResult = {
 export type PipelineTask = {
   name: string;
   params?: PipelineTaskParam[];
-  resources?: TektonResourceGroup<PipelineTaskResource>;
   runAfter?: string[];
   taskRef?: PipelineTaskRef;
   taskSpec?: TektonTaskSpec;
@@ -61,7 +54,6 @@ export type PipelineTask = {
 
 export type PipelineSpec = {
   params?: TektonParam[];
-  resources?: TektonResource[];
   serviceAccountName?: string;
   tasks: PipelineTask[];
   workspaces?: TektonWorkspace[];

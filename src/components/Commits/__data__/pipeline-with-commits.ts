@@ -2,7 +2,7 @@ import { Commit, PipelineRunKind } from '../../../types';
 
 export const pipelineWithCommits: PipelineRunKind[] = [
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     apiGroup: 'tekton.dev',
     kind: 'PipelineRun',
     metadata: {
@@ -67,7 +67,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -123,7 +123,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -193,12 +193,12 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         },
       ],
       pipelineRef: {
-        bundle:
+        resolver:
           'quay.io/redhat-appstudio/build-templates-bundle:ab259a6fef091698b0fc145537338fa78f521c1f',
         name: 'docker-build',
       },
-      serviceAccountName: 'appstudio-pipeline',
-      timeout: '1h0m0s',
+      taskRunTemplate: { serviceAccountName: 'appstudio-pipeline' },
+      timeouts: { pipeline: '1h0m0s' },
       workspaces: [
         {
           name: 'workspace',
@@ -225,7 +225,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -292,7 +292,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     metadata: {
       generateName: 'devfile-sample-go-basic-a8bq-',
@@ -359,12 +359,12 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         },
       ],
       pipelineRef: {
-        bundle:
+        resolver:
           'quay.io/redhat-appstudio-tekton-catalog/pipeline-docker-build:c31f6ad4939f52b30b10331097a21a0d03ca1745',
         name: 'docker-build',
       },
-      serviceAccountName: 'appstudio-pipeline',
-      timeout: '1h0m0s',
+      taskRunTemplate: { serviceAccountName: 'appstudio-pipeline' },
+      timeouts: { pipeline: '1h0m0s' },
       workspaces: [
         {
           name: 'workspace',
@@ -388,13 +388,13 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     status: {
       childReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'devfile-sample-go-basic-a8bq-llf8v-init',
           pipelineTaskName: 'init',
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'devfile-sample-go-basic-a8bq-llf8v-clone-repository',
           pipelineTaskName: 'clone-repository',
@@ -407,7 +407,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
           ],
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'devfile-sample-go-basic-a8bq-llf8v-build-container',
           pipelineTaskName: 'build-container',
@@ -420,13 +420,13 @@ export const pipelineWithCommits: PipelineRunKind[] = [
           ],
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'devfile-sample-go-basic-a8bq-llf8v-show-sbom',
           pipelineTaskName: 'show-sbom',
         },
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           kind: 'TaskRun',
           name: 'devfile-sample-go-basic-a8bq-llf8v-show-summary',
           pipelineTaskName: 'show-summary',
@@ -542,7 +542,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'JAVA_COMMUNITY_DEPENDENCIES',
                 type: 'string',
@@ -659,7 +659,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
                 {
                   image: 'quay.io/redhat-appstudio/buildah:v1.28',
                   name: 'build',
-                  resources: {
+                  computeResources: {
                     limits: {
                       cpu: '2',
                       memory: '4Gi',
@@ -675,7 +675,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
                 {
                   image: 'quay.io/redhat-appstudio/syft:v0.47.0',
                   name: 'sbom-get',
-                  resources: {},
+                  computeResources: {},
                   script:
                     'syft dir:/workspace/source --file=/workspace/source/sbom-source.json --output=cyclonedx-json\nfind $(cat /workspace/container_path) -xtype l -delete\nsyft dir:$(cat /workspace/container_path) --file=/workspace/source/sbom-image.json --output=cyclonedx-json\n',
                 },
@@ -683,14 +683,14 @@ export const pipelineWithCommits: PipelineRunKind[] = [
                   image:
                     'quay.io/redhat-appstudio/hacbs-jvm-build-request-processor:1d417e6f1f3e68c6c537333b5759796eddae0afc',
                   name: 'analyse-dependencies-java-sbom',
-                  resources: {},
+                  computeResources: {},
                   script:
                     "if [ -f /var/lib/containers/java ]; then\n  /opt/jboss/container/java/run/run-java.sh analyse-dependencies path $(cat /workspace/container_path) -s /workspace/source/sbom-image.json --task-run-name devfile-sample-go-basic-a8bq-llf8v-build-container --publishers /tekton/results/SBOM_JAVA_COMPONENTS_COUNT\n  sed -i 's/^/ /' /tekton/results/SBOM_JAVA_COMPONENTS_COUNT # Workaround for SRVKP-2875\nelse\n  touch /tekton/results/JAVA_COMMUNITY_DEPENDENCIES\nfi\n",
                 },
                 {
                   image: 'registry.access.redhat.com/ubi9/python-39:1-114.1681379027',
                   name: 'merge-sboms',
-                  resources: {},
+                  computeResources: {},
                   script:
                     '#!/bin/python3\nimport json\nimport os\n\n# load SBOMs\nwith open("./sbom-image.json") as f:\n  image_sbom = json.load(f)\n\nwith open("./sbom-source.json") as f:\n  source_sbom = json.load(f)\n\n# fetch unique components from available SBOMs\ndef get_identifier(component):\n  return component["name"] + \'@\' + component.get("version", "")\n\nexisting_components = [get_identifier(component) for component in image_sbom["components"]]\n\nfor component in source_sbom["components"]:\n  if get_identifier(component) not in existing_components:\n    image_sbom["components"].append(component)\n    existing_components.append(get_identifier(component))\n\nimage_sbom["components"].sort(key=lambda c: get_identifier(c))\n\n# write the CycloneDX unified SBOM\nwith open("./sbom-cyclonedx.json", "w") as f:\n  json.dump(image_sbom, f, indent=4)\n\n# create and write the PURL unified SBOM\npurls = [{"purl": component["purl"]} for component in image_sbom["components"] if "purl" in component]\npurl_content = {"image_contents": {"dependencies": purls}}\n\nwith open("sbom-purl.json", "w") as output_file:\n  json.dump(purl_content, output_file, indent=4)\n',
                 },
@@ -698,7 +698,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
                   image:
                     'registry.access.redhat.com/ubi9/buildah:9.0.0-19@sha256:c8b1d312815452964885680fc5bc8d99b3bfe9b6961228c71a09c72ca8e915eb',
                   name: 'inject-sbom-and-push',
-                  resources: {},
+                  computeResources: {},
                   script:
                     '# Expose base image digests\nbuildah images --format \'{{ .Name }}:{{ .Tag }}@{{ .Digest }}\' | grep -v $IMAGE > /tekton/results/BASE_IMAGES_DIGESTS\n\nbase_image_name=$(buildah inspect --format \'{{ index .ImageAnnotations "org.opencontainers.image.base.name"}}\' $IMAGE)\nbase_image_digest=$(buildah inspect --format \'{{ index .ImageAnnotations "org.opencontainers.image.base.digest"}}\' $IMAGE)\ncontainer=$(buildah from --pull-never $IMAGE)\nbuildah copy $container sbom-cyclonedx.json sbom-purl.json /root/buildinfo/content_manifests/\nbuildah config -a org.opencontainers.image.base.name=${base_image_name} -a org.opencontainers.image.base.digest=${base_image_digest} $container\nbuildah commit $container $IMAGE\nbuildah push \\\n  --tls-verify=$TLSVERIFY \\\n  --digestfile /workspace/source/image-digest $IMAGE \\\n  docker://$IMAGE\ncat "/workspace/source"/image-digest | tee /tekton/results/IMAGE_DIGEST\necho -n "$IMAGE" | tee /tekton/results/IMAGE_URL\n',
                 },
@@ -714,7 +714,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
                   ],
                   image: 'quay.io/redhat-appstudio/cosign:v1.13.1',
                   name: 'upload-sbom',
-                  resources: {},
+                  computeResources: {},
                 },
               ],
             },
@@ -753,7 +753,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'commit',
                 type: 'string',
@@ -927,7 +927,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
                   image:
                     'registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8:v1.8.2-8@sha256:a538c423e7a11aae6ae582a411fdb090936458075f99af4ce5add038bb6983e8',
                   name: 'clone',
-                  resources: {},
+                  computeResources: {},
                   script:
                     '#!/usr/bin/env sh\nset -eu\n\nif [ "${PARAM_VERBOSE}" = "true" ] ; then\n  set -x\nfi\n\nif [ "${WORKSPACE_BASIC_AUTH_DIRECTORY_BOUND}" = "true" ] ; then\n  cp "${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/.git-credentials" "${PARAM_USER_HOME}/.git-credentials"\n  cp "${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/.gitconfig" "${PARAM_USER_HOME}/.gitconfig"\n  chmod 400 "${PARAM_USER_HOME}/.git-credentials"\n  chmod 400 "${PARAM_USER_HOME}/.gitconfig"\nfi\n\nif [ "${WORKSPACE_SSH_DIRECTORY_BOUND}" = "true" ] ; then\n  cp -R "${WORKSPACE_SSH_DIRECTORY_PATH}" "${PARAM_USER_HOME}"/.ssh\n  chmod 700 "${PARAM_USER_HOME}"/.ssh\n  chmod -R 400 "${PARAM_USER_HOME}"/.ssh/*\nfi\n\nCHECKOUT_DIR="${WORKSPACE_OUTPUT_PATH}/${PARAM_SUBDIRECTORY}"\n\ncleandir() {\n  # Delete any existing contents of the repo directory if it exists.\n  #\n  # We don\'t just "rm -rf ${CHECKOUT_DIR}" because ${CHECKOUT_DIR} might be "/"\n  # or the root of a mounted volume.\n  if [ -d "${CHECKOUT_DIR}" ] ; then\n    # Delete non-hidden files and directories\n    rm -rf "${CHECKOUT_DIR:?}"/*\n    # Delete files and directories starting with . but excluding ..\n    rm -rf "${CHECKOUT_DIR}"/.[!.]*\n    # Delete files and directories starting with .. plus any other character\n    rm -rf "${CHECKOUT_DIR}"/..?*\n  fi\n}\n\nif [ "${PARAM_DELETE_EXISTING}" = "true" ] ; then\n  cleandir\nfi\n\ntest -z "${PARAM_HTTP_PROXY}" || export HTTP_PROXY="${PARAM_HTTP_PROXY}"\ntest -z "${PARAM_HTTPS_PROXY}" || export HTTPS_PROXY="${PARAM_HTTPS_PROXY}"\ntest -z "${PARAM_NO_PROXY}" || export NO_PROXY="${PARAM_NO_PROXY}"\n\n/ko-app/git-init \\\n  -url="${PARAM_URL}" \\\n  -revision="${PARAM_REVISION}" \\\n  -refspec="${PARAM_REFSPEC}" \\\n  -path="${CHECKOUT_DIR}" \\\n  -sslVerify="${PARAM_SSL_VERIFY}" \\\n  -submodules="${PARAM_SUBMODULES}" \\\n  -depth="${PARAM_DEPTH}" \\\n  -sparseCheckoutDirectories="${PARAM_SPARSE_CHECKOUT_DIRECTORIES}"\ncd "${CHECKOUT_DIR}"\nRESULT_SHA="$(git rev-parse HEAD)"\nEXIT_CODE="$?"\nif [ "${EXIT_CODE}" != 0 ] ; then\n  exit "${EXIT_CODE}"\nfi\nprintf "%s" "${RESULT_SHA}" > "/tekton/results/commit"\nprintf "%s" "${PARAM_URL}" > "/tekton/results/url"\n',
                 },
@@ -987,7 +987,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'build',
                 type: 'string',
@@ -1089,7 +1089,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
                   image:
                     'registry.redhat.io/openshift4/ose-tools-rhel8:v4.12@sha256:4d89da145a14501b049397dc723a2b5feba1f2238c9f71659c9512bd27ca4e95',
                   name: 'init',
-                  resources: {},
+                  computeResources: {},
                   script:
                     '#!/bin/bash\necho "Build Initialize: $IMAGE_URL"\necho\necho "Create pipelinerun repository secret"\nSHARED=/secret/default-push-secret/.dockerconfigjson\nexport DOCKER_CONFIG=/tmp/docker/\nmkdir -p $DOCKER_CONFIG\nif [ -f $SHARED ]; then\n  jq -M -s \'.[0] * .[1]\' $SHARED /root/.docker/config.json > $DOCKER_CONFIG/config.json\nelse\n  cp /root/.docker/config.json $DOCKER_CONFIG/config.json\nfi\noc create secret generic --from-file=$DOCKER_CONFIG/config.json $SHARED_PARAM $PIPELINERUN_NAME\noc patch secret $PIPELINERUN_NAME -p "{\\"metadata\\": {\\"ownerReferences\\": [{\\"apiVersion\\": \\"tekton.dev/v1beta1\\", \\"blockOwnerDeletion\\": false, \\"controller\\": true, \\"kind\\": \\"PipelineRun\\", \\"name\\": \\"$PIPELINERUN_NAME\\", \\"uid\\": \\"$PIPELINERUN_UID\\" }]}}"\necho -n $PIPELINERUN_NAME > /tekton/results/container-registry-secret\n\necho "Determine if Image Already Exists"\n# Build the image when image does not exists or rebuild is set to true\nif ! oc image info $IMAGE_URL &>/dev/null || [ "$REBUILD" == "true" ] || [ "$SKIP_CHECKS" == "false" ]; then\n  echo -n "true" > /tekton/results/build\nelse\n  echo -n "false" > /tekton/results/build\nfi\n',
                 },
@@ -1159,7 +1159,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
                   command: ['sh'],
                   image: 'quay.io/redhat-appstudio/cosign:v1.13.1',
                   name: 'show-sbom',
-                  resources: {},
+                  computeResources: {},
                 },
               ],
             },
@@ -1247,7 +1247,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
                   image:
                     'registry.redhat.io/openshift4/ose-cli:v4.12@sha256:9f0cdc00b1b1a3c17411e50653253b9f6bb5329ea4fb82ad983790a6dbf2d9ad',
                   name: 'appstudio-summary',
-                  resources: {},
+                  computeResources: {},
                   script:
                     '#!/usr/bin/env bash\necho\necho "Build Summary:"\necho\necho "Build repository: $GIT_URL"\nif [ "$BUILD_TASK_STATUS" == "Succeeded" ]; then\n  echo "Generated Image is in : $IMAGE_URL"\nfi\necho\noc annotate --overwrite pipelinerun $PIPELINERUN_NAME build.appstudio.openshift.io/repo=$GIT_URL\nif [ "$BUILD_TASK_STATUS" == "Succeeded" ]; then\n  oc annotate --overwrite pipelinerun $PIPELINERUN_NAME build.appstudio.openshift.io/image=$IMAGE_URL\nfi\necho End Summary\n\noc delete --ignore-not-found=true secret $PIPELINERUN_NAME\n',
                 },
@@ -1257,7 +1257,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         },
       },
       startTime: '2023-06-18T12:43:27Z',
-      pipelineResults: [
+      results: [
         {
           name: 'IMAGE_URL',
           value:
@@ -1300,7 +1300,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-show-sbom:0.1@sha256:050bab50254e0377c68d63b6b679decfc655e30cad9ce4b0407fc8468852008d',
               kind: 'Task',
               name: 'show-sbom',
@@ -1329,7 +1329,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-summary:0.1@sha256:9e21e57456c026c15765db23b986e47fc1394fa5d4823d3038b697971dd1a2bd',
               kind: 'Task',
               name: 'summary',
@@ -1473,7 +1473,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-init:0.1@sha256:0eb72d475b171056373384d99dffc9e331264e7f181e50b20e337457d5b87857',
               kind: 'Task',
               name: 'init',
@@ -1493,7 +1493,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
             ],
             runAfter: ['init'],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-git-clone:0.1@sha256:458f4853a01c3273bd76076ac1b015d5f901e70fb4b776f788b577adb25bf5f8',
               kind: 'Task',
               name: 'git-clone',
@@ -1526,7 +1526,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
             ],
             runAfter: ['clone-repository'],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-prefetch-dependencies:0.1@sha256:a7f4bb77c2e3949fa782f45c8ac9aa7f91cdde45dbc8ad408770eb902d830a0a',
               kind: 'Task',
               name: 'prefetch-dependencies',
@@ -1580,7 +1580,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
             ],
             runAfter: ['prefetch-dependencies'],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.1@sha256:0852e61c1018d7f7a47ac2bd63fbda1d3d2247392624c2176ec341e343386b7c',
               kind: 'Task',
               name: 'buildah',
@@ -1617,7 +1617,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
             ],
             runAfter: ['build-container'],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-inspect-image:0.1@sha256:f7f3f86256f12d151463133d6c4ffc667087a87281ff2bc67c53c29f6463cd99',
               kind: 'Task',
               name: 'inspect-image',
@@ -1640,7 +1640,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
             name: 'label-check',
             runAfter: ['inspect-image'],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-label-check:0.1@sha256:76dee4b8c534986f98ab7d6e89aea14582faf0f1128a09a7f058a4f059d0fcf0',
               kind: 'Task',
               name: 'label-check',
@@ -1669,7 +1669,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
             ],
             runAfter: ['inspect-image'],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-label-check:0.1@sha256:76dee4b8c534986f98ab7d6e89aea14582faf0f1128a09a7f058a4f059d0fcf0',
               kind: 'Task',
               name: 'label-check',
@@ -1697,7 +1697,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-deprecated-image-check:0.2@sha256:f6ad9c9b2a019d28e712287cf3cb5fe42df3078a02af0db75f0e76e6060063ca',
               kind: 'Task',
               name: 'deprecated-image-check',
@@ -1734,7 +1734,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
             ],
             runAfter: ['build-container'],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1@sha256:e654ebb13c0b6d98cde388dfd33e258b7368eea5a5a37f3b2edfef7a3e23ffc2',
               kind: 'Task',
               name: 'clair-scan',
@@ -1757,7 +1757,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
             ],
             runAfter: ['clone-repository'],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-sast-snyk-check:0.1@sha256:1bafbb8bb1f41985be67a622080b022d2a6ff8b51b606f7002069df7e79d0cff',
               kind: 'Task',
               name: 'sast-snyk-check',
@@ -1799,7 +1799,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
             ],
             runAfter: ['build-container'],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-clamav-scan:0.1@sha256:2317e03a1bc713cbfb1f7ad40b3bec587f00ec55ca6a6ae2fc33f921908c6d96',
               kind: 'Task',
               name: 'clamav-scan',
@@ -1826,7 +1826,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
             ],
             runAfter: ['build-container'],
             taskRef: {
-              bundle:
+              resolver:
                 'quay.io/redhat-appstudio-tekton-catalog/task-sbom-json-check:0.1@sha256:3fe90c210a4df9c98d5a32a2eeeaa36ca4a5c8a199d56b512076ffca9d3db483',
               kind: 'Task',
               name: 'sbom-json-check',
@@ -1959,7 +1959,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2022,7 +2022,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2090,12 +2090,12 @@ export const pipelineWithCommits: PipelineRunKind[] = [
         },
       ],
       pipelineRef: {
-        bundle:
+        resolver:
           'quay.io/redhat-appstudio/build-templates-bundle:ab259a6fef091698b0fc145537338fa78f521c1f',
         name: 'docker-build',
       },
-      serviceAccountName: 'appstudio-pipeline',
-      timeout: '1h0m0s',
+      taskRunTemplate: { serviceAccountName: 'appstudio-pipeline' },
+      timeouts: { pipeline: '1h0m0s' },
       workspaces: [
         {
           name: 'workspace',
@@ -2122,7 +2122,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2164,7 +2164,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2204,7 +2204,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2245,7 +2245,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2286,7 +2286,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2316,7 +2316,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2346,7 +2346,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2376,7 +2376,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2405,7 +2405,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2435,7 +2435,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2464,7 +2464,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2493,7 +2493,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2512,7 +2512,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2531,7 +2531,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2563,7 +2563,7 @@ export const pipelineWithCommits: PipelineRunKind[] = [
 
 export const pipelineWithoutCommits: PipelineRunKind[] = [
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2579,7 +2579,7 @@ export const pipelineWithoutCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2598,7 +2598,7 @@ export const pipelineWithoutCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2614,7 +2614,7 @@ export const pipelineWithoutCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2633,7 +2633,7 @@ export const pipelineWithoutCommits: PipelineRunKind[] = [
     spec: {},
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     apiGroup: 'tekton.dev',
     metadata: {
@@ -2671,7 +2671,7 @@ export const mockCommits: Commit[] = [
 export const mockPLRs: PipelineRunKind[] = [
   {
     kind: 'PipelineRun',
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     metadata: {
       creationTimestamp: '2022-08-04T16:23:43Z',
       finalizers: Array['chains.tekton.dev/pipelinerun'],
@@ -2694,7 +2694,7 @@ export const mockPLRs: PipelineRunKind[] = [
   },
   {
     kind: 'PipelineRun',
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     metadata: {
       creationTimestamp: '2022-08-04T16:23:43Z',
       finalizers: Array['chains.tekton.dev/pipelinerun'],
@@ -2717,7 +2717,7 @@ export const mockPLRs: PipelineRunKind[] = [
   },
   {
     kind: 'PipelineRun',
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     metadata: {
       creationTimestamp: '2022-08-04T16:23:43Z',
       finalizers: Array['chains.tekton.dev/pipelinerun'],

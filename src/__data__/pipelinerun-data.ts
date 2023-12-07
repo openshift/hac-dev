@@ -1,4 +1,4 @@
-import { PipelineRunKind, PipelineSpec } from '../types';
+import { PipelineRunKind, PipelineRunKindV1, PipelineSpec } from '../types';
 
 const samplePipelineSpec: PipelineSpec = {
   params: [
@@ -22,7 +22,7 @@ const samplePipelineSpec: PipelineSpec = {
           {
             image: 'alpine',
             name: 'generate-first',
-            resources: {},
+            computeResources: {},
             script: 'echo -n "suffix" > $(results.first.path)\n',
           },
         ],
@@ -43,7 +43,7 @@ const samplePipelineSpec: PipelineSpec = {
           {
             image: 'alpine',
             name: 'generate-second',
-            resources: {},
+            computeResources: {},
             script: 'sleep 30\necho -n "suffix" > $(results.two.path)\n',
           },
         ],
@@ -64,7 +64,7 @@ const samplePipelineSpec: PipelineSpec = {
           {
             image: 'alpine',
             name: 'generate-suffix',
-            resources: {},
+            computeResources: {},
             script: 'echo -n "suffix" > $(results.suffix.path)\n',
           },
         ],
@@ -90,7 +90,7 @@ const samplePipelineSpec: PipelineSpec = {
           {
             image: 'alpine',
             name: 'do-something',
-            resources: {},
+            computeResources: {},
             script: 'echo "$(params.arg)" | grep "prefix:suffix"\n',
           },
         ],
@@ -116,7 +116,7 @@ const samplePipelineSpec: PipelineSpec = {
           {
             image: 'alpine',
             name: 'do-something',
-            resources: {},
+            computeResources: {},
             script: 'echo "$(params.arg)" | grep "prefix:suffix"\n',
           },
         ],
@@ -150,7 +150,7 @@ const sampleLabels = {
 };
 
 const samplePipelineRun: PipelineRunKind = {
-  apiVersion: 'tekton.dev/v1beta1',
+  apiVersion: 'tekton.dev/v1',
   kind: 'PipelineRun',
   metadata: {
     creationTimestamp: '2022-11-28T12:08:22Z',
@@ -168,8 +168,8 @@ const samplePipelineRun: PipelineRunKind = {
       },
     ],
     pipelineSpec: samplePipelineSpec,
-    serviceAccountName: 'appstudio-pipeline',
-    timeout: '1h0m0s',
+    taskRunTemplate: { serviceAccountName: 'appstudio-pipeline' },
+    timeouts: { pipeline: '1h0m0s' },
   },
 };
 
@@ -255,13 +255,13 @@ export const testPipelineRuns: TestPipelineRuns = {
                 {
                   image: 'alpine',
                   name: 'generate-first',
-                  resources: {},
+                  computeResources: {},
                   script: 'echo -n "suffix" > /tekton/results/first\n',
                 },
                 {
                   image: 'alpine',
                   name: 'step-do-something',
-                  resources: {},
+                  computeResources: {},
                   script: 'echo -n "suffix" > /tekton/results/first\n',
                 },
               ],
@@ -329,7 +329,7 @@ export const testPipelineRuns: TestPipelineRuns = {
                 {
                   image: 'alpine',
                   name: 'do-something',
-                  resources: {},
+                  computeResources: {},
                   script: 'echo "prefix:suffix" | grep "prefix:suffix"\n',
                 },
               ],
@@ -378,7 +378,7 @@ export const testPipelineRuns: TestPipelineRuns = {
                 {
                   image: 'alpine',
                   name: 'do-something',
-                  resources: {},
+                  computeResources: {},
                   script: 'echo "prefix:suffix:suffix" | grep "prefix:suffix"\n',
                 },
               ],
@@ -417,7 +417,7 @@ export const testPipelineRuns: TestPipelineRuns = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'first',
                 type: 'string',
@@ -435,7 +435,7 @@ export const testPipelineRuns: TestPipelineRuns = {
                 {
                   image: 'alpine',
                   name: 'generate-first',
-                  resources: {},
+                  computeResources: {},
                   script: 'echo -n "suffix" > /tekton/results/first\n',
                 },
               ],
@@ -474,7 +474,7 @@ export const testPipelineRuns: TestPipelineRuns = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'suffix',
                 type: 'string',
@@ -492,7 +492,7 @@ export const testPipelineRuns: TestPipelineRuns = {
                 {
                   image: 'alpine',
                   name: 'generate-suffix',
-                  resources: {},
+                  computeResources: {},
                   script: 'echo -n "suffix" > /tekton/results/suffix\n',
                 },
               ],
@@ -531,7 +531,7 @@ export const testPipelineRuns: TestPipelineRuns = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'two',
                 type: 'string',
@@ -549,7 +549,7 @@ export const testPipelineRuns: TestPipelineRuns = {
                 {
                   image: 'alpine',
                   name: 'generate-second',
-                  resources: {},
+                  computeResources: {},
                   script: 'sleep 30\necho -n "suffix" > /tekton/results/two\n',
                 },
               ],
@@ -560,7 +560,7 @@ export const testPipelineRuns: TestPipelineRuns = {
     },
   },
   [DataState.SKIPPED]: {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     metadata: {
       name: 'when-expression-pipeline-cx05c9',
@@ -579,16 +579,8 @@ export const testPipelineRuns: TestPipelineRuns = {
       pipelineRef: {
         name: 'when-expression-pipeline',
       },
-      resources: [
-        {
-          name: 'source-repo',
-          resourceRef: {
-            name: 'pipeline-git',
-          },
-        },
-      ],
-      serviceAccountName: 'appstudio-pipeline',
-      timeout: '1h0m0s',
+      taskRunTemplate: { serviceAccountName: 'appstudio-pipeline' },
+      timeouts: '1h0m0s',
     },
     status: {
       completionTime: '2021-01-13T14:34:19Z',
@@ -609,23 +601,9 @@ export const testPipelineRuns: TestPipelineRuns = {
             type: 'string',
           },
         ],
-        resources: [
-          {
-            name: 'source-repo',
-            type: 'git',
-          },
-        ],
         tasks: [
           {
             name: 'first-create-file',
-            resources: {
-              outputs: [
-                {
-                  name: 'workspace',
-                  resource: 'source-repo',
-                },
-              ],
-            },
             taskRef: {
               kind: 'Task',
               name: 'create-readme-file',
@@ -775,7 +753,7 @@ export const testPipelineRuns: TestPipelineRuns = {
                 {
                   image: 'alpine',
                   name: 'generate-first',
-                  resources: {},
+                  computeResources: {},
                   script: 'echo -n "suffix" > /tekton/results/first\n',
                 },
               ],
@@ -865,7 +843,7 @@ export const testPipelineRuns: TestPipelineRuns = {
                 {
                   image: 'alpine',
                   name: 'generate-first',
-                  resources: {},
+                  computeResources: {},
                   script: 'echo -n "suffix" > /tekton/results/first\n',
                 },
               ],
@@ -874,7 +852,7 @@ export const testPipelineRuns: TestPipelineRuns = {
         },
       },
     },
-  },
+  } as PipelineRunKindV1,
   [DataState.FAILED]: {
     ...samplePipelineRun,
     status: {

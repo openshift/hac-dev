@@ -1,7 +1,7 @@
-import { PipelineKind, PipelineRunKind } from '../../../types';
+import { PipelineKind, PipelineRunKindV1 } from '../../../types';
 
 export const testPipeline: PipelineKind = {
-  apiVersion: 'tekton.dev/v1beta1',
+  apiVersion: 'tekton.dev/v1',
   kind: 'Pipeline',
   metadata: {
     creationTimestamp: '2022-06-21T04:33:49Z',
@@ -138,14 +138,13 @@ export const testPipeline: PipelineKind = {
         },
       },
     ],
-    resources: [],
     workspaces: [],
     finally: [],
   },
 };
 
-export const testPipelineRun: PipelineRunKind = {
-  apiVersion: 'tekton.dev/v1beta1',
+export const testPipelineRun: PipelineRunKindV1 = {
+  apiVersion: 'tekton.dev/v1',
   kind: 'PipelineRun',
   metadata: {
     annotations: {
@@ -175,8 +174,8 @@ export const testPipelineRun: PipelineRunKind = {
     pipelineRef: {
       name: 'sum-and-multiply-pipeline',
     },
-    serviceAccountName: 'appstudio-pipeline',
-    timeout: '1h0m0s',
+    taskRunTemplate: { serviceAccountName: 'appstudio-pipeline' },
+    timeouts: { pipeline: '1h0m0s' },
   },
   status: {
     conditions: [
@@ -248,7 +247,7 @@ export const testPipelineRun: PipelineRunKind = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'sum',
                 value: '2',
@@ -279,7 +278,7 @@ export const testPipelineRun: PipelineRunKind = {
                 {
                   image: 'bash:latest',
                   name: 'sum',
-                  resources: {},
+                  computeResources: {},
                   script:
                     '#!/usr/bin/env bash\necho -n $(( "$(params.a)" + "$(params.b)" )) | tee $(results.sum.path)\n',
                 },
@@ -335,7 +334,7 @@ export const testPipelineRun: PipelineRunKind = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'product',
                 value: '1',
@@ -366,7 +365,7 @@ export const testPipelineRun: PipelineRunKind = {
                 {
                   image: 'bash:latest',
                   name: 'product',
-                  resources: {},
+                  computeResources: {},
                   script:
                     '#!/usr/bin/env bash\necho -n $(( "$(params.a)" * "$(params.b)" )) | tee $(results.product.path)\n',
                 },
@@ -440,7 +439,7 @@ export const testPipelineRun: PipelineRunKind = {
                 {
                   image: 'bash:latest',
                   name: 'sum',
-                  resources: {},
+                  computeResources: {},
                   script:
                     '#!/usr/bin/env bash\necho -n $(( "$(params.a)" + "$(params.b)" )) | tee $(results.sum.path)\n',
                 },
@@ -569,7 +568,7 @@ export const testPipelineRun: PipelineRunKind = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'TEST_OUTPUT',
               value:
@@ -601,7 +600,7 @@ export const testPipelineRun: PipelineRunKind = {
               {
                 image: 'bash:latest',
                 name: 'sum',
-                resources: {},
+                computeResources: {},
               },
             ],
           },
@@ -639,7 +638,7 @@ export const testPipelineRun: PipelineRunKind = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'TEST_OUTPUT',
               value:
@@ -671,7 +670,7 @@ export const testPipelineRun: PipelineRunKind = {
               {
                 image: 'bash:latest',
                 name: 'product',
-                resources: {},
+                computeResources: {},
               },
             ],
           },
@@ -701,7 +700,7 @@ export const testPipelineRun: PipelineRunKind = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'TEST_OUTPUT',
               value:
@@ -733,7 +732,7 @@ export const testPipelineRun: PipelineRunKind = {
               {
                 image: 'bash:latest',
                 name: 'sum',
-                resources: {},
+                computeResources: {},
               },
             ],
           },
@@ -789,7 +788,7 @@ export const testPipelineRun: PipelineRunKind = {
                 command: ['sh'],
                 image: 'quay.io/redhat-appstudio/cosign:v1.13.1',
                 name: 'show-sbom',
-                resources: {},
+                computeResources: {},
               },
             ],
           },

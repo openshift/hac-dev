@@ -5,9 +5,8 @@ import {
   MatchLabels,
   Selector,
 } from '@openshift/dynamic-plugin-sdk-utils';
-// import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { PipelineRunLabel } from '../consts/pipelinerun';
-import { PipelineRunKind, TaskRunKind } from '../types';
+import { PipelineRunKindV1Beta1, TaskRunKindV1Beta1 } from '../types';
 
 // REST API spec
 // https://github.com/tektoncd/results/blob/main/docs/api/rest-api-spec.md
@@ -71,6 +70,8 @@ const EXP = (left: string, right: string, operator: string) => `${left} ${operat
 export const EQ = (left: string, right: string) => EXP(left, `"${right}"`, '==');
 export const NEQ = (left: string, right: string) => EXP(left, `"${right}"`, '!=');
 
+// TODO: switch to v1 once API is ready
+// https://github.com/tektoncd/community/pull/1055
 export enum DataType {
   PipelineRun = 'tekton.dev/v1beta1.PipelineRun',
   TaskRun = 'tekton.dev/v1beta1.TaskRun',
@@ -282,7 +283,7 @@ const getFilteredPipelineRuns = (
   nextPageToken?: string,
   cacheKey?: string,
 ) =>
-  getFilteredRecord<PipelineRunKind>(
+  getFilteredRecord<PipelineRunKindV1Beta1>(
     workspace,
     namespace,
     DataType.PipelineRun,
@@ -300,7 +301,7 @@ const getFilteredTaskRuns = (
   nextPageToken?: string,
   cacheKey?: string,
 ) =>
-  getFilteredRecord<TaskRunKind>(
+  getFilteredRecord<TaskRunKindV1Beta1>(
     workspace,
     namespace,
     DataType.TaskRun,

@@ -1,7 +1,8 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { ObjectMetadata } from '../shared/components/types';
-import { TektonResultsRun, TektonTaskSpec } from './coreTekton';
+import { TektonResultsRun } from './coreTekton';
 import { PipelineKind, PipelineSpec, WhenExpression } from './pipeline';
+import { TaskRunStatus, TaskRunStatusV1Beta1 } from './task-run';
 
 export type PLRTaskRunStep = {
   container: string;
@@ -23,23 +24,12 @@ export type PLRTaskRunStep = {
   };
 };
 
-export type PLRTaskRunDataStatus = {
-  completionTime?: string;
-  conditions: Condition[];
-  /** Can be empty */
-  podName: string;
-  startTime: string;
-  steps?: PLRTaskRunStep[];
-  taskSpec?: TektonTaskSpec;
-  taskResults?: { name: string; type?: string; value: string }[];
-};
-
 export type PLRTaskRunData = {
   pipelineTaskName: string;
-  status: PLRTaskRunDataStatus;
+  status: TaskRunStatus;
 };
 
-export type PLRTaskRuns = {
+type PLRTaskRuns = {
   [taskRunName: string]: PLRTaskRunData;
 };
 
@@ -107,7 +97,7 @@ export type PipelineRunReferenceResource = {
     name: string;
   };
 };
-export type PipelineRunResource = PipelineRunReferenceResource | PipelineRunEmbeddedResource;
+type PipelineRunResource = PipelineRunReferenceResource | PipelineRunEmbeddedResource;
 
 export type PipelineRunWorkspace = {
   name: string;
@@ -142,10 +132,62 @@ export type PipelineRunStatus = {
     reason?: string;
     whenExpressions?: WhenExpression[];
   }[];
+  results?: TektonResultsRun[];
+};
+
+export type PipelineRunKindV1 = K8sResourceCommon & {
+  spec: {
+    pipelineRef?: { name: string; resolver?: string };
+    pipelineSpec?: PipelineSpec;
+    params?: PipelineRunParam[];
+    workspaces?: PipelineRunWorkspace[];
+    taskRunTemplate?: {
+      serviceAccountName?: string;
+    };
+    timeout?: {
+      pipeline: string;
+      tasks: string;
+      finally: string;
+    };
+    // Only used in a single case - cancelling a pipeline; should not be copied between PLRs
+    status?: 'StoppedRunFinally' | 'CancelledRunFinally' | 'PipelineRunPending';
+  };
+  status?: PipelineRunStatus;
+};
+
+/**
+ * @deprecated
+ */
+type PLRTaskRunsV1Beta1 = {
+  [taskRunName: string]: {
+    pipelineTaskName: string;
+    status: TaskRunStatusV1Beta1;
+  };
+};
+
+/**
+ * @deprecated
+ */
+export type PipelineRunStatusV1Beta1 = {
+  succeededCondition?: string;
+  creationTimestamp?: string;
+  conditions?: Condition[];
+  startTime?: string;
+  completionTime?: string;
+  taskRuns?: PLRTaskRunsV1Beta1;
+  pipelineSpec: PipelineSpec;
+  skippedTasks?: {
+    name: string;
+    reason?: string;
+    whenExpressions?: WhenExpression[];
+  }[];
   pipelineResults?: TektonResultsRun[];
 };
 
-export type PipelineRunKind = K8sResourceCommon & {
+/**
+ * @deprecated
+ */
+export type PipelineRunKindV1Beta1 = K8sResourceCommon & {
   spec: {
     pipelineRef?: { name: string; bundle?: string };
     pipelineSpec?: PipelineSpec;
@@ -157,8 +199,10 @@ export type PipelineRunKind = K8sResourceCommon & {
     // Only used in a single case - cancelling a pipeline; should not be copied between PLRs
     status?: 'StoppedRunFinally' | 'CancelledRunFinally' | 'PipelineRunPending';
   };
-  status?: PipelineRunStatus;
+  status?: PipelineRunStatusV1Beta1;
 };
+
+export type PipelineRunKind = PipelineRunKindV1 | PipelineRunKindV1Beta1;
 
 export type PipelineWithLatest = PipelineKind & {
   latestRun?: PipelineRunKind;

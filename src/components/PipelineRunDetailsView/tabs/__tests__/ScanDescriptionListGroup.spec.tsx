@@ -26,7 +26,7 @@ const mockTaskRun = {
     },
   },
   status: {
-    taskResults: [
+    results: [
       {
         name: 'CVE_SCAN_RESULT',
         value: '{"vulnerabilities":{"critical":1,"high":2,"medium":3,"low":4}}',
@@ -45,7 +45,7 @@ const mockTaskRun2 = {
     },
   },
   status: {
-    taskResults: [
+    results: [
       {
         name: 'CVE_SCAN_RESULT',
         value: '{"vulnerabilities":{"critical":1,"high":2,"medium":3,"low":4}}',

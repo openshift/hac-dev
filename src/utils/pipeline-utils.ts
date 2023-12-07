@@ -5,8 +5,9 @@ import { PipelineRunModel } from '../models';
 import {
   Condition,
   PipelineRunKind,
-  PLRTaskRunData,
+  PipelineRunKindV1Beta1,
   TaskRunKind,
+  TaskRunKindV1Beta1,
   TektonResourceLabel,
   TektonResultsRun,
 } from '../types';
@@ -97,6 +98,13 @@ export const getRandomChars = (len = 6): string => {
     .slice(2, len + 2);
 };
 
+export const isPipelineV1Beta1 = (
+  pipeiline: PipelineRunKind,
+): pipeiline is PipelineRunKindV1Beta1 => pipeiline?.apiVersion === 'tekton.dev/v1beta1';
+
+export const isTaskV1Beta1 = (task: TaskRunKind): task is TaskRunKindV1Beta1 =>
+  task?.apiVersion === 'tekton.dev/v1beta1';
+
 export const getPipelineRunData = (
   latestRun: PipelineRunKind,
   options?: { generateName: boolean },
@@ -111,7 +119,6 @@ export const getPipelineRunData = (
     latestRun.metadata.generateName ||
     latestRun.metadata.name;
 
-  const resources = latestRun?.spec.resources;
   const workspaces = latestRun?.spec.workspaces;
   const params = latestRun?.spec.params;
 
@@ -122,6 +129,11 @@ export const getPipelineRunData = (
       [preferredNameAnnotation]: latestRun?.metadata?.generateName || pipelineName,
     },
   );
+
+  const resolver = isPipelineV1Beta1(latestRun)
+    ? latestRun?.spec.pipelineRef?.bundle
+    : latestRun?.spec.pipelineRef?.resolver;
+
   //should not propagate this last-applied-configuration to a new pipelinerun.
   delete annotations['kubectl.kubernetes.io/last-applied-configuration'];
 
@@ -145,17 +157,21 @@ export const getPipelineRunData = (
       ...(latestRun?.spec.pipelineRef && {
         pipelineRef: {
           name: latestRun?.spec.pipelineRef.name,
-          ...(latestRun?.spec.pipelineRef.bundle && {
-            bundle: latestRun?.spec.pipelineRef.bundle,
-          }),
+          ...(resolver &&
+            (isPipelineV1Beta1(latestRun)
+              ? {
+                  bundle: resolver,
+                }
+              : {
+                  resolver,
+                })),
         },
       }),
-      resources,
       ...(params && { params }),
       workspaces,
       status: null,
     },
-  };
+  } as PipelineRunKind;
   return newPipelineRun;
 };
 
@@ -252,14 +268,15 @@ export const taskResultsStatus = (taskResults: TektonResultsRun[]): runStatus =>
   return runStatus.Succeeded;
 };
 
-export const taskRunStatus = (taskRun: TaskRunKind | PLRTaskRunData): runStatus => {
+export const taskRunStatus = (taskRun: TaskRunKind): runStatus => {
   if (!taskRun?.status?.conditions?.length) {
     return runStatus.Pending;
   }
 
   const status = conditionsRunStatus(taskRun.status.conditions);
+  const results = isTaskV1Beta1(taskRun) ? taskRun.status?.taskResults : taskRun.status?.results;
 
-  return status === runStatus.Succeeded ? taskResultsStatus(taskRun.status.taskResults) : status;
+  return status === runStatus.Succeeded ? taskResultsStatus(results) : status;
 };
 
 export const pipelineRunStatus = (pipelineRun: PipelineRunKind): runStatus =>

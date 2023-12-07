@@ -32,7 +32,7 @@ const SnapshotPipelineRunTab: React.FC<React.PropsWithChildren<SnapshotPipelineR
     ),
   );
 
-  const SnapshotPipelineRuns: PipelineRunKind[] = React.useMemo(() => {
+  const SnapshotPipelineRuns = React.useMemo(() => {
     if (loaded && !LoadError) {
       return pipelineRuns.filter(
         (plr) =>

@@ -10,6 +10,8 @@ import {
   pipelineRunStatusToGitOpsStatus,
   runStatus,
   taskName,
+  isPipelineV1Beta1,
+  isTaskV1Beta1,
 } from '../pipeline-utils';
 
 const samplePipelineRun = testPipelineRuns[DataState.SUCCEEDED];
@@ -95,6 +97,21 @@ describe('getPipelineRunData', () => {
     const runData = getPipelineRunData(samplePipelineRun);
     expect(runData.metadata.generateName).not.toBeDefined();
     expect(runData.metadata.name).toBeDefined();
+  });
+
+  it('should use legacy resolver format for beta1 pipelineruns', () => {
+    const pipelineRun = {
+      ...samplePipelineRun,
+      apiVersion: 'tekton.dev/v1beta1',
+      spec: {
+        pipelineRef: {
+          name: 'test',
+          bundle: 'test',
+        },
+      },
+    };
+    const runData = getPipelineRunData(pipelineRun);
+    expect(runData.spec.pipelineRef).toEqual({ name: 'test', bundle: 'test' });
   });
 });
 
@@ -215,5 +232,19 @@ describe('taskName', () => {
         spec: { taskRef: { params: [{ name: 'myparam', value: 'my-task' }] } },
       } as TaskRunKind),
     ).toBe(undefined);
+  });
+});
+
+describe('isTaskV1Beta1', () => {
+  it('should identify correct api version', () => {
+    expect(isTaskV1Beta1({ apiVersion: 'tekton.dev/v1beta1' } as any)).toBe(true);
+    expect(isTaskV1Beta1({ apiVersion: 'tekton.dev/v1' } as any)).toBe(false);
+  });
+});
+
+describe('isPipelineV1Beta1', () => {
+  it('should identify correct api version', () => {
+    expect(isPipelineV1Beta1({ apiVersion: 'tekton.dev/v1beta1' } as any)).toBe(true);
+    expect(isPipelineV1Beta1({ apiVersion: 'tekton.dev/v1' } as any)).toBe(false);
   });
 });

@@ -1,5 +1,5 @@
 export const mockPipelineRun = {
-  apiVersion: 'tekton.dev/v1beta1',
+  apiVersion: 'tekton.dev/v1',
   kind: 'PipelineRun',
   metadata: {
     generateName: 'human-resources-clkq-on-pull-request-',
@@ -629,13 +629,13 @@ export const mockPipelineRun = {
   status: {
     childReferences: [
       {
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         kind: 'TaskRun',
         name: 'human-resources-clkq-on-pull-request-xn5nd-init',
         pipelineTaskName: 'init',
       },
       {
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         kind: 'TaskRun',
         name: 'human-resources-clkq-on-pull-request-xn5nd-clone-repository',
         pipelineTaskName: 'clone-repository',
@@ -648,7 +648,7 @@ export const mockPipelineRun = {
         ],
       },
       {
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         kind: 'TaskRun',
         name: 'human-resources-clkq-on-pull-request-xn5nd-build-container',
         pipelineTaskName: 'build-container',
@@ -661,7 +661,7 @@ export const mockPipelineRun = {
         ],
       },
       {
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         kind: 'TaskRun',
         name: 'human-resources-clkq-on-pull-request-xn5nd-sanity-inspect-image',
         pipelineTaskName: 'sanity-inspect-image',
@@ -674,7 +674,7 @@ export const mockPipelineRun = {
         ],
       },
       {
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         kind: 'TaskRun',
         name: 'human-resources-clkq-on-pull-request-xn5nd-sanity-label-check',
         pipelineTaskName: 'sanity-label-check',
@@ -687,7 +687,7 @@ export const mockPipelineRun = {
         ],
       },
       {
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         kind: 'TaskRun',
         name: 'hum1e2c0e3126f75d552fc611f4aeae38ab-sanity-optional-label-check',
         pipelineTaskName: 'sanity-optional-label-check',
@@ -700,7 +700,7 @@ export const mockPipelineRun = {
         ],
       },
       {
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         kind: 'TaskRun',
         name: 'hum1e2c0e3126f75d552fc611f4aeae38ab-deprecated-base-image-check',
         pipelineTaskName: 'deprecated-base-image-check',
@@ -713,7 +713,7 @@ export const mockPipelineRun = {
         ],
       },
       {
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         kind: 'TaskRun',
         name: 'human-resources-clkq-on-pull-request-xn5nd-clair-scan',
         pipelineTaskName: 'clair-scan',
@@ -726,7 +726,7 @@ export const mockPipelineRun = {
         ],
       },
       {
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         kind: 'TaskRun',
         name: 'human-resources-clkq-on-pull-request-xn5nd-clamav-scan',
         pipelineTaskName: 'clamav-scan',
@@ -739,7 +739,7 @@ export const mockPipelineRun = {
         ],
       },
       {
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         kind: 'TaskRun',
         name: 'human-resources-clkq-on-pull-request-xn5nd-sbom-json-check',
         pipelineTaskName: 'sbom-json-check',
@@ -752,7 +752,7 @@ export const mockPipelineRun = {
         ],
       },
       {
-        apiVersion: 'tekton.dev/v1beta1',
+        apiVersion: 'tekton.dev/v1',
         kind: 'TaskRun',
         name: 'human-resources-clkq-on-pull-request-xn5nd-show-summary',
         pipelineTaskName: 'show-summary',
@@ -1060,7 +1060,7 @@ export const mockPipelineRun = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'build',
                 type: 'string',
@@ -1248,7 +1248,7 @@ export const mockPipelineRun = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'commit',
                 type: 'string',
@@ -1678,7 +1678,7 @@ export const mockPipelineRun = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'JAVA_COMMUNITY_DEPENDENCIES',
                 type: 'string',
@@ -1825,7 +1825,7 @@ export const mockPipelineRun = {
                   },
                 ],
                 name: '',
-                resources: {},
+                computeResources: {},
               },
               steps: [
                 {
@@ -2070,7 +2070,7 @@ export const mockPipelineRun = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'BASE_IMAGE',
                 type: 'string',
@@ -2245,7 +2245,7 @@ export const mockPipelineRun = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 type: 'string',
@@ -2379,7 +2379,7 @@ export const mockPipelineRun = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 type: 'string',
@@ -2528,7 +2528,7 @@ export const mockPipelineRun = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'PYXIS_HTTP_CODE',
                 type: 'string',
@@ -2721,7 +2721,7 @@ export const mockPipelineRun = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'CVE_SCAN_RESULT',
                 type: 'string',
@@ -2979,7 +2979,7 @@ export const mockPipelineRun = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 type: 'string',
@@ -3017,7 +3017,7 @@ export const mockPipelineRun = {
                   image: 'quay.io/redhat-appstudio/clamav-db:latest',
                   imagePullPolicy: 'Always',
                   name: 'database',
-                  resources: {},
+                  computeResources: {},
                   script: '#!/usr/bin/env bash\ncp -r /var/lib/clamav/* /tmp/clamdb\n',
                   volumeMounts: [
                     {
@@ -3196,7 +3196,7 @@ export const mockPipelineRun = {
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 type: 'string',
@@ -3355,7 +3355,7 @@ export const mockPipelineRun = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'commit',
               type: 'string',
@@ -3643,7 +3643,7 @@ export const mockPipelineRun = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'PYXIS_HTTP_CODE',
               type: 'string',
@@ -3771,7 +3771,7 @@ export const mockPipelineRun = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'BASE_IMAGE',
               type: 'string',
@@ -3950,7 +3950,7 @@ export const mockPipelineRun = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'CVE_SCAN_RESULT',
               type: 'string',
@@ -4084,7 +4084,7 @@ export const mockPipelineRun = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'TEST_OUTPUT',
               type: 'string',
@@ -4188,7 +4188,7 @@ export const mockPipelineRun = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'TEST_OUTPUT',
               type: 'string',
@@ -4292,7 +4292,7 @@ export const mockPipelineRun = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'build',
               type: 'string',
@@ -4480,7 +4480,7 @@ export const mockPipelineRun = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'TEST_OUTPUT',
               type: 'string',
@@ -4518,7 +4518,7 @@ export const mockPipelineRun = {
                 image: 'quay.io/redhat-appstudio/clamav-db:latest',
                 imagePullPolicy: 'Always',
                 name: 'database',
-                resources: {},
+                computeResources: {},
                 script: '#!/usr/bin/env bash\ncp -r /var/lib/clamav/* /tmp/clamdb\n',
                 volumeMounts: [
                   {
@@ -4812,7 +4812,7 @@ export const mockPipelineRun = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'JAVA_COMMUNITY_DEPENDENCIES',
               type: 'string',
@@ -4959,7 +4959,7 @@ export const mockPipelineRun = {
                 },
               ],
               name: '',
-              resources: {},
+              computeResources: {},
             },
             steps: [
               {
@@ -5143,7 +5143,7 @@ export const mockPipelineRun = {
               },
             },
           ],
-          taskResults: [
+          results: [
             {
               name: 'TEST_OUTPUT',
               type: 'string',
@@ -5229,7 +5229,7 @@ export const mockPipelineRun = {
 
 export const mockTaskRuns = [
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -5268,7 +5268,7 @@ export const mockTaskRuns = [
       namespace: 'test-tenant',
       ownerReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           blockOwnerDeletion: true,
           controller: true,
           kind: 'PipelineRun',
@@ -5367,7 +5367,7 @@ export const mockTaskRuns = [
           },
         },
       ],
-      taskResults: [
+      results: [
         {
           name: 'commit',
           type: 'string',
@@ -5600,7 +5600,7 @@ export const mockTaskRuns = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -5636,7 +5636,7 @@ export const mockTaskRuns = [
       namespace: 'test-tenant',
       ownerReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           blockOwnerDeletion: true,
           controller: true,
           kind: 'PipelineRun',
@@ -5741,7 +5741,7 @@ export const mockTaskRuns = [
           },
         },
       ],
-      taskResults: [
+      results: [
         {
           name: 'PYXIS_HTTP_CODE',
           type: 'string',
@@ -5830,7 +5830,7 @@ export const mockTaskRuns = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -5866,7 +5866,7 @@ export const mockTaskRuns = [
       namespace: 'test-tenant',
       ownerReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           blockOwnerDeletion: true,
           controller: true,
           kind: 'PipelineRun',
@@ -5964,7 +5964,7 @@ export const mockTaskRuns = [
           },
         },
       ],
-      taskResults: [
+      results: [
         {
           name: 'BASE_IMAGE',
           type: 'string',
@@ -6075,7 +6075,7 @@ export const mockTaskRuns = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -6111,7 +6111,7 @@ export const mockTaskRuns = [
       namespace: 'test-tenant',
       ownerReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           blockOwnerDeletion: true,
           controller: true,
           kind: 'PipelineRun',
@@ -6227,7 +6227,7 @@ export const mockTaskRuns = [
           },
         },
       ],
-      taskResults: [
+      results: [
         {
           name: 'CVE_SCAN_RESULT',
           type: 'string',
@@ -6321,7 +6321,7 @@ export const mockTaskRuns = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -6357,7 +6357,7 @@ export const mockTaskRuns = [
       namespace: 'test-tenant',
       ownerReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           blockOwnerDeletion: true,
           controller: true,
           kind: 'PipelineRun',
@@ -6446,7 +6446,7 @@ export const mockTaskRuns = [
           },
         },
       ],
-      taskResults: [
+      results: [
         {
           name: 'TEST_OUTPUT',
           type: 'string',
@@ -6511,7 +6511,7 @@ export const mockTaskRuns = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -6547,7 +6547,7 @@ export const mockTaskRuns = [
       namespace: 'test-tenant',
       ownerReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           blockOwnerDeletion: true,
           controller: true,
           kind: 'PipelineRun',
@@ -6630,7 +6630,7 @@ export const mockTaskRuns = [
           },
         },
       ],
-      taskResults: [
+      results: [
         {
           name: 'TEST_OUTPUT',
           type: 'string',
@@ -6695,7 +6695,7 @@ export const mockTaskRuns = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -6731,7 +6731,7 @@ export const mockTaskRuns = [
       namespace: 'test-tenant',
       ownerReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           blockOwnerDeletion: true,
           controller: true,
           kind: 'PipelineRun',
@@ -6829,7 +6829,7 @@ export const mockTaskRuns = [
           },
         },
       ],
-      taskResults: [
+      results: [
         {
           name: 'build',
           type: 'string',
@@ -6941,7 +6941,7 @@ export const mockTaskRuns = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -6977,7 +6977,7 @@ export const mockTaskRuns = [
       namespace: 'test-tenant',
       ownerReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           blockOwnerDeletion: true,
           controller: true,
           kind: 'PipelineRun',
@@ -7108,7 +7108,7 @@ export const mockTaskRuns = [
           },
         },
       ],
-      taskResults: [
+      results: [
         {
           name: 'TEST_OUTPUT',
           type: 'string',
@@ -7146,7 +7146,7 @@ export const mockTaskRuns = [
             image: 'quay.io/redhat-appstudio/clamav-db:latest',
             imagePullPolicy: 'Always',
             name: 'database',
-            resources: {},
+            computeResources: {},
             script: '#!/usr/bin/env bash\ncp -r /var/lib/clamav/* /tmp/clamdb\n',
             volumeMounts: [
               {
@@ -7247,7 +7247,7 @@ export const mockTaskRuns = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -7283,7 +7283,7 @@ export const mockTaskRuns = [
       namespace: 'test-tenant',
       ownerReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           blockOwnerDeletion: true,
           controller: true,
           kind: 'PipelineRun',
@@ -7421,7 +7421,7 @@ export const mockTaskRuns = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -7457,7 +7457,7 @@ export const mockTaskRuns = [
       namespace: 'test-tenant',
       ownerReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           blockOwnerDeletion: true,
           controller: true,
           kind: 'PipelineRun',
@@ -7637,7 +7637,7 @@ export const mockTaskRuns = [
           },
         },
       ],
-      taskResults: [
+      results: [
         {
           name: 'JAVA_COMMUNITY_DEPENDENCIES',
           type: 'string',
@@ -7784,7 +7784,7 @@ export const mockTaskRuns = [
             },
           ],
           name: '',
-          resources: {},
+          computeResources: {},
         },
         steps: [
           {
@@ -7929,7 +7929,7 @@ export const mockTaskRuns = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'TaskRun',
     metadata: {
       annotations: {
@@ -7963,7 +7963,7 @@ export const mockTaskRuns = [
       namespace: 'test-tenant',
       ownerReferences: [
         {
-          apiVersion: 'tekton.dev/v1beta1',
+          apiVersion: 'tekton.dev/v1',
           blockOwnerDeletion: true,
           controller: true,
           kind: 'PipelineRun',
@@ -8049,7 +8049,7 @@ export const mockTaskRuns = [
           },
         },
       ],
-      taskResults: [
+      results: [
         {
           name: 'TEST_OUTPUT',
           type: 'string',

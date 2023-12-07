@@ -8,7 +8,7 @@ import {
 
 export const sampleBuildPipelines: PipelineRunKind[] = [
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     metadata: {
       name: '1-nodejs-2bwzn',
@@ -67,12 +67,12 @@ export const sampleBuildPipelines: PipelineRunKind[] = [
         },
       ],
       pipelineRef: {
-        bundle:
+        resolver:
           'quay.io/redhat-appstudio/build-templates-bundle:19cf17aa63a1c65eee897af8430dbb9c1682d77a',
         name: 'docker-build',
       },
-      serviceAccountName: 'appstudio-pipeline',
-      timeout: '1h0m0s',
+      taskRunTemplate: { serviceAccountName: 'appstudio-pipeline' },
+      timeouts: { pipeline: '1h0m0s' },
       workspaces: [
         {
           name: 'workspace',
@@ -141,7 +141,7 @@ export const sampleBuildPipelines: PipelineRunKind[] = [
                   image:
                     'registry.redhat.io/openshift4/ose-cli@sha256:e6b307c51374607294d1756b871d3c702251c396efdd44d4ef8db68e239339d3',
                   name: 'appstudio-summary',
-                  resources: {},
+                  computeResources: {},
                   script: [
                     '#!/usr/bin/env bash\necho\necho "App Studio Build Summary:"\necho\necho "Build repository: $(params.git-url)"\necho "Generated Image is in : $(params.image-url)"\necho\noc annotate pipelinerun $(params.pipeline-run-name) build.appstudio.openshift.io/repo=$(params.git-url)\noc annotate pipelinerun $(params.pipeline-run-name) build.appstudio.openshift.io/image=$(params.image-url)\n\necho "Output is in the following annotations:"\n\necho "Build Repo is in \'build.appstudio.openshift.io/repo\' "\necho \'oc get pr $(params.pipeline-run-name) -o jsonpath="{.metadata.annotations.build\\.appstudio\\.openshift\\.io/repo}"\'\n\necho "Build Image is in \'build.appstudio.openshift.io/image\' "\necho \'oc get pr $(params.pipeline-run-name) -o jsonpath="{.metadata.annotations.build\\.appstudio\\.openshift\\.io/image}"\'\n\necho End Summary\n',
                   ],
@@ -154,7 +154,7 @@ export const sampleBuildPipelines: PipelineRunKind[] = [
     },
   },
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     metadata: {
       name: '1-nodejs-2bwzn',
@@ -198,12 +198,12 @@ export const sampleBuildPipelines: PipelineRunKind[] = [
         },
       ],
       pipelineRef: {
-        bundle:
+        resolver:
           'quay.io/redhat-appstudio/build-templates-bundle:19cf17aa63a1c65eee897af8430dbb9c1682d77a',
         name: 'docker-build',
       },
-      serviceAccountName: 'appstudio-pipeline',
-      timeout: '1h0m0s',
+      taskRunTemplate: { serviceAccountName: 'appstudio-pipeline' },
+      timeouts: { pipeline: '1h0m0s' },
       workspaces: [
         {
           name: 'workspace',
@@ -225,7 +225,7 @@ export const sampleBuildPipelines: PipelineRunKind[] = [
 
 export const sampleTestPipelines: PipelineRunKind[] = [
   {
-    apiVersion: 'tekton.dev/v1beta1',
+    apiVersion: 'tekton.dev/v1',
     kind: 'PipelineRun',
     metadata: {
       annotations: {
@@ -289,11 +289,11 @@ export const sampleTestPipelines: PipelineRunKind[] = [
         },
       ],
       pipelineRef: {
-        bundle: 'quay.io/kpavic/test-bundle:component-pipeline-pass',
+        resolver: 'quay.io/kpavic/test-bundle:component-pipeline-pass',
         name: 'component-pipeline-pass',
       },
-      serviceAccountName: 'appstudio-pipeline',
-      timeout: '1h0m0s',
+      taskRunTemplate: { serviceAccountName: 'appstudio-pipeline' },
+      timeouts: { pipeline: '1h0m0s' },
     },
     status: {
       completionTime: '2022-11-19T11:41:15Z',
@@ -317,7 +317,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle: 'quay.io/kpavic/test-bundle:test-output',
+              resolver: 'quay.io/kpavic/test-bundle:test-output',
               kind: 'Task',
               name: 'test-output',
             },
@@ -331,7 +331,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle: 'quay.io/kpavic/test-bundle:test-output',
+              resolver: 'quay.io/kpavic/test-bundle:test-output',
               kind: 'Task',
               name: 'test-output',
             },
@@ -345,7 +345,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
               },
             ],
             taskRef: {
-              bundle: 'quay.io/kpavic/test-bundle:test-output',
+              resolver: 'quay.io/kpavic/test-bundle:test-output',
               kind: 'Task',
               name: 'test-output',
             },
@@ -387,7 +387,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 value:
@@ -413,7 +413,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
                 {
                   image: 'quay.io/redhat-appstudio/hacbs-test:stable',
                   name: '',
-                  resources: {},
+                  computeResources: {},
                 },
               ],
             },
@@ -452,7 +452,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 value:
@@ -478,7 +478,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
                 {
                   image: 'quay.io/redhat-appstudio/hacbs-test:stable',
                   name: '',
-                  resources: {},
+                  computeResources: {},
                 },
               ],
             },
@@ -517,7 +517,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
                 },
               },
             ],
-            taskResults: [
+            results: [
               {
                 name: 'TEST_OUTPUT',
                 value:
@@ -543,7 +543,7 @@ export const sampleTestPipelines: PipelineRunKind[] = [
                 {
                   image: 'quay.io/redhat-appstudio/hacbs-test:stable',
                   name: '',
-                  resources: {},
+                  computeResources: {},
                 },
               ],
             },
