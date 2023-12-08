@@ -1,15 +1,25 @@
 import React from 'react';
-import { FormGroup, TextInputTypes, Button, GridItem, Grid } from '@patternfly/react-core';
+import { FormGroup, TextInputTypes, GridItem, Grid } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
 import { useFormikContext } from 'formik';
+import { ButtonWithAccessTooltip } from '../../../components/ButtonWithAccessTooltip';
 import { useRemoteSecrets } from '../../../hooks/UseRemoteSecrets';
+import { RemoteSecretModel, SecretModel } from '../../../models';
 import { InputField, TextColumnField } from '../../../shared';
+import { AccessReviewResources } from '../../../types/rbac';
+import { useAccessReviewForModels } from '../../../utils/rbac';
 import { useModalLauncher } from '../../modal/ModalProvider';
 import { SecretModalLauncher } from '../../Secrets/SecretModalLauncher';
 import { getSupportedPartnerTaskSecrets } from '../../Secrets/utils/secret-utils';
 import { ImportFormValues } from '../utils/types';
 
+const accessReviewResources: AccessReviewResources = [
+  { model: RemoteSecretModel, verb: 'create' },
+  { model: SecretModel, verb: 'create' },
+];
+
 const SecretSection = () => {
+  const [canCreateSecret] = useAccessReviewForModels(accessReviewResources);
   const showModal = useModalLauncher();
   const { values, setFieldValue } = useFormikContext<ImportFormValues>();
 
@@ -61,7 +71,7 @@ const SecretSection = () => {
           );
         }}
       </TextColumnField>
-      <Button
+      <ButtonWithAccessTooltip
         isInline
         type="button"
         variant="link"
@@ -70,9 +80,11 @@ const SecretSection = () => {
         onClick={() =>
           showModal(SecretModalLauncher([...partnerTaskSecrets, ...values.newSecrets], onSubmit))
         }
+        isDisabled={!canCreateSecret}
+        tooltip="You don't have access to add a secret"
       >
         Add secret
-      </Button>
+      </ButtonWithAccessTooltip>
     </FormGroup>
   );
 };
