@@ -21,6 +21,7 @@ jest.mock('../../../../hooks/usePipelineRuns', () => ({
 
 jest.mock('../../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
+  useComponent: jest.fn().mockReturnValue([{ metadata: { name: { test } } }, true]),
 }));
 
 jest.mock('../../../../utils/workspace-context-utils', () => ({
@@ -31,13 +32,18 @@ jest.mock('../../../../hooks/useScanResults', () => ({
   usePLRVulnerabilities: jest.fn(() => ({ vulnerabilities: {}, fetchedPipelineRuns: [] })),
 }));
 
-jest.mock('react-router-dom', () => ({
-  Link: (props) => <a href={props.to}>{props.children}</a>,
-}));
-
 jest.mock('../../../../hooks/useSearchParam', () => ({
   useSearchParam: jest.fn(),
 }));
+
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
+  return {
+    ...actual,
+    Link: (props) => <a href={props.to}>{props.children}</a>,
+    useNavigate: jest.fn(),
+  };
+});
 
 configure({ testIdAttribute: 'data-test' });
 

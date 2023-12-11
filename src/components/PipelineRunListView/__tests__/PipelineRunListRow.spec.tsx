@@ -13,6 +13,11 @@ jest.mock('react-router-dom', () => {
   };
 });
 
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  useK8sWatchResource: () => [[{ metadata: { name: 'test-ns' } }], false],
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
+}));
+
 describe('Pipeline run Row', () => {
   it('should return - when pipelinerun is in running state ', () => {
     const runningPipelineRun = testPipelineRuns[DataState.RUNNING];

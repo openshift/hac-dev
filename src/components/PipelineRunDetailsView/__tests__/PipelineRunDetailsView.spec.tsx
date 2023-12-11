@@ -1,9 +1,10 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useK8sWatchResource, k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, fireEvent, screen, waitFor } from '@testing-library/react';
 import { DataState, testPipelineRuns } from '../../../__data__/pipelinerun-data';
+import { mockPipelineRuns } from '../../../components/ApplicationDetails/__data__/mock-pipeline-run';
 import { useAccessReviewForModel } from '../../../utils/rbac';
 import { routerRenderer } from '../../../utils/test-utils';
 import { PipelineRunDetailsView } from '../PipelineRunDetailsView';
@@ -54,7 +55,6 @@ jest.mock('../../../utils/rbac', () => ({
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useNavigateMock = useNavigate as jest.Mock;
-const mockK8sCreate = k8sCreateResource as jest.Mock;
 const useAccessReviewForModelMock = useAccessReviewForModel as jest.Mock;
 const useParamsMock = useParams as jest.Mock;
 
@@ -187,7 +187,7 @@ describe('PipelineRunDetailsView', () => {
     const actionsDropdown = screen.queryByRole('button', { name: 'Actions' });
     expect(actionsDropdown).toBeInTheDocument();
     fireEvent.click(actionsDropdown);
-
+    expect(screen.queryByText('Rerun')).toBeInTheDocument();
     expect(screen.queryByText('Stop')).toBeInTheDocument();
     expect(screen.queryByText('Cancel')).toBeInTheDocument();
   });
@@ -201,7 +201,7 @@ describe('PipelineRunDetailsView', () => {
     fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
 
     expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'false');
-    expect(screen.queryByText('Stop')).toHaveAttribute('aria-disabled', 'false');
+    expect(screen.queryByText('Cancel')).toHaveAttribute('aria-disabled', 'false');
   });
 
   it('should disable Stop and Cancel buttons if the pipelinerun is succeeded', () => {
@@ -241,17 +241,12 @@ describe('PipelineRunDetailsView', () => {
   });
 
   // Todo: will re-enable this after we figure out the proper rerun solution after mvp
-  xit('should rerun and navigate to new pipelinerun page', async () => {
+  it('should rerun and navigate to new pipelinerun page', async () => {
     const navigateMock = jest.fn();
-    useNavigateMock.mockImplementation(() => navigateMock);
-    let newPlrName: string;
-    mockK8sCreate.mockImplementation((data) => {
-      newPlrName = data.resource.metadata.name;
-      return Promise.resolve(data.resource);
+    useNavigateMock.mockImplementation(() => {
+      return navigateMock;
     });
-    watchResourceMock
-      .mockReturnValueOnce([testPipelineRuns[DataState.RUNNING], true])
-      .mockReturnValue([[], true]);
+    watchResourceMock.mockReturnValueOnce([mockPipelineRuns[0], true]).mockReturnValue([[], true]);
 
     routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
@@ -259,9 +254,11 @@ describe('PipelineRunDetailsView', () => {
     expect(screen.queryByText('Rerun')).toHaveAttribute('aria-disabled', 'false');
 
     fireEvent.click(screen.queryByRole('menuitem', { name: 'Rerun' }));
-    await waitFor(() => {
-      expect(navigateMock).toHaveBeenCalledWith(`/application-pipeline/pipelineruns/${newPlrName}`);
-    });
+    await waitFor(() =>
+      expect(navigateMock).toHaveBeenCalledWith(
+        '/application-pipeline/workspaces/test-ws/applications/test-app/activity/pipelineruns?name=mock-component',
+      ),
+    );
   });
 
   it('should render start new build action', async () => {

@@ -18,9 +18,6 @@ jest.mock('react-i18next', () => ({
 jest.mock('../../../hooks/usePipelineRuns', () => ({
   usePipelineRuns: jest.fn(),
 }));
-jest.mock('../../../hooks/useComponents', () => ({
-  useComponents: jest.fn(),
-}));
 
 jest.mock('../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
@@ -30,9 +27,19 @@ jest.mock('../../../hooks/useScanResults', () => ({
   usePLRVulnerabilities: jest.fn(() => ({ vulnerabilities: {}, fetchedPipelineRuns: [] })),
 }));
 
-jest.mock('react-router-dom', () => ({
-  Link: (props) => <a href={props.to}>{props.children}</a>,
+jest.mock('../../../hooks/useComponents', () => ({
+  useComponents: jest.fn().mockReturnValue([[], true]),
+  useComponent: jest.fn().mockReturnValue([{ metadata: { name: { test } } }, true]),
 }));
+
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
+  return {
+    ...actual,
+    Link: (props) => <a href={props.to}>{props.children}</a>,
+    useNavigate: jest.fn(),
+  };
+});
 
 jest.mock('../../../hooks/useSearchParam', () => ({
   useSearchParam: jest.fn(),
@@ -72,6 +79,7 @@ jest.mock('../../../utils/rbac', () => ({
 const useSearchParamMock = useSearchParam as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
 const usePLRVulnerabilitiesMock = usePLRVulnerabilities as jest.Mock;
+
 const params: any = {};
 
 const mockUseSearchParam = (name: string) => {
