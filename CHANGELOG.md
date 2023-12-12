@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.1](https://github.com/openshift/hac-dev/compare/rhtap-ui-v0.3.0...rhtap-ui-v0.3.1) (2023-12-12)
+
+
+### Bug Fixes
+
+* **import:** add access check to add secret button ([3f86e93](https://github.com/openshift/hac-dev/commit/3f86e93a2272bab9c613cb1e6428a8391c3142ad))
+* **import:** avoid stopping if cdq deletion fails ([412de8c](https://github.com/openshift/hac-dev/commit/412de8c515ed848f6cf22bff3ccafc77ddd82eb0))
+
 ## [0.3.0](https://github.com/openshift/hac-dev/compare/rhtap-ui-v0.2.0...rhtap-ui-v0.3.0) (2023-12-01)
 
 
