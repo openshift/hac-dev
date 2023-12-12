@@ -13,6 +13,21 @@ import { detectComponents } from './cdq-utils';
 import { transformResources, transformComponentValues } from './transform-utils';
 import { DetectedFormComponent, ImportFormValues, ImportSecret, ImportStrategy } from './types';
 
+export const IMPORT_EVENT_NAME = 'import-form-event';
+
+const dispatchCustomEvent = (() => {
+  let numberOfTimesCalled = 0;
+  return (text: string, initiate?: boolean) => {
+    numberOfTimesCalled = initiate ? 0 : numberOfTimesCalled + 1;
+    !initiate &&
+      document.dispatchEvent(
+        new CustomEvent(IMPORT_EVENT_NAME, {
+          detail: { text, progressValue: numberOfTimesCalled },
+        }),
+      );
+  };
+})();
+
 export const createComponents = async (
   components: DetectedFormComponent[],
   application: string,
@@ -21,15 +36,20 @@ export const createComponents = async (
   dryRun?: boolean,
   annotations?: { [key: string]: string },
 ) => {
-  const createComponentPromises = components.map((component) => {
+  const result = [];
+  for (const component of components) {
     const componentData = component.componentStub;
     const componentValues = {
       ...componentData,
       resources: componentData.resources && transformResources(componentData.resources),
     };
     const enablePac = !component.defaultBuildPipeline;
-
-    return createComponent(
+    dispatchCustomEvent(
+      dryRun
+        ? 'Validating Component values...'
+        : `Importing Component ${componentValues.componentName}...`,
+    );
+    const comp = await createComponent(
       componentValues,
       application,
       namespace,
@@ -40,9 +60,10 @@ export const createComponents = async (
       enablePac,
       annotations,
     );
-  });
+    result.push(comp);
+  }
 
-  return Promise.all(createComponentPromises);
+  return result;
 };
 
 export const createSecrets = async (
@@ -50,7 +71,15 @@ export const createSecrets = async (
   workspace: string,
   namespace: string,
   dryRun: boolean,
-) => Promise.all(secrets.map((secret) => createSecret(secret, workspace, namespace, dryRun)));
+) => {
+  const results = [];
+  for (const secret of secrets) {
+    !dryRun && dispatchCustomEvent(`Creating secrets...`);
+    const sec = await createSecret(secret, workspace, namespace, dryRun);
+    results.push(sec);
+  }
+  return results;
+};
 
 export const createResources = async (
   formValues: ImportFormValues,
@@ -108,8 +137,12 @@ export const createResources = async (
     optional: false,
   };
 
+  dispatchCustomEvent('', true);
+
   if (shouldCreateApplication) {
+    dispatchCustomEvent('Validating Application values...');
     await createApplication(application, namespace, true);
+    dispatchCustomEvent('Validating Integration test values...');
     await createIntegrationTest(integrationTestValues, applicationName, namespace, true);
   }
 
@@ -124,8 +157,10 @@ export const createResources = async (
 
   let applicationData: ApplicationKind;
   if (shouldCreateApplication) {
+    dispatchCustomEvent(`Creating Application ${application}...`);
     applicationData = await createApplication(application, namespace);
     applicationName = applicationData.metadata.name;
+    dispatchCustomEvent(`Creating Integration Test ${integrationTestValues.name}...`);
     await createIntegrationTest(integrationTestValues, applicationName, namespace);
   }
   await createSecrets(importSecrets, workspace, namespace, true);

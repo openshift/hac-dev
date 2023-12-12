@@ -10,6 +10,12 @@ import {
   Text,
   Form,
   Divider,
+  Modal,
+  ModalVariant,
+  HelperTextItem,
+  Progress,
+  HelperText,
+  ProgressMeasureLocation,
 } from '@patternfly/react-core';
 import { Formik } from 'formik';
 import { useResourceLimits } from '../../hooks/useLimitRange';
@@ -24,7 +30,7 @@ import { createCloseImportFormModal } from './CloseImportFormModal';
 import GitImportActions from './GitImportActions';
 import ReviewSection from './ReviewSection/ReviewSection';
 import SourceSection from './SourceSection/SourceSection';
-import { createResources } from './utils/submit-utils';
+import { IMPORT_EVENT_NAME, createResources } from './utils/submit-utils';
 import { ImportFormValues, ImportStrategy } from './utils/types';
 import { reviewValidationSchema, sourceValidationSchema } from './utils/validation-utils';
 
@@ -39,6 +45,12 @@ const GitImportForm: React.FunctionComponent<React.PropsWithChildren<GitImportFo
   reviewMode,
   setReviewMode,
 }) => {
+  const [progressBarData, setProgressBarData] = React.useState<{
+    maxValueForProgressBar: number;
+    noOfComponents: number;
+  }>({ maxValueForProgressBar: 0, noOfComponents: 0 });
+  const [submitModalText, setSubmitModalText] = React.useState<string>('');
+  const [valueProgressBar, setValueProgressBar] = React.useState<number>(0);
   const track = useTrackEvent();
   const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
@@ -67,11 +79,37 @@ const GitImportForm: React.FunctionComponent<React.PropsWithChildren<GitImportFo
     },
   };
 
+  React.useEffect(() => {
+    const callback = (e) => {
+      setSubmitModalText(e.detail.text);
+      setValueProgressBar(e.detail.progressValue);
+    };
+    document.addEventListener(IMPORT_EVENT_NAME, callback);
+    return () => {
+      document.removeEventListener(IMPORT_EVENT_NAME, callback);
+    };
+  }, []);
+
   const showModal = useModalLauncher();
 
   const handleSubmit = React.useCallback(
     (values: ImportFormValues, formikHelpers: any) => {
       track(TrackEvents.ButtonClicked, { link_name: 'import-submit', workspace });
+
+      const noOfComponents = (
+        values.selectedComponents
+          ? values.components?.filter((value, index) => values.selectedComponents[index])
+          : values.components
+      )?.length;
+      // calculate number of api requests for the progress bar max value
+      const maxValueForProgressBar =
+        // no. of components with dry run requests
+        noOfComponents * 2 +
+        // application and integration test request with dry run
+        (!values.inAppContext ? 4 : 0) +
+        // no. of secrets with dry run requests
+        (values?.importSecrets.length ?? 0) * 2;
+      setProgressBarData({ maxValueForProgressBar, noOfComponents });
       return createResources(values, ImportStrategy.GIT, workspace)
         .then(({ applicationName: appName, application, components, componentNames }) => {
           if (application) {
@@ -131,6 +169,8 @@ const GitImportForm: React.FunctionComponent<React.PropsWithChildren<GitImportFo
           // eslint-disable-next-line no-console
           console.warn('Error while submitting import form:', error);
           track('Git import failed', error);
+          setSubmitModalText('');
+          setValueProgressBar(0);
           formikHelpers.setSubmitting(false);
           formikHelpers.setStatus({ submitError: error.message });
         });
@@ -176,56 +216,81 @@ const GitImportForm: React.FunctionComponent<React.PropsWithChildren<GitImportFo
   };
 
   return (
-    <Formik
-      onSubmit={reviewMode ? handleSubmit : handleNext}
-      initialValues={initialValues}
-      validationSchema={reviewMode ? reviewValidationSchema : sourceValidationSchema}
-      enableReinitialize
-    >
-      {(formikProps) => (
-        <>
-          <PageSection variant={PageSectionVariants.light}>
-            <Stack>
-              <StackItem className="pf-v5-u-pt-lg">
-                <Bullseye>
-                  <img
-                    src={reviewMode ? integrationIcon : applicationIcon}
-                    height="72px"
-                    width="72px"
-                    alt="Bring in your own code"
-                  />
-                </Bullseye>
-                <Bullseye>
-                  <Title size="lg" headingLevel="h2" className="pf-v5-u-mt-lg pf-v5-u-mb-lg">
-                    {reviewMode ? 'Review and configure for deployment' : 'Bring in your own code'}
-                  </Title>
-                </Bullseye>
-                {!reviewMode && (
+    <>
+      <Formik
+        onSubmit={reviewMode ? handleSubmit : handleNext}
+        initialValues={initialValues}
+        validationSchema={reviewMode ? reviewValidationSchema : sourceValidationSchema}
+        enableReinitialize
+      >
+        {(formikProps) => (
+          <>
+            <PageSection variant={PageSectionVariants.light}>
+              <Stack>
+                <StackItem className="pf-v5-u-pt-lg">
                   <Bullseye>
-                    <Text>You provide the code and we&apos;ll create an application.</Text>
+                    <img
+                      src={reviewMode ? integrationIcon : applicationIcon}
+                      height="72px"
+                      width="72px"
+                      alt="Bring in your own code"
+                    />
                   </Bullseye>
-                )}
-              </StackItem>
-            </Stack>
-          </PageSection>
-          {reviewMode && <Divider className="import-form__divider" />}
-          <PageSection variant={PageSectionVariants.light}>
-            <Form
-              onSubmit={formikProps.handleSubmit}
-              onReset={formikProps.dirty ? handleReset(true) : handleReset(false)}
-            >
-              {reviewMode ? <ReviewSection /> : <SourceSection />}
-            </Form>
-          </PageSection>
-          <GitImportActions
-            reviewMode={reviewMode}
-            onBack={formikProps.dirty ? handleBack(true) : handleBack(false)}
-            onCancel={formikProps.dirty ? handleReset(true) : handleReset(false)}
-            sticky={reviewMode}
+                  <Bullseye>
+                    <Title size="lg" headingLevel="h2" className="pf-v5-u-mt-lg pf-v5-u-mb-lg">
+                      {reviewMode
+                        ? 'Review and configure for deployment'
+                        : 'Bring in your own code'}
+                    </Title>
+                  </Bullseye>
+                  {!reviewMode && (
+                    <Bullseye>
+                      <Text>You provide the code and we&apos;ll create an application.</Text>
+                    </Bullseye>
+                  )}
+                </StackItem>
+              </Stack>
+            </PageSection>
+            {reviewMode && <Divider className="import-form__divider" />}
+            <PageSection variant={PageSectionVariants.light}>
+              <Form
+                onSubmit={formikProps.handleSubmit}
+                onReset={formikProps.dirty ? handleReset(true) : handleReset(false)}
+              >
+                {reviewMode ? <ReviewSection /> : <SourceSection />}
+              </Form>
+            </PageSection>
+            <GitImportActions
+              reviewMode={reviewMode}
+              onBack={formikProps.dirty ? handleBack(true) : handleBack(false)}
+              onCancel={formikProps.dirty ? handleReset(true) : handleReset(false)}
+              sticky={reviewMode}
+            />
+          </>
+        )}
+      </Formik>
+      {!!progressBarData.maxValueForProgressBar && !!submitModalText && (
+        <Modal
+          variant={ModalVariant.small}
+          title={`Importing ${progressBarData.noOfComponents > 1 ? 'components' : 'component'}`}
+          showClose={false}
+          disableFocusTrap
+          isOpen
+        >
+          <Progress
+            min={0}
+            max={progressBarData.maxValueForProgressBar}
+            value={valueProgressBar}
+            measureLocation={ProgressMeasureLocation.inside}
+            helperText={
+              <HelperText>
+                <HelperTextItem>{submitModalText}</HelperTextItem>
+              </HelperText>
+            }
           />
-        </>
+        </Modal>
       )}
-    </Formik>
+    </>
   );
 };
 
