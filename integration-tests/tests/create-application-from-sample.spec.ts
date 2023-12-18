@@ -71,6 +71,7 @@ describe('Create component from sample', () => {
             Cypress.env('appName'),
           );
           cy.contains('Build not started').should('not.exist');
+          cy.wait(1000);
 
           //Delete component
           applicationDetailPage.deleteComponent(quarkusComponentName);
