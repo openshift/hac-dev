@@ -1,16 +1,23 @@
 import '@testing-library/jest-dom';
 import { renderHook } from '@testing-library/react-hooks';
+import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useSBRActions } from '../user-access-actions';
 
 jest.mock('../../../utils/rbac', () => ({
-  useAccessReviewForModel: jest.fn(() => [true, true]),
+  useAccessReviewForModel: jest.fn(),
 }));
 
 jest.mock('../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ workspace: 'test-ws' })),
 }));
 
+const accessReviewMock = useAccessReviewForModel as jest.Mock;
+
 describe('useSBRActions', () => {
+  beforeEach(() => {
+    accessReviewMock.mockReturnValue([true, true]);
+  });
+
   it('should return enabled actions', () => {
     const { result } = renderHook(() =>
       useSBRActions({
@@ -41,6 +48,7 @@ describe('useSBRActions', () => {
   });
 
   it('should return disabled actions due to access', async () => {
+    accessReviewMock.mockReturnValue([false, true]);
     const { result } = renderHook(() =>
       useSBRActions({
         availableActions: [],
