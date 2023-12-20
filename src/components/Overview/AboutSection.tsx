@@ -103,13 +103,13 @@ const AboutSection: React.FC<React.PropsWithChildren<unknown>> = () => (
           <Card isLarge>
             <CardTitle>Contact us</CardTitle>
             <CardBody>
-              Join the DevNation Slack workspace here:{' '}
-              <ExternalLink href="https://dn.dev/slack" hideIcon>
-                https://dn.dev/slack
+              Join the internal RedHat Slack workspace here:{' '}
+              <ExternalLink href="https://redhat-internal.slack.com/" hideIcon>
+                https://redhat-internal.slack.com/
               </ExternalLink>
               , and then join our{' '}
-              <ExternalLink href="https://rhdevnation.slack.com/channels/software-supply-chain-security">
-                #software-supply-chain-security
+              <ExternalLink href="https://redhat.enterprise.slack.com/archives/C04PZ7H0VA8">
+                #rhtap-users
               </ExternalLink>{' '}
               channel.
             </CardBody>
