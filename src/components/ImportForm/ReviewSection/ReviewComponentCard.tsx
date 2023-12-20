@@ -47,6 +47,7 @@ const ReviewComponentCard: React.FC<React.PropsWithChildren<ReviewComponentCardP
   const [expandedComponent, setExpandedComponent] = React.useState(isExpanded);
   const {
     values: { components },
+    setFieldValue,
   } = useFormikContext<ImportFormValues>();
 
   return (
@@ -77,6 +78,9 @@ const ReviewComponentCard: React.FC<React.PropsWithChildren<ReviewComponentCardP
               type={TextInputTypes.text}
               isDisabled={editMode}
               dataTest="component-name-field"
+              onChange={() => {
+                setFieldValue(`components[${detectedComponentIndex}].nameModified`, true);
+              }}
             />
             <br />
             {component.source?.git?.url ? (

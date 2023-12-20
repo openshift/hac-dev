@@ -46,7 +46,7 @@ const GitImportForm: React.FunctionComponent<React.PropsWithChildren<GitImportFo
   const maxlimit = useResourceLimits(namespace, true);
 
   const initialValues: ImportFormValues = {
-    application: applicationName || '',
+    application: applicationName || undefined,
     inAppContext: applicationName ? true : false,
     components: [],
     selectedComponents: [],

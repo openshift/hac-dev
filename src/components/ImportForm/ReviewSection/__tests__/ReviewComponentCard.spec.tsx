@@ -27,9 +27,15 @@ jest.mock('../../utils/useDevfileSamples', () => ({
   useDevfileSamples: jest.fn(() => []),
 }));
 
+const setFieldValueMock = jest.fn();
+
 jest.mock('formik', () => ({
   ...(jest as any).requireActual('formik'),
   useField: jest.fn(),
+  useFormikContext: jest.fn(() => ({
+    ...(jest as any).requireActual('formik').useFormikContext(),
+    setFieldValue: setFieldValueMock,
+  })),
 }));
 
 configure({ testIdAttribute: 'data-test' });
@@ -70,16 +76,12 @@ const gitRepoComponent = {
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 describe('ReviewComponentCard', () => {
-  let onEditHandler;
   beforeEach(() => {
-    onEditHandler = jest.fn();
-    useFieldMock.mockReturnValue([
-      { value: '', onChange: jest.fn() },
-      { value: '' },
-      { setValue: onEditHandler },
-    ]);
+    useFieldMock.mockReturnValue([{ value: '', onChange: jest.fn() }, { value: '' }]);
     watchResourceMock.mockReturnValue([[], true]);
   });
+
+  afterEach(jest.clearAllMocks);
 
   const {
     componentStub: { componentName },
@@ -303,5 +305,26 @@ describe('ReviewComponentCard', () => {
     await act(async () => screen.getByTestId(`${componentName}-toggle-button`).click());
 
     expect(screen.queryByText('Dockerfile')).toBeNull();
+  });
+
+  it('should mark name as modified on change', async () => {
+    useComponentDetectionMock.mockReturnValue([]);
+    formikRenderer(
+      <ReviewComponentCard
+        detectedComponent={gitRepoComponent}
+        detectedComponentIndex={0}
+        showRuntimeSelector
+        isExpanded
+      />,
+      { isDetected: true, source: { git: {} }, components: [] },
+    );
+
+    await act(async () => {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Component name' }), {
+        target: { value: 'test' },
+      });
+    });
+
+    expect(setFieldValueMock).toHaveBeenCalledWith('components[0].nameModified', true);
   });
 });

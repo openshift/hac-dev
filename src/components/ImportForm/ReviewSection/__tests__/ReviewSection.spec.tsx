@@ -32,7 +32,7 @@ jest.mock('../ReviewComponentCard', () => () => {
   return <div data-test="review-component-card" />;
 });
 
-jest.mock('git-url-parse', () => () => jest.fn(() => ({ toString: jest.fn() })));
+jest.mock('git-url-parse', () => () => ({ toString: jest.fn(), name: 'test-git-name' }));
 
 configure({ testIdAttribute: 'data-test' });
 
@@ -43,6 +43,8 @@ describe('ReviewSection', () => {
   beforeEach(() => {
     useApplicationsMock.mockReturnValue([[], true]);
   });
+
+  afterEach(jest.clearAllMocks);
 
   it('should handle waiting on cdq', async () => {
     useComponentDetectionMock.mockReturnValue([[], false]);
@@ -152,6 +154,74 @@ describe('ReviewSection', () => {
       expect(screen.getByText('Components')).toBeInTheDocument();
       expect(screen.getByText('1')).toBeInTheDocument();
       expect(screen.queryAllByTestId('review-component-card')).toHaveLength(1);
+    });
+  });
+
+  it('should set application name if empty', async () => {
+    useComponentDetectionMock.mockReturnValue([
+      [
+        {
+          componentStub: {
+            componentName: 'java-springboot1',
+            application: 'test-app',
+            source: {
+              git: {
+                url: 'https://github.com/devfile-samples/devfile-sample-java-springboot-basic.git',
+              },
+            },
+          },
+        },
+      ],
+      true,
+    ]);
+    const { rerender } = formikRenderer(<ReviewSection />, {
+      source: {
+        git: {
+          url: 'https://github.com/example/repo',
+        },
+      },
+      components: [{}],
+    });
+    // force a re-render because formik is mocked
+    rerender(<ReviewSection />);
+
+    await waitFor(() => {
+      expect(setFieldValueMock).toHaveBeenCalledWith('application', 'test-git-name');
+    });
+  });
+
+  it('should not set application name if already filled', async () => {
+    useComponentDetectionMock.mockReturnValue([
+      [
+        {
+          componentStub: {
+            componentName: 'java-springboot1',
+            application: 'test-app',
+            source: {
+              git: {
+                url: 'https://github.com/devfile-samples/devfile-sample-java-springboot-basic.git',
+              },
+            },
+          },
+        },
+      ],
+      true,
+    ]);
+    const { rerender } = formikRenderer(<ReviewSection />, {
+      application: 'test-app',
+      source: {
+        git: {
+          url: 'https://github.com/example/repo',
+        },
+      },
+      components: [{}],
+    });
+    // force a re-render because formik is mocked
+    rerender(<ReviewSection />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: 'Name' })).toHaveValue('test-app');
+      expect(setFieldValueMock).not.toHaveBeenCalledWith('application', 'test-git-name');
     });
   });
 });
