@@ -130,8 +130,8 @@ describe('usePipelinerunActions', () => {
     expect(actions[0]).toEqual(
       expect.objectContaining({
         label: 'Rerun',
-        disabled: true,
-        disabledTooltip: "You don't have access to rerun",
+        disabled: false,
+        disabledTooltip: null,
       }),
     );
 

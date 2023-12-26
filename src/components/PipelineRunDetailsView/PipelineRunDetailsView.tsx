@@ -123,7 +123,7 @@ export const PipelineRunDetailsView: React.FC<
               isPACEnabled(component) ||
               runType !== PipelineRunType.BUILD,
             isDisabled: !canPatchComponent,
-            disabledTooltip: !canPatchPipeline
+            disabledTooltip: !canPatchComponent
               ? "You don't have access to start a new build"
               : null,
             onClick: () =>

@@ -261,6 +261,20 @@ describe('PipelineRunDetailsView', () => {
     );
   });
 
+  it('should disable Rerun button if user does not have access to patch component', () => {
+    watchResourceMock
+      .mockReturnValueOnce([testPipelineRuns[DataState.RUNNING], true])
+      .mockReturnValue([[], true]);
+    useAccessReviewForModelMock
+      .mockReturnValueOnce([false, true])
+      .mockReturnValueOnce([true, true]);
+
+    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
+    fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
+
+    expect(screen.queryByText('Rerun')).toHaveAttribute('aria-disabled', 'true');
+  });
+
   it('should render start new build action', async () => {
     const navigateMock = jest.fn();
     useNavigateMock.mockImplementation(() => {

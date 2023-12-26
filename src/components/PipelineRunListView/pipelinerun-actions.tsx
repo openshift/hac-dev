@@ -31,12 +31,8 @@ export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] =>
     {
       id: 'pipelinerun-rerun',
       label: 'Rerun',
-      disabled:
-        !canPatchPipelineRun ||
-        !canPatchComponent ||
-        !isPACEnabled ||
-        runType !== PipelineRunType.BUILD,
-      disabledTooltip: !canPatchPipelineRun ? "You don't have access to rerun" : null,
+      disabled: !canPatchComponent || !isPACEnabled || runType !== PipelineRunType.BUILD,
+      disabledTooltip: !canPatchComponent ? "You don't have access to rerun" : null,
       cta: () =>
         componentLoaded &&
         !componentError &&
