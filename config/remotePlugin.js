@@ -43,7 +43,7 @@ const navExtensions = [
     type: 'core.navigation/href',
     properties: {
       href: '/application-pipeline/release',
-      name: 'Release services',
+      name: 'Releases',
     },
     flags: {
       required: ['SIGNUP'],
@@ -621,6 +621,32 @@ const routeExtensions = [
       required: ['SIGNUP'],
     },
   },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/release/workspaces/:workspaceName/release-plan/create',
+      exact: true,
+      component: {
+        $codeRef: 'CreateReleasePlan',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/release/workspaces/:workspaceName/release-plan/edit/:name',
+      exact: true,
+      component: {
+        $codeRef: 'EditReleasePlan',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
 
   // user access
   {
@@ -714,6 +740,8 @@ module.exports = {
       EnvironmentsListPage: resolve(__dirname, '../src/pages/EnvironmentsListPage'),
       CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
       ReleaseListPage: resolve(__dirname, '../src/pages/ReleaseServicesListPage'),
+      CreateReleasePlan: resolve(__dirname, '../src/pages/CreateReleasePlanPage'),
+      EditReleasePlan: resolve(__dirname, '../src/pages/EditReleasePlanPage'),
       WorkspaceContext: resolve(__dirname, '../src/utils/workspace-context-utils'),
       WorkspacedPage: resolve(__dirname, '../src/pages/WorkspacedPage'),
       OverviewPage: resolve(__dirname, '../src/pages/OverviewPage'),

@@ -27,7 +27,7 @@ import { InputField } from '../../shared';
 import { Param } from '../../types/coreBuildService';
 
 interface IntegrationTestParamsProps {
-  heading?: string;
+  heading?: React.ReactNode;
   fieldName: string;
   initExpanded?: boolean;
 }

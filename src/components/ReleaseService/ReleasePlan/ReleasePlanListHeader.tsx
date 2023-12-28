@@ -2,9 +2,9 @@ export const releasesPlanTableColumnClasses = {
   name: 'pf-m-width-25 wrap-column',
   application: 'pf-m-width-15',
   target: 'pf-m-width-20',
-  autoRelease: 'pf-m-width-15',
-  standingAttribution: 'pf-m-width-15',
-  kebab: 'pf-c-table__action',
+  autoRelease: 'pf-m-hidden pf-m-width-15 pf-m-visible-on-xl',
+  standingAttribution: 'pf-m-hidden pf-m-width-15 pf-m-visible-on-xl',
+  kebab: 'pf-v5-c-table__action',
 };
 
 const ReleasePlanListHeader = () => {
