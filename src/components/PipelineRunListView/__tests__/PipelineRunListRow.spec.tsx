@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { DataState, testPipelineRuns } from '../../../__data__/pipelinerun-data';
 import { PipelineRunListRowWithVulnerabilities } from '../PipelineRunListRow';
 
@@ -12,6 +12,11 @@ jest.mock('react-router-dom', () => {
     useSearchParams: jest.fn(),
   };
 });
+
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
+  useK8sWatchResource: () => [[{ metadata: { name: 'test-ns' } }], false],
+  getActiveWorkspace: jest.fn(() => 'test-ws'),
+}));
 
 describe('Pipeline run Row', () => {
   it('should return - when pipelinerun is in running state ', () => {
@@ -70,5 +75,28 @@ describe('Pipeline run Row', () => {
     expect(row.getByText('Critical')).toBeDefined();
     expect(row.getByText('5')).toBeDefined();
     expect(row.getByText('Succeeded')).toBeDefined();
+  });
+
+  it('should display correct PLR actions', async () => {
+    const succeededPlr = testPipelineRuns[DataState.SUCCEEDED];
+    const plrName = succeededPlr.metadata.name;
+    const row = render(
+      <PipelineRunListRowWithVulnerabilities
+        obj={succeededPlr}
+        customData={{
+          fetchedPipelineRuns: [plrName],
+          vulnerabilities: [{ [plrName]: {} }],
+        }}
+        columns={[]}
+      />,
+    );
+
+    fireEvent.click(row.getByTestId('kebab-button'));
+
+    await waitFor(() => {
+      row.getByText('Rerun');
+      row.getByText('Stop');
+      row.getByText('Cancel');
+    });
   });
 });

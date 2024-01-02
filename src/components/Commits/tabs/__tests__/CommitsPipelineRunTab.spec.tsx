@@ -29,6 +29,7 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
+  useNavigate: jest.fn(),
 }));
 
 jest.mock('../../../../utils/workspace-context-utils', () => ({
@@ -41,6 +42,11 @@ jest.mock('../../../../hooks/usePipelineRuns', () => ({
 
 jest.mock('../../../../utils/rbac', () => ({
   useAccessReviewForModel: jest.fn(() => [true, true]),
+}));
+
+jest.mock('../../../../hooks/useComponents', () => ({
+  useComponents: jest.fn(),
+  useComponent: jest.fn().mockReturnValue([{ metadata: { name: { test } } }, true]),
 }));
 
 const appName = 'my-test-app';

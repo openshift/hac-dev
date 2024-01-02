@@ -17,6 +17,7 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('../../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
+  useComponent: jest.fn().mockReturnValue([{ metadata: { name: { test } } }, true]),
 }));
 
 jest.mock('../../../../utils/workspace-context-utils', () => ({
@@ -29,6 +30,7 @@ jest.mock('../../../../hooks/useScanResults', () => ({
 
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
+  useNavigate: jest.fn(),
 }));
 
 jest.mock('../../../../hooks/useSearchParam', () => ({
