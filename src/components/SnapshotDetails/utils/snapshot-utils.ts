@@ -1,4 +1,6 @@
+import { k8sPatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { SnapshotLabels } from '../../../consts/pipelinerun';
+import { SnapshotModel } from '../../../models';
 import { Snapshot } from '../../../types/coreBuildService';
 
 export interface ErrorStatus {
@@ -7,6 +9,8 @@ export interface ErrorStatus {
   details: string;
   lastUpdateTime: string;
 }
+
+export const BUILD_REQUEST_LABEL = 'test.appstudio.openshift.io/run';
 
 export const getEnvironmentProvisionError = (snapshot: Snapshot): ErrorStatus[] => {
   const ENV_PROVISION_ERR = 'EnvironmentProvisionError';
@@ -33,4 +37,21 @@ export const getEnvironmentProvisionError = (snapshot: Snapshot): ErrorStatus[] 
   } catch (e) {
     return null;
   }
+};
+
+export const rerunTestPipeline = (snapshot: Snapshot, scenario) => {
+  return k8sPatchResource({
+    model: SnapshotModel,
+    queryOptions: {
+      name: snapshot.metadata.name,
+      ns: snapshot.metadata.namespace,
+    },
+    patches: [
+      {
+        op: 'add',
+        path: `/metadata/labels/${BUILD_REQUEST_LABEL.replace('/', '~1')}`,
+        value: scenario,
+      },
+    ],
+  });
 };
