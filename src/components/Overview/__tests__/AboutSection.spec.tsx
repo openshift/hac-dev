@@ -14,9 +14,9 @@ describe('About section', () => {
   it('should render the links correctly in about section', () => {
     render(<AboutSection />);
     expect(screen.getByRole('link', { name: 'SLSA Level 3' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'https://dn.dev/slack' })).toBeInTheDocument();
     expect(
-      screen.getByRole('link', { name: '#software-supply-chain-security' }),
+      screen.getByRole('link', { name: 'https://redhat-internal.slack.com/' }),
     ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '#rhtap-users' })).toBeInTheDocument();
   });
 });
