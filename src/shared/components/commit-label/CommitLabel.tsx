@@ -3,8 +3,10 @@ import { Label, Tooltip } from '@patternfly/react-core';
 import { BitbucketIcon } from '@patternfly/react-icons/dist/js/icons/bitbucket-icon';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
 import { GitlabIcon } from '@patternfly/react-icons/dist/js/icons/gitlab-icon';
+import { css } from '@patternfly/react-styles';
 import { getCommitShortName } from '../../../utils/commits-utils';
 import { GitProvider } from '../../utils/git-utils';
+import './CommitLabel.scss';
 
 const tipText = {
   [GitProvider.GITHUB]: 'Open in GitHub',
@@ -30,8 +32,8 @@ const CommitLabel: React.FC<React.PropsWithChildren<CommitLabelProps>> = ({
   const commitShortName = getCommitShortName(sha);
   const label = (
     <Label
-      className="commit-label"
       color="blue"
+      className={css('commit-label', gitProvider === GitProvider.GITHUB && 'black-icon')}
       icon={providerIcon[gitProvider]}
       isCompact
       render={({ className, content }) => (
