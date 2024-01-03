@@ -92,6 +92,11 @@ const GitImportForm: React.FunctionComponent<React.PropsWithChildren<GitImportFo
 
   const showModal = useModalLauncher();
 
+  const closeSubmitProgressModal = () => {
+    setSubmitModalText('');
+    setValueProgressBar(0);
+  };
+
   const handleSubmit = React.useCallback(
     (values: ImportFormValues, formikHelpers: any) => {
       track(TrackEvents.ButtonClicked, { link_name: 'import-submit', workspace });
@@ -110,7 +115,7 @@ const GitImportForm: React.FunctionComponent<React.PropsWithChildren<GitImportFo
         // no. of secrets with dry run requests
         (values?.importSecrets.length ?? 0) * 2;
       setProgressBarData({ maxValueForProgressBar, noOfComponents });
-      return createResources(values, ImportStrategy.GIT, workspace)
+      createResources(values, ImportStrategy.GIT, workspace)
         .then(({ applicationName: appName, application, components, componentNames }) => {
           if (application) {
             track('Application Create', {
@@ -150,6 +155,8 @@ const GitImportForm: React.FunctionComponent<React.PropsWithChildren<GitImportFo
           const doNavigate = () =>
             navigate(`/application-pipeline/workspaces/${workspace}/applications/${appName}`);
 
+          closeSubmitProgressModal();
+
           if (pacComponentNames.length > 0) {
             showModal(
               createCustomizeAllPipelinesModalLauncher(
@@ -169,8 +176,7 @@ const GitImportForm: React.FunctionComponent<React.PropsWithChildren<GitImportFo
           // eslint-disable-next-line no-console
           console.warn('Error while submitting import form:', error);
           track('Git import failed', error);
-          setSubmitModalText('');
-          setValueProgressBar(0);
+          closeSubmitProgressModal();
           formikHelpers.setSubmitting(false);
           formikHelpers.setStatus({ submitError: error.message });
         });
