@@ -205,7 +205,7 @@ export const getURLForParam = (params: ResolverParam[], paramName: string): stri
   }
   if (paramName === ResolverRefParams.PATH && resolverParam) {
     const branch = params.find((param) => param.name === ResolverRefParams.REVISION);
-    return `${checkedURL}/tree/${branch.value}/${resolverParam.value}`;
+    return `${checkedURL}/tree/${branch.value || 'master'}/${resolverParam.value}`;
   }
   if (paramName === ResolverRefParams.REVISION && resolverParam) {
     return `${checkedURL}/tree/${resolverParam.value}`;

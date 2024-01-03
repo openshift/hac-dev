@@ -195,6 +195,12 @@ describe('Create Utils', () => {
     expect(getURLForParam(k8sResource.spec.resolverRef.params, ResolverRefParams.PATH)).toBe(
       'https://github.com/redhat-appstudio/integration-examples/tree/main/pipelines/integration_pipeline_pass.yaml',
     );
+    expect(
+      getURLForParam(
+        MockIntegrationTestsWithGit[3].spec.resolverRef.params,
+        ResolverRefParams.PATH,
+      ),
+    ).toBe('https://github.com/example/repo/tree/master/.tekton/pipeline.yaml');
   });
 
   it('Should set EC kind annotation', async () => {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { fireEvent, render, screen, configure } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { useModalLauncher } from '../../../modal/ModalProvider';
 import {
   MockIntegrationTestsWithBundles,
@@ -58,6 +59,11 @@ describe('IntegrationTestOverviewTab', () => {
     expect(screen.getAllByRole('link')[2].getAttribute('href')).toBe(
       'https://test-url2/tree/main2/test-path2',
     ); // path link
+  });
+
+  it('should not render param if value is not given', () => {
+    render(<IntegrationTestOverviewTab integrationTest={MockIntegrationTestsWithGit[3]} />);
+    expect(screen.queryByText('revision')).not.toBeInTheDocument();
   });
 
   it('should use the git url from the spec param', () => {

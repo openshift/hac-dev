@@ -198,6 +198,29 @@ export const MockIntegrationTestsWithGit: IntegrationTestScenarioKind[] = [
       ],
     },
   },
+  {
+    apiVersion: 'appstudio.redhat.com/v1alpha1',
+    kind: 'IntegrationTestScenario',
+    metadata: {
+      annotations: {
+        'app.kubernetes.io/display-name': 'Test 3',
+      },
+      name: 'test-app-test-4',
+      namespace: 'test-namespace',
+      uid: 'ed722704-74bc-4152-b27b-bee29cc7bfd3',
+    },
+    spec: {
+      application: 'test-app',
+      resolverRef: {
+        resolver: ResolverType.GIT,
+        params: [
+          { name: 'url', value: 'https://github.com/example/repo' },
+          { name: 'revision', value: '' },
+          { name: 'pathInRepo', value: '.tekton/pipeline.yaml' },
+        ],
+      },
+    },
+  },
 ];
 
 export const MockIntegrationTestsWithParams: IntegrationTestScenarioKind[] = [
