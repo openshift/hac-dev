@@ -3,10 +3,17 @@
   flex-direction: column;
   gap: var(--pf-v5-global--spacer--md);
   text-align: left;
-  padding: var(--pf-v5-global--spacer--md);
+  padding-top: var(--pf-v5-global--spacer--md);
+  padding-bottom: var(--pf-v5-global--spacer--md);
+  padding-left: var(--pf-v5-global--spacer--md);
+  max-height: 600px;
 
   &-title {
     font-size: var(--pf-v5-global--icon--FontSize--md);
+    padding-right: var(--pf-v5-global--spacer--md);
+  }
+  &-description {
+    padding-right: var(--pf-v5-global--spacer--md);
   }
 
   &-status {
@@ -15,6 +22,9 @@
       grid-template-columns: auto auto auto;
       column-gap: var(--pf-v5-global--spacer--md);
       row-gap: var(--pf-v5-global--spacer--sm);
+      overflow-y: auto;
+      padding-right: var(--pf-v5-global--spacer--md);
+
       .pf-topology-pipelines__status-icon.pf-m-spin {
         > svg {
           filter: blur(0);
@@ -29,5 +39,6 @@
   &-links {
     display: flex;
     gap: var(--pf-v5-global--spacer--md);
+    padding-right: var(--pf-v5-global--spacer--md);
   }
 }
