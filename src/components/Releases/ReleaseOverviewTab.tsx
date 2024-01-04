@@ -28,7 +28,7 @@ type ReleaseOverviewTabProps = {
 const ReleaseOverviewTab: React.FC<React.PropsWithChildren<ReleaseOverviewTabProps>> = ({
   release,
 }) => {
-  const { namespace } = useWorkspaceInfo();
+  const { namespace, workspace } = useWorkspaceInfo();
   const [pipelineRun, prWorkspace] = useWorkspaceResource(release.status?.processing?.pipelineRun);
   const [releasePlan, releasePlanLoaded] = useK8sWatchResource<ReleasePlanKind>({
     name: release.spec.releasePlan,
@@ -105,10 +105,18 @@ const ReleaseOverviewTab: React.FC<React.PropsWithChildren<ReleaseOverviewTabPro
                 <DescriptionListTerm>Release Plan</DescriptionListTerm>
                 <DescriptionListDescription>{release.spec.releasePlan}</DescriptionListDescription>
               </DescriptionListGroup>
-              <DescriptionListGroup>
-                <DescriptionListTerm>Snapshot</DescriptionListTerm>
-                <DescriptionListDescription>{release.spec.snapshot}</DescriptionListDescription>
-              </DescriptionListGroup>
+              {release.spec.snapshot && releasePlanLoaded && (
+                <DescriptionListGroup>
+                  <DescriptionListTerm>Snapshot</DescriptionListTerm>
+                  <DescriptionListDescription>
+                    <Link
+                      to={`/application-pipeline/workspaces/${workspace}/applications/${releasePlan.spec.application}/snapshots/${release.spec.snapshot}`}
+                    >
+                      {release.spec.snapshot}
+                    </Link>
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+              )}
               <DescriptionListGroup>
                 <DescriptionListTerm>Release Target</DescriptionListTerm>
                 <DescriptionListDescription>
