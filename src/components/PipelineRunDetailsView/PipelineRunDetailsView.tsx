@@ -4,22 +4,21 @@ import { Bullseye, Spinner } from '@patternfly/react-core';
 import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
 import { useComponent } from '../../hooks/useComponents';
 import { usePipelineRun } from '../../hooks/usePipelineRuns';
-import { useSnapshots } from '../../hooks/useSnapshots';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
-import { ComponentModel, PipelineRunModel, SnapshotModel } from '../../models';
+import { ComponentModel, PipelineRunModel } from '../../models';
 import DetailsPage from '../../shared/components/details-page/DetailsPage';
 import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
-import { isPACEnabled, rerunBuildPipeline, startNewBuild } from '../../utils/component-utils';
+import { isPACEnabled, startNewBuild } from '../../utils/component-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { SecurityEnterpriseContractTab } from '../EnterpriseContractView/SecurityEnterpriseContractTab';
 import { isResourceEnterpriseContract } from '../EnterpriseContractView/utils';
+import { usePipelinererunAction } from '../PipelineRunListView/pipelinerun-actions';
 import SidePanelHost from '../SidePanel/SidePanelHost';
-import { rerunTestPipeline } from '../SnapshotDetails/utils/snapshot-utils';
 import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import PipelineRunDetailsTab from './tabs/PipelineRunDetailsTab';
 import PipelineRunLogsTab from './tabs/PipelineRunLogsTab';
@@ -37,26 +36,15 @@ export const PipelineRunDetailsView: React.FC<
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
   const [pipelineRun, loaded, error] = usePipelineRun(namespace, pipelineRunName);
+  const { cta, isDisabled, disabledTooltip } = usePipelinererunAction(pipelineRun);
+
   const [taskRuns, taskRunsLoaded, taskRunError] = useTaskRuns(namespace, pipelineRunName);
   const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
   const [canPatchPipeline] = useAccessReviewForModel(PipelineRunModel, 'patch');
-  const [canPatchSnapshot] = useAccessReviewForModel(SnapshotModel, 'patch');
 
   const [component, componentLoaded, componentError] = useComponent(
     namespace,
     pipelineRun?.metadata?.labels?.[PipelineRunLabel.COMPONENT],
-  );
-
-  const [snapshots, snapshotsLoaded, snapshotsError] = useSnapshots(namespace);
-
-  const snapshot = React.useMemo(
-    () =>
-      snapshotsLoaded &&
-      !snapshotsError &&
-      snapshots.find(
-        (sn) => sn.metadata?.name === pipelineRun?.metadata?.labels?.[PipelineRunLabel.SNAPSHOT],
-      ),
-    [snapshots, snapshotsLoaded, snapshotsError, pipelineRun?.metadata?.labels],
   );
 
   const plrStatus = React.useMemo(
@@ -67,11 +55,6 @@ export const PipelineRunDetailsView: React.FC<
   const runType = React.useMemo(
     () => loaded && !error && pipelineRun.metadata?.labels[PipelineRunLabel.PIPELINE_TYPE],
     [pipelineRun?.metadata?.labels, loaded, error],
-  );
-
-  const scenario = React.useMemo(
-    () => pipelineRun?.metadata?.labels?.[PipelineRunLabel.TEST_SERVICE_SCENARIO],
-    [pipelineRun?.metadata?.labels],
   );
 
   const loadError = error || taskRunError;
@@ -140,34 +123,9 @@ export const PipelineRunDetailsView: React.FC<
             hidden:
               runType !== PipelineRunType.BUILD &&
               (!component || !!componentError || isPACEnabled(component)),
-            isDisabled:
-              (runType === PipelineRunType.BUILD && (!canPatchComponent || !isPACEnabled)) ||
-              (runType === PipelineRunType.TEST && (!canPatchSnapshot || !snapshot)),
-            disabledTooltip:
-              (runType === PipelineRunType.BUILD && !canPatchComponent) ||
-              !isPACEnabled ||
-              (runType === PipelineRunType.TEST && !canPatchSnapshot)
-                ? "You don't have access to rerun"
-                : runType === PipelineRunType.TEST && (!snapshot || !scenario)
-                ? 'Missing snapshot or scenario'
-                : null,
-            onClick: () =>
-              runType === PipelineRunType.BUILD
-                ? componentLoaded &&
-                  !componentError &&
-                  rerunBuildPipeline(component).then(() => {
-                    navigate(
-                      `/application-pipeline/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
-                    );
-                  })
-                : runType === PipelineRunType.TEST &&
-                  snapshot &&
-                  scenario &&
-                  rerunTestPipeline(snapshot, scenario).then(() => {
-                    navigate(
-                      `/application-pipeline/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
-                    );
-                  }),
+            isDisabled,
+            disabledTooltip,
+            onClick: cta,
           },
           {
             key: 'stop',

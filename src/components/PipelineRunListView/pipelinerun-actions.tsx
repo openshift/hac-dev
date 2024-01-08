@@ -13,10 +13,9 @@ import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { rerunTestPipeline } from '../SnapshotDetails/utils/snapshot-utils';
 
-export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] => {
+export const usePipelinererunAction = (pipelineRun: PipelineRunKind) => {
   const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
-  const [canPatchPipelineRun] = useAccessReviewForModel(PipelineRunModel, 'patch');
   const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
   const [canPatchSnapshot] = useAccessReviewForModel(SnapshotModel, 'patch');
 
@@ -27,58 +26,68 @@ export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] =>
 
   const [snapshots, snapshotsLoaded, snapshotsError] = useSnapshots(namespace);
 
+  const snapShotLabel = pipelineRun?.metadata?.labels?.[PipelineRunLabel.SNAPSHOT];
+
   const snapshot = React.useMemo(
     () =>
       snapshotsLoaded &&
       !snapshotsError &&
-      snapshots.find(
-        (sn) => sn.metadata?.name === pipelineRun?.metadata?.labels?.[PipelineRunLabel.SNAPSHOT],
-      ),
-    [snapshots, snapshotsLoaded, snapshotsError, pipelineRun?.metadata?.labels],
+      snapshots.find((sn) => sn.metadata?.name === snapShotLabel),
+    [snapshots, snapshotsLoaded, snapshotsError, snapShotLabel],
   );
 
   const runType = React.useMemo(
     () => pipelineRun?.metadata?.labels[PipelineRunLabel.PIPELINE_TYPE],
-    [pipelineRun.metadata?.labels],
+    [pipelineRun?.metadata?.labels],
   );
 
-  const scenario = React.useMemo(
-    () => pipelineRun?.metadata?.labels?.[PipelineRunLabel.TEST_SERVICE_SCENARIO],
-    [pipelineRun.metadata.labels],
-  );
+  const scenario = pipelineRun?.metadata?.labels?.[PipelineRunLabel.TEST_SERVICE_SCENARIO];
+
+  return {
+    cta: () =>
+      runType === PipelineRunType.BUILD
+        ? componentLoaded &&
+          !componentError &&
+          rerunBuildPipeline(component).then(() => {
+            navigate(
+              `/application-pipeline/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
+            );
+          })
+        : runType === PipelineRunType.TEST &&
+          snapshot &&
+          scenario &&
+          rerunTestPipeline(snapshot, scenario).then(() => {
+            navigate(
+              `/application-pipeline/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
+            );
+          }),
+    isDisabled:
+      (runType === PipelineRunType.BUILD && (!canPatchComponent || !isPACEnabled)) ||
+      (runType === PipelineRunType.TEST && (!canPatchSnapshot || !snapshot || !scenario)),
+
+    disabledTooltip:
+      (runType === PipelineRunType.BUILD && !canPatchComponent) ||
+      !isPACEnabled ||
+      (runType === PipelineRunType.TEST && !canPatchSnapshot)
+        ? "You don't have access to rerun"
+        : runType === PipelineRunType.TEST && (!snapshot || !scenario)
+        ? 'Missing snapshot or scenario'
+        : null,
+  };
+};
+
+export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] => {
+  const { cta, isDisabled, disabledTooltip } = usePipelinererunAction(pipelineRun);
+
+  const [canPatchPipelineRun] = useAccessReviewForModel(PipelineRunModel, 'patch');
 
   return [
     {
       id: 'pipelinerun-rerun',
       label: 'Rerun',
-      disabled:
-        (runType === PipelineRunType.BUILD && (!canPatchComponent || !isPACEnabled)) ||
-        (runType === PipelineRunType.TEST && (!canPatchSnapshot || !snapshot)),
-      disabledTooltip:
-        (runType === PipelineRunType.BUILD && !canPatchComponent) ||
-        !isPACEnabled ||
-        (runType === PipelineRunType.TEST && !canPatchSnapshot)
-          ? "You don't have access to rerun"
-          : runType === PipelineRunType.TEST && (!snapshot || !scenario)
-          ? 'Missing snapshot or scenario'
-          : null,
-      cta: () =>
-        runType === PipelineRunType.BUILD
-          ? componentLoaded &&
-            !componentError &&
-            rerunBuildPipeline(component).then(() => {
-              navigate(
-                `/application-pipeline/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
-              );
-            })
-          : runType === PipelineRunType.TEST &&
-            snapshot &&
-            scenario &&
-            rerunTestPipeline(snapshot, scenario).then(() => {
-              navigate(
-                `/application-pipeline/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
-              );
-            }),
+      disabled: isDisabled,
+      disabledTooltip,
+      cta,
     },
     {
       cta: () => pipelineRunStop(pipelineRun),

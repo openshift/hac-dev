@@ -7,6 +7,7 @@ import { PipelineRunLabel, PipelineRunType } from '../../../../consts/pipelineru
 import { useComponents } from '../../../../hooks/useComponents';
 import { usePLRVulnerabilities } from '../../../../hooks/useScanResults';
 import { useSearchParam } from '../../../../hooks/useSearchParam';
+import { useSnapshots } from '../../../../hooks/useSnapshots';
 import { mockComponentsData } from '../../../ApplicationDetails/__data__';
 import { PipelineRunListRow } from '../../../PipelineRunListView/PipelineRunListRow';
 import SnapshotPipelineRunsList from '../SnapshotPipelineRunsList';
@@ -31,6 +32,10 @@ jest.mock('../../../../hooks/useScanResults', () => ({
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
   useNavigate: jest.fn(),
+}));
+
+jest.mock('../../../../hooks/useSnapshots', () => ({
+  useSnapshots: jest.fn(),
 }));
 
 jest.mock('../../../../hooks/useSearchParam', () => ({
@@ -75,6 +80,7 @@ jest.mock('../../../../utils/rbac', () => ({
 const useSearchParamMock = useSearchParam as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
 const usePLRVulnerabilitiesMock = usePLRVulnerabilities as jest.Mock;
+const mockUseSnapshots = useSnapshots as jest.Mock;
 
 const params: any = {};
 
@@ -165,6 +171,7 @@ describe('SnapshotPipelinerunsTab', () => {
   beforeEach(() => {
     useSearchParamMock.mockImplementation(mockUseSearchParam);
     useComponentsMock.mockReturnValue([mockComponentsData, true]);
+    mockUseSnapshots.mockReturnValue([[{ metadata: { name: 'snp1' } }], true]);
   });
 
   it('should render spinner if pipeline data is not loaded', () => {
