@@ -25,7 +25,7 @@ const ReleasePlanAdmissionListRow: React.FC<
         {obj.spec.releaseStrategy}
       </TableData>
       <TableData className={releasesPlanAdmissionTableColumnClasses.autoRelease}>
-        {capitalize(obj.metadata.labels['release.appstudio.openshift.io/auto-release']) ?? '-'}
+        {capitalize(obj.metadata.labels?.['release.appstudio.openshift.io/auto-release'] ?? '-')}
       </TableData>
       <TableData className={releasesPlanAdmissionTableColumnClasses.kebab}>
         <ActionMenu actions={actions} />

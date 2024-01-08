@@ -26,11 +26,12 @@ const ReleasePlanListRow: React.FC<React.PropsWithChildren<RowFunctionArgs<Relea
       </TableData>
       <TableData className={releasesPlanTableColumnClasses.target}>{obj.spec.target}</TableData>
       <TableData className={releasesPlanTableColumnClasses.autoRelease}>
-        {capitalize(obj.metadata.labels['release.appstudio.openshift.io/auto-release']) ?? '-'}
+        {capitalize(obj.metadata.labels?.['release.appstudio.openshift.io/auto-release'] ?? '-')}
       </TableData>
       <TableData className={releasesPlanTableColumnClasses.standingAttribution}>
-        {capitalize(obj.metadata.labels['release.appstudio.openshift.io/standing-attribution']) ??
-          '-'}
+        {capitalize(
+          obj.metadata.labels?.['release.appstudio.openshift.io/standing-attribution'] ?? '-',
+        )}
       </TableData>
       <TableData className={releasesPlanTableColumnClasses.kebab}>
         <ActionMenu actions={actions} />
