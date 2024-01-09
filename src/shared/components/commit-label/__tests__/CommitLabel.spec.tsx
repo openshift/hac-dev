@@ -32,7 +32,9 @@ describe('CommitLabel', () => {
   it('should render the correct provider icon', () => {
     let label = render(<CommitLabel gitProvider={GitProvider.GITHUB} sha={sha} shaURL={shaURL} />);
     let icon = label.queryByTestId(`git-hub-icon`);
+    const link = label.getByTestId(`commit-label-9135b3a`);
     expect(icon).toBeInTheDocument();
+    expect(link.parentElement).toHaveClass('black-icon');
     label.unmount();
 
     label = render(<CommitLabel gitProvider={GitProvider.GITLAB} sha={sha} shaURL={shaURL} />);
