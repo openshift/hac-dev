@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.4.0](https://github.com/openshift/hac-dev/compare/rhtap-ui-v0.3.1...rhtap-ui-v0.4.0) (2024-01-09)
+
+
+### Features
+
+* **cmp:** add codecov tests ([9fe441d](https://github.com/openshift/hac-dev/commit/9fe441d726603997d7d7330a6da1d8cff2582ae9))
+* **cmp:** address review comments ([f3c8440](https://github.com/openshift/hac-dev/commit/f3c84403e122fbf7fe5a3524e8b35febf9401e1b))
+
+
+### Bug Fixes
+
+* **commit:** use black color for GH commit logo ([7038569](https://github.com/openshift/hac-dev/commit/7038569c9fac77e8e2e7b5b0f582f736967ce86a))
+* **import-flow:** optmize import flow api requests ([db4f4c2](https://github.com/openshift/hac-dev/commit/db4f4c27891d4e507bd455015a6550d4daf7ce52))
+* **import:** avoid resetting name field if changed ([e676903](https://github.com/openshift/hac-dev/commit/e676903782076a9bc6a11a11b9e98ae5b548713a))
+* **integration:** handle missing rev in git params ([d27dd67](https://github.com/openshift/hac-dev/commit/d27dd676a6d66922387a06fe46e5dabe7456874a))
+* **release-plan:** add undefined check on labels ([c2f7b26](https://github.com/openshift/hac-dev/commit/c2f7b26228eacb0f3257112a6489f1d147ce21a1))
+* **slack:** update slack links ([b5a7946](https://github.com/openshift/hac-dev/commit/b5a79462481a78ef67df4dfeb93a4b8f53d5112c))
+
 ## [0.3.1](https://github.com/openshift/hac-dev/compare/rhtap-ui-v0.3.0...rhtap-ui-v0.3.1) (2023-12-12)
 
 
