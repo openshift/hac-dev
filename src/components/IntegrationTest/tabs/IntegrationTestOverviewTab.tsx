@@ -112,6 +112,9 @@ const IntegrationTestOverviewTab: React.FC<
                       integrationTest.spec.resolverRef.params,
                       param.name,
                     );
+                    if (!param.value) {
+                      return null;
+                    }
                     return (
                       <DescriptionListGroup key={param.name}>
                         <DescriptionListTerm>{getLabelForParam(param.name)}</DescriptionListTerm>
