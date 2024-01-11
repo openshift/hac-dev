@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useTaskRun } from '../../hooks/usePipelineRuns';
@@ -7,7 +8,7 @@ import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState
 import { HttpError } from '../../shared/utils/error/http-error';
 import { TektonResourceLabel } from '../../types';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
-import { taskRunStatus } from '../../utils/pipeline-utils';
+import { runStatus, taskRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { SecurityEnterpriseContractTab } from '../EnterpriseContractView/SecurityEnterpriseContractTab';
 import { isResourceEnterpriseContract } from '../EnterpriseContractView/utils';
@@ -24,13 +25,25 @@ export const TaskRunDetailsView: React.FC<React.PropsWithChildren<TaskRunDetails
 }) => {
   const { namespace, workspace } = useWorkspaceInfo();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
-
+  const params = useParams();
+  const navigate = useNavigate();
   const [taskRun, loaded, error] = useTaskRun(namespace, taskRunName);
 
   const trStatus = React.useMemo(
     () => loaded && taskRun && taskRunStatus(taskRun),
     [loaded, taskRun],
   );
+  const applicationName = taskRun?.metadata?.labels[PipelineRunLabel.APPLICATION];
+  const baseURL = `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRunName}`;
+  const { activeTab } = params;
+
+  React.useEffect(() => {
+    if (!activeTab && trStatus) {
+      trStatus === runStatus.Succeeded
+        ? navigate(`${baseURL}/details`)
+        : navigate(`${baseURL}/logs`);
+    }
+  }, [activeTab, baseURL, navigate, trStatus]);
 
   if (error) {
     const httpError = HttpError.fromCode((error as any).code);
@@ -51,7 +64,6 @@ export const TaskRunDetailsView: React.FC<React.PropsWithChildren<TaskRunDetails
     );
   }
 
-  const applicationName = taskRun.metadata?.labels[PipelineRunLabel.APPLICATION];
   const plrName = taskRun.metadata?.labels[TektonResourceLabel.pipelinerun];
   const isEnterpriseContract = isResourceEnterpriseContract(taskRun);
 
@@ -83,7 +95,7 @@ export const TaskRunDetailsView: React.FC<React.PropsWithChildren<TaskRunDetails
           <StatusIconWithTextLabel status={trStatus} />
         </>
       }
-      baseURL={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/taskruns/${taskRunName}`}
+      baseURL={baseURL}
       tabs={[
         {
           key: 'details',

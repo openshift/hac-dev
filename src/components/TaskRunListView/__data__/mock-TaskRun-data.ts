@@ -196,6 +196,7 @@ export const testTaskRuns: TaskRunKind[] = [
       labels: {
         'app.kubernetes.io/managed-by': 'tekton-pipelines',
         'tekton.dev/task': 'example-task',
+        'appstudio.openshift.io/application': 'app',
       },
     },
     spec: {
