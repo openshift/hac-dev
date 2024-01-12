@@ -1,5 +1,6 @@
 import {
   commonFetchJSON,
+  commonFetchText,
   K8sResourceCommon,
   MatchExpression,
   MatchLabels,
@@ -330,9 +331,7 @@ export const getTaskRuns = (
 ) => getFilteredTaskRuns(workspace, namespace, '', options, nextPageToken, cacheKey);
 
 const getLog = (workspace: string, taskRunPath: string) =>
-  commonFetchJSON<Log>(
-    `${getTRUrlPrefix(workspace)}/${taskRunPath.replace('/records/', '/logs/')}`,
-  );
+  commonFetchText(`${getTRUrlPrefix(workspace)}/${taskRunPath.replace('/records/', '/logs/')}`);
 
 export const getTaskRunLog = (
   workspace: string,
@@ -347,8 +346,6 @@ export const getTaskRunLog = (
     { limit: 1 },
   ).then((x) =>
     x?.[1]?.records.length > 0
-      ? getLog(workspace, x?.[1]?.records[0].name).then((response) =>
-          decodeValue(response.result.data),
-        )
+      ? getLog(workspace, x?.[1]?.records[0].name).catch(() => throw404())
       : throw404(),
   );
