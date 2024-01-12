@@ -91,12 +91,14 @@ export class ComponentPage extends AbstractWizardPage {
     UIhelper.selectValueInDropdownbyLabelName('Runtime', runtimeName);
   }
 
-  clickCreateApplication() {
+  clickCreateApplication(customPipeline = false) {
     cy.contains('button', 'Create application', { timeout: 80000 })
       .should('be.enabled')
       .invoke('click')
       .should('be.disabled');
-    Common.waitForLoad();
+    if (!customPipeline) {
+      Common.waitForLoad();
+    }
   }
 
   checkAlert(message: string) {

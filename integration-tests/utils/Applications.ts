@@ -190,7 +190,7 @@ export class Applications {
         .type(secret.value, { log: false });
       UIhelper.clickButton('Create').should('not.exist');
     }
-    componentPage.clickCreateApplication();
+    componentPage.clickCreateApplication(useCustomBuildPipeline);
   }
 
   static verifySecretUsingAPI(secretName: string, key: string, value: string) {
