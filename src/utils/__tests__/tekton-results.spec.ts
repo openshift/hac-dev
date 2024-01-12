@@ -1,4 +1,4 @@
-import { commonFetchJSON } from '@openshift/dynamic-plugin-sdk-utils';
+import { commonFetchJSON, commonFetchText } from '@openshift/dynamic-plugin-sdk-utils';
 import {
   AND,
   createTektonResultsUrl,
@@ -23,7 +23,7 @@ import {
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
 
 const commonFetchJSONMock = commonFetchJSON as unknown as jest.Mock;
-
+const commonFetchTextMock = commonFetchText as unknown as jest.Mock;
 const sampleOptions: TektonResultsOptions = {
   filter: 'count > 1',
   selector: {
@@ -77,12 +77,7 @@ const mockLogsRecordsList = {
   ],
 } as RecordsList;
 
-const mockLogResponse = {
-  result: {
-    // 'sample log'
-    data: 'c2FtcGxlIGxvZw==',
-  },
-};
+const mockLogResponse = 'sample log';
 
 describe('tekton-results', () => {
   beforeEach(() => {
@@ -529,14 +524,15 @@ describe('tekton-results', () => {
 
   describe('getTaskRunLog', () => {
     it('should return the latest component build task run', async () => {
-      commonFetchJSONMock
-        .mockReturnValueOnce(mockLogsRecordsList)
-        .mockReturnValueOnce(Promise.resolve(mockLogResponse));
+      commonFetchJSONMock.mockReturnValueOnce(mockLogsRecordsList);
+      commonFetchTextMock.mockReturnValueOnce(Promise.resolve(mockLogResponse));
       expect(await getTaskRunLog('test-ws', 'test-ns', 'sample-task-run')).toEqual('sample log');
       expect(commonFetchJSONMock.mock.calls).toEqual([
         [
           '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=5&filter=data_type+%3D%3D+%22results.tekton.dev%2Fv1alpha2.Log%22+%26%26+data.spec.resource.kind+%3D%3D+%22TaskRun%22+%26%26+data.spec.resource.name+%3D%3D+%22sample-task-run%22',
         ],
+      ]);
+      expect(commonFetchTextMock.mock.calls).toEqual([
         [
           '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/b9f43742-3675-4a71-8d73-31c5f5080a74/logs/113298cc-07f9-3ce0-85e3-5cf635eacf62',
         ],
