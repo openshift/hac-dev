@@ -2,7 +2,7 @@
 
 React.js application for HAC Developer Experience built using Patternfly 4 and shared Red Hat cloud service frontend components. This application integrates into cloud.redhat.com using Webpack 5 module federation.
 
-HAC Developer Experience will deliver the UI for App Studio.
+HAC Developer Experience will deliver the UI for App Studio..
 
 ## Getting started
 
