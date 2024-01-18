@@ -140,7 +140,7 @@ export const createEnvironmentKindFromReleasePlan = (
   kind: EnvironmentGroupVersionKind.kind,
   metadata: releasePlan.metadata,
   spec: {
-    displayName: releasePlan.spec.displayName,
+    displayName: releasePlan.metadata.name,
     tags: [EnvironmentType.managed],
     type: 'non-poc',
     deploymentStrategy: EnvironmentDeploymentStrategy.Manual,

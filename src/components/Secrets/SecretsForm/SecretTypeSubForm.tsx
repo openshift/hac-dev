@@ -188,7 +188,7 @@ export const SecretTypeSubForm: React.FC<React.PropsWithChildren<unknown>> = () 
       <KeyValueField
         name="labels"
         label="Labels"
-        entries={[{ name: '', value: '' }]}
+        entries={[{ key: '', value: '' }]}
         description="You can add labels to provide more context or tag your secret."
       />
     </>

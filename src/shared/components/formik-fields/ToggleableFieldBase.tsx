@@ -11,6 +11,7 @@ type ToggleableFieldBaseProps = CheckboxFieldProps & {
 
 const ToggleableFieldBase: React.FC<ToggleableFieldBaseProps> = ({
   label,
+  labelIcon,
   formLabel,
   helpText,
   required,
@@ -25,7 +26,7 @@ const ToggleableFieldBase: React.FC<ToggleableFieldBaseProps> = ({
   const isValid = !(touched && error);
   const errorMessage = !isValid ? error : '';
   return (
-    <FormGroup fieldId={fieldId} label={formLabel} isRequired={required}>
+    <FormGroup fieldId={fieldId} label={formLabel} labelIcon={labelIcon} isRequired={required}>
       {children({
         ...field,
         ...props,

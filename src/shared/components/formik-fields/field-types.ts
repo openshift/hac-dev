@@ -190,7 +190,7 @@ export interface EnvironmentFieldProps extends FieldProps {
 }
 
 export interface KeyValueFieldProps extends FieldProps {
-  entries?: NameValuePair[];
+  entries?: { key: string; value: string }[];
   description?: string;
 }
 

@@ -95,10 +95,19 @@ export type ReleasePlanKind = K8sResourceCommon & {
 };
 
 export type ReleasePlanSpec = {
-  displayName: string;
   application: string;
   target: string;
-  releaseStrategy?: string;
+  data?: any;
+  pipelineRef?: {
+    resolver: ResolverType;
+    params: Param[];
+  };
+  serviceAccount?: string;
+};
+
+export const ReleasePlanLabel = {
+  AUTO_RELEASE: 'release.appstudio.openshift.io/auto-release',
+  STANDING_ATTRIBUTION: 'release.appstudio.openshift.io/standing-attribution',
 };
 
 export type ReleaseTarget = {

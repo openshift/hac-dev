@@ -11,6 +11,7 @@ import './RadioGroupField.scss';
 
 const RadioGroupField: React.FC<React.PropsWithChildren<RadioGroupFieldProps>> = ({
   label,
+  labelIcon,
   options,
   helpText,
   required,
@@ -30,6 +31,7 @@ const RadioGroupField: React.FC<React.PropsWithChildren<RadioGroupFieldProps>> =
       fieldId={fieldId}
       isRequired={required}
       label={label}
+      labelIcon={labelIcon}
       isInline={isInline}
     >
       {options.map((option) => {

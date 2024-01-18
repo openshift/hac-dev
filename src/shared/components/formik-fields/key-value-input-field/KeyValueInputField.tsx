@@ -25,7 +25,7 @@ const KeyValueField: React.FC<React.PropsWithChildren<KeyValueFieldProps>> = ({
   }, [entries]);
   const [keyValue, setKeyValue] = React.useState(keyValues);
   const onChangeKeyValuePair = React.useCallback(
-    ({ nameValuePairs: keyValuePairs }: any) => {
+    ({ nameValuePairs: keyValuePairs }: { nameValuePairs: string[][] }) => {
       if (keyValuePairs) {
         const updatedNameValuePairs = compact(
           keyValuePairs.map(([key, value]) => (value.length ? { key, value } : null)),

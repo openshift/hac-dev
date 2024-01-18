@@ -14,7 +14,7 @@ export const ApplicationDropdown: React.FC<React.PropsWithChildren<ApplicationDr
 ) => {
   const { namespace } = useWorkspaceInfo();
   const [applications, loaded] = useApplications(namespace);
-  const [, , { setValue }] = useField<string>('targets.application');
+  const [, , { setValue }] = useField<string>(props.name);
 
   const dropdownItems = React.useMemo(
     () => applications.map((a) => ({ key: a.metadata.name, value: a.metadata.name })),
@@ -26,6 +26,7 @@ export const ApplicationDropdown: React.FC<React.PropsWithChildren<ApplicationDr
       {...props}
       label="Select application"
       placeholder={!loaded ? 'Loading applications...' : 'Select application'}
+      isDisabled={props.isDisabled || !loaded}
       items={dropdownItems}
       onChange={(app: string) => setValue(app)}
     />
