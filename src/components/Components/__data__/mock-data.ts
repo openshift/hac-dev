@@ -24,6 +24,7 @@ export const componentCRMocks: ComponentKind[] = [
       },
     },
     status: {
+      'build-nudged-by': ['mock-component-2', 'mock-component-3'],
       conditions: [
         {
           message: 'Component has been successfully created',
@@ -69,6 +70,7 @@ export const componentCRMocks: ComponentKind[] = [
         },
       },
       targetPort: 3000,
+      'build-nudges-ref': ['mock-component'],
     },
     status: {
       conditions: [
