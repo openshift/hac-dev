@@ -21,6 +21,11 @@ type ComponentWithLatestBuildPipeline = ComponentKind & {
   latestBuildPipelineRun?: PipelineRunKind;
 };
 
+export const getContainerImageLink = (url: string) => {
+  const imageUrl = url.includes('@sha') ? url.split('@sha')[0] : url;
+  return imageUrl.startsWith('http') ? imageUrl : `https://${imageUrl}`;
+};
+
 const ComponentsListRow: React.FC<RowFunctionArgs<ComponentWithLatestBuildPipeline>> = ({
   obj: component,
   customData,
@@ -67,11 +72,10 @@ const ComponentsListRow: React.FC<RowFunctionArgs<ComponentWithLatestBuildPipeli
           {component.spec.containerImage && (
             <FlexItem>
               <ExternalLink
-                href={
-                  component.spec.containerImage.startsWith('http')
-                    ? component.spec.containerImage
-                    : `https://${component.spec.containerImage}`
-                }
+                /** by default patternfly button disable text selection on Button component
+                    this enables it on <a /> tag */
+                style={{ userSelect: 'auto' }}
+                href={getContainerImageLink(component.spec.containerImage)}
                 text={component.spec.containerImage}
               />
             </FlexItem>

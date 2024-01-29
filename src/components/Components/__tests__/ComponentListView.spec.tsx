@@ -9,6 +9,7 @@ import { ComponentGroupVersionKind, PipelineRunGroupVersionKind } from '../../..
 import { componentCRMocks } from '../__data__/mock-data';
 import { mockPipelineRuns } from '../__data__/mock-pipeline-run';
 import ComponentListView from '../ComponentListView';
+import { getContainerImageLink } from '../ComponentsListRow';
 
 const mockComponents = componentCRMocks.reduce((acc, mock) => {
   acc.push({ ...mock, spec: { ...mock.spec, application: 'test-app' } });
@@ -205,5 +206,20 @@ describe('ComponentListViewPage', () => {
     useTRPipelineRunsMock.mockReturnValue([[], true, undefined, getNextPageMock]);
     render(<ComponentListView applicationName="test-app" />);
     expect(getNextPageMock).toHaveBeenCalled();
+  });
+});
+
+describe('getContainerImageLink', () => {
+  it('should return valid container image url', () => {
+    expect(getContainerImageLink('https://quay.io/repo/image')).toEqual(
+      'https://quay.io/repo/image',
+    );
+    expect(getContainerImageLink('quay.io/repo/image')).toEqual('https://quay.io/repo/image');
+    expect(getContainerImageLink('quay.io/repo/image@sha256:asd23412s1243')).toEqual(
+      'https://quay.io/repo/image',
+    );
+    expect(getContainerImageLink('https://quay.io/repo/image@sha256:asd23412s1243')).toEqual(
+      'https://quay.io/repo/image',
+    );
   });
 });
