@@ -34,7 +34,11 @@ const ReleasesListRow: React.FC<
         {obj.spec.releasePlan}
       </TableData>
       <TableData className={releasesTableColumnClasses.releaseSnapshot}>
-        {obj.spec.snapshot}
+        <Link
+          to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/snapshots/${obj.spec.snapshot}`}
+        >
+          {obj.spec.snapshot}
+        </Link>
       </TableData>
       <TableData className={css(releasesTableColumnClasses.kebab, 'm-no-actions')}> </TableData>
     </>

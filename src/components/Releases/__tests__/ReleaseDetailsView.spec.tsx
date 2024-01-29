@@ -51,7 +51,7 @@ describe('ReleaseDetailsView', () => {
         snapshot: 'test-snapshot',
       },
     };
-    watchResourceMock.mockReturnValueOnce([mockRelease, true]).mockReturnValue([[], true]);
+    watchResourceMock.mockReturnValue([mockRelease, true]);
     routerRenderer(<ReleaseDetailsView applicationName="my-app" releaseName="test-release" />);
     expect(screen.getAllByRole('heading')[0]).toHaveTextContent('test-release');
   });
