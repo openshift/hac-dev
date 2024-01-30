@@ -16,12 +16,14 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(() => ({ t: (x) => x })),
 }));
 
+const navigateMock = jest.fn();
+
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
   return {
     ...actual,
     Link: (props) => <a href={props.to}>{props.children}</a>,
-    useNavigate: jest.fn(),
+    useNavigate: () => navigateMock,
     useSearchParams: () => React.useState(() => new URLSearchParams()),
   };
 });
@@ -51,6 +53,24 @@ describe('TaskRunDetailsView', () => {
   it('should render taskrun name if taskrun data is loaded', () => {
     useTaskRunMock.mockReturnValueOnce([testTaskRuns[0], true]).mockReturnValue([[], true]);
     routerRenderer(<TaskRunDetailsView taskRunName={taskrunName} />);
+    screen.getAllByText(taskrunName);
+  });
+
+  it('should redirect to details when taskrun succeeded', () => {
+    useTaskRunMock.mockReturnValueOnce([testTaskRuns[1], true]).mockReturnValue([[], true]);
+    routerRenderer(<TaskRunDetailsView taskRunName={taskrunName} />);
+    expect(navigateMock).toHaveBeenLastCalledWith(
+      '/application-pipeline/workspaces//applications/app/taskruns/example/details',
+    );
+    screen.getAllByText(taskrunName);
+  });
+
+  it('should redirect to logs when taskrun failed', () => {
+    useTaskRunMock.mockReturnValueOnce([testTaskRuns[0], true]).mockReturnValue([[], true]);
+    routerRenderer(<TaskRunDetailsView taskRunName={taskrunName} />);
+    expect(navigateMock).toHaveBeenCalledWith(
+      '/application-pipeline/workspaces//applications/example-app/taskruns/example/logs',
+    );
     screen.getAllByText(taskrunName);
   });
 });
