@@ -15,14 +15,14 @@ type ApplicationPipelineGitHubAppDataType = {
 export const ApplicationPipelineGitHubAppData: {
   [env: string]: ApplicationPipelineGitHubAppDataType;
 } = {
-  dev: { url: 'https://github.com/apps/rhtap-staging', name: 'rhtap-staging' },
+  dev: { url: 'https://github.com/apps/konflux-staging', name: 'konflux-staging' },
   stage: {
-    url: 'https://github.com/apps/rhtap-staging',
-    name: 'rhtap-staging',
+    url: 'https://github.com/apps/konflux-staging',
+    name: 'konflux-staging',
   },
   prod: {
-    url: 'https://github.com/apps/red-hat-trusted-app-pipeline',
-    name: 'red-hat-trusted-app-pipeline',
+    url: 'https://github.com/apps/red-hat-konflux',
+    name: 'red-hat-konflux',
   },
 };
 
