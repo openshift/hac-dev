@@ -7,7 +7,7 @@ import ExclamationTriangleIcon from '@patternfly/react-icons/dist/js/icons/excla
 import { global_danger_color_100 as redColor } from '@patternfly/react-tokens/dist/js/global_danger_color_100';
 import { global_success_color_100 as greenColor } from '@patternfly/react-tokens/dist/js/global_success_color_100';
 import { global_warning_color_100 as yellowColor } from '@patternfly/react-tokens/dist/js/global_warning_color_100';
-import { ENTERPRISE_CONTRACT_STATUS } from './types';
+import { ENTERPRISE_CONTRACT_STATUS, EnterpriseContractResult } from './types';
 
 const ENTERPRISE_CONTRACT_LABEL = 'build.appstudio.redhat.com/pipeline';
 
@@ -43,4 +43,10 @@ export const getRuleStatus = (type: ENTERPRISE_CONTRACT_STATUS) => {
         </>
       );
   }
+};
+
+export const extractEcResultsFromTaskRunLogs = (logs: string): EnterpriseContractResult => {
+  const extractedLogs = logs.match(/(\[report-json\] ).+/g);
+  const json = JSON.parse(extractedLogs.map((l) => l.replace('[report-json] ', '')).join(''));
+  return json;
 };

@@ -2,6 +2,7 @@ import { commonFetchText, getK8sResourceURL } from '@openshift/dynamic-plugin-sd
 import { renderHook } from '@testing-library/react-hooks';
 import { useTaskRuns } from '../../../hooks/useTaskRuns';
 import { PodModel } from '../../../models/pod';
+import { getTaskRunLog } from '../../../utils/tekton-results';
 import {
   mockEnterpriseContractJSON,
   mockEnterpriseContractUIData,
@@ -29,6 +30,12 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
   };
 });
 
+jest.mock('../../../utils/tekton-results', () => ({
+  ...jest.requireActual('../../../utils/tekton-results'),
+  getTaskRunLog: jest.fn(),
+}));
+
+const mockGetTaskRunLogs = getTaskRunLog as jest.Mock;
 const mockCommmonFetchText = commonFetchText as jest.Mock;
 const mockUseTaskRuns = useTaskRuns as jest.Mock;
 
@@ -96,6 +103,40 @@ describe('useEnterpriseContractResultFromLogs', () => {
     expect(mockCommmonFetchText).toHaveBeenCalled();
     expect(loaded).toBe(true);
     expect(ecResult).toBeUndefined();
+  });
+
+  it('should return handle 404 error', async () => {
+    mockUseTaskRuns.mockReturnValue([
+      [
+        {
+          metadata: {
+            namespace: 'asd',
+            name: 'asd',
+          },
+          status: {
+            podName: 'pod-acdf',
+          },
+        },
+      ],
+      true,
+      undefined,
+    ]);
+    mockCommmonFetchText.mockRejectedValue({ code: 404 });
+    mockGetTaskRunLogs.mockReturnValue(`asdfcdfadsf
+    [report-json] { "components": [] }
+    `);
+
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useEnterpriseContractResultFromLogs('dummy-abcd'),
+    );
+    const [, loaded] = result.current;
+    expect(mockCommmonFetchText).toHaveBeenCalled();
+    expect(loaded).toBe(false);
+    await waitForNextUpdate();
+    const [ec, ecLoaded] = result.current;
+    expect(mockGetTaskRunLogs).toHaveBeenCalled();
+    expect(ecLoaded).toBe(true);
+    expect(ec).toEqual([]);
   });
 });
 
