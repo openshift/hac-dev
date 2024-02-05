@@ -22,7 +22,7 @@ type Props = {
   disabled?: boolean;
 };
 
-const usernameRegex = /^[-_a-zA-Z0-9]{5,45}$/;
+const usernameRegex = /^[-_a-zA-Z0-9]{2,45}$/;
 
 export const UsernameSection: React.FC<React.PropsWithChildren<Props>> = ({ disabled }) => {
   const [, { value: usernames, error }, { setValue, setError }] = useField<string[]>('usernames');
