@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bullseye, Spinner } from '@patternfly/react-core';
-import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
+import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useComponent } from '../../hooks/useComponents';
 import { usePipelineRun } from '../../hooks/usePipelineRuns';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
@@ -36,7 +36,8 @@ export const PipelineRunDetailsView: React.FC<
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
   const [pipelineRun, loaded, error] = usePipelineRun(namespace, pipelineRunName);
-  const { cta, isDisabled, disabledTooltip } = usePipelinererunAction(pipelineRun);
+  const { cta, isDisabled, disabledTooltip, hidden, key, label } =
+    usePipelinererunAction(pipelineRun);
 
   const [taskRuns, taskRunsLoaded, taskRunError] = useTaskRuns(namespace, pipelineRunName);
   const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
@@ -50,11 +51,6 @@ export const PipelineRunDetailsView: React.FC<
   const plrStatus = React.useMemo(
     () => loaded && pipelineRun && pipelineRunStatus(pipelineRun),
     [loaded, pipelineRun],
-  );
-
-  const runType = React.useMemo(
-    () => loaded && !error && pipelineRun.metadata?.labels[PipelineRunLabel.PIPELINE_TYPE],
-    [pipelineRun?.metadata?.labels, loaded, error],
   );
 
   const loadError = error || taskRunError;
@@ -118,11 +114,9 @@ export const PipelineRunDetailsView: React.FC<
             },
           },
           {
-            key: 'rerun',
-            label: 'Rerun',
-            hidden:
-              runType !== PipelineRunType.BUILD &&
-              (!component || !!componentError || isPACEnabled(component)),
+            key,
+            label,
+            hidden,
             isDisabled,
             disabledTooltip,
             onClick: cta,

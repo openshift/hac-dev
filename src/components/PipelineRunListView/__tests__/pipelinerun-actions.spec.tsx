@@ -21,7 +21,7 @@ jest.mock('react-router-dom', () => {
 
 jest.mock('../../../utils/component-utils', () => {
   return {
-    isPACEnabled: true,
+    isPACEnabled: () => true,
   };
 });
 
@@ -331,5 +331,71 @@ describe('usePipelinererunAction', () => {
     );
 
     expect(action.cta).toBeDefined();
+  });
+
+  it('should contain correct key', async () => {
+    useAccessReviewForModelMock.mockReturnValue([true, true]);
+    const { result } = renderHook(() =>
+      usePipelinererunAction({
+        metadata: {
+          labels: {
+            'pipelines.appstudio.openshift.io/type': 'test',
+            [PipelineRunLabel.TEST_SERVICE_SCENARIO]: 'scn1',
+          },
+        },
+        status: { conditions: [{ type: 'Succeeded', status: runStatus.Running }] },
+      } as any),
+    );
+    const action = result.current;
+
+    expect(action).toEqual(
+      expect.objectContaining({
+        key: 'rerun',
+      }),
+    );
+  });
+
+  it('should contain correct label', async () => {
+    useAccessReviewForModelMock.mockReturnValue([true, true]);
+    const { result } = renderHook(() =>
+      usePipelinererunAction({
+        metadata: {
+          labels: {
+            'pipelines.appstudio.openshift.io/type': 'test',
+            [PipelineRunLabel.TEST_SERVICE_SCENARIO]: 'scn1',
+          },
+        },
+        status: { conditions: [{ type: 'Succeeded', status: runStatus.Running }] },
+      } as any),
+    );
+    const action = result.current;
+
+    expect(action).toEqual(
+      expect.objectContaining({
+        label: 'Rerun',
+      }),
+    );
+  });
+
+  it('should contain correct hidden', async () => {
+    useAccessReviewForModelMock.mockReturnValue([true, true]);
+    const { result } = renderHook(() =>
+      usePipelinererunAction({
+        metadata: {
+          labels: {
+            'pipelines.appstudio.openshift.io/type': 'test',
+            [PipelineRunLabel.TEST_SERVICE_SCENARIO]: 'scn1',
+          },
+        },
+        status: { conditions: [{ type: 'Succeeded', status: runStatus.Running }] },
+      } as any),
+    );
+    const action = result.current;
+
+    expect(action).toEqual(
+      expect.objectContaining({
+        hidden: true,
+      }),
+    );
   });
 });

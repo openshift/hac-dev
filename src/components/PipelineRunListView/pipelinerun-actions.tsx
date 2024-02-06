@@ -62,7 +62,7 @@ export const usePipelinererunAction = (pipelineRun: PipelineRunKind) => {
             );
           }),
     isDisabled:
-      (runType === PipelineRunType.BUILD && (!canPatchComponent || !isPACEnabled)) ||
+      (runType === PipelineRunType.BUILD && (!canPatchComponent || !isPACEnabled(component))) ||
       (runType === PipelineRunType.TEST && (!canPatchSnapshot || !snapshot || !scenario)),
 
     disabledTooltip:
@@ -73,18 +73,23 @@ export const usePipelinererunAction = (pipelineRun: PipelineRunKind) => {
         : runType === PipelineRunType.TEST && (!snapshot || !scenario)
         ? 'Missing snapshot or scenario'
         : null,
+    hidden:
+      runType !== PipelineRunType.BUILD &&
+      (!component || !!componentError || isPACEnabled(component)),
+    key: 'rerun',
+    label: 'Rerun',
   };
 };
 
 export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] => {
-  const { cta, isDisabled, disabledTooltip } = usePipelinererunAction(pipelineRun);
+  const { cta, isDisabled, disabledTooltip, key, label } = usePipelinererunAction(pipelineRun);
 
   const [canPatchPipelineRun] = useAccessReviewForModel(PipelineRunModel, 'patch');
 
   return [
     {
-      id: 'pipelinerun-rerun',
-      label: 'Rerun',
+      id: key,
+      label,
       disabled: isDisabled,
       disabledTooltip,
       cta,
