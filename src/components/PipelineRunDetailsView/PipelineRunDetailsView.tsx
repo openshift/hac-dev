@@ -102,7 +102,7 @@ export const PipelineRunDetailsView: React.FC<
           {
             key: 'start-new-build',
             label: 'Start new build',
-            hidden: !component || !!componentError || isPACEnabled(component),
+            hidden: !component || !!componentError || !isPACEnabled(component),
             isDisabled: !canPatchComponent,
             disabledTooltip: "You don't have access to start a new build",
             onClick: () => {

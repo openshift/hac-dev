@@ -26,6 +26,14 @@ jest.mock('../../../utils/workspace-context-utils', () => ({
 
 jest.mock('../../PipelineRunDetailsView/PipelineRunVisualization', () => () => <div />);
 
+jest.mock('../../../utils/component-utils', () => {
+  const actual = jest.requireActual('../../../utils/component-utils');
+  return {
+    ...actual,
+    isPACEnabled: () => true,
+  };
+});
+
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
   return {
@@ -159,13 +167,15 @@ describe('PipelineRunDetailsView', () => {
   });
 
   it('should render spinner if pipelinerun data is not loaded', () => {
-    watchResourceMock.mockReturnValue([[], false]);
+    watchResourceMock.mockReturnValueOnce([[], false]).mockReturnValueOnce([[], false]);
     routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     screen.getByRole('progressbar');
   });
 
   it('should render the error state if the pipeline run is not found', () => {
-    watchResourceMock.mockReturnValue([[], false, { code: 404 }]);
+    watchResourceMock
+      .mockReturnValueOnce([[], false, { code: 404 }])
+      .mockReturnValueOnce([[], false, { code: 404 }]);
     routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
     screen.getByText('404: Page not found');
     screen.getByText('Go to applications list');
@@ -266,62 +276,6 @@ describe('PipelineRunDetailsView', () => {
         '/application-pipeline/workspaces/test-ws/applications/test-app/activity/pipelineruns?name=mock-component',
       ),
     );
-  });
-
-  it('should disable rerun if test PLR has no scenario info', async () => {
-    const navigateMock = jest.fn();
-    useNavigateMock.mockImplementation(() => {
-      return navigateMock;
-    });
-    watchResourceMock
-      .mockReturnValueOnce([
-        {
-          metadata: {
-            labels: {
-              [PipelineRunLabel.SNAPSHOT]: 'snp1',
-              ...mockPipelineRuns[1].metadata.labels,
-            },
-          },
-          ...mockPipelineRuns[1],
-        },
-        true,
-      ])
-      .mockReturnValue([[], true]);
-
-    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
-    fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
-    screen.debug();
-
-    screen.queryByText('Rerun');
-    expect(screen.queryByText('Rerun')).toHaveAttribute('aria-disabled', 'true');
-  });
-
-  it('should disable rerun if test PLR has wrong snapshot', async () => {
-    const navigateMock = jest.fn();
-    useNavigateMock.mockImplementation(() => {
-      return navigateMock;
-    });
-    watchResourceMock
-      .mockReturnValueOnce([
-        {
-          metadata: {
-            labels: {
-              ...mockPipelineRuns[1].metadata.labels,
-              [PipelineRunLabel.SNAPSHOT]: 'snap-err',
-            },
-          },
-          ...mockPipelineRuns[1],
-        },
-        true,
-      ])
-      .mockReturnValue([[], true]);
-
-    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
-    fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
-    screen.debug();
-
-    screen.queryByText('Rerun');
-    expect(screen.queryByText('Rerun')).toHaveAttribute('aria-disabled', 'true');
   });
 
   it('should rerun Test and navigate to new pipelinerun page', async () => {

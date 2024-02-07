@@ -62,12 +62,14 @@ export const usePipelinererunAction = (pipelineRun: PipelineRunKind) => {
             );
           }),
     isDisabled:
-      (runType === PipelineRunType.BUILD && (!canPatchComponent || !isPACEnabled(component))) ||
+      (runType === PipelineRunType.BUILD &&
+        (!canPatchComponent ||
+          (componentLoaded && !componentError && component && !isPACEnabled(component)))) ||
       (runType === PipelineRunType.TEST && (!canPatchSnapshot || !snapshot || !scenario)),
 
     disabledTooltip:
       (runType === PipelineRunType.BUILD && !canPatchComponent) ||
-      !isPACEnabled ||
+      (componentLoaded && !componentError && component && !isPACEnabled(component)) ||
       (runType === PipelineRunType.TEST && !canPatchSnapshot)
         ? "You don't have access to rerun"
         : runType === PipelineRunType.TEST && (!snapshot || !scenario)
