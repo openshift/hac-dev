@@ -14,15 +14,9 @@ export const useNudgeData = (application: string): [ComponentRelationValue[], bo
             const data: ComponentRelationValue = {
               source: val.metadata.name,
               nudgeType: ComponentRelationNudgeType.NUDGES,
-              target: val.spec[NudgeStats.NUDGES],
-            };
-            return [...acc, data];
-          }
-          if (val.status?.[NudgeStats.NUDGED_BY]) {
-            const data: ComponentRelationValue = {
-              source: val.metadata.name,
-              nudgeType: ComponentRelationNudgeType.NUDGED_BY,
-              target: val.status?.[NudgeStats.NUDGED_BY],
+              target: val.spec[NudgeStats.NUDGES]?.filter(
+                (cname) => !!components?.find((co) => co?.metadata?.name === cname),
+              ),
             };
             return [...acc, data];
           }

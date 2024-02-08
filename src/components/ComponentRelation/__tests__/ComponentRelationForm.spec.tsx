@@ -14,7 +14,7 @@ describe('ComponentRelationForm', () => {
       ],
     });
     expect(screen.getAllByTestId('toggle-component-menu')).toHaveLength(2);
-    expect(screen.getAllByTestId('nudges')).toHaveLength(1);
-    expect(screen.getAllByTestId('nudged-by')).toHaveLength(1);
+    expect(screen.getAllByTestId('nudges-0')).toHaveLength(1);
+    expect(screen.getAllByTestId('nudged-by-0')).toHaveLength(1);
   });
 });

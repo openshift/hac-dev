@@ -43,14 +43,14 @@ export const componentRelationValidationSchema = yup.mixed().test(
 export const transformNudgeData = (data: ComponentRelationValue[]): { [key: string]: string[] } => {
   return data.reduce((acc, { source, nudgeType, target }) => {
     if (!source) return acc;
-    if (target.length === 0) return acc;
     if (nudgeType === ComponentRelationNudgeType.NUDGES) {
       acc[source] = acc[source] ? union(acc[source], target) : target;
       return acc;
     }
-    target.forEach((t) => {
-      acc[t] = acc[t] ? union(acc[t], [source]) : [source];
-    });
+    target.length > 0 &&
+      target.forEach((t) => {
+        acc[t] = acc[t] ? union(acc[t], [source]) : [source];
+      });
     return acc;
   }, {});
 };

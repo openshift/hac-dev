@@ -48,7 +48,7 @@ describe('ComponentRelationModal', () => {
 
   it('should render dropdowns', () => {
     render(<ComponentRelationModal modalProps={{ isOpen: true }} application="apps" />);
-    expect(screen.getAllByTestId('toggle-component-menu')).toHaveLength(4);
+    expect(screen.getAllByTestId('toggle-component-menu')).toHaveLength(2);
   });
 
   it('should show cancelation modal when clicked on cancel', () => {
@@ -74,9 +74,9 @@ describe('ComponentRelationModal', () => {
   it('should render new relationship on clicking `add another component relationship`', () => {
     render(<ComponentRelationModal modalProps={{ isOpen: true }} application="apps" />);
     screen.getByText('Component relationships');
-    expect(screen.getAllByTestId('toggle-component-menu')).toHaveLength(4);
+    expect(screen.getAllByTestId('toggle-component-menu')).toHaveLength(2);
     fireEvent.click(screen.getByText(`Add another component relationship`));
-    expect(screen.getAllByTestId('toggle-component-menu')).toHaveLength(6);
+    expect(screen.getAllByTestId('toggle-component-menu')).toHaveLength(4);
   });
 
   it('should show confirmation modal on relationship save', async () => {
@@ -88,7 +88,7 @@ describe('ComponentRelationModal', () => {
       <ComponentRelationModal modalProps={{ isOpen, onClose }} application="apps" />,
     );
     expect(screen.queryByText('Component relationships')).toBeInTheDocument();
-    fireEvent.click(screen.getAllByTestId('nudges')[0]);
+    fireEvent.click(screen.getByTestId('nudged-by-0'));
     const saveButton = screen.getByText('Save relationships');
     expect(saveButton.getAttribute('class')).not.toContain('pf-m-disabled');
     fireEvent.click(saveButton);

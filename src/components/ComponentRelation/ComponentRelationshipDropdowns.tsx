@@ -26,7 +26,7 @@ const SelectComponentsDropdown: React.FC<SelectComponentsDropdownProps> = ({
   closeOnSelect,
   badgeValue,
 }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const toggleRef = React.useRef<HTMLButtonElement>(null);
   const menuRef = React.useRef<HTMLDivElement>(null);
   return (

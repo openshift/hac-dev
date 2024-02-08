@@ -42,7 +42,7 @@ export const ComponentRelation: React.FC<ComponentRelationProps> = ({ index, com
           <FlexItem>
             <Flex justifyContent={{ default: 'justifyContentFlexStart' }}>
               <Radio
-                id="nudges"
+                id={`nudges-${index}`}
                 isChecked={ComponentRelationNudgeType.NUDGES === nudgeValue}
                 name={nudgeName}
                 label={
@@ -58,11 +58,11 @@ export const ComponentRelation: React.FC<ComponentRelationProps> = ({ index, com
             </Flex>
             <Flex justifyContent={{ default: 'justifyContentFlexStart' }}>
               <Radio
-                id="nudged-by"
+                id={`nudged-by-${index}`}
                 isChecked={ComponentRelationNudgeType.NUDGED_BY === nudgeValue}
                 name={nudgeName}
                 label={
-                  <b>
+                  <b key={index.toString()}>
                     Is nudged by{' '}
                     <HelpTooltipIcon content="The component will be changed by nudging component's build." />
                   </b>
