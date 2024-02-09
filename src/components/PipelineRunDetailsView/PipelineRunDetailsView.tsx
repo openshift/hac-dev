@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bullseye, Spinner } from '@patternfly/react-core';
-import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
+import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useComponent } from '../../hooks/useComponents';
 import { usePipelineRun } from '../../hooks/usePipelineRuns';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
@@ -10,13 +10,14 @@ import DetailsPage from '../../shared/components/details-page/DetailsPage';
 import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
-import { isPACEnabled, rerunBuildPipeline, startNewBuild } from '../../utils/component-utils';
+import { isPACEnabled, startNewBuild } from '../../utils/component-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { SecurityEnterpriseContractTab } from '../EnterpriseContractView/SecurityEnterpriseContractTab';
 import { isResourceEnterpriseContract } from '../EnterpriseContractView/utils';
+import { usePipelinererunAction } from '../PipelineRunListView/pipelinerun-actions';
 import SidePanelHost from '../SidePanel/SidePanelHost';
 import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import PipelineRunDetailsTab from './tabs/PipelineRunDetailsTab';
@@ -35,6 +36,9 @@ export const PipelineRunDetailsView: React.FC<
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
   const [pipelineRun, loaded, error] = usePipelineRun(namespace, pipelineRunName);
+  const { cta, isDisabled, disabledTooltip, hidden, key, label } =
+    usePipelinererunAction(pipelineRun);
+
   const [taskRuns, taskRunsLoaded, taskRunError] = useTaskRuns(namespace, pipelineRunName);
   const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
   const [canPatchPipeline] = useAccessReviewForModel(PipelineRunModel, 'patch');
@@ -47,11 +51,6 @@ export const PipelineRunDetailsView: React.FC<
   const plrStatus = React.useMemo(
     () => loaded && pipelineRun && pipelineRunStatus(pipelineRun),
     [loaded, pipelineRun],
-  );
-
-  const runType = React.useMemo(
-    () => loaded && !error && pipelineRun.metadata?.labels[PipelineRunLabel.PIPELINE_TYPE],
-    [pipelineRun?.metadata?.labels, loaded, error],
   );
 
   const loadError = error || taskRunError;
@@ -103,7 +102,7 @@ export const PipelineRunDetailsView: React.FC<
           {
             key: 'start-new-build',
             label: 'Start new build',
-            hidden: !component || !!componentError || isPACEnabled(component),
+            hidden: !component || !!componentError || !isPACEnabled(component),
             isDisabled: !canPatchComponent,
             disabledTooltip: "You don't have access to start a new build",
             onClick: () => {
@@ -115,24 +114,12 @@ export const PipelineRunDetailsView: React.FC<
             },
           },
           {
-            key: 'rerun',
-            label: 'Rerun',
-            hidden:
-              !component ||
-              !!componentError ||
-              isPACEnabled(component) ||
-              runType !== PipelineRunType.BUILD,
-            isDisabled: !canPatchComponent,
-            disabledTooltip: !canPatchComponent
-              ? "You don't have access to start a new build"
-              : null,
-            onClick: () =>
-              runType === PipelineRunType.BUILD &&
-              rerunBuildPipeline(component).then(() => {
-                navigate(
-                  `/application-pipeline/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
-                );
-              }),
+            key,
+            label,
+            hidden,
+            isDisabled,
+            disabledTooltip,
+            onClick: cta,
           },
           {
             key: 'stop',
