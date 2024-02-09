@@ -11,7 +11,7 @@ const ReleasesEmptyState: React.FC<React.PropsWithChildren<unknown>> = () => (
         A release object represents a deployed snapshot of your application components. To view your
         releases, set up a release plan for your application.
       </Text>
-      <ExternalLink href="https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/how-to-guides/proc_release_application/">
+      <ExternalLink href=" https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/how-to-guides/con_release_application/">
         Learn more about setting up release plans
       </ExternalLink>
     </EmptyStateBody>
