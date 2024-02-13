@@ -19,6 +19,7 @@ import { MVP_FLAG } from '../../utils/flag-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ActivityTab } from '../Activity/ActivityTab';
+import { useComponentRelationAction } from '../ComponentRelation/useComponentRelationAction';
 import { createCustomizeAllPipelinesModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { applicationDeleteModal } from '../modal/resource-modals';
@@ -29,7 +30,6 @@ import ComponentsTab from './tabs/ComponentsTab';
 import DeploymentsTab from './tabs/DeploymentsTab';
 import IntegrationTestsTab from './tabs/IntegrationTestsTab';
 import ReleasesTab from './tabs/ReleasesTab';
-
 import './ApplicationDetails.scss';
 
 type HacbsApplicationDetailsProps = {
@@ -40,6 +40,7 @@ const ApplicationDetails: React.FC<React.PropsWithChildren<HacbsApplicationDetai
   applicationName,
 }) => {
   const track = useTrackEvent();
+  const defineComponentRelationAction = useComponentRelationAction(applicationName);
   const { namespace, workspace } = useWorkspaceInfo();
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
   const [canCreateEnvironment] = useAccessReviewForModel(EnvironmentModel, 'create');
@@ -154,6 +155,7 @@ const ApplicationDetails: React.FC<React.PropsWithChildren<HacbsApplicationDetai
             isDisabled: !canCreateIntegrationTest,
             disabledTooltip: "You don't have access to add an integration test",
           },
+          defineComponentRelationAction(),
           {
             key: 'create-environment',
             label: 'Create environment',

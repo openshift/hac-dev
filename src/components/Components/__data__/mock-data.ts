@@ -24,6 +24,7 @@ export const componentCRMocks: ComponentKind[] = [
       },
     },
     status: {
+      'build-nudged-by': ['nodejs'],
       conditions: [
         {
           message: 'Component has been successfully created',
@@ -69,6 +70,7 @@ export const componentCRMocks: ComponentKind[] = [
         },
       },
       targetPort: 3000,
+      'build-nudges-ref': ['basic-node-js'],
     },
     status: {
       conditions: [
