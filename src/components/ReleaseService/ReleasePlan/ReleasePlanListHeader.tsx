@@ -1,9 +1,11 @@
 export const releasesPlanTableColumnClasses = {
-  name: 'pf-m-width-25 wrap-column',
+  name: 'pf-m-width-20 wrap-column',
   application: 'pf-m-width-15',
-  target: 'pf-m-width-20',
-  autoRelease: 'pf-m-hidden pf-m-width-15 pf-m-visible-on-xl',
+  target: 'pf-m-width-15',
+  autoRelease: 'pf-m-hidden pf-m-width-10 pf-m-visible-on-xl',
   standingAttribution: 'pf-m-hidden pf-m-width-15 pf-m-visible-on-xl',
+  status: 'pf-m-hidden pf-m-width-15 pf-m-visible-on-xl',
+  rpa: 'pf-m-hidden pf-m-width-15 pf-m-visible-on-xl',
   kebab: 'pf-v5-c-table__action',
 };
 
@@ -28,6 +30,14 @@ const ReleasePlanListHeader = () => {
     {
       title: 'Standing attribution',
       props: { className: releasesPlanTableColumnClasses.standingAttribution },
+    },
+    {
+      title: 'Status',
+      props: { className: releasesPlanTableColumnClasses.status },
+    },
+    {
+      title: 'Release plan admission',
+      props: { className: releasesPlanTableColumnClasses.status },
     },
     {
       title: ' ',

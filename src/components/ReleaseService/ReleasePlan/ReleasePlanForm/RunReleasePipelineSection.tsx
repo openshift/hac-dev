@@ -7,19 +7,19 @@ import { InputField, RadioGroupField, TextAreaField } from '../../../../shared';
 import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
 import { ReleasePipelineLocation } from './form-utils';
 
-const GitOptions: React.FC = () => {
+const GitOptions: React.FC<{ required?: boolean }> = ({ required = false }) => {
   const [expanded, setExpanded] = React.useState(true);
   return (
     <>
       <InputField
         name="git.url"
-        label="GitHub URL"
+        label="GitHub URL for the release pipeline"
         placeholder="Example, https://github.com/tektoncd/catalog"
         helpText="The GitHub repository that contains the YAML definition of the pipeline run for your release service."
-        required
+        required={required}
       />
       <ExpandableSection
-        toggleText="Git options"
+        toggleText="Git options for the release pipeline"
         isExpanded={expanded}
         onToggle={(_, e) => setExpanded(e)}
         isIndented
@@ -29,7 +29,7 @@ const GitOptions: React.FC = () => {
             name="git.revision"
             label="Revision"
             helpText="A Git revision commit SHA, branch, or tag to get a file from."
-            required
+            required={required}
           />
         </FormSection>
         <FormSection>
@@ -37,7 +37,7 @@ const GitOptions: React.FC = () => {
             name="git.path"
             label="Path in repository"
             helpText="How can we find the file in your repository?"
-            required
+            required={required}
           />
         </FormSection>
       </ExpandableSection>
@@ -58,7 +58,7 @@ export const RunReleasePipelineSection: React.FC = () => {
         options={[
           {
             value: ReleasePipelineLocation.current,
-            label: `In the current workspace: ${workspace}`,
+            label: `In this workspace: ${workspace}`,
           },
           { value: ReleasePipelineLocation.target, label: 'In a target workspace' },
         ]}
@@ -66,7 +66,7 @@ export const RunReleasePipelineSection: React.FC = () => {
       />
       {pipelineLocation === ReleasePipelineLocation.current && (
         <>
-          <GitOptions />
+          <GitOptions required />
           <InputField
             name="serviceAccount"
             label="Service account"
@@ -81,22 +81,28 @@ export const RunReleasePipelineSection: React.FC = () => {
           />
           <FormikParamsField
             fieldName="params"
-            heading=<>
-              Parameters{' '}
-              <HelpPopover
-                headerContent="Parameters"
-                bodyContent=<>
-                  Add any of the following types of parameters:
-                  <List>
-                    <ListItem>url: The URL of the repo to fetch and clone anonymously.</ListItem>
-                    <ListItem>repo: The repository to find the resource in.</ListItem>
-                    <ListItem>org: The organization to find the repository in.</ListItem>
-                    <ListItem>revision: Git revision to checkout a file from.</ListItem>
-                    <ListItem>pathInRepo: Where to find the file in the repository.</ListItem>
-                  </List>
-                </>
-              />
-            </>
+            heading={
+              <>
+                Parameters{' '}
+                <HelpPopover
+                  headerContent="Parameters"
+                  bodyContent={
+                    <>
+                      Add any of the following types of parameters:
+                      <List>
+                        <ListItem>
+                          url: The URL of the repo to fetch and clone anonymously.
+                        </ListItem>
+                        <ListItem>repo: The repository to find the resource in.</ListItem>
+                        <ListItem>org: The organization to find the repository in.</ListItem>
+                        <ListItem>revision: Git revision to checkout a file from.</ListItem>
+                        <ListItem>pathInRepo: Where to find the file in the repository.</ListItem>
+                      </List>
+                    </>
+                  }
+                />
+              </>
+            }
           />
         </>
       )}
