@@ -11,7 +11,6 @@ export enum NavItem {
   overview = 'Overview',
   applications = 'Applications',
   environments = 'Environments',
-  learning = 'Learning Resources',
   secrets = 'Secrets',
 }
 
