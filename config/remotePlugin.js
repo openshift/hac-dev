@@ -718,6 +718,26 @@ const routeExtensions = [
   },
 ];
 
+const redirectExtensions = [
+  {
+    type: 'core.page/route',
+    properties: {
+      path: [
+        '/application-pipeline/ns/:ns',
+        '/application-pipeline/ns/:ns/pipelinerun/:pipelineRun',
+        '/application-pipeline/ns/:ns/pipelinerun/:pipelineRun/logs',
+        '/application-pipeline/ns/:ns/pipelinerun/:pipelineRun/logs/:task',
+      ],
+      component: {
+        $codeRef: 'GithubRedirect',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+];
+
 module.exports = {
   pluginMetadata: {
     name: packageInfo.name,
@@ -753,6 +773,7 @@ module.exports = {
       FlagUtils: resolve(__dirname, '../src/utils/flag-utils'),
       Redirect: resolve(__dirname, '../src/pages/RedirectPage'),
       NotFound: resolve(__dirname, '../src/pages/NotFoundPage'),
+      GithubRedirect: resolve(__dirname, '../src/pages/GithubRedirectPage'),
     },
   },
   extensions: [
@@ -760,6 +781,7 @@ module.exports = {
     ...flagExtensions,
     ...contextProviderExtensions,
     ...routeExtensions,
+    ...redirectExtensions,
   ],
   sharedModules: {
     react: { singleton: true },
