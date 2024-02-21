@@ -19,6 +19,7 @@ interface PipelineRunLogsProps {
   taskRuns: TaskRunKind[];
   activeTask?: string;
   workspace: string;
+  onActiveTaskChange?: (value: string) => void;
 }
 interface PipelineRunLogsState {
   activeItem: string;
@@ -31,12 +32,14 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
   }
 
   componentDidMount() {
-    const { activeTask, taskRuns, obj } = this.props;
+    const { activeTask, taskRuns, obj, onActiveTaskChange } = this.props;
     const sortedTaskRuns = this.getSortedTaskRun(taskRuns, [
       ...(obj?.status?.pipelineSpec?.tasks || []),
       ...(obj?.status?.pipelineSpec?.finally || []),
     ]);
     const activeItem = this.getActiveTaskRun(sortedTaskRuns, activeTask);
+    const taskName = this.getTaskRunName(activeItem);
+    !activeTask && onActiveTaskChange?.(taskName);
     this.setState({ activeItem });
   }
 
@@ -59,6 +62,11 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
         taskRuns[taskRuns.length - 1];
 
     return activeTaskRun?.metadata.name;
+  };
+
+  getTaskRunName = (taskRunName: string) => {
+    return this.props.taskRuns.find((taskRun) => taskRun.metadata.name === taskRunName)?.metadata
+      ?.labels?.[TektonResourceLabel.pipelineTask];
   };
 
   getSortedTaskRun = (tRuns: TaskRunKind[], tasks: PipelineTask[]): TaskRunKind[] => {
@@ -86,6 +94,8 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
   };
 
   onNavSelect = (item: { itemId: number | string }) => {
+    const { onActiveTaskChange } = this.props;
+    onActiveTaskChange?.(this.getTaskRunName(item.itemId as string));
     this.setState({
       activeItem: item.itemId as string,
       navUntouched: false,

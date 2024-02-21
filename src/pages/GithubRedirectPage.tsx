@@ -20,9 +20,9 @@ const GithubRedirectPage = () => {
     workspace
       ? `/workspaces/${workspace.metadata.name}${
           application
-            ? `/applications/${application}${
-                task ? `/taskruns/${task}` : pipelineRun ? `/pipelineruns/${pipelineRun}` : ''
-              }${isLogsTabSelected ? `/logs` : ''}`
+            ? `/applications/${application}${pipelineRun ? `/pipelineruns/${pipelineRun}` : ''}${
+                isLogsTabSelected ? `/logs` : ''
+              }${task ? `?task=${task}` : ''}`
             : ''
         }`
       : ''
@@ -58,7 +58,7 @@ const GithubRedirectPage = () => {
             </Bullseye>
             <HelperText>
               <HelperTextItem variant="indeterminate">
-                Redirecting {task ? `to task run` : pipelineRun ? 'to pipeline run' : null}{' '}
+                Redirecting {pipelineRun ? 'to pipeline run' : null}{' '}
                 {isLogsTabSelected ? 'logs' : null}
                 ...
               </HelperTextItem>
