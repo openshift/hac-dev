@@ -70,3 +70,20 @@ export const useSortedComponents = (
 
   return [components, loaded, error];
 };
+
+export const useAllComponents = (namespace: string): [ComponentKind[], boolean, unknown] => {
+  const [components, componentsLoaded, error] = useK8sWatchResource<ComponentKind[]>(
+    namespace
+      ? {
+          groupVersionKind: ComponentGroupVersionKind,
+          namespace,
+          isList: true,
+        }
+      : null,
+  );
+  const allComponents: ComponentKind[] = React.useMemo(
+    () => (componentsLoaded ? components?.filter((c) => !c.metadata.deletionTimestamp) || [] : []),
+    [components, componentsLoaded],
+  );
+  return [allComponents, componentsLoaded, error];
+};

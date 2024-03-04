@@ -10,10 +10,15 @@ import { ComponentRelationNudgeType } from './type';
 
 type ComponentRelationProps = {
   componentNames: string[];
+  groupedComponents: { [application: string]: string[] };
   index?: Number;
 };
 
-export const ComponentRelation: React.FC<ComponentRelationProps> = ({ index, componentNames }) => {
+export const ComponentRelation: React.FC<ComponentRelationProps> = ({
+  index,
+  componentNames,
+  groupedComponents,
+}) => {
   const sourceName = `relations.${index.toString()}.source`;
   const nudgeName = `relations.${index.toString()}.nudgeType`;
   const targetName = `relations.${index.toString()}.target`;
@@ -79,7 +84,7 @@ export const ComponentRelation: React.FC<ComponentRelationProps> = ({ index, com
         <MultiSelectComponentsDropdown
           name={targetName}
           sourceComponentName={sourceValue}
-          componentNames={componentNames}
+          groupedComponents={groupedComponents}
         />
       </GridItem>
     </Grid>

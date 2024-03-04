@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Formik, FormikHelpers } from 'formik';
-import { useComponents } from '../../hooks/useComponents';
+import { useAllComponents, useComponents } from '../../hooks/useComponents';
 import { ComponentKind } from '../../types';
 import { TrackEvents, useTrackEvent } from '../../utils/analytics';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
@@ -28,6 +28,21 @@ export const ComponentRelationModal: React.FC<ComponentRelationModalProps> = ({
   const [nudgeData, loaded, error] = useNudgeData(application);
   const { namespace, workspace } = useWorkspaceInfo();
   const [components, cnLoaded, cnError] = useComponents(namespace, application);
+  const [allComponents, allCompsLoaded, allCompsError] = useAllComponents(namespace);
+  const groupedComponents = React.useMemo(
+    () =>
+      allCompsLoaded && !allCompsError
+        ? allComponents.reduce((acc, val) => {
+            if (acc[val.spec.application]) {
+              acc[val.spec.application] = [...acc[val.spec.application], val.metadata.name];
+            } else {
+              acc[val.spec.application] = [val.metadata.name];
+            }
+            return acc;
+          }, {})
+        : {},
+    [allComponents, allCompsError, allCompsLoaded],
+  );
   const componentNames: string[] = React.useMemo(() => {
     return cnLoaded && !cnError ? components.map((c) => c.metadata.name) : [];
   }, [cnError, cnLoaded, components]);
@@ -111,6 +126,7 @@ export const ComponentRelationModal: React.FC<ComponentRelationModalProps> = ({
       ) : (
         <DefineComponentRelationModal
           componentNames={cnLoaded && !cnError ? componentNames : []}
+          groupedComponents={groupedComponents}
           modalProps={modalProps}
           onCancel={onCancelSaveRelationships}
         />

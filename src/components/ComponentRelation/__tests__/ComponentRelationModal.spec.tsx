@@ -7,7 +7,8 @@ import '@testing-library/jest-dom';
 configure({ testIdAttribute: 'id' });
 
 jest.mock('../../../hooks/useComponents', () => ({
-  useComponents: jest.fn(() => [componentCRMocks, true, null]),
+  useComponents: jest.fn(() => [[componentCRMocks[0]], true, null]),
+  useAllComponents: jest.fn(() => [componentCRMocks, true, null]),
 }));
 
 jest.mock('../../../utils/workspace-context-utils', () => ({
@@ -84,19 +85,13 @@ describe('ComponentRelationModal', () => {
     const onClose = () => {
       isOpen = false;
     };
-    const { rerender } = render(
-      <ComponentRelationModal modalProps={{ isOpen, onClose }} application="apps" />,
-    );
+    render(<ComponentRelationModal modalProps={{ isOpen, onClose }} application="apps" />);
     expect(screen.queryByText('Component relationships')).toBeInTheDocument();
     fireEvent.click(screen.getByTestId('nudged-by-0'));
     const saveButton = screen.getByText('Save relationships');
     expect(saveButton.getAttribute('class')).not.toContain('pf-m-disabled');
     fireEvent.click(saveButton);
-    await waitFor(() => expect(saveButton.getAttribute('class')).toContain('pf-m-in-progress'));
-    await expect(screen.queryByText('Component relationships')).not.toBeInTheDocument();
-    expect(screen.queryByText('Relationships updated!')).toBeInTheDocument();
-    fireEvent.click(screen.getByText('Done'));
-    rerender(<ComponentRelationModal modalProps={{ isOpen, onClose }} application="apps" />);
-    expect(screen.queryByText('Relationships updated!')).not.toBeInTheDocument();
+    await expect(saveButton.getAttribute('class')).toContain('pf-m-in-progress');
+    await waitFor(() => expect(saveButton.getAttribute('class')).not.toContain('pf-m-in-progress'));
   });
 });

@@ -58,7 +58,7 @@ describe('SingleSelectComponentDropdown', () => {
 describe('MultiSelectComponentDropdown', () => {
   it('should render component dropdown', () => {
     formikRenderer(
-      <MultiSelectComponentsDropdown componentNames={['a', 'b']} name="multiSelect" />,
+      <MultiSelectComponentsDropdown groupedComponents={{ c: ['a', 'b'] }} name="multiSelect" />,
       { multiSelect: '' },
     );
     screen.getByText('Choose components to nudge');
@@ -66,7 +66,7 @@ describe('MultiSelectComponentDropdown', () => {
 
   it('should select all item from menu', () => {
     formikRenderer(
-      <MultiSelectComponentsDropdown componentNames={['a', 'b']} name="multiSelect" />,
+      <MultiSelectComponentsDropdown groupedComponents={{ c: ['a', 'b'] }} name="multiSelect" />,
       { multiSelect: '' },
     );
     screen.getByText('Choose components to nudge');
@@ -83,7 +83,7 @@ describe('MultiSelectComponentDropdown', () => {
   it('should not select disabled menu item', () => {
     formikRenderer(
       <MultiSelectComponentsDropdown
-        componentNames={['a', 'b']}
+        groupedComponents={{ c: ['a', 'b'] }}
         name="multiSelect"
         sourceComponentName="a"
       />,
@@ -98,7 +98,7 @@ describe('MultiSelectComponentDropdown', () => {
     fireEvent.click(selectAllButton);
     expect(button.querySelector('.pf-m-read')).toBeInTheDocument();
     expect(button.querySelector('.pf-m-read').innerHTML).toEqual('1');
-    const disabledItem = screen.getByRole('menu').querySelectorAll('.pf-m-disabled');
+    const disabledItem = screen.getAllByRole('menu')[1].querySelectorAll('.pf-m-disabled');
     expect(disabledItem).toHaveLength(1);
   });
 });
