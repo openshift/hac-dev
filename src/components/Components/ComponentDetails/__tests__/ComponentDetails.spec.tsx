@@ -49,6 +49,7 @@ jest.mock('../../../../utils/rbac', () => ({
 
 jest.mock('../../../../hooks/useComponents', () => ({
   useComponent: jest.fn(),
+  useAllComponents: jest.fn(() => [[], true, undefined]),
 }));
 
 jest.mock('../../../../hooks/usePipelineRuns', () => ({

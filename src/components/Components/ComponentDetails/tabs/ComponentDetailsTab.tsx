@@ -5,6 +5,7 @@ import DetailsSection from '../../../../shared/components/details-page/DetailsSe
 import { ComponentKind } from '../../../../types';
 import { TrackEvents, useTrackEvent } from '../../../../utils/analytics';
 import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
+import ComponentNudgesDependencies from '../../../ComponentRelation/details-page/ComponentNudgesDependencies';
 import { createCustomizeComponentPipelineModalLauncher } from '../../../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../../../modal/ModalProvider';
 import ComponentBuildSettings from './ComponentBuildSettings';
@@ -71,6 +72,7 @@ const ComponentDetailsTab: React.FC<React.PropsWithChildren<ComponentDetailsTabP
         }
       >
         <ComponentBuildSettings component={component} />
+        <ComponentNudgesDependencies component={component} />
       </DetailsSection>
       <DetailsSection
         title="Deployment settings"

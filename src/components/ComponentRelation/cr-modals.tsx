@@ -23,6 +23,7 @@ import { PlusCircleIcon } from '@patternfly/react-icons/dist/js/icons/plus-circl
 import { FieldArray, useFormikContext } from 'formik';
 import { isEmpty } from 'lodash-es';
 import { FormFooter } from '../../shared';
+import ExternalLink from '../../shared/components/links/ExternalLink';
 import { RawComponentProps } from '../modal/createModalLauncher';
 import { ComponentRelation } from './ComponentRelationForm';
 import { ComponentRelationFormikValue, ComponentRelationNudgeType } from './type';
@@ -49,7 +50,14 @@ export const DefineComponentRelationModal: React.FC<DefineComponentRelationModal
       {...modalProps}
       onClose={onCancel}
       title="Component relationships"
-      description="Nudging references another component by digest."
+      description={
+        <>
+          Nudging references another component by digest.{' '}
+          <ExternalLink href="https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/how-to-guides/configuring-builds/proc_defining_component_relationships/">
+            Learn more about nudging.
+          </ExternalLink>
+        </>
+      }
       variant={ModalVariant.medium}
       footer={
         <FormFooter

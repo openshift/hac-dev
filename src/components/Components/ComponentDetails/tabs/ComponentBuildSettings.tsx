@@ -11,7 +11,6 @@ import usePACState from '../../../../hooks/usePACState';
 import { ComponentKind } from '../../../../types';
 import ComponentBuildTrigger from '../../ComponentBuildTrigger';
 import ComponentPACStateLabel from '../../ComponentPACStateLabel';
-import ComponentNudgesDependencies from './ComponentNudgesDependencies';
 
 type ComponentBuildSettingsProps = {
   component: ComponentKind;
@@ -54,7 +53,6 @@ const ComponentBuildSettings: React.FC<React.PropsWithChildren<ComponentBuildSet
           </DescriptionList>
         </FlexItem>
       </Flex>
-      <ComponentNudgesDependencies component={component} />
     </>
   );
 };
