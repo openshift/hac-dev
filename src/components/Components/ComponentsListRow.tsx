@@ -11,6 +11,7 @@ import { ComponentKind, PipelineRunKind } from '../../types';
 import { getCommitsFromPLRs } from '../../utils/commits-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { useComponentActions } from '../ApplicationDetails/component-actions';
+import { ComponentRelationStatusIcon } from '../ComponentRelation/details-page/ComponentRelationStatusIcon';
 import GitRepoLink from '../GitLink/GitRepoLink';
 import { useBuildLogViewerModal } from '../LogViewer/BuildLogViewer';
 import ComponentBuildTrigger from './ComponentBuildTrigger';
@@ -57,7 +58,11 @@ const ComponentsListRow: React.FC<RowFunctionArgs<ComponentWithLatestBuildPipeli
             <Link
               to={`/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components/${name}`}
             >
-              <b>{name}</b>
+              <b>{name}</b>{' '}
+              <ComponentRelationStatusIcon
+                component={component}
+                style={{ height: '10px', maxWidth: '25px' }}
+              />
             </Link>
           </FlexItem>
           {component.spec.source?.git && (

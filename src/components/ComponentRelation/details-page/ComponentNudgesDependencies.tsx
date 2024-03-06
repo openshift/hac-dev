@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ExpandableSection, Radio, Tooltip } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons/dist/js/icons/outlined-question-circle-icon';
-import { ComponentKind, NudgeStats } from '../../../../types';
-import ComponentNudgesSVG, { NudgeRadios } from './ComponentNudgesSVG';
+import { ComponentKind, NudgeStats } from '../../../types';
+import ComponentNudgesSVG, { NudgeRadios } from './ComponentNudges';
 
 import './ComponentNudgesDependencies.scss';
 
