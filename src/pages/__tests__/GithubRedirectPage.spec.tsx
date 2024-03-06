@@ -98,7 +98,7 @@ describe('GithubRedirect', () => {
     namespaceRenderer(<GithubRedirectPage />, 'mock', { workspacesLoaded: true });
     const navigate = screen.getByRole('navigate');
     expect(navigate.innerHTML).toEqual(
-      '/application-pipeline/workspaces/mock-workspace/applications/mock-application/taskruns/mock-task/logs',
+      '/application-pipeline/workspaces/mock-workspace/applications/mock-application/pipelineruns/mock-pipeline/logs?task=mock-task',
     );
   });
 
