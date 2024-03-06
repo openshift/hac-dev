@@ -5,14 +5,16 @@ import {
   Menu,
   MenuContainer,
   MenuContent,
+  MenuGroup,
   MenuItem,
   MenuList,
   MenuToggle,
 } from '@patternfly/react-core';
 import { useField } from 'formik';
+import { flatten } from 'lodash-es';
 
 type SelectComponentsDropdownProps = {
-  children: React.ReactNode[];
+  children: React.ReactNode | React.ReactNode[];
   toggleText: string;
   onSelect: (item: string | number) => void;
   closeOnSelect?: boolean;
@@ -56,9 +58,7 @@ const SelectComponentsDropdown: React.FC<SelectComponentsDropdownProps> = ({
             closeOnSelect && setIsOpen(false);
           }}
         >
-          <MenuContent>
-            <MenuList>{children}</MenuList>
-          </MenuContent>
+          <MenuContent>{children}</MenuContent>
         </Menu>
       }
       toggleRef={toggleRef}
@@ -68,17 +68,18 @@ const SelectComponentsDropdown: React.FC<SelectComponentsDropdownProps> = ({
 };
 
 type MultiSelectComponentsDropdownProps = {
-  componentNames: string[];
+  groupedComponents: { [application: string]: string[] };
   sourceComponentName?: string;
   name: string;
 };
 
 export const MultiSelectComponentsDropdown: React.FC<MultiSelectComponentsDropdownProps> = ({
   sourceComponentName,
-  componentNames,
+  groupedComponents,
   name,
 }) => {
   const [{ value: selectedComponents }, , { setValue }] = useField<string[]>(name);
+  const componentNames = flatten(Object.values(groupedComponents));
   const [selectAll, setSelectAll] = React.useState<boolean>(
     componentNames.length - 1 === selectedComponents.length,
   );
@@ -111,34 +112,44 @@ export const MultiSelectComponentsDropdown: React.FC<MultiSelectComponentsDropdo
       onSelect={handleSelect}
       badgeValue={selectedComponents.length || null}
     >
-      <MenuItem hasCheckbox itemId="select-all" isSelected={selectAll}>
-        Select all
-      </MenuItem>
-      <Divider component="li" />
-      {componentNames.map((component) => {
-        const isSelected = selectedComponents.includes(component);
-        const isDisabled = component === sourceComponentName;
-        return (
-          <MenuItem
-            key={component}
-            hasCheckbox
-            itemId={component}
-            isSelected={isSelected}
-            isDisabled={isDisabled}
-            tooltipProps={
-              isDisabled
-                ? {
-                    trigger: 'mouseenter',
-                    content: 'This component is already in the relationship.',
-                    zIndex: 1000,
-                  }
-                : undefined
-            }
-          >
-            {component}
+      <MenuGroup>
+        <MenuList>
+          <MenuItem hasCheckbox itemId="select-all" isSelected={selectAll}>
+            Select all
           </MenuItem>
-        );
-      })}
+        </MenuList>
+      </MenuGroup>
+      <Divider component="li" />
+      {Object.entries(groupedComponents).map(([application, components]) => (
+        <MenuGroup key={application} label={application}>
+          <MenuList>
+            {components.map((component) => {
+              const isSelected = selectedComponents.includes(component);
+              const isDisabled = component === sourceComponentName;
+              return (
+                <MenuItem
+                  key={component}
+                  hasCheckbox
+                  itemId={component}
+                  isSelected={isSelected}
+                  isDisabled={isDisabled}
+                  tooltipProps={
+                    isDisabled
+                      ? {
+                          trigger: 'mouseenter',
+                          content: 'This component is already in the relationship.',
+                          zIndex: 1000,
+                        }
+                      : undefined
+                  }
+                >
+                  {component}
+                </MenuItem>
+              );
+            })}
+          </MenuList>
+        </MenuGroup>
+      ))}
     </SelectComponentsDropdown>
   );
 };
@@ -167,24 +178,26 @@ export const SingleSelectComponentDropdown: React.FC<SingleSelectComponentDropdo
       onSelect={handleSelect}
       closeOnSelect
     >
-      {componentNames.map((component) => (
-        <MenuItem
-          key={component}
-          itemId={component}
-          selected={value === component}
-          isDisabled={disableMenuItem?.(component)}
-          tooltipProps={
-            disableMenuItem?.(component)
-              ? {
-                  appendTo: () => document.querySelector('#hacDev-modal-container'),
-                  content: 'This component is already in the relationship.',
-                }
-              : undefined
-          }
-        >
-          {component}
-        </MenuItem>
-      ))}
+      <MenuList>
+        {componentNames.map((component) => (
+          <MenuItem
+            key={component}
+            itemId={component}
+            selected={value === component}
+            isDisabled={disableMenuItem?.(component)}
+            tooltipProps={
+              disableMenuItem?.(component)
+                ? {
+                    appendTo: () => document.querySelector('#hacDev-modal-container'),
+                    content: 'This component is already in the relationship.',
+                  }
+                : undefined
+            }
+          >
+            {component}
+          </MenuItem>
+        ))}
+      </MenuList>
     </SelectComponentsDropdown>
   );
 };

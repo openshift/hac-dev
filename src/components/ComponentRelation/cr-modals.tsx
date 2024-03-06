@@ -30,6 +30,7 @@ import { DUPLICATE_RELATONSHIP } from './utils';
 
 type DefineComponentRelationModalProps = Omit<Pick<RawComponentProps, 'modalProps'>, 'onClose'> & {
   componentNames: string[];
+  groupedComponents: { [application: string]: string[] };
   onCancel: () => void;
 };
 
@@ -37,10 +38,12 @@ export const DefineComponentRelationModal: React.FC<DefineComponentRelationModal
   onCancel,
   modalProps,
   componentNames,
+  groupedComponents,
 }) => {
   const { values, handleSubmit, isSubmitting, dirty, errors, status } =
     useFormikContext<ComponentRelationFormikValue>();
   const isDuplicateRelationExist = errors?.relations?.includes(DUPLICATE_RELATONSHIP);
+
   return (
     <Modal
       {...modalProps}
@@ -71,6 +74,7 @@ export const DefineComponentRelationModal: React.FC<DefineComponentRelationModal
                       <ComponentRelation
                         key={index}
                         componentNames={componentNames}
+                        groupedComponents={groupedComponents}
                         index={index}
                       />
                       {index !== values.relations.length - 1 ? <Divider /> : null}

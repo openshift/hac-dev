@@ -6,6 +6,7 @@ import { useNudgeData } from '../useNudgeData';
 
 jest.mock('../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
+  useAllComponents: jest.fn(() => [componentCRMocks, true, null]),
 }));
 
 jest.mock('../../../utils/workspace-context-utils', () => ({
@@ -22,7 +23,7 @@ describe('useNudgeData', () => {
       {
         source: 'nodejs',
         nudgeType: ComponentRelationNudgeType.NUDGES,
-        target: [],
+        target: ['basic-node-js'],
       },
     ]);
   });
