@@ -43,7 +43,10 @@ describe('createReleasePlan', () => {
     expect(result).toEqual(
       expect.objectContaining({
         metadata: {
-          labels: {},
+          labels: {
+            'release.appstudio.openshift.io/auto-release': 'false',
+            'release.appstudio.openshift.io/standing-attribution': 'false',
+          },
           name: 'test-plan',
           namespace: 'test-ns',
         },
@@ -66,7 +69,7 @@ describe('createReleasePlan', () => {
             ],
             resolver: 'git',
           },
-          target: 'test-ws',
+          target: 'test-ws-tenant',
         },
       }),
     );
@@ -111,7 +114,7 @@ describe('createReleasePlan', () => {
             ],
             resolver: 'git',
           },
-          target: 'target-ws',
+          target: 'target-ws-tenant',
         },
       }),
     );
@@ -161,6 +164,7 @@ describe('createReleasePlan', () => {
     );
     expect(result.metadata.labels).toEqual({
       'release.appstudio.openshift.io/auto-release': 'true',
+      'release.appstudio.openshift.io/standing-attribution': 'false',
     });
   });
 });
@@ -186,7 +190,7 @@ describe('editReleasePlan', () => {
       'my-ws',
     );
 
-    expect(result.spec.target).toBe('my-ws');
+    expect(result.spec.target).toBe('my-ws-tenant');
   });
 });
 

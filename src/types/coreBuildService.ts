@@ -92,6 +92,7 @@ export type ReleaseStatus = {
 
 export type ReleasePlanKind = K8sResourceCommon & {
   spec: ReleasePlanSpec;
+  status?: ReleasePlanStatus;
 };
 
 export type ReleasePlanSpec = {
@@ -103,6 +104,14 @@ export type ReleasePlanSpec = {
     params: Param[];
   };
   serviceAccount?: string;
+};
+
+export type ReleasePlanStatus = {
+  releasePlanAdmission?: {
+    name: string;
+    active: boolean;
+  };
+  conditions?: Condition[];
 };
 
 export const ReleasePlanLabel = {

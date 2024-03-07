@@ -21,6 +21,8 @@ export enum ReleasePipelineLocation {
   target,
 }
 
+const WORKSPACE_SUFFIX = 'tenant';
+
 export type ReleasePlanFormValues = {
   name: string;
   application: string;
@@ -46,10 +48,18 @@ export const releasePlanFormSchema = yup.object({
     .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
     .required('Required'),
   application: yup.string().required('Required'),
-  git: yup.object({
-    url: yup.string().matches(gitUrlRegex).required('Required'),
-    revision: yup.string().required('Required'),
-    path: yup.string().required('Required'),
+  git: yup.object().when('releasePipelineLocation', {
+    is: ReleasePipelineLocation.current,
+    then: yup.object({
+      url: yup.string().matches(gitUrlRegex).required('Required'),
+      revision: yup.string().required('Required'),
+      path: yup.string().required('Required'),
+    }),
+    otherwise: yup.object({
+      url: yup.string().matches(gitUrlRegex),
+      revision: yup.string(),
+      path: yup.string(),
+    }),
   }),
   serviceAccount: yup.string().when('releasePipelineLocation', {
     is: ReleasePipelineLocation.current,
@@ -100,15 +110,17 @@ export const createReleasePlan = async (
       namespace,
       labels: {
         ...labels,
-        ...(autoRelease ? { [ReleasePlanLabel.AUTO_RELEASE]: 'true' } : {}),
-        ...(standingAttribution ? { [ReleasePlanLabel.STANDING_ATTRIBUTION]: 'true' } : {}),
+        ...{
+          [ReleasePlanLabel.AUTO_RELEASE]: String(Boolean(autoRelease)),
+          [ReleasePlanLabel.STANDING_ATTRIBUTION]: String(Boolean(standingAttribution)),
+        },
       },
     },
     spec: {
       application,
       ...(data ? { data } : {}),
       serviceAccount,
-      target: targetWs,
+      target: `${targetWs}-${WORKSPACE_SUFFIX}`,
       pipelineRef: {
         resolver: ResolverType.GIT,
         params: [
@@ -161,8 +173,10 @@ export const editReleasePlan = async (
       ...releasePlan.metadata,
       labels: {
         ...labels,
-        ...(autoRelease ? { [ReleasePlanLabel.AUTO_RELEASE]: 'true' } : {}),
-        ...(standingAttribution ? { [ReleasePlanLabel.STANDING_ATTRIBUTION]: 'true' } : {}),
+        ...{
+          [ReleasePlanLabel.AUTO_RELEASE]: String(Boolean(autoRelease)),
+          [ReleasePlanLabel.STANDING_ATTRIBUTION]: String(Boolean(standingAttribution)),
+        },
       },
     },
     spec: {
@@ -170,7 +184,7 @@ export const editReleasePlan = async (
       application,
       ...(data ? { data } : {}),
       serviceAccount,
-      target: targetWs,
+      target: `${targetWs}-${WORKSPACE_SUFFIX}`,
       pipelineRef: {
         resolver: ResolverType.GIT,
         params: [
