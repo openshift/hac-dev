@@ -12,6 +12,13 @@ export const useReleasePlanActions = (obj: ReleasePlanKind) => {
   const [canUpdate] = useAccessReviewForModel(ReleasePlanModel, 'update');
   return [
     {
+      label: 'Trigger release plan',
+      id: `trigger-releaseplan-${obj.metadata.name}`,
+      cta: {
+        href: `/application-pipeline/release/workspaces/${workspace}/release-plan/trigger/${obj.metadata.name}`,
+      },
+    },
+    {
       label: 'Edit release plan',
       id: `edit-releaseplan-${obj.metadata.name}`,
       disabled: !canUpdate,
