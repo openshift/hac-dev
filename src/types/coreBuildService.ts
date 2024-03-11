@@ -72,7 +72,7 @@ export type Env = {
 
 export type ReleaseKind = K8sResourceCommon & {
   spec: ReleaseSpec;
-  status: ReleaseStatus;
+  status?: ReleaseStatus;
 };
 
 export type ReleaseSpec = {

@@ -1,18 +1,17 @@
 import * as React from 'react';
 import { Form, PageSection, PageSectionVariants } from '@patternfly/react-core';
-import { FormikProps, useField } from 'formik';
+import { FormikProps } from 'formik';
 import isEmpty from 'lodash-es/isEmpty';
 import PageLayout from '../../../../components/PageLayout/PageLayout';
 import { FormFooter, TextAreaField } from '../../../../shared';
 import KeyValueField from '../../../../shared/components/formik-fields/key-value-input-field/KeyValueInputField';
 import { useWorkspaceBreadcrumbs } from '../../../../utils/breadcrumb-utils';
-import { ReleasePlanFormValues } from '../ReleasePlanForm/form-utils';
+import AddBugSection from './AddBugSection/AddBugSection';
+import { TriggerReleaseFormValues } from './form-utils';
 import { ReleasePlanDropdown } from './ReleasePlanDropdown';
 import { SnapshotDropdown } from './SnapshotDropdown';
 
-type Props = FormikProps<ReleasePlanFormValues> & {
-  edit?: boolean;
-};
+type Props = FormikProps<TriggerReleaseFormValues>;
 
 export const TriggerReleaseForm: React.FC<Props> = ({
   handleSubmit,
@@ -21,10 +20,8 @@ export const TriggerReleaseForm: React.FC<Props> = ({
   dirty,
   errors,
   status,
-  edit,
 }) => {
   const breadcrumbs = useWorkspaceBreadcrumbs();
-  const [{ value: labels }] = useField<ReleasePlanFormValues['labels']>('labels');
 
   return (
     <PageLayout
@@ -38,7 +35,7 @@ export const TriggerReleaseForm: React.FC<Props> = ({
         },
         {
           path: '#',
-          name: edit ? 'Edit release plan' : 'Create release plan',
+          name: 'Trigger release plan',
         },
       ]}
       footer={
@@ -55,7 +52,7 @@ export const TriggerReleaseForm: React.FC<Props> = ({
       <PageSection variant={PageSectionVariants.light} isFilled isWidthLimited>
         <Form style={{ maxWidth: '70%' }}>
           <ReleasePlanDropdown
-            name="release"
+            name="releasePlan"
             helpText="The release you want to release to the environments in your target workspace."
             required
           />
@@ -64,6 +61,8 @@ export const TriggerReleaseForm: React.FC<Props> = ({
             helpText="The release you want to release to the environments in your target workspace."
             required
           />
+          <AddBugSection field="issues" />
+
           <TextAreaField
             name="synopsis"
             label="Synopsis"
@@ -74,26 +73,18 @@ export const TriggerReleaseForm: React.FC<Props> = ({
             label="Topic"
             helpText="What topics are related to this release? Such as osp-director-downloader-container or osp-director-agent-container"
           />
-          <TextAreaField
-            name="description"
-            label="Description"
-            helpText="Provide data related to a release pipeline."
-          />
-          <TextAreaField
-            name="solution"
-            label="Solution"
-            helpText="Provide data related to a release pipeline."
-          />
+
+          <TextAreaField name="description" label="Description" />
+          <TextAreaField name="solution" label="Solution" />
           <TextAreaField
             name="references"
             label="References"
-            helpText="Provide atleast 1 URL. Sparate URLs by commas"
+            helpText="Please enter at least 1 reference"
           />
           <KeyValueField
             name="labels"
             label="Labels"
             description="You can add labels to provide more context or tag your release plan."
-            entries={labels}
           />
         </Form>
       </PageSection>

@@ -13,12 +13,12 @@ export const ReleasePlanDropdown: React.FC<React.PropsWithChildren<ReleasePlanDr
   props,
 ) => {
   const { namespace } = useWorkspaceInfo();
-  const [applications, loaded] = useReleasePlans(namespace);
+  const [releasePlans, loaded] = useReleasePlans(namespace);
   const [, , { setValue }] = useField<string>(props.name);
 
   const dropdownItems = React.useMemo(
-    () => applications.map((a) => ({ key: a.metadata.name, value: a.metadata.name })),
-    [applications],
+    () => releasePlans.map((a) => ({ key: a.metadata.name, value: a.metadata.name })),
+    [releasePlans],
   );
 
   return (

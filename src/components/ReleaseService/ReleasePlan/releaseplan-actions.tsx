@@ -15,7 +15,7 @@ export const useReleasePlanActions = (obj: ReleasePlanKind) => {
       label: 'Trigger release plan',
       id: `trigger-releaseplan-${obj.metadata.name}`,
       cta: {
-        href: `/application-pipeline/release/workspaces/${workspace}/release-plan/trigger/${obj.metadata.name}`,
+        href: `/application-pipeline/release/workspaces/${workspace}/release-plan/trigger`,
       },
     },
     {
