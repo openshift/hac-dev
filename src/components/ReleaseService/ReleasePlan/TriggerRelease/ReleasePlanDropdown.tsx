@@ -25,7 +25,7 @@ export const ReleasePlanDropdown: React.FC<React.PropsWithChildren<ReleasePlanDr
     <DropdownField
       {...props}
       label="Release plan"
-      placeholder={!loaded ? 'Loading releases...' : 'Select release'}
+      placeholder={!loaded ? 'Loading release plans...' : 'Select release plan'}
       isDisabled={props.isDisabled || !loaded}
       items={dropdownItems}
       onChange={(app: string) => setValue(app)}

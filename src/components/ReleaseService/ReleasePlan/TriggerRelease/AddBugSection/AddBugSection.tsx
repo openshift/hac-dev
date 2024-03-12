@@ -1,22 +1,25 @@
 import * as React from 'react';
 import {
-  Button,
   EmptyState,
   EmptyStateBody,
   SearchInput,
+  TextContent,
+  TextVariants,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
+  Text,
 } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { FieldArray, useField } from 'formik';
 import { debounce } from 'lodash-es';
-import { useModalLauncher } from '../../../../../components/modal/ModalProvider';
 import { useSearchParam } from '../../../../../hooks/useSearchParam';
 import ActionMenu from '../../../../../shared/components/action-menu/ActionMenu';
 import FilteredEmptyState from '../../../../../shared/components/empty-state/FilteredEmptyState';
-import { createAddBugModal } from './AddBugModal';
+import { AddBugModal } from './AddBugModal';
+
+import './AddBugSection.scss';
 
 interface AddBugSectionProps {
   field: string;
@@ -26,14 +29,22 @@ export interface BugsObject {
   issueKey: string;
   summary: string;
   url?: string;
-  last_updated?: string;
+  uploadDate?: string;
   status?: string;
 }
+
+export const bugsTableColumnClass = {
+  issueKey: 'pf-m-width-15 wrap-column',
+  url: 'pf-m-width-30 pf-m-width-25-on-lg',
+  summary: 'pf-m-width-20 pf-m-width-20-on-lg pf-m-width-15-on-xl',
+  uploadDate: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-20',
+  status: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-15',
+  kebab: 'pf-v5-c-table__action',
+};
 
 const AddBugSection: React.FC<React.PropsWithChildren<AddBugSectionProps>> = ({ field }) => {
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
   const [{ value: issues }, ,] = useField<BugsObject[]>(field);
-  const showModal = useModalLauncher();
 
   const [onLoadName, setOnLoadName] = React.useState(nameFilter);
   React.useEffect(() => {
@@ -43,8 +54,12 @@ const AddBugSection: React.FC<React.PropsWithChildren<AddBugSectionProps>> = ({ 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const filteredBugs = issues?.filter(
-    (bug) => !nameFilter || bug.issueKey.indexOf(nameFilter) >= 0,
+  const filteredBugs = React.useMemo(
+    () =>
+      issues && Array.isArray(issues)
+        ? issues?.filter((bug) => !nameFilter || bug.issueKey.indexOf(nameFilter) >= 0)
+        : [],
+    [issues, nameFilter],
   );
 
   const onClearFilters = () => {
@@ -61,8 +76,8 @@ const AddBugSection: React.FC<React.PropsWithChildren<AddBugSectionProps>> = ({ 
     nameFilter ? (
       <FilteredEmptyState onClearFilters={onClearFilters} />
     ) : (
-      <EmptyState>
-        <EmptyStateBody>No Bugs found</EmptyStateBody>
+      <EmptyState className="pf-v5-u-m-0 pf-v5-u-p-">
+        <EmptyStateBody className="pf-v5-u-m-0 pf-v5-u-p-0">No Bugs found</EmptyStateBody>
       </EmptyState>
     );
 
@@ -76,6 +91,11 @@ const AddBugSection: React.FC<React.PropsWithChildren<AddBugSectionProps>> = ({ 
 
         return (
           <>
+            <TextContent className="pf-v5-u-mt-xs">
+              <Text component={TextVariants.h4} className="pf-v5-u-mt-0 pf-v5-u-pt-0">
+                Are there any bug fixes you would like to add to this release?
+              </Text>
+            </TextContent>
             <Toolbar
               data-test="pipelinerun-list-toolbar"
               clearAllFilters={onClearFilters}
@@ -95,41 +115,38 @@ const AddBugSection: React.FC<React.PropsWithChildren<AddBugSectionProps>> = ({ 
                     />
                   </ToolbarItem>
                   <ToolbarItem>
-                    <Button
-                      onClick={() => showModal(createAddBugModal({ bugArrayHelper: addNewBug }))}
-                      data-test="edit-param-button"
-                    >
-                      Add a Bug
-                    </Button>
+                    <AddBugModal bugArrayHelper={addNewBug} />
                   </ToolbarItem>
                 </ToolbarGroup>
               </ToolbarContent>
             </Toolbar>
-            <Table
-              aria-label="Simple table"
-              variant="compact"
-              borders
-              className="pf-v5-u-mt-0 pf-v5-u-pt-0"
-            >
-              <Thead>
-                <Tr>
-                  <Th>Bug issue key</Th>
-                  <Th>URL</Th>
-                  <Th>Summary</Th>
-                  <Th>Last updated</Th>
-                  <Th>Status</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {Array.isArray(filteredBugs) && filteredBugs.length > 0
-                  ? filteredBugs.map((bug, i) => (
+            <div className="pf-v5-u-mb-md">
+              <Table
+                aria-label="Simple table"
+                variant="compact"
+                borders
+                className="pf-v5-u-m-0 pf-v5-u-p-0"
+              >
+                <Thead>
+                  <Tr>
+                    <Th className={bugsTableColumnClass.issueKey}>Bug issue key</Th>
+                    <Th className={bugsTableColumnClass.url}>URL</Th>
+                    <Th className={bugsTableColumnClass.summary}>Summary</Th>
+                    <Th className={bugsTableColumnClass.uploadDate}>Last updated</Th>
+                    <Th className={bugsTableColumnClass.status}>Status</Th>
+                  </Tr>
+                </Thead>
+
+                {Array.isArray(filteredBugs) && filteredBugs.length > 0 && (
+                  <Tbody>
+                    {filteredBugs.map((bug, i) => (
                       <Tr key={bug.issueKey}>
-                        <Td>{bug.issueKey}</Td>
-                        <Td>{bug.url}</Td>
-                        <Td>{bug.summary}</Td>
-                        <Td>{bug.last_updated}</Td>
-                        <Td>{bug.status}</Td>
-                        <Td>
+                        <Td className={bugsTableColumnClass.issueKey}>{bug.issueKey}</Td>
+                        <Td className={bugsTableColumnClass.url}>{bug.url}</Td>
+                        <Td className={bugsTableColumnClass.summary}>{bug.summary}</Td>
+                        <Td className={bugsTableColumnClass.uploadDate}>{bug.uploadDate}</Td>
+                        <Td className={bugsTableColumnClass.status}>{bug.status}</Td>
+                        <Td className={bugsTableColumnClass.kebab}>
                           <ActionMenu
                             actions={[
                               {
@@ -141,10 +158,15 @@ const AddBugSection: React.FC<React.PropsWithChildren<AddBugSectionProps>> = ({ 
                           />
                         </Td>
                       </Tr>
-                    ))
-                  : EmptyMsg()}
-              </Tbody>
-            </Table>
+                    ))}
+                  </Tbody>
+                )}
+              </Table>
+            </div>
+            {!filteredBugs ||
+              (filteredBugs?.length === 0 && (
+                <div className="add-bug-section__emptyMsg">{EmptyMsg()}</div>
+              ))}
           </>
         );
       }}

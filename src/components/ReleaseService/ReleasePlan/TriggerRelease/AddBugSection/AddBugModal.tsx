@@ -1,115 +1,41 @@
 import * as React from 'react';
-import {
-  Button,
-  ButtonType,
-  DatePicker,
-  Form,
-  InputGroup,
-  InputGroupItem,
-  ModalVariant,
-  Stack,
-  StackItem,
-  Text,
-  TextContent,
-  TextVariants,
-} from '@patternfly/react-core';
-import { Formik, useFormikContext, useField } from 'formik';
-import { InputField, TextAreaField, DropdownField } from '../../../../../shared';
-import { ComponentProps, createModalLauncher } from '../../../../modal/createModalLauncher';
+import { Button, Modal, ModalVariant } from '@patternfly/react-core';
+import { Formik } from 'formik';
+import * as yup from 'yup';
+import { ComponentProps } from '../../../../modal/createModalLauncher';
+import BugFormContent from './BugFormContent';
 
 type AddBugModalProps = ComponentProps & {
-  obj?: any;
   bugArrayHelper: (values) => void;
 };
 
-type AddBugFormValues = {
-  issueKey: string;
-  url: string;
-  uploadDate: string;
-  status: string;
-};
-
-const dropdownItems = [
-  { key: 'inProgress', value: 'In progress' },
-  { key: 'closed', value: 'Closed' },
-  { key: 'resolved', value: 'Resolved' },
-];
-
-type StatusDropdownProps = Omit<
-  React.ComponentProps<typeof DropdownField>,
-  'items' | 'label' | 'placeholder'
->;
-
-export const StatusDropdown: React.FC<React.PropsWithChildren<StatusDropdownProps>> = (props) => {
-  const [, , { setValue }] = useField<string>(props.name);
-
-  return (
-    <DropdownField
-      {...props}
-      label="Release plan"
-      placeholder="Select status of bug"
-      items={dropdownItems}
-      onChange={(app: string) => setValue(app)}
-    />
-  );
-};
-
-const BugFormModal = () => {
-  const { handleSubmit, isSubmitting } = useFormikContext<AddBugFormValues>();
-  const formRef = React.useRef<HTMLDivElement>();
-
-  return (
-    <Form>
-      <div ref={formRef}>
-        <Stack hasGutter>
-          <StackItem>
-            <TextContent>
-              <Text component={TextVariants.p}>
-                Provide information about a Bug that has already been resolved.
-              </Text>
-            </TextContent>
-          </StackItem>
-          <StackItem>
-            <InputField label="Bug issue key" name="issueKey" required />
-          </StackItem>
-          <StackItem>
-            <InputField label="URL" name="url" required />
-          </StackItem>
-          <StackItem>
-            <InputGroup>
-              <InputGroupItem>
-                <DatePicker appendTo={formRef.current} />
-              </InputGroupItem>
-            </InputGroup>
-          </StackItem>
-          <StackItem>
-            <StatusDropdown name="status" />
-          </StackItem>
-          <StackItem>
-            <TextAreaField name="summary" label="Summary" />
-          </StackItem>
-          <StackItem>
-            <Button
-              type={ButtonType.submit}
-              isLoading={isSubmitting}
-              data-testid="update-resource"
-              onClick={(e) => {
-                e.preventDefault(), handleSubmit();
-              }}
-            >
-              Add Bug
-            </Button>
-          </StackItem>
-        </Stack>
-      </div>
-    </Form>
-  );
-};
+const bugFormSchema = yup.object({
+  issueKey: yup.string().required('Required'),
+  url: yup.string().required('Required'),
+});
 
 export const AddBugModal: React.FC<React.PropsWithChildren<AddBugModalProps>> = ({
   onClose,
   bugArrayHelper,
 }) => {
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isTimePickerOpen, setIsTimePickerOpen] = React.useState(false);
+  const dateRef = React.useRef(null);
+
+  const handleModalToggle = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const onEscapePress = (event: KeyboardEvent) => {
+    if (dateRef && dateRef.current && dateRef.current.isCalendarOpen) {
+      dateRef.current.toggleCalendar(false, event.key);
+    } else if (isTimePickerOpen) {
+      setIsTimePickerOpen(false);
+    } else {
+      handleModalToggle();
+    }
+  };
+
   const setValues = React.useCallback(
     (fields) => {
       bugArrayHelper(fields);
@@ -119,17 +45,26 @@ export const AddBugModal: React.FC<React.PropsWithChildren<AddBugModalProps>> = 
   );
 
   return (
-    <Formik
-      onSubmit={setValues}
-      initialValues={{ issueKey: '', url: '', summary: '', uploadDate: '' }}
-    >
-      <BugFormModal />
-    </Formik>
+    <>
+      <Button variant="primary" onClick={handleModalToggle}>
+        Add a bug
+      </Button>
+      <Modal
+        id="date-time-picker-modal"
+        variant={ModalVariant.medium}
+        title="Add a bug fix"
+        isOpen={isModalOpen}
+        onEscapePress={onEscapePress}
+        onClose={handleModalToggle}
+      >
+        <Formik
+          onSubmit={setValues}
+          initialValues={{ issueKey: '', url: '', summary: '', uploadDate: '' }}
+          validationSchema={bugFormSchema}
+        >
+          <BugFormContent modalToggle={handleModalToggle} />
+        </Formik>
+      </Modal>
+    </>
   );
 };
-
-export const createAddBugModal = createModalLauncher(AddBugModal, {
-  'data-testid': `trigger-release-modal`,
-  variant: ModalVariant.medium,
-  title: `Add bug modal`,
-});
