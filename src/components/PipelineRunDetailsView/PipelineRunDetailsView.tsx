@@ -36,8 +36,7 @@ export const PipelineRunDetailsView: React.FC<
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
   const [pipelineRun, loaded, error] = usePipelineRun(namespace, pipelineRunName);
-  const { cta, isDisabled, disabledTooltip, hidden, key, label } =
-    usePipelinererunAction(pipelineRun);
+  const { cta, isDisabled, disabledTooltip, key, label } = usePipelinererunAction(pipelineRun);
 
   const [taskRuns, taskRunsLoaded, taskRunError] = useTaskRuns(namespace, pipelineRunName);
   const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
@@ -116,7 +115,6 @@ export const PipelineRunDetailsView: React.FC<
           {
             key,
             label,
-            hidden,
             isDisabled,
             disabledTooltip,
             onClick: cta,

@@ -376,26 +376,4 @@ describe('usePipelinererunAction', () => {
       }),
     );
   });
-
-  it('should contain correct hidden', async () => {
-    useAccessReviewForModelMock.mockReturnValue([true, true]);
-    const { result } = renderHook(() =>
-      usePipelinererunAction({
-        metadata: {
-          labels: {
-            'pipelines.appstudio.openshift.io/type': 'test',
-            [PipelineRunLabel.TEST_SERVICE_SCENARIO]: 'scn1',
-          },
-        },
-        status: { conditions: [{ type: 'Succeeded', status: runStatus.Running }] },
-      } as any),
-    );
-    const action = result.current;
-
-    expect(action).toEqual(
-      expect.objectContaining({
-        hidden: true,
-      }),
-    );
-  });
 });
