@@ -3,8 +3,7 @@ import { useField } from 'formik';
 import { DropdownField } from '../../../../../shared';
 
 const dropdownItems = [
-  { key: 'inProgress', value: 'In progress' },
-  { key: 'closed', value: 'Closed' },
+  { key: 'unresolved', value: 'Unresolved' },
   { key: 'resolved', value: 'Resolved' },
 ];
 
@@ -19,8 +18,8 @@ const StatusDropdown: React.FC<React.PropsWithChildren<StatusDropdownProps>> = (
   return (
     <DropdownField
       {...props}
-      label="Release plan"
-      placeholder="Select status of bug"
+      label="Status"
+      placeholder="Select status of isssue"
       items={dropdownItems}
       onChange={(app: string) => setValue(app)}
     />

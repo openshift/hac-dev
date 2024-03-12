@@ -4,13 +4,11 @@ import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import { TriggerReleaseFormPage } from '../components/ReleaseService/ReleasePlan/TriggerRelease/TriggerReleaseFormPage';
 import { FULL_APPLICATION_TITLE } from '../consts/labels';
-import { ReleasePlanModel } from '../models';
+import { ReleaseModel } from '../models';
 import { AccessReviewResources } from '../types';
 
 const TriggerReleasePlanPage: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const accessReviewResources: AccessReviewResources = [
-    { model: ReleasePlanModel, verb: 'create' },
-  ];
+  const accessReviewResources: AccessReviewResources = [{ model: ReleaseModel, verb: 'create' }];
 
   return (
     <NamespacedPage>

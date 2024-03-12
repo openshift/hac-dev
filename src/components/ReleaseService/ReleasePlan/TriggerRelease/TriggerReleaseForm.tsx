@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Form, PageSection, PageSectionVariants } from '@patternfly/react-core';
-import { FormikProps } from 'formik';
+import { FormikProps, useField } from 'formik';
 import isEmpty from 'lodash-es/isEmpty';
 import PageLayout from '../../../../components/PageLayout/PageLayout';
 import { FormFooter, TextAreaField } from '../../../../shared';
 import KeyValueField from '../../../../shared/components/formik-fields/key-value-input-field/KeyValueInputField';
 import { useWorkspaceBreadcrumbs } from '../../../../utils/breadcrumb-utils';
-import AddBugSection from './AddBugSection/AddBugSection';
+import { IssueType } from './AddIssueSection/AddIssueModal';
+import { AddIssueSection } from './AddIssueSection/AddIssueSection';
 import { TriggerReleaseFormValues } from './form-utils';
 import { ReleasePlanDropdown } from './ReleasePlanDropdown';
 import { SnapshotDropdown } from './SnapshotDropdown';
@@ -22,6 +23,8 @@ export const TriggerReleaseForm: React.FC<Props> = ({
   status,
 }) => {
   const breadcrumbs = useWorkspaceBreadcrumbs();
+
+  const [{ value: labels }] = useField<TriggerReleaseFormValues['labels']>('labels');
 
   return (
     <PageLayout
@@ -61,7 +64,9 @@ export const TriggerReleaseForm: React.FC<Props> = ({
             helpText="The release you want to release to the environments in your target workspace."
             required
           />
-          <AddBugSection field="issues" />
+          <AddIssueSection field="issues" issueType={IssueType.BUG} />
+
+          <AddIssueSection field="cves" issueType={IssueType.CVE} />
 
           <TextAreaField
             name="synopsis"
@@ -85,6 +90,7 @@ export const TriggerReleaseForm: React.FC<Props> = ({
             name="labels"
             label="Labels"
             description="You can add labels to provide more context or tag your release plan."
+            entries={labels}
           />
         </Form>
       </PageSection>

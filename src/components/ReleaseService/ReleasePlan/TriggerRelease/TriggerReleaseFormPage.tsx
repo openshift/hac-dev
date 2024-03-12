@@ -26,9 +26,6 @@ export const TriggerReleaseFormPage: React.FC<Props> = ({ releasePlan }) => {
     });
 
     try {
-      // edit
-      //   ? await editReleasePlan(releasePlan, values, workspace, true)
-      //   : await createReleasePlan(values, namespace, workspace, true);
       const newRelease = await createRelease(values, namespace, releasePlan);
       track('Release plan triggered', {
         // eslint-disable-next-line camelcase

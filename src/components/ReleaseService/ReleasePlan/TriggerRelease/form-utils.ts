@@ -6,7 +6,7 @@ import {
   RESOURCE_NAME_LENGTH_ERROR_MSG,
   RESOURCE_NAME_REGEX_MSG,
 } from '../../../../components/ImportForm/utils/validation-utils';
-import { ReleaseModel, ReleasePlanGroupVersionKind } from '../../../../models';
+import { ReleaseGroupVersionKind, ReleaseModel } from '../../../../models';
 import { ReleaseKind, ReleasePlanKind } from '../../../../types/coreBuildService';
 
 export enum ReleasePipelineLocation {
@@ -21,8 +21,9 @@ export type TriggerReleaseFormValues = {
   topic: string;
   description?: string;
   solution?: string;
-  references: string;
-  issues?: string[];
+  references?: string;
+  issues?: any[];
+  cves?: any[];
   labels?: { key: string; value: string }[];
 };
 
@@ -47,20 +48,23 @@ export const createRelease = async (
   const {
     releasePlan: rp,
     snapshot,
+    cves,
     topic,
     labels: labelPairs,
     description,
     solution,
     issues,
+    references,
     synopsis,
   } = values;
 
   const labels = labelPairs
     .filter((l) => !!l.key)
     .reduce((acc, o) => ({ ...acc, [o.key]: o.value }), {} as Record<string, string>);
+
   const resource: ReleaseKind = {
-    apiVersion: `${ReleasePlanGroupVersionKind.group}/${ReleasePlanGroupVersionKind.version}`,
-    kind: ReleasePlanGroupVersionKind.kind,
+    apiVersion: `${ReleaseGroupVersionKind.group}/${ReleaseGroupVersionKind.version}`,
+    kind: ReleaseGroupVersionKind.kind,
     metadata: {
       generateName: rp,
       namespace,
@@ -74,8 +78,10 @@ export const createRelease = async (
       releasePlan: rp,
       snapshot,
       data: {
-        advisory: {
+        releaseNotes: {
+          cves,
           issues,
+          references,
           synopsis,
           topic,
           description,

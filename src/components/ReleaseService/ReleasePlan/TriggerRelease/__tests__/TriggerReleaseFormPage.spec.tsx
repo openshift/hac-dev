@@ -12,6 +12,7 @@ jest.mock('../../../../../utils/analytics', () => ({
 }));
 
 const navigateMock = jest.fn();
+
 jest.mock('react-router-dom', () => ({
   ...(jest as any).requireActual('react-router-dom'),
   useLocation: jest.fn(() => ({})),
@@ -21,13 +22,12 @@ jest.mock('react-router-dom', () => ({
 
 jest.mock('../form-utils', () => ({
   ...jest.requireActual<any>('../form-utils'),
-  createReleasePlan: jest.fn(),
-  editReleasePlan: jest.fn(),
-  releasePlanFormSchema: yup.object(),
+  createRelease: jest.fn(),
+  triggerReleaseFormSchema: yup.object(),
 }));
 
-jest.mock('../ReleasePlanForm', () => ({
-  ReleasePlanForm: ({ handleSubmit, handleReset }) => (
+jest.mock('../TriggerReleaseForm', () => ({
+  TriggerReleaseForm: ({ handleSubmit, handleReset }) => (
     <>
       <button onClick={handleSubmit}>Submit</button>
       <button onClick={handleReset}>Reset</button>
@@ -35,11 +35,11 @@ jest.mock('../ReleasePlanForm', () => ({
   ),
 }));
 
-const createReleasePlanMock = createRelease as jest.Mock;
+const triggerReleasePlanMock = createRelease as jest.Mock;
 
-describe('ReleaseFormPage', () => {
-  it('should navigate on successful creation', async () => {
-    createReleasePlanMock.mockResolvedValue({ metadata: {}, spec: {} });
+describe('TriggerReleaseFormPage', () => {
+  it('should navigate on successful trigger', async () => {
+    triggerReleasePlanMock.mockResolvedValue({ metadata: {}, spec: {} });
     namespaceRenderer(<TriggerReleaseFormPage />, 'test-ns', {
       workspace: 'test-ws',
     });
@@ -48,48 +48,22 @@ describe('ReleaseFormPage', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
     });
 
-    expect(createReleasePlanMock).toHaveBeenCalled();
-    expect(createReleasePlanMock).toHaveBeenCalledWith(
+    expect(triggerReleasePlanMock).toHaveBeenCalled();
+    expect(triggerReleasePlanMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        name: '',
-        application: '',
-        autoRelease: false,
-        standingAttribution: false,
-        data: '',
-        params: [],
-        serviceAccount: '',
-        target: '',
-        git: {
-          url: '',
-          revision: '',
-          path: '',
-        },
+        description: '',
+        labels: [{ key: '', value: '' }],
+        references: '',
+        releasePlan: '',
+        snapshot: '',
+        synopsis: '',
+        topic: '',
       }),
       'test-ns',
-      'test-ws',
+      undefined,
     );
-    expect(createReleasePlanMock).toHaveBeenCalledTimes(2);
     expect(navigateMock).toHaveBeenCalledWith('/application-pipeline/release');
   });
-
-  //   it('should navigate on successful edit', async () => {
-  //     editReleasePlanMock.mockResolvedValue({ metadata: {}, spec: {} });
-  //     namespaceRenderer(
-  //       <ReleasePlanFormPage releasePlan={{ metadata: {}, spec: {} } as any} />,
-  //       'test-ns',
-  //       {
-  //         workspace: 'test-ws',
-  //       },
-  //     );
-
-  //     await act(async () => {
-  //       fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
-  //     });
-
-  //     expect(editReleasePlanMock).toHaveBeenCalled();
-  //     expect(editReleasePlanMock).toHaveBeenCalledTimes(2);
-  //     expect(navigateMock).toHaveBeenCalledWith('/application-pipeline/release');
-  //   });
 
   it('should navigate to release list on reset', async () => {
     namespaceRenderer(

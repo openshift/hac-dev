@@ -1,4 +1,4 @@
-import { ReleasePlanModel } from '../../../models';
+import { ReleaseModel, ReleasePlanModel } from '../../../models';
 import { ReleasePlanKind } from '../../../types/coreBuildService';
 import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
@@ -10,6 +10,8 @@ export const useReleasePlanActions = (obj: ReleasePlanKind) => {
   const { workspace } = useWorkspaceInfo();
   const [canDelete] = useAccessReviewForModel(ReleasePlanModel, 'delete');
   const [canUpdate] = useAccessReviewForModel(ReleasePlanModel, 'update');
+  const [canTrigger] = useAccessReviewForModel(ReleaseModel, 'create');
+
   return [
     {
       label: 'Trigger release plan',
@@ -17,6 +19,8 @@ export const useReleasePlanActions = (obj: ReleasePlanKind) => {
       cta: {
         href: `/application-pipeline/release/workspaces/${workspace}/release-plan/trigger`,
       },
+      disabled: !canTrigger,
+      disabledTooltip: "You don't have permission to trigger this release plan",
     },
     {
       label: 'Edit release plan',
