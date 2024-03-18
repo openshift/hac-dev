@@ -637,6 +637,19 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
+      path: '/application-pipeline/release/workspaces/:workspaceName/release-plan/trigger',
+      exact: true,
+      component: {
+        $codeRef: 'TriggerReleasePlan',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
       path: '/application-pipeline/release/workspaces/:workspaceName/release-plan/edit/:name',
       exact: true,
       component: {
@@ -761,6 +774,7 @@ module.exports = {
       CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
       ReleaseListPage: resolve(__dirname, '../src/pages/ReleaseServicesListPage'),
       CreateReleasePlan: resolve(__dirname, '../src/pages/CreateReleasePlanPage'),
+      TriggerReleasePlan: resolve(__dirname, '../src/pages/TriggerReleasePlanPage'),
       EditReleasePlan: resolve(__dirname, '../src/pages/EditReleasePlanPage'),
       WorkspaceContext: resolve(__dirname, '../src/utils/workspace-context-utils'),
       WorkspacedPage: resolve(__dirname, '../src/pages/WorkspacedPage'),

@@ -19,9 +19,11 @@ const EmptyStateImg = () => (
 );
 
 const FilteredEmptyState: React.FC<
-  React.PropsWithChildren<Omit<EmptyStateProps, 'children'> & { onClearFilters: () => void }>
-> = ({ onClearFilters, ...props }) => (
-  <EmptyState className="app-empty-state" variant={EmptyStateVariant.full} {...props}>
+  React.PropsWithChildren<
+    Omit<EmptyStateProps, 'children'> & { variant?: string; onClearFilters: () => void }
+  >
+> = ({ variant = EmptyStateVariant.full, onClearFilters, ...props }) => (
+  <EmptyState className="app-empty-state" variant={variant} {...props}>
     <EmptyStateHeader
       titleText="No results found"
       icon={<EmptyStateIcon icon={EmptyStateImg} />}

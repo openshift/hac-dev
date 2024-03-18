@@ -70,14 +70,42 @@ export type Env = {
   value: string;
 };
 
+export type CVE = {
+  issueKey: string;
+  url: string;
+  status?: string;
+  summary?: string;
+  uploadDate?: string;
+  components?: string[];
+};
+
+export type Issue = {
+  issueKey: string;
+  url: string;
+  status?: string;
+  summary?: string;
+  uploadDate?: string;
+};
+
 export type ReleaseKind = K8sResourceCommon & {
   spec: ReleaseSpec;
-  status: ReleaseStatus;
+  status?: ReleaseStatus;
 };
 
 export type ReleaseSpec = {
   snapshot: string;
   releasePlan: string;
+  data?: {
+    releaseNotes?: {
+      topic?: string;
+      description: string;
+      synopsis: string;
+      cves: CVE[];
+      issues: Issue[];
+      solution?: string;
+      references?: string;
+    };
+  };
 };
 
 export type ReleaseStatus = {
