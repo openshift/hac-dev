@@ -153,8 +153,6 @@ export const getScanResultsMap = (
 
 export const usePLRScanResults = (
   pipelineRunNames: string[],
-  // enable cache only if the pipeline run has completed
-  cache?: boolean,
 ): [{ [key: string]: any }, boolean, string[]] => {
   // Fetch directly from tekton-results because a task result is only present on completed tasks runs.
   const cacheKey = React.useRef('');
@@ -184,9 +182,7 @@ export const usePLRScanResults = (
       }),
       [pipelineRunNames],
     ),
-    cache && pipelineRunNames.length
-      ? `useScanResults-${pipelineRunNames.sort().join('|')}`
-      : undefined,
+    pipelineRunNames.length ? `useScanResults-${pipelineRunNames.sort().join('|')}` : undefined,
   );
 
   return React.useMemo(() => {
