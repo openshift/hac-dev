@@ -89,7 +89,7 @@ const useTRRuns = <Kind extends K8sResourceCommon>(
             if (nextPageToken) {
               setResult((cur) => [cur[0], cur[1], e, undefined]);
             } else {
-              setResult([[], false, e, undefined]);
+              setResult([[], true, e, undefined]);
             }
           }
         }

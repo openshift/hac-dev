@@ -210,6 +210,12 @@ describe('Pipeline run List', () => {
     );
   });
 
+  it('should render error state when there is an API error', () => {
+    usePipelineRunsMock.mockReturnValue([[], true, new Error('500: Internal server error')]);
+    render(<PipelineRunsListView applicationName="purple-mermaid-app" />);
+    screen.getByText('Unable to load pipeline runs');
+  });
+
   it('should render correct columns when pipelineRuns are present', () => {
     usePipelineRunsMock.mockReturnValue([pipelineRuns, true]);
     render(<PipelineRunsListView applicationName={appName} />);

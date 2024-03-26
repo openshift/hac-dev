@@ -57,7 +57,9 @@ const BasePipelineRunListRow: React.FC<React.PropsWithChildren<BasePipelineRunLi
           data-testid="vulnerabilities"
           className={pipelineRunTableColumnClasses.vulnerabilities}
         >
-          {!obj?.status?.completionTime ? (
+          {customData?.error ? (
+            <>N/A</>
+          ) : !obj?.status?.completionTime ? (
             '-'
           ) : scanLoaded ? (
             <ScanStatus scanResults={scanResults} />

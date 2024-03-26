@@ -3,6 +3,8 @@ import { Bullseye, Spinner, Title } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { usePipelineRuns } from '../../../hooks/usePipelineRuns';
 import { Table } from '../../../shared';
+import ErrorEmptyState from '../../../shared/components/empty-state/ErrorEmptyState';
+import { HttpError } from '../../../shared/utils/error/http-error';
 import { PipelineRunKind } from '../../../types';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import PipelineRunEmptyState from '../../PipelineRunDetailsView/PipelineRunEmptyState';
@@ -16,7 +18,8 @@ const IntegrationTestPipelineRunTab: React.FC<
 > = ({ applicationName, testName }) => {
   const { namespace } = useWorkspaceInfo();
 
-  const [pipelineRuns, loaded, , getNextPage] = usePipelineRuns(
+  // Todo add errors here
+  const [pipelineRuns, loaded, error, getNextPage] = usePipelineRuns(
     namespace,
     React.useMemo(
       () => ({
@@ -30,6 +33,17 @@ const IntegrationTestPipelineRunTab: React.FC<
       [applicationName, testName],
     ),
   );
+
+  if (error) {
+    const httpError = HttpError.fromCode(error ? (error as any).code : 404);
+    return (
+      <ErrorEmptyState
+        httpError={httpError}
+        title="Unable to load pipeline runs"
+        body={httpError?.message.length ? httpError?.message : 'Something went wrong'}
+      />
+    );
+  }
 
   if (!loaded) {
     return (

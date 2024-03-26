@@ -47,6 +47,24 @@ describe('Pipeline run Row', () => {
     expect(row.getByText('Succeeded')).toBeDefined();
   });
 
+  it('should return N/A when vulnerabilities API errors out ', () => {
+    const succeededPlr = testPipelineRuns[DataState.SUCCEEDED];
+    const plrName = succeededPlr.metadata.name;
+    const row = render(
+      <PipelineRunListRowWithVulnerabilities
+        obj={succeededPlr}
+        customData={{
+          fetchedPipelineRuns: [plrName],
+          vulnerabilities: [{ [plrName]: {} }],
+          error: new Error('500: Internal Server error'),
+        }}
+        columns={[]}
+      />,
+    );
+
+    expect(row.getByText('N/A')).toBeDefined();
+  });
+
   it('should show vulnerabilities when it is available ', () => {
     const succeededPlr = testPipelineRuns[DataState.SUCCEEDED];
     const plrName = succeededPlr.metadata.name;

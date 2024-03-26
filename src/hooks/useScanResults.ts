@@ -153,7 +153,7 @@ export const getScanResultsMap = (
 
 export const usePLRScanResults = (
   pipelineRunNames: string[],
-): [{ [key: string]: any }, boolean, string[]] => {
+): [{ [key: string]: any }, boolean, string[], unknown] => {
   // Fetch directly from tekton-results because a task result is only present on completed tasks runs.
   const cacheKey = React.useRef('');
 
@@ -163,7 +163,7 @@ export const usePLRScanResults = (
 
   const { namespace } = useWorkspaceInfo();
   // Fetch directly from tekton-results because a task result is only present on completed tasks runs.
-  const [taskRuns, loaded] = useTRTaskRuns(
+  const [taskRuns, loaded, error] = useTRTaskRuns(
     pipelineRunNames.length > 0 ? namespace : null,
     React.useMemo(
       () => ({
@@ -187,15 +187,16 @@ export const usePLRScanResults = (
 
   return React.useMemo(() => {
     if (!loaded || !pipelineRunNames) {
-      return [null, loaded, []];
+      return [null, loaded, [], error];
     }
     const scanResultsMap = getScanResultsMap(taskRuns);
     return [
       scanResultsMap,
       loaded,
       loaded && pipelineRunNames.sort().join('|') === cacheKey.current ? pipelineRunNames : [],
+      error,
     ];
-  }, [loaded, pipelineRunNames, taskRuns]);
+  }, [loaded, pipelineRunNames, taskRuns, error]);
 };
 
 export const usePLRVulnerabilities = (
@@ -203,6 +204,7 @@ export const usePLRVulnerabilities = (
 ): {
   vulnerabilities: { [key: string]: ScanResults };
   fetchedPipelineRuns: string[];
+  error: unknown;
 } => {
   const pageSize = 30;
   const processedPipelineruns = React.useRef([]);
@@ -216,7 +218,7 @@ export const usePLRVulnerabilities = (
   };
 
   // enable cache only if the pipeline run has completed
-  const [vulnerabilities, vloaded, vlist] = usePLRScanResults(
+  const [vulnerabilities, vloaded, vlist, error] = usePLRScanResults(
     difference(
       processedPipelineruns.current.slice(
         (currentPage - 1) * pageSize,
@@ -225,7 +227,7 @@ export const usePLRVulnerabilities = (
       loadedPipelineRunNames.current,
     ),
   );
-  if (vloaded && vulnerabilities) {
+  if ((vloaded && vulnerabilities) || error) {
     pipelineRunVulnerabilities.current = merge(
       {},
       vulnerabilities,
@@ -252,5 +254,6 @@ export const usePLRVulnerabilities = (
   return {
     vulnerabilities: pipelineRunVulnerabilities.current,
     fetchedPipelineRuns: loadedPipelineRunNames.current,
+    error,
   };
 };

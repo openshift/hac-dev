@@ -82,6 +82,12 @@ describe('CommitsListView', () => {
     useComponentsMock.mockReturnValue([MockComponents, true]);
   });
 
+  it('should render error state when there is an API error', () => {
+    watchResourceMock.mockReturnValue([[], true, new Error('500: Internal server error')]);
+    render(<CommitsListView applicationName="purple-mermaid-app" />);
+    screen.getByText('Unable to load pipeline runs');
+  });
+
   it('should render empty state if no commits are present', () => {
     watchResourceMock.mockReturnValue([[], true]);
     render(<CommitsListView applicationName="purple-mermaid-app" />);

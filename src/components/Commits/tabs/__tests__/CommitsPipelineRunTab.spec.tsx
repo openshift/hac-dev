@@ -69,6 +69,21 @@ const commitPlrs = [
 ];
 
 describe('Commit Pipelinerun List', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+  it('should render error state if the API errors out', () => {
+    usePipelineRunsForCommitMock.mockReturnValue([
+      [],
+      true,
+      new Error('500: Internal server error'),
+    ]);
+
+    render(<CommitsPipelineRunTab applicationName={appName} commitName="test-sha" />);
+
+    screen.getByText('Unable to load pipeline runs');
+  });
+
   it('should render empty state if no pipelinerun is present', () => {
     usePipelineRunsForCommitMock.mockReturnValue([[], true]);
     watchResourceMock.mockReturnValue([[], true]);
