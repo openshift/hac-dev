@@ -75,9 +75,6 @@ export const usePipelinererunAction = (pipelineRun: PipelineRunKind) => {
         : runType === PipelineRunType.TEST && (!snapshot || !scenario)
         ? 'Missing snapshot or scenario'
         : null,
-    hidden:
-      runType !== PipelineRunType.BUILD &&
-      (!component || !!componentError || isPACEnabled(component)),
     key: 'rerun',
     label: 'Rerun',
   };
