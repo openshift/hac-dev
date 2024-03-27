@@ -145,7 +145,7 @@ describe('useTektonResults', () => {
         });
         const { result } = renderHook(() => useTestHook('test-ns'));
         expect(getRunsMock).toHaveBeenCalledWith('test-ws', 'test-ns', undefined, null, undefined);
-        expect(result.current).toEqual([[], false, error, undefined]);
+        expect(result.current).toEqual([[], true, error, undefined]);
       });
 
       it('should return error when exception thrown when getting next page', async () => {

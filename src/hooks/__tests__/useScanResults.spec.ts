@@ -71,13 +71,20 @@ describe('usePLRScanResults', () => {
   it('returns null if results are not fetched', () => {
     useTRTaskRunsMock.mockReturnValue([null, false]);
     const { result } = renderHook(() => usePLRScanResults(['test1']));
-    expect(result.current).toEqual([null, false, []]);
+    expect(result.current).toEqual([null, false, [], undefined]);
   });
 
   it('returns null if scan results are not found in taskrun', () => {
     useTRTaskRunsMock.mockReturnValue([[], true]);
     const { result } = renderHook(() => usePLRScanResults(['test2']));
-    expect(result.current).toEqual([null, true, []]);
+    expect(result.current).toEqual([null, true, [], undefined]);
+  });
+
+  it('returns error if scan results API is failing', () => {
+    const badGatewayError = new Error('502: bad gateway error');
+    useTRTaskRunsMock.mockReturnValue([[], true, badGatewayError]);
+    const { result } = renderHook(() => usePLRScanResults(['test2']));
+    expect(result.current).toEqual([null, true, [], badGatewayError]);
   });
 
   it('returns scan results if taskrun is found', () => {

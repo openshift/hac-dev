@@ -8,16 +8,18 @@ import {
 } from '@patternfly/react-core';
 import {
   Select,
-  SelectVariant,
   SelectGroup,
   SelectOption,
+  SelectVariant,
 } from '@patternfly/react-core/deprecated';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { useBuildPipelines } from '../../hooks/useBuildPipelines';
 import { useComponents } from '../../hooks/useComponents';
 import { useSearchParam } from '../../hooks/useSearchParam';
+import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
 import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
 import Table from '../../shared/components/table/Table';
+import { HttpError } from '../../shared/utils/error/http-error';
 import { getCommitsFromPLRs, statuses } from '../../utils/commits-utils';
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
@@ -43,7 +45,7 @@ const CommitsListView: React.FC<React.PropsWithChildren<CommitsListViewProps>> =
     applicationName,
   );
 
-  const [pipelineRuns, loaded, , getNextPage] = useBuildPipelines(
+  const [pipelineRuns, loaded, error, getNextPage] = useBuildPipelines(
     namespace,
     applicationName,
     undefined,
@@ -163,6 +165,16 @@ const CommitsListView: React.FC<React.PropsWithChildren<CommitsListViewProps>> =
     </Toolbar>
   );
 
+  if (error) {
+    const httpError = HttpError.fromCode(error ? (error as any).code : 404);
+    return (
+      <ErrorEmptyState
+        httpError={httpError}
+        title="Unable to load pipeline runs"
+        body={httpError?.message.length ? httpError?.message : 'Something went wrong'}
+      />
+    );
+  }
   return (
     <Table
       virtualize
