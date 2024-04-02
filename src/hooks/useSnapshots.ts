@@ -15,7 +15,7 @@ export const useSnapshots = (
   });
   return React.useMemo(
     () => [
-      loaded && !error
+      loaded && !error && commit
         ? snapshots.filter(
             (snapshot) =>
               snapshot.metadata.labels?.[PipelineRunLabel.TEST_SERVICE_COMMIT] === commit ||
