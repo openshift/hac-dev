@@ -14,7 +14,7 @@ export const ReleasePlanDropdown: React.FC<React.PropsWithChildren<ReleasePlanDr
 ) => {
   const { namespace } = useWorkspaceInfo();
   const [releasePlans, loaded] = useReleasePlans(namespace);
-  const [, , { setValue }] = useField<string>(props.name);
+  const [{ value }, , { setValue }] = useField<string>(props.name);
 
   const dropdownItems = React.useMemo(
     () => releasePlans.map((a) => ({ key: a.metadata.name, value: a.metadata.name })),
@@ -28,6 +28,7 @@ export const ReleasePlanDropdown: React.FC<React.PropsWithChildren<ReleasePlanDr
       placeholder={!loaded ? 'Loading release plans...' : 'Select release plan'}
       isDisabled={props.isDisabled || !loaded}
       items={dropdownItems}
+      value={value}
       onChange={(app: string) => setValue(app)}
     />
   );

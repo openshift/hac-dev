@@ -12,7 +12,7 @@ import { TriggerReleaseFormValues } from './form-utils';
 import { ReleasePlanDropdown } from './ReleasePlanDropdown';
 import { SnapshotDropdown } from './SnapshotDropdown';
 
-type Props = FormikProps<TriggerReleaseFormValues>;
+type Props = FormikProps<TriggerReleaseFormValues> & { applicationName: string };
 
 export const TriggerReleaseForm: React.FC<Props> = ({
   handleSubmit,
@@ -21,6 +21,7 @@ export const TriggerReleaseForm: React.FC<Props> = ({
   dirty,
   errors,
   status,
+  applicationName,
 }) => {
   const breadcrumbs = useWorkspaceBreadcrumbs();
 
@@ -63,6 +64,7 @@ export const TriggerReleaseForm: React.FC<Props> = ({
             name="snapshot"
             helpText="The release you want to release to the environments in your target workspace."
             required
+            applicationName={applicationName}
           />
           <AddIssueSection field="issues" issueType={IssueType.BUG} />
 

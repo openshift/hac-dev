@@ -16,6 +16,8 @@ export const TriggerReleaseFormPage: React.FC<Props> = ({ releasePlan }) => {
   const track = useTrackEvent();
   const { namespace, workspace } = useWorkspaceInfo();
 
+  const applicationName = releasePlan?.spec?.application;
+
   const handleSubmit = async (
     values: TriggerReleaseFormValues,
     { setSubmitting, setStatus }: FormikHelpers<TriggerReleaseFormValues>,
@@ -35,7 +37,9 @@ export const TriggerReleaseFormPage: React.FC<Props> = ({ releasePlan }) => {
         releasePlan: newRelease.spec.releasePlan,
         workspace,
       });
-      navigate('/application-pipeline/release');
+      navigate(
+        `/application-pipeline/workspaces/${workspace}/applications/${releasePlan?.spec?.application}/releases/${newRelease.metadata?.name}`,
+      );
     } catch (e) {
       // eslint-disable-next-line no-console
       console.warn('Error while submitting integration test:', e);
@@ -72,7 +76,7 @@ export const TriggerReleaseFormPage: React.FC<Props> = ({ releasePlan }) => {
       validationSchema={triggerReleaseFormSchema}
       initialValues={initialValues}
     >
-      {(props) => <TriggerReleaseForm {...props} />}
+      {(props) => <TriggerReleaseForm {...props} applicationName={applicationName} />}
     </Formik>
   );
 };

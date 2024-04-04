@@ -46,7 +46,7 @@ describe('useReleasePlanActions', () => {
       expect.objectContaining({
         label: 'Trigger release plan',
         cta: {
-          href: `/application-pipeline/release/workspaces/test-ws/release-plan/trigger`,
+          href: `/application-pipeline/release/workspaces/test-ws/release-plan/trigger/test-release-plan`,
         },
       }),
     );

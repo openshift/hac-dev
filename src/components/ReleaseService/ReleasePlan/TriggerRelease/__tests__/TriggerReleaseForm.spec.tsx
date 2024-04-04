@@ -44,7 +44,7 @@ describe('TriggerReleaseForm', () => {
   it('should show trigger release button and heading', () => {
     const values = {};
     const props = { values } as FormikProps<any>;
-    const result = formikRenderer(<TriggerReleaseForm {...props} />, values);
+    const result = formikRenderer(<TriggerReleaseForm applicationName="app1" {...props} />, values);
     expect(result.getByRole('heading', { name: 'Trigger release plan' })).toBeVisible();
     expect(result.getByRole('button', { name: 'Trigger' })).toBeVisible();
   });
@@ -52,7 +52,7 @@ describe('TriggerReleaseForm', () => {
   it('should show trigger release input fields', () => {
     const values = {};
     const props = { values } as FormikProps<any>;
-    const result = formikRenderer(<TriggerReleaseForm {...props} />, values);
+    const result = formikRenderer(<TriggerReleaseForm applicationName="app1" {...props} />, values);
     expect(result.getByRole('textbox', { name: 'Synopsis' })).toBeVisible();
     expect(result.getByRole('textbox', { name: 'Description' })).toBeVisible();
     expect(result.getByRole('textbox', { name: 'Topic' })).toBeVisible();
@@ -62,7 +62,7 @@ describe('TriggerReleaseForm', () => {
   it('should show release & snapshot dropdown in loading state', () => {
     const values = {};
     const props = { values } as FormikProps<any>;
-    formikRenderer(<TriggerReleaseForm {...props} />, values);
+    formikRenderer(<TriggerReleaseForm applicationName="app1" {...props} />, values);
     expect(screen.getByText('Loading release plans...')).toBeVisible();
     expect(screen.getByText('Loading snapshots...')).toBeVisible();
   });

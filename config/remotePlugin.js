@@ -637,7 +637,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/application-pipeline/release/workspaces/:workspaceName/release-plan/trigger',
+      path: '/application-pipeline/release/workspaces/:workspaceName/release-plan/trigger/:name',
       exact: true,
       component: {
         $codeRef: 'TriggerReleasePlan',
