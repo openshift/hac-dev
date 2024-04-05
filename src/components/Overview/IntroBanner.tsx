@@ -113,13 +113,13 @@ const IntroBanner: React.FC<React.PropsWithChildren<unknown>> = () => {
                   start using the service.
                 </p>
                 <p>
-                  Join the internal RedHat Slack workspace here:{' '}
+                  Join the internal Red Hat Slack workspace here:{' '}
                   <ExternalLink href="https://redhat-internal.slack.com/" hideIcon>
                     https://redhat-internal.slack.com/
                   </ExternalLink>
                   , and then join our{' '}
                   <ExternalLink href="https://app.slack.com/client/E030G10V24F/C04PZ7H0VA8">
-                    #rhtap-users
+                    #konflux-users
                   </ExternalLink>{' '}
                   channel.
                 </p>
