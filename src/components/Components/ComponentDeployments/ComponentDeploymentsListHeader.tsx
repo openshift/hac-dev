@@ -6,6 +6,10 @@ export const componentDeploymentsColumnClasses = {
   logs: 'pf-c-table__action',
 };
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const ComponentDeploymentsListHeader = () => {
   return [
     {

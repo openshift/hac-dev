@@ -59,13 +59,7 @@ describe('SnapshotOverview', () => {
     mockSnapshots[0].metadata.deletionTimestamp = '1';
     watchResourceMock.mockImplementation(getMockedResources);
     routerRenderer(
-      <SnapshotOverview
-        snapshot={mockSnapshots[0]}
-        environments={[
-          { kind: 'Environment', apiVersion: 'v1', metadata: { name: 'test' }, spec: null },
-        ]}
-        buildPipelineName="build-pipeline"
-      />,
+      <SnapshotOverview snapshot={mockSnapshots[0]} buildPipelineName="build-pipeline" />,
     );
     expect(screen.getByText('Created at')).toBeInTheDocument();
     expect(screen.getByText('Deployed to')).toBeInTheDocument();
@@ -211,18 +205,7 @@ describe('SnapshotOverview environments', () => {
     mockSnapshots[2].metadata.deletionTimestamp = '1';
     watchResourceMock.mockImplementation(getMockedResources);
     routerRenderer(
-      <SnapshotOverview
-        snapshot={mockSnapshots[2]}
-        environments={[
-          {
-            kind: 'Environment',
-            apiVersion: 'v1',
-            metadata: { name: 'test' },
-            spec: { displayName: 'test-env', deploymentStrategy: null },
-          },
-        ]}
-        buildPipelineName="build-pipeline"
-      />,
+      <SnapshotOverview snapshot={mockSnapshots[2]} buildPipelineName="build-pipeline" />,
     );
     expect(screen.getByText('test-env')).toBeInTheDocument();
   });
@@ -231,18 +214,7 @@ describe('SnapshotOverview environments', () => {
     mockSnapshots[2].metadata.deletionTimestamp = '1';
     watchResourceMock.mockImplementation(getMockedResources);
     routerRenderer(
-      <SnapshotOverview
-        snapshot={mockSnapshots[2]}
-        environments={[
-          {
-            kind: 'Environment',
-            apiVersion: 'v1',
-            metadata: { name: 'test' },
-            spec: null,
-          },
-        ]}
-        buildPipelineName="build-pipeline"
-      />,
+      <SnapshotOverview snapshot={mockSnapshots[2]} buildPipelineName="build-pipeline" />,
     );
     expect(screen.getByText('test')).toBeInTheDocument();
   });

@@ -30,6 +30,10 @@ const ScanResultsColumn: React.FC<React.PropsWithChildren<ScanResultsColumnProps
   return <ScanStatus scanResults={scanResults} />;
 };
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const ComponentDeploymentsListRow: React.FC<
   React.PropsWithChildren<RowFunctionArgs<EnvironmentKind>>
 > = ({ obj: environment, customData }) => {

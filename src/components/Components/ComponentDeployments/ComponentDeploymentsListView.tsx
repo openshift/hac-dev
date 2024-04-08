@@ -27,6 +27,10 @@ type DeploymentsToolbarProps = {
   onNameInput: (value: string) => void;
 };
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const DeploymentsToolbar: React.FC<React.PropsWithChildren<DeploymentsToolbarProps>> = React.memo(
   ({ nameFilter, onNameInput }) => (
     <Toolbar data-test="commit-list-toolbar" clearAllFilters={() => onNameInput('')}>
@@ -53,6 +57,10 @@ interface ComponentDeploymentsListViewProps {
   component: ComponentKind;
 }
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const ComponentDeploymentsListView: React.FC<
   React.PropsWithChildren<ComponentDeploymentsListViewProps>
 > = ({ component }) => {

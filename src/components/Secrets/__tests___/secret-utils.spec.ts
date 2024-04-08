@@ -254,7 +254,6 @@ const formValues: AddSecretFormValues = {
   targets: {
     application: 'test-application',
     component: TargetDropdownDefaults.ALL_COMPONENTS,
-    environment: TargetDropdownDefaults.ALL_ENVIRONMENTS,
   },
   opaque: {
     keyValues: [
@@ -385,7 +384,7 @@ describe('getTargetLabelsForRemoteSecret', () => {
     expect(
       getTargetLabelsForRemoteSecret({
         ...formValues,
-        targets: { application: null, component: null, environment: null },
+        targets: { application: null, component: null },
       }),
     ).toEqual({
       'ui.appstudio.redhat.com/secret-for': 'Build',
@@ -436,7 +435,7 @@ describe('getTargetLabelsForRemoteSecret', () => {
       getTargetLabelsForRemoteSecret({
         ...formValues,
         secretFor: SecretFor.Build,
-        targets: { application: null, component: null, environment: null },
+        targets: { application: null, component: null },
       }),
     ).toEqual({
       'ui.appstudio.redhat.com/secret-for': 'Build',
@@ -448,7 +447,7 @@ describe('getTargetLabelsForRemoteSecret', () => {
       getTargetLabelsForRemoteSecret({
         ...formValues,
         secretFor: SecretFor.Deployment,
-        targets: { application: null, component: null, environment: null },
+        targets: { application: null, component: null },
       }),
     ).toEqual({
       'ui.appstudio.redhat.com/secret-for': 'Deployment',

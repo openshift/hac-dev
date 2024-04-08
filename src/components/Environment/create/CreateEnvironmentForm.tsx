@@ -34,11 +34,19 @@ export type CreateEnvironmentFormValues = {
 
 type CreateEnvironmentFormProps = FormikProps<CreateEnvironmentFormValues>;
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const deploymentStrategyItems = Object.entries(EnvironmentDeploymentStrategy).map(([key]) => ({
   key,
   value: key,
 }));
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const CreateEnvironmentForm: React.FC<React.PropsWithChildren<CreateEnvironmentFormProps>> = ({
   dirty,
   errors,

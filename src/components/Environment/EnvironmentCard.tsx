@@ -34,6 +34,10 @@ import {
   getEnvironmentTypeLabel,
 } from './environment-utils';
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const ApplicationEnvironmentStatus: React.FC<
   React.PropsWithChildren<{
     environment: EnvironmentKindWithHealthStatus;
@@ -70,6 +74,10 @@ type EnvironmentCardProps = {
   applicationName?: string;
 };
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const EnvironmentCard: React.FC<React.PropsWithChildren<EnvironmentCardProps>> = ({
   environment,
   readOnly,

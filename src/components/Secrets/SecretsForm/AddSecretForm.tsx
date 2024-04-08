@@ -29,7 +29,6 @@ const AddSecretForm = () => {
     targets: {
       application: '',
       component: TargetDropdownDefaults.ALL_COMPONENTS,
-      environment: TargetDropdownDefaults.ALL_ENVIRONMENTS,
     },
     opaque: {
       keyValues: [{ key: '', value: '' }],

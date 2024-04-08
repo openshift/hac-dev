@@ -171,7 +171,6 @@ const addSecretFormValues: AddSecretFormValues = {
   targets: {
     application: 'test-application',
     component: TargetDropdownDefaults.ALL_COMPONENTS,
-    environment: TargetDropdownDefaults.ALL_ENVIRONMENTS,
   },
   opaque: {
     keyValues: [

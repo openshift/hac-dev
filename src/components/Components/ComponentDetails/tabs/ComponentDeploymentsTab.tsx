@@ -7,6 +7,10 @@ type ComponentDeploymentsTabProps = {
   component: ComponentKind;
 };
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 export const ComponentDeploymentsTab: React.FC<
   React.PropsWithChildren<ComponentDeploymentsTabProps>
 > = ({ component }) => (

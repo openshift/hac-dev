@@ -9,6 +9,10 @@ import { useAllEnvironments } from './useAllEnvironments';
 import { useReleases } from './useReleases';
 import { useSnapshotsEnvironmentBindings } from './useSnapshotsEnvironmentBindings';
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 export type EnvironmentKindWithHealthStatus = EnvironmentKind & {
   healthStatus: GitOpsDeploymentHealthStatus;
   lastDeploy: string;

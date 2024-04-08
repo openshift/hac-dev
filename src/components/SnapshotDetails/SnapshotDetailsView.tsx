@@ -2,22 +2,18 @@ import React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Bullseye, Spinner, Text, TextVariants } from '@patternfly/react-core';
 import { SnapshotLabels } from '../../consts/pipelinerun';
-import { useEnvironments } from '../../hooks/useEnvironments';
 import { usePipelineRun } from '../../hooks/usePipelineRuns';
-import { SnapshotEnvironmentBindingGroupVersionKind, SnapshotGroupVersionKind } from '../../models';
+import { SnapshotGroupVersionKind } from '../../models';
 import CommitLabel from '../../shared/components/commit-label/CommitLabel';
 import DetailsPage from '../../shared/components/details-page/DetailsPage';
 import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
 import { LoadingBox } from '../../shared/components/status-box/StatusBox';
 import { Timestamp } from '../../shared/components/timestamp/Timestamp';
 import { HttpError } from '../../shared/utils/error/http-error';
-import { EnvironmentKind } from '../../types';
-import { Snapshot, SnapshotEnvironmentBinding } from '../../types/coreBuildService';
+import { Snapshot } from '../../types/coreBuildService';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import { createCommitObjectFromPLR } from '../../utils/commits-utils';
-import { runStatus } from '../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
-import { StatusIconWithTextLabel } from '../topology/StatusIcon';
 import SnapshotOverviewTab from './tabs/SnapshotOverview';
 import SnapshotPipelineRunTab from './tabs/SnapshotPipelineRunsTab';
 
@@ -56,41 +52,6 @@ const SnapshotDetailsView: React.FC<React.PropsWithChildren<SnapshotDetailsViewP
     [plrLoaded, plrLoadError, buildPipelineRun],
   );
 
-  const [environments, environmentsLoaded, environmentsError] = useEnvironments();
-
-  const [snapshotEBs, sebLoaded, sebLoadError] = useK8sWatchResource<SnapshotEnvironmentBinding[]>({
-    groupVersionKind: SnapshotEnvironmentBindingGroupVersionKind,
-    namespace: snapshot?.metadata?.namespace,
-    isList: true,
-  });
-
-  const deployedEnvironments: EnvironmentKind[] = React.useMemo(() => {
-    const envList = [];
-    sebLoaded &&
-      !sebLoadError &&
-      environmentsLoaded &&
-      !environmentsError &&
-      environments.forEach((env) => {
-        const snapshotWithEnvironment = snapshotEBs.find(
-          (seb) =>
-            seb?.spec?.environment === env.metadata?.name &&
-            seb.spec?.snapshot === snapshot?.metadata?.name,
-        );
-        if (snapshotWithEnvironment) {
-          envList.push(env);
-        }
-      });
-    return envList;
-  }, [
-    sebLoadError,
-    sebLoaded,
-    snapshotEBs,
-    snapshot?.metadata?.name,
-    environments,
-    environmentsError,
-    environmentsLoaded,
-  ]);
-
   if (loadErr || (loaded && !snapshot)) {
     return (
       <ErrorEmptyState
@@ -101,7 +62,7 @@ const SnapshotDetailsView: React.FC<React.PropsWithChildren<SnapshotDetailsViewP
     );
   }
 
-  if ((!plrLoadError && !plrLoaded) || (!sebLoaded && !sebLoadError)) {
+  if (!plrLoadError && !plrLoaded) {
     return <LoadingBox />;
   }
 
@@ -140,23 +101,6 @@ const SnapshotDetailsView: React.FC<React.PropsWithChildren<SnapshotDetailsViewP
                     className="pf-u-display-inline"
                   />
                 </Text>
-                <Text component={TextVariants.p} data-test="snapshot-commit-label">
-                  {environments?.map((env) => {
-                    const isDeployed = deployedEnvironments.find(
-                      (e) => e.metadata.name === env.metadata?.name,
-                    );
-                    return (
-                      <>
-                        <StatusIconWithTextLabel
-                          key={env.metadata?.name}
-                          text={env.spec.displayName ?? env.metadata.name}
-                          dataTestAttribute="snapshot-env-label"
-                          status={isDeployed ? runStatus.Succeeded : runStatus.Cancelling}
-                        />{' '}
-                      </>
-                    );
-                  })}
-                </Text>
               </>
             )}
           </>
@@ -172,7 +116,6 @@ const SnapshotDetailsView: React.FC<React.PropsWithChildren<SnapshotDetailsViewP
                 snapshot={snapshot}
                 commit={commit}
                 buildPipelineName={buildPipelineName}
-                environments={deployedEnvironments}
               />
             ),
           },

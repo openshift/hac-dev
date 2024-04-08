@@ -16,7 +16,6 @@ import { useAppBuildNodes } from './useAppBuildNodes';
 import { useAppComponentsNodes } from './useAppComponentsNodes';
 import { useAppReleaseNodes } from './useAppReleaseNodes';
 import { useAppReleasePlanNodes } from './useAppReleasePlanNodes';
-import { useAppStaticEnvironmentNodes } from './useAppStaticEnvironmentNodes';
 
 export const useAppWorkflowData = (
   applicationName: string,
@@ -66,26 +65,21 @@ export const useAppWorkflowData = (
     applicationIntegrationTestNodes,
   ]);
 
-  const [
-    staticEnvironmentNodes,
-    staticEnvironmentGroup,
-    lastStaticEnv,
-    staticEnvironmentsLoaded,
-    staticEnvironmentsErrors,
-  ] = useAppStaticEnvironmentNodes(
-    namespace,
-    applicationName,
-    expanded ? applicationIntegrationTestTasks : [testsGroup?.id ?? ''],
-    expanded,
-  );
+  // const [
+  //   staticEnvironmentNodes,
+  //   staticEnvironmentGroup,
+  //   lastStaticEnv,
+  //   staticEnvironmentsLoaded,
+  //   staticEnvironmentsErrors,
+  // ] = useAppStaticEnvironmentNodes(
+  //   namespace,
+  //   applicationName,
+  //   expanded ? applicationIntegrationTestTasks : [testsGroup?.id ?? ''],
+  //   expanded,
+  // );
 
   const [releaseNodes, releaseGroup, releaseTasks, releasesLoaded, releasesError] =
-    useAppReleaseNodes(
-      namespace,
-      applicationName,
-      expanded ? lastStaticEnv : [staticEnvironmentGroup?.id ?? ''],
-      expanded,
-    );
+    useAppReleaseNodes(namespace, applicationName, [''], expanded);
 
   const [
     managedEnvironmentNodes,
@@ -98,7 +92,7 @@ export const useAppWorkflowData = (
     componentsLoaded &&
     buildsLoaded &&
     applicationTestsLoaded &&
-    staticEnvironmentsLoaded &&
+    // staticEnvironmentsLoaded &&
     releasesLoaded &&
     managedEnvironmentsLoaded;
 
@@ -106,7 +100,7 @@ export const useAppWorkflowData = (
     ...componentsErrors,
     ...buildsErrors,
     ...applicationErrors,
-    ...staticEnvironmentsErrors,
+    // ...staticEnvironmentsErrors,
     ...releasesError,
     ...managedEnvironmentsError,
   ];
@@ -120,7 +114,7 @@ export const useAppWorkflowData = (
       ...(componentNodes?.length ? componentNodes : [componentGroup]),
       ...(buildNodes?.length ? buildNodes : [buildGroup]),
       ...applicationIntegrationTestNodes,
-      ...(staticEnvironmentNodes?.length ? staticEnvironmentNodes : [staticEnvironmentGroup]),
+      // ...(staticEnvironmentNodes?.length ? staticEnvironmentNodes : [staticEnvironmentGroup]),
       ...(mvpFeature ? [] : releaseNodes?.length ? releaseNodes : [releaseGroup]),
       ...(mvpFeature
         ? []
@@ -135,7 +129,7 @@ export const useAppWorkflowData = (
       componentGroup,
       buildGroup,
       testsGroup,
-      staticEnvironmentGroup,
+      // staticEnvironmentGroup,
       ...(mvpFeature ? [] : [releaseGroup]),
       ...(mvpFeature ? [] : [managedEnvironmentGroup]),
     ];
@@ -147,7 +141,7 @@ export const useAppWorkflowData = (
     componentGroup,
     buildGroup,
     testsGroup,
-    staticEnvironmentGroup,
+    // staticEnvironmentGroup,
     ...(mvpFeature ? [] : [releaseGroup]),
     ...(mvpFeature ? [] : [managedEnvironmentGroup]),
   ];

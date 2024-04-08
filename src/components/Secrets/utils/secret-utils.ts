@@ -175,10 +175,7 @@ export const getTargetLabelsForRemoteSecret = (
   const labels = {
     [SecretByUILabel]: secretFor,
   };
-  const { application, component, environment } = targets;
-
-  if (environment && environment !== TargetDropdownDefaults.ALL_ENVIRONMENTS)
-    labels[SecretSPILabel.ENVIRONMENT] = environment;
+  const { application, component } = targets;
 
   if (application) labels[SecretSPILabel.APPLICATION] = application;
 

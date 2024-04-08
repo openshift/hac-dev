@@ -23,7 +23,6 @@ import { createCustomizeComponentPipelineModalLauncher } from '../../CustomizedP
 import { GettingStartedCard } from '../../GettingStartedCard/GettingStartedCard';
 import { useModalLauncher } from '../../modal/ModalProvider';
 import { ComponentActivityTab } from './tabs/ComponentActivityTab';
-import { ComponentDeploymentsTab } from './tabs/ComponentDeploymentsTab';
 import ComponentDetailsTab from './tabs/ComponentDetailsTab';
 
 import './ComponentDetailsView.scss';
@@ -149,11 +148,6 @@ const ComponentDetailsView: React.FC<React.PropsWithChildren<ComponentDetailsVie
             key: 'activity',
             label: 'Activity',
             component: <ComponentActivityTab component={component} />,
-          },
-          {
-            key: 'deployments',
-            label: 'Deployments',
-            component: <ComponentDeploymentsTab component={component} />,
           },
         ]}
       />

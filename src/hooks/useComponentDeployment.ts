@@ -6,6 +6,10 @@ import { GitOpsDeploymentKind } from '../types';
 import { SnapshotEnvironmentBinding } from '../types/coreBuildService';
 import { DeploymentKind } from '../types/deployment';
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 export const useComponentDeployment = (
   namespace: string,
   componentName: string,

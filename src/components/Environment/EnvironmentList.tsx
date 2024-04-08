@@ -37,6 +37,10 @@ type EnvironmentListProps = {
   applicationName?: string;
 };
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const EnvironmentList: React.FC<React.PropsWithChildren<EnvironmentListProps>> = ({
   environments,
   environmentsLoaded,

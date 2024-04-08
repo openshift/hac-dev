@@ -6,6 +6,10 @@ type DeploymentsTabProps = {
   applicationName?: string;
 };
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const DeploymentsTab: React.FC<React.PropsWithChildren<DeploymentsTabProps>> = ({
   applicationName,
 }) => (

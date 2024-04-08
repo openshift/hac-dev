@@ -183,5 +183,4 @@ export interface Source {
 export interface Targets {
   application: string;
   component: string;
-  environment: string;
 }

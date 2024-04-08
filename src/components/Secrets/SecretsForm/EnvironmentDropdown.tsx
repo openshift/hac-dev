@@ -5,6 +5,10 @@ import { DropdownField } from '../../../shared';
 
 type EnvironmentDropdownTypes = Omit<React.ComponentProps<typeof DropdownField>, 'items' | 'label'>;
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 export const EnvironmentDropdown: React.FC<React.PropsWithChildren<EnvironmentDropdownTypes>> = (
   props,
 ) => {

@@ -3,6 +3,10 @@ import { Alert, AlertActionCloseButton } from '@patternfly/react-core';
 
 const ENV_ALERT_KEY = 'env-list-instruction';
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const EnvironmentsInfoAlert: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [showAlertInfo, setShowAlertInfo] = React.useState<boolean>(
     window.localStorage.getItem(ENV_ALERT_KEY) !== 'false',

@@ -5,6 +5,10 @@ import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 import { useEnvironments } from './useEnvironments';
 import { useReleasePlans } from './useReleasePlans';
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 export const useAllEnvironments = (): [EnvironmentKind[], boolean] => {
   const { namespace } = useWorkspaceInfo();
   const [environments, environmentsLoaded] = useEnvironments();
