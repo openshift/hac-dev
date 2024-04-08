@@ -6,25 +6,17 @@ import {
   PipelineRunType,
 } from '../../../../consts/pipelinerun';
 import { useComponents } from '../../../../hooks/useComponents';
-import { useEnvironments } from '../../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../../hooks/useIntegrationTestScenarios';
 import { usePipelineRunsForCommit } from '../../../../hooks/usePipelineRuns';
 import { useReleasePlans } from '../../../../hooks/useReleasePlans';
 import { useReleases } from '../../../../hooks/useReleases';
 import { useSnapshots } from '../../../../hooks/useSnapshots';
-import { useSnapshotsEnvironmentBindings } from '../../../../hooks/useSnapshotsEnvironmentBindings';
-import { Commit, ComponentKind, EnvironmentKind, PipelineRunKind } from '../../../../types';
-import {
-  ReleaseKind,
-  ReleasePlanKind,
-  SnapshotEnvironmentBinding,
-} from '../../../../types/coreBuildService';
-import { GitOpsDeploymentHealthStatus } from '../../../../types/gitops-deployment';
+import { Commit, ComponentKind, PipelineRunKind } from '../../../../types';
+import { ReleaseKind, ReleasePlanKind } from '../../../../types/coreBuildService';
 import { MVP_FLAG } from '../../../../utils/flag-utils';
 import {
   conditionsRunStatus,
   pipelineRunStatus,
-  pipelineRunStatusToGitOpsStatus,
   runStatus,
 } from '../../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
@@ -52,7 +44,6 @@ export const useCommitWorkflowData = (
     namespace,
     applicationName,
   );
-  const [environments, environmentsLoaded, environmentsError] = useEnvironments();
   const [releasePlans, releasePlansLoaded, releasePlansError] = useReleasePlans(namespace);
   const [releases, releasesLoaded, releasesError] = useReleases(namespace);
   const [pipelines, pipelinesLoaded, pipelinesError] = usePipelineRunsForCommit(
@@ -80,30 +71,16 @@ export const useCommitWorkflowData = (
     [pipelines, pipelinesLoaded],
   );
 
-  const [snapshotsEB, snapshotsEBLoaded, snapshotsEBError] = useSnapshotsEnvironmentBindings(
-    namespace,
-    applicationName,
-  );
-
   const [snapshots, sloaded, serror] = useSnapshots(namespace, commit.sha);
 
   const allResourcesLoaded: boolean =
     componentsLoaded &&
     integrationTestsLoaded &&
     pipelinesLoaded &&
-    environmentsLoaded &&
-    snapshotsEBLoaded &&
     releasesLoaded &&
     sloaded &&
     releasePlansLoaded;
-  const allErrors = [
-    environmentsError,
-    releasePlansError,
-    releasesError,
-    pipelinesError,
-    snapshotsEBError,
-    serror,
-  ].filter((e) => !!e);
+  const allErrors = [releasePlansError, releasesError, pipelinesError, serror].filter((e) => !!e);
 
   const commitComponents = React.useMemo(
     () =>
@@ -214,7 +191,6 @@ export const useCommitWorkflowData = (
       nodes.push(...appTestNodes);
       const appTestNodesWidth = appTestNodes.reduce((max, node) => Math.max(max, node.width), 0);
       appTestNodes.forEach((n) => (n.width = appTestNodesWidth));
-      const appNodeIds = appTestNodes.length ? appTestNodes.map((n) => n.id) : [buildNode.id];
 
       const currentSnapshotName = getLatestResource(
         snapshots.filter(
@@ -225,84 +201,7 @@ export const useCommitWorkflowData = (
         ),
       )?.metadata?.name;
 
-      const compSnapshots: SnapshotEnvironmentBinding[] = snapshotsEB.filter(
-        (as) => as.spec.snapshot === currentSnapshotName,
-      );
-
-      const environmentStatus: (env: EnvironmentKind) => runStatus = (
-        environment: EnvironmentKind,
-      ): runStatus => {
-        return compSnapshots.find((as) => as.spec.environment === environment.metadata.name)
-          ? runStatus.Succeeded
-          : runStatus.Pending;
-      };
-
-      const staticEnvNodes: CommitWorkflowNodeModel[] = environments.length
-        ? environments.map((environment) => {
-            const environmentName = environment.metadata.name;
-            const runAfterTasks = environment.spec.parentEnvironment
-              ? [environment.spec.parentEnvironment]
-              : appNodeIds;
-            const latestRelease = releases
-              .filter((release) => release.spec.releasePlan === environment.metadata.name)
-              .sort((a, b) => (a.status.startTime > b.status.startTime ? -1 : 1))[0];
-
-            const envNode: CommitWorkflowNodeModel = {
-              id: addPrefixToResourceName(compName, environmentName),
-              label: environmentName,
-              type: NodeType.WORKFLOW_NODE,
-              width: getLabelWidth(environmentName),
-              height: DEFAULT_NODE_HEIGHT,
-              runAfterTasks,
-              data: {
-                status: environmentStatus(environment),
-                workflowType: CommitWorkflowNodeType.STATIC_ENVIRONMENT,
-                resource: {
-                  ...environment,
-                  healthStatus: latestRelease
-                    ? pipelineRunStatusToGitOpsStatus(
-                        conditionsRunStatus(latestRelease.status?.conditions),
-                      )
-                    : GitOpsDeploymentHealthStatus.Missing,
-                  lastDeploy: latestRelease?.status.completionTime,
-                },
-                application: commit.application,
-              },
-            };
-            return envNode;
-          })
-        : [
-            {
-              id: `${name}-static-env`,
-              label: 'No static environments set',
-              type: NodeType.WORKFLOW_NODE,
-              width: getLabelWidth('No static environments set'),
-              height: DEFAULT_NODE_HEIGHT,
-              runAfterTasks: appNodeIds,
-              data: {
-                status: runStatus.Pending,
-                workflowType: CommitWorkflowNodeType.STATIC_ENVIRONMENT,
-                application: commit.application,
-              },
-            },
-          ];
-
-      nodes.push(...staticEnvNodes);
-      const staticEnvNodesWidth = staticEnvNodes.reduce(
-        (max, node) => Math.max(max, node.width),
-        0,
-      );
-      staticEnvNodes.forEach((n) => (n.width = staticEnvNodesWidth));
-
       if (!mvpFeature) {
-        const lastStaticEnvNodeIds = environments.length
-          ? staticEnvNodes.reduce((acc, env) => {
-              if (!staticEnvNodes.find((node) => node.runAfterTasks?.includes(env.id))) {
-                acc.push(env.id);
-              }
-              return acc;
-            }, [])
-          : [`${name}-static-env`];
         const latestRelease: ReleaseKind = getLatestResource(
           releases.filter((r) => r.spec.snapshot === currentSnapshotName),
         );
@@ -324,7 +223,6 @@ export const useCommitWorkflowData = (
                 type: NodeType.WORKFLOW_NODE,
                 width: getLabelWidth(releaseName),
                 height: DEFAULT_NODE_HEIGHT,
-                runAfterTasks: lastStaticEnvNodeIds,
                 data: {
                   status: releaseStatus,
                   workflowType: CommitWorkflowNodeType.RELEASE,
@@ -341,7 +239,6 @@ export const useCommitWorkflowData = (
                 type: NodeType.WORKFLOW_NODE,
                 width: getLabelWidth('No releases set'),
                 height: DEFAULT_NODE_HEIGHT,
-                runAfterTasks: lastStaticEnvNodeIds,
                 data: {
                   status: runStatus.Pending,
                   workflowType: CommitWorkflowNodeType.RELEASE,
@@ -419,8 +316,6 @@ export const useCommitWorkflowData = (
     testPipelines,
     integrationTests,
     snapshots,
-    snapshotsEB,
-    environments,
     mvpFeature,
     releases,
     releasePlans,

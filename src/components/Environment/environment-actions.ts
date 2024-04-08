@@ -7,6 +7,10 @@ import { useModalLauncher } from '../modal/ModalProvider';
 // import { createEditStrategyModal } from './EditStrategyModal';
 import { EnvironmentType, getEnvironmentType } from './environment-utils';
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 export const useEnvironmentActions = (environment: EnvironmentKind): Action[] => {
   const showModal = useModalLauncher();
   const envType = getEnvironmentType(environment);

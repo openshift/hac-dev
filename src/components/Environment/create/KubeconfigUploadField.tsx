@@ -7,6 +7,10 @@ type KubeconfigUploadFieldProps = {
   name: string;
 };
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const KubeconfigUploadField: React.FC<React.PropsWithChildren<KubeconfigUploadFieldProps>> = ({
   name,
 }) => {

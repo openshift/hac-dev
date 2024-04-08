@@ -13,6 +13,10 @@ export enum EnvironmentDeploymentStrategy {
   Manual = 'Manual',
 }
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 export const getEnvironmentDeploymentStrategyLabel = (
   environment: EnvironmentKind,
 ): EnvironmentDeploymentStrategy =>

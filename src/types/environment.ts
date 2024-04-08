@@ -1,5 +1,9 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 export type EnvironmentKind = K8sResourceCommon & {
   spec: {
     configuration?: {

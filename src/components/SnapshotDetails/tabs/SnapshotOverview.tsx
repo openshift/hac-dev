@@ -14,11 +14,9 @@ import { ScanStatus } from '../../../components/PipelineRunListView/ScanStatus';
 import { useScanResults } from '../../../hooks/useScanResults';
 import CommitLabel from '../../../shared/components/commit-label/CommitLabel';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
-import { Commit, EnvironmentKind } from '../../../types';
+import { Commit } from '../../../types';
 import { Snapshot } from '../../../types/coreBuildService';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
-import EnvironmentProvisionErrorAlert from '../EnvironmentProvisionErrorAlert';
-import { getEnvironmentProvisionError } from '../utils/snapshot-utils';
 import SnapshotComponentsList from './SnapshotComponentsList';
 import { SnapshotComponentTableData } from './SnapshotComponentsListRow';
 
@@ -26,14 +24,12 @@ interface SnapshotOverviewTabProps {
   snapshot: Snapshot;
   commit?: Commit;
   buildPipelineName?: string;
-  environments?: EnvironmentKind[];
 }
 
 const SnapshotOverviewTab: React.FC<React.PropsWithChildren<SnapshotOverviewTabProps>> = ({
   snapshot,
   commit,
   buildPipelineName,
-  environments,
 }) => {
   const { workspace } = useWorkspaceInfo();
   const [scanResults, scanLoaded] = useScanResults(buildPipelineName, true);
@@ -49,8 +45,6 @@ const SnapshotOverviewTab: React.FC<React.PropsWithChildren<SnapshotOverviewTabP
       }),
     [snapshot.spec],
   );
-
-  const errorStatus = getEnvironmentProvisionError(snapshot);
 
   return (
     <>
@@ -102,27 +96,6 @@ const SnapshotOverviewTab: React.FC<React.PropsWithChildren<SnapshotOverviewTabP
                 default: '1Col',
               }}
             >
-              {environments && (
-                <DescriptionListGroup>
-                  <DescriptionListTerm>Deployed to</DescriptionListTerm>
-                  <DescriptionListDescription>
-                    {errorStatus && Array.isArray(errorStatus) && errorStatus.length > 0 ? (
-                      <EnvironmentProvisionErrorAlert errorStatus={errorStatus} />
-                    ) : (
-                      environments.map((env) => (
-                        <div key={env.metadata.name}>
-                          <Link
-                            to={`/application-pipeline/workspaces/${workspace}/applications/${snapshot.spec.application}/deployments`}
-                          >
-                            {env.spec?.displayName ?? env.metadata?.name}
-                          </Link>
-                        </div>
-                      ))
-                    )}
-                  </DescriptionListDescription>
-                </DescriptionListGroup>
-              )}
-
               <DescriptionListGroup>
                 <DescriptionListTerm>Vulnerabilities</DescriptionListTerm>
                 <DescriptionListDescription>

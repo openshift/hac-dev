@@ -6,6 +6,10 @@ import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { createEnvironment, environmentFormSchema } from '../environment-utils';
 import CreateEnvironmentForm, { CreateEnvironmentFormValues } from './CreateEnvironmentForm';
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const CreateEnvironment: React.FC<React.PropsWithChildren<unknown>> = () => {
   const navigate = useNavigate();
   const track = useTrackEvent();

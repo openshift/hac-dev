@@ -22,16 +22,6 @@ const navExtensions = [
   {
     type: 'core.navigation/href',
     properties: {
-      href: '/application-pipeline/environments',
-      name: 'Environments',
-    },
-    flags: {
-      required: ['SIGNUP'],
-    },
-  },
-  {
-    type: 'core.navigation/href',
-    properties: {
       href: '/application-pipeline/secrets',
       name: 'Secrets',
     },
@@ -503,32 +493,6 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/application-pipeline/environments/workspaces/:workspaceName',
-      exact: true,
-      component: {
-        $codeRef: 'EnvironmentsListPage',
-      },
-    },
-    flags: {
-      required: ['SIGNUP'],
-    },
-  },
-  {
-    type: 'core.page/route',
-    properties: {
-      path: '/application-pipeline/environments/workspaces',
-      exact: true,
-      component: {
-        $codeRef: 'EnvironmentsListPage',
-      },
-    },
-    flags: {
-      required: ['SIGNUP'],
-    },
-  },
-  {
-    type: 'core.page/route',
-    properties: {
       path: '/application-pipeline/secrets',
       exact: true,
       component: {
@@ -546,19 +510,6 @@ const routeExtensions = [
       exact: true,
       component: {
         $codeRef: 'CreateSecret',
-      },
-    },
-    flags: {
-      required: ['SIGNUP'],
-    },
-  },
-  {
-    type: 'core.page/route',
-    properties: {
-      path: '/application-pipeline/environments/workspaces/:workspaceName/create',
-      exact: true,
-      component: {
-        $codeRef: 'CreateEnvironment',
       },
     },
     flags: {
@@ -770,8 +721,6 @@ module.exports = {
       Import: resolve(__dirname, '../src/pages/ImportPage'),
       ComponentDetails: resolve(__dirname, '../src/pages/ComponentDetailsPage'),
       DeploymentSettings: resolve(__dirname, '../src/pages/DeploymentSettingsPage'),
-      EnvironmentsListPage: resolve(__dirname, '../src/pages/EnvironmentsListPage'),
-      CreateEnvironment: resolve(__dirname, '../src/pages/CreateEnvironmentPage'),
       ReleaseListPage: resolve(__dirname, '../src/pages/ReleaseServicesListPage'),
       CreateReleasePlan: resolve(__dirname, '../src/pages/CreateReleasePlanPage'),
       TriggerReleasePlan: resolve(__dirname, '../src/pages/TriggerReleasePlanPage'),

@@ -10,6 +10,10 @@ const helpText =
   `Enter the domain name to access the cluster's application and services. ` +
   `For non-OpenShift clusters, it looks like $(minikube ip).nip.io and for OpenShift clusters, it looks like apps.xyz.rhcloud.com`;
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const IngressDomainField: React.FC<React.PropsWithChildren<IngressDomainFieldProps>> = ({
   clusterType,
 }) => {

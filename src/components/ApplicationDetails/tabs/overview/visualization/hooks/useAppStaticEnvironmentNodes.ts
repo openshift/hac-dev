@@ -15,6 +15,10 @@ import {
 } from '../utils/node-utils';
 import { getLatestResource, updateParallelNodeWidths } from '../utils/visualization-utils';
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 export const useAppStaticEnvironmentNodes = (
   namespace: string,
   applicationName: string,

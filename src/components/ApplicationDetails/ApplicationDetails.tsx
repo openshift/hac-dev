@@ -27,7 +27,6 @@ import { ApplicationHeader } from './ApplicationHeader';
 import { applicationQuickstartContent } from './ApplicationQuickstartContent';
 import ApplicationOverviewTab from './tabs/ApplicationOverviewTab';
 import ComponentsTab from './tabs/ComponentsTab';
-import DeploymentsTab from './tabs/DeploymentsTab';
 import IntegrationTestsTab from './tabs/IntegrationTestsTab';
 import ReleasesTab from './tabs/ReleasesTab';
 import './ApplicationDetails.scss';
@@ -235,11 +234,6 @@ const ApplicationDetails: React.FC<React.PropsWithChildren<HacbsApplicationDetai
             key: 'integrationtests',
             label: 'Integration tests',
             component: <IntegrationTestsTab applicationName={applicationName} />,
-          },
-          {
-            key: 'deployments',
-            label: 'Deployments',
-            component: <DeploymentsTab applicationName={applicationName} />,
           },
           {
             key: 'releases',

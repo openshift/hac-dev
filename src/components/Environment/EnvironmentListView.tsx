@@ -20,6 +20,9 @@ type EnvironmentListViewProps = {
 
 const DEFAULT_VALID_TYPES = Object.keys(EnvironmentType).map((t) => EnvironmentType[t]);
 
+/**
+ * @deprecated Remove Environment ListPage
+ */
 const ApplicationEnvironmentListView: React.FC<
   React.PropsWithChildren<EnvironmentListViewProps>
 > = ({ applicationName, preFilter, validTypes, typesFilter, setTypesFilter, unsetTypesFilter }) => {
@@ -101,6 +104,9 @@ const ApplicationEnvironmentListView: React.FC<
   );
 };
 
+/**
+ * @deprecated Remove Environment ListPage
+ */
 const AllEnvironmentsListView: React.FC<React.PropsWithChildren<EnvironmentListViewProps>> = ({
   validTypes,
   preFilter,
@@ -148,6 +154,10 @@ type Props = {
   validTypes?: EnvironmentType[];
 };
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 const EnvironmentListView: React.FC<React.PropsWithChildren<Props>> = ({
   applicationName,
   validTypes = DEFAULT_VALID_TYPES,

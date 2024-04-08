@@ -13,7 +13,6 @@ import {
 } from '../utils/secret-utils';
 import { ApplicationDropdown } from './ApplicationDropdown';
 import { ComponentDropdown } from './ComponentDropdown';
-import { EnvironmentDropdown } from './EnvironmentDropdown';
 import { ImagePullSecretForm } from './ImagePullSecretForm';
 import { KeyValueSecretForm } from './KeyValueSecretForm';
 import { SourceSecretForm } from './SourceSecretForm';
@@ -176,11 +175,6 @@ export const SecretTypeSubForm: React.FC<React.PropsWithChildren<unknown>> = () 
           <ComponentDropdown
             name="targets.component"
             helpText="The secret key and its value will be associated with the selected target"
-          />
-          <EnvironmentDropdown
-            name="targets.environment"
-            helpText="The secret key and its value will be associated with the selected target"
-            required
           />
         </>
       )}

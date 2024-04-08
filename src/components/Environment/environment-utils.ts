@@ -114,6 +114,10 @@ export const environmentFormSchema = yup.object({
     .required('Required'),
 });
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 export const getEnvironmentType = (env: EnvironmentKind): EnvironmentType =>
   env.spec?.tags?.includes(EnvironmentType.managed)
     ? EnvironmentType.managed
@@ -121,6 +125,10 @@ export const getEnvironmentType = (env: EnvironmentKind): EnvironmentType =>
     ? EnvironmentType.static
     : EnvironmentType.default;
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 export const getEnvironmentTypeLabel = (type: EnvironmentType) => {
   switch (type) {
     case EnvironmentType.managed:
@@ -162,6 +170,10 @@ const createCredentialsSecret = async (kubeconfig: string, namespace: string, dr
   });
 };
 
+/**
+ * @deprecated Remove Environments and Deployment references
+ * https://issues.redhat.com/browse/HAC-5682
+ */
 export const createEnvironment = async (
   values: CreateEnvironmentFormValues,
   namespace: string,
