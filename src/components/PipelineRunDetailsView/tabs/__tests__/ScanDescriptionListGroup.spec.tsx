@@ -57,7 +57,7 @@ const mockTaskRun2 = {
 describe('ScanDescriptionListGroup', () => {
   it('should show empty state if results are not available', () => {
     const { container } = render(<ScanDescriptionListGroup taskRuns={[]} />);
-    expect(container).toHaveTextContent('Vulnerabilities scan');
+    expect(container).toHaveTextContent('Fixable vulnerabilities scan');
     expect(container).toHaveTextContent('-');
   });
 
@@ -70,7 +70,7 @@ describe('ScanDescriptionListGroup', () => {
     const { container } = render(
       <ScanDescriptionListGroup taskRuns={[mockTaskRun]} hideIfNotFound />,
     );
-    expect(container).toHaveTextContent('Vulnerabilities scan');
+    expect(container).toHaveTextContent('Fixable vulnerabilities scan');
     expect(screen.getByTestId('scan-status-critical-test-id')).toHaveTextContent('Critical1');
     expect(screen.getByTestId('scan-status-high-test-id')).toHaveTextContent('High2');
     expect(screen.getByTestId('scan-status-medium-test-id')).toHaveTextContent('Medium3');

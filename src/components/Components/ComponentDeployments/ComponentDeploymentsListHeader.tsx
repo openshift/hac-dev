@@ -21,7 +21,7 @@ const ComponentDeploymentsListHeader = () => {
       props: { className: componentDeploymentsColumnClasses.snapshot },
     },
     {
-      title: 'Vulnerabilities',
+      title: 'Fixable vulnerabilities',
       props: { className: componentDeploymentsColumnClasses.vulnerabilities },
     },
     {

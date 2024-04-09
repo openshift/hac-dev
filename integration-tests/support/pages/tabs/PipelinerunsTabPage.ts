@@ -97,21 +97,21 @@ export class DetailsTab {
 
   static checkVulScanOnClairDrawer(vulnerabilities: RegExp) {
     cy.get(pipelinerunsTabPO.drawerPanel)
-      .contains(pipelinerunsTabPO.listGroup, 'Vulnerabilities scan')
+      .contains(pipelinerunsTabPO.listGroup, 'Fixable vulnerabilities scan')
       .contains(vulnerabilities)
       .scrollIntoView()
       .should('be.visible');
   }
 
   static checkVulScanOnPipelinerunDetails(vulnerabilities: RegExp) {
-    cy.contains(pipelinerunsTabPO.listGroup, 'Vulnerabilities scan')
+    cy.contains(pipelinerunsTabPO.listGroup, 'Fixable vulnerabilities scan')
       .contains(vulnerabilities)
       .scrollIntoView()
       .should('be.visible');
   }
 
   static clickOnVulScanViewLogs() {
-    cy.contains(pipelinerunsTabPO.listGroup, 'Vulnerabilities scan').contains('View logs').click();
+    cy.contains(pipelinerunsTabPO.listGroup, 'Fixable vulnerabilities scan').contains('View logs').click();
   }
 
   static clickOnDrawerPanelLogsTab() {
