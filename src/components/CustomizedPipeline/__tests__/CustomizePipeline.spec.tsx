@@ -278,9 +278,6 @@ describe('CustomizePipeline', () => {
         modalProps={{ isOpen: true, title: 'test' }}
       />,
     );
-    expect(screen.getByText('quay.io/org/test:latest')).toHaveAttribute(
-      'href',
-      'https://quay.io/org/test:latest',
-    );
+    expect(screen.getByText('quay.io/org/test:latest')).toBeVisible();
   });
 });

@@ -12,6 +12,7 @@ import {
   Text,
   TextContent,
   TextVariants,
+  Truncate,
 } from '@patternfly/react-core';
 import {
   Dropdown,
@@ -125,7 +126,7 @@ const Row: React.FC<
           pacState === PACState.error || pacState === PACState.sample ? { borderBottom: 0 } : {}
         }
       >
-        <Td>
+        <Td modifier="breakWord">
           <div>
             <b>{component.metadata.name}</b>
           </div>
@@ -148,7 +149,7 @@ const Row: React.FC<
                     ? component.spec.containerImage
                     : `https://${component.spec.containerImage}`
                 }
-                text={component.spec.containerImage}
+                text={<Truncate content={component.spec.containerImage} />}
               />
             </div>
           )}
@@ -252,7 +253,7 @@ const Row: React.FC<
             }
           })()}
         </Td>
-        <Td>
+        <Td className="pf-v5-u-text-align-right">
           <ComponentKebab
             component={component}
             state={pacState}
