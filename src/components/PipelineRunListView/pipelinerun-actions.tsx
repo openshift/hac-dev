@@ -6,7 +6,7 @@ import { useSnapshots } from '../../hooks/useSnapshots';
 import { ComponentModel, PipelineRunModel, SnapshotModel } from '../../models';
 import { Action } from '../../shared/components/action-menu/types';
 import { PipelineRunKind } from '../../types';
-import { isPACEnabled, rerunBuildPipeline } from '../../utils/component-utils';
+import { startNewBuild } from '../../utils/component-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
 import { pipelineRunStatus, runStatus } from '../../utils/pipeline-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
@@ -48,7 +48,7 @@ export const usePipelinererunAction = (pipelineRun: PipelineRunKind) => {
       runType === PipelineRunType.BUILD
         ? componentLoaded &&
           !componentError &&
-          rerunBuildPipeline(component).then(() => {
+          startNewBuild(component).then(() => {
             navigate(
               `/application-pipeline/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
             );
@@ -62,14 +62,11 @@ export const usePipelinererunAction = (pipelineRun: PipelineRunKind) => {
             );
           }),
     isDisabled:
-      (runType === PipelineRunType.BUILD &&
-        (!canPatchComponent ||
-          (componentLoaded && !componentError && component && !isPACEnabled(component)))) ||
+      (runType === PipelineRunType.BUILD && !canPatchComponent) ||
       (runType === PipelineRunType.TEST && (!canPatchSnapshot || !snapshot || !scenario)),
 
     disabledTooltip:
       (runType === PipelineRunType.BUILD && !canPatchComponent) ||
-      (componentLoaded && !componentError && component && !isPACEnabled(component)) ||
       (runType === PipelineRunType.TEST && !canPatchSnapshot)
         ? "You don't have access to rerun"
         : runType === PipelineRunType.TEST && (!snapshot || !scenario)
@@ -103,7 +100,6 @@ export const usePipelinerunActions = (pipelineRun: PipelineRunKind): Action[] =>
         ? "You don't have access to stop this pipeline"
         : undefined,
     },
-
     {
       cta: () => pipelineRunCancel(pipelineRun),
       id: 'pipelinerun-cancel',

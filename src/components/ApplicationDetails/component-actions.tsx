@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ComponentModel } from '../../models';
 import { Action } from '../../shared/components/action-menu/types';
 import { ComponentKind } from '../../types';
-import { isPACEnabled, startNewBuild } from '../../utils/component-utils';
+import { startNewBuild } from '../../utils/component-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { createCustomizeComponentPipelineModalLauncher } from '../CustomizedPipeline/CustomizePipelinesModal';
@@ -40,9 +40,7 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
           workspace,
         },
       },
-    ];
-    if (!isPACEnabled(component)) {
-      updatedActions.push({
+      {
         cta: () => startNewBuild(component),
         id: 'start-new-build',
         label: 'Start new build',
@@ -55,9 +53,7 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
           app_name: applicationName,
           workspace,
         },
-      });
-    }
-    updatedActions.push(
+      },
       {
         cta: {
           href: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components/${name}/deployment-settings`,
@@ -81,7 +77,7 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
         disabled: !canDeleteComponent,
         disabledTooltip: "You don't have access to delete a component",
       },
-    );
+    ];
     return updatedActions;
   }, [
     applicationName,

@@ -326,29 +326,6 @@ describe('PipelineRunDetailsView', () => {
     expect(screen.queryByText('Rerun')).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should render start new build action', async () => {
-    const navigateMock = jest.fn();
-    useNavigateMock.mockImplementation(() => {
-      return navigateMock;
-    });
-    watchResourceMock
-      .mockReturnValueOnce([testPipelineRuns[DataState.SUCCEEDED], true])
-      .mockReturnValue([[], true]);
-
-    routerRenderer(<PipelineRunDetailsView pipelineRunName={pipelineRunName} />);
-    fireEvent.click(screen.queryByRole('button', { name: 'Actions' }));
-
-    const startNewBuildButton = screen.queryByText('Start new build');
-    expect(startNewBuildButton).toHaveAttribute('aria-disabled', 'false');
-
-    fireEvent.click(startNewBuildButton);
-    await waitFor(() =>
-      expect(navigateMock).toHaveBeenCalledWith(
-        '/application-pipeline/workspaces/test-ws/applications/test-app/activity/pipelineruns?name=mock-component',
-      ),
-    );
-  });
-
   it('should disable Stop and Cancel buttons if user does not have access to patch pipeline run', () => {
     watchResourceMock
       .mockReturnValueOnce([testPipelineRuns[DataState.RUNNING], true])
