@@ -22,7 +22,7 @@ const createPipelineRunListHeader = (showVulnerabilities: boolean) => () => {
     ...(showVulnerabilities
       ? [
           {
-            title: 'Vulnerabilities',
+            title: 'Fixable Vulnerabilities',
             props: { className: pipelineRunTableColumnClasses.vulnerabilities },
           },
         ]

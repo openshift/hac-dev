@@ -103,7 +103,7 @@ const ScanDescriptionListGroup: React.FC<React.PropsWithChildren<Props>> = ({
 
   return (
     <DescriptionListGroup>
-      <DescriptionListTerm>Vulnerabilities scan</DescriptionListTerm>
+      <DescriptionListTerm>Fixable vulnerabilities scan</DescriptionListTerm>
       <DescriptionListDescription>
         {scanResults?.vulnerabilities ? <ScanDetailStatus scanResults={scanResults} /> : '-'}
         {scanResults?.vulnerabilities ? renderLogsLink() : null}

@@ -57,7 +57,7 @@ describe('TaskRunDetails', () => {
     expect(result.queryByText('Results')).toBeInTheDocument();
     expect(result.queryByText('test-name')).toBeInTheDocument();
     expect(result.queryByText('test-value')).toBeInTheDocument();
-    expect(result.container).not.toHaveTextContent('Vulnerabilities scan');
+    expect(result.container).not.toHaveTextContent('Fixable vulnerabilities scan');
   });
 
   it('should render task run vulnerabilities scan results', () => {
@@ -84,6 +84,6 @@ describe('TaskRunDetails', () => {
         }
       />,
     );
-    expect(container).toHaveTextContent('Vulnerabilities scan');
+    expect(container).toHaveTextContent('Fixable vulnerabilities scan');
   });
 });
