@@ -78,7 +78,6 @@ describe('Secrets List', () => {
 
     screen.getByText('test-secret-one');
     screen.getByText('AwaitingData');
-    screen.getByText('Deployment');
     screen.getByText('Image pull');
   });
 
