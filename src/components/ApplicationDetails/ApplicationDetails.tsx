@@ -4,12 +4,7 @@ import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { useApplication } from '../../hooks/useApplications';
-import {
-  ApplicationModel,
-  ComponentModel,
-  EnvironmentModel,
-  IntegrationTestScenarioModel,
-} from '../../models';
+import { ApplicationModel, ComponentModel, IntegrationTestScenarioModel } from '../../models';
 import DetailsPage from '../../shared/components/details-page/DetailsPage';
 import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
 import { HttpError } from '../../shared/utils/error/http-error';
@@ -42,7 +37,6 @@ const ApplicationDetails: React.FC<React.PropsWithChildren<HacbsApplicationDetai
   const defineComponentRelationAction = useComponentRelationAction(applicationName);
   const { namespace, workspace } = useWorkspaceInfo();
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
-  const [canCreateEnvironment] = useAccessReviewForModel(EnvironmentModel, 'create');
   const [canCreateIntegrationTest] = useAccessReviewForModel(
     IntegrationTestScenarioModel,
     'create',
@@ -155,28 +149,6 @@ const ApplicationDetails: React.FC<React.PropsWithChildren<HacbsApplicationDetai
             disabledTooltip: "You don't have access to add an integration test",
           },
           defineComponentRelationAction(),
-          {
-            key: 'create-environment',
-            label: 'Create environment',
-            component: (
-              <Link
-                to={`/application-pipeline/environments/workspaces/${workspace}/create`}
-                onClick={() => {
-                  track(TrackEvents.ButtonClicked, {
-                    link_name: 'add-environment',
-                    link_location: 'application-details-actions',
-                    app_name: applicationName,
-                    workspace,
-                  });
-                }}
-              >
-                Create environment
-              </Link>
-            ),
-            hidden: mvpFeature,
-            isDisabled: !canCreateEnvironment,
-            disabledTooltip: "You don't have access to create an environment",
-          },
           {
             key: 'application-quickstart',
             label: 'Getting started with an application',

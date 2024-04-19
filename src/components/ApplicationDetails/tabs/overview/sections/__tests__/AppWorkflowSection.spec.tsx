@@ -143,7 +143,7 @@ describe('useAppWorkflowData hook', () => {
     const graph = screen.getByTestId('application-overview-graph');
     expect(graph).toBeVisible();
     const nodes = graph.querySelectorAll('[data-kind="node"]');
-    expect(nodes).toHaveLength(6);
+    expect(nodes).toHaveLength(5);
   });
   it('should render the graph expanded when set', () => {
     params.expanded = 'true';
@@ -151,9 +151,9 @@ describe('useAppWorkflowData hook', () => {
     const graph = screen.getByTestId('application-overview-graph');
     expect(graph).toBeVisible();
     const nodes = graph.querySelectorAll('[data-kind="node"]');
-    expect(nodes).toHaveLength(28);
+    expect(nodes).toHaveLength(23);
     const workFlowNodes = graph.querySelectorAll('[data-type="workflow-node"]');
-    expect(workFlowNodes).toHaveLength(15);
+    expect(workFlowNodes).toHaveLength(12);
   });
   it('should navigate to the correct tab on a node click', async () => {
     act(() => {

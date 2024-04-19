@@ -12,62 +12,17 @@ import {
   Spinner,
   Button,
 } from '@patternfly/react-core';
-import { PipelineRunLabel } from '../../../../consts/pipelinerun';
-import { useAllEnvironments } from '../../../../hooks/useAllEnvironments';
-import { useComponentDeployment } from '../../../../hooks/useComponentDeployment';
-import { useAllGitOpsDeploymentCRs } from '../../../../hooks/useGitOpsDeploymentCR';
 import { useLatestSuccessfulBuildPipelineRunForComponent } from '../../../../hooks/usePipelineRuns';
-import { useSnapshotsEnvironmentBindings } from '../../../../hooks/useSnapshotsEnvironmentBindings';
 import { useTaskRuns } from '../../../../hooks/useTaskRuns';
 import CommitLabel from '../../../../shared/components/commit-label/CommitLabel';
 import ErrorEmptyState from '../../../../shared/components/empty-state/ErrorEmptyState';
 import { Timestamp } from '../../../../shared/components/timestamp/Timestamp';
 import { HttpError } from '../../../../shared/utils/error/http-error';
-import { ComponentKind, EnvironmentKind, GitOpsDeploymentKind } from '../../../../types';
-import { SnapshotEnvironmentBinding } from '../../../../types/coreBuildService';
+import { ComponentKind } from '../../../../types';
 import { getCommitsFromPLRs } from '../../../../utils/commits-utils';
 import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
 import { useBuildLogViewerModal } from '../../../LogViewer/BuildLogViewer';
 import ScanDescriptionListGroup from '../../../PipelineRunDetailsView/tabs/ScanDescriptionListGroup';
-import PodLogsButton from '../../../PodLogs/PodLogsButton';
-
-type DeploymentRowProps = {
-  component: ComponentKind;
-  gitOpsDeployments: GitOpsDeploymentKind[];
-  snapshotEB: SnapshotEnvironmentBinding;
-  environments: EnvironmentKind[];
-};
-
-const DeploymentRow: React.FC<React.PropsWithChildren<DeploymentRowProps>> = ({
-  component,
-  snapshotEB,
-  environments,
-}) => {
-  const { namespace } = useWorkspaceInfo();
-  const [deployment, deploymentLoaded, deploymentLoadError] = useComponentDeployment(
-    namespace,
-    component.metadata.name,
-    snapshotEB,
-  );
-  const environmentName = snapshotEB.metadata.labels?.['appstudio.environment'];
-  const environment = environments.find((env) => env.metadata.name === environmentName);
-
-  const podSelector = React.useMemo(
-    () =>
-      environmentName === 'development' &&
-      !deploymentLoadError &&
-      deploymentLoaded &&
-      deployment?.spec?.selector,
-    [environmentName, deploymentLoadError, deploymentLoaded, deployment?.spec?.selector],
-  );
-
-  return (
-    <div>
-      <div>{environment?.spec.displayName || environmentName}</div>
-      <PodLogsButton component={component} podSelector={podSelector} showDisabled />
-    </div>
-  );
-};
 
 type ComponentLatestBuildProps = {
   component: ComponentKind;
@@ -81,26 +36,12 @@ const ComponentLatestBuild: React.FC<React.PropsWithChildren<ComponentLatestBuil
     namespace,
     component.metadata.name,
   );
-  const application = pipelineRun?.metadata?.labels?.[PipelineRunLabel.APPLICATION];
   const commit = React.useMemo(
     () => ((pipelineRunLoaded && pipelineRun && getCommitsFromPLRs([pipelineRun], 1)) || [])[0],
     [pipelineRunLoaded, pipelineRun],
   );
   const [taskRuns, taskRunsLoaded] = useTaskRuns(namespace, pipelineRun?.metadata?.name);
-  const [snapshotEBs, sebLoaded] = useSnapshotsEnvironmentBindings(namespace, application);
-  const [gitOpsDeployments, gitOpsDeploymentLoaded] = useAllGitOpsDeploymentCRs(namespace);
-  const [environments, environmentsLoaded] = useAllEnvironments();
   const buildLogsModal = useBuildLogViewerModal(component);
-
-  const deployments = React.useMemo(
-    () =>
-      sebLoaded &&
-      snapshotEBs &&
-      snapshotEBs.filter(
-        (seb) => seb.spec.components?.find((c) => c.name === component.spec.componentName) || [],
-      ),
-    [component.spec.componentName, sebLoaded, snapshotEBs],
-  );
 
   const containerImage = component.status?.containerImage;
 
@@ -115,13 +56,7 @@ const ComponentLatestBuild: React.FC<React.PropsWithChildren<ComponentLatestBuil
     );
   }
 
-  if (
-    !pipelineRunLoaded ||
-    !taskRunsLoaded ||
-    !sebLoaded ||
-    !gitOpsDeploymentLoaded ||
-    !environmentsLoaded
-  ) {
+  if (!pipelineRunLoaded || !taskRunsLoaded) {
     return (
       <div className="pf-u-m-lg">
         <Spinner />
@@ -180,26 +115,6 @@ const ComponentLatestBuild: React.FC<React.PropsWithChildren<ComponentLatestBuil
                     </>
                   )}
                 </>
-              ) : (
-                '-'
-              )}
-            </DescriptionListDescription>
-          </DescriptionListGroup>
-          <DescriptionListGroup>
-            <DescriptionListTerm>Deployed to</DescriptionListTerm>
-            <DescriptionListDescription>
-              {deployments.length ? (
-                <div className="component-details__build-deployments">
-                  {deployments.map((deployment) => (
-                    <DeploymentRow
-                      key={deployment.metadata.uid}
-                      component={component}
-                      gitOpsDeployments={gitOpsDeployments}
-                      snapshotEB={deployment}
-                      environments={environments}
-                    />
-                  ))}
-                </div>
               ) : (
                 '-'
               )}

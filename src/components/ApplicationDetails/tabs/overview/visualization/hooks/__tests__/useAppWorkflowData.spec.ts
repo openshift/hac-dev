@@ -109,8 +109,8 @@ describe('useAppWorkflowData hook', () => {
     const { result } = renderHook(() => useAppWorkflowData('test', false));
     const [model, loaded] = result.current;
 
-    expect(model.nodes).toHaveLength(6);
-    expect(model.edges).toHaveLength(5);
+    expect(model.nodes).toHaveLength(5);
+    expect(model.edges).toHaveLength(4);
     expect(loaded).toBe(true);
   });
 
@@ -118,8 +118,8 @@ describe('useAppWorkflowData hook', () => {
     const { result } = renderHook(() => useAppWorkflowData('test', false));
     const [model, loaded] = result.current;
 
-    expect(model.nodes).toHaveLength(6);
-    expect(model.nodes.filter((n) => n.data.isDisabled)).toHaveLength(6);
+    expect(model.nodes).toHaveLength(5);
+    expect(model.nodes.filter((n) => n.data.isDisabled)).toHaveLength(5);
     expect(loaded).toBe(true);
   });
 
@@ -134,18 +134,6 @@ describe('useAppWorkflowData hook', () => {
     expect(model.nodes[1].label).toBe('Builds');
   });
 
-  it('Non Abstract nodes should contain the child resources', () => {
-    useEnvironmentsMock.mockReturnValue([sampleEnvironments, true]);
-
-    const { result } = renderHook(() => useAppWorkflowData('test', false));
-    const [model] = result.current;
-    const environmentNode = model.nodes.find(
-      (n) => n.data.workflowType === WorkflowNodeType.STATIC_ENVIRONMENT,
-    );
-
-    expect(environmentNode.data.resources.length).toBe(3);
-  });
-
   it('nodes should be disabled / enabled based on the availability of resources', () => {
     useEnvironmentsMock.mockReturnValue([sampleEnvironments, true]);
 
@@ -155,7 +143,7 @@ describe('useAppWorkflowData hook', () => {
     const enabledNodes = model.nodes.filter((node) => !node.data.isDisabled);
 
     expect(disabledNodes).toHaveLength(5);
-    expect(enabledNodes).toHaveLength(1);
+    expect(enabledNodes).toHaveLength(0);
   });
 
   it('label should change based on the availability of resources', () => {
@@ -164,20 +152,16 @@ describe('useAppWorkflowData hook', () => {
     const { result } = renderHook(() => useAppWorkflowData('test', false));
     const [model] = result.current;
     const sourceNode = model.nodes.find((n) => n.data.workflowType === WorkflowNodeType.COMPONENT);
-    const environmentNode = model.nodes.find(
-      (n) => n.data.workflowType === WorkflowNodeType.STATIC_ENVIRONMENT,
-    );
 
     expect(sourceNode.label).toBe('Components');
-    expect(environmentNode.label).toBe('No static environments set');
   });
 
   it('should return the expanded workflow model', () => {
     const { result } = renderHook(() => useAppWorkflowData('test', true));
     const [model] = result.current;
 
-    expect(model.nodes).toHaveLength(12);
-    expect(model.edges).toHaveLength(5);
+    expect(model.nodes).toHaveLength(10);
+    expect(model.edges).toHaveLength(4);
     expect(
       model.nodes.filter((n) => n.data.workflowType === WorkflowNodeType.COMPONENT),
     ).toHaveLength(2);
@@ -187,7 +171,7 @@ describe('useAppWorkflowData hook', () => {
     const { result } = renderHook(() => useAppWorkflowData('test', true));
     const [model] = result.current;
 
-    expect(model.nodes.filter((n) => n.group)).toHaveLength(6);
+    expect(model.nodes.filter((n) => n.group)).toHaveLength(5);
   });
 
   it('should display empty integration test group node', () => {
@@ -213,8 +197,8 @@ describe('useAppWorkflowData hook', () => {
     const { result } = renderHook(() => useAppWorkflowData('test', false));
     const [model, loaded] = result.current;
 
-    expect(model.nodes).toHaveLength(4);
-    expect(model.edges).toHaveLength(3);
+    expect(model.nodes).toHaveLength(3);
+    expect(model.edges).toHaveLength(2);
     expect(loaded).toBe(true);
   });
 });

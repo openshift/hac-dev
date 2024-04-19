@@ -62,7 +62,6 @@ describe('SnapshotOverview', () => {
       <SnapshotOverview snapshot={mockSnapshots[0]} buildPipelineName="build-pipeline" />,
     );
     expect(screen.getByText('Created at')).toBeInTheDocument();
-    expect(screen.getByText('Deployed to')).toBeInTheDocument();
     expect(screen.getByText('Vulnerabilities')).toBeInTheDocument();
   });
 
@@ -160,20 +159,6 @@ describe('SnapshotOverview', () => {
       (useCommitStatus as jest.Mock).mockReturnValueOnce(['-', true]);
     });
 
-    it('should display ErrorAlert when EnvironementProvisionError occurs', async () => {
-      watchResourceMock.mockImplementation(getMockedResources);
-      routerRenderer(
-        <SnapshotOverview
-          snapshot={mockSnapshots[0]}
-          buildPipelineName="build-pipeline"
-          commit={mockCommits[0]}
-        />,
-      );
-
-      screen.queryByTestId('env-provision-err-alert');
-      screen.queryByText('Failed for app-sample-go-basic-enterprise-contract');
-    });
-
     it('should display failed scenario', async () => {
       watchResourceMock.mockImplementation(getMockedResources);
       routerRenderer(
@@ -197,25 +182,5 @@ describe('SnapshotOverview', () => {
       );
       expect(screen.queryByText('Failed for')).not.toBeInTheDocument();
     });
-  });
-});
-
-describe('SnapshotOverview environments', () => {
-  it('should show Environment display name', () => {
-    mockSnapshots[2].metadata.deletionTimestamp = '1';
-    watchResourceMock.mockImplementation(getMockedResources);
-    routerRenderer(
-      <SnapshotOverview snapshot={mockSnapshots[2]} buildPipelineName="build-pipeline" />,
-    );
-    expect(screen.getByText('test-env')).toBeInTheDocument();
-  });
-
-  it('should display Environment metadata name when display name not exists', () => {
-    mockSnapshots[2].metadata.deletionTimestamp = '1';
-    watchResourceMock.mockImplementation(getMockedResources);
-    routerRenderer(
-      <SnapshotOverview snapshot={mockSnapshots[2]} buildPipelineName="build-pipeline" />,
-    );
-    expect(screen.getByText('test')).toBeInTheDocument();
   });
 });

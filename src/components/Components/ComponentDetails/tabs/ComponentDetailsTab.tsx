@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import DetailsSection from '../../../../shared/components/details-page/DetailsSection';
 import { ComponentKind } from '../../../../types';
@@ -9,7 +8,6 @@ import ComponentNudgesDependencies from '../../../ComponentRelation/details-page
 import { createCustomizeComponentPipelineModalLauncher } from '../../../CustomizedPipeline/CustomizePipelinesModal';
 import { useModalLauncher } from '../../../modal/ModalProvider';
 import ComponentBuildSettings from './ComponentBuildSettings';
-import ComponentDeploymentSettings from './ComponentDeploymentSettings';
 import ComponentDetails from './ComponentDetails';
 import ComponentLatestBuild from './ComponentLatestBuild';
 
@@ -20,10 +18,7 @@ type ComponentDetailsTabProps = {
 const ComponentDetailsTab: React.FC<React.PropsWithChildren<ComponentDetailsTabProps>> = ({
   component,
 }) => {
-  const navigate = useNavigate();
-  const { appName } = useParams();
   const { workspace } = useWorkspaceInfo();
-  const { componentName } = component.spec;
   const track = useTrackEvent();
   const showModal = useModalLauncher();
 
@@ -40,12 +35,6 @@ const ComponentDetailsTab: React.FC<React.PropsWithChildren<ComponentDetailsTabP
         component.metadata.name,
         component.metadata.namespace,
       ),
-    );
-  };
-
-  const editDeploymentSettings = () => {
-    navigate(
-      `/application-pipeline/workspaces/${workspace}/applications/${appName}/components/${componentName}/deployment-settings`,
     );
   };
 
@@ -73,20 +62,6 @@ const ComponentDetailsTab: React.FC<React.PropsWithChildren<ComponentDetailsTabP
       >
         <ComponentBuildSettings component={component} />
         <ComponentNudgesDependencies component={component} />
-      </DetailsSection>
-      <DetailsSection
-        title="Deployment settings"
-        description={
-          <span>
-            These properties are set independently for each environment the component is deployed
-            to.{` `}
-            <Button variant={ButtonVariant.link} isInline onClick={editDeploymentSettings}>
-              Edit deployment settings
-            </Button>
-          </span>
-        }
-      >
-        <ComponentDeploymentSettings component={component} />
       </DetailsSection>
     </div>
   );

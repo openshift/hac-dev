@@ -110,7 +110,7 @@ const mockUseTaskRuns = useTaskRuns as jest.Mock;
 
 const commit = MockCommit;
 
-describe('CommitVisualization', () => {
+describe('CommitSidePanel', () => {
   beforeEach(() => {
     mockGetLatestCommitFromPipelineRuns.mockReturnValue(commit);
     mockUseCommitStatus.mockReturnValue(['Success', true]);
@@ -238,27 +238,6 @@ describe('CommitVisualization', () => {
       'Succeeded',
     );
   });
-  it('should render the environment side panel when the environment node is selected', async () => {
-    routerRenderer(
-      <CommitDetailsView commitName="Test commit name" applicationName="test-application" />,
-    );
-
-    const graph = screen.getByTestId('commit-graph');
-    expect(graph).toBeVisible();
-
-    const envNode = graph.querySelector('[data-id="human-resources-clkq--development"]');
-    expect(envNode).toBeVisible();
-    const clickable = envNode.querySelector('.pf-topology-pipelines__pill');
-    expect(clickable).toBeVisible();
-    await act(async () => {
-      fireEvent.click(clickable);
-    });
-    const header = screen.getByTestId('env-side-panel-head');
-    expect(header).toBeVisible();
-    expect(header.querySelector('.commit-side-panel__head-title').textContent).toContain(
-      'Development',
-    );
-  });
   it('should render the release side panel when the release node is selected', async () => {
     routerRenderer(
       <CommitDetailsView commitName="Test commit name" applicationName="test-application" />,
@@ -277,28 +256,5 @@ describe('CommitVisualization', () => {
     const header = screen.getByTestId('release-side-panel-head');
     expect(header).toBeVisible();
     expect(header.querySelector('.commit-side-panel__head-title').textContent).toContain('Release');
-  });
-  it('should render the managed environment side panel when the managed environment node is selected', async () => {
-    routerRenderer(
-      <CommitDetailsView commitName="Test commit name" applicationName="test-application" />,
-    );
-
-    const graph = screen.getByTestId('commit-graph');
-    expect(graph).toBeVisible();
-
-    const managedEnvNode = graph.querySelector(
-      '[data-id="human-resources-clkq-managed-environments"]',
-    );
-    expect(managedEnvNode).toBeVisible();
-    const clickable = managedEnvNode.querySelector('.pf-topology-pipelines__pill');
-    expect(clickable).toBeVisible();
-    await act(async () => {
-      fireEvent.click(clickable);
-    });
-    const header = screen.getByTestId('managed-env-side-panel-head');
-    expect(header).toBeVisible();
-    expect(header.querySelector('.commit-side-panel__head-title').textContent).toContain(
-      'No managed environments set',
-    );
   });
 });

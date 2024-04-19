@@ -65,21 +65,13 @@ export const useAppWorkflowData = (
     applicationIntegrationTestNodes,
   ]);
 
-  // const [
-  //   staticEnvironmentNodes,
-  //   staticEnvironmentGroup,
-  //   lastStaticEnv,
-  //   staticEnvironmentsLoaded,
-  //   staticEnvironmentsErrors,
-  // ] = useAppStaticEnvironmentNodes(
-  //   namespace,
-  //   applicationName,
-  //   expanded ? applicationIntegrationTestTasks : [testsGroup?.id ?? ''],
-  //   expanded,
-  // );
-
   const [releaseNodes, releaseGroup, releaseTasks, releasesLoaded, releasesError] =
-    useAppReleaseNodes(namespace, applicationName, [''], expanded);
+    useAppReleaseNodes(
+      namespace,
+      applicationName,
+      expanded ? applicationIntegrationTestTasks : [testsGroup?.id ?? ''],
+      expanded,
+    );
 
   const [
     managedEnvironmentNodes,
@@ -92,7 +84,6 @@ export const useAppWorkflowData = (
     componentsLoaded &&
     buildsLoaded &&
     applicationTestsLoaded &&
-    // staticEnvironmentsLoaded &&
     releasesLoaded &&
     managedEnvironmentsLoaded;
 
@@ -100,7 +91,6 @@ export const useAppWorkflowData = (
     ...componentsErrors,
     ...buildsErrors,
     ...applicationErrors,
-    // ...staticEnvironmentsErrors,
     ...releasesError,
     ...managedEnvironmentsError,
   ];
@@ -114,7 +104,6 @@ export const useAppWorkflowData = (
       ...(componentNodes?.length ? componentNodes : [componentGroup]),
       ...(buildNodes?.length ? buildNodes : [buildGroup]),
       ...applicationIntegrationTestNodes,
-      // ...(staticEnvironmentNodes?.length ? staticEnvironmentNodes : [staticEnvironmentGroup]),
       ...(mvpFeature ? [] : releaseNodes?.length ? releaseNodes : [releaseGroup]),
       ...(mvpFeature
         ? []
@@ -129,7 +118,6 @@ export const useAppWorkflowData = (
       componentGroup,
       buildGroup,
       testsGroup,
-      // staticEnvironmentGroup,
       ...(mvpFeature ? [] : [releaseGroup]),
       ...(mvpFeature ? [] : [managedEnvironmentGroup]),
     ];
@@ -141,7 +129,6 @@ export const useAppWorkflowData = (
     componentGroup,
     buildGroup,
     testsGroup,
-    // staticEnvironmentGroup,
     ...(mvpFeature ? [] : [releaseGroup]),
     ...(mvpFeature ? [] : [managedEnvironmentGroup]),
   ];

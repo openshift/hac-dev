@@ -32,22 +32,11 @@ Because every app is different, we leave it up to you to build the pipeline. Onc
 2. In the URL line, add a URL to your integration test.
 3. To ensure your app is only released when the test passes, mark the integration test as **Mandatory for Release**.`,
       },
-      {
-        title: `Manage environments`,
-        description: `Now, we need to deploy your builds somewhere.
-        Add a static environment, an environment available only on this workspace.
-        This will be your development environment.
-1. To add a static environment, go to the **Actions** dropdown of your application and select **Add environment**.
-2. On the next page, select a static environment.
-3. On the Create Static environment page, complete all the mandatory input.
-4. Click **Create**.`,
-      },
     ],
     conclusion: `All done, your factory is ready!
 
 Next you would want to:
 
-- Connect to a managed environment to release your app to
 - Push some code, monitor its process
 
 In case you get lost, this guide is available for you on the Application **Actions** dropdown.`,

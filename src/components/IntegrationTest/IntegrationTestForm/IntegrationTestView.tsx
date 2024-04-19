@@ -58,8 +58,6 @@ const IntegrationTestView: React.FunctionComponent<
       url: url?.value ?? '',
       revision: revision?.value ?? '',
       path: path?.value ?? '',
-      environmentName: integrationTest?.spec?.environment?.name ?? '',
-      environmentType: integrationTest?.spec?.environment?.type ?? '',
       params: getFormParamValues(integrationTest?.spec?.params),
       optional:
         integrationTest?.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true' ?? false,
