@@ -44,7 +44,7 @@ const AppWorkflowSection: React.FC<React.PropsWithChildren<AppWorkflowSectionPro
               <FlexItem>
                 <Text component={TextVariants.p}>
                   This is a visualization of your application pipeline, from source code through
-                  test to deployments.
+                  release.
                 </Text>
               </FlexItem>
               {loaded && errors.length === 0 && (

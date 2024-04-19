@@ -24,8 +24,8 @@ const SecretsListPage: React.FC<React.PropsWithChildren<unknown>> = () => {
           title="Secrets"
           description={
             <>
-              Manage your build and deployment secrets and their related configurations. You can add
-              a secret at the workspace level.
+              Manage your secrets and their related configurations. You can add a secret at the
+              workspace level.
               <br /> All secrets are stored using AWS Secrets Manager to keep your data private.
               <HelpTopicLink topicId={'rhtap-secrets-secrets'}>
                 Learn more <OpenDrawerRightIcon />

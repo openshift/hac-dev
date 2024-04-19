@@ -71,7 +71,7 @@ export const ComponentActivityTab: React.FC<React.PropsWithChildren<ComponentAct
     <div>
       <DetailsSection
         title="Activity"
-        description="Monitor CI/CD activity for this component. Each item in the list represents a process that started by a user, generated a snapshot and deployed."
+        description="Monitor CI/CD activity for this component. Each item in the list represents a process that was started by a user, generated a snapshot, and released."
       >
         <Tabs
           style={{

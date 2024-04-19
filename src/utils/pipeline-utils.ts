@@ -15,7 +15,7 @@ import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
 
 export const COMPONENT_DESC =
   'A component is an image built from code in a source repository. Applications are sets of components that run together on environments.';
-export const BUILD_DESC = `Every component requires a build to deploy to an environment. If you choose to use a default pipeline, we'll automatically trigger a single build. Subsequent builds will need to be manually requested. If you choose to customize your build pipeline, you'll walk through a few steps to opt in, including merging a pull request with the default pipeline definition. We'll generate new builds for each merged pull request.`;
+export const BUILD_DESC = `Every component requires a build to release. We’ll automatically trigger a single build. Subsequent builds will need to be manually requested.`;
 export const TESTS_DESC = `Catch functional regressions from code changes by adding integration tests. Integration tests run in parallel, validating each new component build with the latest version of all other application components.`;
 export const STATIC_ENV_DESC = `A static environment is a set of compute resources bundled together. Use static environments for developing, testing, and staging before releasing your application. You can share static environments across all applications within the workspace.`;
 export const RELEASE_DESC = `After pushing your application to release, your application goes through a series of tests through the release pipeline to ensure the application complies with the  release policy set on the release target, also known as the "managed environment".`;

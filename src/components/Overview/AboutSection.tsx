@@ -48,7 +48,7 @@ const AboutSection: React.FC<React.PropsWithChildren<unknown>> = () => (
             <CardBody>
               Create applications from your git repository or our bundled samples. Your applications
               will be automatically built then containerized with Red Hat’s secure runtime images
-              and deployed into a cloud hosted development environment with OpenShift.
+              and released with OpenShift.
             </CardBody>
           </Card>
           <Card isPlain isCompact>
@@ -72,10 +72,8 @@ const AboutSection: React.FC<React.PropsWithChildren<unknown>> = () => (
           <Card isPlain isCompact>
             <CardTitle>Become Continuous</CardTitle>
             <CardBody>
-              You can run your containerized applications in the bundled, shared Kubernetes-based
-              environments that are powered by Red Hat OpenShift. You can share the routes created
-              for your services and you can continuously build, test, and rollout your applications
-              with a simple `git push` or acceptance of a pull request.
+              You can continuously build, test, and rollout your containerized applications with a
+              simple ‘git push’ or appearance of a pull request.
             </CardBody>
           </Card>
         </CardBody>

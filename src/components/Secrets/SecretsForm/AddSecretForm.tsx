@@ -74,7 +74,7 @@ const AddSecretForm = () => {
           title="Add secret"
           description={
             <>
-              Add a new secret to use with any of your environments.
+              Add a secret that will be stored using AWS Secret Manager to keep your data private.
               <HelpTopicLink topicId={'rhtap-secrets-secrets'}>
                 Learn more <OpenDrawerRightIcon />
               </HelpTopicLink>
