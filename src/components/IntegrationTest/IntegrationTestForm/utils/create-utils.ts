@@ -99,24 +99,23 @@ export const editIntegrationTest = (
   });
 };
 
-// /**
-//  * Create integrationTestScenario CR
-//  *
-//  * @param integrationTestValues integration test data
-//  * @param application application name
-//  * @param namespace namespace of the application
-//  * @param dryRun dry run without creating any resources
-//  * @returns Returns IntegrationTestScenario CR data
-//  *
-//  */
+/**
+ * Create integrationTestScenario CR
+ *
+ * @param integrationTestValues integration test data
+ * @param application application name
+ * @param namespace namespace of the application
+ * @param dryRun dry run without creating any resources
+ * @returns Returns IntegrationTestScenario CR data
+ *
+ */
 export const createIntegrationTest = (
   integrationTestValues: IntegrationTestFormValues,
   application: string,
   namespace: string,
   dryRun?: boolean,
 ): Promise<IntegrationTestScenarioKind> => {
-  const { name, url, revision, path, optional, environmentName, environmentType, params } =
-    integrationTestValues;
+  const { name, url, revision, path, optional, params } = integrationTestValues;
   const isEC =
     url === EC_INTEGRATION_TEST_URL &&
     revision === EC_INTEGRATION_TEST_REVISION &&
@@ -132,16 +131,6 @@ export const createIntegrationTest = (
     },
     spec: {
       application,
-      environment:
-        environmentType && environmentName !== ENVIRONMENTS.DEFAULT
-          ? {
-              name: environmentName,
-              type: environmentType,
-              configuration: {
-                env: [],
-              },
-            }
-          : null,
       resolverRef: {
         resolver: ResolverType.GIT,
         params: [

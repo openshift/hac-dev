@@ -1,5 +1,4 @@
 import { useComponents, useSortedComponents } from '../../../hooks/useComponents';
-import { useEnvironments } from '../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../hooks/useIntegrationTestScenarios';
 import { useLatestBuildPipelines } from '../../../hooks/useLatestBuildPipelines';
 import { useLatestIntegrationTestPipelines } from '../../../hooks/useLatestIntegrationTestPipelines';
@@ -9,7 +8,6 @@ import { useSnapshotsEnvironmentBindings } from '../../../hooks/useSnapshotsEnvi
 import {
   mockBuildPipelinesData,
   mockComponentsData,
-  mockEnvironmentsData,
   mockIntegrationTestScenariosData,
   mockReleasePlansData,
   mockReleasesData,
@@ -26,9 +24,6 @@ jest.mock('../../../hooks/useIntegrationTestScenarios', () => ({
 }));
 jest.mock('../../../hooks/useLatestBuildPipelines', () => ({
   useLatestBuildPipelines: jest.fn(),
-}));
-jest.mock('../../../hooks/useEnvironments', () => ({
-  useEnvironments: jest.fn(),
 }));
 jest.mock('../../../hooks/useReleases', () => ({
   useReleases: jest.fn(),
@@ -49,7 +44,6 @@ export const getMockWorkflows = () => {
     useSortedComponentsMock: useSortedComponents as jest.Mock,
     useIntegrationTestScenariosMock: useIntegrationTestScenarios as jest.Mock,
     useLatestBuildPipelinesMock: useLatestBuildPipelines as jest.Mock,
-    useEnvironmentsMock: useEnvironments as jest.Mock,
     useReleasesMock: useReleases as jest.Mock,
     useReleasePlansMock: useReleasePlans as jest.Mock,
     useLatestIntegrationTestPipelinesMock: useLatestIntegrationTestPipelines as jest.Mock,
@@ -64,7 +58,6 @@ export const getMockWorkflows = () => {
       true,
     ]);
     mockFns.useLatestBuildPipelinesMock.mockReturnValue([mockBuildPipelinesData, true]);
-    mockFns.useEnvironmentsMock.mockReturnValue([mockEnvironmentsData, true]);
     mockFns.useReleasePlansMock.mockReturnValue([mockReleasePlansData, true]);
     mockFns.useReleasesMock.mockReturnValue([mockReleasesData, true]);
     mockFns.useLatestIntegrationTestPipelinesMock.mockReturnValue([mockTestPipelinesData, true]);

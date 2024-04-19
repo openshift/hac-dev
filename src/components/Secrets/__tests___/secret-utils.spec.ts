@@ -425,7 +425,6 @@ describe('getTargetLabelsForRemoteSecret', () => {
     expect(getTargetLabelsForRemoteSecret(fValues)).toEqual({
       'appstudio.redhat.com/application': 'test-application',
       'appstudio.openshift.io/component': 'test-component',
-      'appstudio.redhat.com/environment': 'test-environment',
       'ui.appstudio.redhat.com/secret-for': 'Build',
     });
   });

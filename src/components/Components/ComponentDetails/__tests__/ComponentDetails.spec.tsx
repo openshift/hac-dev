@@ -15,7 +15,6 @@ import { WorkspaceContext } from '../../../../utils/workspace-context-utils';
 import { useModalLauncher } from '../../../modal/ModalProvider';
 import {
   mockComponent,
-  mockComponentWithoutEnvs,
   mockDeployment,
   mockEnvironments,
   mockGitOpsDeploymentCRs,
@@ -230,16 +229,6 @@ describe('ComponentDetailsView', () => {
     );
     expect(screen.queryByTestId('sbom-test')).toBeNull();
     expect(screen.queryByTestId('build-container-image-test')).toBeNull();
-  });
-
-  it('should indicate when there are no environment variables', async () => {
-    useComponentMock.mockReturnValue([mockComponentWithoutEnvs, true]);
-    routerRenderer(
-      <ComponentDetailsViewWrapper>
-        <ComponentDetailsView applicationName="test-application" componentName="human-resources" />,
-      </ComponentDetailsViewWrapper>,
-    );
-    screen.getByText('No environment variables');
   });
 
   it('should allow the user to edit the pipeline build plan', async () => {

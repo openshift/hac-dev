@@ -13,7 +13,6 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
   const { workspace } = useWorkspaceInfo();
   const showModal = useModalLauncher();
   const applicationName = component?.spec.application;
-  const [canUpdateComponent] = useAccessReviewForModel(ComponentModel, 'update');
   const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
   const [canDeleteComponent] = useAccessReviewForModel(ComponentModel, 'delete');
 
@@ -53,37 +52,20 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
           app_name: applicationName,
           workspace,
         },
-      },
-      {
-        cta: {
-          href: `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components/${name}/deployment-settings`,
-        },
-        id: 'deployment-settings',
-        label: 'Edit deployment settings',
-        disabled: !canUpdateComponent,
-        disabledTooltip: "You don't have access to edit deployment settings",
-        analytics: {
-          link_name: 'deployment-settings',
-          link_location: 'component-actions',
-          component_name: name,
-          app_name: applicationName,
-          workspace,
-        },
-      },
-      {
-        cta: () => showModal(componentDeleteModal(component)),
-        id: `delete-${name.toLowerCase()}`,
-        label: 'Delete component',
-        disabled: !canDeleteComponent,
-        disabledTooltip: "You don't have access to delete a component",
-      },
-    ];
+      });
+    }
+    updatedActions.push({
+      cta: () => showModal(componentDeleteModal(component)),
+      id: `delete-${name.toLowerCase()}`,
+      label: 'Delete component',
+      disabled: !canDeleteComponent,
+      disabledTooltip: "You don't have access to delete a component",
+    });
     return updatedActions;
   }, [
     applicationName,
     canDeleteComponent,
     canPatchComponent,
-    canUpdateComponent,
     component,
     name,
     showModal,

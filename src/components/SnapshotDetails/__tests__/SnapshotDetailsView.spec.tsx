@@ -4,17 +4,12 @@ import '@testing-library/jest-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, screen } from '@testing-library/react';
 import { WatchK8sResource } from '../../../dynamic-plugin-sdk';
-import { useEnvironments } from '../../../hooks/useEnvironments';
 import { PipelineRunGroupVersionKind, SnapshotGroupVersionKind } from '../../../models';
 import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
 import { routerRenderer } from '../../../utils/test-utils';
 import { pipelineWithCommits } from '../../Commits/__data__/pipeline-with-commits';
 import { useCommitStatus } from '../../Commits/commit-status';
-import {
-  MockEnvironments,
-  MockEnvironmentsWithoutDisplayName,
-  MockSnapshots,
-} from '../../Commits/CommitDetails/visualization/__data__/MockCommitWorkflowData';
+import { MockSnapshots } from '../../Commits/CommitDetails/visualization/__data__/MockCommitWorkflowData';
 import SnapshotDetails from '../SnapshotDetailsView';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -36,10 +31,6 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-jest.mock('../../../hooks/useEnvironments', () => ({
-  useEnvironments: jest.fn(),
-}));
-
 jest.mock('../../../utils/rbac', () => ({
   useAccessReviewForModel: jest.fn(() => [true, true]),
 }));
@@ -47,8 +38,6 @@ jest.mock('../../../utils/rbac', () => ({
 const useParamsMock = useParams as jest.Mock;
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
-
-const mockUseEnvironments = useEnvironments as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
@@ -77,7 +66,6 @@ const errorSnapshotResources = (params: WatchK8sResource) => {
 describe('SnapshotDetailsView', () => {
   beforeEach(() => {
     useParamsMock.mockReturnValue({ activeTab: 'overview' });
-    mockUseEnvironments.mockReturnValue([MockEnvironments, true]);
     (useCommitStatus as jest.Mock).mockReturnValueOnce(['-', true]);
   });
 
@@ -118,37 +106,6 @@ describe('SnapshotDetailsView', () => {
     expect(screen.getByText(/Snapshots/)).toBeInTheDocument();
   });
 
-  it('should show environment name in details', () => {
-    watchResourceMock.mockImplementation(getMockedResources);
-    mockUseEnvironments.mockReturnValue([MockEnvironmentsWithoutDisplayName, true]);
-    routerRenderer(
-      <SnapshotDetails snapshotName="my-test-output-1" applicationName="my-test-output" />,
-    );
-    expect(screen.getByText('Deployed to')).toBeInTheDocument();
-    expect(screen.getByText('test')).toBeInTheDocument();
-  });
-
-  it('should show environment display name instead of metadata', () => {
-    watchResourceMock.mockImplementation(getMockedResources);
-    mockUseEnvironments.mockReturnValue([MockEnvironments, true]);
-    routerRenderer(
-      <SnapshotDetails snapshotName="my-test-output-1" applicationName="my-test-output" />,
-    );
-    expect(screen.getByText('Deployed to')).toBeInTheDocument();
-    expect(screen.getByText('Development')).toBeInTheDocument();
-  });
-
-  it('should show environment label in header', () => {
-    watchResourceMock.mockImplementation(getMockedResources);
-    mockUseEnvironments.mockReturnValue([MockEnvironments, true]);
-    routerRenderer(
-      <SnapshotDetails snapshotName="my-test-output-1" applicationName="my-test-output" />,
-    );
-    const envLabel = screen.getByTestId('snapshot-env-label');
-    expect(envLabel).toBeInTheDocument();
-    expect(envLabel.innerHTML).toBe('Development');
-  });
-
   it('should show correct details', () => {
     mockSnapshots[0].metadata.deletionTimestamp = '1';
     watchResourceMock.mockImplementation(getMockedResources);
@@ -156,7 +113,6 @@ describe('SnapshotDetailsView', () => {
       <SnapshotDetails snapshotName="my-test-output-2" applicationName="my-test-output" />,
     );
     screen.getByText('Triggered by');
-    expect(screen.getByTestId('snapshot-commit-label')).toBeInTheDocument();
     expect(screen.getByTestId('snapshot-name').innerHTML).toBe('my-test-output-2');
   });
 

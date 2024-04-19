@@ -93,7 +93,6 @@ describe('SecretTypeSubForm', () => {
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Select application' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'All components' })).toBeVisible();
-      expect(screen.getByRole('button', { name: 'All environments' })).toBeVisible();
     });
   });
 });
