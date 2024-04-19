@@ -64,9 +64,8 @@ const IntroBanner: React.FC<React.PropsWithChildren<unknown>> = () => {
           </CardTitle>
           <CardBody>
             <Text>
-              Import, containerize, and deploy to a development environment. With just a few clicks,
-              you can interact with your application running in OpenShift and Kubernetes. Build
-              here, go anywhere.
+              Import, containerize, and release. With just a few clicks, you can interact with your
+              application running in OpenShift and Kubernetes. Build here, go anywhere.
             </Text>
           </CardBody>
           <CardBody>

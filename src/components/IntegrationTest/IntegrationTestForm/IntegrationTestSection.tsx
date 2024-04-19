@@ -156,7 +156,7 @@ const IntegrationTestSection: React.FC<React.PropsWithChildren<Props>> = ({ isIn
           name="integrationTest.optional"
           aria-label="Mark as optional for release"
           label="Mark as optional for release"
-          helpText="Passing this test is optional, and it cannot prevent the application from being deployed or released."
+          helpText="Passing this test is optional and cannot prevent the application from being released."
           data-test="optional-release-checkbox"
         />
       </FormSection>
