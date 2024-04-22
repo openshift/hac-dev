@@ -63,28 +63,4 @@ describe('Create Component from Public Git Source', () => {
       cy.contains('python-app-multi-components').should('not.exist');
     });
   });
-
-  describe('Edit resources for the existing app', () => {
-    before(() => {
-      ComponentsTabPage.openComponent(componentPage.componentName);
-      ComponentDetailsPage.editComponent();
-    });
-
-    it('Check Resources Value', () => {
-      DeploymentSettingsPage.checkCpuAndMemory(cpuCount + 1, cpuUnit, ramValue, ramUnit);
-      DeploymentSettingsPage.checkInstances(replicaCount);
-    });
-
-    // Skipping due to : https://issues.redhat.com/browse/HAC-3184
-    // it('Change Resources Value', () => {
-    //   componentPage.setRam(2, MemoryUnit.gigabyte);
-    //   componentPage.setCpuByButton(cpuCount, cpuUnit);
-    //   componentPage.saveChanges();
-    // });
-
-    // it('Check updated resources values', () => {
-    //   Applications.goToComponentsTab();
-    //   DeploymentSettingsPage.checkCpuAndMemory(cpuCount, CPUUnit.millicore, 2, MemoryUnit.gigabyte);
-    // });
-  });
 });

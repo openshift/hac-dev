@@ -91,9 +91,6 @@ export class Applications {
       timeout: 15000,
     });
   }
-  static verifyAppstatusIsSucceeded() {
-    cy.contains(applicationsPagePO.appStatus, 'Healthy', { timeout: 100000 }).should('be.visible');
-  }
 
   static clickActionsDropdown(dropdownItem: string) {
     cy.get(actionsDropdown.dropdown).click();

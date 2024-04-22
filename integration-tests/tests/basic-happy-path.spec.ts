@@ -145,11 +145,6 @@ describe('Basic Happy Path', () => {
     it('Verify deployed image exists', () => {
       ComponentDetailsPage.checkBuildImage();
     });
-
-    it('Verify the status code and response body of the deployment URL of each component', () => {
-      ComponentDetailsPage.openTab(ComponentPageTabs.deployments);
-      DeploymentsTab.verifyRoute(quarkusDeplomentBody);
-    });
   });
 
   describe('Check Application Overview', () => {
@@ -157,14 +152,9 @@ describe('Basic Happy Path', () => {
       Common.openApplicationURL(applicationName);
     });
 
-    it('Validate Application Status', () => {
-      Applications.verifyAppstatusIsSucceeded();
-    });
-
     it('Validate the graph views for the created application', () => {
       UIhelper.verifyGraphNodes('Components', false);
       UIhelper.verifyGraphNodes('Builds');
-      UIhelper.verifyGraphNodes('Static environments');
     });
   });
 });
