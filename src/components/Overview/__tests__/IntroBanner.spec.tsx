@@ -54,7 +54,7 @@ describe('Intro Banner', () => {
     expect(
       screen.getByRole('link', { name: 'https://redhat-internal.slack.com/' }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: '#rhtap-users' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '#konflux-users' })).toBeInTheDocument();
   });
 
   it('should show create application action when user is signed up', () => {
