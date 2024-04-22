@@ -10,7 +10,6 @@ export const pageTitles = {
 export enum NavItem {
   overview = 'Overview',
   applications = 'Applications',
-  environments = 'Environments',
   secrets = 'Secrets',
 }
 
