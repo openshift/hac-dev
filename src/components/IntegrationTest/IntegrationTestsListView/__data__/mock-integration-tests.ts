@@ -172,7 +172,7 @@ export const MockIntegrationTestsWithGit: IntegrationTestScenarioKind[] = [
         params: [
           {
             name: 'url',
-            value: 'https://github.com/redhat-appstudio/integration-examples.git',
+            value: 'https://github.com/konflux-ci/integration-examples.git',
           },
           {
             name: 'revision',
@@ -247,7 +247,7 @@ export const MockIntegrationTestsWithParams: IntegrationTestScenarioKind[] = [
         params: [
           {
             name: 'url',
-            value: 'https://github.com/redhat-appstudio/integration-examples.git',
+            value: 'https://github.com/konflux-ci/integration-examples.git',
           },
           {
             name: 'revision',
