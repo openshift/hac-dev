@@ -88,19 +88,20 @@ export class APIHelper {
     this.githubRequest('DELETE', githubAPIEndpoints.qeRepos(repoName));
   }
 
-  static importCodeToGitHubRepository(fromRepoLink: string, toRepoName: string) {
+  static createRepositoryFromTemplate(
+    templateOwner: string,
+    templateRepoName: string,
+    targetOwner: string,
+    targetRepoName: string,
+  ) {
     const body = {
-      vcs: 'git',
-      vcs_url: fromRepoLink,
+      owner: targetOwner,
+      name: targetRepoName,
     };
-    this.githubRequest('PUT', githubAPIEndpoints.repoImport(toRepoName), body);
-    this.checkResponseBodyAndStatusCode(
-      githubAPIEndpoints.repoImport(toRepoName),
-      '"status":"complete"',
-      5000,
-      0,
-      20,
-      this.githubHeaders,
+    this.githubRequest(
+      'POST',
+      githubAPIEndpoints.templateRepo(templateOwner, templateRepoName),
+      body,
     );
   }
 }

@@ -27,7 +27,8 @@ describe('Advanced Happy path', () => {
   const componentPage = new ComponentPage();
   const latestCommitsTabPage = new LatestCommitsTabPage();
   const integrationTestsTabPage = new IntegrationTestsTabPage();
-  const sourceCodeRepoLink = 'https://github.com/hac-test/devfile-sample-go-basic';
+  const sourceOwner = 'hac-test';
+  const sourceRepo = 'devfile-sample-go-basic';
   const repoName = Common.generateAppName('devfile-sample-go-basic');
   const repoOwner = 'redhat-hac-qe';
   const repoLink = `https://github.com/${repoOwner}/${repoName}`;
@@ -75,11 +76,10 @@ describe('Advanced Happy path', () => {
   };
 
   before(() => {
-    APIHelper.createGitHubRepository(repoName);
-    APIHelper.importCodeToGitHubRepository(sourceCodeRepoLink, repoName);
+    APIHelper.createRepositoryFromTemplate(sourceOwner, sourceRepo, repoOwner, repoName);
     APIHelper.githubRequest(
       'GET',
-      githubAPIEndpoints.contents('hac-test', 'devfile-sample-go-basic', componentInfo.filePath),
+      githubAPIEndpoints.contents(sourceOwner, sourceRepo, componentInfo.filePath),
     ).then((response) => {
       componentInfo.goFileSHAOriginal = response.body.sha;
       componentInfo.goFileBase64Original = response.body.content;
