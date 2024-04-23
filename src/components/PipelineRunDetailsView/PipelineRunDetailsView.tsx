@@ -1,16 +1,13 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { useComponent } from '../../hooks/useComponents';
 import { usePipelineRun } from '../../hooks/usePipelineRuns';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
-import { ComponentModel, PipelineRunModel } from '../../models';
+import { PipelineRunModel } from '../../models';
 import DetailsPage from '../../shared/components/details-page/DetailsPage';
 import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
 import { HttpError } from '../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
-import { isPACEnabled, startNewBuild } from '../../utils/component-utils';
 import { pipelineRunCancel, pipelineRunStop } from '../../utils/pipeline-actions';
 import { pipelineRunStatus } from '../../utils/pipeline-utils';
 import { useAccessReviewForModel } from '../../utils/rbac';
@@ -31,7 +28,6 @@ type PipelineRunDetailsViewProps = {
 export const PipelineRunDetailsView: React.FC<
   React.PropsWithChildren<PipelineRunDetailsViewProps>
 > = ({ pipelineRunName }) => {
-  const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
 
@@ -39,13 +35,7 @@ export const PipelineRunDetailsView: React.FC<
   const { cta, isDisabled, disabledTooltip, key, label } = usePipelinererunAction(pipelineRun);
 
   const [taskRuns, taskRunsLoaded, taskRunError] = useTaskRuns(namespace, pipelineRunName);
-  const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
   const [canPatchPipeline] = useAccessReviewForModel(PipelineRunModel, 'patch');
-
-  const [component, componentLoaded, componentError] = useComponent(
-    namespace,
-    pipelineRun?.metadata?.labels?.[PipelineRunLabel.COMPONENT],
-  );
 
   const plrStatus = React.useMemo(
     () => loaded && pipelineRun && pipelineRunStatus(pipelineRun),
@@ -64,7 +54,7 @@ export const PipelineRunDetailsView: React.FC<
     );
   }
 
-  if (!(loaded && taskRunsLoaded && componentLoaded)) {
+  if (!(loaded && taskRunsLoaded)) {
     return (
       <Bullseye>
         <Spinner />
@@ -98,20 +88,6 @@ export const PipelineRunDetailsView: React.FC<
           </>
         }
         actions={[
-          {
-            key: 'start-new-build',
-            label: 'Start new build',
-            hidden: !component || !!componentError || !isPACEnabled(component),
-            isDisabled: !canPatchComponent,
-            disabledTooltip: "You don't have access to start a new build",
-            onClick: () => {
-              startNewBuild(component).then(() =>
-                navigate(
-                  `/application-pipeline/workspaces/${workspace}/applications/${component.spec.application}/activity/pipelineruns?name=${component.metadata.name}`,
-                ),
-              );
-            },
-          },
           {
             key,
             label,

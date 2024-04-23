@@ -37,11 +37,43 @@ export type ComponentBuildStatus = {
   message?: string;
 };
 
+/**
+ * If whole pac section is missing, PaC state is considered disabled
+ * Missing pac section shows that PaC was never requested on this component before,
+ * where as pac.state=disabled means that it was provisioned and then removed.
+ *
+ * https://github.com/redhat-appstudio/build-service/pull/164
+ */
+export const getComponentBuildStatus = (component: ComponentKind) => {
+  const buildStatusJSON = component.metadata?.annotations?.[BUILD_STATUS_ANNOTATION];
+  if (!buildStatusJSON) {
+    return null;
+  }
+  try {
+    const buildStatus = JSON.parse(buildStatusJSON) as ComponentBuildStatus;
+    return buildStatus;
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('Error while parsing component build status: ', e);
+    return null;
+  }
+};
+
+export const getPACProvision = (component: ComponentKind) =>
+  getComponentBuildStatus(component)?.pac?.state;
+
+export const isPACEnabled = (component: ComponentKind) =>
+  getPACProvision(component) === ComponentBuildState.enabled;
+
 export enum BuildRequest {
   /**
    * submits a new simple build pipeline. The build could be requested at any time regardless PaC Component configuration
    */
-  triggerBuild = 'trigger-simple-build',
+  triggerSimpleBuild = 'trigger-simple-build',
+  /**
+   * submits a new pac build pipeline. The build could be requested at any time regardless PaC Component configuration
+   */
+  triggerPACBuild = 'trigger-pac-build',
   /**
    * requests Pipelines-as-Code provision for the Component
    */
@@ -50,10 +82,6 @@ export enum BuildRequest {
    * requests Pipelines-as-Code clean up for the Component
    */
   unconfigurePac = 'unconfigure-pac',
-  /**
-   * submits a rerun request.
-   */
-  rerunBuild = 'trigger-simple-build',
 }
 
 export const enablePAC = (component: ComponentKind) =>
@@ -99,54 +127,12 @@ export const startNewBuild = (component: ComponentKind) =>
       {
         op: 'add',
         path: `/metadata/annotations/${BUILD_REQUEST_ANNOTATION.replace('/', '~1')}`,
-        value: BuildRequest.triggerBuild,
+        value: isPACEnabled(component)
+          ? BuildRequest.triggerPACBuild
+          : BuildRequest.triggerSimpleBuild,
       },
     ],
   });
-
-export const rerunBuildPipeline = (component: ComponentKind) =>
-  k8sPatchResource({
-    model: ComponentModel,
-    queryOptions: {
-      name: component.metadata.name,
-      ns: component.metadata.namespace,
-    },
-    patches: [
-      {
-        op: 'add',
-        path: `/metadata/annotations/${BUILD_REQUEST_ANNOTATION.replace('/', '~1')}`,
-        value: BuildRequest.rerunBuild,
-      },
-    ],
-  });
-
-/**
- * If whole pac section is missing, PaC state is considered disabled
- * Missing pac section shows that PaC was never requested on this component before,
- * where as pac.state=disabled means that it was provisioned and then removed.
- *
- * https://github.com/redhat-appstudio/build-service/pull/164
- */
-export const getComponentBuildStatus = (component: ComponentKind) => {
-  const buildStatusJSON = component.metadata?.annotations?.[BUILD_STATUS_ANNOTATION];
-  if (!buildStatusJSON) {
-    return null;
-  }
-  try {
-    const buildStatus = JSON.parse(buildStatusJSON) as ComponentBuildStatus;
-    return buildStatus;
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error('Error while parsing component build status: ', e);
-    return null;
-  }
-};
-
-export const getPACProvision = (component: ComponentKind) =>
-  getComponentBuildStatus(component)?.pac?.state;
-
-export const isPACEnabled = (component: ComponentKind) =>
-  getPACProvision(component) === ComponentBuildState.enabled;
 
 const GIT_URL_PREFIX = 'https://github.com/';
 
