@@ -77,7 +77,6 @@ describe('Secrets List', () => {
     expect(screen.queryByTestId('secrets-empty-state')).not.toBeInTheDocument();
 
     screen.getByText('test-secret-one');
-    screen.getByText('AwaitingData');
     screen.getByText('Image pull');
   });
 
@@ -102,8 +101,6 @@ describe('Secrets List', () => {
     expect(screen.queryByText('test-secret-one')).not.toBeInTheDocument();
 
     screen.getByText('test-secret-two');
-    screen.getByText('Injected');
-    screen.getByText('Build');
     screen.getByText('Key/value (1)');
   });
 

@@ -17,7 +17,7 @@ export enum RemoteSecretStatus {
 const SecretsListRow: React.FC<React.PropsWithChildren<SecretsListRowProps>> = ({ obj }) => {
   const actions = useSecretActions(obj);
 
-  const { secretName, secretFor, secretLabels, secretType, secretStatus } = getSecretRowData(obj);
+  const { secretName, secretLabels, secretType } = getSecretRowData(obj);
   const labels =
     secretLabels !== '-'
       ? secretLabels.split(', ').map((s) => <Label key={s}>{s}</Label>)
@@ -25,11 +25,9 @@ const SecretsListRow: React.FC<React.PropsWithChildren<SecretsListRowProps>> = (
 
   return (
     <>
-      <TableData className={secretsTableColumnClasses.secretFor}>{secretFor}</TableData>
       <TableData className={secretsTableColumnClasses.secretType}>{secretType}</TableData>
       <TableData className={secretsTableColumnClasses.name}> {secretName} </TableData>
       <TableData className={secretsTableColumnClasses.labels}>{labels}</TableData>
-      <TableData className={secretsTableColumnClasses.status}>{secretStatus}</TableData>
       <TableData className={secretsTableColumnClasses.kebab}>
         <ActionMenu actions={actions} />
       </TableData>

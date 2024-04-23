@@ -1,18 +1,12 @@
 export const secretsTableColumnClasses = {
-  secretFor: 'pf-m-width-25  pf-m-width-20-on-xl',
-  secretType: 'pf-m-width-25 pf-m-width-20-on-xl',
-  name: 'pf-m-width-25 pf-m-width-20-on-xl wrap-column',
-  labels: 'pf-m-hidden pf-m-visible-on-xl pf-m-width-15',
-  status: 'pf-m-hidden pf-m-visible-on-lg pf-m-width-20 pf-m-width-15-on-xl wrap-column',
+  secretType: 'pf-m-width-30',
+  name: 'pf-m-width-30 wrap-column',
+  labels: 'pf-m-width-30 wrap-column',
   kebab: 'pf-c-table__action',
 };
 
 const SecretsListHeader = () => {
   return [
-    {
-      title: 'Secret for',
-      props: { className: secretsTableColumnClasses.secretFor },
-    },
     {
       title: 'Secret type',
       props: { className: secretsTableColumnClasses.secretType },
@@ -24,10 +18,6 @@ const SecretsListHeader = () => {
     {
       title: 'Labels',
       props: { className: secretsTableColumnClasses.labels },
-    },
-    {
-      title: 'Status',
-      props: { className: secretsTableColumnClasses.status },
     },
     {
       title: ' ',

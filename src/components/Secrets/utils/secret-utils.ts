@@ -207,22 +207,18 @@ export const getSecretRowData = (obj: RemoteSecretKind): any => {
 
   const keys = obj?.status?.secret?.keys;
   const secretName = obj?.spec?.secret?.name || '-';
-  const secretFor = obj?.metadata?.labels?.[SecretByUILabel] ?? SecretFor.Build;
   const secretLabels = obj
     ? Object.keys(obj?.spec?.secret?.labels || {})
         .map((k) => `${k}=${obj.spec?.secret?.labels[k]}`)
         .join(', ') || '-'
     : '-';
   const secretType =
-    (type === SecretTypeDisplayLabel.keyValue && keys ? `${type} (${keys?.length})` : type) || '-';
-  const secretStatus = statusFromConditions(obj?.status?.conditions) ?? '-';
+    type === SecretTypeDisplayLabel.keyValue && keys ? `${type} (${keys?.length})` : type || '-';
 
   return {
     secretName,
-    secretFor,
     secretLabels,
     secretType,
-    secretStatus,
   };
 };
 

@@ -150,10 +150,8 @@ describe('getSecretRowData', () => {
   it('should return all the row data for a given secret', () => {
     const injectedSecret = sampleRemoteSecrets[RemoteSecretStatusReason.Injected];
     expect(getSecretRowData(injectedSecret)).toEqual({
-      secretFor: 'Build',
       secretLabels: '-',
       secretName: 'test-secret-two',
-      secretStatus: 'Injected',
       secretType: 'Key/value (1)',
     });
   });
@@ -167,10 +165,8 @@ describe('getSecretRowData', () => {
     };
 
     expect(getSecretRowData(secretWithoutStatus)).toEqual({
-      secretFor: 'Build',
       secretLabels: '-',
       secretName: 'test-secret-two',
-      secretStatus: '-',
       secretType: 'Key/value',
     });
   });
