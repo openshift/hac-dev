@@ -1,22 +1,20 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik, FormikHelpers } from 'formik';
-import { ReleasePlanKind } from '../../../../types/coreBuildService';
 import { useTrackEvent, TrackEvents } from '../../../../utils/analytics';
 import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
 import { TriggerReleaseFormValues, createRelease, triggerReleaseFormSchema } from './form-utils';
 import { TriggerReleaseForm } from './TriggerReleaseForm';
 
 type Props = {
-  releasePlan?: ReleasePlanKind;
+  releasePlan?: string;
+  applicationName: string;
 };
 
-export const TriggerReleaseFormPage: React.FC<Props> = ({ releasePlan }) => {
+export const TriggerReleaseFormPage: React.FC<Props> = ({ releasePlan, applicationName }) => {
   const navigate = useNavigate();
   const track = useTrackEvent();
   const { namespace, workspace } = useWorkspaceInfo();
-
-  const applicationName = releasePlan?.spec?.application;
 
   const handleSubmit = async (
     values: TriggerReleaseFormValues,
@@ -28,7 +26,7 @@ export const TriggerReleaseFormPage: React.FC<Props> = ({ releasePlan }) => {
     });
 
     try {
-      const newRelease = await createRelease(values, namespace, releasePlan);
+      const newRelease = await createRelease(values, namespace);
       track('Release plan triggered', {
         // eslint-disable-next-line camelcase
         release_plan_name: newRelease.metadata.name,
@@ -38,7 +36,7 @@ export const TriggerReleaseFormPage: React.FC<Props> = ({ releasePlan }) => {
         workspace,
       });
       navigate(
-        `/application-pipeline/workspaces/${workspace}/applications/${releasePlan?.spec?.application}/releases/${newRelease.metadata?.name}`,
+        `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/releases/${newRelease.metadata?.name}`,
       );
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -58,15 +56,13 @@ export const TriggerReleaseFormPage: React.FC<Props> = ({ releasePlan }) => {
   };
 
   const initialValues: TriggerReleaseFormValues = {
-    releasePlan: releasePlan?.metadata?.name ?? '',
+    releasePlan,
     snapshot: '',
     synopsis: '',
     description: '',
     topic: '',
     references: '',
-    labels: releasePlan?.metadata?.labels
-      ? Object.entries(releasePlan?.metadata?.labels).map(([key, value]) => ({ key, value }))
-      : [{ key: '', value: '' }],
+    labels: [{ key: '', value: '' }],
   };
 
   return (

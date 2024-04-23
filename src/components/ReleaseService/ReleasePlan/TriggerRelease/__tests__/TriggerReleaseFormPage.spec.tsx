@@ -41,14 +41,7 @@ describe('TriggerReleaseFormPage', () => {
   it('should navigate on successful trigger', async () => {
     triggerReleasePlanMock.mockResolvedValue({ metadata: { name: 'newRelease' }, spec: {} });
     namespaceRenderer(
-      <TriggerReleaseFormPage
-        releasePlan={{
-          apiVersion: 'v1',
-          kind: 'ReleasePlan',
-          metadata: { name: 'rp1' },
-          spec: { application: 'app1', target: 'snp1' },
-        }}
-      />,
+      <TriggerReleaseFormPage releasePlan="rp1" applicationName="app1" />,
       'test-ns',
       {
         workspace: 'test-ws',
@@ -71,12 +64,6 @@ describe('TriggerReleaseFormPage', () => {
         topic: '',
       }),
       'test-ns',
-      {
-        apiVersion: 'v1',
-        kind: 'ReleasePlan',
-        metadata: { name: 'rp1' },
-        spec: { application: 'app1', target: 'snp1' },
-      },
     );
     expect(navigateMock).toHaveBeenCalledWith(
       '/application-pipeline/workspaces/test-ws/applications/app1/releases/newRelease',
@@ -85,7 +72,7 @@ describe('TriggerReleaseFormPage', () => {
 
   it('should navigate to release list on reset', async () => {
     namespaceRenderer(
-      <TriggerReleaseFormPage releasePlan={{ metadata: {}, spec: {} } as any} />,
+      <TriggerReleaseFormPage releasePlan="rp1" applicationName="app1" />,
       'test-ns',
       {
         workspace: 'test-ws',

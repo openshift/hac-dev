@@ -7,7 +7,7 @@ import {
   RESOURCE_NAME_REGEX_MSG,
 } from '../../../../components/ImportForm/utils/validation-utils';
 import { ReleaseGroupVersionKind, ReleaseModel } from '../../../../models';
-import { ReleaseKind, ReleasePlanKind } from '../../../../types/coreBuildService';
+import { ReleaseKind } from '../../../../types/coreBuildService';
 
 export enum ReleasePipelineLocation {
   current,
@@ -40,11 +40,7 @@ export const triggerReleaseFormSchema = yup.object({
     .required('Required'),
 });
 
-export const createRelease = async (
-  values: TriggerReleaseFormValues,
-  namespace: string,
-  releasePlan: ReleasePlanKind,
-) => {
+export const createRelease = async (values: TriggerReleaseFormValues, namespace: string) => {
   const {
     releasePlan: rp,
     snapshot,
@@ -69,10 +65,8 @@ export const createRelease = async (
       generateName: rp,
       namespace,
       labels: {
-        ...releasePlan?.metadata?.labels,
         ...labels,
       },
-      annotations: { ...releasePlan?.metadata?.annotations },
     },
     spec: {
       releasePlan: rp,
