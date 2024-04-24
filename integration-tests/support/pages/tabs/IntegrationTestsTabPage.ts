@@ -30,7 +30,6 @@ export class IntegrationTestsTabPage {
     githubURL: string,
     revision: string,
     pathInRepository: string,
-    env: string,
     markOptionalForRelease?: string,
   ) {
     this.verifySaveChangesIsDisabled();
@@ -41,7 +40,6 @@ export class IntegrationTestsTabPage {
     }).should('be.visible');
     UIhelper.inputValueInTextBoxByLabelName('Revision', revision);
     UIhelper.inputValueInTextBoxByLabelName('Path in repository', pathInRepository);
-    UIhelper.selectValueInDropdownbyLabelName('Environment', env);
     if (markOptionalForRelease === 'uncheck') {
       cy.get(addIntegrationTestStepPO.optionalreleaseCheckbox).uncheck();
     } else if (markOptionalForRelease === 'check') {
