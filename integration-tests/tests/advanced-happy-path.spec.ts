@@ -64,7 +64,6 @@ describe('Advanced Happy path', () => {
     integrationTestNameTemp: Common.generateAppName('integration-tests-temp'),
     githubURL: 'https://github.com/redhat-hac-qe/integration-examples',
     pathInRepository: 'pipelines/integration_pipeline_pass.yaml',
-    env: 'development',
   };
 
   const integrationTestTaskNames = ['task-success', 'task-green', 'task-skipped'];
@@ -200,11 +199,6 @@ describe('Advanced Happy path', () => {
       Applications.clickBreadcrumbLink(applicationName);
     });
 
-    it('Verify the status code and response body of the deployment URL of each component', () => {
-      ComponentDetailsPage.openTab(ComponentPageTabs.deployments);
-      DeploymentsTab.verifyRoute(componentInfo.deploymentBodyOriginal);
-    });
-
     it('Verify SBOM on components tab', () => {
       ComponentDetailsPage.openTab(ComponentPageTabs.detail);
       ComponentDetailsPage.checkSBOM();
@@ -224,7 +218,6 @@ describe('Advanced Happy path', () => {
         integrationTestDetails.githubURL,
         'main',
         integrationTestDetails.pathInRepository,
-        integrationTestDetails.env,
         'check',
       );
       integrationTestsTabPage.verifyRowInIntegrationTestsTable({
@@ -242,7 +235,6 @@ describe('Advanced Happy path', () => {
         integrationTestDetails.githubURL,
         'main',
         integrationTestDetails.pathInRepository,
-        'No environment',
       );
       integrationTestsTabPage.verifyRowInIntegrationTestsTable({
         name: integrationTestDetails.integrationTestNameTemp,
@@ -258,7 +250,6 @@ describe('Advanced Happy path', () => {
         'Edit',
       );
       Common.waitForLoad();
-      UIhelper.verifyValueInDropdownbyLabelName('Environment', integrationTestDetails.env, true);
       integrationTestsTabPage.editIntegrationTest(integrationTestDetails.githubURL, 'uncheck');
       integrationTestsTabPage.verifyRowInIntegrationTestsTable({
         name: integrationTestDetails.integrationTestName,
@@ -430,18 +421,6 @@ describe('Advanced Happy path', () => {
       ComponentsTabPage.openComponent(componentName);
     });
 
-    it('Verify that the component deployment reflects latest changes', () => {
-      ComponentDetailsPage.openTab(ComponentPageTabs.deployments);
-      DeploymentsTab.verifyRoute(componentInfo.deploymentBodyUpdated);
-    });
-
-    it('Verify view pod logs', () => {
-      ComponentDetailsPage.openPodLogs();
-      cy.contains('Pod status: Running').should('be.visible');
-      applicationDetailPage.checkPodLog('my-go', 'TEST_ENV_VAR : Test go app');
-      applicationDetailPage.closeBuildLog();
-    });
-
     it('Verify Commit Trigger', () => {
       ComponentDetailsPage.openTab(ComponentPageTabs.detail);
       UIhelper.verifyLabelAndValue('Triggered by', componentInfo.updatedCommitMessage);
@@ -493,11 +472,7 @@ describe('Advanced Happy path', () => {
       latestCommitsTabPage.verifyBranch('main', repoLink);
       UIhelper.verifyLabelAndValue('By', gitHubUser);
       UIhelper.verifyLabelAndValue('Status', 'Succeeded');
-      latestCommitsTabPage.verifyNodesOnCommitOverview([
-        'commit',
-        `${componentName}-build`,
-        'development',
-      ]);
+      latestCommitsTabPage.verifyNodesOnCommitOverview(['commit', `${componentName}-build`]);
     });
 
     it('verify the Commit Pipeline runs Tab', () => {
@@ -528,7 +503,6 @@ describe('Advanced Happy path', () => {
       UIhelper.verifyGraphNodes('Components', false);
       UIhelper.verifyGraphNodes('Builds');
       UIhelper.verifyGraphNodes('Tests', false);
-      UIhelper.verifyGraphNodes('Static environments');
     });
   });
 

@@ -52,8 +52,9 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
           app_name: applicationName,
           workspace,
         },
-      });
-    }
+      },
+    ];
+
     updatedActions.push({
       cta: () => showModal(componentDeleteModal(component)),
       id: `delete-${name.toLowerCase()}`,
