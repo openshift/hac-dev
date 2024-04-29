@@ -2,12 +2,10 @@ import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { useAllEnvironments } from '../../../hooks/useAllEnvironments';
 import { useSnapshotsEnvironmentBindings } from '../../../hooks/useSnapshotsEnvironmentBindings';
 import * as dateTime from '../../../shared/components/timestamp/datetime';
 import { ApplicationKind, ComponentKind } from '../../../types';
 import { mockSnapshotsEnvironmentBindings } from '../../ApplicationDetails/__data__';
-import { mockAppEnvWithHealthStatus } from '../../Environment/__data__/mockAppEnvWithHealthStatus';
 import ApplicationListRow from '../ApplicationListRow';
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
@@ -17,10 +15,6 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 jest.mock('../../../hooks/useSnapshotsEnvironmentBindings', () => ({
   useSnapshotsEnvironmentBindings: jest.fn(),
-}));
-
-jest.mock('../../../hooks/useAllEnvironments', () => ({
-  useAllEnvironments: jest.fn(),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -86,11 +80,9 @@ const components: ComponentKind[] = [
 
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
-const useAllEnvironmentsMock = useAllEnvironments as jest.Mock;
 
 describe('Application List Row', () => {
   beforeEach(() => {
-    useAllEnvironmentsMock.mockReturnValue([mockAppEnvWithHealthStatus, true]);
     useSnapshotsEnvironmentBindingsMock.mockReturnValue([mockSnapshotsEnvironmentBindings, true]);
   });
 

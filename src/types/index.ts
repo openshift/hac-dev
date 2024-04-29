@@ -5,7 +5,6 @@ export * from './component';
 export * from './component-detection-query';
 export * from './coreTekton';
 export * from './enterprise-contract.-policy';
-export * from './environment';
 export * from './pipeline';
 export * from './pipeline-resource';
 export * from './pipeline-run';

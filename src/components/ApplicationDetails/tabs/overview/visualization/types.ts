@@ -1,6 +1,6 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
 import { EdgeModel, PipelineNodeModel } from '@patternfly/react-topology';
-import { Commit, ComponentKind, EnvironmentKind, PipelineRunKind } from '../../../../../types';
+import { Commit, ComponentKind, PipelineRunKind } from '../../../../../types';
 import {
   IntegrationTestScenarioKind,
   ReleaseKind,
@@ -25,7 +25,6 @@ export type WorkflowResource =
   | ComponentKind
   | IntegrationTestScenarioKind
   | PipelineRunKind
-  | EnvironmentKind
   | ReleaseKind
   | ReleasePlanKind
   | Commit;
@@ -34,7 +33,6 @@ export type WorkflowResources =
   | ComponentKind[]
   | IntegrationTestScenarioKind[]
   | PipelineRunKind[]
-  | EnvironmentKind[]
   | ReleaseKind[]
   | ReleasePlanKind[]
   | Commit[];
@@ -48,12 +46,10 @@ export type CommitComponentResource = {
   releaseStatus: runStatus;
   buildPipelinestatus: runStatus;
   releasePlanStatus: (rp: ReleasePlanKind) => runStatus;
-  environmentStatus: (env: EnvironmentKind) => runStatus;
   integrationTestStatus: (test: IntegrationTestScenarioKind) => runStatus;
   applicationIntegrationTests: IntegrationTestScenarioKind[];
   compReleases: ReleaseKind[];
   compReleasePlans: ReleasePlanKind[];
-  compEnvironments: EnvironmentKind[];
 };
 
 export type Workflow = {

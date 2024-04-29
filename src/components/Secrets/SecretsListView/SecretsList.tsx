@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useSortedEnvironments } from '../../../hooks/useEnvironments';
 import { Table } from '../../../shared';
 import { RemoteSecretKind } from '../../../types';
 import SecretsListHeader from './SecretsListHeader';
@@ -10,13 +9,6 @@ type SecretsListProps = {
 };
 
 const SecretsList: React.FC<React.PropsWithChildren<SecretsListProps>> = ({ secrets }) => {
-  const [environments, environmentsLoaded] = useSortedEnvironments();
-
-  const environmentNames = React.useMemo(
-    () => environments.map((e) => e.metadata.name),
-    [environments],
-  );
-
   return (
     <>
       <Table
@@ -24,7 +16,6 @@ const SecretsList: React.FC<React.PropsWithChildren<SecretsListProps>> = ({ secr
         aria-label="Secret List"
         Header={SecretsListHeader}
         Row={SecretsListRow}
-        customData={{ environmentNames, environmentsLoaded }}
         loaded
         getRowProps={(obj) => ({
           id: obj.metadata.name,

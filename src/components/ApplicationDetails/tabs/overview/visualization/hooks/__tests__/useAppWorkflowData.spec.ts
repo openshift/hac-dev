@@ -2,7 +2,6 @@ import '@testing-library/jest-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { renderHook } from '@testing-library/react-hooks';
 import { useComponents } from '../../../../../../../hooks/useComponents';
-import { useEnvironments } from '../../../../../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../../../../../hooks/useIntegrationTestScenarios';
 import { useLatestBuildPipelines } from '../../../../../../../hooks/useLatestBuildPipelines';
 import { useLatestIntegrationTestPipelines } from '../../../../../../../hooks/useLatestIntegrationTestPipelines';
@@ -14,7 +13,6 @@ import { WorkflowNodeType } from '../../types';
 import {
   sampleBuildPipelines,
   sampleComponents,
-  sampleEnvironments,
   sampleIntegrationTestScenarios,
 } from '../__data__/workflow-data';
 import { useAppWorkflowData } from '../useAppWorkflowData';
@@ -35,9 +33,6 @@ jest.mock('../../../../../../../hooks/useIntegrationTestScenarios', () => ({
 }));
 jest.mock('../../../../../../../hooks/useLatestBuildPipelines', () => ({
   useLatestBuildPipelines: jest.fn(),
-}));
-jest.mock('../../../../../../../hooks/useEnvironments', () => ({
-  useEnvironments: jest.fn(),
 }));
 jest.mock('../../../../../../../hooks/useReleases', () => ({
   useReleases: jest.fn(),
@@ -61,7 +56,6 @@ const useWorkspaceInfoMock = useWorkspaceInfo as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
 const useIntegrationTestScenariosMock = useIntegrationTestScenarios as jest.Mock;
 const useLatestBuildPipelinesMock = useLatestBuildPipelines as jest.Mock;
-const useEnvironmentsMock = useEnvironments as jest.Mock;
 const useReleasesMock = useReleases as jest.Mock;
 const useReleasePlansMock = useReleasePlans as jest.Mock;
 const useLatestIntegrationTestPipelinesMock = useLatestIntegrationTestPipelines as jest.Mock;
@@ -74,7 +68,6 @@ describe('useAppWorkflowData hook', () => {
     useComponentsMock.mockReturnValue([[], true]);
     useIntegrationTestScenariosMock.mockReturnValue([[], true]);
     useLatestBuildPipelinesMock.mockReturnValue([[], true]);
-    useEnvironmentsMock.mockReturnValue([[], true]);
     useReleasePlansMock.mockReturnValue([[], true]);
     useReleasesMock.mockReturnValue([[], true]);
     useLatestIntegrationTestPipelinesMock.mockReturnValue([[], true]);
@@ -135,8 +128,6 @@ describe('useAppWorkflowData hook', () => {
   });
 
   it('nodes should be disabled / enabled based on the availability of resources', () => {
-    useEnvironmentsMock.mockReturnValue([sampleEnvironments, true]);
-
     const { result } = renderHook(() => useAppWorkflowData('test', false));
     const [model] = result.current;
     const disabledNodes = model.nodes.filter((n) => n.data.isDisabled);
