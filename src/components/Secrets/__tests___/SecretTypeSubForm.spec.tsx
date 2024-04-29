@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { useApplications } from '../../../hooks/useApplications';
 import { useComponents } from '../../../hooks/useComponents';
-import { useEnvironments } from '../../../hooks/useEnvironments';
 import { SecretFor, SecretTypeDropdownLabel } from '../../../types';
 import { formikRenderer } from '../../../utils/test-utils';
 import { SecretTypeSubForm } from '../SecretsForm/SecretTypeSubForm';
@@ -26,13 +25,8 @@ jest.mock('../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
 }));
 
-jest.mock('../../../hooks/useEnvironments', () => ({
-  useEnvironments: jest.fn(),
-}));
-
 const useApplicationsMock = useApplications as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
-const useEnvironmentsMock = useEnvironments as jest.Mock;
 
 describe('SecretTypeSubForm', () => {
   beforeEach(() => {
@@ -45,7 +39,6 @@ describe('SecretTypeSubForm', () => {
     };
     useApplicationsMock.mockReturnValue([[], true]);
     useComponentsMock.mockReturnValue([[], true]);
-    useEnvironmentsMock.mockReturnValue([[], true]);
 
     formikRenderer(<SecretTypeSubForm />, initialValues);
   });

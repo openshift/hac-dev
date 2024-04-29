@@ -1,22 +1,5 @@
-import { EnvironmentKind } from '../../types';
 import { LimitRange, SnapshotEnvironmentBinding } from '../../types/coreBuildService';
 import { RouteKind } from '../../types/routes';
-
-export const mockEnvironments: EnvironmentKind[] = [
-  {
-    kind: 'Environment',
-    apiVersion: 'appstudio.redhat.com/v1alpha1',
-    metadata: {
-      name: 'prod',
-      namespace: 'test',
-    },
-    spec: {
-      displayName: 'Prod',
-      deploymentStrategy: 'Manual',
-      type: 'poc',
-    },
-  },
-];
 
 const baseSnapshotEnvironmentBinding: SnapshotEnvironmentBinding = {
   apiVersion: 'appstudio.redhat.com/v1alpha1',

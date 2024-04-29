@@ -145,17 +145,17 @@ describe('statusFromConditions', () => {
 
 describe('getSecretRowData', () => {
   it('should return the default value', () => {
-    expect(getSecretRowData(null, []).secretName).toBe('-');
+    expect(getSecretRowData(null).secretName).toBe('-');
   });
 
   it('should return all the row data for a given secret', () => {
     const injectedSecret = sampleRemoteSecrets[RemoteSecretStatusReason.Injected];
-    expect(getSecretRowData(injectedSecret, ['development'])).toEqual({
+    expect(getSecretRowData(injectedSecret)).toEqual({
       secretFor: 'Build',
       secretLabels: '-',
       secretName: 'test-secret-two',
       secretStatus: 'Injected',
-      secretTarget: 'development',
+      secretTarget: '-',
       secretType: 'Key/value (1)',
     });
   });
@@ -168,12 +168,12 @@ describe('getSecretRowData', () => {
       status: undefined,
     };
 
-    expect(getSecretRowData(secretWithoutStatus, ['development'])).toEqual({
+    expect(getSecretRowData(secretWithoutStatus)).toEqual({
       secretFor: 'Build',
       secretLabels: '-',
       secretName: 'test-secret-two',
       secretStatus: '-',
-      secretTarget: 'development',
+      secretTarget: '-',
       secretType: 'Key/value',
     });
   });
@@ -194,7 +194,7 @@ describe('getSecretRowData', () => {
         },
       },
     };
-    expect(getSecretRowData(secretWithLabels, ['development']).secretLabels).toEqual(
+    expect(getSecretRowData(secretWithLabels).secretLabels).toEqual(
       'label1=test-label-1, label2=test-label-2',
     );
   });

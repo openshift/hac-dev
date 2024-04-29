@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { act, fireEvent, screen } from '@testing-library/react';
 import { useComponents } from '../../../../../hooks/useComponents';
-import { useEnvironments } from '../../../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../../../hooks/useIntegrationTestScenarios';
 import { usePipelineRunsForCommit } from '../../../../../hooks/usePipelineRuns';
 import { useReleasePlans } from '../../../../../hooks/useReleasePlans';
@@ -20,7 +19,6 @@ import {
   MockBuildPipelines,
   MockCommit,
   MockComponents,
-  MockEnvironments,
   MockIntegrationTests,
   MockReleasePlans,
   MockReleases,
@@ -46,9 +44,6 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 jest.mock('../../../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
-}));
-jest.mock('../../../../../hooks/useEnvironments', () => ({
-  useEnvironments: jest.fn(),
 }));
 jest.mock('../../../../../hooks/useIntegrationTestScenarios', () => ({
   useIntegrationTestScenarios: jest.fn(),
@@ -95,7 +90,6 @@ jest.mock('../../../../../hooks/useTaskRuns', () => ({
 }));
 
 const mockUseComponents = useComponents as jest.Mock;
-const mockUseEnvironments = useEnvironments as jest.Mock;
 const mockUseIntegrationTestScenarios = useIntegrationTestScenarios as jest.Mock;
 const mockUseReleasePlans = useReleasePlans as jest.Mock;
 const mockUseReleases = useReleases as jest.Mock;
@@ -121,7 +115,6 @@ describe('CommitSidePanel', () => {
     mockUseTaskRuns.mockReturnValue([testTaskRuns, true, undefined]);
 
     mockUseComponents.mockReturnValue([MockComponents, true]);
-    mockUseEnvironments.mockReturnValue([MockEnvironments, true]);
     mockUseIntegrationTestScenarios.mockReturnValue([MockIntegrationTests, true]);
     mockUseReleasePlans.mockReturnValue([MockReleasePlans, true]);
     mockUseReleases.mockReturnValue([MockReleases, true]);

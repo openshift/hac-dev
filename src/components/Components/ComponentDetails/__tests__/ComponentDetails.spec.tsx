@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { screen, fireEvent, act, configure } from '@testing-library/react';
-import { useAllEnvironments } from '../../../../hooks/useAllEnvironments';
 import { useComponent } from '../../../../hooks/useComponents';
 import { useAllGitOpsDeploymentCRs } from '../../../../hooks/useGitOpsDeploymentCR';
 import { PACState } from '../../../../hooks/usePACState';
@@ -16,7 +15,6 @@ import { useModalLauncher } from '../../../modal/ModalProvider';
 import {
   mockComponent,
   mockDeployment,
-  mockEnvironments,
   mockGitOpsDeploymentCRs,
   mockLatestSuccessfulBuild,
   mockSnapshotEBs,
@@ -71,11 +69,6 @@ jest.mock('../../../../hooks/useGitOpsDeploymentCR', () => ({
   useAllGitOpsDeploymentCRs: jest.fn(),
 }));
 
-jest.mock('../../../../hooks/useAllEnvironments', () => ({
-  ...jest.requireActual<any>('../../../../hooks/useAllEnvironments'),
-  useAllEnvironments: jest.fn(),
-}));
-
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   ...jest.requireActual<any>('@openshift/dynamic-plugin-sdk-utils'),
   useK8sWatchResource: jest.fn(),
@@ -107,7 +100,6 @@ const useLatestSuccessfulBuildPipelineRunForComponentMock =
 const useTaskRunsMock = useTaskRuns as jest.Mock;
 const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
 const useAllGitOpsDeploymentCRsMock = useAllGitOpsDeploymentCRs as jest.Mock;
-const useAllEnvironmentsMock = useAllEnvironments as jest.Mock;
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useModalLauncherMock = useModalLauncher as jest.Mock;
 
@@ -142,7 +134,6 @@ describe('ComponentDetailsView', () => {
     useTaskRunsMock.mockReturnValue([mockTaskRuns, true]);
     useSnapshotsEnvironmentBindingsMock.mockReturnValue([mockSnapshotEBs, true]);
     useAllGitOpsDeploymentCRsMock.mockReturnValue([mockGitOpsDeploymentCRs, true]);
-    useAllEnvironmentsMock.mockReturnValue([mockEnvironments, true]);
     watchResourceMock.mockReturnValue([mockDeployment, true]);
 
     navigateMock = jest.fn();

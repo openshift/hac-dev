@@ -2,7 +2,6 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
 import { screen, render, fireEvent, waitFor, act } from '@testing-library/react';
-import { useSortedEnvironments } from '../../../hooks/useEnvironments';
 import { useRemoteSecrets } from '../../../hooks/UseRemoteSecrets';
 import { RemoteSecretStatusReason } from '../../../types';
 import SecretsListRow from '../SecretsListView/SecretsListRow';
@@ -26,10 +25,6 @@ jest.mock('react-router-dom', () => {
 
 jest.mock('../../../hooks/UseRemoteSecrets', () => ({
   useRemoteSecrets: jest.fn(),
-}));
-
-jest.mock('../../../hooks/useEnvironments', () => ({
-  useSortedEnvironments: jest.fn(),
 }));
 
 jest.mock('../../../shared/components/table', () => {
@@ -57,12 +52,7 @@ jest.mock('../../../shared/components/table', () => {
 });
 
 const useRemoteSecretsMock = useRemoteSecrets as jest.Mock;
-const useSortedEnvironmentsMock = useSortedEnvironments as jest.Mock;
 describe('Secrets List', () => {
-  beforeEach(() => {
-    useSortedEnvironmentsMock.mockReturnValue([[], true]);
-  });
-
   it('should render the loader if the secrets are not loaded', () => {
     useRemoteSecretsMock.mockReturnValue([[], false]);
     render(<SecretsListView />);

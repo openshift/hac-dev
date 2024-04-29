@@ -6,9 +6,7 @@ import {
 } from '../visualization/commit-visualization-types';
 import BuildSidePanel from './BuildSidePanel';
 import CommitSidePanel from './CommitSidePanel';
-import EnvironmentSidePanel from './EnvironmentSidePanel';
 import IntegrationTestSidePanel from './IntegrationTestSidePanel';
-import ManagedEnvironmentSidePanel from './ManagedEnvironmentSidePanel';
 import ReleaseSidePanel from './ReleaseSidePanel';
 
 import './CommitWorkflowSidePanel.scss';
@@ -29,12 +27,8 @@ const CommitWorkflowSidePanel: React.FC<React.PropsWithChildren<Props>> = ({
       return <BuildSidePanel workflowNode={workflowNode} onClose={onClose} />;
     case CommitWorkflowNodeType.APPLICATION_TEST:
       return <IntegrationTestSidePanel workflowNode={workflowNode} onClose={onClose} />;
-    case CommitWorkflowNodeType.STATIC_ENVIRONMENT:
-      return <EnvironmentSidePanel workflowNode={workflowNode} onClose={onClose} />;
     case CommitWorkflowNodeType.RELEASE:
       return <ReleaseSidePanel workflowNode={workflowNode} onClose={onClose} />;
-    case CommitWorkflowNodeType.MANAGED_ENVIRONMENT:
-      return <ManagedEnvironmentSidePanel workflowNode={workflowNode} onClose={onClose} />;
     default:
       return null;
   }

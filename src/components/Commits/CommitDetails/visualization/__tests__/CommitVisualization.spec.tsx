@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { render, screen } from '@testing-library/react';
 import { useComponents } from '../../../../../hooks/useComponents';
-import { useEnvironments } from '../../../../../hooks/useEnvironments';
 import { useIntegrationTestScenarios } from '../../../../../hooks/useIntegrationTestScenarios';
 import { usePipelineRunsForCommit } from '../../../../../hooks/usePipelineRuns';
 import { useReleasePlans } from '../../../../../hooks/useReleasePlans';
@@ -15,7 +14,6 @@ import {
   MockBuildPipelines,
   MockIntegrationTests,
   MockComponents,
-  MockEnvironments,
   MockReleasePlans,
   MockReleases,
   MockSnapshots,
@@ -42,9 +40,7 @@ jest.mock('../../../../../hooks/usePipelineRuns', () => ({
 jest.mock('../../../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
 }));
-jest.mock('../../../../../hooks/useEnvironments', () => ({
-  useEnvironments: jest.fn(),
-}));
+
 jest.mock('../../../../../hooks/useIntegrationTestScenarios', () => ({
   useIntegrationTestScenarios: jest.fn(),
 }));
@@ -67,7 +63,6 @@ jest.mock('@openshift/dynamic-plugin-sdk', () => ({
 
 const mockUsePipelineRunsForCommit = usePipelineRunsForCommit as jest.Mock;
 const mockUseComponents = useComponents as jest.Mock;
-const mockUseEnvironments = useEnvironments as jest.Mock;
 const mockUseIntegrationTestScenarios = useIntegrationTestScenarios as jest.Mock;
 const mockUseReleasePlans = useReleasePlans as jest.Mock;
 const mockUseReleases = useReleases as jest.Mock;
@@ -84,7 +79,6 @@ describe('CommitVisualization', () => {
       true,
     ]);
     mockUseComponents.mockReturnValue([MockComponents, true]);
-    mockUseEnvironments.mockReturnValue([MockEnvironments, true]);
     mockUseIntegrationTestScenarios.mockReturnValue([MockIntegrationTests, true]);
     mockUseReleasePlans.mockReturnValue([MockReleasePlans, true]);
     mockUseReleases.mockReturnValue([MockReleases, true]);
@@ -108,7 +102,6 @@ describe('CommitVisualization', () => {
   it('should not render the commit visualization graph', () => {
     mockUsePipelineRunsForCommit.mockReturnValue([[], false]);
     mockUseComponents.mockReturnValue([[], false]);
-    mockUseEnvironments.mockReturnValue([[], false]);
     mockUseIntegrationTestScenarios.mockReturnValue([[], false]);
     mockUseReleasePlans.mockReturnValue([[], false]);
     mockUseReleases.mockReturnValue([[], false]);
@@ -130,7 +123,6 @@ describe('CommitVisualization', () => {
       new CustomError('Model does not exist'),
     ]);
     mockUseComponents.mockReturnValue([[], true]);
-    mockUseEnvironments.mockReturnValue([[], true]);
     mockUseIntegrationTestScenarios.mockReturnValue([[], true]);
     mockUseReleasePlans.mockReturnValue([[], true]);
     mockUseReleases.mockReturnValue([[], true]);

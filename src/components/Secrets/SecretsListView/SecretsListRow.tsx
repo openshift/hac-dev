@@ -16,13 +16,13 @@ export enum RemoteSecretStatus {
 
 const SecretsListRow: React.FC<React.PropsWithChildren<SecretsListRowProps>> = ({
   obj,
-  customData,
+  customData = {},
 }) => {
-  const { environmentNames = [], environmentsLoaded } = customData;
+  const { environmentsLoaded = true } = customData;
   const actions = useSecretActions(obj);
 
   const { secretName, secretFor, secretTarget, secretLabels, secretType, secretStatus } =
-    getSecretRowData(obj, environmentNames);
+    getSecretRowData(obj);
   const labels =
     secretLabels !== '-'
       ? secretLabels.split(', ').map((s) => <Label key={s}>{s}</Label>)

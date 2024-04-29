@@ -211,22 +211,21 @@ export const statusFromConditions = (
   return conditions[conditions.length - 1]?.reason || RemoteSecretStatusReason.Unknown;
 };
 
-export const getSecretRowData = (obj: RemoteSecretKind, environmentNames: string[]): any => {
+export const getSecretRowData = (obj: RemoteSecretKind): any => {
   const type = typeToLabel(obj?.spec?.secret?.type);
 
   const keys = obj?.status?.secret?.keys;
   const secretName = obj?.spec?.secret?.name || '-';
   const secretFor = obj?.metadata?.labels?.[SecretByUILabel] ?? SecretFor.Deployment;
-  const secretTarget =
-    obj?.metadata?.labels?.['appstudio.redhat.com/environment'] ?? environmentNames.join(',');
+  const secretTarget = obj?.metadata?.labels?.['appstudio.redhat.com/environment'] ?? '-';
   const secretLabels = obj
     ? Object.keys(obj?.spec?.secret?.labels || {})
         .map((k) => `${k}=${obj.spec?.secret?.labels[k]}`)
         .join(', ') || '-'
     : '-';
   const secretType =
-    type === SecretTypeDisplayLabel.keyValue && keys ? `${type} (${keys?.length})` : type || '-';
-  const secretStatus = statusFromConditions(obj?.status?.conditions);
+    (type === SecretTypeDisplayLabel.keyValue && keys ? `${type} (${keys?.length})` : type) || '-';
+  const secretStatus = statusFromConditions(obj?.status?.conditions) ?? '-';
 
   return {
     secretName,

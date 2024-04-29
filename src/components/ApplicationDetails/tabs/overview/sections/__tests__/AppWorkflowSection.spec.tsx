@@ -67,9 +67,6 @@ jest.mock('../../../../../../hooks/useIntegrationTestScenarios', () => ({
 jest.mock('../../../../../../hooks/useLatestBuildPipelines', () => ({
   useLatestBuildPipelines: jest.fn(),
 }));
-jest.mock('../../../../../../hooks/useEnvironments', () => ({
-  useEnvironments: jest.fn(),
-}));
 jest.mock('../../../../../../hooks/useReleases', () => ({
   useReleases: jest.fn(),
 }));

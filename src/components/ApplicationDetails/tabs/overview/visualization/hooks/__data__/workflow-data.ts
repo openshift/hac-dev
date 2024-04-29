@@ -635,7 +635,7 @@ export const sampleComponents: ComponentKind[] = [
   },
 ];
 
-export const sampleEnvironments: EnvironmentKind[] = [
+export const sampleEnvironments = [
   {
     apiVersion: 'appstudio.redhat.com/v1alpha1',
     kind: 'Environment',

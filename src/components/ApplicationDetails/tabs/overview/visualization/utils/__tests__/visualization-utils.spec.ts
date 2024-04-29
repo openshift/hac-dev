@@ -1,4 +1,3 @@
-import { EnvironmentKind } from '../../../../../../../types';
 import { sampleBuildPipelines, sampleEnvironments } from '../../hooks/__data__/workflow-data';
 import {
   addPrefixFromResourceName,
@@ -95,30 +94,6 @@ describe('appendPrefixToResources', () => {
     const resources = appendPrefixToResources(sampleBuildPipelines, 'test');
     expect(resources[0].metadata.name).toBe(`test#${sampleBuildPipelines[0].metadata.name}`);
     expect(resources[1].metadata.name).toBe(`test#${sampleBuildPipelines[1].metadata.name}`);
-  });
-
-  test('should modify all the resources and its additional path with given prefix ', () => {
-    const resources = appendPrefixToResources(
-      sampleEnvironments,
-      'envprefix',
-      'spec.parentEnvironment',
-    ) as EnvironmentKind[];
-    expect(resources[2].metadata.name).toBe(`envprefix#${sampleEnvironments[2].metadata.name}`);
-    expect(resources[2].spec.parentEnvironment).toBe(
-      `envprefix#${sampleEnvironments[2].spec.parentEnvironment}`,
-    );
-  });
-
-  test('should not update the additional path with given prefix when the path is invalid or not defined', () => {
-    const resources = appendPrefixToResources(
-      sampleEnvironments,
-      'envprefix',
-      'spec.parentEnvironment',
-    ) as EnvironmentKind[];
-
-    const envWithoutParent = resources.find((env) => env.spec.parentEnvironment === undefined);
-    expect(envWithoutParent.metadata.name).toBe(`envprefix#${sampleEnvironments[0].metadata.name}`);
-    expect(envWithoutParent.spec.parentEnvironment).toBeUndefined;
   });
 });
 
