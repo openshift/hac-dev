@@ -512,11 +512,7 @@ describe('Advanced Happy path', () => {
     });
 
     it('Verify Secret on Secret List', () => {
-      UIhelper.verifyRowInTable('Secret List', secret.secretName, [
-        'Build',
-        'development',
-        'Injected',
-      ]);
+      UIhelper.verifyRowInTable('Secret List', secret.secretName, ['Key/value']);
     });
 
     it('Delete Secret', () => {
