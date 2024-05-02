@@ -1,9 +1,4 @@
-import {
-  ImagePullSecretType,
-  SecretFor,
-  SecretTypeDropdownLabel,
-  SourceSecretType,
-} from '../../../types';
+import { ImagePullSecretType, SecretTypeDropdownLabel, SourceSecretType } from '../../../types';
 import { secretFormValidationSchema } from '../utils/secret-validation';
 
 describe('validation-utils', () => {
@@ -85,18 +80,6 @@ describe('validation-utils', () => {
         source: {
           authType: SourceSecretType.ssh,
           ['ssh-privatekey']: '',
-        },
-      }),
-    ).rejects.toThrow('Required');
-  });
-
-  it('should validate targets field', async () => {
-    await expect(() =>
-      secretFormValidationSchema.validate({
-        secretFor: SecretFor.Deployment,
-        name: 'test-resource',
-        targets: {
-          application: '',
         },
       }),
     ).rejects.toThrow('Required');

@@ -15,12 +15,10 @@ import {
   SecretCondition,
   SecretFor,
   SecretKind,
-  SecretSPILabel,
   SecretType,
   SecretTypeDisplayLabel,
   SecretTypeDropdownLabel,
   SourceSecretType,
-  TargetDropdownDefaults,
 } from '../../../types';
 
 export type PartnerTask = {
@@ -171,17 +169,10 @@ export const getSecretFormData = (values: AddSecretFormValues, namespace: string
 export const getTargetLabelsForRemoteSecret = (
   values: AddSecretFormValues,
 ): { [key: string]: string } => {
-  const { targets, secretFor } = values;
+  const { secretFor } = values;
   const labels = {
     [SecretByUILabel]: secretFor,
   };
-  const { application, component } = targets;
-
-  if (application) labels[SecretSPILabel.APPLICATION] = application;
-
-  if (component && component !== TargetDropdownDefaults.ALL_COMPONENTS)
-    labels[SecretSPILabel.COMPONENT] = component;
-
   return labels;
 };
 
@@ -216,24 +207,18 @@ export const getSecretRowData = (obj: RemoteSecretKind): any => {
 
   const keys = obj?.status?.secret?.keys;
   const secretName = obj?.spec?.secret?.name || '-';
-  const secretFor = obj?.metadata?.labels?.[SecretByUILabel] ?? SecretFor.Deployment;
-  const secretTarget = obj?.metadata?.labels?.['appstudio.redhat.com/environment'] ?? '-';
   const secretLabels = obj
     ? Object.keys(obj?.spec?.secret?.labels || {})
         .map((k) => `${k}=${obj.spec?.secret?.labels[k]}`)
         .join(', ') || '-'
     : '-';
   const secretType =
-    (type === SecretTypeDisplayLabel.keyValue && keys ? `${type} (${keys?.length})` : type) || '-';
-  const secretStatus = statusFromConditions(obj?.status?.conditions) ?? '-';
+    type === SecretTypeDisplayLabel.keyValue && keys ? `${type} (${keys?.length})` : type || '-';
 
   return {
     secretName,
-    secretFor,
-    secretTarget,
     secretLabels,
     secretType,
-    secretStatus,
   };
 };
 
@@ -286,11 +271,6 @@ export const createRemoteSecretResource = (
         type: secret.type,
         ...(labels?.secret && { labels: labels.secret }),
       },
-      targets: [
-        {
-          namespace,
-        },
-      ],
     },
   };
 

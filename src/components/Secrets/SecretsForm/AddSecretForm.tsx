@@ -5,12 +5,7 @@ import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash-es';
 import FormFooter from '../../../shared/components/form-components/FormFooter';
-import {
-  AddSecretFormValues,
-  SecretFor,
-  SecretTypeDropdownLabel,
-  TargetDropdownDefaults,
-} from '../../../types';
+import { AddSecretFormValues, SecretFor, SecretTypeDropdownLabel } from '../../../types';
 import { addSecret } from '../../../utils/create-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
@@ -26,10 +21,6 @@ const AddSecretForm = () => {
     type: SecretTypeDropdownLabel.opaque,
     name: '',
     secretFor: SecretFor.Build,
-    targets: {
-      application: '',
-      component: TargetDropdownDefaults.ALL_COMPONENTS,
-    },
     opaque: {
       keyValues: [{ key: '', value: '' }],
     },

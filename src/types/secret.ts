@@ -51,7 +51,6 @@ export type RemoteSecretKind = K8sResourceCommon & {
         [key: string]: string;
       };
     };
-    targets: { namespace: string }[];
   };
   status?: RemoteSecretStatus;
 };
@@ -59,7 +58,6 @@ export type RemoteSecretKind = K8sResourceCommon & {
 export interface RemoteSecretStatus {
   conditions?: SecretCondition[];
   secret?: Secret;
-  targets?: Target[];
 }
 
 export enum RemoteSecretStatusReason {
@@ -145,7 +143,6 @@ export interface AddSecretFormValues {
   type: string;
   name: string;
   secretFor: SecretFor;
-  targets: Targets;
   opaque: Opaque;
   image: Image;
   source: Source;

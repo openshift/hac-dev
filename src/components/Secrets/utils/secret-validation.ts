@@ -2,12 +2,7 @@ import { Base64 } from 'js-base64';
 import attempt from 'lodash-es/attempt';
 import isError from 'lodash-es/isError';
 import * as yup from 'yup';
-import {
-  ImagePullSecretType,
-  SecretFor,
-  SecretTypeDropdownLabel,
-  SourceSecretType,
-} from '../../../types';
+import { ImagePullSecretType, SecretTypeDropdownLabel, SourceSecretType } from '../../../types';
 import {
   MAX_RESOURCE_NAME_LENGTH,
   RESOURCE_NAME_LENGTH_ERROR_MSG,
@@ -76,17 +71,6 @@ export const secretFormValidationSchema = yup.object({
         is: SourceSecretType.ssh,
         then: yup.string().required('Required'),
       }),
-    }),
-  }),
-  targets: yup.object().when('secretFor', {
-    is: SecretFor.Deployment,
-    then: yup.object({
-      application: yup
-        .string()
-        .required('Required')
-        .test('application-label-test', 'Select an application', (application) => {
-          return application !== 'All applications';
-        }),
     }),
   }),
 });

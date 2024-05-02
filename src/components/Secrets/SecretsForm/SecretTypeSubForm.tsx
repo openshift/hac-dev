@@ -1,7 +1,7 @@
 import React from 'react';
 import { SelectVariant } from '@patternfly/react-core/deprecated';
 import { useFormikContext } from 'formik';
-import { DropdownItemObject, InputField, RadioGroupField, SelectInputField } from '../../../shared';
+import { DropdownItemObject, InputField, SelectInputField } from '../../../shared';
 import KeyValueField from '../../../shared/components/formik-fields/key-value-input-field/KeyValueInputField';
 import { AddSecretFormValues, SecretFor, SecretTypeDropdownLabel } from '../../../types';
 import SecretTypeSelector from '../SecretTypeSelector';
@@ -11,8 +11,6 @@ import {
   isPartnerTask,
   isPartnerTaskAvailable,
 } from '../utils/secret-utils';
-import { ApplicationDropdown } from './ApplicationDropdown';
-import { ComponentDropdown } from './ComponentDropdown';
 import { ImagePullSecretForm } from './ImagePullSecretForm';
 import { KeyValueSecretForm } from './KeyValueSecretForm';
 import { SourceSecretForm } from './SourceSecretForm';
@@ -94,23 +92,6 @@ export const SecretTypeSubForm: React.FC<React.PropsWithChildren<unknown>> = () 
 
   return (
     <>
-      <RadioGroupField
-        name="secretFor"
-        label="Secret for"
-        options={[
-          { label: 'Build', value: SecretFor.Build },
-          { label: 'Deployment', value: SecretFor.Deployment },
-        ]}
-        onChange={(type) => {
-          setFieldValue('secretFor', type);
-          setFieldValue('type', availableTypes[0]);
-          if (type === SecretFor.Deployment) {
-            name && isPartnerTask(name) && setFieldValue('name', '');
-            clearKeyValues();
-          }
-        }}
-        required
-      />
       <SecretTypeSelector
         key={secretFor}
         dropdownItems={dropdownItems}
@@ -127,7 +108,7 @@ export const SecretTypeSubForm: React.FC<React.PropsWithChildren<unknown>> = () 
           }
         }}
       />
-      {secretFor === SecretFor.Build && isPartnerTaskAvailable(currentTypeRef.current) ? (
+      {isPartnerTaskAvailable(currentTypeRef.current) ? (
         <SelectInputField
           name="name"
           label="Secret name"
@@ -165,19 +146,6 @@ export const SecretTypeSubForm: React.FC<React.PropsWithChildren<unknown>> = () 
         />
       )}
 
-      {secretFor === SecretFor.Deployment && (
-        <>
-          <ApplicationDropdown
-            name="targets.application"
-            helpText="The secret key and its value will be associated with the selected target"
-            required
-          />
-          <ComponentDropdown
-            name="targets.component"
-            helpText="The secret key and its value will be associated with the selected target"
-          />
-        </>
-      )}
       {selectedForm && selectedForm.component}
       <KeyValueField
         name="labels"

@@ -44,19 +44,11 @@ describe('SecretTypeSubForm', () => {
   });
 
   it('should render Secret type sub form and fields', () => {
-    expect(screen.getByText('Secret for')).toBeVisible();
     expect(screen.getByText('Secret type')).toBeVisible();
     expect(screen.getByText('Secret name')).toBeVisible();
   });
 
   it('should render subforms correctly for specified targets', async () => {
-    await fireEvent.click(screen.getByRole('radio', { name: 'Deployment' }));
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Key/value secret' })).toBeDisabled();
-      expect(screen.getByText('Key value sub form')).toBeVisible();
-    });
-
-    await fireEvent.click(screen.getByRole('radio', { name: 'Build' }));
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Key/value secret' })).toBeEnabled();
     });
@@ -67,25 +59,10 @@ describe('SecretTypeSubForm', () => {
   });
 
   it('should render correct variant of name field', async () => {
-    await fireEvent.click(screen.getByRole('radio', { name: 'Deployment' }));
-    await waitFor(() => {
-      expect(screen.getByRole('textbox', { name: 'Secret name' })).toBeVisible();
-    });
-
-    await fireEvent.click(screen.getByRole('radio', { name: 'Build' }));
     await waitFor(async () => {
       expect(screen.getByRole('button', { name: 'Secret name' })).toBeVisible();
       await fireEvent.click(screen.getByRole('button', { name: 'Secret name' }));
       expect(screen.getByText('snyk-secret')).toBeVisible();
-    });
-  });
-
-  it('should render target fields for Deployment secret', async () => {
-    await fireEvent.click(screen.getByRole('radio', { name: 'Deployment' }));
-
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Select application' })).toBeVisible();
-      expect(screen.getByRole('button', { name: 'All components' })).toBeVisible();
     });
   });
 });

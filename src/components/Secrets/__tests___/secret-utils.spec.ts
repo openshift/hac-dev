@@ -10,7 +10,6 @@ import {
   SecretType,
   SecretTypeDropdownLabel,
   SourceSecretType,
-  TargetDropdownDefaults,
 } from '../../../types';
 import {
   createRemoteSecretResource,
@@ -151,11 +150,8 @@ describe('getSecretRowData', () => {
   it('should return all the row data for a given secret', () => {
     const injectedSecret = sampleRemoteSecrets[RemoteSecretStatusReason.Injected];
     expect(getSecretRowData(injectedSecret)).toEqual({
-      secretFor: 'Build',
       secretLabels: '-',
       secretName: 'test-secret-two',
-      secretStatus: 'Injected',
-      secretTarget: '-',
       secretType: 'Key/value (1)',
     });
   });
@@ -169,11 +165,8 @@ describe('getSecretRowData', () => {
     };
 
     expect(getSecretRowData(secretWithoutStatus)).toEqual({
-      secretFor: 'Build',
       secretLabels: '-',
       secretName: 'test-secret-two',
-      secretStatus: '-',
-      secretTarget: '-',
       secretType: 'Key/value',
     });
   });
@@ -251,10 +244,6 @@ const formValues: AddSecretFormValues = {
   type: 'Key/value secret',
   name: 'test',
   secretFor: SecretFor.Build,
-  targets: {
-    application: 'test-application',
-    component: TargetDropdownDefaults.ALL_COMPONENTS,
-  },
   opaque: {
     keyValues: [
       {
@@ -384,47 +373,8 @@ describe('getTargetLabelsForRemoteSecret', () => {
     expect(
       getTargetLabelsForRemoteSecret({
         ...formValues,
-        targets: { application: null, component: null },
       }),
     ).toEqual({
-      'ui.appstudio.redhat.com/secret-for': 'Build',
-    });
-  });
-
-  it('should return application target labels for remote secret', () => {
-    expect(getTargetLabelsForRemoteSecret(formValues)).toEqual({
-      'appstudio.redhat.com/application': 'test-application',
-      'ui.appstudio.redhat.com/secret-for': 'Build',
-    });
-  });
-
-  it('should return application and component target labels for remote secret', () => {
-    const fValues = {
-      ...formValues,
-      targets: {
-        ...formValues.targets,
-        component: 'test-component',
-      },
-    };
-    expect(getTargetLabelsForRemoteSecret(fValues)).toEqual({
-      'appstudio.redhat.com/application': 'test-application',
-      'appstudio.openshift.io/component': 'test-component',
-      'ui.appstudio.redhat.com/secret-for': 'Build',
-    });
-  });
-
-  it('should return application, component and environment target labels for remote secret', () => {
-    const fValues = {
-      ...formValues,
-      targets: {
-        ...formValues.targets,
-        component: 'test-component',
-        environment: 'test-environment',
-      },
-    };
-    expect(getTargetLabelsForRemoteSecret(fValues)).toEqual({
-      'appstudio.redhat.com/application': 'test-application',
-      'appstudio.openshift.io/component': 'test-component',
       'ui.appstudio.redhat.com/secret-for': 'Build',
     });
   });
@@ -434,7 +384,6 @@ describe('getTargetLabelsForRemoteSecret', () => {
       getTargetLabelsForRemoteSecret({
         ...formValues,
         secretFor: SecretFor.Build,
-        targets: { application: null, component: null },
       }),
     ).toEqual({
       'ui.appstudio.redhat.com/secret-for': 'Build',
@@ -446,7 +395,6 @@ describe('getTargetLabelsForRemoteSecret', () => {
       getTargetLabelsForRemoteSecret({
         ...formValues,
         secretFor: SecretFor.Deployment,
-        targets: { application: null, component: null },
       }),
     ).toEqual({
       'ui.appstudio.redhat.com/secret-for': 'Deployment',

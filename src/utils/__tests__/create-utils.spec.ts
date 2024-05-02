@@ -14,7 +14,6 @@ import {
   SPIAccessTokenBindingKind,
   SecretFor,
   SecretTypeDropdownLabel,
-  TargetDropdownDefaults,
 } from '../../types';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
@@ -168,10 +167,6 @@ const addSecretFormValues: AddSecretFormValues = {
   type: 'Image pull secret',
   name: 'test',
   secretFor: SecretFor.Build,
-  targets: {
-    application: 'test-application',
-    component: TargetDropdownDefaults.ALL_COMPONENTS,
-  },
   opaque: {
     keyValues: [
       {
