@@ -20,6 +20,8 @@ export const SourceSecretForm: React.FC<React.PropsWithChildren<unknown>> = () =
         ]}
         required
       />
+      <InputField name="source.host" label="Host" helpText="Host for the secret" />
+      <InputField name="source.repo" label="Repository" helpText="Repository for the secret" />
       {type === SourceSecretType.basic ? (
         <>
           <InputField

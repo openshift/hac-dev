@@ -9,6 +9,13 @@ export enum SecretSPILabel {
   COMPONENT = 'appstudio.openshift.io/component',
 }
 
+export enum SecretLabels {
+  CREDENTIAL_LABEL = 'appstudio.redhat.com/credentials',
+  CREDENTIAL_VALUE = 'scm',
+  HOST_LABEL = 'appstudio.redhat.com/scm.host',
+  REPO_ANNOTATION = 'appstudio.redhat.com/scm.repository',
+}
+
 export enum TargetDropdownDefaults {
   ALL_ENVIRONMENTS = 'All environments',
   ALL_COMPONENTS = 'All components',
@@ -175,6 +182,8 @@ export interface Source {
   authType: string;
   username?: string;
   password?: string;
+  host?: string;
+  repo?: string;
 }
 
 export interface Targets {

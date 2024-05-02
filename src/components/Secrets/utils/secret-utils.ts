@@ -15,6 +15,7 @@ import {
   SecretCondition,
   SecretFor,
   SecretKind,
+  SecretLabels,
   SecretType,
   SecretTypeDisplayLabel,
   SecretTypeDropdownLabel,
@@ -32,6 +33,7 @@ export type PartnerTask = {
     readOnlyKey?: boolean;
   }[];
 };
+
 export const supportedPartnerTasksSecrets: { [key: string]: PartnerTask } = {
   snyk: {
     type: SecretType.opaque,
@@ -152,12 +154,6 @@ export const getSecretFormData = (values: AddSecretFormValues, namespace: string
     metadata: {
       name: values.name,
       namespace,
-      labels: {
-        'appstudio.redhat.com/upload-secret': 'remotesecret',
-      },
-      annotations: {
-        'appstudio.redhat.com/remotesecret-name': `${values.name}`,
-      },
     },
     type: getKubernetesSecretType(values),
     data,
@@ -177,16 +173,35 @@ export const getTargetLabelsForRemoteSecret = (
 };
 
 export const getLabelsForSecret = (values: AddSecretFormValues): { [key: string]: string } => {
-  if (!values.labels || values.labels.length === 0) {
+  if (!values.source?.host && (!values.labels || values.labels.length === 0)) {
+    // if no labels quit early
     return null;
   }
+
   const labels = {};
-  values.labels.map(({ key, value }) => {
-    if (key && value) {
-      labels[key] = value;
-    }
-  });
+  if (values.labels && values.labels.length > 0) {
+    // get user defined labels
+    values.labels.map(({ key, value }) => {
+      if (key && value) {
+        labels[key] = value;
+      }
+    });
+  }
+
+  if (values?.source?.host) {
+    // get scm labels for host
+    labels[SecretLabels.CREDENTIAL_LABEL] = SecretLabels.CREDENTIAL_VALUE;
+    labels[SecretLabels.HOST_LABEL] = values.source.host;
+  }
   return labels;
+};
+
+export const getAnnotationForSecret = (values: AddSecretFormValues): { [key: string]: string } => {
+  if (!values.source?.repo) {
+    // get scm annotation for repository
+    return null;
+  }
+  return { [SecretLabels.REPO_ANNOTATION]: values.source.repo };
 };
 
 export const statusFromConditions = (
@@ -239,7 +254,11 @@ export const createSecretResource = async (
 export const createRemoteSecretResource = (
   secret: SecretKind,
   namespace: string,
-  labels: { secret: { [key: string]: string }; remoteSecret: { [key: string]: string } },
+  labels: {
+    secret: { [key: string]: string };
+    remoteSecret: { [key: string]: string };
+    annotations: { [key: string]: string };
+  },
   linkServiceAccount: boolean,
   dryRun: boolean,
 ): Promise<RemoteSecretKind> => {
@@ -252,7 +271,9 @@ export const createRemoteSecretResource = (
       labels: {
         [SecretByUILabel]: SecretFor.Build,
         ...(labels?.remoteSecret && { ...labels.remoteSecret }),
+        ...labels?.secret,
       },
+      annotations: labels?.annotations,
     },
     spec: {
       secret: {

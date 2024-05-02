@@ -7,6 +7,7 @@ import {
   ImagePullSecretType,
   RemoteSecretStatusReason,
   SecretFor,
+  SecretLabels,
   SecretType,
   SecretTypeDropdownLabel,
   SourceSecretType,
@@ -14,6 +15,7 @@ import {
 import {
   createRemoteSecretResource,
   createSecretResource,
+  getAnnotationForSecret,
   getKubernetesSecretType,
   getLabelsForSecret,
   getSecretFormData,
@@ -269,6 +271,37 @@ const formValues: AddSecretFormValues = {
     password: 'test',
   },
 };
+
+const formValuesForSCM: AddSecretFormValues = {
+  type: 'Key/value secret',
+  name: 'test',
+  secretFor: SecretFor.Build,
+  opaque: {
+    keyValues: [
+      {
+        key: 'test',
+        value: 'dGVzdA==',
+      },
+    ],
+  },
+  image: {
+    authType: 'Image registry credentials',
+    registryCreds: [
+      {
+        registry: 'test.io',
+        username: 'test',
+        password: 'test',
+        email: 'test@test.com',
+      },
+    ],
+  },
+  source: {
+    authType: 'Basic authentication',
+    host: 'www.github.com',
+    repo: 'hac-dev',
+  },
+};
+
 describe('getKubernetesSecretType', () => {
   it('should return opaque secret type', () => {
     const opaqueFormValues = formValues;
@@ -420,6 +453,38 @@ describe('getLabelsForSecret', () => {
       }),
     ).toEqual({
       test: 'test-value',
+    });
+  });
+
+  it('should return host & scm labels for SCM secret', () => {
+    expect(
+      getLabelsForSecret({
+        ...formValuesForSCM,
+      }),
+    ).toEqual({
+      [SecretLabels.CREDENTIAL_LABEL]: SecretLabels.CREDENTIAL_VALUE,
+      [SecretLabels.HOST_LABEL]: 'www.github.com',
+    });
+  });
+});
+
+describe('getAnnotationForSecret', () => {
+  it('should return host & scm label', () => {
+    expect(
+      getLabelsForSecret({
+        ...formValues,
+        labels: null,
+      }),
+    ).toBeNull();
+  });
+
+  it('should return repo annotation for SCM remote secret', () => {
+    expect(
+      getAnnotationForSecret({
+        ...formValuesForSCM,
+      }),
+    ).toEqual({
+      [SecretLabels.REPO_ANNOTATION]: 'hac-dev',
     });
   });
 });

@@ -14,6 +14,7 @@ import {
 import { ImportSecret } from '../components/ImportForm/utils/types';
 import {
   createRemoteSecretResource,
+  getAnnotationForSecret,
   getLabelsForSecret,
   getSecretFormData,
   getTargetLabelsForRemoteSecret,
@@ -307,6 +308,7 @@ export const createSecretResource = async (
   const labels = {
     secret: getLabelsForSecret(values),
     remoteSecret: getTargetLabelsForRemoteSecret(values),
+    annotations: getAnnotationForSecret(values),
   };
   await createRemoteSecretResource(
     secretResource,
@@ -346,12 +348,6 @@ export const createSecret = async (
     metadata: {
       name: secret.secretName,
       namespace,
-      labels: {
-        'appstudio.redhat.com/upload-secret': 'remotesecret',
-      },
-      annotations: {
-        'appstudio.redhat.com/remotesecret-name': `${secret.secretName}`,
-      },
     },
     type: K8sSecretType[secret.type],
     stringData: secret.keyValues.reduce((acc, s) => {
