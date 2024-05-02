@@ -164,19 +164,19 @@ describe('Create Utils', () => {
       'https://test-url',
     );
     expect(getURLForParam(k8sResource.spec.resolverRef.params, ResolverRefParams.URL)).toBe(
-      'https://github.com/redhat-appstudio/integration-examples',
+      'https://github.com/konflux-ci/integration-examples',
     );
     expect(getURLForParam(resource.spec.resolverRef.params, ResolverRefParams.REVISION)).toBe(
       'https://test-url/tree/main',
     );
     expect(getURLForParam(k8sResource.spec.resolverRef.params, ResolverRefParams.REVISION)).toBe(
-      'https://github.com/redhat-appstudio/integration-examples/tree/main',
+      'https://github.com/konflux-ci/integration-examples/tree/main',
     );
     expect(getURLForParam(resource.spec.resolverRef.params, ResolverRefParams.PATH)).toBe(
       'https://test-url/tree/main/test-path',
     );
     expect(getURLForParam(k8sResource.spec.resolverRef.params, ResolverRefParams.PATH)).toBe(
-      'https://github.com/redhat-appstudio/integration-examples/tree/main/pipelines/integration_pipeline_pass.yaml',
+      'https://github.com/konflux-ci/integration-examples/tree/main/pipelines/integration_pipeline_pass.yaml',
     );
     expect(
       getURLForParam(
