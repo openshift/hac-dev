@@ -13,7 +13,6 @@ import { ImportFormValues } from '../utils/types';
 import { gitUrlRegex } from '../utils/validation-utils';
 import AuthOptions from './AuthOptions';
 import GitOptions from './GitOptions';
-import { useEnablePrivateAuthFlowFlag } from './useEnablePrivateAuthFlowFlag';
 
 import './SourceSection.scss';
 
@@ -26,7 +25,6 @@ export enum AccessHelpText {
 type SourceSectionProps = {};
 
 const SourceSection: React.FC<React.PropsWithChildren<SourceSectionProps>> = () => {
-  const enablePrivateAuth = useEnablePrivateAuthFlowFlag();
   const [, { value: source }] = useField<string>({
     name: 'source.git.url',
     type: 'input',
@@ -126,7 +124,7 @@ const SourceSection: React.FC<React.PropsWithChildren<SourceSectionProps>> = () 
           setHelpTextInvalid(
             "Looks like your repository is private, so we're not able to access it.",
           );
-          enablePrivateAuth && setShowAuthOptions(true);
+          setShowAuthOptions(true);
         } else {
           setHelpTextInvalid('This provider is not supported');
         }
@@ -140,7 +138,6 @@ const SourceSection: React.FC<React.PropsWithChildren<SourceSectionProps>> = () 
     setFieldValue,
     setFormValidated,
     sourceUrl,
-    enablePrivateAuth,
   ]);
 
   const isPrivateAuthorized =
@@ -152,14 +149,14 @@ const SourceSection: React.FC<React.PropsWithChildren<SourceSectionProps>> = () 
   useAccessTokenBinding(isPrivateAuthorized && source);
 
   React.useEffect(() => {
-    if (isPrivateAuthorized && enablePrivateAuth) {
+    if (isPrivateAuthorized) {
       if (authSecret) {
         setFormValidated();
       } else {
         setFormValidating();
       }
     }
-  }, [authSecret, isPrivateAuthorized, enablePrivateAuth, setFormValidated, setFormValidating]);
+  }, [authSecret, isPrivateAuthorized, setFormValidated, setFormValidating]);
 
   useOnMount(() => {
     source && !isValidated && handleSourceChange();
@@ -181,7 +178,7 @@ const SourceSection: React.FC<React.PropsWithChildren<SourceSectionProps>> = () 
             data-test="enter-source"
           />
         </FormGroup>
-        {enablePrivateAuth && showAuthOptions ? <AuthOptions /> : null}
+        {showAuthOptions ? <AuthOptions /> : null}
         {showGitOptions ? <GitOptions /> : null}
       </FormSection>
     </Bullseye>

@@ -60,6 +60,7 @@ export const mockLocation = (location?: {
   pathname?: string;
   search?: string;
   origin?: string;
+  hostname?: string;
 }) => {
   const windowLocation = JSON.stringify(window.location);
   delete window.location;
