@@ -1,9 +1,9 @@
 import React from 'react';
-import ImportForm from '../components/ImportForm/ImportForm';
+import { ImportForm } from '../components/ImportForm_new/ImportForm';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';
-import { ApplicationModel, ComponentDetectionQueryModel, ComponentModel } from '../models';
+import { ApplicationModel, ComponentModel } from '../models';
 import { getQueryArgument } from '../shared/utils';
 import { AccessReviewResources } from '../types';
 
@@ -13,14 +13,10 @@ const ImportPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = ()
   const applicationName = getQueryArgument('application');
 
   const accessReviewResources: AccessReviewResources = applicationName
-    ? [
-        { model: ComponentModel, verb: 'create' },
-        { model: ComponentDetectionQueryModel, verb: 'create' },
-      ]
+    ? [{ model: ComponentModel, verb: 'create' }]
     : [
         { model: ApplicationModel, verb: 'create' },
         { model: ComponentModel, verb: 'create' },
-        { model: ComponentDetectionQueryModel, verb: 'create' },
       ];
 
   return (

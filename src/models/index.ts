@@ -22,3 +22,4 @@ export * from './limit-range';
 export * from './remotesecret';
 export * from './workspace';
 export * from './space-binding-request';
+export * from './config-map';

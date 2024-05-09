@@ -36,9 +36,12 @@ const getThumbnailFromApplication = (application: ApplicationKind) => {
 };
 
 export const ApplicationThumbnail: React.FC<
-  React.PropsWithChildren<{ application: ApplicationKind }>
-> = ({ application }) => {
-  const icon = getThumbnailFromApplication(application);
+  React.PropsWithChildren<{ application?: ApplicationKind; annotationValue?: number }>
+> = ({ application, annotationValue }) => {
+  const icon =
+    annotationValue !== undefined
+      ? ICONS[annotationValue]
+      : getThumbnailFromApplication(application);
   return (
     <img style={{ height: '70px', verticalAlign: 'top' }} src={icon} alt="Application thumbnail" />
   );
