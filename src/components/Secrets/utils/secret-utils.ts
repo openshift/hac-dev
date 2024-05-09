@@ -271,6 +271,7 @@ export const createRemoteSecretResource = (
         type: secret.type,
         ...(labels?.secret && { labels: labels.secret }),
       },
+      targets: [{ namespace }],
     },
   };
 
