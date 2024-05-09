@@ -1,0 +1,8 @@
+.git-import-actions {
+  &__sticky {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding-top: var(--pf-v5-global--spacer--lg);
+  }
+}

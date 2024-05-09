@@ -12,13 +12,9 @@ export const ApplicationHeader: React.FC<
         <ApplicationThumbnail application={application} />
       </FlexItem>
       <FlexItem alignSelf={{ default: 'alignSelfCenter' }}>
-        <Flex>
-          <FlexItem>
-            <Text component="h1" data-test="details__title">
-              {application?.spec?.displayName || ''}
-            </Text>
-          </FlexItem>
-        </Flex>
+        <Text component="h1" data-test="details__title">
+          {application?.spec?.displayName || ''}
+        </Text>
       </FlexItem>
     </Flex>
   );
