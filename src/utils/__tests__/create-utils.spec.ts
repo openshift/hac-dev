@@ -6,8 +6,7 @@ import {
 } from '@openshift/dynamic-plugin-sdk-utils';
 import omit from 'lodash/omit';
 import { THUMBNAIL_ANNOTATION } from '../../components/ApplicationDetails/ApplicationThumbnail';
-import { PIPELINE_SERVICE_ACCOUNT } from '../../consts/pipeline';
-import { RemoteSecretModel, SPIAccessTokenBindingModel } from '../../models';
+import { SPIAccessTokenBindingModel } from '../../models';
 import {
   AddSecretFormValues,
   ComponentDetectionQueryKind,
@@ -25,7 +24,6 @@ import {
   createAccessTokenBinding,
   sanitizeName,
   createSecret,
-  createSecretResource,
   addSecret,
 } from './../create-utils';
 
@@ -502,7 +500,6 @@ describe('Create Utils', () => {
       true,
     );
 
-    expect(createResourceMock).toHaveBeenCalledTimes(1);
     expect(commonFetchMock).toHaveBeenCalledTimes(1);
 
     expect(commonFetchMock).toHaveBeenCalledWith(
@@ -563,46 +560,6 @@ describe('Create Utils', () => {
     );
   });
 
-  it('should link the secret to the pipeline service account', async () => {
-    commonFetchMock.mockClear();
-    commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
-
-    await createSecret(
-      {
-        secretName: 'registry-creds',
-        type: SecretTypeDropdownLabel.image,
-        keyValues: [{ key: 'token', value: 'my-token-data' }],
-      },
-      'test-ws',
-      'test-ns',
-      false,
-    );
-
-    expect(commonFetchMock).toHaveBeenCalledTimes(1);
-
-    expect(createResourceMock.mock.calls[2]).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          resource: expect.objectContaining({
-            spec: expect.objectContaining({
-              secret: expect.objectContaining({
-                linkedTo: expect.arrayContaining([
-                  expect.objectContaining({
-                    serviceAccount: expect.objectContaining({
-                      reference: expect.objectContaining({
-                        name: PIPELINE_SERVICE_ACCOUNT,
-                      }),
-                    }),
-                  }),
-                ]),
-              }),
-            }),
-          }),
-        }),
-      ]),
-    );
-  });
-
   it('should create partner task secret', async () => {
     commonFetchMock.mockClear();
     createResourceMock
@@ -622,69 +579,17 @@ describe('Create Utils', () => {
     );
 
     expect(commonFetchMock).toHaveBeenCalled();
-    expect(createResourceMock).toHaveBeenCalledTimes(1);
-    expect(createResourceMock.mock.calls[0]).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          model: expect.objectContaining(RemoteSecretModel),
-        }),
-      ]),
-    );
-  });
-  it('createSecretResource', async () => {
-    await createSecretResource(addSecretFormValues, 'test-ws', 'test-ns', false);
-
-    expect(createResourceMock.mock.calls[1]).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          resource: expect.objectContaining({
-            spec: expect.objectContaining({
-              secret: expect.objectContaining({
-                labels: expect.objectContaining({
-                  test: 'test',
-                }),
-                linkedTo: expect.arrayContaining([
-                  expect.objectContaining({
-                    serviceAccount: expect.objectContaining({
-                      reference: expect.objectContaining({
-                        name: PIPELINE_SERVICE_ACCOUNT,
-                      }),
-                    }),
-                  }),
-                ]),
-              }),
-            }),
-          }),
-        }),
-      ]),
-    );
   });
   it('should add secret', async () => {
+    commonFetchMock.mockClear();
     await addSecret(addSecretFormValues, 'test-ws', 'test-ns');
+    expect(commonFetchMock).toHaveBeenCalled();
 
-    expect(createResourceMock.mock.calls[1]).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          resource: expect.objectContaining({
-            spec: expect.objectContaining({
-              secret: expect.objectContaining({
-                labels: expect.objectContaining({
-                  test: 'test',
-                }),
-                linkedTo: expect.arrayContaining([
-                  expect.objectContaining({
-                    serviceAccount: expect.objectContaining({
-                      reference: expect.objectContaining({
-                        name: PIPELINE_SERVICE_ACCOUNT,
-                      }),
-                    }),
-                  }),
-                ]),
-              }),
-            }),
-          }),
-        }),
-      ]),
+    expect(commonFetchMock).toHaveBeenCalledWith(
+      '/workspaces/test-ws/api/v1/namespaces/test-ns/secrets',
+      expect.objectContaining({
+        body: expect.stringContaining('"type":"kubernetes.io/dockerconfigjson"'),
+      }),
     );
   });
 });

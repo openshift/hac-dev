@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { RemoteSecretModel } from '../../models';
-import { RemoteSecretKind } from '../../types';
+import { SecretModel } from '../../models';
+import { SecretKind } from '../../types';
 import { createDeleteModalLauncher } from '../modal/DeleteResourceModal';
 
-export const secretDeleteModal = (secret: RemoteSecretKind) =>
+export const secretDeleteModal = (secret: SecretKind) =>
   createDeleteModalLauncher(secret.kind)({
     obj: secret,
-    model: RemoteSecretModel,
+    model: SecretModel,
     displayName: secret.metadata.name,
     description: (
       <>

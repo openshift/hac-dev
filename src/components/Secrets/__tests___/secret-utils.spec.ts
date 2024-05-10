@@ -1,7 +1,5 @@
 import '@testing-library/jest-dom';
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { PIPELINE_SERVICE_ACCOUNT } from '../../../consts/pipeline';
-import { RemoteSecretModel } from '../../../models/remotesecret';
 import {
   AddSecretFormValues,
   ImagePullSecretType,
@@ -13,13 +11,11 @@ import {
   SourceSecretType,
 } from '../../../types';
 import {
-  createRemoteSecretResource,
   createSecretResource,
   getAnnotationForSecret,
   getKubernetesSecretType,
   getLabelsForSecret,
   getSecretFormData,
-  getSecretRowData,
   getSupportedPartnerTaskKeyValuePairs,
   getSupportedPartnerTaskSecrets,
   getTargetLabelsForRemoteSecret,
@@ -29,6 +25,8 @@ import {
   supportedPartnerTasksSecrets,
   typeToDropdownLabel,
   typeToLabel,
+  getSecretRowLabels,
+  getSecretTypetoLabel,
 } from '../utils/secret-utils';
 import { sampleImagePullSecret, sampleOpaqueSecret, sampleRemoteSecrets } from './secret-data';
 
@@ -96,39 +94,6 @@ describe('createSecretResource', () => {
   });
 });
 
-describe('createRemoteSecretResource', () => {
-  it('should create Remote secret resource', () => {
-    createRemoteSecretResource(sampleOpaqueSecret, 'test-ns', null, false, false);
-
-    expect(createResourceMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        resource: expect.objectContaining({
-          kind: RemoteSecretModel.kind,
-        }),
-      }),
-    );
-  });
-
-  it('should link the secret resource to pipeline service account', () => {
-    createResourceMock.mockClear();
-    createRemoteSecretResource(sampleOpaqueSecret, 'test-ns', null, true, false);
-
-    expect(createResourceMock.mock.calls[0][0].resource.spec.secret).toEqual(
-      expect.objectContaining({
-        linkedTo: expect.arrayContaining([
-          expect.objectContaining({
-            serviceAccount: expect.objectContaining({
-              reference: expect.objectContaining({
-                name: PIPELINE_SERVICE_ACCOUNT,
-              }),
-            }),
-          }),
-        ]),
-      }),
-    );
-  });
-});
-
 describe('statusFromConditions', () => {
   it('should return the default value', () => {
     expect(statusFromConditions(null)).toBe('-');
@@ -144,54 +109,52 @@ describe('statusFromConditions', () => {
   });
 });
 
-describe('getSecretRowData', () => {
+describe('getSecretRowLabels', () => {
   it('should return the default value', () => {
-    expect(getSecretRowData(null).secretName).toBe('-');
+    expect(getSecretRowLabels(null).secretLabels).toBe('-');
   });
 
-  it('should return all the row data for a given secret', () => {
-    const injectedSecret = sampleRemoteSecrets[RemoteSecretStatusReason.Injected];
-    expect(getSecretRowData(injectedSecret)).toEqual({
-      secretLabels: '-',
-      secretName: 'test-secret-two',
-      secretType: 'Key/value (1)',
-    });
-  });
-
-  it('should not throw error when the status field is missing in the newly created secret', () => {
-    const injectedSecret = sampleRemoteSecrets[RemoteSecretStatusReason.Injected];
-
-    const secretWithoutStatus = {
-      ...injectedSecret,
-      status: undefined,
-    };
-
-    expect(getSecretRowData(secretWithoutStatus)).toEqual({
-      secretLabels: '-',
-      secretName: 'test-secret-two',
-      secretType: 'Key/value',
+  it('should return correct label given secret', () => {
+    expect(
+      getSecretRowLabels({
+        apiVersion: 'v1',
+        kind: 'secret',
+        metadata: { labels: { labelA: 'valA' } },
+      }),
+    ).toEqual({
+      secretLabels: 'labelA=valA',
     });
   });
 
   it('should return the labels data for the given secret', () => {
-    const injectedSecret = sampleRemoteSecrets[RemoteSecretStatusReason.Injected];
-
     const secretWithLabels = {
-      ...injectedSecret,
-      spec: {
-        ...injectedSecret.spec,
-        secret: {
-          ...injectedSecret.spec.secret,
-          labels: {
-            label1: 'test-label-1',
-            label2: 'test-label-2',
-          },
+      apiVersion: 'v1',
+      kind: 'secret',
+      metadata: {
+        labels: {
+          label1: 'test-label-1',
+          label2: 'test-label-2',
         },
       },
     };
-    expect(getSecretRowData(secretWithLabels).secretLabels).toEqual(
+
+    expect(getSecretRowLabels(secretWithLabels).secretLabels).toEqual(
       'label1=test-label-1, label2=test-label-2',
     );
+  });
+});
+
+describe('getSecretTypetoLabel', () => {
+  it('should return early if no Secret specified', () => {
+    expect(getSecretTypetoLabel(null)).toBe(undefined);
+  });
+
+  it('should return correct label for opaque', () => {
+    expect(getSecretTypetoLabel(sampleImagePullSecret)).toEqual('Image pull');
+  });
+
+  it('should return correct label for key', () => {
+    expect(getSecretTypetoLabel(sampleOpaqueSecret)).toEqual('Key/value');
   });
 });
 

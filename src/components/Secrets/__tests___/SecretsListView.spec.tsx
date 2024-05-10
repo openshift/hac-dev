@@ -2,7 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
 import { screen, render, fireEvent, waitFor, act } from '@testing-library/react';
-import { useRemoteSecrets } from '../../../hooks/UseRemoteSecrets';
+import { useSecrets } from '../../../hooks/UseRemoteSecrets';
 import { RemoteSecretStatusReason } from '../../../types';
 import SecretsListRow from '../SecretsListView/SecretsListRow';
 import SecretsListView from '../SecretsListView/SecretsListView';
@@ -24,7 +24,7 @@ jest.mock('react-router-dom', () => {
 });
 
 jest.mock('../../../hooks/UseRemoteSecrets', () => ({
-  useRemoteSecrets: jest.fn(),
+  useSecrets: jest.fn(),
 }));
 
 jest.mock('../../../shared/components/table', () => {
@@ -51,25 +51,31 @@ jest.mock('../../../shared/components/table', () => {
   };
 });
 
-const useRemoteSecretsMock = useRemoteSecrets as jest.Mock;
+const useSecretsMock = useSecrets as jest.Mock;
+
 describe('Secrets List', () => {
   it('should render the loader if the secrets are not loaded', () => {
-    useRemoteSecretsMock.mockReturnValue([[], false]);
+    useSecretsMock.mockReturnValue([[], false]);
     render(<SecretsListView />);
 
     screen.getByRole('progressbar');
   });
 
   it('should render the empty state if there are not remote secrets in the workspace', () => {
-    useRemoteSecretsMock.mockReturnValue([[], true]);
+    useSecretsMock.mockReturnValue([[], true]);
     render(<SecretsListView />);
 
     expect(screen.queryByTestId('secrets-empty-state')).toBeInTheDocument();
   });
 
   it('should render all the remote secrets in the workspace', () => {
-    useRemoteSecretsMock.mockReturnValue([
-      [sampleRemoteSecrets[RemoteSecretStatusReason.AwaitingData]],
+    useSecretsMock.mockReturnValue([
+      [
+        {
+          ...sampleRemoteSecrets[RemoteSecretStatusReason.AwaitingData],
+          type: 'kubernetes.io/dockerconfigjson',
+        },
+      ],
       true,
     ]);
     render(<SecretsListView />);
@@ -81,10 +87,19 @@ describe('Secrets List', () => {
   });
 
   it('should filter the remote secrets in the workspace', () => {
-    useRemoteSecretsMock.mockReturnValue([
+    useSecretsMock.mockReturnValue([
       [
-        sampleRemoteSecrets[RemoteSecretStatusReason.AwaitingData],
-        sampleRemoteSecrets[RemoteSecretStatusReason.Injected],
+        {
+          metadata: { name: 'test-secret-three' },
+          ...sampleRemoteSecrets[RemoteSecretStatusReason.AwaitingData],
+          type: 'kubernetes.io/dockerconfigjson',
+        },
+        {
+          metadata: { name: 'test-secret-two' },
+          ...sampleRemoteSecrets[RemoteSecretStatusReason.Injected],
+          type: 'Opaque',
+          data: { keys: ['test'] },
+        },
       ],
       true,
     ]);
@@ -105,10 +120,16 @@ describe('Secrets List', () => {
   });
 
   it('should remove the search filter string when clear button is clicked', async () => {
-    useRemoteSecretsMock.mockReturnValue([
+    useSecretsMock.mockReturnValue([
       [
-        sampleRemoteSecrets[RemoteSecretStatusReason.AwaitingData],
-        sampleRemoteSecrets[RemoteSecretStatusReason.Injected],
+        {
+          metadata: { name: 'test-secret-three' },
+          ...sampleRemoteSecrets[RemoteSecretStatusReason.AwaitingData],
+        },
+        {
+          metadata: { name: 'test-secret-two' },
+          ...sampleRemoteSecrets[RemoteSecretStatusReason.Injected],
+        },
       ],
       true,
     ]);

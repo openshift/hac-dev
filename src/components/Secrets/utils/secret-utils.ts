@@ -1,19 +1,15 @@
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Base64 } from 'js-base64';
 import { pick } from 'lodash-es';
-import { PIPELINE_SERVICE_ACCOUNT } from '../../../consts/pipeline';
 import { SecretModel } from '../../../models';
-import { RemoteSecretModel } from '../../../models/remotesecret';
 import {
   AddSecretFormValues,
   ImagePullSecretType,
   K8sSecretType,
-  RemoteSecretKind,
   RemoteSecretStatusReason,
   RemoteSecretStatusType,
   SecretByUILabel,
   SecretCondition,
-  SecretFor,
   SecretKind,
   SecretLabels,
   SecretType,
@@ -217,24 +213,28 @@ export const statusFromConditions = (
   return conditions[conditions.length - 1]?.reason || RemoteSecretStatusReason.Unknown;
 };
 
-export const getSecretRowData = (obj: RemoteSecretKind): any => {
-  const type = typeToLabel(obj?.spec?.secret?.type);
-
-  const keys = obj?.status?.secret?.keys;
-  const secretName = obj?.spec?.secret?.name || '-';
+export const getSecretRowLabels = (obj: SecretKind): any => {
   const secretLabels = obj
-    ? Object.keys(obj?.spec?.secret?.labels || {})
-        .map((k) => `${k}=${obj.spec?.secret?.labels[k]}`)
+    ? Object.keys(obj?.metadata?.labels || {})
+        .map((k) => `${k}=${obj.metadata?.labels[k]}`)
         .join(', ') || '-'
     : '-';
-  const secretType =
-    type === SecretTypeDisplayLabel.keyValue && keys ? `${type} (${keys?.length})` : type || '-';
-
   return {
-    secretName,
     secretLabels,
-    secretType,
   };
+};
+
+export const getSecretTypetoLabel = (obj: SecretKind) => {
+  if (!obj) {
+    return;
+  }
+  const type = typeToLabel(obj.type);
+
+  const secretType =
+    type === SecretTypeDisplayLabel.keyValue && obj.data
+      ? `${type} (${Object.keys(obj.data).length})`
+      : type || '-';
+  return secretType;
 };
 
 export const createSecretResource = async (
@@ -251,61 +251,58 @@ export const createSecretResource = async (
     resource: secretResource,
   });
 
-export const createRemoteSecretResource = (
-  secret: SecretKind,
-  namespace: string,
-  labels: {
-    secret: { [key: string]: string };
-    remoteSecret: { [key: string]: string };
-    annotations: { [key: string]: string };
-  },
-  linkServiceAccount: boolean,
-  dryRun: boolean,
-): Promise<RemoteSecretKind> => {
-  const remoteSecretResource: RemoteSecretKind = {
-    apiVersion: `${RemoteSecretModel.apiGroup}/${RemoteSecretModel.apiVersion}`,
-    kind: RemoteSecretModel.kind,
-    metadata: {
-      name: `${secret.metadata.name}`,
-      namespace,
-      labels: {
-        [SecretByUILabel]: SecretFor.Build,
-        ...(labels?.remoteSecret && { ...labels.remoteSecret }),
-        ...labels?.secret,
-      },
-      annotations: labels?.annotations,
-    },
-    spec: {
-      secret: {
-        ...(linkServiceAccount && {
-          linkedTo: [
-            {
-              serviceAccount: {
-                reference: {
-                  name: PIPELINE_SERVICE_ACCOUNT,
-                },
-              },
-            },
-          ],
-        }),
-        name: secret.metadata.name,
-        type: secret.type,
-        ...(labels?.secret && { labels: labels.secret }),
-      },
-      targets: [{ namespace }],
-    },
-  };
+// export const createSecretResourceWithMetadata = (
+//   secret: SecretKind,
+//   namespace: string,
+//   labels: {
+//     secret: { [key: string]: string };
+//     annotations: { [key: string]: string };
+//   },
+//   linkServiceAccount: boolean,
+//   dryRun: boolean,
+// ): Promise<SecretKind> => {
+//   const secretResource: SecretKind = {
+//     apiVersion: `${SecretModel.apiVersion}`,
+//     kind: SecretModel.kind,
+//     metadata: {
+//       name: `${secret.metadata.name}`,
+//       namespace,
+//       labels: {
+//         [SecretByUILabel]: SecretFor.Build,
+//         ...labels?.secret,
+//       },
+//       annotations: labels?.annotations,
+//     },
+//     spec: {
+//       secret: {
+//         ...(linkServiceAccount && {
+//           linkedTo: [
+//             {
+//               serviceAccount: {
+//                 reference: {
+//                   name: PIPELINE_SERVICE_ACCOUNT,
+//                 },
+//               },
+//             },
+//           ],
+//         }),
+//         name: secret.metadata.name,
+//         type: secret.type,
+//         ...(labels?.secret && { labels: labels.secret }),
+//       },
+//     },
+//   };
 
-  return k8sCreateResource({
-    model: RemoteSecretModel,
-    queryOptions: {
-      name: `${secret.metadata.name}`,
-      ns: namespace,
-      ...(dryRun && { queryParams: { dryRun: 'All' } }),
-    },
-    resource: remoteSecretResource,
-  });
-};
+//   return k8sCreateResource({
+//     model: SecretModel,
+//     queryOptions: {
+//       name: `${secret.metadata.name}`,
+//       ns: namespace,
+//       ...(dryRun && { queryParams: { dryRun: 'All' } }),
+//     },
+//     resource: secretResource,
+//   });
+// };
 
 export const getAddSecretBreadcrumbs = () => {
   return [
