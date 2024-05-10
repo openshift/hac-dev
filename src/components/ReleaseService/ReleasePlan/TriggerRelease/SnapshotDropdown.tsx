@@ -7,18 +7,26 @@ import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
 type SnapshotDropdownProps = Omit<
   React.ComponentProps<typeof DropdownField>,
   'items' | 'label' | 'placeholder'
->;
+> & { applicationName: string };
 
 export const SnapshotDropdown: React.FC<React.PropsWithChildren<SnapshotDropdownProps>> = (
   props,
 ) => {
   const { namespace } = useWorkspaceInfo();
-  const [applications, loaded] = useSnapshots(namespace);
+  const [snapshots, loaded] = useSnapshots(namespace);
   const [, , { setValue }] = useField<string>(props.name);
 
+  const filteredSnapshots = React.useMemo(
+    () =>
+      loaded && props.applicationName
+        ? snapshots.filter((sn) => sn.spec?.application === props.applicationName)
+        : snapshots,
+    [loaded, props.applicationName, snapshots],
+  );
+
   const dropdownItems = React.useMemo(
-    () => applications.map((a) => ({ key: a.metadata.name, value: a.metadata.name })),
-    [applications],
+    () => filteredSnapshots.map((a) => ({ key: a.metadata.name, value: a.metadata.name })),
+    [filteredSnapshots],
   );
 
   return (

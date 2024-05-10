@@ -18,16 +18,19 @@ describe('SnapshotDropdown', () => {
 
   it('should show loading indicator if snapshot arent loaded', () => {
     useSnapshotsMock.mockReturnValue([[], false]);
-    formikRenderer(<SnapshotDropdown name="snapshot" />);
+    formikRenderer(<SnapshotDropdown applicationName="app" name="snapshot" />);
     expect(screen.getByText('Loading snapshots...')).toBeVisible();
   });
 
   it('should show dropdown if snapshots are loaded', async () => {
     useSnapshotsMock.mockReturnValue([
-      [{ metadata: { name: 'snapshot1' } }, { metadata: { name: 'snapshot2' } }],
+      [
+        { metadata: { name: 'snapshot1' }, spec: { application: 'app' } },
+        { metadata: { name: 'snapshot2' }, spec: { application: 'app' } },
+      ],
       true,
     ]);
-    formikRenderer(<SnapshotDropdown name="snapshot" />);
+    formikRenderer(<SnapshotDropdown applicationName="app" name="snapshot" />);
     await act(async () => {
       fireEvent.click(screen.getByRole('button'));
     });
@@ -36,13 +39,33 @@ describe('SnapshotDropdown', () => {
     expect(screen.getByRole('menuitem', { name: 'snapshot2' })).toBeVisible();
   });
 
+  it('should only show dropdowns related to the correct application', async () => {
+    useSnapshotsMock.mockReturnValue([
+      [
+        { metadata: { name: 'snapshot1' }, spec: { application: 'app' } },
+        { metadata: { name: 'snapshot2' }, spec: { application: 'app2' } },
+      ],
+      true,
+    ]);
+    formikRenderer(<SnapshotDropdown applicationName="app" name="snapshot" />);
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button'));
+    });
+
+    expect(screen.getByRole('menuitem', { name: 'snapshot1' })).toBeVisible();
+    expect(screen.queryByRole('menuitem', { name: 'snapshot2' })).not.toBeInTheDocument();
+  });
+
   it('should change the Snapshot dropdown value', async () => {
     useSnapshotsMock.mockReturnValue([
-      [{ metadata: { name: 'snapshot1' } }, { metadata: { name: 'snapshot2' } }],
+      [
+        { metadata: { name: 'snapshot1' }, spec: { application: 'app' } },
+        { metadata: { name: 'snapshot2' }, spec: { application: 'app' } },
+      ],
       true,
     ]);
 
-    formikRenderer(<SnapshotDropdown name="snapshot" />, {
+    formikRenderer(<SnapshotDropdown applicationName="app" name="snapshot" />, {
       targets: { application: 'app' },
     });
     expect(screen.queryByRole('button')).toBeInTheDocument();

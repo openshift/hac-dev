@@ -37,6 +37,7 @@ describe('useReleasePlanActions', () => {
     const { result } = renderHook(() =>
       useReleasePlanActions({
         metadata: { name: 'test-release-plan' },
+        spec: { application: 'test-app' },
         status: { conditions: [{ type: 'Succeeded', status: runStatus.Running }] },
       } as any),
     );
@@ -46,7 +47,7 @@ describe('useReleasePlanActions', () => {
       expect.objectContaining({
         label: 'Trigger release plan',
         cta: {
-          href: `/application-pipeline/release/workspaces/test-ws/release-plan/trigger`,
+          href: `/application-pipeline/release/workspaces/test-ws/application/test-app/release-plan/trigger/test-release-plan`,
         },
       }),
     );

@@ -36,6 +36,15 @@ describe('ReleasePlanDropdown', () => {
     expect(screen.getByRole('menuitem', { name: 'rp2' })).toBeVisible();
   });
 
+  it('should select current releasePlan by default', async () => {
+    useReleasePlansMock.mockReturnValue([
+      [{ metadata: { name: 'rp1' } }, { metadata: { name: 'rp2' } }],
+      true,
+    ]);
+    formikRenderer(<ReleasePlanDropdown name="releasePlan" />, { releasePlan: 'rp1' });
+    expect(screen.getByText('rp1')).toBeVisible();
+  });
+
   it('should change the release plan dropdown value', async () => {
     useReleasePlansMock.mockReturnValue([
       [{ metadata: { name: 'rp1' } }, { metadata: { name: 'rp2' } }],

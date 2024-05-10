@@ -39,10 +39,14 @@ const triggerReleasePlanMock = createRelease as jest.Mock;
 
 describe('TriggerReleaseFormPage', () => {
   it('should navigate on successful trigger', async () => {
-    triggerReleasePlanMock.mockResolvedValue({ metadata: {}, spec: {} });
-    namespaceRenderer(<TriggerReleaseFormPage />, 'test-ns', {
-      workspace: 'test-ws',
-    });
+    triggerReleasePlanMock.mockResolvedValue({ metadata: { name: 'newRelease' }, spec: {} });
+    namespaceRenderer(
+      <TriggerReleaseFormPage releasePlan="rp1" applicationName="app1" />,
+      'test-ns',
+      {
+        workspace: 'test-ws',
+      },
+    );
 
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
@@ -54,20 +58,21 @@ describe('TriggerReleaseFormPage', () => {
         description: '',
         labels: [{ key: '', value: '' }],
         references: '',
-        releasePlan: '',
+        releasePlan: 'rp1',
         snapshot: '',
         synopsis: '',
         topic: '',
       }),
       'test-ns',
-      undefined,
     );
-    expect(navigateMock).toHaveBeenCalledWith('/application-pipeline/release');
+    expect(navigateMock).toHaveBeenCalledWith(
+      '/application-pipeline/workspaces/test-ws/applications/app1/releases/newRelease',
+    );
   });
 
   it('should navigate to release list on reset', async () => {
     namespaceRenderer(
-      <TriggerReleaseFormPage releasePlan={{ metadata: {}, spec: {} } as any} />,
+      <TriggerReleaseFormPage releasePlan="rp1" applicationName="app1" />,
       'test-ns',
       {
         workspace: 'test-ws',
