@@ -14,6 +14,8 @@ import overviewInfo1 from '../../imgs/overview/overview-info1.svg';
 import overviewInfo2 from '../../imgs/overview/overview-info2.svg';
 import overviewInfo3 from '../../imgs/overview/overview-info3.svg';
 
+import './InfoBanner.scss';
+
 const InfoBanner = () => (
   <Card isLarge>
     <CardBody style={{ paddingLeft: '16px' }}>
@@ -26,12 +28,15 @@ const InfoBanner = () => (
           <Card isPlain isCompact>
             <CardTitle>
               <Bullseye>
-                <img
-                  src={overviewInfo1}
-                  alt="OpenShift and Kubernetes"
-                  width="30px"
-                  height="30px"
-                />
+                <div className="info-banner__circle">
+                  <Bullseye>
+                    <img
+                      src={overviewInfo1}
+                      className="info-banner__icon"
+                      alt="OpenShift and Kubernetes"
+                    />
+                  </Bullseye>
+                </div>
               </Bullseye>
             </CardTitle>
             <CardBody>
@@ -53,7 +58,15 @@ const InfoBanner = () => (
           <Card isPlain isCompact>
             <CardTitle>
               <Bullseye>
-                <img src={overviewInfo2} alt="Secure supply chain" width="30px" height="30px" />
+                <div className="info-banner__circle">
+                  <Bullseye>
+                    <img
+                      src={overviewInfo2}
+                      className="info-banner__icon"
+                      alt="Secure supply chain"
+                    />
+                  </Bullseye>
+                </div>
               </Bullseye>
             </CardTitle>
             <CardBody>
@@ -72,11 +85,17 @@ const InfoBanner = () => (
           <Card isPlain isCompact>
             <CardTitle>
               <Bullseye>
-                <img src={overviewInfo3} alt="Cloud deployment" width="30px" height="30px" />
+                <div className="info-banner__circle">
+                  <Bullseye>
+                    <img src={overviewInfo3} className="info-banner__icon" alt="Cloud deployment" />
+                  </Bullseye>
+                </div>
               </Bullseye>
             </CardTitle>
             <CardBody>
-              <Bullseye>Simplified deployment across multiple clouds</Bullseye>
+              <Bullseye>
+                Execute integration tests for complex applications and see results in your SCM
+              </Bullseye>
             </CardBody>
           </Card>
         </FlexItem>

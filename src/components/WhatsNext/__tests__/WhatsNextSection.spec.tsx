@@ -1,8 +1,8 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import componentsIcon from '../../../imgs/illustrations/Components.svg';
-import githubAppIcon from '../../../imgs/illustrations/Github app.svg';
+import componentsIcon from '../../../imgs/Components.svg';
+import gitAppIcon from '../../../imgs/git-app.svg';
 import WhatsNextSection, { WhatsNextItem } from '../WhatsNextSection';
 
 jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
@@ -39,7 +39,7 @@ const mockWhatsNextItems: WhatsNextItem[] = [
   {
     title: 'External link action',
     description: 'Sample action to take user to an external link.',
-    icon: githubAppIcon,
+    icon: gitAppIcon,
     cta: {
       label: 'Take me to external link',
       href: 'https://github.com/sample-user/sample-app',
@@ -49,7 +49,7 @@ const mockWhatsNextItems: WhatsNextItem[] = [
   {
     title: 'On click action',
     description: 'Sample action to trigger an onClick action.',
-    icon: githubAppIcon,
+    icon: gitAppIcon,
     cta: {
       label: 'Trigger onClick',
       onClick: mockOnClick,

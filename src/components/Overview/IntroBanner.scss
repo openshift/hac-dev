@@ -1,19 +1,19 @@
 .intro-banner {
+  background: url(/src/imgs/overview/Rectangle.svg);
+  background-size: cover;
+
   &__content {
-    color: var(--pf-v5-global--Color--light-100);
-    background-color: var(--pf-v5-global--BackgroundColor--dark-100);
+    background-color: transparent;
   }
 
   &__image {
     background: url(/src/imgs/overview/overview-banner.svg);
-    background-color: var(--pf-v5-global--BackgroundColor--dark-100);
     background-size: cover;
   }
 
   &__cta {
     margin-top: var(--pf-v5-global--spacer--sm);
     margin-right: var(--pf-v5-global--spacer--md);
-    color: var(--pf-v5-global--Color--light-100);
 
     & + &__cta {
       margin-right: none;

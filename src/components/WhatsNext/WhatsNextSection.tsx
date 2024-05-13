@@ -9,6 +9,7 @@ import {
   Title,
 } from '@patternfly/react-core';
 import { ArrowRightIcon } from '@patternfly/react-icons/dist/js/icons/arrow-right-icon';
+import ExternalLink from '../../shared/components/links/ExternalLink';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 
@@ -19,6 +20,7 @@ export type WhatsNextItem = {
   description: string;
   icon: string;
   helpId?: string;
+  helpLink?: string;
   cta?: {
     label: string;
     href?: string;
@@ -77,6 +79,11 @@ const WhatsNextSection: React.FunctionComponent<React.PropsWithChildren<WhatsNex
               <HelpTopicLink topicId={item.helpId}>
                 Learn more <ArrowRightIcon />
               </HelpTopicLink>
+            )}
+            {!item.helpId && item.helpLink && (
+              <ExternalLink href={item.helpLink} isInline={false} hideIcon>
+                Learn more <ArrowRightIcon />
+              </ExternalLink>
             )}
           </SplitItem>
         </Card>

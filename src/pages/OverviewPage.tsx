@@ -1,19 +1,15 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { PageSection } from '@patternfly/react-core';
+import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import AboutSection from '../components/Overview/AboutSection';
 import InfoBanner from '../components/Overview/InfoBanner';
 import IntroBanner from '../components/Overview/IntroBanner';
 import { FULL_APPLICATION_TITLE } from '../consts/labels';
 
-// PF 5 CSS
-// TODO: Remove when console is at PF 5
-import '@patternfly/patternfly/patternfly.css';
-import '@patternfly/patternfly/patternfly-addons.css';
-
 const OverviewPage: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
-    <>
+    <NamespacedPage hideAppBanner>
       <Helmet>
         <title>Overview | {FULL_APPLICATION_TITLE}</title>
       </Helmet>
@@ -22,7 +18,7 @@ const OverviewPage: React.FC<React.PropsWithChildren<unknown>> = () => {
       <PageSection isFilled>
         <AboutSection />
       </PageSection>
-    </>
+    </NamespacedPage>
   );
 };
 

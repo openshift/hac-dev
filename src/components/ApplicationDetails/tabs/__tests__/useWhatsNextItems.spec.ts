@@ -26,7 +26,7 @@ describe('useWhatsNextItems', () => {
   it('should return a list of whats next items', () => {
     const applicationName = 'test-application';
     const { result } = renderHook(() => useWhatsNextItems(applicationName));
-    expect(result.current).toHaveLength(4);
+    expect(result.current).toHaveLength(6);
     expect(result.current).toMatchSnapshot();
   });
 
@@ -42,7 +42,7 @@ describe('useWhatsNextItems', () => {
     const showModal = jest.fn();
     (useModalLauncher as jest.Mock).mockReturnValueOnce(showModal);
     const { result } = renderHook(() => useWhatsNextItems(applicationName));
-    result.current[3].cta.onClick();
+    result.current[5].cta.onClick();
     expect(showModal).toHaveBeenCalled();
   });
 });
