@@ -1,9 +1,15 @@
 import * as React from 'react';
-import { K8sResourceCommon, k8sGetResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { k8sGetResource } from '@openshift/dynamic-plugin-sdk-utils';
+import YAML from 'js-yaml';
 import { ConfigMapModel } from '../../../models';
 
-export const usePipelineTemplates = () => {
-  const [data, setdata] = React.useState<K8sResourceCommon>();
+type PipelineTemplateItems = {
+  defaultPipelineName: string;
+  pipelines: { name: string; bundle: string }[];
+};
+
+export const usePipelineTemplates = (): [PipelineTemplateItems, boolean] => {
+  const [data, setdata] = React.useState<PipelineTemplateItems>();
   const [loaded, setLoaded] = React.useState(false);
 
   React.useEffect(() => {
@@ -12,10 +18,16 @@ export const usePipelineTemplates = () => {
       try {
         const res = await k8sGetResource({
           model: ConfigMapModel,
-          queryOptions: { ns: 'build-service', name: 'build-pipeline-config' },
+          // [TODO] change the namepsace to build-service
+          queryOptions: { ns: 'sbudhwar-1-tenant', name: 'build-pipeline-config' },
         });
         if (isMounted) {
-          setdata(res);
+          const json = YAML.load(res.data['config.yaml'] as string);
+          setdata({
+            defaultPipelineName: json['default-pipeline-name'],
+            // eslint-disable-next-line dot-notation
+            pipelines: json['pipelines'],
+          });
           setLoaded(true);
         }
       } catch (e) {

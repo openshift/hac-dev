@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ExpandableSection } from '@patternfly/react-core';
+import { InputField } from 'formik-pf';
 import HelpPopover from '../../HelpPopover';
-import { InputField } from '../components/InputField';
 
 const GitOptions: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
