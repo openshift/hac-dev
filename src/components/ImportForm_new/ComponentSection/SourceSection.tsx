@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { FormSection } from '@patternfly/react-core';
-import { InputField } from '../components/InputField';
+import { InputField } from 'formik-pf';
 import GitOptions from './GitOptions';
 
 export const SourceSection = () => {
   return (
-    <FormSection>
+    <>
       <InputField
         name="source.git.url"
         label="Git repository url"
@@ -14,11 +13,10 @@ export const SourceSection = () => {
         // validated={validated}
         // helpText={helpText}
         // helpTextInvalid={helpTextInvalid}
-        required
+        isRequired
         data-test="enter-source"
       />
-
       <GitOptions />
-    </FormSection>
+    </>
   );
 };

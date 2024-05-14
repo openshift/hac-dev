@@ -1,32 +1,32 @@
 import * as React from 'react';
 import { useFormikContext } from 'formik';
 import { DropdownField } from '../../../shared';
-// import { usePipelineTemplates } from './usePipelineTemplate';
+import { ImportFormValues } from '../type';
+import { usePipelineTemplates } from './usePipelineTemplate';
 
 export const PipelineSection: React.FunctionComponent = () => {
-  //   const [pipelines, loaded] = usePipelineTemplates();
-  const { setFieldValue, setFieldTouched } = useFormikContext();
+  const [template, loaded] = usePipelineTemplates();
+  const { values, setFieldValue } = useFormikContext<ImportFormValues>();
 
-  const setValues = React.useCallback(
-    (type) => {
-      setFieldValue('pipeline', type);
-      setFieldTouched('pipeline', true);
-    },
-    [setFieldValue, setFieldTouched],
-  );
+  const dropdownItems = React.useMemo(() => {
+    return loaded ? template.pipelines.map((t) => ({ key: t.name, value: t.name })) : [];
+  }, [loaded, template?.pipelines]);
 
-  //   console.log('#################', pipelines, loaded);
+  React.useEffect(() => {
+    if (loaded && values.pipeline.name) {
+      const bundle = template.pipelines.find((t) => t.name === values.pipeline.name)?.bundle;
+      setFieldValue('pipeline.bundle', bundle);
+    }
+  }, [loaded, setFieldValue, template?.pipelines, values.pipeline.name]);
 
   return (
     <DropdownField
-      name="pipeline"
+      name="pipeline.name"
       label="Pipelines"
       data-testid="secret-type-selector"
-      items={[]}
-      title="Select a Pipeline"
-      onChange={setValues}
-      isDisabled={false}
-      fullWidth
+      items={dropdownItems}
+      placeholder={!loaded ? 'Loading pipelines...' : 'Select a Pipeline'}
+      isDisabled={!loaded}
       required
     />
   );

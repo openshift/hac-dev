@@ -12,6 +12,15 @@ export const GitImportForm: React.FC<{ applicationName: string }> = ({ applicati
     application: applicationName || '',
     inAppContext: !!applicationName,
     showComponent: !!applicationName,
+    componentName: '',
+    source: {
+      git: {
+        url: '',
+      },
+    },
+    pipeline: {
+      name: '',
+    },
   };
 
   const handleSubmit = React.useCallback(() => {}, []);
@@ -25,11 +34,19 @@ export const GitImportForm: React.FC<{ applicationName: string }> = ({ applicati
     >
       {(formikProps) => {
         return (
-          <Form onSubmit={formikProps.handleSubmit} onReset={formikProps.handleReset}>
+          <Form
+            onSubmit={formikProps.handleSubmit}
+            onReset={formikProps.handleReset}
+            isWidthLimited
+          >
             <PageSection>
               <ApplicationSection />
-              <ComponentSection />
-              <PipelineSection />
+              {formikProps.values.showComponent ? (
+                <>
+                  <ComponentSection />
+                  <PipelineSection />
+                </>
+              ) : null}
             </PageSection>
             <GitImportActions />
           </Form>

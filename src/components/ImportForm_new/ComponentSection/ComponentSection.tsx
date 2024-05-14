@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Text, TextContent, TextVariants } from '@patternfly/react-core';
-import { InputField } from '../components/InputField';
+import { FormSection, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { InputField } from 'formik-pf';
 import { SourceSection } from './SourceSection';
 
 export const ComponentSection = () => {
   return (
-    <>
+    <FormSection>
       <TextContent>
         <Text component={TextVariants.h3}>Component details</Text>
         <Text component={TextVariants.p}>
@@ -13,7 +13,7 @@ export const ComponentSection = () => {
         </Text>
       </TextContent>
       <SourceSection />
-      <InputField name="componentName" label="Component name" required />
-    </>
+      <InputField name="componentName" label="Component name" isRequired />
+    </FormSection>
   );
 };
