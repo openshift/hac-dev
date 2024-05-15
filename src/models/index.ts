@@ -17,6 +17,7 @@ export * from './snapshot';
 export * from './snapshot-environment-binding';
 export * from './rbac';
 export * from './secret';
+export * from './service-account';
 export * from './limit-range';
 export * from './remotesecret';
 export * from './workspace';

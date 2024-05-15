@@ -117,6 +117,12 @@ export enum SecretType {
   tls = 'kubernetes.io/tls',
 }
 
+export type ServiceAccountKind = {
+  automountServiceAccountToken?: boolean;
+  imagePullSecrets?: SecretKind[] | { [key: string]: string }[];
+  secrets?: SecretKind[] | { [key: string]: string };
+} & K8sResourceCommon;
+
 export enum SecretTypeAbstraction {
   generic = 'generic',
   source = 'source',

@@ -17,6 +17,7 @@ import {
   getLabelsForSecret,
   getSecretFormData,
 } from '../components/Secrets/utils/secret-utils';
+import { linkSecretToServiceAccount } from '../components/Secrets/utils/service-account-utils';
 import {
   ApplicationModel,
   ComponentModel,
@@ -34,6 +35,7 @@ import {
   AddSecretFormValues,
   SecretByUILabel,
   SecretFor,
+  SecretType,
 } from '../types';
 import { ComponentSpecs } from './../types/component';
 import { BuildRequest, BUILD_REQUEST_ANNOTATION } from './component-utils';
@@ -307,14 +309,6 @@ export const createSecretResource = async (
     secret: getLabelsForSecret(values),
   };
   const annotations = getAnnotationForSecret(values);
-  // await createSecretResourceWithMetadata(
-  //   secretResource,
-  //   namespace,
-  //   labels,
-  //   typeToDropdownLabel(secretResource.type) === SecretTypeDropdownLabel.image,
-  //   dryRun,
-  // );
-
   const k8sSecretResource = {
     ...secretResource,
     metadata: {
@@ -326,6 +320,11 @@ export const createSecretResource = async (
       annotations,
     },
   };
+  // if image pull secret, link to service account
+  if (secretResource.type === SecretType.dockerconfigjson) {
+    linkSecretToServiceAccount(secretResource, namespace);
+  }
+
   // Todo: K8sCreateResource appends the resource name and errors out.
   // Fix the below code when this sdk-utils issue is resolved https://issues.redhat.com/browse/RHCLOUD-21655.
   return await commonFetch(

@@ -251,59 +251,6 @@ export const createSecretResource = async (
     resource: secretResource,
   });
 
-// export const createSecretResourceWithMetadata = (
-//   secret: SecretKind,
-//   namespace: string,
-//   labels: {
-//     secret: { [key: string]: string };
-//     annotations: { [key: string]: string };
-//   },
-//   linkServiceAccount: boolean,
-//   dryRun: boolean,
-// ): Promise<SecretKind> => {
-//   const secretResource: SecretKind = {
-//     apiVersion: `${SecretModel.apiVersion}`,
-//     kind: SecretModel.kind,
-//     metadata: {
-//       name: `${secret.metadata.name}`,
-//       namespace,
-//       labels: {
-//         [SecretByUILabel]: SecretFor.Build,
-//         ...labels?.secret,
-//       },
-//       annotations: labels?.annotations,
-//     },
-//     spec: {
-//       secret: {
-//         ...(linkServiceAccount && {
-//           linkedTo: [
-//             {
-//               serviceAccount: {
-//                 reference: {
-//                   name: PIPELINE_SERVICE_ACCOUNT,
-//                 },
-//               },
-//             },
-//           ],
-//         }),
-//         name: secret.metadata.name,
-//         type: secret.type,
-//         ...(labels?.secret && { labels: labels.secret }),
-//       },
-//     },
-//   };
-
-//   return k8sCreateResource({
-//     model: SecretModel,
-//     queryOptions: {
-//       name: `${secret.metadata.name}`,
-//       ns: namespace,
-//       ...(dryRun && { queryParams: { dryRun: 'All' } }),
-//     },
-//     resource: secretResource,
-//   });
-// };
-
 export const getAddSecretBreadcrumbs = () => {
   return [
     { path: '/application-pipeline/secrets', name: 'Secrets' },

@@ -6,6 +6,7 @@ import {
 } from '@openshift/dynamic-plugin-sdk-utils';
 import omit from 'lodash/omit';
 import { THUMBNAIL_ANNOTATION } from '../../components/ApplicationDetails/ApplicationThumbnail';
+import { linkSecretToServiceAccount } from '../../components/Secrets/utils/service-account-utils';
 import { SPIAccessTokenBindingModel } from '../../models';
 import {
   AddSecretFormValues,
@@ -29,9 +30,14 @@ import {
 
 jest.mock('@openshift/dynamic-plugin-sdk-utils');
 
+jest.mock('../../components/Secrets/utils/service-account-utils', () => {
+  return { linkSecretToServiceAccount: jest.fn() };
+});
+
 const createResourceMock = k8sCreateResource as jest.Mock;
 const getResourceMock = k8sGetResource as jest.Mock;
 const commonFetchMock = commonFetch as jest.Mock;
+const linkSecretToServiceAccountMock = linkSecretToServiceAccount as jest.Mock;
 
 jest.mock('../../components/ApplicationDetails/ApplicationThumbnail', () => {
   const actual = jest.requireActual('../../components/ApplicationDetails/ApplicationThumbnail');
@@ -590,6 +596,16 @@ describe('Create Utils', () => {
       expect.objectContaining({
         body: expect.stringContaining('"type":"kubernetes.io/dockerconfigjson"'),
       }),
+    );
+  });
+
+  it('should call linkToServiceAccount For image pull secrets', async () => {
+    linkSecretToServiceAccountMock.mockClear();
+    await addSecret(addSecretFormValues, 'test-ws', 'test-ns');
+    expect(linkSecretToServiceAccountMock).toHaveBeenCalled();
+    expect(linkSecretToServiceAccountMock).toHaveBeenCalledWith(
+      expect.objectContaining({ metadata: expect.objectContaining({ name: 'test' }) }),
+      'test-ns',
     );
   });
 });
