@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ValidatedOptions } from '@patternfly/react-core';
 import { useField } from 'formik';
-import { InputField } from '../../../shared';
+import { InputField } from 'formik-pf';
 import GitOptions from './GitOptions';
 
 export const SourceSection = () => {
@@ -18,7 +18,7 @@ export const SourceSection = () => {
         label="Git repository url"
         placeholder="Enter your source"
         validated={validated}
-        required
+        isRequired
         data-test="enter-source"
       />
       {validated === ValidatedOptions.success ? <GitOptions /> : null}

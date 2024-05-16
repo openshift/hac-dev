@@ -10,10 +10,7 @@ export type ImportFormValues = {
       context?: string;
     };
   };
-  pipeline: {
-    name: string;
-    bundle?: string;
-  };
+  pipeline: string;
   importSecrets?: ImportSecret[];
   newSecrets?: string[];
 };
