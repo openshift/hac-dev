@@ -160,6 +160,10 @@ describe('Advanced Happy path', () => {
   });
 
   describe('Verify CVE scan', () => {
+    before(() => {
+      cy.reload();
+      Common.waitForLoad();
+    });
     it('Verify clair scan node details on drawer Panel', () => {
       DetailsTab.clickOnNode('clair-scan');
       DetailsTab.checkVulScanOnClairDrawer(vulnerabilities);
@@ -419,6 +423,8 @@ describe('Advanced Happy path', () => {
       Applications.clickBreadcrumbLink(applicationName);
       Applications.goToComponentsTab();
       ComponentsTabPage.openComponent(componentName);
+      cy.reload();
+      Common.waitForLoad();
     });
 
     it('Verify Commit Trigger', () => {
