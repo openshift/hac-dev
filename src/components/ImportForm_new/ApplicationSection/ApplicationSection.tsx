@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Flex, FlexItem, FormSection } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
-import { InputField } from 'formik-pf';
+import { InputField } from '../../../shared';
 import { ApplicationThumbnail } from '../../ApplicationDetails/ApplicationThumbnail';
 import { ImportFormValues } from '../type';
 
@@ -22,9 +22,8 @@ const ApplicationSection: React.FunctionComponent<React.PropsWithChildren<unknow
             label="Application name"
             placeholder="Enter name"
             isDisabled={inAppContext}
-            isRequired
+            required
             dataTest="app-name-field"
-            className="hac-input-field"
           />
         </FormSection>
       </FlexItem>

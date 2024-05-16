@@ -5,7 +5,9 @@ import ApplicationSection from './ApplicationSection/ApplicationSection';
 import { ComponentSection } from './ComponentSection/ComponentSection';
 import GitImportActions from './GitImportActions';
 import { PipelineSection } from './PipelineSection/PipelineSection';
+import SecretSection from './SecretSection/SecretSection';
 import { ImportFormValues } from './type';
+import { formValidationSchema } from './validation.utils';
 
 export const GitImportForm: React.FC<{ applicationName: string }> = ({ applicationName }) => {
   const initialValues: ImportFormValues = {
@@ -21,6 +23,8 @@ export const GitImportForm: React.FC<{ applicationName: string }> = ({ applicati
     pipeline: {
       name: '',
     },
+    importSecrets: [],
+    newSecrets: [],
   };
 
   const handleSubmit = React.useCallback(() => {}, []);
@@ -31,6 +35,7 @@ export const GitImportForm: React.FC<{ applicationName: string }> = ({ applicati
       initialValues={initialValues}
       onSubmit={handleSubmit}
       onReset={handleReset}
+      validationSchema={formValidationSchema}
     >
       {(formikProps) => {
         return (
@@ -45,6 +50,7 @@ export const GitImportForm: React.FC<{ applicationName: string }> = ({ applicati
                 <>
                   <ComponentSection />
                   <PipelineSection />
+                  <SecretSection />
                 </>
               ) : null}
             </PageSection>

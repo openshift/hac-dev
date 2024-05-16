@@ -14,4 +14,16 @@ export type ImportFormValues = {
     name: string;
     bundle?: string;
   };
+  importSecrets?: ImportSecret[];
+  newSecrets?: string[];
+};
+
+export type ImportSecret = {
+  secretName: string;
+  type: string;
+  keyValues: {
+    key: string;
+    value: string;
+    readOnlyKey?: boolean;
+  }[];
 };

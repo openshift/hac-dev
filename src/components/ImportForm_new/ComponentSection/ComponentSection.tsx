@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FormSection, Text, TextContent, TextVariants } from '@patternfly/react-core';
-import { InputField } from 'formik-pf';
+import { InputField } from '../../../shared';
 import { SourceSection } from './SourceSection';
 
 export const ComponentSection = () => {
@@ -13,7 +13,7 @@ export const ComponentSection = () => {
         </Text>
       </TextContent>
       <SourceSection />
-      <InputField name="componentName" label="Component name" isRequired />
+      <InputField name="componentName" label="Component name" required />
     </FormSection>
   );
 };
