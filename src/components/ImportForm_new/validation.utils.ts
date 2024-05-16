@@ -23,14 +23,13 @@ const componentSchema = yup.object({
       revision: yup.string(),
       context: yup.string(),
     }),
-    isValidated: yup.boolean().isTrue().required('Required'),
   }),
   componentName: yup
     .string()
     .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
     .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
     .required('Required'),
-  pipeline: yup.object({ name: yup.string().required('Required') }),
+  pipeline: yup.string().required('Required'),
 });
 
 export const formValidationSchema = yup.mixed().test(

@@ -11,13 +11,14 @@ export const PipelineSection: React.FunctionComponent = () => {
 
   return (
     <DropdownField
-      name="pipeline.name"
-      label="Pipelines"
+      name="pipeline"
+      label="Pipeline"
       data-testid="secret-type-selector"
       items={dropdownItems}
       placeholder={!loaded ? 'Loading pipelines...' : 'Select a Pipeline'}
       isDisabled={!loaded}
       required
+      validateOnChange
     />
   );
 };

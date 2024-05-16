@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { FormSection, Text, TextContent, TextVariants } from '@patternfly/react-core';
-import { InputField } from '../../../shared';
+import { useFormikContext } from 'formik';
+import { InputField } from 'formik-pf';
+import GitRepoLink from '../../GitLink/GitRepoLink';
+import { ImportFormValues } from '../type';
 import { SourceSection } from './SourceSection';
 
 export const ComponentSection = () => {
+  const { values } = useFormikContext<ImportFormValues>();
   return (
     <FormSection>
       <TextContent>
@@ -13,7 +17,14 @@ export const ComponentSection = () => {
         </Text>
       </TextContent>
       <SourceSection />
-      <InputField name="componentName" label="Component name" required />
+      <InputField name="componentName" label="Component name" isRequired />
+      {values.source.git.url ? (
+        <GitRepoLink
+          url={values.source.git.url}
+          revision={values.source.git.revision}
+          context={values.source.git.context}
+        />
+      ) : null}
     </FormSection>
   );
 };

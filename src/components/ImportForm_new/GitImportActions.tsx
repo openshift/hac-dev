@@ -44,7 +44,7 @@ const GitImportActions: React.FunctionComponent = () => {
         </ActionListItem>
         {!showComponent ? (
           <ActionListItem>
-            <Button variant="secondary" onClick={handleComponent}>
+            <Button variant="secondary" isDisabled={isSubmitting} onClick={handleComponent}>
               Add a component
             </Button>
           </ActionListItem>
