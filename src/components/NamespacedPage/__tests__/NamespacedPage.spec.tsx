@@ -29,5 +29,17 @@ describe('Application List', () => {
       </NamespacedPage>,
     );
     expect(screen.getByText('Test Component')).toBeInTheDocument();
+    expect(screen.getByText('Private Preview')).toBeInTheDocument();
+  });
+
+  it('should not render app banner if hideAppBanner prop is passed', () => {
+    activeNamepaceMock.mockReturnValue({ namespace: 'test-ns', workspacesLoaded: true });
+    render(
+      <NamespacedPage hideAppBanner>
+        <h1>Test Component</h1>
+      </NamespacedPage>,
+    );
+    expect(screen.queryByText('Private Preview')).not.toBeInTheDocument();
+    expect(screen.getByText('Test Component')).toBeInTheDocument();
   });
 });

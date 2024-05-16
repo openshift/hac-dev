@@ -13,4 +13,4 @@ export enum NavItem {
   secrets = 'Secrets',
 }
 
-export const FULL_APPLICATION_TITLE = 'Red Hat Trusted Application Pipeline';
+export const FULL_APPLICATION_TITLE = 'Konflux';

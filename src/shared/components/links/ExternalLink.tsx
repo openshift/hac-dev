@@ -14,6 +14,7 @@ type ExternalLinkProps = {
   hideIcon?: boolean;
   variant?: ButtonProps['variant'];
   icon?: ButtonProps['icon'];
+  isInline?: boolean;
   onClick?: ButtonProps['onClick'];
   analytics?: AnalyticsButtonProperties;
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -29,6 +30,7 @@ const ExternalLink: React.FC<React.PropsWithChildren<ExternalLinkProps>> = ({
   style,
   hideIcon,
   variant = ButtonVariant.link,
+  isInline = true,
   icon,
   onClick,
   size = 'sm',
@@ -41,7 +43,7 @@ const ExternalLink: React.FC<React.PropsWithChildren<ExternalLinkProps>> = ({
     target="_blank"
     rel="noopener noreferrer"
     data-test-id={dataTestID}
-    isInline
+    isInline={isInline}
     variant={variant}
     icon={icon}
     onClick={(e) => {

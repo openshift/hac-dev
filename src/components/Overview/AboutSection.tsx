@@ -61,15 +61,6 @@ const AboutSection: React.FC<React.PropsWithChildren<unknown>> = () => (
             </CardBody>
           </Card>
           <Card isPlain isCompact>
-            <CardTitle>Add some GitOps</CardTitle>
-            <CardBody>
-              Add SDLC environments for your applications, each defined to deploy the application to
-              a Red Hat OpenShift or Kubernetes cluster on your desired cloud platforms via GitOps.
-              You can easily define deployment, scaling, and application settings for each
-              environment.
-            </CardBody>
-          </Card>
-          <Card isPlain isCompact>
             <CardTitle>Become Continuous</CardTitle>
             <CardBody>
               You can continuously build, test, and rollout your containerized applications with a

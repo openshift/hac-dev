@@ -1,6 +1,6 @@
 import React from 'react';
 import { EmptyStateBody, Text, TextVariants } from '@patternfly/react-core';
-import emptyStateImgUrl from '../../imgs/Commit.svg';
+import emptyStateImgUrl from '../../imgs/Release.svg';
 import AppEmptyState from '../../shared/components/empty-state/AppEmptyState';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 

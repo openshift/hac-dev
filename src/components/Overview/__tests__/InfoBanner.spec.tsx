@@ -10,6 +10,8 @@ describe('Info banner', () => {
       'Start with source code and containerize your applications for OpenShift and Kubernetes',
     );
     screen.getByText("Rapidly improve the security of your application's software supply chain");
-    screen.getByText('Simplified deployment across multiple clouds');
+    screen.getByText(
+      'Execute integration tests for complex applications and see results in your SCM',
+    );
   });
 });

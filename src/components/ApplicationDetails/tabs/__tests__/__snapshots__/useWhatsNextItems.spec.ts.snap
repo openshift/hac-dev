@@ -19,7 +19,45 @@ Array [
     "description": "Grow your application by adding components.",
     "helpId": "stonesoup-whatsnext-add-component",
     "icon": "test-file-stub",
-    "title": "Add a component",
+    "title": "Grow your application",
+  },
+  Object {
+    "cta": Object {
+      "analytics": Object {
+        "app_name": "test-application",
+        "link_location": "whats-next",
+        "link_name": "add-test",
+        "workspace": undefined,
+      },
+      "disabled": false,
+      "disabledTooltip": "You don't have access to add an integration test",
+      "href": "/application-pipeline/workspaces/undefined/applications/test-application/integrationtests/add",
+      "label": "Add a test",
+      "testId": "add-test",
+    },
+    "description": "Integration tests run in parallel, validating each new component build with the latest version of all other components.",
+    "helpLink": "https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/how-to-guides/testing_applications/proc_adding_an_integration_test/",
+    "icon": "test-file-stub",
+    "title": "Add integration tests",
+  },
+  Object {
+    "cta": Object {
+      "analytics": Object {
+        "app_name": "test-application",
+        "link_location": "whats-next",
+        "link_name": "add-release-plan",
+        "workspace": undefined,
+      },
+      "disabled": false,
+      "disabledTooltip": "You don't have access to create a release plan",
+      "href": "/application-pipeline/release/workspaces/undefined/release-plan/create",
+      "label": "Create a plan",
+      "testId": "add-release-plan",
+    },
+    "description": "A release object represents deployable snapshot of your application. To release your code, create a release plan with release details.",
+    "helpLink": "https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/how-to-guides/con_release_application/",
+    "icon": "test-file-stub",
+    "title": "Create a release plan",
   },
   Object {
     "cta": Object {

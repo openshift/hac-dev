@@ -54,7 +54,7 @@ const IntroBanner: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
 
   return (
-    <Grid>
+    <Grid className="intro-banner">
       <GridItem span={8}>
         <Card className="intro-banner__content" isLarge>
           <CardTitle>
