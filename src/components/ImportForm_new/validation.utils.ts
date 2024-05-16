@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { ImportFormValues } from './type';
 
 const gitUrlRegex =
   /^((((ssh|git|https?:?):\/\/:?)(([^\s@]+@|[^@]:?)[-\w.]+(:\d\d+:?)?(\/[-\w.~/?[\]!$&'()*+,;=:@%]*:?)?:?))|([^\s@]+@[-\w.]+:[-\w.~/?[\]!$&'()*+,;=:@%]*?:?))$/;
@@ -10,12 +11,7 @@ const RESOURCE_NAME_REGEX_MSG =
 const MAX_RESOURCE_NAME_LENGTH = 63;
 const RESOURCE_NAME_LENGTH_ERROR_MSG = `Must be no more than ${MAX_RESOURCE_NAME_LENGTH} characters.`;
 
-export const formValidationSchema = yup.object({
-  application: yup
-    .string()
-    .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
-    .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
-    .required('Required'),
+const componentSchema = yup.object({
   source: yup.object({
     git: yup.object({
       url: yup
@@ -36,3 +32,17 @@ export const formValidationSchema = yup.object({
     .required('Required'),
   pipeline: yup.object({ name: yup.string().required('Required') }),
 });
+
+export const formValidationSchema = yup.mixed().test(
+  (values: ImportFormValues) =>
+    yup
+      .object({
+        application: yup
+          .string()
+          .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
+          .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
+          .required('Required'),
+      })
+      .concat(values.showComponent ? componentSchema : undefined)
+      .validate(values, { abortEarly: false }) as any,
+);
