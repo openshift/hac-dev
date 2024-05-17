@@ -215,6 +215,7 @@ const PipelineRunsListView: React.FC<React.PropsWithChildren<PipelineRunsListVie
   }
   return (
     <Table
+      key={`${pipelineRuns.length}-${vulnerabilities.fetchedPipelineRuns.length}`}
       data={filteredPLRs}
       unfilteredData={pipelineRuns}
       NoDataEmptyMsg={NoDataEmptyMsg}

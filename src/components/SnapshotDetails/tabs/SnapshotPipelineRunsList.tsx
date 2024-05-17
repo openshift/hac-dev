@@ -196,6 +196,7 @@ const SnapshotPipelineRunsList: React.FC<React.PropsWithChildren<SnapshotPipelin
       </Toolbar>
       {filteredPLRs.length > 0 ? (
         <Table
+          key={`${snapshotPipelineRuns.length}-${vulnerabilities.fetchedPipelineRuns.length}`}
           data={filteredPLRs}
           aria-label="Pipeline run List"
           customData={vulnerabilities}
