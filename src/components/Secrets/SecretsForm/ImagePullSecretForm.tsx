@@ -20,6 +20,7 @@ export const ImagePullSecretForm: React.FC<React.PropsWithChildren<unknown>> = (
           { key: 'uploadConfigFile', value: ImagePullSecretType.UploadConfigFile },
         ]}
         required
+        className="secret-type-subform__dropdown"
         validateOnChange
       />
       {type === ImagePullSecretType.ImageRegistryCreds ? (
