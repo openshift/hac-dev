@@ -62,6 +62,7 @@ const CommitsPipelineRunTab: React.FC<React.PropsWithChildren<CommitsPipelineRun
         Pipeline runs
       </Title>
       <Table
+        key={`${pipelineRuns.length}-${vulnerabilities.fetchedPipelineRuns.length}`}
         data={pipelineRuns}
         aria-label="Pipelinerun List"
         Header={PipelineRunListHeaderWithVulnerabilities}
