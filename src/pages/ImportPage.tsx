@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImportForm } from '../components/ImportForm_new/ImportForm';
+import ImportForm from '../components/ImportForm/ImportForm';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmount';

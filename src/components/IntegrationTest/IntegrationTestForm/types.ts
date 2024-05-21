@@ -1,5 +1,4 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
-import { ImportFormValues } from '../../../components/ImportForm/utils/types';
 import { Param } from '../../../types/coreBuildService';
 
 export type IntegrationTestFormValues = {
@@ -24,7 +23,10 @@ export enum IntegrationTestLabels {
   SCENARIO = 'test.appstudio.openshift.io/scenario',
 }
 
-export type FormValues = ImportFormValues & {
+export type FormValues = {
+  application: string;
+  inAppContext: string;
+  namespace: string;
   applicationData?: K8sResourceCommon;
   integrationTest: IntegrationTestFormValues;
 };

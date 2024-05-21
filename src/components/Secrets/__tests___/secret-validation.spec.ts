@@ -5,12 +5,6 @@ describe('validation-utils', () => {
   it('should validate name field', async () => {
     await expect(() =>
       secretFormValidationSchema.validate({
-        name: '',
-      }),
-    ).rejects.toThrow('Required');
-
-    await expect(() =>
-      secretFormValidationSchema.validate({
         name: '123',
       }),
     ).rejects.toThrow(

@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { screen, configure, waitFor } from '@testing-library/react';
-import { ServiceProviderType } from '../../../../types';
 import { formikRenderer } from '../../../../utils/test-utils';
-import { useAccessCheck } from '../../../ImportForm/utils/auth-utils';
 import IntegrationTestSection from '../IntegrationTestSection';
 
 const navigateMock = jest.fn();
@@ -24,21 +22,11 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 
-jest.mock('../../../ImportForm/utils/auth-utils', () => ({
-  useAccessCheck: jest.fn(),
-}));
-
 configure({ testIdAttribute: 'data-test' });
-
-const useAccessCheckMock = useAccessCheck as jest.Mock;
 
 describe('IntegrationTestSection', () => {
   beforeEach(() => {
     useK8sWatchResourceMock.mockReturnValue([[], false]);
-    useAccessCheckMock.mockReturnValue([
-      { isRepoAccessible: true, serviceProvider: ServiceProviderType.GitHub },
-      true,
-    ]);
   });
   it('should render the page header by default', async () => {
     const wrapper = formikRenderer(<IntegrationTestSection />, {
@@ -74,19 +62,5 @@ describe('IntegrationTestSection', () => {
     });
 
     screen.queryByTestId('its-param-field');
-  });
-
-  it('should return show error message if the repo is not accessible', async () => {
-    useK8sWatchResourceMock.mockReturnValue([[], true]);
-    useAccessCheckMock.mockReturnValue([
-      { isRepoAccessible: false, serviceProvider: ServiceProviderType.GitHub },
-      true,
-    ]);
-    formikRenderer(<IntegrationTestSection isInPage />, {
-      source: 'http://test.com/testorg/test-repo',
-      secret: null,
-    });
-
-    screen.getByText('Unable to access repository');
   });
 });

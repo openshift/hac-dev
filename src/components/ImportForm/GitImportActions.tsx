@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  Bullseye,
   ActionList,
   ActionListItem,
   Button,
@@ -9,72 +8,53 @@ import {
 } from '@patternfly/react-core';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import { ImportFormValues } from './utils/types';
+import type { ImportFormValues } from './type';
 
 import './GitImportActions.scss';
 
-type GitImportActionsProps = {
-  reviewMode: boolean;
-  onBack: () => void;
-  onCancel: () => void;
-  sticky?: boolean;
-};
-
-const GitImportActions: React.FunctionComponent<React.PropsWithChildren<GitImportActionsProps>> = ({
-  reviewMode,
-  onBack,
-  onCancel,
-  sticky,
-}) => {
+const GitImportActions: React.FunctionComponent = () => {
   const {
-    values: { inAppContext },
+    values: { inAppContext, showComponent },
     isValid,
     dirty,
     isSubmitting,
-    setErrors,
-    handleSubmit,
+    setFieldValue,
   } = useFormikContext<ImportFormValues>();
 
-  const handleBack = () => {
-    setErrors({});
-    onBack();
-  };
+  const handleComponent = React.useCallback(() => {
+    setFieldValue('showComponent', true);
+  }, [setFieldValue]);
 
   return (
     <PageSection
-      className={classNames({ 'git-import-actions__sticky': sticky })}
+      className={classNames({ 'git-import-actions__sticky': showComponent })}
       variant={PageSectionVariants.light}
-      padding={{ default: 'noPadding' }}
-      hasShadowTop={sticky}
+      hasShadowTop={showComponent}
+      component="footer"
     >
-      <Bullseye>
-        <ActionList className="pf-v5-u-pb-lg">
+      <ActionList>
+        <ActionListItem>
+          <Button
+            type="submit"
+            isDisabled={!isValid || !dirty || isSubmitting}
+            isLoading={isSubmitting}
+          >
+            {inAppContext ? 'Add component' : 'Create application'}
+          </Button>
+        </ActionListItem>
+        {!showComponent ? (
           <ActionListItem>
-            <Button
-              type="submit"
-              onClick={() => handleSubmit()}
-              isDisabled={!isValid || !dirty || isSubmitting}
-              isLoading={isSubmitting}
-            >
-              {reviewMode ? (inAppContext ? 'Add component' : 'Create application') : 'Import code'}
+            <Button variant="secondary" isDisabled={isSubmitting} onClick={handleComponent}>
+              Add a component
             </Button>
           </ActionListItem>
-          {reviewMode && (
-            <>
-              <ActionListItem>
-                <Button variant="secondary" onClick={handleBack}>
-                  Back
-                </Button>
-              </ActionListItem>
-              <ActionListItem>
-                <Button variant="link" type="reset" onClick={onCancel}>
-                  Cancel
-                </Button>
-              </ActionListItem>
-            </>
-          )}
-        </ActionList>
-      </Bullseye>
+        ) : null}
+        <ActionListItem>
+          <Button variant="link" type="reset">
+            Cancel
+          </Button>
+        </ActionListItem>
+      </ActionList>
     </PageSection>
   );
 };

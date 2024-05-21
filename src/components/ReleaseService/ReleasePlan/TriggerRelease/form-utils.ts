@@ -1,13 +1,8 @@
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import * as yup from 'yup';
-import {
-  MAX_RESOURCE_NAME_LENGTH,
-  resourceNameRegex,
-  RESOURCE_NAME_LENGTH_ERROR_MSG,
-  RESOURCE_NAME_REGEX_MSG,
-} from '../../../../components/ImportForm/utils/validation-utils';
 import { ReleaseGroupVersionKind, ReleaseModel } from '../../../../models';
 import { ReleaseKind } from '../../../../types/coreBuildService';
+import { resourceNameYupValidation } from '../../../../utils/validation-utils';
 
 export enum ReleasePipelineLocation {
   current,
@@ -28,16 +23,8 @@ export type TriggerReleaseFormValues = {
 };
 
 export const triggerReleaseFormSchema = yup.object({
-  releasePlan: yup
-    .string()
-    .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
-    .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
-    .required('Required'),
-  snapshot: yup
-    .string()
-    .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
-    .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
-    .required('Required'),
+  releasePlan: resourceNameYupValidation,
+  snapshot: resourceNameYupValidation,
 });
 
 export const createRelease = async (values: TriggerReleaseFormValues, namespace: string) => {

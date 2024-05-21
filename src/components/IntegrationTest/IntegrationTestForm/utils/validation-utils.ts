@@ -1,12 +1,9 @@
 import * as yup from 'yup';
-import {
-  RESOURCE_NAME_REGEX_MSG,
-  resourceNameRegex,
-} from '../../../ImportForm/utils/validation-utils';
+import { resourceNameYupValidation } from '../../../../utils/validation-utils';
 
 export const integrationTestValidationSchema = yup.object({
   integrationTest: yup.object({
-    name: yup.string().matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG).required('Required'),
+    name: resourceNameYupValidation,
     url: yup
       .string()
       .required('Required')

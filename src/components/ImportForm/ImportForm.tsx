@@ -1,52 +1,19 @@
-import React from 'react';
-import { PageSection } from '@patternfly/react-core';
-import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
+import * as React from 'react';
+import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
-import { HelpTopicLink } from '../HelpTopicLink/HelpTopicLink';
 import PageLayout from '../PageLayout/PageLayout';
-import GitImportForm from './GitImportForm';
-import SampleImportForm from './SampleImportForm';
+import { GitImportForm } from './GitImportForm';
 
-import './ImportForm.scss';
-
-type ImportFormProps = {
-  applicationName?: string;
-};
-
-const ImportForm: React.FunctionComponent<React.PropsWithChildren<ImportFormProps>> = ({
-  applicationName,
-}) => {
-  const [reviewMode, setReviewMode] = React.useState(false);
-
+const ImportForm: React.FC<{ applicationName: string }> = ({ applicationName }) => {
   const applicationBreadcrumbs = useApplicationBreadcrumbs(applicationName);
-
-  const title = reviewMode ? 'Configure your components for deployment' : 'Create an application';
-  const description = reviewMode
-    ? 'Review and define deployment settings and options.'
-    : 'Provide a link to your GitHub repository or start with a no-fail sample.';
-  const helpId = reviewMode ? 'rhtap-import-configure-component' : 'rhtap-import-add-component';
-
   return (
     <PageLayout
       breadcrumbs={[...applicationBreadcrumbs, { path: '#', name: 'Create an application' }]}
-      title={title}
-      description={
-        <>
-          {description}{' '}
-          <HelpTopicLink topicId={helpId} isInline>
-            Learn more <OpenDrawerRightIcon />
-          </HelpTopicLink>
-        </>
-      }
+      title="Create an application"
+      description="An application is one or more components that run together."
     >
-      <PageSection isFilled className="import-form">
-        <GitImportForm
-          applicationName={applicationName}
-          reviewMode={reviewMode}
-          setReviewMode={setReviewMode}
-        />
-        <br />
-        {!reviewMode && <SampleImportForm applicationName={applicationName} />}
+      <PageSection variant={PageSectionVariants.light} padding={{ default: 'noPadding' }}>
+        <GitImportForm applicationName={applicationName} />
       </PageSection>
     </PageLayout>
   );

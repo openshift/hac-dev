@@ -473,22 +473,6 @@ const routeExtensions = [
     },
   },
 
-  // Deployment settings
-
-  {
-    type: 'core.page/route',
-    properties: {
-      path: '/application-pipeline/workspaces/:workspaceName/applications/:appName/components/:componentName/deployment-settings',
-      exact: true,
-      component: {
-        $codeRef: 'DeploymentSettings',
-      },
-    },
-    flags: {
-      required: ['SIGNUP'],
-    },
-  },
-
   // Environments page
   {
     type: 'core.page/route',
@@ -733,7 +717,6 @@ module.exports = {
       ApplicationDetails: resolve(__dirname, '../src/pages/ApplicationDetailsPage'),
       Import: resolve(__dirname, '../src/pages/ImportPage'),
       ComponentDetails: resolve(__dirname, '../src/pages/ComponentDetailsPage'),
-      DeploymentSettings: resolve(__dirname, '../src/pages/DeploymentSettingsPage'),
       ReleaseListPage: resolve(__dirname, '../src/pages/ReleaseServicesListPage'),
       CreateReleasePlan: resolve(__dirname, '../src/pages/CreateReleasePlanPage'),
       TriggerReleasePlan: resolve(__dirname, '../src/pages/TriggerReleasePlanPage'),

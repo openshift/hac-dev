@@ -7,7 +7,6 @@ import { useReleasePlans } from '../../../../hooks/useReleasePlans';
 import { namespaceRenderer } from '../../../../utils/test-utils';
 import { WorkspaceContext } from '../../../../utils/workspace-context-utils';
 import { mockApplication } from '../../../ApplicationDetails/__data__/mock-data';
-import { useAccessCheck } from '../../../ImportForm/utils/auth-utils';
 import { MockIntegrationTestsWithGit } from '../../IntegrationTestsListView/__data__/mock-integration-tests';
 import IntegrationTestView from '../IntegrationTestView';
 import { createIntegrationTest } from '../utils/create-utils';
@@ -30,10 +29,6 @@ jest.mock('react-router-dom', () => ({
   useParams: jest.fn(() => ({
     appName: 'test-app',
   })),
-}));
-
-jest.mock('../../../ImportForm/utils/auth-utils', () => ({
-  useAccessCheck: jest.fn(),
 }));
 
 jest.mock('react-i18next', () => ({
@@ -65,7 +60,6 @@ jest.mock('../../../../utils/rbac', () => ({
 }));
 
 const createIntegrationTestMock = createIntegrationTest as jest.Mock;
-const useAccessCheckMock = useAccessCheck as jest.Mock;
 const useReleasePlansMock = useReleasePlans as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
@@ -108,7 +102,6 @@ describe('IntegrationTestView', () => {
   beforeEach(() => {
     useApplicationsMock.mockReturnValue([[mockApplication], true]);
     watchResourceMock.mockReturnValueOnce([[], true]);
-    useAccessCheckMock.mockReturnValue([{}, false]);
     useReleasePlansMock.mockReturnValue([[], true]);
   });
   const fillIntegrationTestForm = (wrapper: RenderResult) => {

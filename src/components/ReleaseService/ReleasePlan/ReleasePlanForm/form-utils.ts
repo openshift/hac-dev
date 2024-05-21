@@ -1,12 +1,5 @@
 import { k8sCreateResource, k8sUpdateResource } from '@openshift/dynamic-plugin-sdk-utils';
 import * as yup from 'yup';
-import {
-  gitUrlRegex,
-  MAX_RESOURCE_NAME_LENGTH,
-  resourceNameRegex,
-  RESOURCE_NAME_LENGTH_ERROR_MSG,
-  RESOURCE_NAME_REGEX_MSG,
-} from '../../../../components/ImportForm/utils/validation-utils';
 import { ResolverRefParams } from '../../../../components/IntegrationTest/IntegrationTestForm/utils/create-utils';
 import { ReleasePlanGroupVersionKind, ReleasePlanModel } from '../../../../models';
 import { Param } from '../../../../types';
@@ -15,6 +8,7 @@ import {
   ReleasePlanLabel,
   ResolverType,
 } from '../../../../types/coreBuildService';
+import { GIT_URL_REGEX, resourceNameYupValidation } from '../../../../utils/validation-utils';
 
 export enum ReleasePipelineLocation {
   current,
@@ -42,21 +36,17 @@ export type ReleasePlanFormValues = {
 };
 
 export const releasePlanFormSchema = yup.object({
-  name: yup
-    .string()
-    .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
-    .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG)
-    .required('Required'),
+  name: resourceNameYupValidation,
   application: yup.string().required('Required'),
   git: yup.object().when('releasePipelineLocation', {
     is: ReleasePipelineLocation.current,
     then: yup.object({
-      url: yup.string().matches(gitUrlRegex).required('Required'),
+      url: yup.string().matches(GIT_URL_REGEX).required('Required'),
       revision: yup.string().required('Required'),
       path: yup.string().required('Required'),
     }),
     otherwise: yup.object({
-      url: yup.string().matches(gitUrlRegex),
+      url: yup.string().matches(GIT_URL_REGEX),
       revision: yup.string(),
       path: yup.string(),
     }),

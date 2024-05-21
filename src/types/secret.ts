@@ -1,7 +1,16 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
-import { ImportSecret } from '../components/ImportForm/utils/types';
 
 export const SecretByUILabel = 'ui.appstudio.redhat.com/secret-for';
+
+export type ImportSecret = {
+  secretName: string;
+  type: string;
+  keyValues: {
+    key: string;
+    value: string;
+    readOnlyKey?: boolean;
+  }[];
+};
 
 export enum SecretSPILabel {
   ENVIRONMENT = 'appstudio.redhat.com/environment',
