@@ -35,20 +35,20 @@ describe('Advanced Happy path', () => {
   const gitHubUser = Cypress.env('GH_USERNAME');
   const componentName = Common.generateAppName('go');
 
-  after(function () {
-    APIHelper.deleteGitHubRepository(repoName);
+  // after(function () {
+  //   APIHelper.deleteGitHubRepository(repoName);
 
-    // If some test failed, don't remove the app
-    let allTestsSucceeded = true;
-    this.test.parent.eachTest((test) => {
-      if (test.state === 'failed') {
-        allTestsSucceeded = false;
-      }
-    });
-    if (allTestsSucceeded || Cypress.env('REMOVE_APP_ON_FAIL')) {
-      Applications.deleteApplication(applicationName);
-    }
-  });
+  //   // If some test failed, don't remove the app
+  //   let allTestsSucceeded = true;
+  //   this.test.parent.eachTest((test) => {
+  //     if (test.state === 'failed') {
+  //       allTestsSucceeded = false;
+  //     }
+  //   });
+  //   if (allTestsSucceeded || Cypress.env('REMOVE_APP_ON_FAIL')) {
+  //     Applications.deleteApplication(applicationName);
+  //   }
+  // });
 
   const componentInfo: { [key: string]: string } = {
     deploymentBodyOriginal: 'Hello World!',
