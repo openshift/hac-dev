@@ -3,7 +3,7 @@ import { BitbucketIcon } from '@patternfly/react-icons/dist/js/icons/bitbucket-i
 import { GitAltIcon } from '@patternfly/react-icons/dist/js/icons/git-alt-icon';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
 import { GitlabIcon } from '@patternfly/react-icons/dist/js/icons/gitlab-icon';
-import { gitUrlRegex } from '../../components/ImportForm/utils/validation-utils';
+import { GIT_URL_REGEX } from '../../utils/validation-utils';
 
 export enum GitProvider {
   GITHUB = 'github',
@@ -22,7 +22,7 @@ const hasDomain = (url: string, domain: string): boolean => {
 };
 
 export const detectGitType = (url: string): GitProvider => {
-  if (!gitUrlRegex.test(url)) {
+  if (!GIT_URL_REGEX.test(url)) {
     // Not a URL
     return GitProvider.INVALID;
   }

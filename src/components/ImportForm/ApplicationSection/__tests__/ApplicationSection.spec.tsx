@@ -20,7 +20,7 @@ describe('ApplicationSection', () => {
 
     useFormikContextMock.mockReturnValue({ values: { inAppContext: true } });
     render(<ApplicationSection />);
-    screen.getByText('Name');
+    screen.getByText('Application name');
     expect(screen.getByPlaceholderText('Enter name')).toBeDisabled();
   });
 });

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { URL_ERROR_MSG, urlRegex } from '../../../../ImportForm/utils/validation-utils';
+import { URL_ERROR_MSG, URL_REGEX } from '../../../../../utils/validation-utils';
 import { ComponentProps } from '../../../../modal/createModalLauncher';
 import BugFormContent from './BugFormContent';
 import CVEFormContent from './CVEFormContent';
@@ -20,7 +20,7 @@ type AddIssueModalProps = ComponentProps & {
 
 const IssueFormSchema = yup.object({
   key: yup.string().required('Required'),
-  url: yup.string().matches(urlRegex, URL_ERROR_MSG).required('Required'),
+  url: yup.string().matches(URL_REGEX, URL_ERROR_MSG).required('Required'),
 });
 
 export const AddIssueModal: React.FC<React.PropsWithChildren<AddIssueModalProps>> = ({

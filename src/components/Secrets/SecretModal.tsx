@@ -8,9 +8,8 @@ import {
   ModalVariant,
 } from '@patternfly/react-core';
 import { Formik } from 'formik';
-import { SecretTypeDropdownLabel } from '../../types';
-import { ImportSecret } from '../ImportForm/utils/types';
-import { SecretFromSchema } from '../ImportForm/utils/validation-utils';
+import { ImportSecret, SecretTypeDropdownLabel } from '../../types';
+import { SecretFromSchema } from '../../utils/validation-utils';
 import { RawComponentProps } from '../modal/createModalLauncher';
 import SecretForm from './SecretForm';
 

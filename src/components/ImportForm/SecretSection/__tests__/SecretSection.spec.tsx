@@ -27,7 +27,7 @@ describe('SecretSection', () => {
   it('should render secret section', () => {
     formikRenderer(<SecretSection />, {});
 
-    screen.getByText('Secrets');
+    screen.getByText('Build time secret');
     screen.getByTestId('add-secret-button');
   });
 

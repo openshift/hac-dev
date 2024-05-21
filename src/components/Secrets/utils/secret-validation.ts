@@ -3,19 +3,10 @@ import attempt from 'lodash-es/attempt';
 import isError from 'lodash-es/isError';
 import * as yup from 'yup';
 import { ImagePullSecretType, SecretTypeDropdownLabel, SourceSecretType } from '../../../types';
-import {
-  MAX_RESOURCE_NAME_LENGTH,
-  RESOURCE_NAME_LENGTH_ERROR_MSG,
-  RESOURCE_NAME_REGEX_MSG,
-  resourceNameRegex,
-} from '../../ImportForm/utils/validation-utils';
+import { resourceNameYupValidation } from '../../../utils/validation-utils';
 
 export const secretFormValidationSchema = yup.object({
-  name: yup
-    .string()
-    .required('Required')
-    .matches(resourceNameRegex, RESOURCE_NAME_REGEX_MSG)
-    .max(MAX_RESOURCE_NAME_LENGTH, RESOURCE_NAME_LENGTH_ERROR_MSG),
+  name: resourceNameYupValidation,
   type: yup.string(),
   opaque: yup.object().when('type', {
     is: SecretTypeDropdownLabel.opaque,

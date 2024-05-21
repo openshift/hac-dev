@@ -1,56 +1,55 @@
 import React from 'react';
-import { FormGroup, TextInputTypes, GridItem, Grid } from '@patternfly/react-core';
+import { TextInputTypes, GridItem, Grid, FormSection } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
 import { useFormikContext } from 'formik';
-import { ButtonWithAccessTooltip } from '../../../components/ButtonWithAccessTooltip';
-import { useRemoteSecrets } from '../../../hooks/UseRemoteSecrets';
-import { RemoteSecretModel, SecretModel } from '../../../models';
+import { useSecrets } from '../../../hooks/useSecrets';
+import { SecretModel } from '../../../models';
 import { InputField, TextColumnField } from '../../../shared';
 import { AccessReviewResources } from '../../../types/rbac';
 import { useAccessReviewForModels } from '../../../utils/rbac';
+import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
+import { ButtonWithAccessTooltip } from '../../ButtonWithAccessTooltip';
 import { useModalLauncher } from '../../modal/ModalProvider';
 import { SecretModalLauncher } from '../../Secrets/SecretModalLauncher';
 import { getSupportedPartnerTaskSecrets } from '../../Secrets/utils/secret-utils';
-import { ImportFormValues } from '../utils/types';
+import { ImportFormValues } from '../type';
 
-const accessReviewResources: AccessReviewResources = [
-  { model: RemoteSecretModel, verb: 'create' },
-  { model: SecretModel, verb: 'create' },
-];
+const accessReviewResources: AccessReviewResources = [{ model: SecretModel, verb: 'create' }];
 
 const SecretSection = () => {
   const [canCreateSecret] = useAccessReviewForModels(accessReviewResources);
   const showModal = useModalLauncher();
   const { values, setFieldValue } = useFormikContext<ImportFormValues>();
+  const { namespace } = useWorkspaceInfo();
 
-  const [remoteSecrets, remoteSecretsLoaded] = useRemoteSecrets(values.namespace);
+  const [secrets, secretsLoaded] = useSecrets(namespace);
 
   const partnerTaskNames = getSupportedPartnerTaskSecrets().map(({ label }) => label);
   const partnerTaskSecrets: string[] =
-    remoteSecrets && remoteSecretsLoaded
-      ? remoteSecrets
+    secrets && secretsLoaded
+      ? secrets
           ?.filter((rs) => partnerTaskNames.includes(rs.metadata.name))
           ?.map((s) => s.metadata.name) || []
       : [];
 
   const onSubmit = React.useCallback(
     (secretValue: any) => {
-      const secrets = [...values.importSecrets, secretValue];
+      const allSecrets = [...values.importSecrets, secretValue];
       const secretNames = [...values.newSecrets, secretValue.secretName];
-      setFieldValue('importSecrets', secrets);
+      setFieldValue('importSecrets', allSecrets);
       setFieldValue('newSecrets', secretNames);
     },
     [values, setFieldValue],
   );
 
   return (
-    <FormGroup>
+    <FormSection>
       <TextColumnField
         name="newSecrets"
-        label="Secrets"
+        label="Build time secret"
         addLabel="Add secret"
         placeholder="Secret"
-        helpText="Keep your data secure with a build-time secret."
+        helpText="Keep your data secure by defining a build time secret. Secrets are stored at a workspace level so applications within workspace will have access to these secrets."
         noFooter
         isReadOnly
         onChange={(v) =>
@@ -85,7 +84,7 @@ const SecretSection = () => {
       >
         Add secret
       </ButtonWithAccessTooltip>
-    </FormGroup>
+    </FormSection>
   );
 };
 export default SecretSection;

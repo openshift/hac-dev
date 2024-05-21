@@ -6,102 +6,24 @@ import {
   TextVariants,
   ValidatedOptions,
 } from '@patternfly/react-core';
-import { useFormikContext, useField } from 'formik';
-import gitUrlParse from 'git-url-parse';
+import { useField } from 'formik';
 import { CheckboxField, InputField } from '../../../shared';
-import { useDebounceCallback } from '../../../shared/hooks/useDebounceCallback';
-import { AccessHelpText } from '../../ImportForm/SourceSection/SourceSection';
-import { useAccessCheck } from '../../ImportForm/utils/auth-utils';
-import { gitUrlRegex, RESOURCE_NAME_REGEX_MSG } from '../../ImportForm/utils/validation-utils';
+import { RESOURCE_NAME_REGEX_MSG } from '../../../utils/validation-utils';
 import FormikParamsField from '../FormikParamsField';
-import { IntegrationTestFormValues } from './types';
 import './IntegrationTestSection.scss';
 
 type Props = { isInPage?: boolean; edit?: boolean };
 
 const IntegrationTestSection: React.FC<React.PropsWithChildren<Props>> = ({ isInPage, edit }) => {
-  const [, { value: source }] = useField<string>({
+  const [, { touched, error }] = useField<string>({
     name: 'integrationTest.url',
     type: 'input',
   });
-
-  const [, { value: isValidated }] = useField<boolean>('source.isValidated');
-
-  const {
-    values: { secret: authSecret },
-    setFieldValue,
-  } = useFormikContext<IntegrationTestFormValues>();
-
-  const [sourceUrl, setSourceUrl] = React.useState('');
-  const [validated, setValidated] = React.useState(null);
-
-  const [helpText, setHelpText] = React.useState(
-    isValidated ? AccessHelpText.validated : AccessHelpText.default,
-  );
-  const [helpTextInvalid, setHelpTextInvalid] = React.useState('');
-
-  const [{ isGit, isRepoAccessible, serviceProvider }, accessCheckLoaded] = useAccessCheck(
-    isValidated ? null : sourceUrl,
-    authSecret,
-  );
-
-  const setFormValidating = React.useCallback(() => {
-    setValidated(ValidatedOptions.default);
-    setHelpText(AccessHelpText.checking);
-    setFieldValue('source.isValidated', false);
-  }, [setFieldValue]);
-
-  const setFormValidated = React.useCallback(() => {
-    setValidated(ValidatedOptions.success);
-    setHelpText(AccessHelpText.validated);
-    setFieldValue('source.isValidated', true);
-  }, [setFieldValue]);
-
-  const handleSourceChange = React.useCallback(() => {
-    const searchTerm = source;
-    const isGitUrlValid = gitUrlRegex.test(searchTerm?.trim());
-    if (!searchTerm || !isGitUrlValid) {
-      setValidated(ValidatedOptions.error);
-      setHelpTextInvalid('Invalid URL');
-      setSourceUrl(null);
-      return;
-    }
-    setFormValidating();
-    setHelpTextInvalid('');
-    setSourceUrl(searchTerm);
-  }, [source, setFormValidating]);
-
-  const debouncedHandleSourceChange = useDebounceCallback(handleSourceChange);
-
-  // TODO: Remove when it is fixed in formik-pf
-  React.useEffect(() => {
-    if (accessCheckLoaded) {
-      if (isRepoAccessible) {
-        try {
-          const { organization } = gitUrlParse(sourceUrl);
-          if (!organization) {
-            setValidated(ValidatedOptions.error);
-            setHelpTextInvalid('Not a valid source repository');
-            return;
-          }
-        } catch {
-          // ignore, should never happen when isRepoAccessible is true, but for tests it is not valid
-        }
-        setFormValidated();
-      } else {
-        setValidated(ValidatedOptions.error);
-        setHelpTextInvalid('Unable to access repository');
-      }
-    }
-  }, [
-    accessCheckLoaded,
-    isRepoAccessible,
-    isGit,
-    serviceProvider,
-    setFieldValue,
-    setFormValidated,
-    sourceUrl,
-  ]);
+  const validated = touched
+    ? touched && !error
+      ? ValidatedOptions.success
+      : ValidatedOptions.error
+    : ValidatedOptions.default;
 
   return (
     <>
@@ -129,11 +51,8 @@ const IntegrationTestSection: React.FC<React.PropsWithChildren<Props>> = ({ isIn
         <InputField
           name="integrationTest.url"
           placeholder="Enter your source"
-          onChange={debouncedHandleSourceChange}
           validated={validated}
-          helpText={helpText}
           label="GitHub URL"
-          helpTextInvalid={helpTextInvalid}
           required
           data-test="git-url-input"
         />
