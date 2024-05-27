@@ -2,6 +2,8 @@ import * as React from 'react';
 import {
   ActionList,
   ActionListItem,
+  Alert,
+  AlertGroup,
   Button,
   PageSection,
   PageSectionVariants,
@@ -17,6 +19,7 @@ const GitImportActions: React.FunctionComponent = () => {
     values: { inAppContext, showComponent },
     isValid,
     dirty,
+    status,
     isSubmitting,
     setFieldValue,
   } = useFormikContext<ImportFormValues>();
@@ -32,6 +35,11 @@ const GitImportActions: React.FunctionComponent = () => {
       hasShadowTop={showComponent}
       component="footer"
     >
+      {status?.submitError ? (
+        <AlertGroup>
+          <Alert variant="danger" title={status?.submitError} isInline />
+        </AlertGroup>
+      ) : null}
       <ActionList>
         <ActionListItem>
           <Button

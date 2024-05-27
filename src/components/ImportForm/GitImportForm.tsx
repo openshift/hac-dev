@@ -24,6 +24,7 @@ export const GitImportForm: React.FC<{ applicationName: string }> = ({ applicati
     inAppContext: !!applicationName,
     showComponent: !!applicationName,
     componentName: '',
+    isPrivateRepo: false,
     source: {
       git: {
         url: '',

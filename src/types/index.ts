@@ -18,3 +18,4 @@ export * from './gitops-deployment';
 export * from './release';
 export * from './space-binding-request';
 export * from './workspace';
+export * from './image-repository';

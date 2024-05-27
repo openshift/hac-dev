@@ -24,6 +24,7 @@ import {
   ComponentDetectionQueryModel,
   SPIAccessTokenBindingModel,
   SecretModel,
+  ImageRepositoryModel,
 } from '../models';
 import {
   ComponentKind,
@@ -35,6 +36,8 @@ import {
   AddSecretFormValues,
   SecretTypeDisplayLabel,
   ImportSecret,
+  ImageRepositoryKind,
+  ImageRepositoryVisibility,
 } from '../types';
 import { ComponentSpecs } from './../types/component';
 import { BuildRequest, BUILD_REQUEST_ANNOTATION } from './component-utils';
@@ -101,7 +104,7 @@ export const createComponent = (
   dryRun?: boolean,
   originalComponent?: ComponentKind,
   verb: 'create' | 'update' = 'create',
-  enablePac: boolean = false,
+  enablePac: boolean = true,
   annotations?: { [key: string]: string },
 ) => {
   const { componentName, containerImage, source, replicas, resources, env, targetPort } = component;
@@ -125,7 +128,6 @@ export const createComponent = (
           : {
               annotations: {
                 'image.redhat.com/generate': 'true',
-                'skip-initial-checks': 'true',
               },
             })),
     },
@@ -369,4 +371,45 @@ export const createSecret = async (
       headers: { 'Content-type': 'application/json' },
     },
   );
+};
+
+type CreateImageRepositoryType = {
+  application: string;
+  component: string;
+  namespace: string;
+  isPrivate: boolean;
+};
+
+export const createImageRepository = (
+  { application, component, namespace, isPrivate }: CreateImageRepositoryType,
+  dryRun: boolean = false,
+) => {
+  const imageRepositoryResource: ImageRepositoryKind = {
+    apiVersion: `${ImageRepositoryModel.apiGroup}/${ImageRepositoryModel.apiVersion}`,
+    kind: ImageRepositoryModel.kind,
+    metadata: {
+      name: `imagerepository-for-${application}-${component}`,
+      namespace,
+      labels: {
+        'appstudio.redhat.com/component': component,
+        'appstudio.redhat.com/application': application,
+      },
+    },
+    spec: {
+      image: {
+        visibility: isPrivate
+          ? ImageRepositoryVisibility.private
+          : ImageRepositoryVisibility.public,
+      },
+    },
+  };
+
+  return k8sCreateResource({
+    model: ImageRepositoryModel,
+    resource: imageRepositoryResource,
+    queryOptions: {
+      ns: namespace,
+      ...(dryRun && { queryParams: { dryRun: 'All' } }),
+    },
+  });
 };
