@@ -9,6 +9,13 @@ export enum SecretSPILabel {
   COMPONENT = 'appstudio.openshift.io/component',
 }
 
+export enum SecretLabels {
+  CREDENTIAL_LABEL = 'appstudio.redhat.com/credentials',
+  CREDENTIAL_VALUE = 'scm',
+  HOST_LABEL = 'appstudio.redhat.com/scm.host',
+  REPO_ANNOTATION = 'appstudio.redhat.com/scm.repository',
+}
+
 export enum TargetDropdownDefaults {
   ALL_ENVIRONMENTS = 'All environments',
   ALL_COMPONENTS = 'All components',
@@ -110,6 +117,12 @@ export enum SecretType {
   tls = 'kubernetes.io/tls',
 }
 
+export type ServiceAccountKind = {
+  automountServiceAccountToken?: boolean;
+  imagePullSecrets?: SecretKind[] | { [key: string]: string }[];
+  secrets?: SecretKind[] | { [key: string]: string };
+} & K8sResourceCommon;
+
 export enum SecretTypeAbstraction {
   generic = 'generic',
   source = 'source',
@@ -175,6 +188,8 @@ export interface Source {
   authType: string;
   username?: string;
   password?: string;
+  host?: string;
+  repo?: string;
 }
 
 export interface Targets {

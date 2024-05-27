@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Table } from '../../../shared';
-import { RemoteSecretKind } from '../../../types';
+import { SecretKind } from '../../../types';
 import SecretsListHeader from './SecretsListHeader';
 import SecretsListRow from './SecretsListRow';
 
 type SecretsListProps = {
-  secrets: RemoteSecretKind[];
+  secrets: SecretKind[];
 };
 
 const SecretsList: React.FC<React.PropsWithChildren<SecretsListProps>> = ({ secrets }) => {

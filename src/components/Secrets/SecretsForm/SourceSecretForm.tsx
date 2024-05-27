@@ -19,7 +19,10 @@ export const SourceSecretForm: React.FC<React.PropsWithChildren<unknown>> = () =
           { key: 'ssh', value: SourceSecretType.ssh },
         ]}
         required
+        className="secret-type-subform__dropdown"
       />
+      <InputField name="source.host" label="Host" helpText="Host for the secret" />
+      <InputField name="source.repo" label="Repository" helpText="Repository for the secret" />
       {type === SourceSecretType.basic ? (
         <>
           <InputField

@@ -14,6 +14,7 @@ import {
 import { ImagePullSecretForm } from './ImagePullSecretForm';
 import { KeyValueSecretForm } from './KeyValueSecretForm';
 import { SourceSecretForm } from './SourceSecretForm';
+import './SecretTypeSubForm.scss';
 
 const secretTypes = [
   {
@@ -119,6 +120,7 @@ export const SecretTypeSubForm: React.FC<React.PropsWithChildren<unknown>> = () 
           variant={SelectVariant.typeahead}
           options={options}
           isCreatable
+          className="secret-type-subform__dropdown"
           isInputValuePersisted
           hasOnCreateOption
           required

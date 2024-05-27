@@ -3,6 +3,7 @@ import { useFormikContext } from 'formik';
 import { DropdownField } from '../../shared';
 import { DropdownItemObject } from '../../shared/components/dropdown/BasicDropdown';
 import { SecretFormValues, SecretTypeDropdownLabel } from '../../types';
+import './SecretTypeSelector.scss';
 
 type SecretTypeSelectorProps = {
   onChange: (type: string) => void;
@@ -32,6 +33,7 @@ const SecretTypeSelector: React.FC<React.PropsWithChildren<SecretTypeSelectorPro
     <DropdownField
       name="type"
       label="Secret type"
+      className="secret-type-selector__dropdown"
       data-testid="secret-type-selector"
       helpText="Tell us the secret type you want to add"
       items={dropdownItems}

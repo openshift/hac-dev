@@ -9,7 +9,7 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from '@patternfly/react-core';
-import { useRemoteSecrets } from '../../../hooks/UseRemoteSecrets';
+import { useSecrets } from '../../../hooks/UseRemoteSecrets';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import secretEmptyStateIcon from '../../../imgs/secret.svg';
 import { RemoteSecretModel } from '../../../models';
@@ -27,15 +27,13 @@ type SecretsListViewProps = {
 const SecretsListView: React.FC<React.PropsWithChildren<SecretsListViewProps>> = () => {
   const { namespace, workspace } = useWorkspaceInfo();
 
-  const [secrets, secretsLoaded] = useRemoteSecrets(namespace);
+  const [secrets, secretsLoaded] = useSecrets(namespace);
   const [nameFilter, setNameFilter, unsetNameFilter] = useSearchParam('name', '');
   const [canCreateRemoteSecret] = useAccessReviewForModel(RemoteSecretModel, 'create');
 
   const filteredRemoteSecrets = React.useMemo(() => {
     // apply name filter
-    return nameFilter
-      ? secrets.filter((s) => (s.spec?.secret?.name || s.metadata.name).indexOf(nameFilter) !== -1)
-      : secrets;
+    return nameFilter ? secrets.filter((s) => s.metadata.name.indexOf(nameFilter) !== -1) : secrets;
   }, [secrets, nameFilter]);
 
   const createSecretButton = React.useMemo(() => {

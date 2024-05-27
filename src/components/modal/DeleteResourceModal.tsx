@@ -30,6 +30,7 @@ type DeleteResourceModalProps = ComponentProps & {
   displayName?: string;
   isEntryNotRequired?: boolean;
   description?: React.ReactNode;
+  submitCallback?: (obj: any, namespace?: string) => void;
 };
 
 export const DeleteResourceModal: React.FC<React.PropsWithChildren<DeleteResourceModalProps>> = ({
@@ -39,6 +40,7 @@ export const DeleteResourceModal: React.FC<React.PropsWithChildren<DeleteResourc
   displayName,
   isEntryNotRequired = false,
   description,
+  submitCallback,
 }) => {
   const [error, setError] = React.useState<string>();
   const resourceName = displayName || obj.metadata.name;
@@ -52,6 +54,7 @@ export const DeleteResourceModal: React.FC<React.PropsWithChildren<DeleteResourc
           ns: obj.metadata.namespace,
         },
       });
+      submitCallback && submitCallback(obj, obj.metadata?.namespace);
       onClose(null, { submitClicked: true });
     } catch (e) {
       setError(e.message || e.toString());
