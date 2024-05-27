@@ -20,7 +20,7 @@ describe('ComponentSection', () => {
     const source = screen.getByPlaceholderText('Enter your source');
 
     await user.type(source, 'https://github.com/abcd/repo.git');
-    await user.click(screen.getByTestId('component-name'));
+    await user.tab();
     await waitFor(() => screen.getByText('Show advanced Git options'));
   });
 });
