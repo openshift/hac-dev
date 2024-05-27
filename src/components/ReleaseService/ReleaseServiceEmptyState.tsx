@@ -12,7 +12,7 @@ export const ReleaseServiceEmptyState: React.FC<
 > = ({ title }) => {
   return (
     <AppEmptyState emptyStateImg={emptyStateImgUrl} title={title}>
-      <ExternalLink href=" https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/how-to-guides/con_release_application/">
+      <ExternalLink href="https://konflux-ci.dev/docs/advanced-how-tos/releasing/">
         Learn more about setting up release services
       </ExternalLink>
     </AppEmptyState>

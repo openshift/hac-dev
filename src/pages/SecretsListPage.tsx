@@ -2,13 +2,13 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Divider, PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
-import { HelpTopicLink } from '../components/HelpTopicLink/HelpTopicLink';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import PageLayout from '../components/PageLayout/PageLayout';
 import SecretsListView from '../components/Secrets/SecretsListView/SecretsListView';
 import { FULL_APPLICATION_TITLE } from '../consts/labels';
 import { RemoteSecretModel } from '../models';
+import ExternalLink from '../shared/components/links/ExternalLink';
 import { AccessReviewResources } from '../types';
 
 const SecretsListPage: React.FC<React.PropsWithChildren<unknown>> = () => {
@@ -27,9 +27,13 @@ const SecretsListPage: React.FC<React.PropsWithChildren<unknown>> = () => {
               Manage your secrets and their related configurations. You can add a secret at the
               workspace level.
               <br /> All secrets are stored using AWS Secrets Manager to keep your data private.
-              <HelpTopicLink topicId={'rhtap-secrets-secrets'}>
+              <ExternalLink
+                href="https://konflux-ci.dev/docs/how-tos/configuring/creating-secrets/"
+                isInline={false}
+                hideIcon
+              >
                 Learn more <OpenDrawerRightIcon />
-              </HelpTopicLink>
+              </ExternalLink>
             </>
           }
         >

@@ -5,10 +5,10 @@ import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash-es';
 import FormFooter from '../../../shared/components/form-components/FormFooter';
+import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { AddSecretFormValues, SecretFor, SecretTypeDropdownLabel } from '../../../types';
 import { addSecret } from '../../../utils/create-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
-import { HelpTopicLink } from '../../HelpTopicLink/HelpTopicLink';
 import PageLayout from '../../PageLayout/PageLayout';
 import { getAddSecretBreadcrumbs } from '../utils/secret-utils';
 import { secretFormValidationSchema } from '../utils/secret-validation';
@@ -66,9 +66,13 @@ const AddSecretForm = () => {
           description={
             <>
               Add a secret that will be stored using AWS Secret Manager to keep your data private.
-              <HelpTopicLink topicId={'rhtap-secrets-secrets'}>
+              <ExternalLink
+                href="https://konflux-ci.dev/docs/how-tos/configuring/creating-secrets/"
+                isInline={false}
+                hideIcon
+              >
                 Learn more <OpenDrawerRightIcon />
-              </HelpTopicLink>
+              </ExternalLink>
             </>
           }
           footer={

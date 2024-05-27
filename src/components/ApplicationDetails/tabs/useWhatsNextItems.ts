@@ -41,7 +41,7 @@ export const useWhatsNextItems = (applicationName: string) => {
           workspace,
         },
       },
-      helpId: 'stonesoup-whatsnext-add-component',
+      helpLink: 'https://konflux-ci.dev/docs/how-tos/creating/',
     },
     {
       title: 'Add integration tests',
@@ -61,8 +61,7 @@ export const useWhatsNextItems = (applicationName: string) => {
           workspace,
         },
       },
-      helpLink:
-        'https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/how-to-guides/testing_applications/proc_adding_an_integration_test/',
+      helpLink: 'https://konflux-ci.dev/docs/how-tos/testing/integration/adding/',
     },
     {
       title: 'Create a release plan',
@@ -82,8 +81,7 @@ export const useWhatsNextItems = (applicationName: string) => {
           workspace,
         },
       },
-      helpLink:
-        'https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/how-to-guides/con_release_application/',
+      helpLink: 'https://konflux-ci.dev/docs/advanced-how-tos/releasing/',
     },
     {
       title: 'Install our GitHub app',
@@ -100,7 +98,7 @@ export const useWhatsNextItems = (applicationName: string) => {
           workspace,
         },
       },
-      helpId: 'stonesoup-whatsnext-install-github-app',
+      helpLink: 'https://konflux-ci.dev/docs/how-tos/creating/',
     },
     {
       title: 'Make a code change',
@@ -116,7 +114,7 @@ export const useWhatsNextItems = (applicationName: string) => {
           workspace,
         },
       },
-      helpId: 'stonesoup-whatsnext-make-code-change',
+      helpLink: 'https://konflux-ci.dev/docs/how-tos/creating/',
     },
     {
       title: 'Manage build pipelines',
@@ -134,7 +132,7 @@ export const useWhatsNextItems = (applicationName: string) => {
           workspace,
         },
       },
-      helpId: 'stonesoup-whatsnext-customize-build-pipeline',
+      helpLink: 'https://konflux-ci.dev/docs/how-tos/configuring/customizing-the-build/',
     },
   ];
   return whatsNextItems;
