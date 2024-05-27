@@ -16,6 +16,7 @@ import {
   getAnnotationForSecret,
   getLabelsForSecret,
   getSecretFormData,
+  typeToLabel,
 } from '../components/Secrets/utils/secret-utils';
 import { linkSecretToServiceAccount } from '../components/Secrets/utils/service-account-utils';
 import {
@@ -33,9 +34,7 @@ import {
   K8sSecretType,
   SecretKind,
   AddSecretFormValues,
-  SecretByUILabel,
-  SecretFor,
-  SecretType,
+  SecretTypeDisplayLabel,
 } from '../types';
 import { ComponentSpecs } from './../types/component';
 import { BuildRequest, BUILD_REQUEST_ANNOTATION } from './component-utils';
@@ -314,14 +313,13 @@ export const createSecretResource = async (
     metadata: {
       ...secretResource.metadata,
       labels: {
-        [SecretByUILabel]: SecretFor.Build,
         ...labels?.secret,
       },
       annotations,
     },
   };
   // if image pull secret, link to service account
-  if (secretResource.type === SecretType.dockerconfigjson) {
+  if (typeToLabel(secretResource.type) === SecretTypeDisplayLabel.imagePull) {
     linkSecretToServiceAccount(secretResource, namespace);
   }
 
