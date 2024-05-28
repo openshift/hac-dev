@@ -31,7 +31,7 @@ export const THUMBNAIL_ANNOTATION = 'application.thumbnail';
 export const getRandomSvgNumber = () => Math.floor(Math.random() * ICONS.length);
 
 const getThumbnailFromApplication = (application: ApplicationKind) => {
-  const index = application.metadata.annotations[THUMBNAIL_ANNOTATION];
+  const index = application.metadata?.annotations?.[THUMBNAIL_ANNOTATION];
   return index ? ICONS[parseInt(index, 10)] : ICONS[0];
 };
 
