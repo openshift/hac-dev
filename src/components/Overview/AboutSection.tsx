@@ -5,37 +5,12 @@ import {
   CardTitle,
   Grid,
   GridItem,
-  Split,
-  SplitItem,
   Stack,
   StackItem,
 } from '@patternfly/react-core';
-import argoLogo from '../../imgs/overview/Argo.svg';
-import clairLogo from '../../imgs/overview/Clair.svg';
-import goLogo from '../../imgs/overview/Go.svg';
-import javaLogo from '../../imgs/overview/Java.svg';
-import nodeLogo from '../../imgs/overview/Nodejs.svg';
-import openPolicyAgentLogo from '../../imgs/overview/OpenPolicyAgent.svg';
-import pythonLogo from '../../imgs/overview/Python.svg';
-import redhatLogo from '../../imgs/overview/RedHat.svg';
-import tektonLogo from '../../imgs/overview/Tekton.svg';
 import ExternalLink from '../../shared/components/links/ExternalLink';
 
 import './AboutSection.scss';
-
-type TechnologyTileProps = {
-  name: string;
-  logo: string;
-};
-
-const TechnologyTile: React.FC<React.PropsWithChildren<TechnologyTileProps>> = ({ name, logo }) => (
-  <Split hasGutter>
-    <SplitItem>
-      <img src={logo} alt={`${name} logo`} className="technology-logo" />
-    </SplitItem>
-    <SplitItem isFilled>{name}</SplitItem>
-  </Split>
-);
 
 const AboutSection: React.FC<React.PropsWithChildren<unknown>> = () => (
   <Grid hasGutter>
@@ -44,27 +19,41 @@ const AboutSection: React.FC<React.PropsWithChildren<unknown>> = () => (
         <CardTitle>About</CardTitle>
         <CardBody style={{ paddingLeft: '16px' }}>
           <Card isPlain isCompact>
-            <CardTitle>Source to Cloud</CardTitle>
+            <CardTitle>Build</CardTitle>
             <CardBody>
-              Create applications from your git repository or our bundled samples. Your applications
-              will be automatically built then containerized with Red Hat’s secure runtime images
-              and released with OpenShift.
+              Build artifacts of all kinds from source. Enable hermetic builds and produce accurate
+              SBOMs.
             </CardBody>
           </Card>
           <Card isPlain isCompact>
-            <CardTitle>Shift Left for DevSecOps</CardTitle>
+            <CardTitle>Securely Sign</CardTitle>
             <CardBody>
-              Out-of-the-box support for{' '}
-              <ExternalLink href="https://slsa.dev/spec/v1.0/levels">SLSA Level 3</ExternalLink>{' '}
-              means you can identify critical vulnerabilities in your application much earlier with
-              each pull request introspecting your direct and transitive dependencies.
+              Generate secure & detailed provenance, an immutable record of what happened during
+              each and every build step.
             </CardBody>
           </Card>
           <Card isPlain isCompact>
-            <CardTitle>Become Continuous</CardTitle>
+            <CardTitle>Identify Vulnerabilities</CardTitle>
+            <CardBody>Catch critical vulnerabilities quickly with each pull request.</CardBody>
+          </Card>
+          <Card isPlain isCompact>
+            <CardTitle>Supply Chain Safeguards</CardTitle>
             <CardBody>
-              You can continuously build, test, and rollout your containerized applications with a
-              simple ‘git push’ or appearance of a pull request.
+              Verify container images against major secure software frameworks or your own custom
+              rules.
+            </CardBody>
+          </Card>
+          <Card isPlain isCompact>
+            <CardTitle>Integration Tests</CardTitle>
+            <CardBody>
+              Execute integration tests for complex applications and see results in your SCM.
+            </CardBody>
+          </Card>
+          <Card isPlain isCompact>
+            <CardTitle>SCM Integration</CardTitle>
+            <CardBody>
+              Build in response to git events, post results of builds and tests back to your Pull or
+              Merge requests
             </CardBody>
           </Card>
         </CardBody>
@@ -74,33 +63,13 @@ const AboutSection: React.FC<React.PropsWithChildren<unknown>> = () => (
       <Stack hasGutter>
         <StackItem>
           <Card isLarge>
-            <CardTitle>Related technologies</CardTitle>
-            <CardBody>
-              <TechnologyTile name="Node.js" logo={nodeLogo} />
-              <TechnologyTile name="Clair" logo={clairLogo} />
-              <TechnologyTile name="Python" logo={pythonLogo} />
-              <TechnologyTile name="Java" logo={javaLogo} />
-              <TechnologyTile name="Go" logo={goLogo} />
-              <TechnologyTile name="Tekton" logo={tektonLogo} />
-              <TechnologyTile name="Argo CD" logo={argoLogo} />
-              <TechnologyTile name="Open Policy Agent" logo={openPolicyAgentLogo} />
-              <TechnologyTile name="OpenShift" logo={redhatLogo} />
-            </CardBody>
-          </Card>
-        </StackItem>
-        <StackItem>
-          <Card isLarge>
             <CardTitle>Contact us</CardTitle>
             <CardBody>
-              Join the internal RedHat Slack workspace here:{' '}
-              <ExternalLink href="https://redhat-internal.slack.com/" hideIcon>
-                https://redhat-internal.slack.com/
+              To talk to someone from the Konflux team, open an issue in our discussions{' '}
+              <ExternalLink href="https://github.com/konflux-ci/discussions/issues">
+                repository
               </ExternalLink>
-              , and then join our{' '}
-              <ExternalLink href="https://redhat.enterprise.slack.com/archives/C04PZ7H0VA8">
-                #rhtap-users
-              </ExternalLink>{' '}
-              channel.
+              .
             </CardBody>
           </Card>
         </StackItem>

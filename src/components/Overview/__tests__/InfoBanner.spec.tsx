@@ -6,12 +6,8 @@ import InfoBanner from '../InfoBanner';
 describe('Info banner', () => {
   it('should render everything correctly in info banner', () => {
     render(<InfoBanner />);
-    screen.getByText(
-      'Start with source code and containerize your applications for OpenShift and Kubernetes',
-    );
+    screen.getByText('Build artifacts of all kinds from source');
     screen.getByText("Rapidly improve the security of your application's software supply chain");
-    screen.getByText(
-      'Execute integration tests for complex applications and see results in your SCM',
-    );
+    screen.getByText('Catch critical vulnerabilities quickly');
   });
 });
