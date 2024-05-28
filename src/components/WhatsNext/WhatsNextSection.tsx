@@ -81,8 +81,8 @@ const WhatsNextSection: React.FunctionComponent<React.PropsWithChildren<WhatsNex
               </HelpTopicLink>
             )}
             {!item.helpId && item.helpLink && (
-              <ExternalLink href={item.helpLink} isInline={false} hideIcon>
-                Learn more <ArrowRightIcon />
+              <ExternalLink href={item.helpLink} isInline={false}>
+                Learn more
               </ExternalLink>
             )}
           </SplitItem>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, PageSection, PageSectionVariants } from '@patternfly/react-core';
-import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash-es';
 import FormFooter from '../../../shared/components/form-components/FormFooter';
@@ -65,13 +64,9 @@ const AddSecretForm = () => {
           title="Add secret"
           description={
             <>
-              Add a secret that will be stored using AWS Secret Manager to keep your data private.
-              <ExternalLink
-                href="https://konflux-ci.dev/docs/how-tos/configuring/creating-secrets/"
-                isInline={false}
-                hideIcon
-              >
-                Learn more <OpenDrawerRightIcon />
+              Add a secret that will be stored using AWS Secret Manager to keep your data private.{' '}
+              <ExternalLink href="https://konflux-ci.dev/docs/how-tos/configuring/creating-secrets/">
+                Learn more
               </ExternalLink>
             </>
           }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Divider, PageSection, PageSectionVariants } from '@patternfly/react-core';
-import { OpenDrawerRightIcon } from '@patternfly/react-icons/dist/esm/icons/open-drawer-right-icon';
 import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import PageLayout from '../components/PageLayout/PageLayout';
@@ -26,13 +25,9 @@ const SecretsListPage: React.FC<React.PropsWithChildren<unknown>> = () => {
             <>
               Manage your secrets and their related configurations. You can add a secret at the
               workspace level.
-              <br /> All secrets are stored using AWS Secrets Manager to keep your data private.
-              <ExternalLink
-                href="https://konflux-ci.dev/docs/how-tos/configuring/creating-secrets/"
-                isInline={false}
-                hideIcon
-              >
-                Learn more <OpenDrawerRightIcon />
+              <br /> All secrets are stored using AWS Secrets Manager to keep your data private.{' '}
+              <ExternalLink href="https://konflux-ci.dev/docs/how-tos/configuring/creating-secrets/">
+                Learn more
               </ExternalLink>
             </>
           }

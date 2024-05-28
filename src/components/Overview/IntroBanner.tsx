@@ -64,8 +64,8 @@ const IntroBanner: React.FC<React.PropsWithChildren<unknown>> = () => {
           </CardTitle>
           <CardBody>
             <Text>
-              Import, containerize, and release. With just a few clicks, you can interact with your
-              application running in OpenShift and Kubernetes. Build here, go anywhere.
+              Konflux makes it easy to securely build, test and release your software projects to a
+              wide variety of targets.
             </Text>
           </CardBody>
           <CardBody>

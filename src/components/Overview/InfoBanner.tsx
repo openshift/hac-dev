@@ -41,10 +41,7 @@ const InfoBanner = () => (
             </CardTitle>
             <CardBody>
               <Bullseye>
-                <Text component={TextVariants.p}>
-                  Start with source code and containerize your applications for OpenShift and
-                  Kubernetes
-                </Text>
+                <Text component={TextVariants.p}>Build artifacts of all kinds from source</Text>
               </Bullseye>
             </CardBody>
           </Card>
@@ -93,9 +90,7 @@ const InfoBanner = () => (
               </Bullseye>
             </CardTitle>
             <CardBody>
-              <Bullseye>
-                Execute integration tests for complex applications and see results in your SCM
-              </Bullseye>
+              <Bullseye>Catch critical vulnerabilities quickly</Bullseye>
             </CardBody>
           </Card>
         </FlexItem>

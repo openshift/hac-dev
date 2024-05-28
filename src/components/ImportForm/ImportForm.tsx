@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PageSection, PageSectionVariants } from '@patternfly/react-core';
-import ExternalLink from 'src/shared/components/links/ExternalLink';
+import ExternalLink from '../../shared/components/links/ExternalLink';
 import { useApplicationBreadcrumbs } from '../../utils/breadcrumb-utils';
 import PageLayout from '../PageLayout/PageLayout';
 import { GitImportForm } from './GitImportForm';
