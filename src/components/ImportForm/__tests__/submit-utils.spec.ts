@@ -1,4 +1,8 @@
-import { createApplication, createComponent } from '../../../utils/create-utils';
+import {
+  createApplication,
+  createComponent,
+  createImageRepository,
+} from '../../../utils/create-utils';
 import { createIntegrationTest } from '../../IntegrationTest/IntegrationTestForm/utils/create-utils';
 import { createResources } from '../submit-utils';
 
@@ -8,6 +12,7 @@ jest.mock('../../../utils/create-utils', () => ({
   ...(jest.requireActual('../../../utils/create-utils') as object),
   createApplication: jest.fn(),
   createComponent: jest.fn(),
+  createImageRepository: jest.fn(),
 }));
 
 jest.mock('../../IntegrationTest/IntegrationTestForm/utils/create-utils', () => ({
@@ -17,6 +22,7 @@ jest.mock('../../IntegrationTest/IntegrationTestForm/utils/create-utils', () => 
 const createApplicationMock = createApplication as jest.Mock;
 const createComponentMock = createComponent as jest.Mock;
 const createIntegrationTestMock = createIntegrationTest as jest.Mock;
+const createImageRepositoryMock = createImageRepository as jest.Mock;
 
 describe('Submit Utils: createResources', () => {
   it('should create application and components', async () => {
@@ -42,6 +48,7 @@ describe('Submit Utils: createResources', () => {
     expect(createApplicationMock).toHaveBeenCalledTimes(2);
     expect(createIntegrationTestMock).toHaveBeenCalledTimes(2);
     expect(createComponentMock).toHaveBeenCalledTimes(2);
+    expect(createImageRepositoryMock).toHaveBeenCalledTimes(2);
   });
 
   it('should create application but not components', async () => {
@@ -67,6 +74,7 @@ describe('Submit Utils: createResources', () => {
     expect(createApplicationMock).toHaveBeenCalledTimes(2);
     expect(createIntegrationTestMock).toHaveBeenCalledTimes(2);
     expect(createComponentMock).toHaveBeenCalledTimes(0);
+    expect(createImageRepositoryMock).toHaveBeenCalledTimes(0);
   });
 
   it('should not create application but create components', async () => {
@@ -92,6 +100,7 @@ describe('Submit Utils: createResources', () => {
     expect(createApplicationMock).toHaveBeenCalledTimes(0);
     expect(createIntegrationTestMock).toHaveBeenCalledTimes(0);
     expect(createComponentMock).toHaveBeenCalledTimes(2);
+    expect(createImageRepositoryMock).toHaveBeenCalledTimes(2);
   });
 
   afterEach(() => {

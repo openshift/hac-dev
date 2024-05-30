@@ -1,5 +1,10 @@
-import { ApplicationKind, ImageRepositoryVisibility, ImportSecret } from '../../types';
-import { createApplication, createComponent, createSecret } from '../../utils/create-utils';
+import { ApplicationKind, ImportSecret } from '../../types';
+import {
+  createApplication,
+  createComponent,
+  createImageRepository,
+  createSecret,
+} from '../../utils/create-utils';
 import {
   EC_INTEGRATION_TEST_URL,
   EC_INTEGRATION_TEST_REVISION,
@@ -44,12 +49,6 @@ export const createResources = async (
   let applicationName = application;
   const componentAnnotations: { [key: string]: string } = {
     [BUILD_PIPELINE_ANNOTATION]: JSON.stringify({ name: pipeline, bundle: 'latest' }),
-    // [TODO] ImageRepository: remove this annotation once ImageReposoitory has correct permission
-    ['image.redhat.com/generate']: JSON.stringify({
-      visibility: isPrivateRepo
-        ? ImageRepositoryVisibility.private
-        : ImageRepositoryVisibility.public,
-    }),
   };
 
   const integrationTestValues: IntegrationTestFormValues = {
@@ -76,11 +75,10 @@ export const createResources = async (
       undefined,
       componentAnnotations,
     );
-    // [TODO] ImageRepository: create ImageRepository once CR has correct permissions
-    // await createImageRepository(
-    //   { application, component: componentName, namespace, isPrivate: isPrivateRepo },
-    //   true,
-    // );
+    await createImageRepository(
+      { application, component: componentName, namespace, isPrivate: isPrivateRepo },
+      true,
+    );
   }
 
   let applicationData: ApplicationKind;
@@ -105,13 +103,12 @@ export const createResources = async (
       undefined,
       componentAnnotations,
     );
-    // [TODO] ImageRepository: create ImageRepository once the CR has correct permissions
-    // await createImageRepository({
-    //   application,
-    //   component: componentName,
-    //   namespace,
-    //   isPrivate: isPrivateRepo,
-    // });
+    await createImageRepository({
+      application,
+      component: componentName,
+      namespace,
+      isPrivate: isPrivateRepo,
+    });
     await createSecrets(importSecrets, workspace, namespace, false);
   }
 
