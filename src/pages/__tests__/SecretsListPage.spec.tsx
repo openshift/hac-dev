@@ -1,5 +1,6 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, screen } from '@testing-library/react';
 import { useAccessReviewForModels } from '../../utils/rbac';
@@ -11,6 +12,7 @@ jest.mock('react-router-dom', () => {
   return {
     ...actual,
     useParams: jest.fn(),
+    useNavigate: jest.fn(),
   };
 });
 
@@ -58,7 +60,13 @@ describe('SecretsListPage', () => {
   it('should render secrets list page', () => {
     accessReviewMock.mockReturnValue([true, true]);
     watchResourceMock.mockReturnValue([[], true, null]);
-    namespaceRenderer(<SecretListPage />, 'test-ns', { workspacesLoaded: true });
+    namespaceRenderer(
+      <BrowserRouter>
+        <SecretListPage />
+      </BrowserRouter>,
+      'test-ns',
+      { workspacesLoaded: true },
+    );
     screen.getByTestId('secrets-list-view');
   });
 });
