@@ -1,7 +1,8 @@
 export const addComponentPagePO = {
   samples: 'Start with a sample.',
   addComponent: '[data-test="add-component"] > a',
-  enterSource: '[data-test="enter-source"]',
+  enterSource: '[data-testid="enter-source"]',
+  verifiedSource: '[class="pf-v5-c-form-control pf-m-success"]',
   gitOptions: 'Git options',
   gitReference: '[data-test="git-reference"]',
   contextDir: '[data-test="context-dir"]',
@@ -30,13 +31,14 @@ export const createApplicationPagePO = {
   applicationName: '[id="form-input-application-field"]',
   next: 'button[type=submit]',
   createApplication: 'Create application',
+  addComponentButton: 'Add a component',
 };
 
 export const ComponentsPagePO = {
   appInput: '[data-test="app-name-field"] input',
   create: 'button[type=submit]',
   createText: 'Create',
-  componentNameField: '[data-test="component-name-field"] input',
+  componentNameField: '[data-testid="component-name"]',
   checkIcon: '[data-test="check-icon"]',
   closeIcon: '[data-test="close-icon"]',
   showAdvancedSetting: 'Show advanced deployment options',

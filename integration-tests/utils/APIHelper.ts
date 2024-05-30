@@ -27,6 +27,9 @@ export class APIHelper {
       url,
       headers: this.githubHeaders,
     };
+    if (!Cypress.env('GH_TOKEN') && options.method == 'POST') {
+      cy.log('GitHub Token is not set, the GitHub request may fail.');
+    }
     if (body) {
       options.body = body;
     }
@@ -103,5 +106,22 @@ export class APIHelper {
       githubAPIEndpoints.templateRepo(templateOwner, templateRepoName),
       body,
     );
+  }
+
+  static mergePR(
+    owner: string,
+    repoName: string,
+    pullNumber: number,
+    commitTitle: string,
+    commitMessage: string,
+  ) {
+    const body = { commit_title: `${commitTitle}`, commit_message: `${commitMessage}` };
+    APIHelper.githubRequest(
+      'PUT',
+      githubAPIEndpoints.merge(owner, repoName, pullNumber),
+      body,
+    ).then((result) => {
+      expect(result.body.merged).to.be.true;
+    });
   }
 }

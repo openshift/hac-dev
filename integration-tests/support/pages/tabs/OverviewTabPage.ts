@@ -8,6 +8,6 @@ export class OverviewTabPage {
 
   addComponent() {
     Common.waitForLoad();
-    cy.wait(500).get(overviewTabPO.addComponent).click();
+    cy.wait(500).contains(overviewTabPO.addComponent, 'Add component').click();
   }
 }

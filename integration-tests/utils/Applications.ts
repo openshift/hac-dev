@@ -33,43 +33,42 @@ export class Applications {
     cy.get(`[data-id="${applicationName}"]`).find(actions.kebabButton).click();
   }
 
-  static createApplication() {
+  static createApplication(applicationName: string) {
     cy.title().should('eq', `Applications | ${FULL_APPLICATION_TITLE}`);
     const createApplicationPage = new CreateApplicationPage();
     createApplicationPage.clickCreateApplication();
-    cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
+    cy.title().should('eq', `Applications | ${FULL_APPLICATION_TITLE}`);
     cy.testA11y(`${pageTitles.createApp} page`);
+    createApplicationPage.setApplicationName(applicationName);
+    createApplicationPage.clickAddComponent();
   }
 
   static createComponent(
     publicGitRepo: string,
     componentName: string,
+    pipeline: string,
     applicationName?: string,
-    runtime?: string,
-    useCustomBuildPipeline: boolean = false,
-    envVar?: { varName: string; value: string },
     secret?: { secretName: string; key: string; value: string },
   ) {
-    this.importCodeStep(publicGitRepo);
-    this.configureComponentsStep(
-      componentName,
-      useCustomBuildPipeline,
-      applicationName,
-      runtime,
-      envVar,
-      secret,
-    );
+    const addComponent = new AddComponentPage();
+    const componentPage = new ComponentPage();
+    cy.title().should('eq', `Applications | ${FULL_APPLICATION_TITLE}`);
+
+    addComponent.setSource(publicGitRepo);
+    this.configureComponentsStep(componentName, pipeline, applicationName, secret);
+    addComponent.waitRepoValidated();
+    componentPage.clickCreateApplication();
   }
 
   static checkComponentInListView(
     componentName: string,
     applicationName: string,
     componentStatus: string,
-    componentLabel: string,
+    buildTrigger: string,
   ) {
     this.createdComponentExists(componentName, applicationName);
     this.checkComponentStatus(componentName, componentStatus);
-    this.checkComponentLabel(componentName, componentLabel);
+    this.checkBuildTrigger(componentName, buildTrigger);
   }
 
   static createdComponentExists(componentName: string, applicationName: string) {
@@ -86,7 +85,7 @@ export class Applications {
     });
   }
 
-  static checkComponentLabel(componentName: string, componentLabel: string) {
+  static checkBuildTrigger(componentName: string, componentLabel: string) {
     cy.get(componentsTabPO.componentListItem(componentName)).contains(componentLabel, {
       timeout: 15000,
     });
@@ -133,41 +132,18 @@ export class Applications {
     Common.waitForLoad();
   }
 
-  static importCodeStep(publicGitRepo: string) {
-    const addComponent = new AddComponentPage();
-    cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
-
-    // Enter git repo URL
-    addComponent.setSource(publicGitRepo);
-    // Check if the source is validated
-    addComponent.waitRepoValidated();
-
-    addComponent.submit();
-    cy.title().should('eq', `Import - Configure components | ${FULL_APPLICATION_TITLE}`);
-  }
-
   static configureComponentsStep(
     componentName: string,
-    useCustomBuildPipeline: boolean,
+    pipeline: string,
     applicationName?: string,
-    runtime?: string,
-    envVar?: { varName: string; value: string },
     secret?: { secretName: string; key: string; value: string },
   ) {
     const componentPage = new ComponentPage();
     componentPage.editComponentName(componentName);
+    componentPage.setPipeline(pipeline);
 
     if (applicationName) {
       componentPage.setApplicationName(applicationName);
-    }
-    if (runtime) {
-      componentPage.selectRuntime(runtime);
-    }
-    if (envVar) {
-      componentPage.addEnvVar(envVar.varName, envVar.value);
-    }
-    if (useCustomBuildPipeline) {
-      componentPage.selectCustomBuildPipeline();
     }
     if (secret) {
       UIhelper.clickButton('Add secret');
@@ -187,7 +163,6 @@ export class Applications {
         .type(secret.value, { log: false });
       UIhelper.clickButton('Create').should('not.exist');
     }
-    componentPage.clickCreateApplication(useCustomBuildPipeline);
   }
 
   static verifySecretUsingAPI(secretName: string, key: string, value: string) {
