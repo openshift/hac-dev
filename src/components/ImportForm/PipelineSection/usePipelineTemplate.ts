@@ -19,10 +19,6 @@ const PIPELINE_DATA = {
       bundle:
         'quay.io/redhat-appstudio-tekton-catalog/pipeline-docker-build:032a8745d43a942a247f365fc890b06023ccd67d',
     },
-    {
-      name: 'docker-build-community',
-      bundle: '',
-    },
   ],
 };
 
