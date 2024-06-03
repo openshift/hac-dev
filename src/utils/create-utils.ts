@@ -121,15 +121,10 @@ export const createComponent = (
         (enablePac
           ? {
               annotations: {
-                'image.redhat.com/generate': 'true',
                 [BUILD_REQUEST_ANNOTATION]: BuildRequest.configurePac,
               },
             }
-          : {
-              annotations: {
-                'image.redhat.com/generate': 'true',
-              },
-            })),
+          : {})),
     },
     spec: {
       componentName,
