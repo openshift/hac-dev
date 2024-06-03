@@ -156,6 +156,10 @@ export default defineConfig({
         }
       }
 
+      if (config.env.GH_TOKEN == '') {
+        throw new Error('GH_TOKEN variable needs to be set to run a test.');
+      }
+
       config.env.HAC_WORKSPACE = config.env.USERNAME.toLowerCase();
       config.env.HAC_NAMESPACE = `${config.env.HAC_WORKSPACE}-tenant`;
 

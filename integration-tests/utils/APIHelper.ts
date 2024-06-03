@@ -27,9 +27,6 @@ export class APIHelper {
       url,
       headers: this.githubHeaders,
     };
-    if (!Cypress.env('GH_TOKEN') && options.method == 'POST') {
-      cy.log('GitHub Token is not set, the GitHub request may fail.');
-    }
     if (body) {
       options.body = body;
     }
