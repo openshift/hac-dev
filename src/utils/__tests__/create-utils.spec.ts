@@ -87,7 +87,6 @@ const mockComponentData: ComponentKind = {
     namespace: 'test-ns',
     annotations: {
       'build.appstudio.openshift.io/request': 'configure-pac',
-      'image.redhat.com/generate': 'true',
     },
   },
   spec: {
@@ -127,7 +126,6 @@ const mockComponentDataWithPAC = {
   metadata: {
     ...mockComponentDataWithDevfile.metadata,
     annotations: {
-      'image.redhat.com/generate': 'true',
       'build.appstudio.openshift.io/request': 'configure-pac',
     },
   },
