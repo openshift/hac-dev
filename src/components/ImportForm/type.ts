@@ -11,6 +11,7 @@ export type ImportFormValues = {
       url: string;
       revision?: string;
       context?: string;
+      dockerfileUrl?: string;
     };
   };
   pipeline: string;
