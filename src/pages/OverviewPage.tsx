@@ -9,7 +9,7 @@ import { FULL_APPLICATION_TITLE } from '../consts/labels';
 
 const OverviewPage: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
-    <NamespacedPage hideAppBanner>
+    <NamespacedPage hideAppBanner skipWorkspaceCheck>
       <Helmet>
         <title>Overview | {FULL_APPLICATION_TITLE}</title>
       </Helmet>
