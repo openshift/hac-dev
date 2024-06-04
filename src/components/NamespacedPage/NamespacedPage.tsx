@@ -15,11 +15,13 @@ import './NamespacedPage.scss';
 type NamespacedPageProps = {
   children: React.ReactNode;
   hideAppBanner?: boolean;
+  skipWorkspaceCheck?: boolean;
 };
 
 const NamespacedPage: React.FunctionComponent<React.PropsWithChildren<NamespacedPageProps>> = ({
   children,
   hideAppBanner,
+  skipWorkspaceCheck = false,
 }) => {
   const { workspacesLoaded } = React.useContext(WorkspaceContext);
 
@@ -33,7 +35,7 @@ const NamespacedPage: React.FunctionComponent<React.PropsWithChildren<Namespaced
     }
   }, []);
 
-  if (!workspacesLoaded) {
+  if (!skipWorkspaceCheck && !workspacesLoaded) {
     return (
       <Bullseye>
         <Spinner />
