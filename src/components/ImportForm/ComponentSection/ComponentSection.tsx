@@ -18,6 +18,11 @@ export const ComponentSection = () => {
       </TextContent>
       <SourceSection />
       <InputField
+        name="source.git.dockerfileUrl"
+        label="Docker file"
+        placeholder="/path/to/Dockerfile"
+      />
+      <InputField
         name="componentName"
         label="Component name"
         isRequired
