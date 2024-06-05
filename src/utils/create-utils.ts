@@ -394,6 +394,9 @@ export const createImageRepository = (
         'appstudio.redhat.com/component': component,
         'appstudio.redhat.com/application': application,
       },
+      annotations: {
+        'image-controller.appstudio.redhat.com/update-component-image': 'true',
+      },
     },
     spec: {
       image: {
