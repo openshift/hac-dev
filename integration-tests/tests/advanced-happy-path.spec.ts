@@ -37,8 +37,6 @@ describe('Advanced Happy path', () => {
   const pipeline = 'docker-build';
 
   after(function () {
-    APIHelper.deleteGitHubRepository(repoName);
-
     // If some test failed, don't remove the app
     let allTestsSucceeded = true;
     this.test.parent.eachTest((test) => {
@@ -48,6 +46,7 @@ describe('Advanced Happy path', () => {
     });
     if (allTestsSucceeded || Cypress.env('REMOVE_APP_ON_FAIL')) {
       Applications.deleteApplication(applicationName);
+      APIHelper.deleteGitHubRepository(repoName);
     }
   });
 

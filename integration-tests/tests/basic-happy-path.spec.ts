@@ -128,11 +128,11 @@ describe('Basic Happy Path', () => {
 
     it('Verify the Pipeline run details and Node Graph view', () => {
       Applications.goToPipelinerunsTab();
-      UIhelper.getTableRow('Pipeline run List', 'Running')
-        .contains(`${componentName}-`)
+      UIhelper.getTableRow('Pipeline run List', `${componentName}-on-pull-request`)
+        .contains(componentName)
         .invoke('text')
         .then((pipelinerunName) => {
-          PipelinerunsTabPage.clickOnRunningPipelinerun(componentName);
+          UIhelper.clickRowCellInTable('Pipeline run List', pipelinerunName, pipelinerunName);
           UIhelper.verifyLabelAndValue('Namespace', Cypress.env('HAC_NAMESPACE'));
           UIhelper.verifyLabelAndValue('Pipeline', pipelinerunName);
           UIhelper.verifyLabelAndValue('Application', applicationName);
@@ -153,8 +153,14 @@ describe('Basic Happy Path', () => {
         });
     });
 
-    it('Verify Enterprise contract Test pipeline run Details', () => {
+    it('Wait for on-push build to finish', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
+      UIhelper.getTableRow('Pipeline run List', 'on-push')
+        .contains('Running', { timeout: 120000 })
+        .should('not.exist');
+    });
+
+    it('Verify Enterprise contract Test pipeline run Details', () => {
       UIhelper.clickRowCellInTable('Pipeline run List', 'Test', `${applicationName}-`);
       DetailsTab.waitForPLRAndDownloadAllLogs(false);
     });
