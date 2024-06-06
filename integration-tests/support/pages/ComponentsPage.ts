@@ -3,9 +3,18 @@ import { UIhelper } from '../../utils/UIhelper';
 import { CPUUnit, MemoryUnit } from '../constants/Units';
 import { ComponentsPagePO } from '../pageObjects/createApplication-po';
 import { alertTitle } from '../pageObjects/global-po';
+import { componentDetailsPO } from '../pageObjects/pages-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class ComponentPage extends AbstractWizardPage {
+  openPipelinePlanModal() {
+    cy.contains('button', 'Merge pull request').should('be.visible').click();
+  }
+
+  setPipeline(pipeline: string) {
+    cy.get(ComponentsPagePO.dropdown, { timeout: 80000 }).eq(0).should('be.enabled').click();
+    cy.get(ComponentsPagePO.dropdown).get('a').contains(pipeline).click();
+  }
   public componentName: string;
 
   editComponentName(newName: string) {
@@ -91,14 +100,12 @@ export class ComponentPage extends AbstractWizardPage {
     UIhelper.selectValueInDropdownbyLabelName('Runtime', runtimeName);
   }
 
-  clickCreateApplication(customPipeline = false) {
+  clickCreateApplication() {
     cy.contains('button', 'Create application', { timeout: 80000 })
       .should('be.enabled')
       .invoke('click')
       .should('be.disabled');
-    if (!customPipeline) {
-      Common.waitForLoad();
-    }
+    Common.waitForLoad();
   }
 
   checkAlert(message: string) {

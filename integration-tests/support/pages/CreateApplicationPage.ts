@@ -4,6 +4,14 @@ import { createApplicationPagePO } from '../pageObjects/createApplication-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class CreateApplicationPage extends AbstractWizardPage {
+  waitAppCreated(applicationName: string) {
+    Common.verifyPageTitle(applicationName);
+  }
+
+  clickAddComponent() {
+    cy.contains(createApplicationPagePO.addComponentButton).click({ force: true });
+  }
+
   getApplicationName() {
     return cy.get(createApplicationPagePO.applicationName);
   }

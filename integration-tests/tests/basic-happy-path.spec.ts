@@ -1,10 +1,12 @@
-import { FULL_APPLICATION_TITLE } from '../support/constants/PageTitle';
+import { FULL_APPLICATION_TITLE, NavItem } from '../support/constants/PageTitle';
+import { actions } from '../support/pageObjects/global-po';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import {
   ComponentDetailsPage,
   ComponentPageTabs,
   DeploymentsTab,
 } from '../support/pages/ComponentDetailsPage';
+import { ComponentPage } from '../support/pages/ComponentsPage';
 import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
 import { IntegrationTestsTabPage } from '../support/pages/tabs/IntegrationTestsTabPage';
 import {
@@ -12,6 +14,7 @@ import {
   PipelinerunsTabPage,
   TaskRunsTab,
 } from '../support/pages/tabs/PipelinerunsTabPage';
+import { APIHelper } from '../utils/APIHelper';
 import { Applications } from '../utils/Applications';
 import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
@@ -20,12 +23,25 @@ describe('Basic Happy Path', () => {
   const applicationName = Common.generateAppName();
   const applicationDetailPage = new ApplicationDetailPage();
   const integrationTestsTab = new IntegrationTestsTabPage();
-  const publicRepo = 'https://github.com/hac-test/devfile-sample-code-with-quarkus';
+  const componentPage = new ComponentPage();
+
+  const sourceOwner = 'hac-test';
+  const sourceRepo = 'devfile-sample-code-with-quarkus';
+  const repoName = Common.generateAppName(sourceRepo);
+  const repoOwner = 'redhat-hac-qe';
+  const publicRepo = `https://github.com/${repoOwner}/${repoName}`;
   const componentName: string = Common.generateAppName('java-quarkus');
   const piplinerunlogsTasks = ['init', 'clone-repository', 'build-container', 'show-summary'];
   const quarkusDeplomentBody = 'Congratulations, you have created a new Quarkus cloud application';
+  const pipeline = 'docker-build';
+
+  before(function () {
+    APIHelper.createRepositoryFromTemplate(sourceOwner, sourceRepo, repoOwner, repoName);
+  });
 
   after(function () {
+    APIHelper.deleteGitHubRepository(repoName);
+
     // If some test failed, don't remove the app
     let allTestsSucceeded = true;
     this.test.parent.eachTest((test) => {
@@ -34,18 +50,24 @@ describe('Basic Happy Path', () => {
       }
     });
     if (allTestsSucceeded || Cypress.env('REMOVE_APP_ON_FAIL')) {
-      Applications.deleteApplication(applicationName);
+      // use UI to remove the application to test the flow
+      Common.navigateTo(NavItem.applications);
+      Applications.openKebabMenu(applicationName);
+      cy.get(actions.deleteApp).click();
+      cy.get(actions.deleteModalInput).clear().type(applicationName);
+      cy.get(actions.deleteModalButton).click();
+      cy.get(`[data-id="${applicationName}"]`).should('not.exist');
     }
   });
 
   it('Create an Application with a component', () => {
-    Applications.createApplication();
-    Applications.createComponent(publicRepo, componentName, applicationName);
+    Applications.createApplication(applicationName);
+    Applications.createComponent(publicRepo, componentName, pipeline, applicationName);
     Applications.checkComponentInListView(
       componentName,
       applicationName,
       'Build running',
-      'Default',
+      'Automatic',
     );
   });
 
@@ -62,20 +84,20 @@ describe('Basic Happy Path', () => {
 
     it("Use 'Components' tabs to start adding a new component", () => {
       Applications.goToOverviewTab().addComponent();
-      cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
+      cy.title().should('eq', `${applicationName} - Overview | Konflux`);
       cy.url().should('include', `/import?application=${applicationName}`);
     });
 
     it("Use HACBS 'Components' tabs to start adding a new component", () => {
       Applications.goToComponentsTab();
       ComponentsTabPage.clickAddComponent();
-      cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
+      cy.title().should('eq', `${applicationName} - Components | Konflux`);
       cy.url().should('include', `/import?application=${applicationName}`);
     });
 
     it("Click 'Actions' dropdown to add a component", () => {
       Applications.clickActionsDropdown('Add component');
-      cy.title().should('eq', `Import - Add components | ${FULL_APPLICATION_TITLE}`);
+      cy.title().should('eq', `${applicationName} - Overview | Konflux`);
       cy.url().should('include', `/import?application=${applicationName}`);
     });
   });
@@ -85,13 +107,32 @@ describe('Basic Happy Path', () => {
       Applications.clickBreadcrumbLink(applicationName);
     });
 
+    it('Merge the auto-generated PR, and verify the event status on modal', () => {
+      Applications.goToComponentsTab();
+      componentPage.openPipelinePlanModal();
+      componentPage.verifyAndWaitForPRIsSent();
+
+      APIHelper.mergePR(
+        repoOwner,
+        repoName,
+        1,
+        'firstCommit',
+        'This PR was auto-generated by appstudio-ci__bot',
+      );
+
+      // Disabled due to bug https://issues.redhat.com/browse/KFLUXBUGS-1307
+      // componentPage.verifyAndWaitForPRMerge();
+
+      componentPage.closeModal();
+    });
+
     it('Verify the Pipeline run details and Node Graph view', () => {
       Applications.goToPipelinerunsTab();
-      UIhelper.getTableRow('Pipeline run List', 'Running')
-        .contains(`${componentName}-`)
+      UIhelper.getTableRow('Pipeline run List', `${componentName}-on-pull-request`)
+        .contains(componentName)
         .invoke('text')
         .then((pipelinerunName) => {
-          PipelinerunsTabPage.clickOnRunningPipelinerun(componentName);
+          UIhelper.clickRowCellInTable('Pipeline run List', pipelinerunName, pipelinerunName);
           UIhelper.verifyLabelAndValue('Namespace', Cypress.env('HAC_NAMESPACE'));
           UIhelper.verifyLabelAndValue('Pipeline', pipelinerunName);
           UIhelper.verifyLabelAndValue('Application', applicationName);
@@ -112,8 +153,14 @@ describe('Basic Happy Path', () => {
         });
     });
 
-    it('Verify Enterprise contract Test pipeline run Details', () => {
+    it('Wait for on-push build to finish', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
+      UIhelper.getTableRow('Pipeline run List', 'on-push')
+        .contains('Running', { timeout: 120000 })
+        .should('not.exist');
+    });
+
+    it('Verify Enterprise contract Test pipeline run Details', () => {
       UIhelper.clickRowCellInTable('Pipeline run List', 'Test', `${applicationName}-`);
       DetailsTab.waitForPLRAndDownloadAllLogs(false);
     });

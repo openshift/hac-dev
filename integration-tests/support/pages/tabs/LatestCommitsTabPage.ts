@@ -9,23 +9,6 @@ type commitsRow = {
 
 // Latest Commits List view page
 export class LatestCommitsTabPage {
-  mergePR(
-    owner: string,
-    repoName: string,
-    pullNumber: number,
-    commitTitle: string,
-    commitMessage: string,
-  ) {
-    const body = { commit_title: `${commitTitle}`, commit_message: `${commitMessage}` };
-    APIHelper.githubRequest(
-      'PUT',
-      githubAPIEndpoints.merge(owner, repoName, pullNumber),
-      body,
-    ).then((result) => {
-      expect(result.body.merged).to.be.true;
-    });
-  }
-
   editFile(
     gitRepo: string,
     filePath: string,

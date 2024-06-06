@@ -34,10 +34,9 @@ describe('Advanced Happy path', () => {
   const repoLink = `https://github.com/${repoOwner}/${repoName}`;
   const gitHubUser = Cypress.env('GH_USERNAME');
   const componentName = Common.generateAppName('go');
+  const pipeline = 'docker-build';
 
   after(function () {
-    APIHelper.deleteGitHubRepository(repoName);
-
     // If some test failed, don't remove the app
     let allTestsSucceeded = true;
     this.test.parent.eachTest((test) => {
@@ -47,6 +46,7 @@ describe('Advanced Happy path', () => {
     });
     if (allTestsSucceeded || Cypress.env('REMOVE_APP_ON_FAIL')) {
       Applications.deleteApplication(applicationName);
+      APIHelper.deleteGitHubRepository(repoName);
     }
   });
 
@@ -86,26 +86,15 @@ describe('Advanced Happy path', () => {
   });
 
   it('Create an Application with a component', () => {
-    Applications.createApplication();
-    Applications.createComponent(
-      repoLink,
-      componentName,
-      applicationName,
-      'Go',
-      true,
-      {
-        varName: 'TEST_ENV_VAR',
-        value: 'Test go app',
-      },
-      secret,
-    );
+    Applications.createApplication(applicationName);
+    Applications.createComponent(repoLink, componentName, pipeline, applicationName, secret);
   });
 
   describe('Trigger a new Pipelinerun related to push event', () => {
     it('Merge the auto-generated PR, and verify the event status on modal', () => {
       componentPage.verifyAndWaitForPRIsSent();
 
-      latestCommitsTabPage.mergePR(
+      APIHelper.mergePR(
         repoOwner,
         repoName,
         1,

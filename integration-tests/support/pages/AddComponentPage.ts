@@ -8,7 +8,7 @@ export class AddComponentPage extends AbstractWizardPage {
     cy.contains('div', addComponentPagePO.notValidatedMessage, { timeout: timeoutDuration });
   }
   waitRepoValidated(timeoutDuration: number = 140000) {
-    cy.contains('div', 'Access validated', { timeout: timeoutDuration });
+    cy.get(addComponentPagePO.verifiedSource, { timeout: timeoutDuration }).should('be.visible');
   }
 
   openSamplesPage() {

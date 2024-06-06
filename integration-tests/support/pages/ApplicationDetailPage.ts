@@ -64,7 +64,7 @@ export class ApplicationDetailPage {
   }
 
   openAddComponentPage() {
-    cy.get(addComponentPagePO.addComponent).click({ force: true });
+    cy.contains(addComponentPagePO.addComponent, 'Add component').click({ force: true });
     Common.verifyPageTitle(pageTitles.createApp);
     Common.waitForLoad();
     cy.testA11y(`${pageTitles.createApp} page`);
