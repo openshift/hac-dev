@@ -49,20 +49,12 @@ const usePACState = (component: ComponentKind) => {
           },
           matchExpressions: [
             { key: PipelineRunLabel.PULL_REQUEST_NUMBER_LABEL, operator: 'DoesNotExist' },
-            {
-              key: PipelineRunLabel.COMMIT_USER_LABEL,
-              values: [prBotName],
-              operator: 'NotEquals',
-            },
-            {
-              key: PipelineRunLabel.COMMIT_USER_LABEL,
-              operator: 'Exists',
-            },
           ],
         },
-        limit: 1,
+        // this limit is based on the assumption that user merges the PR after the component is created
+        limit: 10,
       }),
-      [component.metadata.name, component.spec.application, prBotName],
+      [component.metadata.name, component.spec.application],
     ),
   );
 
@@ -77,6 +69,10 @@ const usePACState = (component: ComponentKind) => {
     [configurationTime, pipelineBuildRuns],
   );
 
+  const prMerged = runsForComponent.find(
+    (r) => !r.metadata?.annotations?.[PipelineRunLabel.COMMIT_USER_LABEL]?.includes(prBotName),
+  );
+
   return isSample
     ? PACState.sample
     : isConfigureRequested
@@ -86,7 +82,7 @@ const usePACState = (component: ComponentKind) => {
     : pacProvision === ComponentBuildState.enabled
     ? !pipelineBuildRunsLoaded
       ? PACState.loading
-      : runsForComponent?.length > 0
+      : prMerged
       ? PACState.ready
       : PACState.pending
     : !pacProvision || pacProvision === ComponentBuildState.disabled

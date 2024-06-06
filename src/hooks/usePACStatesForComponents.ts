@@ -89,19 +89,10 @@ const usePACStatesForComponents = (components: ComponentKind[]): PacStatesForCom
               values: neededNames,
             },
             { key: PipelineRunLabel.PULL_REQUEST_NUMBER_LABEL, operator: 'DoesNotExist' },
-            {
-              key: PipelineRunLabel.COMMIT_USER_LABEL,
-              values: [prBotName],
-              operator: 'NotEquals',
-            },
-            {
-              key: PipelineRunLabel.COMMIT_USER_LABEL,
-              operator: 'Exists',
-            },
           ],
         },
       }),
-      [application, neededNames, prBotName],
+      [application, neededNames],
     ),
   );
 
@@ -117,15 +108,18 @@ const usePACStatesForComponents = (components: ComponentKind[]): PacStatesForCom
         );
         const configurationTime = buildStatus?.pac?.['configuration-time'];
 
-        const runForComponent = pipelineBuildRuns?.find(
+        const runsForComponent = pipelineBuildRuns?.filter(
           (p) =>
             p.metadata.labels?.[PipelineRunLabel.COMPONENT] === componentName &&
             (configurationTime
               ? new Date(p.metadata.creationTimestamp) > new Date(configurationTime)
               : true),
         );
-
-        if (runForComponent) {
+        const prMerged = runsForComponent.find(
+          (r) =>
+            !r.metadata?.annotations?.[PipelineRunLabel.COMMIT_USER_LABEL]?.includes(prBotName),
+        );
+        if (prMerged) {
           updates[componentName] = PACState.ready;
           update = true;
         } else if (!getNextPage) {
@@ -144,7 +138,7 @@ const usePACStatesForComponents = (components: ComponentKind[]): PacStatesForCom
         getNextPage();
       }
     }
-  }, [components, getNextPage, neededNames, pipelineBuildRuns, pipelineBuildRunsLoaded]);
+  }, [components, getNextPage, neededNames, pipelineBuildRuns, pipelineBuildRunsLoaded, prBotName]);
 
   return componentPacStates;
 };
