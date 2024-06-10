@@ -12,10 +12,8 @@ import {
 } from '@patternfly/react-core';
 import { useFormikContext } from 'formik';
 import { isEmpty } from 'lodash-es';
-import { InputField, TextAreaField } from '../../../../../shared';
+import { InputField } from '../../../../../shared';
 import ComponentField from './ComponentField';
-import StatusDropdown from './StatusDropdown';
-import UploadDate from './UploadDate';
 
 type CVEFormValues = {
   CVEKey: string;
@@ -42,22 +40,10 @@ const CVEFormContent: React.FC<CVEFormContentProps> = ({ modalToggle }) => {
           </TextContent>
         </StackItem>
         <StackItem>
-          <InputField data-test="cve-issue-key" label="CVE key" name="key" required />
+          <InputField data-test="cve-issue-key" label="CVE ID" name="key" required />
         </StackItem>
         <StackItem>
           <ComponentField name="components" />
-        </StackItem>
-        <StackItem>
-          <InputField data-test="cve-url" label="URL for the CVE" name="url" required />
-        </StackItem>
-        <StackItem>
-          <TextAreaField name="summary" label="Summary" />
-        </StackItem>
-        <StackItem>
-          <UploadDate name="uploadDate" label="Last updated" />
-        </StackItem>
-        <StackItem>
-          <StatusDropdown name="status" />
         </StackItem>
         <StackItem>
           <Button

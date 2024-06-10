@@ -65,22 +65,21 @@ describe('triggerReleasePlan', () => {
         topic: 'topic of release',
         references: 'references',
         issues: [
-          { issueKey: 'RHTAP-5560', summary: 'summary1', url: 'test-url' },
-          { issueKey: 'RHTAP-5561', summary: 'summary2', url: 'test-url2' },
-          { issueKey: 'RHTAP-5562', summary: 'summary3', url: 'test-url2' },
+          { key: 'RHTAP-5560', summary: 'summary1', url: 'test-url' },
+          { key: 'RHTAP-5561', summary: 'summary2', url: 'test-url2' },
+          { key: 'RHTAP-5562', summary: 'summary3', url: 'test-url2' },
         ],
         labels: [],
       },
       'test-ns',
     );
 
-    const advisoryIssues = result.spec.data.releaseNotes.issues;
+    const advisoryIssues = result.spec.data.releaseNotes.fixed;
     expect(advisoryIssues.length).toEqual(3);
     expect(advisoryIssues[0]).toEqual(
       expect.objectContaining({
-        issueKey: 'RHTAP-5560',
-        url: 'test-url',
-        summary: 'summary1',
+        id: 'RHTAP-5560',
+        source: 'test-url',
       }),
     );
   });
@@ -95,8 +94,22 @@ describe('triggerReleasePlan', () => {
         topic: 'topic of release',
         references: 'references',
         cves: [
-          { issueKey: 'cve1', components: ['a', 'b'], url: 'test-url' },
-          { issueKey: 'cve2', components: ['c', 'd'], url: 'test-url2' },
+          {
+            issueKey: 'cve1',
+            components: [
+              { name: 'a', packages: ['p3', 'p4'] },
+              { name: 'b', packages: ['p1', 'p2'] },
+            ],
+            url: 'test-url',
+          },
+          {
+            issueKey: 'cve2',
+            components: [
+              { name: 'c', packages: ['p5', 'p6'] },
+              { name: 'd', packages: ['p7', 'p8'] },
+            ],
+            url: 'test-url2',
+          },
         ],
         labels: [],
       },
@@ -109,7 +122,10 @@ describe('triggerReleasePlan', () => {
       expect.objectContaining({
         issueKey: 'cve1',
         url: 'test-url',
-        components: ['a', 'b'],
+        components: [
+          { name: 'a', packages: ['p3', 'p4'] },
+          { name: 'b', packages: ['p1', 'p2'] },
+        ],
       }),
     );
   });
