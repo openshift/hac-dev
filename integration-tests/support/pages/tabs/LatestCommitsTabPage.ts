@@ -49,14 +49,6 @@ export class LatestCommitsTabPage {
     );
   }
 
-  verifyBranch(branchName: string, repoLink: string) {
-    UIhelper.verifyLabelAndValue('Branch', branchName).should(
-      'have.attr',
-      'href',
-      `${repoLink}/tree/${branchName}`,
-    );
-  }
-
   verifyNodesOnCommitOverview(nodes: string[]) {
     nodes.forEach((nodetext) => {
       UIhelper.verifyGraphNodes(nodetext);

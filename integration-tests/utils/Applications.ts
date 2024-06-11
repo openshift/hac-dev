@@ -21,6 +21,15 @@ import { Common } from './Common';
 import { UIhelper } from './UIhelper';
 
 export class Applications {
+  static createCleanApp(applicationName: string) {
+    cy.title().should('eq', `Applications | ${FULL_APPLICATION_TITLE}`);
+    const createApplicationPage = new CreateApplicationPage();
+    createApplicationPage.clickCreateApplication();
+    cy.testA11y(`${pageTitles.createApp} page`);
+    createApplicationPage.setApplicationName(applicationName);
+    createApplicationPage.clickCreateApplication();
+  }
+
   static deleteApplication(applicationName: string) {
     APIHelper.requestHACAPI({
       method: 'DELETE',
@@ -48,16 +57,16 @@ export class Applications {
     componentName: string,
     pipeline: string,
     applicationName?: string,
+    dockerfilePath?: string,
     secret?: { secretName: string; key: string; value: string },
   ) {
     const addComponent = new AddComponentPage();
     const componentPage = new ComponentPage();
-    cy.title().should('eq', `Applications | ${FULL_APPLICATION_TITLE}`);
 
     addComponent.setSource(publicGitRepo);
-    this.configureComponentsStep(componentName, pipeline, applicationName, secret);
+    this.configureComponentsStep(componentName, pipeline, applicationName, dockerfilePath, secret);
     addComponent.waitRepoValidated();
-    componentPage.clickCreateApplication();
+    componentPage.clickSubmitButton();
   }
 
   static checkComponentInListView(
@@ -136,6 +145,7 @@ export class Applications {
     componentName: string,
     pipeline: string,
     applicationName?: string,
+    dockerfilePath?: string,
     secret?: { secretName: string; key: string; value: string },
   ) {
     const componentPage = new ComponentPage();
@@ -144,6 +154,9 @@ export class Applications {
 
     if (applicationName) {
       componentPage.setApplicationName(applicationName);
+    }
+    if (dockerfilePath) {
+      componentPage.setDockerfilePath(dockerfilePath);
     }
     if (secret) {
       UIhelper.clickButton('Add secret');

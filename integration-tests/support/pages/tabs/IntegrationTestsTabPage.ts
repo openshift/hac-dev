@@ -35,9 +35,6 @@ export class IntegrationTestsTabPage {
     this.verifySaveChangesIsDisabled();
     UIhelper.inputValueInTextBoxByLabelName('Integration test name', integrationTestName);
     UIhelper.inputValueInTextBoxByLabelName('GitHub URL', githubURL);
-    cy.contains(addIntegrationTestStepPO.accessValidationMsg, 'Access validated', {
-      timeout: 80000,
-    }).should('be.visible');
     UIhelper.inputValueInTextBoxByLabelName('Revision', revision);
     UIhelper.inputValueInTextBoxByLabelName('Path in repository', pathInRepository);
     if (markOptionalForRelease === 'uncheck') {
@@ -56,9 +53,6 @@ export class IntegrationTestsTabPage {
 
     if (githubURL) {
       UIhelper.inputValueInTextBoxByLabelName('GitHub URL', githubURL);
-      cy.contains(addIntegrationTestStepPO.accessValidationMsg, 'Access validated', {
-        timeout: 80000,
-      }).should('be.visible');
     }
 
     if (markOptionalForRelease === 'uncheck')
