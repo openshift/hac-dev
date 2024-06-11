@@ -170,6 +170,19 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
+      path: '/application-pipeline/secrets',
+      exact: true,
+      component: {
+        $codeRef: 'WorkspacedPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+  {
+    type: 'core.page/route',
+    properties: {
       path: '/application-pipeline/access',
       exact: true,
       component: {
@@ -477,7 +490,7 @@ const routeExtensions = [
   {
     type: 'core.page/route',
     properties: {
-      path: '/application-pipeline/secrets',
+      path: '/application-pipeline/secrets/workspaces/:workspaceName',
       exact: true,
       component: {
         $codeRef: 'SecretsListPage',

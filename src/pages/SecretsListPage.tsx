@@ -9,10 +9,11 @@ import { FULL_APPLICATION_TITLE } from '../consts/labels';
 import { RemoteSecretModel } from '../models';
 import ExternalLink from '../shared/components/links/ExternalLink';
 import { AccessReviewResources } from '../types';
+import { useWorkspaceBreadcrumbs } from '../utils/breadcrumb-utils';
 
 const SecretsListPage: React.FC<React.PropsWithChildren<unknown>> = () => {
   const accessReviewResources: AccessReviewResources = [{ model: RemoteSecretModel, verb: 'list' }];
-
+  const breadcrumbs = useWorkspaceBreadcrumbs();
   return (
     <NamespacedPage>
       <PageAccessCheck accessReviewResources={accessReviewResources}>
@@ -31,6 +32,13 @@ const SecretsListPage: React.FC<React.PropsWithChildren<unknown>> = () => {
               </ExternalLink>
             </>
           }
+          breadcrumbs={[
+            ...breadcrumbs,
+            {
+              path: '#',
+              name: 'Secrets',
+            },
+          ]}
         >
           <Divider style={{ background: 'white', paddingTop: 'var(--pf-v5-global--spacer--md)' }} />
 
