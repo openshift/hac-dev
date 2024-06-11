@@ -22,7 +22,7 @@ export const createCommitObjectFromPLR = (plr: PipelineRunKind): Commit => {
   }
   const commitSHA = getCommitSha(plr);
   const commitBranch = plr.metadata.annotations?.[PipelineRunLabel.COMMIT_BRANCH_ANNOTATION] ?? '';
-  const commitUser = plr.metadata.labels?.[PipelineRunLabel.COMMIT_USER_LABEL];
+  const commitUser = plr.metadata.annotations?.[PipelineRunLabel.COMMIT_USER_LABEL];
   const creationTime = plr.metadata.creationTimestamp;
   const application = plr.metadata.labels[PipelineRunLabel.APPLICATION];
   const component = plr.metadata.labels[PipelineRunLabel.COMPONENT] ?? '';

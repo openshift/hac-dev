@@ -43,7 +43,7 @@ const ComponentLatestBuild: React.FC<React.PropsWithChildren<ComponentLatestBuil
   const [taskRuns, taskRunsLoaded] = useTaskRuns(namespace, pipelineRun?.metadata?.name);
   const buildLogsModal = useBuildLogViewerModal(component);
 
-  const containerImage = component.status?.containerImage;
+  const containerImage = component.spec.containerImage;
 
   if (error) {
     const httpError = HttpError.fromCode((error as any).code);
