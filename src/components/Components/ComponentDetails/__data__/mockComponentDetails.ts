@@ -15,8 +15,6 @@ export const mockComponent: ComponentKind = {
   spec: {
     application: 'test-application',
     componentName: 'human-resources',
-    containerImage:
-      'quay.io/redhat-user-workloads-stage/test-ns/test-application/human-resources@sha256:6abea50ce7c0fd7f6f8dc83913d7b47e31612ed81a00d7ce3a7dc4ffe406a830',
     replicas: 1,
     resources: {
       requests: {
