@@ -50,5 +50,15 @@ describe('git-utils', () => {
       const result = getGitPath('customrepo.com', '', 'test');
       expect(result).toBe('');
     });
+
+    it('should return correct path for self hosted gitlab internal instance', () => {
+      const result = getGitPath('customrepo.com', 'org', 'test', 'gitlab.cee.redhat.com');
+      expect(result).toBe('/-/tree/org/test');
+    });
+
+    it('should return correct path for self hosted instance', () => {
+      const result = getGitPath('customrepo.com', 'org', 'test', 'gitlab.abcd.org.com');
+      expect(result).toBe('');
+    });
   });
 });

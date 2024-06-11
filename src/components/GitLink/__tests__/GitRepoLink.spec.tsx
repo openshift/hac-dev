@@ -42,6 +42,15 @@ describe('GitRepoLink', () => {
     expect(result.baseElement).toHaveTextContent('(.hidden_dir)');
   });
 
+  it('should render the correct url for self hosted instance', () => {
+    const result = render(
+      <GitRepoLink url="https://gitlab.cee.redhat.com/myorg/myrepo" context="./test" />,
+    );
+    expect(result.baseElement.querySelector('a').getAttribute('href')).toContain(
+      'https://gitlab.cee.redhat.com',
+    );
+  });
+
   it('should not render if url is missing or invalid', () => {
     const { container } = render(<GitRepoLink url="" />);
     expect(container).toBeEmptyDOMElement();
