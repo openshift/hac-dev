@@ -4,7 +4,12 @@ import { GitAltIcon } from '@patternfly/react-icons/dist/js/icons/git-alt-icon';
 import { GithubIcon } from '@patternfly/react-icons/dist/js/icons/github-icon';
 import { GitlabIcon } from '@patternfly/react-icons/dist/js/icons/gitlab-icon';
 
-export const getGitPath = (gitSource: string, revision: string, path?: string): string => {
+export const getGitPath = (
+  gitSource: string,
+  revision: string,
+  path?: string,
+  domain?: string,
+): string => {
   if (!revision) {
     // main or master branch but we cannot construct the url
     return '';
@@ -21,6 +26,10 @@ export const getGitPath = (gitSource: string, revision: string, path?: string): 
       prefix = '/-/tree';
       break;
     default:
+      if (domain === 'gitlab.cee.redhat.com') {
+        prefix = '/-/tree';
+        break;
+      }
       // omit path for unknown source
       return '';
   }
