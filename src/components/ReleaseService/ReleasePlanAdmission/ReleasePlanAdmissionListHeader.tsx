@@ -1,9 +1,8 @@
 export const releasesPlanAdmissionTableColumnClasses = {
   name: 'pf-m-width-20 wrap-column',
-  application: 'pf-m-width-20',
+  application: 'pf-m-width-30',
   source: 'pf-m-width-20',
-  releaseStrategy: 'pf-m-width-20',
-  autoRelease: 'pf-m-width-10',
+  autoRelease: 'pf-m-width-20',
   kebab: 'pf-c-table__action',
 };
 
@@ -20,10 +19,6 @@ const ReleasePlanAdmissionListHeader = () => {
     {
       title: 'Source Workspace',
       props: { className: releasesPlanAdmissionTableColumnClasses.source },
-    },
-    {
-      title: 'Release Strategy',
-      props: { className: releasesPlanAdmissionTableColumnClasses.releaseStrategy },
     },
     {
       title: 'Auto release',
