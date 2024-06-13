@@ -129,7 +129,7 @@ export enum SecretType {
 export type ServiceAccountKind = {
   automountServiceAccountToken?: boolean;
   imagePullSecrets?: SecretKind[] | { [key: string]: string }[];
-  secrets?: SecretKind[] | { [key: string]: string };
+  secrets?: SecretKind[] | { [key: string]: string }[];
 } & K8sResourceCommon;
 
 export enum SecretTypeAbstraction {

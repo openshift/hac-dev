@@ -58,6 +58,11 @@ describe('linkSecretToServiceAccount', () => {
             path: '/imagePullSecrets',
             value: [{ name: 'test-secret' }],
           },
+          {
+            op: 'replace',
+            path: '/secrets',
+            value: [{ name: 'test-secret' }],
+          },
         ],
       }),
     );
@@ -81,6 +86,11 @@ describe('linkSecretToServiceAccount', () => {
               { name: 'ip-secret4' },
               { name: 'test-secret' },
             ],
+          },
+          {
+            op: 'replace',
+            path: '/secrets',
+            value: [{ name: 'secret1' }, { name: 'secret2' }, { name: 'test-secret' }],
           },
         ],
       }),
@@ -127,6 +137,11 @@ describe('UnLinkSecretFromServiceAccount', () => {
             op: 'replace',
             path: '/imagePullSecrets',
             value: [{ name: 'ip-secret1' }, { name: 'ip-secret2' }, { name: 'ip-secret4' }],
+          },
+          {
+            op: 'replace',
+            path: '/secrets',
+            value: [{ name: 'secret1' }, { name: 'secret2' }],
           },
         ],
       }),
