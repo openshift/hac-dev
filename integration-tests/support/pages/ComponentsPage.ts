@@ -7,6 +7,14 @@ import { componentDetailsPO } from '../pageObjects/pages-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class ComponentPage extends AbstractWizardPage {
+  setDockerfilePath(dockerfilePath: string) {
+    cy.get(ComponentsPagePO.dockerfileInput).clear().type(dockerfilePath);
+  }
+
+  clickSubmitButton() {
+    cy.get(ComponentsPagePO.create).should('be.enabled').click();
+  }
+
   openPipelinePlanModal() {
     cy.contains('button', 'Merge pull request').should('be.visible').click();
   }

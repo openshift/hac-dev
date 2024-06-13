@@ -58,6 +58,7 @@ export const ComponentsPagePO = {
   customBuildRequestedState: '[data-testid="requested-state"]',
   label: '[class="pf-v5-c-label__content"]',
   customBuildPipelineModalCloseBtn: '[data-test="close-button custom-pipeline-modal"]',
+  dockerfileInput: 'input[id="form-input-source-git-dockerfileUrl-field"]',
 };
 
 export const applicationDetailPagePO = {

@@ -35,6 +35,7 @@ describe('Advanced Happy path', () => {
   const gitHubUser = Cypress.env('GH_USERNAME');
   const componentName = Common.generateAppName('go');
   const pipeline = 'docker-build';
+  const dockerfilePath = 'docker/Dockerfile';
 
   after(function () {
     // If some test failed, don't remove the app
@@ -85,13 +86,23 @@ describe('Advanced Happy path', () => {
     });
   });
 
-  it('Create an Application with a component', () => {
-    Applications.createApplication(applicationName);
-    Applications.createComponent(repoLink, componentName, pipeline, applicationName, secret);
+  it('Create clean application and add a component', () => {
+    Applications.createCleanApp(applicationName);
+    Applications.goToOverviewTab().addComponent();
+    Applications.createComponent(
+      repoLink,
+      componentName,
+      pipeline,
+      undefined,
+      dockerfilePath,
+      secret,
+    );
   });
 
   describe('Trigger a new Pipelinerun related to push event', () => {
     it('Merge the auto-generated PR, and verify the event status on modal', () => {
+      Applications.goToComponentsTab();
+      componentPage.openPipelinePlanModal();
       componentPage.verifyAndWaitForPRIsSent();
 
       APIHelper.mergePR(
@@ -103,6 +114,7 @@ describe('Advanced Happy path', () => {
       );
 
       componentPage.verifyAndWaitForPRMerge();
+
       componentPage.closeModal();
     });
 
@@ -111,7 +123,7 @@ describe('Advanced Happy path', () => {
         componentName,
         applicationName,
         'Build running',
-        'Custom',
+        'Automatic',
       );
     });
 
@@ -458,7 +470,7 @@ describe('Advanced Happy path', () => {
         Cypress.env(`${componentInfo.updatedCommitMessage}_SHA`),
         repoLink,
       ); // Commit SHA was stored in dynamic env at latestCommitsTabPage.editFile()
-      latestCommitsTabPage.verifyBranch('main', repoLink);
+      UIhelper.verifyLabelAndValue('Branch', 'main');
       UIhelper.verifyLabelAndValue('By', gitHubUser);
       UIhelper.verifyLabelAndValue('Status', 'Succeeded');
       latestCommitsTabPage.verifyNodesOnCommitOverview(['commit', `${componentName}-build`]);
@@ -501,6 +513,7 @@ describe('Advanced Happy path', () => {
     });
 
     it('Verify Secret on Secret List', () => {
+      SecretsPage.searchSecret(secret.secretName);
       UIhelper.verifyRowInTable('Secret List', secret.secretName, ['Key/value']);
     });
 
