@@ -57,8 +57,12 @@ bonfire deploy \
 # Call the keycloak API and add a user
 B64_USER=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.username'| tr -d '"')
 B64_PASS=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.password' | tr -d '"')
+
+
+CYPRESS_USERNAME="e2e-hac-"`echo ${B64_USER} | base64 -d`
+ENCODED_CYPRESS_USERNAME=`echo -n ${CYPRESS_USERNAME} | base64 -w 0`
 # These ENVs are populated in the Jenkins job by Vault secrets
-python tmp/keycloak.py $HAC_KC_SSO_URL $HAC_KC_USERNAME $HAC_KC_PASSWORD $B64_USER $B64_PASS $HAC_KC_REGISTRATION
+python tmp/keycloak.py $HAC_KC_SSO_URL $HAC_KC_USERNAME $HAC_KC_PASSWORD $ENCODED_CYPRESS_USERNAME $B64_PASS $HAC_KC_REGISTRATION
 mkdir -p $WORKSPACE/artifacts
 
 PR_TITLE=$(echo ${ghprbPullTitle} | sed -r 's/\s/_/g')
@@ -69,7 +73,7 @@ COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z \
     -e CYPRESS_PR_CHECK=true \
     -e CYPRESS_GH_PR_LINK=${ghprbPullLink} \
     -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/application-pipeline \
-    -e CYPRESS_USERNAME=`echo ${B64_USER} | base64 -d` \
+    -e CYPRESS_USERNAME=${CYPRESS_USERNAME} \
     -e CYPRESS_PASSWORD=`echo ${B64_PASS} | base64 -d` \
     -e CYPRESS_GH_PR_TITLE=${PR_TITLE} \
     -e CYPRESS_SSO_URL=${HAC_KC_SSO_URL} \
