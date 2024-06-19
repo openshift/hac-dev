@@ -53,6 +53,16 @@ export const unLinkSecretFromServiceAccount = async (secret: SecretKind, namespa
   });
 
   const existingIPSecrets = serviceAccount?.imagePullSecrets;
+  const existingSecrets = serviceAccount?.secrets;
+
+  if (
+    Array.isArray(existingIPSecrets) &&
+    existingIPSecrets.length === 0 &&
+    Array.isArray(existingSecrets) &&
+    existingSecrets.length === 0
+  ) {
+    return;
+  }
 
   const imagePullSecretsList =
     Array.isArray(existingIPSecrets) && existingIPSecrets.length >= 0
@@ -60,8 +70,6 @@ export const unLinkSecretFromServiceAccount = async (secret: SecretKind, namespa
           (s) => s.name !== secret.metadata?.name,
         )
       : [];
-
-  const existingSecrets = serviceAccount?.secrets;
 
   const secretsList =
     Array.isArray(existingSecrets) && existingSecrets.length >= 0
