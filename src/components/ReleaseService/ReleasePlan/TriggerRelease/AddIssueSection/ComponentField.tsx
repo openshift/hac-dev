@@ -84,7 +84,6 @@ const ComponentField: React.FC<React.PropsWithChildren<ComponentFieldProps>> = (
                                         variant={ButtonVariant.plain}
                                         onClick={() => packageArrayHelper.remove(j)}
                                         data-test={`remove-cmp-${i}-pac-${j}`}
-                                        isDisabled={components.length === 1}
                                       >
                                         <MinusCircleIcon />
                                       </Button>

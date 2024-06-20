@@ -82,4 +82,41 @@ describe('ComponentField', () => {
         .innerHTML,
     ).toBe('cmp2');
   });
+
+  it('should show packages', async () => {
+    formikRenderer(<ComponentField name="components" />, {
+      components: [{ name: 'a', packages: ['p1', 'p2'] }],
+    });
+    expect(screen.queryByTestId('cmp-0-pac-0')).toBeInTheDocument();
+    expect((screen.queryByTestId('cmp-0-pac-0') as HTMLInputElement).value).toBe('p1');
+    expect(screen.queryByTestId('cmp-0-pac-1')).toBeInTheDocument();
+    expect((screen.queryByTestId('cmp-0-pac-1') as HTMLInputElement).value).toBe('p2');
+  });
+
+  it('should add packages', async () => {
+    formikRenderer(<ComponentField name="components" />, {
+      components: [{ name: 'a', packages: ['p1', 'p2'] }],
+    });
+    expect(screen.queryByTestId('cmp-0-pac-0')).toBeInTheDocument();
+    act(() => {
+      fireEvent.click(screen.queryByTestId('add-cmp-0-pac'));
+    });
+    expect(screen.queryByTestId('cmp-0-pac-2')).toBeInTheDocument();
+    expect((screen.queryByTestId('cmp-0-pac-2') as HTMLInputElement).value).toBe('');
+  });
+
+  it('should remove packages', async () => {
+    formikRenderer(<ComponentField name="components" />, {
+      components: [{ name: 'a', packages: ['p1', 'p2'] }],
+    });
+
+    expect(screen.queryByTestId('cmp-0-pac-0')).toBeInTheDocument();
+    expect((screen.queryByTestId('cmp-0-pac-0') as HTMLInputElement).value).toBe('p1');
+    expect(screen.queryByTestId('cmp-0-pac-1')).toBeInTheDocument();
+    expect((screen.queryByTestId('cmp-0-pac-1') as HTMLInputElement).value).toBe('p2');
+    act(() => {
+      fireEvent.click(screen.queryByTestId('remove-cmp-0-pac-1'));
+    });
+    expect(screen.queryByTestId('cmp-0-pac-1')).not.toBeInTheDocument();
+  });
 });
