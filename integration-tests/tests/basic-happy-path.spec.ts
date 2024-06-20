@@ -40,8 +40,6 @@ describe('Basic Happy Path', () => {
   });
 
   after(function () {
-    APIHelper.deleteGitHubRepository(repoName);
-
     // If some test failed, don't remove the app
     let allTestsSucceeded = true;
     this.test.parent.eachTest((test) => {
@@ -57,6 +55,7 @@ describe('Basic Happy Path', () => {
       cy.get(actions.deleteModalInput).clear().type(applicationName);
       cy.get(actions.deleteModalButton).click();
       cy.get(`[data-id="${applicationName}"]`).should('not.exist');
+      APIHelper.deleteGitHubRepository(repoName);
     }
   });
 
