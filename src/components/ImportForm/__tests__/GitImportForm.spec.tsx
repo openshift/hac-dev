@@ -65,6 +65,8 @@ describe('GitImportForm', () => {
   it('should call createResource on application submit', () => {
     routerRenderer(<GitImportForm applicationName={undefined} />);
     expect(screen.getByText('Create application')).toBeDisabled();
+    const componentButton = screen.getByText('Add a component');
+    fireEvent.click(componentButton);
     fireEvent.input(screen.getByPlaceholderText('Enter name'), { target: { value: 'test-app' } });
     expect(screen.getByText('Create application')).not.toBeDisabled();
     fireEvent.click(screen.getByText('Create application'));

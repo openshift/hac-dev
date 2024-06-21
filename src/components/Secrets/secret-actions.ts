@@ -1,4 +1,4 @@
-import { RemoteSecretModel } from '../../models';
+import { SecretModel } from '../../models';
 import { Action } from '../../shared/components/action-menu/types';
 import { SecretKind } from '../../types';
 import { useAccessReviewForModel } from '../../utils/rbac';
@@ -7,7 +7,7 @@ import { secretDeleteModal } from './secret-modal';
 
 export const useSecretActions = (secret: SecretKind): Action[] => {
   const showModal = useModalLauncher();
-  const [canDelete] = useAccessReviewForModel(RemoteSecretModel, 'delete');
+  const [canDelete] = useAccessReviewForModel(SecretModel, 'delete');
   return [
     {
       cta: () => showModal(secretDeleteModal(secret)),
