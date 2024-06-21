@@ -16,13 +16,10 @@ const ReleasePlanAdmissionListRow: React.FC<
         {obj.metadata.name}
       </TableData>
       <TableData className={releasesPlanAdmissionTableColumnClasses.application}>
-        {obj.spec.application}
+        {obj.spec.application ?? '-'}
       </TableData>
       <TableData className={releasesPlanAdmissionTableColumnClasses.source}>
-        {obj.spec.origin}
-      </TableData>
-      <TableData className={releasesPlanAdmissionTableColumnClasses.releaseStrategy}>
-        {obj.spec.releaseStrategy}
+        {obj.spec.origin ?? '-'}
       </TableData>
       <TableData className={releasesPlanAdmissionTableColumnClasses.autoRelease}>
         {capitalize(obj.metadata.labels?.['release.appstudio.openshift.io/auto-release'] ?? '-')}

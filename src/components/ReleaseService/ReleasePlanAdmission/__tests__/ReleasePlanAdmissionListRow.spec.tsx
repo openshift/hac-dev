@@ -16,7 +16,6 @@ describe('ReleasePlanAdmissionListRow', () => {
     expect(cells[0].innerHTML).toBe(mockReleasePlanAdmission.metadata.name);
     expect(cells[1].innerHTML).toBe('my-app-1');
     expect(cells[2].innerHTML).toBe('sbudhwar-1-tenant');
-    expect(cells[3].innerHTML).toBe('test-rs');
-    expect(cells[4].innerHTML).toBe('True');
+    expect(cells[3].innerHTML).toBe('True');
   });
 });
