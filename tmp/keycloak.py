@@ -15,7 +15,8 @@ SIGNUP_ENDPOINT = "api/v1/signup"
 @click.argument("user", type=str, required=True)
 @click.argument("secret", type=str, required=True)
 @click.argument("register", type=str, required=True)
-def main(kc, admin, password, user, secret, register):
+@click.option("--verify/--no-verify", default=True, required=True)
+def main(kc, admin, password, user, secret, register, verify):
     tokenUrl = f"{kc}{TOKEN_ENDPOINT}"
     userUrl = f"{kc}{USER_ENDPOINT}"
     registerUrl = f"{register}{SIGNUP_ENDPOINT}"
@@ -29,8 +30,14 @@ def main(kc, admin, password, user, secret, register):
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
     }
+
+    if not verify:
+        print("WARN: Verification of certificates is turned off.")
     
-    r = requests.post(tokenUrl, data=params, headers=headers)
+    session = requests.Session()
+    session.verify=verify
+    
+    r = session.post(tokenUrl, data=params, headers=headers)
     access_token = r.json()["access_token"]
 
     headers["Content-Type"] = "application/json"
@@ -63,7 +70,7 @@ def main(kc, admin, password, user, secret, register):
             }
         ],
     }
-    resp = requests.post(userUrl, headers=headers, json=user)
+    resp = session.post(userUrl, headers=headers, json=user)
     if resp.status_code == 201:
         print(f"User created: request succeeded with {resp.status_code}")
     else:
@@ -81,12 +88,12 @@ def main(kc, admin, password, user, secret, register):
         "Content-Type": "application/x-www-form-urlencoded",
     }
 
-    new_user = requests.post(tokenUrl, data=new_user_params, headers=user_header)
+    new_user = session.post(tokenUrl, data=new_user_params, headers=user_header)
     user_bearer = new_user.json()["access_token"]
 
     headers["Authorization"] = f"Bearer {user_bearer}"
 
-    reg = requests.post(registerUrl, headers=headers)
+    reg = session.post(registerUrl, headers=headers)
     if reg.status_code == 202:
         print(f"User registered: request succeeded with {reg.status_code}")
     else:
