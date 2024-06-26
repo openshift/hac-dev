@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.5.1](https://github.com/openshift/hac-dev/compare/rhtap-ui-v0.5.0...rhtap-ui-v0.5.1) (2024-06-24)
+
+
+### Bug Fixes
+
+* **BuildPipeline:** filter pipeine run based on sender annotation ([ee781ec](https://github.com/openshift/hac-dev/commit/ee781ec71502dcab8032136bbb123317f0d5b60a))
+* **e2e:** fix basic happy path ([9820229](https://github.com/openshift/hac-dev/commit/98202297f868c9351763264b6306774df9bc953e))
+* **e2e:** move GH_TOKEN verification ([89b89f7](https://github.com/openshift/hac-dev/commit/89b89f731ac1c2d3e1cf2ef45ac454b68bd8ddd6))
+* **git-utils:** add unit test for parsing git urls ([397620e](https://github.com/openshift/hac-dev/commit/397620e78fe3ae310afdd7272fde917e276872bd))
+* **GitRepoLink:** add support for gitlab.cee.redhat.com urls ([3c4b791](https://github.com/openshift/hac-dev/commit/3c4b791c030114228416537f8e06bb33619f7ea8))
+* **ImageRepository:** add iimage controller annontation while create IR cr ([731eb36](https://github.com/openshift/hac-dev/commit/731eb3671c8a3e8face5810c6ff3e913f47e3d41))
+* **import:** do not send generate annotation in component ([80837b7](https://github.com/openshift/hac-dev/commit/80837b760827a5f3a338e570c313c0a138835da7))
+* **ImportFlow:** add input field for docker file path ([e1546f7](https://github.com/openshift/hac-dev/commit/e1546f7df5df126800bec50a76b85f53a1d6c15e))
+* **OverviewPage:** remomve NamepspacedPage wrapper from Overview page ([eee873d](https://github.com/openshift/hac-dev/commit/eee873db78dbd10f4c8c719c2beef01ecd4ef46b))
+* **release:** remove releaseplan strategy ([cb49ba5](https://github.com/openshift/hac-dev/commit/cb49ba519d1964d42809f23aa809947c1c66118a))
+* **release:** remove strategy component ([b9d6f85](https://github.com/openshift/hac-dev/commit/b9d6f85bed46d505d662e37b0aa4fb2a917cef7e))
+* **secret:** link serviceaccount ([#950](https://github.com/openshift/hac-dev/issues/950)) ([f898233](https://github.com/openshift/hac-dev/commit/f89823352dcba7c0f8ece6bd8f177e21b021b025))
+* **SecretListPage:** add workspace breadcrumbs on secrets list page ([71724ec](https://github.com/openshift/hac-dev/commit/71724ec0dd0576fd533ea37d2d8e39fb80b3bd0a))
+* show data for build image and commit author ([714ce4b](https://github.com/openshift/hac-dev/commit/714ce4be3c3539d7098eb2d76eb8e6947dead366))
+* **test:** don't remove repo if test failed to easy failure debugging ([bab0439](https://github.com/openshift/hac-dev/commit/bab04390464c6a49e5f6debbcf84b3064d66d14a))
+* **test:** dont verify certificate, added due to test deployments in infra-deployments PR check jobs ([149de17](https://github.com/openshift/hac-dev/commit/149de173982ecae4071ed69d1bb357fcacf2617f))
+* **test:** fix advanced happy path ([1c19720](https://github.com/openshift/hac-dev/commit/1c19720b51c221f994791fb99cfedbb08048b4b9))
+* **WorkspacedPage:** add unit tests for Workspaced component ([08ec922](https://github.com/openshift/hac-dev/commit/08ec922d119f6a6d4e1c061fa107b1b0e524fc23))
+
 ## [0.5.0](https://github.com/openshift/hac-dev/compare/rhtap-ui-v0.4.0...rhtap-ui-v0.5.0) (2024-06-03)
 
 
