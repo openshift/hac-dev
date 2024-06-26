@@ -11,7 +11,7 @@ export enum ReleasePipelineLocation {
 
 const getIssues = (issues): { id: string; source: string }[] => {
   return issues?.map((issue) => {
-    return { id: issue.key, source: issue.url };
+    return { id: issue.id, source: issue.url };
   });
 };
 

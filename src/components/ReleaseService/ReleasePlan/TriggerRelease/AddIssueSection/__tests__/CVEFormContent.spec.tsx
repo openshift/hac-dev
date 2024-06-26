@@ -36,7 +36,7 @@ describe('CVEFormContent', () => {
 
   it('should show correct values', async () => {
     formikRenderer(<CVEFormContent modalToggle={null} />, {
-      key: 'CVE-120',
+      id: 'CVE-120',
       components: [
         { name: 'a', packages: ['p1', 'p2', 'p3'] },
         { name: 'b', packages: ['p1', 'p2', 'p3'] },
@@ -49,7 +49,7 @@ describe('CVEFormContent', () => {
 
   it('should render component fields ', async () => {
     formikRenderer(<CVEFormContent modalToggle={null} />, {
-      key: 'CVE-120',
+      id: 'CVE-120',
       components: [
         { name: 'a', packages: ['p1', 'p2', 'p3'] },
         { name: 'b', packages: ['p1', 'p2', 'p3'] },
@@ -64,7 +64,7 @@ describe('CVEFormContent', () => {
 
   it('should remove component fields ', async () => {
     formikRenderer(<CVEFormContent modalToggle={null} />, {
-      key: 'CVE-120',
+      id: 'CVE-120',
       components: [
         { name: 'a', packages: ['p1', 'p2', 'p3'] },
         { name: 'b', packages: ['p1', 'p2', 'p3'] },
@@ -92,7 +92,7 @@ describe('CVEFormContent', () => {
 
   it('should render multiple packages ', async () => {
     formikRenderer(<CVEFormContent modalToggle={null} />, {
-      key: 'CVE-120',
+      id: 'CVE-120',
       components: [
         { name: 'a', packages: ['p1', 'p2', 'p3'] },
         { name: 'b', packages: ['p3', 'p4', 'p3'] },
