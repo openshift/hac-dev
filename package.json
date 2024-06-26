@@ -1,6 +1,6 @@
 {
   "name": "hac-dev",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": false,
   "engines": {
     "node": ">=16.0.0",
