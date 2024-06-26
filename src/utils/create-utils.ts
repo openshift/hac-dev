@@ -373,10 +373,11 @@ type CreateImageRepositoryType = {
   component: string;
   namespace: string;
   isPrivate: boolean;
+  bambinoUrl: string;
 };
 
 export const createImageRepository = (
-  { application, component, namespace, isPrivate }: CreateImageRepositoryType,
+  { application, component, namespace, isPrivate, bambinoUrl }: CreateImageRepositoryType,
   dryRun: boolean = false,
 ) => {
   const imageRepositoryResource: ImageRepositoryKind = {
@@ -399,6 +400,16 @@ export const createImageRepository = (
           ? ImageRepositoryVisibility.private
           : ImageRepositoryVisibility.public,
       },
+      notifications: [
+        {
+          title: 'SBOM-event-to-Bombino',
+          event: 'repo_push',
+          method: 'webhook',
+          config: {
+            url: bambinoUrl,
+          },
+        },
+      ],
     },
   };
 

@@ -34,6 +34,7 @@ export const createResources = async (
   formValues: ImportFormValues,
   namespace: string,
   workspace: string,
+  bambinoUrl: string,
 ) => {
   const {
     source,
@@ -76,7 +77,7 @@ export const createResources = async (
       componentAnnotations,
     );
     await createImageRepository(
-      { application, component: componentName, namespace, isPrivate: isPrivateRepo },
+      { application, component: componentName, namespace, isPrivate: isPrivateRepo, bambinoUrl },
       true,
     );
   }
@@ -108,6 +109,7 @@ export const createResources = async (
       component: componentName,
       namespace,
       isPrivate: isPrivateRepo,
+      bambinoUrl,
     });
     await createSecrets(importSecrets, workspace, namespace, false);
   }

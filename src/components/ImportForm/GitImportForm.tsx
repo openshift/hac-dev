@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, PageSection } from '@patternfly/react-core';
 import { Formik } from 'formik';
+import { useBambinoUrl } from '../../hooks/useUIInstance';
 import { TrackEvents, useTrackEvent } from '../../utils/analytics';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import ApplicationSection from './ApplicationSection/ApplicationSection';
@@ -19,6 +20,7 @@ export const GitImportForm: React.FC<{ applicationName: string }> = ({ applicati
   const track = useTrackEvent();
   const navigate = useNavigate();
   const { namespace, workspace } = useWorkspaceInfo();
+  const bambinoUrl = useBambinoUrl();
   const initialValues: ImportFormValues = {
     application: applicationName || '',
     inAppContext: !!applicationName,
@@ -39,7 +41,7 @@ export const GitImportForm: React.FC<{ applicationName: string }> = ({ applicati
     (values: ImportFormValues, formikHelpers: any) => {
       track(TrackEvents.ButtonClicked, { link_name: 'import-submit', workspace });
 
-      createResources(values, namespace, workspace)
+      createResources(values, namespace, workspace, bambinoUrl)
         .then(({ applicationName: appName, application, component }) => {
           if (application) {
             track('Application Create', {
@@ -70,7 +72,7 @@ export const GitImportForm: React.FC<{ applicationName: string }> = ({ applicati
           formikHelpers.setStatus({ submitError: error.message });
         });
     },
-    [namespace, navigate, track, workspace],
+    [bambinoUrl, namespace, navigate, track, workspace],
   );
 
   const handleReset = React.useCallback(() => {
