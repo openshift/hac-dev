@@ -13,7 +13,6 @@ import {
   Title,
   Divider,
   ClipboardCopy,
-  Truncate,
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
@@ -138,7 +137,7 @@ const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetails
                   <DescriptionListGroup>
                     <DescriptionListTerm>Snapshot creation status</DescriptionListTerm>
                     <DescriptionListDescription>
-                      <Truncate content={snapshotCreationStatus.message} />
+                      {snapshotCreationStatus.message}
                     </DescriptionListDescription>
                   </DescriptionListGroup>
                 )}
