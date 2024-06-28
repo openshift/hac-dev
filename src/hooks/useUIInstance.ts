@@ -5,15 +5,15 @@ export enum ConsoleDotEnvironments {
   stage = 'stage',
   qa = 'qa',
   prod = 'prod',
-  internalProd = ConsoleDotEnvironments.prod,
-  internalStage = ConsoleDotEnvironments.stage,
+  internalProd = 'prod',
+  internalStage = 'stage',
 }
 
 const internalInstance = (host: string) => (env: 'prod' | 'stage') =>
   new RegExp(`stone-${env}-([A-Za-z0-9]+).([a-z]+).([a-z0-9]+).openshiftapps.com`, 'g').test(host);
 
-const getInternalInstance = () => {
-  const matchInternalInstance = internalInstance(window.location.host);
+export const getInternalInstance = () => {
+  const matchInternalInstance = internalInstance(window.location.hostname);
   if (matchInternalInstance('prod')) {
     return ConsoleDotEnvironments.internalProd;
   } else if (matchInternalInstance('stage')) {
@@ -41,7 +41,7 @@ const getSBOMEnvUrl = (env: ConsoleDotEnvironments) => (imageHash: string) => {
   );
 };
 
-const getBambinoUrl = (env: ConsoleDotEnvironments) => {
+const getBombinoUrl = (env: ConsoleDotEnvironments) => {
   if (env === ConsoleDotEnvironments.prod) {
     return 'https://bombino.api.redhat.com/v1/sbom/quay/push';
   }
@@ -50,4 +50,4 @@ const getBambinoUrl = (env: ConsoleDotEnvironments) => {
 
 export const useSbomUrl = () => getSBOMEnvUrl(useUIInstance());
 
-export const useBambinoUrl = () => getBambinoUrl(useUIInstance());
+export const useBombinoUrl = () => getBombinoUrl(useUIInstance());

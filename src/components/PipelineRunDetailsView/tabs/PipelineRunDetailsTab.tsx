@@ -24,7 +24,6 @@ import { PipelineRunKind, TaskRunKind, TektonResultsRun } from '../../../types';
 import { getCommitSha, getCommitShortName } from '../../../utils/commits-utils';
 import {
   calculateDuration,
-  // getSbomTaskRun,
   pipelineRunStatus,
   isPipelineV1Beta1,
 } from '../../../utils/pipeline-utils';
@@ -71,7 +70,6 @@ const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetails
     results?.find(({ name }) => name === `IMAGE_URL`)?.value;
   const sourceUrl = getSourceUrl(pipelineRun);
   const pipelineStatus = !error ? pipelineRunStatus(pipelineRun) : null;
-  // const sbomTaskRun = React.useMemo(() => getSbomTaskRun(taskRuns), [taskRuns]);
   const integrationTestName = pipelineRun.metadata.labels[PipelineRunLabel.TEST_SERVICE_SCENARIO];
   const snapshot =
     pipelineRun.metadata?.annotations?.[PipelineRunLabel.SNAPSHOT] ||

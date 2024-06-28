@@ -1,20 +1,34 @@
-import { mockLocation } from '../../utils/test-utils';
-import { getGithubAppForInternalInstance } from '../useApplicationPipelineGitHubApp';
+import { renderHook } from '@testing-library/react';
+import { useApplicationPipelineGitHubApp } from '../useApplicationPipelineGitHubApp';
+import { useUIInstance } from '../useUIInstance';
 
-describe('getGithubAppForInternalInstance', () => {
-  it('should return correct env for internal instance host', () => {
-    mockLocation({ hostname: 'konflux.apps.stone-prod-p01.wcfb.p1.openshiftapps.com' });
-    expect(getGithubAppForInternalInstance()).toEqual({
-      url: 'https://github.com/apps/red-hat-konflux',
-      name: 'red-hat-konflux',
-    });
-    mockLocation({ hostname: 'rhtap.apps.rosa.stone-stage-p01.apys.p3.openshiftapps.com' });
-    expect(getGithubAppForInternalInstance()).toEqual({
+jest.mock('../useUIInstance', () => ({ useUIInstance: jest.fn() }));
+
+const mockUIInstance = useUIInstance as jest.Mock;
+
+describe('useApplicationPipelineGithubApp', () => {
+  it('should return correct github app', () => {
+    mockUIInstance.mockReturnValue('stage');
+    const { result, rerender } = renderHook(() => useApplicationPipelineGitHubApp());
+    expect(result.current).toEqual({
       url: 'https://github.com/apps/konflux-staging',
       name: 'konflux-staging',
     });
-    mockLocation({ hostname: 'abcd.com' });
-    expect(getGithubAppForInternalInstance()).toEqual({
+    mockUIInstance.mockReturnValue('prod');
+    rerender();
+    expect(result.current).toEqual({
+      url: 'https://github.com/apps/red-hat-konflux',
+      name: 'red-hat-konflux',
+    });
+    mockUIInstance.mockReturnValue('dev');
+    rerender();
+    expect(result.current).toEqual({
+      url: 'https://github.com/apps/konflux-staging',
+      name: 'konflux-staging',
+    });
+    mockUIInstance.mockReturnValue('qa');
+    rerender();
+    expect(result.current).toEqual({
       url: 'https://github.com/apps/konflux-staging',
       name: 'konflux-staging',
     });
