@@ -19,6 +19,12 @@ jest.mock('../submit-utils', () => ({
   createResources: jest.fn(),
 }));
 
+jest.mock('../../../hooks/useUIInstance', () => {
+  return {
+    useBombinoUrl: jest.fn(() => 'https://mock.bombino.url'),
+  };
+});
+
 const mockUsePipelineTemplate = usePipelineTemplates as jest.Mock;
 const mockUseSecrets = useSecrets as jest.Mock;
 const mockCreateResources = createResources as jest.Mock;
