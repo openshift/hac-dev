@@ -366,7 +366,7 @@ describe('Advanced Happy path', () => {
         UIhelper.verifyRowInTable('Pipeline run List', testPipelineName, [/^Test$/]);
         UIhelper.clickLink(testPipelineName);
         DetailsTab.waitForPLRAndDownloadAllLogs(false);
-        UIhelper.verifyLabelAndValue('Pipeline', testPipelineName);
+        UIhelper.verifyLabelAndValue('Pipeline', 'enterprise-contract');
         UIhelper.verifyLabelAndValue('Related pipelines', '2 pipelines').click();
         PipelinerunsTabPage.verifyRelatedPipelines(
           integrationTestDetails.passIntegrationTestPipelineRunName,
