@@ -45,14 +45,14 @@ oc process -f tmp/hac-proxy.yaml -n ${NAMESPACE} -p NAMESPACE=${NAMESPACE} -p EN
 export BONFIRE_FRONTEND_DEPENDENCIES=chrome-service,insights-chrome
 
 # Deploy hac-dev with PR git ref and mainline hac-core ref
-bonfire deploy \
-        hac \
-        --frontends true \
-        --source=appsre \
-        --clowd-env ${ENV_NAME} \
-        --set-template-ref ${COMPONENT}=${GIT_COMMIT} \
-        --set-image-tag ${IMAGE}=${IMAGE_TAG} \
-        --namespace ${NAMESPACE}
+# bonfire deploy \
+#         hac \
+#         --frontends true \
+#         --source=appsre \
+#         --clowd-env ${ENV_NAME} \
+#         --set-template-ref ${COMPONENT}=${GIT_COMMIT} \
+#         --set-image-tag ${IMAGE}=${IMAGE_TAG} \
+#         --namespace ${NAMESPACE}
 
 # Call the keycloak API and add a user
 B64_USER=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.username'| tr -d '"')
@@ -94,6 +94,7 @@ fi
 set +e
 TEST_RUN=0
 
+id
 podman run --userns=keep-id ${COMMON_SETUP} \
     -e CYPRESS_GH_TOKEN=${CYPRESS_GH_TOKEN} \
     -e CYPRESS_GH_PASSWORD=${CYPRESS_GH_PASSWORD} \

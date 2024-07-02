@@ -12,11 +12,15 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 RUN wget "https://github.com/sigstore/cosign/releases/download/v2.0.0/cosign-linux-amd64" && \
     mv cosign-linux-amd64 /usr/local/bin/cosign && \
     chmod +x /usr/local/bin/cosign
-    
-USER node:0
 
-COPY --chown=node:root --chmod=775 . /tmp/e2e
+RUN useradd -ms /bin/bash jenkins
+USER jenkins:1001
+
+COPY --chown=jenkins:1001 --chmod=775 . /tmp/e2e
 RUN chmod -R 775 /tmp/e2e
+
+RUN id && \
+    ls -la /tmp/e2e
 
 RUN cd /tmp/e2e && \
     umask 0002 && \
