@@ -45,6 +45,12 @@ jest.mock('react-router-dom', () => {
   };
 });
 
+jest.mock('../../../hooks/useUIInstance', () => {
+  return {
+    useSbomUrl: jest.fn(() => () => 'https://view.sbom.mock.url/'),
+  };
+});
+
 jest.mock('../../../hooks/useSnapshots', () => ({
   useSnapshots: jest.fn(),
 }));
