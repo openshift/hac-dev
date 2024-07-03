@@ -27,8 +27,10 @@ source <(curl -sSL $COMMON_BUILDER/src/frontend-build.sh)
 BUILD_RESULTS=$?
 
 # Get bonfire helper scripts and python venv. Set GIT_COMMIT and IMAGE_TAG
-CICD_URL=https://raw.githubusercontent.com/RedHatInsights/bonfire/master/cicd
-curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
+
+export BONFIRE_REPO_BRANCH='pre-frontend-changes'
+BOOTSTRAP_SCRIPT_URL="https://raw.githubusercontent.com/RedHatInsights/cicd-tools/${BONFIRE_REPO_BRANCH}/bootstrap.sh"
+curl -s "$BOOTSTRAP_SCRIPT_URL" > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
 
 # Note: PoC will be cleaned up with Bonfire changes
 # Get a namespace in the eph cluster and set vars accordingly
