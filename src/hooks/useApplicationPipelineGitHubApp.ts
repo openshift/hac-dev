@@ -1,4 +1,4 @@
-import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
+import { useUIInstance } from './useUIInstance';
 
 enum ConsoleDotEnvironments {
   dev = 'dev',
@@ -26,21 +26,8 @@ export const ApplicationPipelineGitHubAppData: {
   },
 };
 
-export const getGithubAppForInternalInstance = () => {
-  const host = window.location.hostname;
-  if (host === 'konflux.apps.stone-prod-p01.wcfb.p1.openshiftapps.com') {
-    return ApplicationPipelineGitHubAppData.prod;
-  }
-  if (host === 'rhtap.apps.rosa.stone-stage-p01.apys.p3.openshiftapps.com') {
-    return ApplicationPipelineGitHubAppData.stage;
-  }
-  return ApplicationPipelineGitHubAppData.dev;
-};
-
 export const useApplicationPipelineGitHubApp = (): ApplicationPipelineGitHubAppDataType => {
-  const { getEnvironment } = useChrome();
-
-  const environment = getEnvironment();
+  const environment = useUIInstance();
 
   switch (environment) {
     case ConsoleDotEnvironments.prod:
@@ -49,6 +36,6 @@ export const useApplicationPipelineGitHubApp = (): ApplicationPipelineGitHubAppD
     case ConsoleDotEnvironments.stage:
       return ApplicationPipelineGitHubAppData.stage;
     default:
-      return getGithubAppForInternalInstance();
+      return ApplicationPipelineGitHubAppData.dev;
   }
 };

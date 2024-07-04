@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, render, screen } from '@testing-library/react';
 import { PipelineRunLabel } from '../../../../consts/pipelinerun';
+import { useSbomUrl } from '../../../../hooks/useUIInstance';
 import { CustomError } from '../../../../shared/utils/error/custom-error';
 import { PipelineRunKind, TaskRunKind, TektonResourceLabel } from '../../../../types';
 import {
@@ -22,10 +23,17 @@ jest.mock('../../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));
 
+jest.mock('../../../../hooks/useUIInstance', () => {
+  return {
+    useSbomUrl: jest.fn(),
+  };
+});
+
 jest.mock('../../../topology/factories/VisualizationFactory', () => () => <div />);
 
 configure({ testIdAttribute: 'data-test' });
 
+const sbomMock = useSbomUrl as jest.Mock;
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 
 beforeEach(() => {
@@ -390,7 +398,12 @@ describe('PipelineRunDetailsTab', () => {
           [PipelineRunLabel.BUILD_IMAGE_ANNOTATION]: 'quay.io/test/user-workload:test-image',
         },
       },
+      status: {
+        ...testPipelineRun.status,
+        pipelineResults: [{ name: 'IMAGE_DIGEST', value: 'random-digest' }],
+      },
     };
+    sbomMock.mockReturnValue(() => 'https://view.mock.sbom.url/');
     render(
       <PipelineRunDetailsTab
         pipelineRun={simplePipelineRun}
@@ -402,10 +415,7 @@ describe('PipelineRunDetailsTab', () => {
       },
     );
     expect(screen.getByText('View SBOM')).toBeInTheDocument();
-    expect(screen.getByText('View SBOM')).toHaveProperty(
-      'href',
-      'http://localhost/application-pipeline/workspaces/test-ws/applications/my-app/taskruns/sum-and-multiply-pipeline-8mhx4-show-sbom/logs',
-    );
+    expect(screen.getByText('View SBOM')).toHaveProperty('href', 'https://view.mock.sbom.url/');
   });
 
   it('should not render the snapshot section if it is not available for a pipelinerun', () => {

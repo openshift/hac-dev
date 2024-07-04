@@ -15,15 +15,15 @@ import {
   ClipboardCopy,
 } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
+import { useSbomUrl } from '../../../hooks/useUIInstance';
 import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { ErrorDetailsWithStaticLog } from '../../../shared/components/pipeline-run-logs/logs/log-snippet-types';
 import { getPLRLogSnippet } from '../../../shared/components/pipeline-run-logs/logs/pipelineRunLogSnippet';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
-import { PipelineRunKind, TaskRunKind } from '../../../types';
+import { PipelineRunKind, TaskRunKind, TektonResultsRun } from '../../../types';
 import { getCommitSha, getCommitShortName } from '../../../utils/commits-utils';
 import {
   calculateDuration,
-  getSbomTaskRun,
   pipelineRunStatus,
   isPipelineV1Beta1,
 } from '../../../utils/pipeline-utils';
@@ -48,6 +48,7 @@ const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetails
   taskRuns,
 }) => {
   const { workspace } = useWorkspaceInfo();
+  const generateSbomUrl = useSbomUrl();
   const results = isPipelineV1Beta1(pipelineRun)
     ? pipelineRun.status?.pipelineResults
     : pipelineRun.status?.results;
@@ -60,13 +61,15 @@ const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetails
       : '',
   );
   const sha = getCommitSha(pipelineRun);
+  const imageDigest = (pipelineRun.status?.pipelineResults as TektonResultsRun[])?.find(
+    (tr) => tr?.name === 'IMAGE_DIGEST',
+  )?.value;
   const applicationName = pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION];
   const buildImage =
     pipelineRun.metadata?.annotations?.[PipelineRunLabel.BUILD_IMAGE_ANNOTATION] ||
     results?.find(({ name }) => name === `IMAGE_URL`)?.value;
   const sourceUrl = getSourceUrl(pipelineRun);
   const pipelineStatus = !error ? pipelineRunStatus(pipelineRun) : null;
-  const sbomTaskRun = React.useMemo(() => getSbomTaskRun(taskRuns), [taskRuns]);
   const integrationTestName = pipelineRun.metadata.labels[PipelineRunLabel.TEST_SERVICE_SCENARIO];
   const snapshot =
     pipelineRun.metadata?.annotations?.[PipelineRunLabel.SNAPSHOT] ||
@@ -222,17 +225,11 @@ const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetails
                     </DescriptionListDescription>
                   </DescriptionListGroup>
                 )}
-                {sbomTaskRun && (
+                {imageDigest && (
                   <DescriptionListGroup>
                     <DescriptionListTerm>SBOM</DescriptionListTerm>
                     <DescriptionListDescription>
-                      <Link
-                        to={`/application-pipeline/workspaces/${workspace}/applications/${
-                          sbomTaskRun.metadata.labels[PipelineRunLabel.APPLICATION]
-                        }/taskruns/${sbomTaskRun.metadata.name}/logs`}
-                      >
-                        View SBOM
-                      </Link>
+                      <ExternalLink href={generateSbomUrl(imageDigest)}>View SBOM</ExternalLink>
                     </DescriptionListDescription>
                   </DescriptionListGroup>
                 )}

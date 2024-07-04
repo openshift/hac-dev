@@ -21,6 +21,10 @@ type ImageRepositoryStatus = {
     'push-remote-secret'?: string;
     'pull-remote-secret'?: string;
   };
+  notifications?: {
+    title: string;
+    uuid: string;
+  };
 };
 
 type ImageRepositorySpec = {
@@ -31,8 +35,20 @@ type ImageRepositorySpec = {
   credentials?: {
     'regenerate-token': boolean;
   };
+  notifications?: {
+    title: string;
+    event: 'repo_push';
+    method: 'email' | 'webhook';
+    config: {
+      url?: string;
+      email?: string;
+    };
+  }[];
 };
 
+/**
+ * Resource types taken from https://github.com/konflux-ci/image-controller/blob/main/api/v1alpha1/imagerepository_types.go
+ */
 export type ImageRepositoryKind = {
   spec: ImageRepositorySpec;
   status?: ImageRepositoryStatus;
