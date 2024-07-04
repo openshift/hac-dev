@@ -72,6 +72,17 @@ const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetails
     pipelineRun.metadata?.annotations?.[PipelineRunLabel.SNAPSHOT] ||
     pipelineRun.metadata?.labels?.[PipelineRunLabel.SNAPSHOT];
 
+  const snapshotStatusAnnotation =
+    pipelineRun.metadata?.annotations?.[PipelineRunLabel.CREATE_SNAPSHOT_STATUS];
+
+  const snapshotCreationStatus = React.useMemo(() => {
+    try {
+      return JSON.parse(snapshotStatusAnnotation);
+    } catch (e) {
+      return null;
+    }
+  }, [snapshotStatusAnnotation]);
+
   return (
     <>
       <Title headingLevel="h4" className="pf-v5-c-title pf-v5-u-mt-lg pf-v5-u-mb-lg" size="lg">
@@ -122,6 +133,14 @@ const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetails
                   <DescriptionListTerm>Duration</DescriptionListTerm>
                   <DescriptionListDescription>{duration ?? '-'}</DescriptionListDescription>
                 </DescriptionListGroup>
+                {snapshotCreationStatus && (
+                  <DescriptionListGroup>
+                    <DescriptionListTerm>Snapshot creation status</DescriptionListTerm>
+                    <DescriptionListDescription>
+                      {snapshotCreationStatus.message}
+                    </DescriptionListDescription>
+                  </DescriptionListGroup>
+                )}
               </DescriptionList>
             </FlexItem>
             <FlexItem style={{ flex: 1 }}>
