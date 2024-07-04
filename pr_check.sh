@@ -70,8 +70,8 @@ mkdir -p $WORKSPACE/artifacts
 PR_TITLE=$(echo ${ghprbPullTitle} | sed -r 's/\s/_/g')
 GH_COMMENTBODY=$(echo ${ghprbCommentBody} | sed -r 's/\s/_/g')
 
-COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z \
-    -v $PWD/integration-tests:/e2e:Z \
+COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z,U \
+    -v $PWD/integration-tests:/e2e:Z,U \
     -e CYPRESS_PR_CHECK=true \
     -e CYPRESS_GH_PR_LINK=${ghprbPullLink} \
     -e CYPRESS_HAC_BASE_URL=https://${HOSTNAME}/application-pipeline \
