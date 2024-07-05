@@ -20,12 +20,13 @@ import ExternalLink from '../../../shared/components/links/ExternalLink';
 import { ErrorDetailsWithStaticLog } from '../../../shared/components/pipeline-run-logs/logs/log-snippet-types';
 import { getPLRLogSnippet } from '../../../shared/components/pipeline-run-logs/logs/pipelineRunLogSnippet';
 import { Timestamp } from '../../../shared/components/timestamp/Timestamp';
-import { PipelineRunKind, TaskRunKind, TektonResultsRun } from '../../../types';
+import { PipelineRunKind, TaskRunKind } from '../../../types';
 import { getCommitSha, getCommitShortName } from '../../../utils/commits-utils';
 import {
   calculateDuration,
   pipelineRunStatus,
-  isPipelineV1Beta1,
+  getPipelineRunStatusResults,
+  getPipelineRunStatusResultForName,
 } from '../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import GitRepoLink from '../../GitLink/GitRepoLink';
@@ -49,9 +50,7 @@ const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetails
 }) => {
   const { workspace } = useWorkspaceInfo();
   const generateSbomUrl = useSbomUrl();
-  const results = isPipelineV1Beta1(pipelineRun)
-    ? pipelineRun.status?.pipelineResults
-    : pipelineRun.status?.results;
+  const results = getPipelineRunStatusResults(pipelineRun);
   const pipelineRunFailed = (getPLRLogSnippet(pipelineRun, taskRuns) ||
     {}) as ErrorDetailsWithStaticLog;
   const duration = calculateDuration(
@@ -61,13 +60,11 @@ const PipelineRunDetailsTab: React.FC<React.PropsWithChildren<PipelineRunDetails
       : '',
   );
   const sha = getCommitSha(pipelineRun);
-  const imageDigest = (pipelineRun.status?.pipelineResults as TektonResultsRun[])?.find(
-    (tr) => tr?.name === 'IMAGE_DIGEST',
-  )?.value;
+  const imageDigest = getPipelineRunStatusResultForName('IMAGE_DIGEST', pipelineRun)?.value;
   const applicationName = pipelineRun.metadata?.labels[PipelineRunLabel.APPLICATION];
   const buildImage =
     pipelineRun.metadata?.annotations?.[PipelineRunLabel.BUILD_IMAGE_ANNOTATION] ||
-    results?.find(({ name }) => name === `IMAGE_URL`)?.value;
+    getPipelineRunStatusResultForName(`IMAGE_URL`, pipelineRun)?.value;
   const sourceUrl = getSourceUrl(pipelineRun);
   const pipelineStatus = !error ? pipelineRunStatus(pipelineRun) : null;
   const integrationTestName = pipelineRun.metadata.labels[PipelineRunLabel.TEST_SERVICE_SCENARIO];
