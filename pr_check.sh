@@ -28,8 +28,9 @@ BUILD_RESULTS=$?
 
 # Get bonfire helper scripts and python venv. Set GIT_COMMIT and IMAGE_TAG
 
-export BONFIRE_REPO_BRANCH='pre-frontend-changes'
-BOOTSTRAP_SCRIPT_URL="https://raw.githubusercontent.com/RedHatInsights/cicd-tools/${BONFIRE_REPO_BRANCH}/bootstrap.sh"
+export BONFIRE_REPO_BRANCH='fix-pr-image-tag'
+export BONFIRE_REPO='mjholder'
+BOOTSTRAP_SCRIPT_URL="https://raw.githubusercontent.com/${BONFIRE_REPO}/cicd-tools/${BONFIRE_REPO_BRANCH}/bootstrap.sh"
 curl -s "$BOOTSTRAP_SCRIPT_URL" > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
 
 # Note: PoC will be cleaned up with Bonfire changes
