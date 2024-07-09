@@ -1,9 +1,11 @@
-import merge from 'lodash/merge';
+import curry from 'lodash/fp/curry';
+import merge from 'lodash-es/merge';
 import { preferredNameAnnotation } from '../consts/pipeline';
 import { ScanResults, isCVEScanResult } from '../hooks/useScanResults';
 import { PipelineRunModel } from '../models';
 import {
   Condition,
+  PipelineResult,
   PipelineRunKind,
   PipelineRunKindV1Beta1,
   TaskRunKind,
@@ -333,3 +335,17 @@ export const taskName = (taskrun: TaskRunKind) =>
   taskrun.metadata.labels[TektonResourceLabel.pipelineTask] ||
   taskrun.metadata.labels[TektonResourceLabel.task] ||
   taskrun.spec.taskRef?.params?.find((r) => r.name === 'name')?.value;
+
+export const getPipelineRunStatusResults = (pipelineRun: PipelineRunKind) => {
+  return isPipelineV1Beta1(pipelineRun)
+    ? pipelineRun.status?.pipelineResults
+    : pipelineRun.status?.results;
+};
+
+const getPipelineRunStatusResultForKey = curry(
+  (key: string, value: string, pipelineRun: PipelineRunKind): PipelineResult => {
+    const results = getPipelineRunStatusResults(pipelineRun);
+    return results?.find((res) => res[key] === value);
+  },
+);
+export const getPipelineRunStatusResultForName = getPipelineRunStatusResultForKey('name');

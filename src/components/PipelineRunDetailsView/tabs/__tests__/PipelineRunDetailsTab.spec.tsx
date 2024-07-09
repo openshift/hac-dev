@@ -400,7 +400,7 @@ describe('PipelineRunDetailsTab', () => {
       },
       status: {
         ...testPipelineRun.status,
-        pipelineResults: [{ name: 'IMAGE_DIGEST', value: 'random-digest' }],
+        results: [{ name: 'IMAGE_DIGEST', value: 'random-digest' }],
       },
     };
     sbomMock.mockReturnValue(() => 'https://view.mock.sbom.url/');
