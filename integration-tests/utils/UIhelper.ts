@@ -2,6 +2,13 @@ import { UIhelperPO } from '../support/pageObjects/global-po';
 import { Common } from './Common';
 
 export class UIhelper {
+  static checkTableHasRows(tableAriaLabel: string, text: string, occurrence: number) {
+    cy.get(`[aria-label="${tableAriaLabel}"]`)
+      .find('tr')
+      .filter(`:contains(${text})`)
+      .should('have.length', occurrence);
+  }
+
   static clickTab(tabName: string) {
     cy.contains(UIhelperPO.tabs, new RegExp(`^\\s*${tabName}\\s*$`)).click();
     Common.waitForLoad();
@@ -66,7 +73,9 @@ export class UIhelper {
   }
 
   static getTableRow(tableAriaLabel: string, uniqueRowText: string | RegExp) {
-    return cy.contains(UIhelperPO.tableRow(tableAriaLabel), uniqueRowText, { timeout: 60000 });
+    return cy
+      .contains(UIhelperPO.tableRow(tableAriaLabel), uniqueRowText, { timeout: 60000 })
+      .scrollIntoView();
   }
 
   static verifyRowInTable(

@@ -15,6 +15,7 @@ export const addComponentPagePO = {
   authenticateButton: '[data-testid="authenticate-token"]',
   notValidatedMessage: 'Unable to access repository',
   useTokenButton: 'Use a token instead',
+  privateInputId: '[id="form-checkbox-isPrivateRepo-field"]',
 };
 
 export const componentSamplesPagePO = {

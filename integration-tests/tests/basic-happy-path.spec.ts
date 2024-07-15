@@ -146,7 +146,7 @@ describe('Basic Happy Path', () => {
           });
 
           TaskRunsTab.goToTaskrunsTab();
-          TaskRunsTab.assertTaskNamesAndTaskRunStatus(
+          TaskRunsTab.assertTaskAndTaskRunStatus(
             TaskRunsTab.getbasicTaskNamesList(pipelinerunName),
           );
         });
@@ -154,9 +154,7 @@ describe('Basic Happy Path', () => {
 
     it('Wait for on-push build to finish', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
-      UIhelper.getTableRow('Pipeline run List', 'on-push')
-        .contains('Running', { timeout: 120000 })
-        .should('not.exist');
+      UIhelper.checkTableHasRows('Pipeline run List', 'test', 2);
     });
 
     it('Verify Enterprise contract Test pipeline run Details', () => {

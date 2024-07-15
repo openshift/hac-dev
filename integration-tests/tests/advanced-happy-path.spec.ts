@@ -93,6 +93,7 @@ describe('Advanced Happy path', () => {
       repoLink,
       componentName,
       pipeline,
+      false,
       undefined,
       dockerfilePath,
       secret,
@@ -137,7 +138,7 @@ describe('Advanced Happy path', () => {
           DetailsTab.waitForPLRAndDownloadAllLogs();
 
           TaskRunsTab.goToTaskrunsTab();
-          TaskRunsTab.assertTaskNamesAndTaskRunStatus(
+          TaskRunsTab.assertTaskAndTaskRunStatus(
             TaskRunsTab.getAdvancedTaskNamesList(componentInfo.firstPipelineRunName),
           );
         });
@@ -293,7 +294,7 @@ describe('Advanced Happy path', () => {
           UIhelper.clickLink(componentInfo.secondPipelineRunName);
           DetailsTab.waitForPLRAndDownloadAllLogs();
           TaskRunsTab.goToTaskrunsTab();
-          TaskRunsTab.assertTaskNamesAndTaskRunStatus(
+          TaskRunsTab.assertTaskAndTaskRunStatus(
             TaskRunsTab.getAdvancedTaskNamesList(componentInfo.secondPipelineRunName),
           );
         });
@@ -331,7 +332,7 @@ describe('Advanced Happy path', () => {
 
     it('Verify Integration Test pipeline runs Task runs & Logs Tab', () => {
       UIhelper.clickTab('Task runs');
-      TaskRunsTab.assertTaskNamesAndTaskRunStatus([
+      TaskRunsTab.assertTaskAndTaskRunStatus([
         {
           name: new RegExp(`${applicationName}-.*-${integrationTestTaskNames[0]}`),
           task: integrationTestTaskNames[0],
