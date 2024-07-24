@@ -9,6 +9,12 @@ export enum ReleasePipelineLocation {
   target,
 }
 
+const getIssues = (issues): { id: string; source: string }[] => {
+  return issues?.map((issue) => {
+    return { id: issue.id, source: issue.url };
+  });
+};
+
 export type TriggerReleaseFormValues = {
   releasePlan: string;
   snapshot: string;
@@ -60,8 +66,8 @@ export const createRelease = async (values: TriggerReleaseFormValues, namespace:
       snapshot,
       data: {
         releaseNotes: {
+          fixed: getIssues(issues),
           cves,
-          issues,
           references,
           synopsis,
           topic,

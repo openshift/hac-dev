@@ -32,7 +32,7 @@ export interface IssueObject {
   key: string;
   summary: string;
   url?: string;
-  components?: string[];
+  components?: { name: string; packages: string[] }[];
   uploadDate?: string;
   status?: string;
 }
@@ -188,8 +188,8 @@ export const AddIssueSection: React.FC<React.PropsWithChildren<AddIssueSectionPr
                             Array.isArray(issue.components) &&
                             issue.components.length > 0
                               ? issue.components?.map((component) => (
-                                  <span key={component} className="pf-v5-u-mr-sm">
-                                    {component}
+                                  <span key={component.name} className="pf-v5-u-mr-sm">
+                                    {component.name}
                                   </span>
                                 ))
                               : '-'}
