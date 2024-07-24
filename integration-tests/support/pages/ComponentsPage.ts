@@ -2,11 +2,30 @@ import { Common } from '../../utils/Common';
 import { UIhelper } from '../../utils/UIhelper';
 import { CPUUnit, MemoryUnit } from '../constants/Units';
 import { ComponentsPagePO } from '../pageObjects/createApplication-po';
-import { alertTitle } from '../pageObjects/global-po';
-import { componentDetailsPO } from '../pageObjects/pages-po';
+import { UIhelperPO, alertTitle } from '../pageObjects/global-po';
 import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class ComponentPage extends AbstractWizardPage {
+  static checkQuayImageIsPrivate() {
+    let label = 'Image';
+    cy.contains(UIhelperPO.listGroup_dt, new RegExp(`^\\s*${label}\\s*$`))
+      .siblings('dd')
+      .then(($quay) => {
+        let quayLink = $quay.text();
+        // remove "quay.io/" prefix from the quay link
+        let quayRepoIdentifier = quayLink.replace('quay.io/', '');
+        let curlLink = `https://quay.io/api/v1/repository/${quayRepoIdentifier}`;
+        cy.exec(
+          `curl -X GET -H "Authorization: Bearer ${Cypress.env(
+            'QUAY_TOKEN',
+          )}" -H "Content-Type: application/json" ${curlLink}`,
+        ).then((obj) => {
+          let response = JSON.parse(obj.stdout);
+          expect(response.is_public).to.be.false;
+        });
+      });
+  }
+
   setDockerfilePath(dockerfilePath: string) {
     cy.get(ComponentsPagePO.dockerfileInput).clear().type(dockerfilePath);
   }

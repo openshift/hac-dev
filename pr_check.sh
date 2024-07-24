@@ -112,12 +112,5 @@ fi
 
 bonfire namespace release -f ${NAMESPACE}
 
-# Stubbed out for now
-cat << EOF > $WORKSPACE/artifacts/junit-dummy.xml
-<testsuite tests="1">
-    <testcase classname="dummy" name="dummytest"/>
-</testsuite>
-EOF
-
 # teardown_docker
 exit $TEST_RUN

@@ -93,10 +93,12 @@ export class APIHelper {
     templateRepoName: string,
     targetOwner: string,
     targetRepoName: string,
+    isPrivate: boolean = false,
   ) {
     const body = {
       owner: targetOwner,
       name: targetRepoName,
+      private: isPrivate,
     };
     this.githubRequest(
       'POST',

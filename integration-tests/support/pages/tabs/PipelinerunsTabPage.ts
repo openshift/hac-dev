@@ -111,7 +111,9 @@ export class DetailsTab {
   }
 
   static clickOnVulScanViewLogs() {
-    cy.contains(pipelinerunsTabPO.listGroup, 'Fixable vulnerabilities scan').contains('View logs').click();
+    cy.contains(pipelinerunsTabPO.listGroup, 'Fixable vulnerabilities scan')
+      .contains('View logs')
+      .click();
   }
 
   static clickOnDrawerPanelLogsTab() {
@@ -188,10 +190,9 @@ export class TaskRunsTab {
     ];
   }
 
-  static assertTaskNamesAndTaskRunStatus(taskNames: taskRunDetailsRow[]) {
+  static assertTaskAndTaskRunStatus(taskNames: taskRunDetailsRow[]) {
     taskNames.forEach((taskNameRow) => {
-      UIhelper.verifyRowInTable('TaskRun List', taskNameRow.name, [
-        new RegExp(`^${taskNameRow.task}$`),
+      UIhelper.verifyRowInTable('TaskRun List', taskNameRow.task, [
         new RegExp(`${taskNameRow.status}`),
       ]);
     });

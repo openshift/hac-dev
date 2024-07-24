@@ -56,6 +56,7 @@ export class Applications {
     publicGitRepo: string,
     componentName: string,
     pipeline: string,
+    isPrivate: boolean = false,
     applicationName?: string,
     dockerfilePath?: string,
     secret?: { secretName: string; key: string; value: string },
@@ -66,6 +67,9 @@ export class Applications {
     addComponent.setSource(publicGitRepo);
     this.configureComponentsStep(componentName, pipeline, applicationName, dockerfilePath, secret);
     addComponent.waitRepoValidated();
+    if (isPrivate) {
+      addComponent.setPrivate();
+    }
     componentPage.clickSubmitButton();
   }
 
