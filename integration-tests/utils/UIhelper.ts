@@ -9,9 +9,11 @@ export class UIhelper {
       .should('have.length', occurrence);
   }
 
-  static clickTab(tabName: string) {
+  static clickTab(tabName: string, waitForLoad: boolean = true) {
     cy.contains(UIhelperPO.tabs, new RegExp(`^\\s*${tabName}\\s*$`)).click();
-    Common.waitForLoad();
+    if (waitForLoad) {
+      Common.waitForLoad();
+    }
   }
 
   static inputValueInTextBoxByLabelName(label: string, value: string) {

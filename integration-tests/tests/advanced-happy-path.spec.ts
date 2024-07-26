@@ -150,7 +150,8 @@ describe('Advanced Happy path', () => {
       UIhelper.clickTab('Details');
     });
 
-    it('Verify SBOM and logs', () => {
+    // skipping due to https://issues.redhat.com/browse/HAC-5807
+    it.skip('Verify SBOM and logs', () => {
       UIhelper.clickLink('View SBOM');
       DetailsTab.verifyLogs('"bomFormat": "CycloneDX"');
     });
@@ -171,13 +172,14 @@ describe('Advanced Happy path', () => {
       DetailsTab.closeDrawerPanel();
     });
 
-    it('Verify vulnebralities on pipeline run Details Page', () => {
+    it('Verify vulnerabilities on pipeline run Details Page', () => {
       DetailsTab.checkVulScanOnPipelinerunDetails(vulnerabilities);
       DetailsTab.clickOnVulScanViewLogs();
       DetailsTab.verifyLogs('Task clair-scan completed');
     });
 
-    it('Verify vulnebralities on pipeline run list', () => {
+    // skipping due to https://issues.redhat.com/browse/HAC-5808
+    it.skip('Verify vulnerabilities on pipeline run list', () => {
       Applications.clickBreadcrumbLink('Pipeline runs');
       UIhelper.verifyRowInTable('Pipeline run List', componentInfo.firstPipelineRunName, [
         vulnerabilities,
@@ -185,6 +187,7 @@ describe('Advanced Happy path', () => {
     });
 
     it('Verify Enterprise contract Test pipeline run Details', () => {
+      Applications.clickBreadcrumbLink('Pipeline runs');
       UIhelper.clickRowCellInTable('Pipeline run List', 'Test', `${applicationName}-`);
       DetailsTab.waitForPLRAndDownloadAllLogs(false);
     });
@@ -439,13 +442,15 @@ describe('Advanced Happy path', () => {
     });
 
     it('verify Pipeline runs Tab on component Details page', () => {
-      UIhelper.clickTab('Pipeline runs');
+      UIhelper.clickTab('Pipeline runs', false);
       UIhelper.verifyRowInTable('Pipeline run List', componentInfo.firstPipelineRunName, [
-        vulnerabilities,
+        // skipping due to https://issues.redhat.com/browse/HAC-5808
+        // vulnerabilities,
         /Succeeded/,
       ]);
       UIhelper.verifyRowInTable('Pipeline run List', componentInfo.secondPipelineRunName, [
-        vulnerabilities,
+        // skipping due to https://issues.redhat.com/browse/HAC-5808
+        // vulnerabilities,
         /Succeeded/,
       ]);
     });
