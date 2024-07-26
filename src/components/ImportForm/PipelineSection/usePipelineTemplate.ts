@@ -7,7 +7,7 @@ type PipelineTemplateItems = {
 
 // [TODO] ConfigMap: remove PIPELINE_DATA once permission issue resolved for build-service namespace
 const PIPELINE_DATA = {
-  'default-pipeline-name': 'docker-build',
+  'default-pipeline-name': 'docker-build-oci-ta',
   pipelines: [
     {
       name: 'fbc-builder',
@@ -18,6 +18,11 @@ const PIPELINE_DATA = {
       name: 'docker-build',
       bundle:
         'quay.io/konflux-ci/tekton-catalog/pipeline-docker-build@sha256:effd08d960f33d9957618982244e0d9c06f89eaaca5d125a434eacfc9851a04f',
+    },
+    {
+      name: 'docker-build-oci-ta',
+      bundle:
+        'quay.io/konflux-ci/tekton-catalog/pipeline-docker-build-oci-ta@sha256:9002db310cd002ddc7ccf94e08f8cd9b02c1bdd5dce36b59173fbc6cd4799f97',
     },
   ],
 };

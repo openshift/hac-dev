@@ -47,7 +47,7 @@ describe('usePipelineTemplate', () => {
     const { result } = renderHook(() => usePipelineTemplates());
     expect(result.current).toEqual([
       {
-        defaultPipelineName: 'docker-build',
+        defaultPipelineName: 'docker-build-oci-ta',
         pipelines: [
           {
             name: 'fbc-builder',
@@ -58,6 +58,11 @@ describe('usePipelineTemplate', () => {
             name: 'docker-build',
             bundle:
               'quay.io/konflux-ci/tekton-catalog/pipeline-docker-build@sha256:effd08d960f33d9957618982244e0d9c06f89eaaca5d125a434eacfc9851a04f',
+          },
+          {
+            name: 'docker-build-oci-ta',
+            bundle:
+              'quay.io/konflux-ci/tekton-catalog/pipeline-docker-build-oci-ta@sha256:9002db310cd002ddc7ccf94e08f8cd9b02c1bdd5dce36b59173fbc6cd4799f97',
           },
         ],
       },
