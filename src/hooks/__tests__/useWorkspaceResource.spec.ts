@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { useWorkspaceForNamespace } from '../useWorkspaceForNamespace';
 import { useWorkspaceResource } from '../useWorkspaceResource';
 

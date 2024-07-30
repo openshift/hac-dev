@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { useAccessReviewForModel } from '../../../../utils/rbac';
 import { useModalLauncher } from '../../../modal/ModalProvider';
 import { useWhatsNextItems } from '../useWhatsNextItems';

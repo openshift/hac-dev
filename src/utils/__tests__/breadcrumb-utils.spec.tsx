@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { useParams } from 'react-router-dom';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { useApplicationBreadcrumbs } from '../breadcrumb-utils';
 
 jest.mock('react-router-dom', () => ({

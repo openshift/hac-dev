@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { useComponents } from '../../../../../../../hooks/useComponents';
 import { useIntegrationTestScenarios } from '../../../../../../../hooks/useIntegrationTestScenarios';
 import { useLatestBuildPipelines } from '../../../../../../../hooks/useLatestBuildPipelines';

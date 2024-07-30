@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { useTrackEvent } from '../analytics';
 
 const trackMock = jest.fn();

@@ -1,6 +1,6 @@
 /* eslint-disable max-nested-callbacks */
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { PipelineRunGroupVersionKind, TaskRunGroupVersionKind } from '../../models';
 import { useComponents } from '../useComponents';
 import {
