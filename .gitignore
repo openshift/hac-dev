@@ -27,3 +27,6 @@ config/.env.local
 
 # Generated pacts
 pact
+
+# go mod cache
+pkg/
