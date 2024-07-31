@@ -4,6 +4,7 @@ import {
   k8sUpdateResource,
   commonFetch,
 } from '@openshift/dynamic-plugin-sdk-utils';
+import gitUrlParse from 'git-url-parse';
 import isEqual from 'lodash/isEqual';
 import isNumber from 'lodash/isNumber';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,6 +27,7 @@ import {
   SecretModel,
   ImageRepositoryModel,
 } from '../models';
+import { isGitLabRepo } from '../shared/utils/git-utils';
 import {
   ComponentKind,
   ApplicationKind,
@@ -40,8 +42,13 @@ import {
   ImageRepositoryVisibility,
 } from '../types';
 import { ComponentSpecs } from './../types/component';
-import { BuildRequest, BUILD_REQUEST_ANNOTATION } from './component-utils';
-
+import {
+  BuildRequest,
+  BUILD_REQUEST_ANNOTATION,
+  GIT_PROVIDER_ANNOTATION,
+  GITLAB_ANNOTATION_VALUE,
+  GITLAB_PROVIDER_URL_ANNOTATION,
+} from './component-utils';
 export const sanitizeName = (name: string) => name.split(/ |\./).join('-').toLowerCase();
 /**
  * Create HAS Application CR
@@ -111,6 +118,8 @@ export const createComponent = (
 
   const name = component.componentName.split(/ |\./).join('-').toLowerCase();
 
+  const isGitLab = isGitLabRepo(source?.git?.url);
+
   const newComponent = {
     apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
     kind: ComponentModel.kind,
@@ -143,8 +152,19 @@ export const createComponent = (
     verb === 'update' ? { ...originalComponent, spec: newComponent.spec } : newComponent;
 
   // merge additional annotations
-  if (annotations) {
-    resource.metadata.annotations = { ...resource.metadata.annotations, ...annotations };
+  if (annotations || isGitLab) {
+    const newAnnotations = annotations;
+    if (isGitLab) {
+      let parsed: gitUrlParse.GitUrl;
+      try {
+        parsed = gitUrlParse(source?.git?.url);
+      } catch {
+        return null;
+      }
+      newAnnotations[GIT_PROVIDER_ANNOTATION] = GITLAB_ANNOTATION_VALUE;
+      newAnnotations[GITLAB_PROVIDER_URL_ANNOTATION] = parsed.resource;
+    }
+    resource.metadata.annotations = { ...resource.metadata.annotations, ...newAnnotations };
   }
 
   return verb === 'create'
