@@ -8,17 +8,31 @@ import {
   FlexItem,
 } from '@patternfly/react-core';
 import yamlParser from 'js-yaml';
+import { useLatestSuccessfulBuildPipelineRunForComponent } from '../../../../hooks/usePipelineRuns';
 import ExternalLink from '../../../../shared/components/links/ExternalLink';
 import { ComponentKind } from '../../../../types';
+import { getPipelineRunStatusResults } from '../../../../utils/pipeline-utils';
+import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
 import GitRepoLink from '../../../GitLink/GitRepoLink';
 
 type ComponentDetailsProps = {
   component: ComponentKind;
 };
 
+const RESULT_NAME = 'IMAGE_URL';
+
 const ComponentDetails: React.FC<React.PropsWithChildren<ComponentDetailsProps>> = ({
   component,
 }) => {
+  const { namespace } = useWorkspaceInfo();
+  const [pipelineRun, pipelineRunLoaded, error] = useLatestSuccessfulBuildPipelineRunForComponent(
+    namespace,
+    component.metadata.name,
+  );
+  const results = !error && pipelineRunLoaded ? getPipelineRunStatusResults(pipelineRun) : null;
+  const latestImageURL = results?.find((result) => result.name === RESULT_NAME);
+  const componentImageURL = latestImageURL?.value ?? component.spec.containerImage;
+
   const runTime = React.useMemo(() => {
     try {
       const loadedYaml = yamlParser?.load(component.status?.devfile) as {
@@ -57,7 +71,7 @@ const ComponentDetails: React.FC<React.PropsWithChildren<ComponentDetailsProps>>
           </DescriptionList>
         </FlexItem>
       )}
-      {component.spec.containerImage && (
+      {componentImageURL && (
         <FlexItem style={{ flex: 1 }}>
           <DescriptionList
             columnModifier={{
@@ -65,15 +79,15 @@ const ComponentDetails: React.FC<React.PropsWithChildren<ComponentDetailsProps>>
             }}
           >
             <DescriptionListGroup>
-              <DescriptionListTerm>Image</DescriptionListTerm>
+              <DescriptionListTerm>Latest image</DescriptionListTerm>
               <DescriptionListDescription>
                 <ExternalLink
                   href={
-                    component.spec.containerImage.startsWith('http')
-                      ? component.spec.containerImage
-                      : `https://${component.spec.containerImage}`
+                    componentImageURL.startsWith('http')
+                      ? componentImageURL
+                      : `https://${componentImageURL}`
                   }
-                  text={component.spec.containerImage}
+                  text={componentImageURL}
                 />
               </DescriptionListDescription>
             </DescriptionListGroup>
