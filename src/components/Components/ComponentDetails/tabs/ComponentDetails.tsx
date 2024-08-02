@@ -8,7 +8,7 @@ import {
   FlexItem,
 } from '@patternfly/react-core';
 import yamlParser from 'js-yaml';
-import { useLatestSuccessfulBuildPipelineRunForComponent } from '../../../../hooks/usePipelineRuns';
+import { useLatestPushBuildPipelineRunForComponent } from '../../../../hooks/usePipelineRuns';
 import ExternalLink from '../../../../shared/components/links/ExternalLink';
 import { ComponentKind } from '../../../../types';
 import { getPipelineRunStatusResults } from '../../../../utils/pipeline-utils';
@@ -25,11 +25,15 @@ const ComponentDetails: React.FC<React.PropsWithChildren<ComponentDetailsProps>>
   component,
 }) => {
   const { namespace } = useWorkspaceInfo();
-  const [pipelineRun, pipelineRunLoaded, error] = useLatestSuccessfulBuildPipelineRunForComponent(
+  const [latestPushBuildPLR, pipelineRunLoaded, error] = useLatestPushBuildPipelineRunForComponent(
     namespace,
     component.metadata.name,
   );
-  const results = !error && pipelineRunLoaded ? getPipelineRunStatusResults(pipelineRun) : null;
+
+  const results =
+    !error && pipelineRunLoaded && latestPushBuildPLR?.status
+      ? getPipelineRunStatusResults(latestPushBuildPLR)
+      : null;
   const latestImageURL = results?.find((result) => result.name === RESULT_NAME);
   const componentImageURL = latestImageURL?.value ?? component.spec.containerImage;
 
@@ -80,7 +84,7 @@ const ComponentDetails: React.FC<React.PropsWithChildren<ComponentDetailsProps>>
           >
             <DescriptionListGroup>
               <DescriptionListTerm>Latest image</DescriptionListTerm>
-              <DescriptionListDescription>
+              <DescriptionListDescription data-test="component-latest-image">
                 <ExternalLink
                   href={
                     componentImageURL.startsWith('http')

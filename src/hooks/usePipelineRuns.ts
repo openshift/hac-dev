@@ -6,7 +6,7 @@ import {
   useK8sWatchResource,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { differenceBy, uniqBy } from 'lodash-es';
-import { PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
+import { PipelineRunEventType, PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { PipelineRunGroupVersionKind, TaskRunGroupVersionKind } from '../models';
 import { useDeepCompareMemoize } from '../shared';
 import { PipelineRunKind, TaskRunKind } from '../types';
@@ -191,6 +191,30 @@ export const useLatestBuildPipelineRunForComponent = (
   ) as unknown as [PipelineRunKind[], boolean, unknown];
 
   return React.useMemo(() => [result[0]?.[0], result[1], result[2]], [result]);
+};
+
+export const useLatestPushBuildPipelineRunForComponent = (
+  namespace: string,
+  componentName: string,
+): [PipelineRunKind, boolean, unknown] => {
+  const result = usePipelineRuns(
+    namespace,
+    React.useMemo(
+      () => ({
+        selector: {
+          matchLabels: {
+            [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
+            [PipelineRunLabel.COMPONENT]: componentName,
+            [PipelineRunLabel.COMMIT_EVENT_TYPE_LABEL]: PipelineRunEventType.PUSH,
+          },
+        },
+        limit: 1,
+      }),
+      [componentName],
+    ),
+  );
+
+  return [result[0]?.[0], result[1], result[2]];
 };
 
 export const useLatestSuccessfulBuildPipelineRunForComponent = (

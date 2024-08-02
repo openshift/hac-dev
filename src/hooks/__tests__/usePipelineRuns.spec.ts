@@ -5,6 +5,7 @@ import { PipelineRunGroupVersionKind, TaskRunGroupVersionKind } from '../../mode
 import { useComponents } from '../useComponents';
 import {
   useLatestBuildPipelineRunForComponent,
+  useLatestPushBuildPipelineRunForComponent,
   useLatestSuccessfulBuildPipelineRunForComponent,
   usePipelineRun,
   usePipelineRuns,
@@ -91,6 +92,32 @@ const resultMock3 = [
       },
       annotations: {
         'build.appstudio.redhat.com/commit_sha': 'other-sha',
+      },
+    },
+  },
+];
+
+const resultMockPush = [
+  {
+    kind: PipelineRunGroupVersionKind.kind,
+    metadata: {
+      name: 'first',
+      creationTimestamp: '2023-04-11T19:36:25Z',
+      labels: {
+        'pipelinesascode.tekton.dev/sha': 'sample-sha',
+        'appstudio.openshift.io/component': 'test-component',
+        'pipelinesascode.tekton.dev/event-type': 'push',
+      },
+    },
+  },
+  {
+    kind: PipelineRunGroupVersionKind.kind,
+    metadata: {
+      name: 'second',
+      creationTimestamp: '2022-04-11T19:36:25Z',
+      labels: {
+        'pac.test.appstudio.openshift.io/sha': 'sample-sha',
+        'appstudio.openshift.io/component': 'test-component',
       },
     },
   },
@@ -328,6 +355,49 @@ describe('usePipelineRuns', () => {
         useLatestBuildPipelineRunForComponent('test-ns', 'sample-component'),
       );
       expect(result.current).toEqual([resultMock[0], true, undefined]);
+    });
+  });
+
+  describe('useLatestPushBuildPipelineRunForComponent', () => {
+    it('should create specific selector', () => {
+      useK8sWatchResourceMock.mockReturnValue([[], true, undefined]);
+      useTRPipelineRunsMock.mockReturnValue([[], false, undefined]);
+      const { result } = renderHook(() =>
+        useLatestPushBuildPipelineRunForComponent('test-ns', 'sample-component'),
+      );
+
+      expect(result.current).toEqual([undefined, false, undefined]);
+
+      expect(useK8sWatchResourceMock).toHaveBeenCalledWith({
+        groupVersionKind: PipelineRunGroupVersionKind,
+        namespace: 'test-ns',
+        isList: true,
+        selector: {
+          matchLabels: {
+            'pipelines.appstudio.openshift.io/type': 'build',
+            'appstudio.openshift.io/component': 'sample-component',
+            'pipelinesascode.tekton.dev/event-type': 'push',
+          },
+        },
+      });
+      expect(useTRPipelineRunsMock).toHaveBeenCalledWith('test-ns', {
+        limit: 1,
+        selector: {
+          matchLabels: {
+            'pipelines.appstudio.openshift.io/type': 'build',
+            'appstudio.openshift.io/component': 'sample-component',
+            'pipelinesascode.tekton.dev/event-type': 'push',
+          },
+        },
+      });
+    });
+
+    it('should return a single pipeline run', () => {
+      useK8sWatchResourceMock.mockReturnValue([resultMockPush, true]);
+      const { result } = renderHook(() =>
+        useLatestPushBuildPipelineRunForComponent('test-ns', 'sample-component'),
+      );
+      expect(result.current).toEqual([resultMockPush[0], true, undefined]);
     });
   });
 

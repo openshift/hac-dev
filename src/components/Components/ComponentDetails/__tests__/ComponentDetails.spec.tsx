@@ -6,7 +6,10 @@ import { screen, fireEvent, act, configure } from '@testing-library/react';
 import { useComponent } from '../../../../hooks/useComponents';
 import { useAllGitOpsDeploymentCRs } from '../../../../hooks/useGitOpsDeploymentCR';
 import { PACState } from '../../../../hooks/usePACState';
-import { useLatestSuccessfulBuildPipelineRunForComponent } from '../../../../hooks/usePipelineRuns';
+import {
+  useLatestSuccessfulBuildPipelineRunForComponent,
+  useLatestPushBuildPipelineRunForComponent,
+} from '../../../../hooks/usePipelineRuns';
 import { useSnapshotsEnvironmentBindings } from '../../../../hooks/useSnapshotsEnvironmentBindings';
 import { useTaskRuns } from '../../../../hooks/useTaskRuns';
 import { routerRenderer } from '../../../../utils/test-utils';
@@ -52,6 +55,7 @@ jest.mock('../../../../hooks/useComponents', () => ({
 jest.mock('../../../../hooks/usePipelineRuns', () => ({
   ...jest.requireActual<any>('../../../../hooks/usePipelineRuns'),
   useLatestSuccessfulBuildPipelineRunForComponent: jest.fn(),
+  useLatestPushBuildPipelineRunForComponent: jest.fn(),
 }));
 
 jest.mock('../../../../hooks/useTaskRuns', () => ({
@@ -97,6 +101,8 @@ const useParamsMock = useParams as jest.Mock;
 const useComponentMock = useComponent as jest.Mock;
 const useLatestSuccessfulBuildPipelineRunForComponentMock =
   useLatestSuccessfulBuildPipelineRunForComponent as jest.Mock;
+const useLatestPushBuildPipelineRunForComponentMock =
+  useLatestPushBuildPipelineRunForComponent as jest.Mock;
 const useTaskRunsMock = useTaskRuns as jest.Mock;
 const useSnapshotsEnvironmentBindingsMock = useSnapshotsEnvironmentBindings as jest.Mock;
 const useAllGitOpsDeploymentCRsMock = useAllGitOpsDeploymentCRs as jest.Mock;
@@ -128,6 +134,10 @@ describe('ComponentDetailsView', () => {
   beforeEach(() => {
     useComponentMock.mockReturnValue([mockComponent, true]);
     useLatestSuccessfulBuildPipelineRunForComponentMock.mockReturnValue([
+      mockLatestSuccessfulBuild,
+      true,
+    ]);
+    useLatestPushBuildPipelineRunForComponentMock.mockReturnValue([
       mockLatestSuccessfulBuild,
       true,
     ]);
@@ -241,5 +251,62 @@ describe('ComponentDetailsView', () => {
       </ComponentDetailsViewWrapper>,
     );
     expect(screen.getByTestId('component-nudges-dependencies')).toBeInTheDocument();
+  });
+
+  it('should not render Component container image URL', async () => {
+    routerRenderer(
+      <ComponentDetailsViewWrapper>
+        <ComponentDetailsView applicationName="test-application" componentName="human-resources" />,
+      </ComponentDetailsViewWrapper>,
+    );
+    expect(screen.queryByText('Latest image')).not.toBeInTheDocument();
+  });
+
+  it('should render Component container image URL when latest build url not found', async () => {
+    useComponentMock.mockReturnValue([
+      { ...mockComponent, spec: { containerImage: 'test-url', ...mockComponent.spec } },
+      true,
+    ]);
+    routerRenderer(
+      <ComponentDetailsViewWrapper>
+        <ComponentDetailsView applicationName="test-application" componentName="human-resources" />,
+      </ComponentDetailsViewWrapper>,
+    );
+    expect(screen.getByText('Latest image')).toBeInTheDocument();
+    const latestImage = screen.getByTestId('component-latest-image');
+    expect(latestImage.children[0].children[0].getAttribute('href')).toBe('https://test-url');
+  });
+
+  it('should render Component latest build image URL when latest build exists', async () => {
+    useComponentMock.mockReturnValue([
+      { ...mockComponent, spec: { containerImage: 'test-url', ...mockComponent.spec } },
+      true,
+    ]);
+    useLatestPushBuildPipelineRunForComponentMock.mockReturnValue([
+      {
+        ...mockLatestSuccessfulBuild,
+        status: {
+          results: [
+            {
+              description: '',
+              name: 'IMAGE_URL',
+              value: 'build-container.image.url',
+            },
+          ],
+          ...mockLatestSuccessfulBuild.status,
+        },
+      },
+      true,
+    ]);
+    routerRenderer(
+      <ComponentDetailsViewWrapper>
+        <ComponentDetailsView applicationName="test-application" componentName="human-resources" />,
+      </ComponentDetailsViewWrapper>,
+    );
+    expect(screen.getByText('Latest image')).toBeInTheDocument();
+    const latestImage = screen.getByTestId('component-latest-image');
+    expect(latestImage.children[0].children[0].getAttribute('href')).toBe(
+      'https://build-container.image.url',
+    );
   });
 });
