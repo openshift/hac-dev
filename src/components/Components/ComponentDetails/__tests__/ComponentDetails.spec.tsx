@@ -242,4 +242,61 @@ describe('ComponentDetailsView', () => {
     );
     expect(screen.getByTestId('component-nudges-dependencies')).toBeInTheDocument();
   });
+
+  it('should not render Component container image URL', async () => {
+    routerRenderer(
+      <ComponentDetailsViewWrapper>
+        <ComponentDetailsView applicationName="test-application" componentName="human-resources" />,
+      </ComponentDetailsViewWrapper>,
+    );
+    expect(screen.queryByText('Latest image')).not.toBeInTheDocument();
+  });
+
+  it('should render Component container image URL when latest build url not found', async () => {
+    useComponentMock.mockReturnValue([
+      { ...mockComponent, spec: { containerImage: 'test-url', ...mockComponent.spec } },
+      true,
+    ]);
+    routerRenderer(
+      <ComponentDetailsViewWrapper>
+        <ComponentDetailsView applicationName="test-application" componentName="human-resources" />,
+      </ComponentDetailsViewWrapper>,
+    );
+    expect(screen.getByText('Latest image')).toBeInTheDocument();
+    const latestImage = screen.getByTestId('component-latest-image');
+    expect(latestImage.children[0].children[0].getAttribute('href')).toBe('https://test-url');
+  });
+
+  it('should render Component latest build image URL when latest build exists', async () => {
+    useComponentMock.mockReturnValue([
+      { ...mockComponent, spec: { containerImage: 'test-url', ...mockComponent.spec } },
+      true,
+    ]);
+    useLatestSuccessfulBuildPipelineRunForComponentMock.mockReturnValue([
+      {
+        ...mockLatestSuccessfulBuild,
+        status: {
+          results: [
+            {
+              description: '',
+              name: 'IMAGE_URL',
+              value: 'build-container.image.url',
+            },
+          ],
+          ...mockLatestSuccessfulBuild.status,
+        },
+      },
+      true,
+    ]);
+    routerRenderer(
+      <ComponentDetailsViewWrapper>
+        <ComponentDetailsView applicationName="test-application" componentName="human-resources" />,
+      </ComponentDetailsViewWrapper>,
+    );
+    expect(screen.getByText('Latest image')).toBeInTheDocument();
+    const latestImage = screen.getByTestId('component-latest-image');
+    expect(latestImage.children[0].children[0].getAttribute('href')).toBe(
+      'https://build-container.image.url',
+    );
+  });
 });
