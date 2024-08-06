@@ -61,13 +61,16 @@ def main(kc, admin, password, user, secret, register, verify):
             "IsInternal": "false",
             "IsOrgAdmin": "true",
             "IsActive": "true",
-            "Entitlements": "{}"
+            "entitlements": "{\"insights\": {\"is_entitled\": true, \"is_trial\": false}}"
         },
         "credentials": [
             {
                 "type": "password", 
                 "value": decodedPassword,
             }
+        ],
+        "realmRoles": [
+            "default-roles-redhat-external"
         ],
     }
     resp = session.post(userUrl, headers=headers, json=user)
