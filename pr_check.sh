@@ -55,6 +55,18 @@ bonfire deploy \
         --set-image-tag ${IMAGE}=${IMAGE_TAG} \
         --namespace ${NAMESPACE}
 
+
+# Hacks for clowder and keycloak integration
+oc get clowdenvironment $ENV_NAME -o json | jq '.spec.disabled=true' | oc apply -f -
+export KC_URL=$(echo $HAC_KC_SSO_URL | sed -s 's/\/auth\///')
+oc get deployment $ENV_NAME-mbop -o json | \
+  jq --arg url $KC_URL --arg user $HAC_KC_USERNAME --arg pass $HAC_KC_PASSWORD \
+    '(.spec.template.spec.containers[].env=[
+     {"name": "KEYCLOAK_SERVER", "value": $url},
+     {"name": "KEYCLOAK_USERNAME", "value": $user},
+     {"name": "KEYCLOAK_PASSWORD", "value": $pass},
+     {"name": "KEYCLOAK_VERSION", "value": "23.0.1"}])' | oc replace -f -
+
 # Call the keycloak API and add a user
 B64_USER=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.username'| tr -d '"')
 B64_PASS=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.password' | tr -d '"')
