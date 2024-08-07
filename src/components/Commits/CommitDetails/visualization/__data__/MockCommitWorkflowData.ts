@@ -2241,7 +2241,7 @@ export const MockCommit = {
                     exitCode: 0,
                     finishedAt: '2023-03-27T13:46:14Z',
                     message:
-                      '[{"key":"CLAIR_SCAN_RESULT","value":"{\\"vulnerabilities\\":{\\"critical\\":0,\\"high\\":0,\\"medium\\":1,\\"low\\":0}}\\n","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1679924774\\",\\"note\\":\\"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+                      '[{"key":"SCAN_OUTPUT","value":"{\\"vulnerabilities\\":{\\"critical\\":0,\\"high\\":0,\\"medium\\":1,\\"low\\":0}}\\n","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1679924774\\",\\"note\\":\\"Please refer to result SCAN_OUTPUT for the vulnerabilities scanned by clair\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
                     reason: 'Completed',
                     startedAt: '2023-03-27T13:46:14Z',
                   },
@@ -2249,7 +2249,7 @@ export const MockCommit = {
               ],
               taskResults: [
                 {
-                  name: 'CLAIR_SCAN_RESULT',
+                  name: 'SCAN_OUTPUT',
                   type: 'string',
                   value: '{"vulnerabilities":{"critical":0,"high":0,"medium":1,"low":0}}\n',
                 },
@@ -2257,7 +2257,7 @@ export const MockCommit = {
                   name: 'TEST_OUTPUT',
                   type: 'string',
                   value:
-                    '{"result":"SUCCESS","timestamp":"1679924774","note":"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair","namespace":"default","successes":0,"failures":0,"warnings":0}\n',
+                    '{"result":"SUCCESS","timestamp":"1679924774","note":"Please refer to result SCAN_OUTPUT for the vulnerabilities scanned by clair","namespace":"default","successes":0,"failures":0,"warnings":0}\n',
                 },
               ],
               taskSpec: {
@@ -2287,7 +2287,7 @@ export const MockCommit = {
                   },
                   {
                     description: 'clair scan result',
-                    name: 'CLAIR_SCAN_RESULT',
+                    name: 'SCAN_OUTPUT',
                     type: 'string',
                   },
                 ],
@@ -2335,7 +2335,7 @@ export const MockCommit = {
                     name: 'test-format-result',
                     resources: {},
                     script:
-                      '#!/usr/bin/env bash\n. /utils.sh\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]] || [[ "$(jq \'.[] | has("failures")\' /tekton/home/clair-vulnerabilities.json)" == "false" ]]; then\n  TEST_OUTPUT=$(make_result_json -r "ERROR" -t "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again")\n  echo "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  \'{vulnerabilities:{\n      critical: (.[] | .failures | map(select(.metadata.details.name=="clair_critical_vulnerabilities")) | length),\n      high: (.[] | .failures | map(select(.metadata.details.name=="clair_high_vulnerabilities")) | length),\n      medium: (.[] | .failures | map(select(.metadata.details.name=="clair_medium_vulnerabilities")) | length),\n      low: (.[] | .failures | map(select(.metadata.details.name=="clair_low_vulnerabilities")) | length)\n    }}\' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/CLAIR_SCAN_RESULT\n\nTEST_OUTPUT=$(make_result_json -r "SUCCESS" -t "Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair")\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
+                      '#!/usr/bin/env bash\n. /utils.sh\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]] || [[ "$(jq \'.[] | has("failures")\' /tekton/home/clair-vulnerabilities.json)" == "false" ]]; then\n  TEST_OUTPUT=$(make_result_json -r "ERROR" -t "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again")\n  echo "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  \'{vulnerabilities:{\n      critical: (.[] | .failures | map(select(.metadata.details.name=="clair_critical_vulnerabilities")) | length),\n      high: (.[] | .failures | map(select(.metadata.details.name=="clair_high_vulnerabilities")) | length),\n      medium: (.[] | .failures | map(select(.metadata.details.name=="clair_medium_vulnerabilities")) | length),\n      low: (.[] | .failures | map(select(.metadata.details.name=="clair_low_vulnerabilities")) | length)\n    }}\' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/SCAN_OUTPUT\n\nTEST_OUTPUT=$(make_result_json -r "SUCCESS" -t "Please refer to result SCAN_OUTPUT for the vulnerabilities scanned by clair")\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                   },
                 ],
               },
@@ -6810,7 +6810,7 @@ export const MockBuildPipelines = [
                   exitCode: 0,
                   finishedAt: '2023-03-27T13:46:14Z',
                   message:
-                    '[{"key":"CLAIR_SCAN_RESULT","value":"{\\"vulnerabilities\\":{\\"critical\\":0,\\"high\\":0,\\"medium\\":1,\\"low\\":0}}\\n","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1679924774\\",\\"note\\":\\"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+                    '[{"key":"SCAN_OUTPUT","value":"{\\"vulnerabilities\\":{\\"critical\\":0,\\"high\\":0,\\"medium\\":1,\\"low\\":0}}\\n","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1679924774\\",\\"note\\":\\"Please refer to result SCAN_OUTPUT for the vulnerabilities scanned by clair\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
                   reason: 'Completed',
                   startedAt: '2023-03-27T13:46:14Z',
                 },
@@ -6818,7 +6818,7 @@ export const MockBuildPipelines = [
             ],
             taskResults: [
               {
-                name: 'CLAIR_SCAN_RESULT',
+                name: 'SCAN_OUTPUT',
                 type: 'string',
                 value: '{"vulnerabilities":{"critical":0,"high":0,"medium":1,"low":0}}\n',
               },
@@ -6826,7 +6826,7 @@ export const MockBuildPipelines = [
                 name: 'TEST_OUTPUT',
                 type: 'string',
                 value:
-                  '{"result":"SUCCESS","timestamp":"1679924774","note":"Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair","namespace":"default","successes":0,"failures":0,"warnings":0}\n',
+                  '{"result":"SUCCESS","timestamp":"1679924774","note":"Please refer to result SCAN_OUTPUT for the vulnerabilities scanned by clair","namespace":"default","successes":0,"failures":0,"warnings":0}\n',
               },
             ],
             taskSpec: {
@@ -6856,7 +6856,7 @@ export const MockBuildPipelines = [
                 },
                 {
                   description: 'clair scan result',
-                  name: 'CLAIR_SCAN_RESULT',
+                  name: 'SCAN_OUTPUT',
                   type: 'string',
                 },
               ],
@@ -6904,7 +6904,7 @@ export const MockBuildPipelines = [
                   name: 'test-format-result',
                   resources: {},
                   script:
-                    '#!/usr/bin/env bash\n. /utils.sh\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]] || [[ "$(jq \'.[] | has("failures")\' /tekton/home/clair-vulnerabilities.json)" == "false" ]]; then\n  TEST_OUTPUT=$(make_result_json -r "ERROR" -t "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again")\n  echo "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  \'{vulnerabilities:{\n      critical: (.[] | .failures | map(select(.metadata.details.name=="clair_critical_vulnerabilities")) | length),\n      high: (.[] | .failures | map(select(.metadata.details.name=="clair_high_vulnerabilities")) | length),\n      medium: (.[] | .failures | map(select(.metadata.details.name=="clair_medium_vulnerabilities")) | length),\n      low: (.[] | .failures | map(select(.metadata.details.name=="clair_low_vulnerabilities")) | length)\n    }}\' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/CLAIR_SCAN_RESULT\n\nTEST_OUTPUT=$(make_result_json -r "SUCCESS" -t "Please refer to result CLAIR_SCAN_RESULT for the vulnerabilities scanned by clair")\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
+                    '#!/usr/bin/env bash\n. /utils.sh\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]] || [[ "$(jq \'.[] | has("failures")\' /tekton/home/clair-vulnerabilities.json)" == "false" ]]; then\n  TEST_OUTPUT=$(make_result_json -r "ERROR" -t "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again")\n  echo "/tekton/home/clair-vulnerabilities.json is not generated correctly, please check again"\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  \'{vulnerabilities:{\n      critical: (.[] | .failures | map(select(.metadata.details.name=="clair_critical_vulnerabilities")) | length),\n      high: (.[] | .failures | map(select(.metadata.details.name=="clair_high_vulnerabilities")) | length),\n      medium: (.[] | .failures | map(select(.metadata.details.name=="clair_medium_vulnerabilities")) | length),\n      low: (.[] | .failures | map(select(.metadata.details.name=="clair_low_vulnerabilities")) | length)\n    }}\' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/SCAN_OUTPUT\n\nTEST_OUTPUT=$(make_result_json -r "SUCCESS" -t "Please refer to result SCAN_OUTPUT for the vulnerabilities scanned by clair")\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
                 },
               ],
             },
