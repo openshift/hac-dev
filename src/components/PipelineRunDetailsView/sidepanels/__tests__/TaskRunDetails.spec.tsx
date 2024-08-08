@@ -75,7 +75,7 @@ describe('TaskRunDetails', () => {
             status: {
               results: [
                 {
-                  name: 'CLAIR_SCAN_RESULTS',
+                  name: 'SCAN_OUTPUT',
                   value: '{"vulnerabilities":{"critical":0,"high":0,"medium":1,"low":0}}',
                 },
               ],

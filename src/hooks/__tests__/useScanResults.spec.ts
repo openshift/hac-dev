@@ -22,7 +22,7 @@ const taskRunData = [
     status: {
       results: [
         {
-          name: 'CVE_SCAN_RESULT',
+          name: 'SCAN_OUTPUT',
           value: '{ "vulnerabilities": { "critical": 1, "high": 2, "medium": 3, "low": 4 } }',
         },
       ],
@@ -36,7 +36,7 @@ const taskRunData = [
     status: {
       results: [
         {
-          name: 'CLAIR_SCAN_RESULT',
+          name: 'SCAN_OUTPUT',
           value: '{ "vulnerabilities": { "critical": 5, "high": 2, "medium": 0, "low": 4 } }',
         },
       ],

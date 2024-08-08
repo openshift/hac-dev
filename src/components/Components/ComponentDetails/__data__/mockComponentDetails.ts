@@ -4452,7 +4452,7 @@ export const mockTaskRuns = [
           terminated: {
             reason: 'Completed',
             message:
-              '[{"key":"CLAIR_SCAN_RESULT","value":"{\\"vulnerabilities\\":{\\"critical\\":0,\\"high\\":2,\\"medium\\":7,\\"low\\":3}}\\n","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1690797413\\",\\"note\\":\\"Task clair-scan completed: Refer to Tekton task result CLAIR_SCAN_RESULT for vulnerabilities scanned by Clair.\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
+              '[{"key":"SCAN_OUTPUT","value":"{\\"vulnerabilities\\":{\\"critical\\":0,\\"high\\":2,\\"medium\\":7,\\"low\\":3}}\\n","type":1},{"key":"TEST_OUTPUT","value":"{\\"result\\":\\"SUCCESS\\",\\"timestamp\\":\\"1690797413\\",\\"note\\":\\"Task clair-scan completed: Refer to Tekton task result SCAN_OUTPUT for vulnerabilities scanned by Clair.\\",\\"namespace\\":\\"default\\",\\"successes\\":0,\\"failures\\":0,\\"warnings\\":0}\\n","type":1}]',
             exitCode: 0,
             startedAt: '2023-07-31T09:56:53Z',
             finishedAt: '2023-07-31T09:56:54Z',
@@ -4500,7 +4500,7 @@ export const mockTaskRuns = [
             image:
               'quay.io/redhat-appstudio/hacbs-test:v1.1.0@sha256:82b43bffe4eacc717239424f64478b18f36528df47c2d11df3a8d031e81a3c67',
             script:
-              '#!/usr/bin/env bash\n. /utils.sh\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]]; then\n  note="Task clair-scan failed: /tekton/home/clair-vulnerabilities.json did not generate. For details, check Tekton task log."\n  TEST_OUTPUT=$(make_result_json -r "ERROR" -t "$note")\n  echo "/tekton/home/clair-vulnerabilities.json did not generate correctly. For details, check conftest command in Tekton task log."\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  \'{vulnerabilities:{\n      critical: (.[] | .warnings? // [] | map(select(.metadata.details.name=="clair_critical_vulnerabilities").metadata."vulnerabilities_number" // 0)| add // 0),\n      high: (.[] | .warnings? // [] | map(select(.metadata.details.name=="clair_high_vulnerabilities").metadata."vulnerabilities_number" // 0)| add // 0),\n      medium: (.[] | .warnings? // [] | map(select(.metadata.details.name=="clair_medium_vulnerabilities").metadata."vulnerabilities_number" // 0)| add // 0),\n      low: (.[] | .warnings? // [] | map(select(.metadata.details.name=="clair_low_vulnerabilities").metadata."vulnerabilities_number" // 0)| add // 0)\n    }}\' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/CLAIR_SCAN_RESULT\n\nnote="Task clair-scan completed: Refer to Tekton task result CLAIR_SCAN_RESULT for vulnerabilities scanned by Clair."\nTEST_OUTPUT=$(make_result_json -r "SUCCESS" -t "$note")\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
+              '#!/usr/bin/env bash\n. /utils.sh\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]]; then\n  note="Task clair-scan failed: /tekton/home/clair-vulnerabilities.json did not generate. For details, check Tekton task log."\n  TEST_OUTPUT=$(make_result_json -r "ERROR" -t "$note")\n  echo "/tekton/home/clair-vulnerabilities.json did not generate correctly. For details, check conftest command in Tekton task log."\n  echo "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  \'{vulnerabilities:{\n      critical: (.[] | .warnings? // [] | map(select(.metadata.details.name=="clair_critical_vulnerabilities").metadata."vulnerabilities_number" // 0)| add // 0),\n      high: (.[] | .warnings? // [] | map(select(.metadata.details.name=="clair_high_vulnerabilities").metadata."vulnerabilities_number" // 0)| add // 0),\n      medium: (.[] | .warnings? // [] | map(select(.metadata.details.name=="clair_medium_vulnerabilities").metadata."vulnerabilities_number" // 0)| add // 0),\n      low: (.[] | .warnings? // [] | map(select(.metadata.details.name=="clair_low_vulnerabilities").metadata."vulnerabilities_number" // 0)| add // 0)\n    }}\' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/SCAN_OUTPUT\n\nnote="Task clair-scan completed: Refer to Tekton task result SCAN_OUTPUT for vulnerabilities scanned by Clair."\nTEST_OUTPUT=$(make_result_json -r "SUCCESS" -t "$note")\necho "${TEST_OUTPUT}" | tee /tekton/results/TEST_OUTPUT\n',
             resources: {},
           },
         ],
@@ -4529,7 +4529,7 @@ export const mockTaskRuns = [
             description: 'Tekton task test output.',
           },
           {
-            name: 'CLAIR_SCAN_RESULT',
+            name: 'SCAN_OUTPUT',
             type: 'string',
             description: 'Clair scan result.',
           },
@@ -4549,7 +4549,7 @@ export const mockTaskRuns = [
       ],
       taskResults: [
         {
-          name: 'CLAIR_SCAN_RESULT',
+          name: 'SCAN_OUTPUT',
           type: 'string',
           value: '{"vulnerabilities":{"critical":0,"high":2,"medium":7,"low":3}}\n',
         },
@@ -4557,7 +4557,7 @@ export const mockTaskRuns = [
           name: 'TEST_OUTPUT',
           type: 'string',
           value:
-            '{"result":"SUCCESS","timestamp":"1690797413","note":"Task clair-scan completed: Refer to Tekton task result CLAIR_SCAN_RESULT for vulnerabilities scanned by Clair.","namespace":"default","successes":0,"failures":0,"warnings":0}\n',
+            '{"result":"SUCCESS","timestamp":"1690797413","note":"Task clair-scan completed: Refer to Tekton task result SCAN_OUTPUT for vulnerabilities scanned by Clair.","namespace":"default","successes":0,"failures":0,"warnings":0}\n',
         },
       ],
       completionTime: '2023-07-31T09:56:55Z',
