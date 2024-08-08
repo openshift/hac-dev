@@ -79,12 +79,6 @@ export const editIntegrationTest = (
         ],
       },
       params: formatParams(params),
-      contexts: [
-        {
-          description: 'Application testing',
-          name: 'application',
-        },
-      ],
     },
   };
 
