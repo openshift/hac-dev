@@ -68,9 +68,9 @@ export const UsernameSection: React.FC<React.PropsWithChildren<Props>> = ({ disa
         label="Enter usernames"
         labelIcon={
           <HelpPopover
-            aria-label="Usernames in RHTAP"
-            headerContent="Usernames in RHTAP"
-            bodyContent="To find their username, the user you want to invite should log into RHTAP and click Workspaces. Their username is the first item in the breadcrumb navigation."
+            aria-label="Usernames in KONFLUX"
+            headerContent="Usernames in KONFLUX"
+            bodyContent="Your username is the name of your default workspace. To find a list of your workspaces, navigate to the Applications pane and select the options icon in the breadcrumb navigation."
           />
         }
         isRequired
@@ -116,7 +116,7 @@ export const UsernameSection: React.FC<React.PropsWithChildren<Props>> = ({ disa
               </HelperTextItem>
             ) : (
               <HelperTextItem>
-                Provide RHTAP usernames for the users you want to invite.
+                Provide KONFLUX usernames for the users you want to invite.
               </HelperTextItem>
             )}
           </HelperText>
