@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { usePipelineRunsForCommit } from '../../../hooks/usePipelineRuns';
 import { pipelineWithCommits } from '../__data__/pipeline-with-commits';
 import { useCommitStatus } from '../commit-status';

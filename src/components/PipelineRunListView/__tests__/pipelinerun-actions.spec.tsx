@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { useNavigate } from 'react-router-dom';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { PipelineRunLabel } from '../../../consts/pipelinerun';
 import { useSnapshots } from '../../../hooks/useSnapshots';
 import { runStatus } from '../../../utils/pipeline-utils';

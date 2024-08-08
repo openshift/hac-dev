@@ -1,6 +1,6 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import '@testing-library/jest-dom';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { useComponents } from '../../../../../../../hooks/useComponents';
 import { useLatestIntegrationTestPipelines } from '../../../../../../../hooks/useLatestIntegrationTestPipelines';
 import { mockIntegrationTestScenariosData } from '../../../../../__data__';
