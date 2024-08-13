@@ -45,6 +45,18 @@ const webpackProxy = {
       pathRewrite: { '^/api/k8s/registration': '' },
     },
     {
+      context: (path) => path.includes('/api/k8s/workspace/apis/workspaces.konflux.io/'),
+      target:
+        'https://workspaces-rest-api-server-workspaces-system.apps.stone-stg-host.qc0p.p1.openshiftapps.com',
+      secure: false,
+      changeOrigin: true,
+      autoRewrite: true,
+      ws: true,
+      pathRewrite: {
+        '^/api/k8s/workspace/apis/workspaces.konflux.io/': 'apis/workspaces.konflux.io/',
+      },
+    },
+    {
       context: (path) => path.includes('/api/k8s'),
       target: PROXY_URL,
       secure: false,

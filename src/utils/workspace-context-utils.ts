@@ -63,6 +63,10 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
   const [workspacesLoaded, setWorkspacesLoaded] = React.useState<boolean>(false);
   const [wsUpdateCounter, setWsUpdateCounter] = React.useState(1);
 
+  fetch(`/api/k8s/workspace/apis/workspaces.konflux.io/v1alpha1/workspaces`).then((data) =>
+    data.json(),
+  );
+
   const getDefaultNsForWorkspace = React.useCallback(
     (allWorkspaces: Workspace[], currentWorkspace: string) => {
       const obj = allWorkspaces?.find((w) => w.metadata.name === currentWorkspace);
