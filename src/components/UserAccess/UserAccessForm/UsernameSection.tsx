@@ -68,8 +68,8 @@ export const UsernameSection: React.FC<React.PropsWithChildren<Props>> = ({ disa
         label="Enter usernames"
         labelIcon={
           <HelpPopover
-            aria-label="Usernames in KONFLUX"
-            headerContent="Usernames in KONFLUX"
+            aria-label="Usernames in Konflux"
+            headerContent="Usernames in Konflux"
             bodyContent="Your username is the name of your default workspace. To find a list of your workspaces, navigate to the Applications pane and select the options icon in the breadcrumb navigation."
           />
         }
@@ -116,7 +116,7 @@ export const UsernameSection: React.FC<React.PropsWithChildren<Props>> = ({ disa
               </HelperTextItem>
             ) : (
               <HelperTextItem>
-                Provide KONFLUX usernames for the users you want to invite.
+                Provide Konflux usernames for the users you want to invite.
               </HelperTextItem>
             )}
           </HelperText>
