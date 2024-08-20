@@ -8,13 +8,27 @@ export const WorkspaceSwitcher: React.FC<
 > = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { workspace, workspaces } = React.useContext(WorkspaceContext);
+  const {
+    workspace,
+    kubesawWorkspaces = [],
+    konfluxWorkspaces = [],
+  } = React.useContext(WorkspaceContext);
 
   const menuItems = React.useMemo(
-    () => workspaces?.map((app) => ({ key: app.metadata.name, name: app.metadata.name })) || [],
-    [workspaces],
+    () =>
+      (Array.isArray(konfluxWorkspaces) &&
+        konfluxWorkspaces.length > 0 &&
+        konfluxWorkspaces.map((app) => ({
+          key: app.metadata.namespace,
+          name: app.metadata.namespace,
+          visibility: app.spec?.visibility,
+        }))) ||
+      [],
+    [konfluxWorkspaces],
   );
-  const selectedItem = workspaces.find((item) => item.metadata.name === workspace) || workspaces[0];
+  const selectedItem =
+    konfluxWorkspaces?.find((item) => item.metadata.namespace === workspace) ||
+    (Array.isArray(kubesawWorkspaces) && kubesawWorkspaces.length > 0 && kubesawWorkspaces[0]);
 
   const onSelect = (item: ContextMenuItem) => {
     // switch to new workspace but keep the first segment of the URL
@@ -23,11 +37,11 @@ export const WorkspaceSwitcher: React.FC<
     );
   };
 
-  return workspaces.length > 0 ? (
+  return Array.isArray(konfluxWorkspaces) && konfluxWorkspaces.length > 0 ? (
     <ContextSwitcher
       resourceType="workspace"
       menuItems={menuItems}
-      selectedItem={{ key: selectedItem.metadata.name, name: selectedItem.metadata.name }}
+      selectedItem={{ key: selectedItem.metadata.namespace, name: selectedItem.metadata.namespace }}
       onSelect={onSelect}
       footer={<></>}
     />

@@ -1,6 +1,12 @@
 import React from 'react';
-import { Divider, DrilldownMenu, MenuItem } from '@patternfly/react-core';
+import { Divider, DrilldownMenu, Flex, FlexItem, MenuItem } from '@patternfly/react-core';
+import LockOpenIcon from '@patternfly/react-icons/dist/js/icons/lock-open-icon';
 import { ContextMenuItem } from './ContextSwitcher';
+
+export enum ItemVisibility {
+  PRIVATE = 'private',
+  COMMUNITY = 'community',
+}
 
 export const ContextMenuListItem: React.FC<React.PropsWithChildren<{ item: ContextMenuItem }>> = ({
   item,
@@ -27,7 +33,14 @@ export const ContextMenuListItem: React.FC<React.PropsWithChildren<{ item: Conte
     );
   }
 
-  return <MenuItem itemId={item.key}>{item.name}</MenuItem>;
+  return (
+    <MenuItem itemId={item.key}>
+      <Flex>
+        <FlexItem>{item.visibility === ItemVisibility.COMMUNITY ? <LockOpenIcon /> : ' '}</FlexItem>
+        <FlexItem>{item.name}</FlexItem>
+      </Flex>
+    </MenuItem>
+  );
 };
 
 export const filteredItems = (items: ContextMenuItem[], filter: string) => {

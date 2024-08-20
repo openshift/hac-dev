@@ -18,6 +18,14 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   setActiveWorkspaceLocalStorage: jest.fn(),
 }));
 
+jest.mock('../workspace-context-utils', () => {
+  const actual = jest.requireActual('../workspace-context-utils');
+  return {
+    ...actual,
+    fetchKonfluxWorkspaces: jest.fn().mockResolvedValue([]),
+  };
+});
+
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
   return {
@@ -119,20 +127,22 @@ describe('useActiveWorkspace', () => {
       lastUsedWorkspace: 'test-ws',
       workspace: '',
       workspaceResource: undefined,
-      workspaces: [],
+      konfluxWorkspaces: [],
+      kubesawWorkspaces: [],
       workspacesLoaded: false,
       updateWorkspace: expect.any(Function),
     });
   });
 
   it('should set workspaces from the api results ', async () => {
+    fetchMock.mockResolvedValue({ json: async () => mockWorkspaces });
     getActiveWorkspaceMock.mockReturnValue('');
 
     const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
     await waitForNextUpdate();
 
     expect(result.current.workspace).toBe('workspace-one');
-    expect(result.current.workspaces).toHaveLength(2);
+    expect(result.current.kubesawWorkspaces).toHaveLength(2);
   });
 
   it('should set your home workspace for the first time user', async () => {
@@ -159,6 +169,9 @@ describe('useActiveWorkspace', () => {
   });
 
   it('should use first available workspace when home workspace is not found for first time user', async () => {
+    fetchMock
+      .mockResolvedValueOnce({ json: async () => mockWorkspaces })
+      .mockResolvedValue({ json: async () => mockWorkspaces[0] });
     const workspaces = [
       { ...mockWorkspaces[0], status: { ...mockWorkspaces[0].status, type: 'default' } },
       mockWorkspaces[1],
@@ -173,7 +186,7 @@ describe('useActiveWorkspace', () => {
     expect(result.current.workspace).toBe('workspace-one');
     expect(result.current.workspaceResource).toEqual({
       ...mockWorkspaces[0],
-      status: { ...mockWorkspaces[0].status, type: 'default' },
+      status: { ...mockWorkspaces[0].status, type: 'home' },
     });
     expect(fetchMock).toHaveBeenCalledWith(
       '/api/k8s/apis/toolchain.dev.openshift.com/v1alpha1/workspaces/workspace-one',
@@ -188,12 +201,14 @@ describe('useActiveWorkspace', () => {
 
     unmount();
     expect(result.current.workspace).toBe('');
-    expect(result.current.workspaces).toHaveLength(0);
+    expect(result.current.kubesawWorkspaces).toHaveLength(0);
   });
 
   it('should should select the workspace from url', async () => {
+    fetchMock.mockResolvedValue({ json: async () => mockWorkspaces });
     window.location.pathname = '/application-pipeline/workspaces/workspace-two/applications';
     const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
+
     await waitForNextUpdate();
 
     expect(result.current.workspace).toBe('workspace-two');
@@ -206,6 +221,7 @@ describe('useActiveWorkspace', () => {
     ]);
     window.location.pathname = '/application-pipeline/workspaces/workspace-invalid/applications';
     const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
+    fetchMock.mockResolvedValueOnce({ json: async () => [] });
 
     await waitForNextUpdate();
 
@@ -215,6 +231,9 @@ describe('useActiveWorkspace', () => {
   });
 
   it('should should honor the workspace from localstorage', async () => {
+    fetchMock
+      .mockResolvedValueOnce({ json: async () => mockWorkspaces })
+      .mockResolvedValue({ json: async () => mockWorkspaces[0] });
     setActiveWorkspaceLocalStorage('workspace-one');
     const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
     await waitForNextUpdate();
@@ -225,6 +244,7 @@ describe('useActiveWorkspace', () => {
   it('should should not navigate to the selected workspace route if the user is in non workspace pages', async () => {
     window.location.pathname = '/application-pipeline/overview';
     getActiveWorkspaceMock.mockReturnValue('');
+    fetchMock.mockResolvedValue({ json: async () => mockWorkspaces[1] });
     renderHook(() => useActiveWorkspace());
 
     await waitFor(() => {
@@ -233,6 +253,9 @@ describe('useActiveWorkspace', () => {
   });
 
   it('should navigate to the selected workspace route', async () => {
+    fetchMock
+      .mockResolvedValueOnce({ json: async () => mockWorkspaces })
+      .mockResolvedValue({ json: async () => mockWorkspaces[0] });
     getActiveWorkspaceMock.mockReturnValue('');
     renderHook(() => useActiveWorkspace());
 
@@ -244,6 +267,9 @@ describe('useActiveWorkspace', () => {
   });
 
   it('should update workspace if url segment changes', async () => {
+    fetchMock
+      .mockResolvedValueOnce({ json: async () => mockWorkspaces })
+      .mockResolvedValue({ json: async () => mockWorkspaces[0] });
     k8sListResourceItemsMock.mockReturnValue(mockWorkspaces);
     window.location.pathname = '/application-pipeline/workspaces/workspace-one/applications';
     const { result, waitForNextUpdate, rerender } = renderHook(() => useActiveWorkspace());
@@ -264,7 +290,9 @@ describe('useActiveWorkspace', () => {
 
     k8sListResourceItemsMock.mockReturnValue(workspaces);
     getActiveWorkspaceMock.mockReturnValue('');
-    fetchMock.mockResolvedValue({ json: async () => mockWorkspaces[0] });
+    fetchMock
+      .mockResolvedValueOnce({ json: async () => mockWorkspaces })
+      .mockResolvedValue({ json: async () => mockWorkspaces[0] });
 
     const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
     await waitForNextUpdate();
@@ -281,7 +309,7 @@ describe('useActiveWorkspace', () => {
     await act(async () => {
       result.current.updateWorkspace();
     });
-    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(fetchMock).toHaveBeenCalledTimes(5);
     expect(result.current.workspaceResource).toEqual({
       ...mockWorkspaces[0],
       status: { type: 'default' },

@@ -1,14 +1,24 @@
 import * as React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { ItemVisibility } from './context-switcher-utils';
 import { ContextSwitcher } from './ContextSwitcher';
+
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
+  return {
+    ...actual,
+    Link: (props) => (
+      <a href={props.to} data-test={props['data-test']}>
+        {props.children}
+      </a>
+    ),
+  };
+});
 
 jest.mock('../../hooks/useLocalStorage', () => ({
   useLocalStorage: jest.fn(() => [{}, jest.fn()]),
 }));
-
-const localStorageMock = useLocalStorage as jest.Mock;
 
 describe('ContextSwitcher', () => {
   it('should render context switcher component', () => {
@@ -16,7 +26,8 @@ describe('ContextSwitcher', () => {
     act(() => screen.getByRole('button').click());
 
     expect(screen.getByPlaceholderText('Filter application by name')).toBeVisible();
-    expect(screen.getByText('Recent')).toBeVisible();
+    expect(screen.getByText('Public')).toBeVisible();
+    expect(screen.getByText('Private')).toBeVisible();
     expect(screen.getByText('All')).toBeVisible();
     expect(screen.getByText('footer text')).toBeVisible();
   });
@@ -65,30 +76,20 @@ describe('ContextSwitcher', () => {
     expect(screen.queryByText('Test 3')).not.toBeInTheDocument();
   });
 
-  it('should use recent items from localStorage', () => {
+  it('should show private items', () => {
     const items = [
-      { name: 'Test 1', key: 'test1' },
-      { name: 'Test 2', key: 'test2' },
-      { name: 'Test 3', key: 'test3' },
+      { name: 'Test 1', key: 'test1', visibility: ItemVisibility.PRIVATE },
+      { name: 'Test 2', key: 'test2', visibility: ItemVisibility.PRIVATE },
+      { name: 'Test 3', key: 'test3', visibility: ItemVisibility.COMMUNITY },
     ];
-    const setStorageMock = jest.fn();
-    localStorageMock.mockReturnValue([
-      { recentItems: { resource: ['test2', 'test3'] } },
-      setStorageMock,
-    ]);
+
     render(<ContextSwitcher menuItems={items} />);
     act(() => screen.getByRole('button').click());
 
-    act(() => screen.getByText('Recent').click());
-    expect(setStorageMock).toHaveBeenCalledWith(
-      expect.objectContaining({ lastTab: { resource: 0 } }),
-    );
+    act(() => screen.getByText('Private').click());
 
-    act(() => screen.getByText('Test 1').click());
-    expect(setStorageMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        recentItems: { resource: ['test1', 'test2', 'test3'] },
-      }),
-    );
+    expect(screen.queryByText('Test 1')).toBeInTheDocument();
+    expect(screen.queryByText('Test 2')).toBeInTheDocument();
+    expect(screen.queryByText('Test 3')).not.toBeInTheDocument();
   });
 });

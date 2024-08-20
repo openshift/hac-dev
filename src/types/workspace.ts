@@ -4,10 +4,13 @@ export interface Workspace extends K8sResourceCommon {
   status: {
     type?: string;
     namespaces: Namespace[];
-    owner: string;
+    owner: string | { email: string };
     role: WorkspaceRole;
     availableRoles?: WorkspaceRole[];
     bindings?: WorkspaceBinding[];
+  };
+  spec?: {
+    visibility: string;
   };
 }
 

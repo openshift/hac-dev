@@ -12,6 +12,13 @@ const navExtensions = [
   {
     type: 'core.navigation/href',
     properties: {
+      href: '/application-pipeline/workspace-list',
+      name: 'Workspaces',
+    },
+  },
+  {
+    type: 'core.navigation/href',
+    properties: {
       href: '/application-pipeline/workspaces',
       name: 'Applications',
     },
@@ -161,6 +168,21 @@ const routeExtensions = [
       exact: true,
       component: {
         $codeRef: 'WorkspacedPage',
+      },
+    },
+    flags: {
+      required: ['SIGNUP'],
+    },
+  },
+
+  // workspace route
+  {
+    type: 'core.page/route',
+    properties: {
+      path: '/application-pipeline/workspace-list',
+      exact: true,
+      component: {
+        $codeRef: 'WorkspaceListPage',
       },
     },
     flags: {
@@ -736,6 +758,7 @@ module.exports = {
       EditReleasePlan: resolve(__dirname, '../src/pages/EditReleasePlanPage'),
       WorkspaceContext: resolve(__dirname, '../src/utils/workspace-context-utils'),
       WorkspacedPage: resolve(__dirname, '../src/pages/WorkspacedPage'),
+      WorkspaceListPage: resolve(__dirname, '../src/pages/WorkspaceListPage'),
       OverviewPage: resolve(__dirname, '../src/pages/OverviewPage'),
       SecretsListPage: resolve(__dirname, '../src/pages/SecretsListPage'),
       CreateSecret: resolve(__dirname, '../src/pages/CreateSecretPage'),

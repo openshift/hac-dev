@@ -12,7 +12,8 @@ describe('useWorkspaceForNamespace', () => {
           lastUsedWorkspace: 'test-ws',
           workspace: '',
           workspaceResource: undefined,
-          workspaces: [
+          konfluxWorkspaces: [],
+          kubesawWorkspaces: [
             { metadata: { name: 'ws1' }, status: { namespaces: [{ name: 'my-ns' }] } },
             { metadata: { name: 'ws2' }, status: { namespaces: [{ name: 'my-ns-2' }] } },
             { metadata: { name: 'ws3' }, status: { namespaces: [{ name: 'test-ns' }] } },

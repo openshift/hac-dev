@@ -2,10 +2,54 @@ import * as React from 'react';
 import { act, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useApplications } from '../../../hooks/useApplications';
+import { Workspace } from '../../../types';
 import { useAccessReviewForModel } from '../../../utils/rbac';
 import { routerRenderer } from '../../../utils/test-utils';
 import { mockApplication } from '../__data__/mock-data';
 import { ApplicationSwitcher } from '../ApplicationSwitcher';
+
+const mockWorkspaces: Workspace[] = [
+  {
+    apiVersion: 'toolchain.dev.openshift.com/v1alpha1',
+    kind: 'Workspace',
+    metadata: {
+      name: 'workspace-one',
+      namespace: 'toolchain-host-operator',
+    },
+    status: {
+      type: 'home',
+      namespaces: [
+        {
+          name: 'workspace-one-tenant',
+          type: 'default',
+        },
+        {
+          name: 'myworkspace-extra',
+        },
+      ],
+      owner: 'john',
+      role: 'admin',
+    },
+  },
+  {
+    apiVersion: 'toolchain.dev.openshift.com/v1alpha1',
+    kind: 'Workspace',
+    metadata: {
+      name: 'workspace-two',
+      namespace: 'toolchain-host-operator',
+    },
+    status: {
+      namespaces: [
+        {
+          name: 'workspace-two-tenant',
+          type: 'default',
+        },
+      ],
+      owner: 'doe',
+      role: 'admin',
+    },
+  },
+];
 
 jest.mock('../../../hooks/useLocalStorage', () => ({
   useLocalStorage: jest.fn(() => [{}, jest.fn()]),
@@ -52,8 +96,11 @@ const app3 = {
 
 describe('ContextSwitcher', () => {
   beforeEach(() => {
+    const fetchMock = jest.fn();
+    window.fetch = fetchMock;
     useApplicationsMock.mockReturnValue([[app1, app2, app3], true]);
     useAccessReviewForModelMock.mockReturnValue([true, true]);
+    fetchMock.mockResolvedValue({ json: async () => mockWorkspaces });
   });
 
   it('should render application switcher component', () => {
@@ -61,7 +108,8 @@ describe('ContextSwitcher', () => {
     act(() => screen.getByRole('button').click());
 
     expect(screen.getByPlaceholderText('Filter application by name')).toBeVisible();
-    expect(screen.getByText('Recent')).toBeVisible();
+    expect(screen.getByText('Public')).toBeVisible();
+    expect(screen.getByText('Private')).toBeVisible();
     expect(screen.getByText('All')).toBeVisible();
     expect(screen.queryByText('Create application')).toHaveAttribute('aria-disabled', 'false');
     switcher.unmount();
@@ -73,7 +121,8 @@ describe('ContextSwitcher', () => {
     act(() => screen.getByRole('button').click());
 
     expect(screen.getByPlaceholderText('Filter application by name')).toBeVisible();
-    expect(screen.getByText('Recent')).toBeVisible();
+    expect(screen.getByText('Public')).toBeVisible();
+    expect(screen.getByText('Private')).toBeVisible();
     expect(screen.getByText('All')).toBeVisible();
     expect(screen.queryByText('Create application')).toHaveAttribute('aria-disabled', 'true');
     switcher.unmount();

@@ -31,32 +31,33 @@ const renderWithContext = (values) =>
 
 describe('WorkspaceSwitcher', () => {
   it('should not render switcher when there are no workspaces', () => {
-    renderWithContext({ workspaces: [] });
+    renderWithContext({ konfluxWorkspaces: [] });
     expect(screen.queryByText('workspace')).not.toBeInTheDocument();
   });
 
   it('should render workspace switcher component', () => {
     renderWithContext({
-      workspaces: [
-        { metadata: { name: 'test-ws' } },
-        { metadata: { name: 'test-ws-1' } },
-        { metadata: { name: 'test-ws-2' } },
+      konfluxWorkspaces: [
+        { metadata: { namespace: 'test-ws' } },
+        { metadata: { namespace: 'test-ws-1' } },
+        { metadata: { namespace: 'test-ws-2' } },
       ],
       workspace: 'test-ws',
     });
     act(() => screen.getByRole('button').click());
 
     expect(screen.getByPlaceholderText('Filter workspace by name')).toBeVisible();
-    expect(screen.getByText('Recent')).toBeVisible();
+    expect(screen.getByText('Public')).toBeVisible();
+    expect(screen.getByText('Private')).toBeVisible();
     expect(screen.getByText('All')).toBeVisible();
   });
 
   it('should show currently selected item', () => {
     renderWithContext({
-      workspaces: [
-        { metadata: { name: 'test-ws' } },
-        { metadata: { name: 'test-ws-1' } },
-        { metadata: { name: 'test-ws-2' } },
+      konfluxWorkspaces: [
+        { metadata: { namespace: 'test-ws' } },
+        { metadata: { namespace: 'test-ws-1' } },
+        { metadata: { namespace: 'test-ws-2' } },
       ],
       workspace: 'test-ws',
     });
@@ -72,11 +73,12 @@ describe('WorkspaceSwitcher', () => {
       pathname: '/application-pipeline/workspaces/test-ws/applications',
     });
     renderWithContext({
-      workspaces: [
-        { metadata: { name: 'test-ws' } },
-        { metadata: { name: 'test-ws-1' } },
-        { metadata: { name: 'test-ws-2' } },
+      konfluxWorkspaces: [
+        { metadata: { namespace: 'test-ws' } },
+        { metadata: { namespace: 'test-ws-1' } },
+        { metadata: { namespace: 'test-ws-2' } },
       ],
+
       workspace: 'test-ws',
     });
     act(() => screen.getByRole('button').click());
@@ -94,10 +96,15 @@ describe('WorkspaceSwitcher', () => {
       pathname: '/application-pipeline/workspaces/test-ws/applications/my-app/snapshots/test-snap',
     });
     renderWithContext({
-      workspaces: [
+      kubesawWorkspaces: [
         { metadata: { name: 'test-ws' } },
         { metadata: { name: 'test-ws-1' } },
         { metadata: { name: 'test-ws-2' } },
+      ],
+      konfluxWorkspaces: [
+        { metadata: { namespace: 'test-ws' } },
+        { metadata: { namespace: 'test-ws-1' } },
+        { metadata: { namespace: 'test-ws-2' } },
       ],
       workspace: 'test-ws',
     });
