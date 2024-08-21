@@ -64,6 +64,11 @@ describe('usePipelineTemplate', () => {
             bundle:
               'quay.io/konflux-ci/tekton-catalog/pipeline-docker-build-oci-ta@sha256:9002db310cd002ddc7ccf94e08f8cd9b02c1bdd5dce36b59173fbc6cd4799f97',
           },
+          {
+            name: 'docker-build-multi-platform-oci-ta',
+            bundle:
+              'quay.io/konflux-ci/tekton-catalog/pipeline-docker-build-multi-platform-oci-ta@sha256:269480b2037478c1c8509c5f562b65f0b7f4e8675d5fda68b6bf3d28357962d7',
+          },
         ],
       },
       true,
