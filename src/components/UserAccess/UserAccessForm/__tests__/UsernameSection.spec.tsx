@@ -47,7 +47,7 @@ describe('UsernameSection', () => {
     validateMock.mockResolvedValue(false);
     formikRenderer(<UsernameSection />, { usernames: [] });
     expect(
-      screen.getByText('Provide RHTAP usernames for the users you want to invite.'),
+      screen.getByText('Provide Konflux usernames for the users you want to invite.'),
     ).toBeVisible();
     await act(async () => {
       fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'user!@#' } });
