@@ -1,5 +1,5 @@
 import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 import { IntegrationTestScenarioModel } from '../../models';
 import { AccessReviewResources } from '../../types';
 import {
@@ -68,7 +68,7 @@ describe('useAccessReview', () => {
 
   it('should return access and loading state', async () => {
     createResourceMock.mockImplementation(() => Promise.resolve({ status: { allowed: true } }));
-    const { result, waitForNextUpdate } = renderHook(() =>
+    const { result } = renderHook(() =>
       useAccessReview({
         group: 'tekton.dev',
         resource: 'pipelineruns',
@@ -78,14 +78,17 @@ describe('useAccessReview', () => {
     );
 
     expect(result.current).toEqual([false, false]);
-    await waitForNextUpdate();
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     expect(result.current).toEqual([true, true]);
   });
 
   it('should return no access when allowed is set to false', async () => {
     createResourceMock.mockImplementation(() => Promise.resolve({ status: { allowed: false } }));
 
-    const { result, waitForNextUpdate } = renderHook(() =>
+    const { result } = renderHook(() =>
       useAccessReview({
         group: 'tekton.dev',
         resource: 'taskruns',
@@ -93,14 +96,17 @@ describe('useAccessReview', () => {
         verb: 'update',
       }),
     );
-    await waitForNextUpdate();
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     expect(result.current).toEqual([false, true]);
   });
 
   it('should return true when there API failure due to some reason', async () => {
     createResourceMock.mockImplementation(() => Promise.reject(new Error('404 not found')));
 
-    const { result, waitForNextUpdate } = renderHook(() =>
+    const { result } = renderHook(() =>
       useAccessReview({
         group: 'tekton.dev',
         resource: 'taskruns',
@@ -108,7 +114,10 @@ describe('useAccessReview', () => {
         verb: 'watch',
       }),
     );
-    await waitForNextUpdate();
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     expect(result.current).toEqual([true, true]);
   });
 });
@@ -135,7 +144,7 @@ describe('useAccessReviews', () => {
           status: { allowed: true },
         }),
       );
-    const { result, waitForNextUpdate } = renderHook(() =>
+    const { result } = renderHook(() =>
       useAccessReviews([
         {
           group: 'appstudio.redhat.com',
@@ -151,7 +160,10 @@ describe('useAccessReviews', () => {
         },
       ]),
     );
-    await waitForNextUpdate();
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     expect(result.current).toEqual([true, true]);
   });
 
@@ -169,7 +181,7 @@ describe('useAccessReviews', () => {
           status: { allowed: false },
         }),
       );
-    const { result, waitForNextUpdate } = renderHook(() =>
+    const { result } = renderHook(() =>
       useAccessReviews([
         {
           group: 'appstudio.redhat.com',
@@ -185,14 +197,17 @@ describe('useAccessReviews', () => {
         },
       ]),
     );
-    await waitForNextUpdate();
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     expect(result.current).toEqual([false, true]);
   });
 
   it('should return true when there API failure due to some reason', async () => {
     createResourceMock.mockImplementation(() => Promise.reject(new Error('404 not found')));
 
-    const { result, waitForNextUpdate } = renderHook(() =>
+    const { result } = renderHook(() =>
       useAccessReviews([
         {
           group: 'appstudio.redhat.com',
@@ -202,7 +217,10 @@ describe('useAccessReviews', () => {
         },
       ]),
     );
-    await waitForNextUpdate();
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     expect(result.current).toEqual([true, true]);
   });
 });
@@ -220,10 +238,13 @@ describe('useAccessReviewForModel', () => {
     jest.clearAllMocks();
   });
   it('should return values', async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
+    const { result } = renderHook(() =>
       useAccessReviewForModel(IntegrationTestScenarioModel, 'get'),
     );
-    await waitForNextUpdate();
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     expect(result.current).toEqual([true, true]);
   });
 });
@@ -249,10 +270,11 @@ describe('useAccessReviewForModels', () => {
       { model: IntegrationTestScenarioModel, verb: 'update' },
     ];
 
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useAccessReviewForModels(accessReviewResources),
-    );
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useAccessReviewForModels(accessReviewResources));
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     expect(result.current).toEqual([true, true]);
   });
 

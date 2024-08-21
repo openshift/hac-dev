@@ -1,5 +1,5 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
 import { useTRPipelineRuns } from '../../hooks/useTektonResults';
 import { ComponentKind } from '../../types';

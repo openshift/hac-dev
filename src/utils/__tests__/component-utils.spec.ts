@@ -1,5 +1,5 @@
 import { k8sPatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { useApplicationPipelineGitHubApp } from '../../hooks/useApplicationPipelineGitHubApp';
 import { ComponentModel } from '../../models';
 import { ComponentKind } from '../../types';

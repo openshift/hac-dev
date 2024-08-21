@@ -1,5 +1,5 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { DataState, testPipelineRuns } from '../../__data__/pipelinerun-data';
 import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
 import { useLatestIntegrationTestPipelines } from '../useLatestIntegrationTestPipelines';

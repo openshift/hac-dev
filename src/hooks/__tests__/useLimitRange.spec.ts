@@ -1,5 +1,5 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { mockLimitRange } from '../__data__/mock-data';
 import { useLimitRange, useLimitRanges, useResourceLimits } from '../useLimitRange';
 

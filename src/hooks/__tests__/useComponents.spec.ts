@@ -1,5 +1,5 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { mockComponentsData } from '../../components/ApplicationDetails/__data__/WorkflowComponentsData';
 import { useAllComponents, useComponents } from '../useComponents';
 

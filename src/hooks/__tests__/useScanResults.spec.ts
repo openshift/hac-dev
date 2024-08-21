@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { DataState, testPipelineRuns } from '../../__data__/pipelinerun-data';
 import { usePLRScanResults, usePLRVulnerabilities, useScanResults } from '../useScanResults';
 import { useTRTaskRuns } from '../useTektonResults';

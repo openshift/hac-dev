@@ -1,4 +1,4 @@
-import { cleanup, renderHook } from '@testing-library/react-hooks';
+import { cleanup, renderHook } from '@testing-library/react';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
 import { useQuickstartCloseOnUnmount } from '../useQuickstartCloseOnUnmount';
 

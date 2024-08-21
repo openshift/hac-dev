@@ -1,5 +1,5 @@
 import { commonFetchJSON } from '@openshift/dynamic-plugin-sdk-utils';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 import { useTaskRuns } from '../../../hooks/useTaskRuns';
 import { getTaskRunLog } from '../../../utils/tekton-results';
 import {
@@ -43,8 +43,12 @@ describe('useEnterpriseContractResultFromLogs', () => {
     mockUseTaskRuns.mockReturnValue([
       [
         {
+          metadata: {
+            namespace: 'test-ns',
+            name: 'test-task',
+          },
           status: {
-            podName: 'pod-acdf',
+            podName: 'test-pod',
           },
         },
       ],
@@ -54,10 +58,11 @@ describe('useEnterpriseContractResultFromLogs', () => {
   });
 
   it('should parse valid rules to json', async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useEnterpriseContractResultFromLogs('dummy-abcd'),
-    );
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useEnterpriseContractResultFromLogs('test-pr'));
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(result.current[0][0].successes.length).toEqual(1);
     expect(result.current[0][0].violations.length).toEqual(1);
@@ -65,10 +70,11 @@ describe('useEnterpriseContractResultFromLogs', () => {
   });
 
   it('should filter out all 404 image url components from EC results', async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useEnterpriseContractResultFromLogs('dummy-abcd'),
-    );
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useEnterpriseContractResultFromLogs('dummy-abcd'));
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     const [ecResult, loaded] = result.current;
     expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(loaded).toBe(true);
@@ -78,10 +84,11 @@ describe('useEnterpriseContractResultFromLogs', () => {
   it('should return handle api errors', async () => {
     mockCommmonFetchJSON.mockRejectedValue(new Error('Api error'));
 
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useEnterpriseContractResultFromLogs('dummy-abcd'),
-    );
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useEnterpriseContractResultFromLogs('dummy-abcd'));
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     const [ecResult, loaded] = result.current;
     expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(loaded).toBe(true);
@@ -109,13 +116,14 @@ describe('useEnterpriseContractResultFromLogs', () => {
     [report-json] { "components": [] }
     `);
 
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useEnterpriseContractResultFromLogs('dummy-abcd'),
-    );
+    const { result } = renderHook(() => useEnterpriseContractResultFromLogs('dummy-abcd'));
     const [, loaded] = result.current;
     expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(loaded).toBe(false);
-    await waitForNextUpdate();
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     const [ec, ecLoaded] = result.current;
     expect(mockGetTaskRunLogs).toHaveBeenCalled();
     expect(ecLoaded).toBe(true);
@@ -151,6 +159,10 @@ describe('useEnterpriseContractResults', () => {
     mockUseTaskRuns.mockReturnValue([
       [
         {
+          metadata: {
+            namespace: 'test-ns',
+            name: 'dummy-abcd',
+          },
           status: {
             podName: 'pod-acdf',
           },
@@ -162,12 +174,13 @@ describe('useEnterpriseContractResults', () => {
   });
 
   it('should return enterprise contract results', async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useEnterpriseContractResults('dummy-abcd'),
-    );
+    const { result } = renderHook(() => useEnterpriseContractResults('dummy-abcd'));
     expect(result.current[0]).toEqual(undefined);
     expect(result.current[1]).toEqual(false);
-    await waitForNextUpdate();
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
     expect(result.current[0]).toEqual(mockEnterpriseContractUIData);
     expect(result.current[1]).toEqual(true);
   });

@@ -1,5 +1,5 @@
 /* eslint-disable max-nested-callbacks */
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import {
   TektonResultsOptions,
   getPipelineRuns,
@@ -56,7 +56,7 @@ describe('useTektonResults', () => {
 
       it(`should return ${name} runs`, async () => {
         getRunsMock.mockReturnValue(mockResponseNext);
-        const { result, waitFor } = renderHook(() => useTestHook('test-ns'));
+        const { result } = renderHook(() => useTestHook('test-ns'));
         expect(getRunsMock).toHaveBeenCalledWith('test-ws', 'test-ns', undefined, null, undefined);
         expect(result.current).toEqual([[], false, undefined, undefined]);
         await waitFor(() => result.current[1]);
@@ -69,9 +69,7 @@ describe('useTektonResults', () => {
         const filter: TektonResultsOptions = {
           filter: 'foo=bar',
         };
-        const { result, waitFor } = renderHook(() =>
-          useTestHook('test-ns', filter, 'test-cache-key'),
-        );
+        const { result } = renderHook(() => useTestHook('test-ns', filter, 'test-cache-key'));
         expect(getRunsMock).toHaveBeenCalledWith(
           'test-ws',
           'test-ns',
@@ -87,9 +85,7 @@ describe('useTektonResults', () => {
       it('should return pass along cache key', async () => {
         getRunsMock.mockClear();
         getRunsMock.mockReturnValue(mockResponseNext);
-        const { result, waitFor } = renderHook(() =>
-          useTestHook('test-ns', undefined, 'test-cache-key'),
-        );
+        const { result } = renderHook(() => useTestHook('test-ns', undefined, 'test-cache-key'));
         expect(getRunsMock).toHaveBeenCalledWith(
           'test-ws',
           'test-ns',
@@ -104,7 +100,7 @@ describe('useTektonResults', () => {
 
       it(`should return function to get next ${name} runs`, async () => {
         getRunsMock.mockReturnValueOnce(mockResponse).mockReturnValueOnce(mockResponseNext);
-        const { result, waitFor } = renderHook(() => useTestHook('test-ns'));
+        const { result } = renderHook(() => useTestHook('test-ns'));
         expect(getRunsMock).toHaveBeenCalledWith('test-ws', 'test-ns', undefined, null, undefined);
         expect(result.current).toEqual([[], false, undefined, undefined]);
         await waitFor(() => result.current[1]);
@@ -150,7 +146,7 @@ describe('useTektonResults', () => {
 
       it('should return error when exception thrown when getting next page', async () => {
         getRunsMock.mockReturnValueOnce(mockResponse);
-        const { result, waitFor } = renderHook(() => useTestHook('test-ns'));
+        const { result } = renderHook(() => useTestHook('test-ns'));
         expect(getRunsMock).toHaveBeenCalledWith('test-ws', 'test-ns', undefined, null, undefined);
         expect(result.current).toEqual([[], false, undefined, undefined]);
         await waitFor(() => result.current[1]);
@@ -193,7 +189,7 @@ describe('useTektonResults', () => {
 
     it('should return task run log', async () => {
       getTaskRunLogMock.mockReturnValue('sample log');
-      const { result, waitFor } = renderHook(() => useTRTaskRunLog('test-ns', 'sample-task-run'));
+      const { result } = renderHook(() => useTRTaskRunLog('test-ns', 'sample-task-run'));
       expect(getTaskRunLogMock).toHaveBeenCalledWith('test-ws', 'test-ns', 'sample-task-run');
       expect(result.current).toEqual([null, false, undefined]);
       await waitFor(() => result.current[1]);

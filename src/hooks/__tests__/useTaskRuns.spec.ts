@@ -1,5 +1,5 @@
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { testTaskRuns } from '../../components/TaskRunListView/__data__/mock-TaskRun-data';
 import { useTaskRuns } from '../useTaskRuns';
 import { useTRTaskRuns } from '../useTektonResults';

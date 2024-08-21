@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useSBRActions } from '../user-access-actions';
 

@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { useNavigate } from 'react-router-dom';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { runStatus } from '../../../../utils/pipeline-utils';
 import { useAccessReviewForModel } from '../../../../utils/rbac';
 import { useReleasePlanActions } from '../releaseplan-actions';

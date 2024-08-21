@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { mockLocation } from '../../utils/test-utils';
 import { useSearchParam } from '../useSearchParam';
 
