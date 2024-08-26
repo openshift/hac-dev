@@ -1,5 +1,8 @@
 import * as React from 'react';
+import { commonFetchText, getK8sResourceURL } from '@openshift/dynamic-plugin-sdk-utils';
+import YAML from 'js-yaml';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
+import { PodModel } from '../../models/pod';
 import { getTaskRunLog } from '../../utils/tekton-results';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import {
@@ -15,39 +18,81 @@ export const useEnterpriseContractResultFromLogs = (
 ): [ComponentEnterpriseContractResult[], boolean] => {
   const { namespace, workspace } = useWorkspaceInfo();
   const [taskRun, loaded, error] = useTaskRuns(namespace, pipelineRunName, 'verify');
+  const [fetchTknLogs, setFetchTknLogs] = React.useState<boolean>(false);
   const [ecJson, setEcJson] = React.useState<EnterpriseContractResult>();
   const [ecLoaded, setEcLoaded] = React.useState<boolean>(false);
+  const ecResultOpts = React.useMemo(() => {
+    const podName = loaded && !error ? taskRun[0].status.podName : null;
+    return podName
+      ? {
+          ns: namespace,
+          name: podName,
+          path: 'log',
+          queryParams: {
+            container: 'step-report',
+            follow: 'true',
+          },
+        }
+      : null;
+  }, [loaded, error, taskRun, namespace]);
 
   React.useEffect(() => {
-    if (!loaded || error) {
-      return;
-    }
-
     let unmount = false;
-    const fetch = async () => {
-      try {
-        const logs = await getTaskRunLog(
-          workspace,
-          taskRun[0].metadata.namespace,
-          taskRun[0].metadata.name,
-        );
-        if (unmount) return;
-        const json = extractEcResultsFromTaskRunLogs(logs);
-        setEcJson(json);
-        setEcLoaded(true);
-      } catch (e) {
-        if (unmount) return;
-        setEcLoaded(true);
-        // eslint-disable-next-line no-console
-        console.warn('Error while fetching Enterprise Contract result from tekton results logs', e);
-      }
-    };
-
-    fetch();
+    if (ecResultOpts) {
+      commonFetchText(getK8sResourceURL(PodModel, undefined, ecResultOpts))
+        .then((res) => {
+          if (unmount) return;
+          const json = YAML.load(res) as EnterpriseContractResult;
+          setEcJson(json);
+          setEcLoaded(true);
+        })
+        .catch((err) => {
+          if (unmount) return;
+          if (err.code === 404) {
+            setFetchTknLogs(true);
+          } else {
+            setEcLoaded(true);
+          }
+          // eslint-disable-next-line no-console
+          console.warn('Error while fetching Enterprise Contract result from logs', err);
+        });
+    }
     return () => {
       unmount = true;
     };
-  }, [taskRun, loaded, error, workspace]);
+  }, [ecResultOpts]);
+
+  React.useEffect(() => {
+    let unmount = false;
+    if (fetchTknLogs) {
+      const fetch = async () => {
+        try {
+          const logs = await getTaskRunLog(
+            workspace,
+            taskRun[0].metadata.namespace,
+            taskRun[0].metadata.name,
+          );
+          if (unmount) return;
+          const json = extractEcResultsFromTaskRunLogs(logs);
+          setEcJson(json);
+          setEcLoaded(true);
+        } catch (e) {
+          if (unmount) return;
+          setEcLoaded(true);
+          // eslint-disable-next-line no-console
+          console.warn(
+            'Error while fetching Enterprise Contract result from tekton results logs',
+            e,
+          );
+        }
+      };
+
+      fetch();
+    }
+    return () => {
+      unmount = true;
+    };
+  }, [fetchTknLogs, taskRun, workspace]);
 
   const ecResult = React.useMemo(() => {
     // filter out components for which ec didn't execute because invalid image URL
