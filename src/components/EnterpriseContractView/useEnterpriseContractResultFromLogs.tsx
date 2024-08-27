@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { commonFetchText, getK8sResourceURL } from '@openshift/dynamic-plugin-sdk-utils';
-import YAML from 'js-yaml';
+import { commonFetchJSON, getK8sResourceURL } from '@openshift/dynamic-plugin-sdk-utils';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
 import { PodModel } from '../../models/pod';
 import { getTaskRunLog } from '../../utils/tekton-results';
@@ -29,7 +28,7 @@ export const useEnterpriseContractResultFromLogs = (
           name: podName,
           path: 'log',
           queryParams: {
-            container: 'step-report',
+            container: 'step-report-json',
             follow: 'true',
           },
         }
@@ -39,11 +38,10 @@ export const useEnterpriseContractResultFromLogs = (
   React.useEffect(() => {
     let unmount = false;
     if (ecResultOpts) {
-      commonFetchText(getK8sResourceURL(PodModel, undefined, ecResultOpts))
-        .then((res) => {
+      commonFetchJSON(getK8sResourceURL(PodModel, undefined, ecResultOpts))
+        .then((res: EnterpriseContractResult) => {
           if (unmount) return;
-          const json = YAML.load(res) as EnterpriseContractResult;
-          setEcJson(json);
+          setEcJson(res);
           setEcLoaded(true);
         })
         .catch((err) => {

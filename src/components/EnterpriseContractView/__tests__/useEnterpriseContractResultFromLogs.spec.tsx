@@ -1,12 +1,10 @@
-import { commonFetchText, getK8sResourceURL } from '@openshift/dynamic-plugin-sdk-utils';
+import { commonFetchJSON } from '@openshift/dynamic-plugin-sdk-utils';
 import { renderHook } from '@testing-library/react-hooks';
 import { useTaskRuns } from '../../../hooks/useTaskRuns';
-import { PodModel } from '../../../models/pod';
 import { getTaskRunLog } from '../../../utils/tekton-results';
 import {
   mockEnterpriseContractJSON,
   mockEnterpriseContractUIData,
-  mockEnterpriseContractYaml,
 } from '../__data__/mockEnterpriseContractLogsJson';
 import {
   mapEnterpriseContractResultData,
@@ -26,7 +24,7 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
   const actual = jest.requireActual('@openshift/dynamic-plugin-sdk-utils');
   return {
     ...actual,
-    commonFetchText: jest.fn(),
+    commonFetchJSON: jest.fn(),
   };
 });
 
@@ -36,12 +34,12 @@ jest.mock('../../../utils/tekton-results', () => ({
 }));
 
 const mockGetTaskRunLogs = getTaskRunLog as jest.Mock;
-const mockCommmonFetchText = commonFetchText as jest.Mock;
+const mockCommmonFetchJSON = commonFetchJSON as unknown as jest.Mock;
 const mockUseTaskRuns = useTaskRuns as jest.Mock;
 
 describe('useEnterpriseContractResultFromLogs', () => {
   beforeEach(() => {
-    mockCommmonFetchText.mockResolvedValue(mockEnterpriseContractYaml);
+    mockCommmonFetchJSON.mockResolvedValue(mockEnterpriseContractJSON);
     mockUseTaskRuns.mockReturnValue([
       [
         {
@@ -55,27 +53,12 @@ describe('useEnterpriseContractResultFromLogs', () => {
     ]);
   });
 
-  it('should fetch EC yaml and parse yaml to json', () => {
-    const opts = {
-      ns: 'test-ns',
-      name: 'pod-acdf',
-      path: 'log',
-      queryParams: {
-        container: 'step-report',
-        follow: 'true',
-      },
-    };
-    renderHook(() => useEnterpriseContractResultFromLogs('dummy-abcd'));
-    expect(mockCommmonFetchText).toHaveBeenCalled();
-    expect(mockCommmonFetchText).toHaveBeenCalledWith(getK8sResourceURL(PodModel, undefined, opts));
-  });
-
   it('should parse valid rules to json', async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useEnterpriseContractResultFromLogs('dummy-abcd'),
     );
     await waitForNextUpdate();
-    expect(mockCommmonFetchText).toHaveBeenCalled();
+    expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(result.current[0][0].successes.length).toEqual(1);
     expect(result.current[0][0].violations.length).toEqual(1);
     expect(result.current[0][0].warnings).toEqual(undefined);
@@ -87,20 +70,20 @@ describe('useEnterpriseContractResultFromLogs', () => {
     );
     await waitForNextUpdate();
     const [ecResult, loaded] = result.current;
-    expect(mockCommmonFetchText).toHaveBeenCalled();
+    expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(loaded).toBe(true);
     expect(ecResult.findIndex((ec) => ec.name === 'devfile-sample-1jik')).toEqual(-1);
   });
 
   it('should return handle api errors', async () => {
-    mockCommmonFetchText.mockRejectedValue(new Error('Api error'));
+    mockCommmonFetchJSON.mockRejectedValue(new Error('Api error'));
 
     const { result, waitForNextUpdate } = renderHook(() =>
       useEnterpriseContractResultFromLogs('dummy-abcd'),
     );
     await waitForNextUpdate();
     const [ecResult, loaded] = result.current;
-    expect(mockCommmonFetchText).toHaveBeenCalled();
+    expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(loaded).toBe(true);
     expect(ecResult).toBeUndefined();
   });
@@ -121,7 +104,7 @@ describe('useEnterpriseContractResultFromLogs', () => {
       true,
       undefined,
     ]);
-    mockCommmonFetchText.mockRejectedValue({ code: 404 });
+    mockCommmonFetchJSON.mockRejectedValue({ code: 404 });
     mockGetTaskRunLogs.mockReturnValue(`asdfcdfadsf
     [report-json] { "components": [] }
     `);
@@ -130,7 +113,7 @@ describe('useEnterpriseContractResultFromLogs', () => {
       useEnterpriseContractResultFromLogs('dummy-abcd'),
     );
     const [, loaded] = result.current;
-    expect(mockCommmonFetchText).toHaveBeenCalled();
+    expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(loaded).toBe(false);
     await waitForNextUpdate();
     const [ec, ecLoaded] = result.current;
@@ -164,7 +147,7 @@ describe('mapEnterpriseContractResultData', () => {
 
 describe('useEnterpriseContractResults', () => {
   beforeEach(() => {
-    mockCommmonFetchText.mockResolvedValue(mockEnterpriseContractYaml);
+    mockCommmonFetchJSON.mockResolvedValue(mockEnterpriseContractJSON);
     mockUseTaskRuns.mockReturnValue([
       [
         {
