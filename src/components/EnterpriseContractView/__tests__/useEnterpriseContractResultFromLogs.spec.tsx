@@ -1,3 +1,4 @@
+import { commonFetchJSON } from '@openshift/dynamic-plugin-sdk-utils';
 import { renderHook } from '@testing-library/react-hooks';
 import { useTaskRuns } from '../../../hooks/useTaskRuns';
 import { getTaskRunLog } from '../../../utils/tekton-results';
@@ -19,25 +20,31 @@ jest.mock('../../../hooks/useTaskRuns', () => ({
   useTaskRuns: jest.fn(),
 }));
 
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
+  const actual = jest.requireActual('@openshift/dynamic-plugin-sdk-utils');
+  return {
+    ...actual,
+    commonFetchJSON: jest.fn(),
+  };
+});
+
 jest.mock('../../../utils/tekton-results', () => ({
   ...jest.requireActual('../../../utils/tekton-results'),
   getTaskRunLog: jest.fn(),
 }));
 
 const mockGetTaskRunLogs = getTaskRunLog as jest.Mock;
+const mockCommmonFetchJSON = commonFetchJSON as unknown as jest.Mock;
 const mockUseTaskRuns = useTaskRuns as jest.Mock;
 
 describe('useEnterpriseContractResultFromLogs', () => {
   beforeEach(() => {
+    mockCommmonFetchJSON.mockResolvedValue(mockEnterpriseContractJSON);
     mockUseTaskRuns.mockReturnValue([
       [
         {
-          metadata: {
-            namespace: 'test-ns',
-            name: 'test-task',
-          },
           status: {
-            podName: 'test-pod',
+            podName: 'pod-acdf',
           },
         },
       ],
@@ -47,16 +54,11 @@ describe('useEnterpriseContractResultFromLogs', () => {
   });
 
   it('should parse valid rules to json', async () => {
-    mockGetTaskRunLogs.mockResolvedValue(
-      `[report-json] ${JSON.stringify(mockEnterpriseContractJSON)}`,
-    );
     const { result, waitForNextUpdate } = renderHook(() =>
-      useEnterpriseContractResultFromLogs('test-pr'),
+      useEnterpriseContractResultFromLogs('dummy-abcd'),
     );
     await waitForNextUpdate();
-
-    expect(mockUseTaskRuns).toHaveBeenCalledWith('test-ns', 'test-pr', 'verify');
-    expect(mockGetTaskRunLogs).toHaveBeenCalledWith('test-ws', 'test-ns', 'test-task');
+    expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(result.current[0][0].successes.length).toEqual(1);
     expect(result.current[0][0].violations.length).toEqual(1);
     expect(result.current[0][0].warnings).toEqual(undefined);
@@ -68,20 +70,20 @@ describe('useEnterpriseContractResultFromLogs', () => {
     );
     await waitForNextUpdate();
     const [ecResult, loaded] = result.current;
-    expect(mockGetTaskRunLogs).toHaveBeenCalled();
+    expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(loaded).toBe(true);
     expect(ecResult.findIndex((ec) => ec.name === 'devfile-sample-1jik')).toEqual(-1);
   });
 
   it('should return handle api errors', async () => {
-    mockGetTaskRunLogs.mockRejectedValue(new Error('Api error'));
+    mockCommmonFetchJSON.mockRejectedValue(new Error('Api error'));
 
     const { result, waitForNextUpdate } = renderHook(() =>
       useEnterpriseContractResultFromLogs('dummy-abcd'),
     );
     await waitForNextUpdate();
     const [ecResult, loaded] = result.current;
-    expect(mockGetTaskRunLogs).toHaveBeenCalled();
+    expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(loaded).toBe(true);
     expect(ecResult).toBeUndefined();
   });
@@ -102,7 +104,7 @@ describe('useEnterpriseContractResultFromLogs', () => {
       true,
       undefined,
     ]);
-    mockGetTaskRunLogs.mockRejectedValue({ code: 404 });
+    mockCommmonFetchJSON.mockRejectedValue({ code: 404 });
     mockGetTaskRunLogs.mockReturnValue(`asdfcdfadsf
     [report-json] { "components": [] }
     `);
@@ -111,7 +113,7 @@ describe('useEnterpriseContractResultFromLogs', () => {
       useEnterpriseContractResultFromLogs('dummy-abcd'),
     );
     const [, loaded] = result.current;
-    expect(mockGetTaskRunLogs).toHaveBeenCalled();
+    expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(loaded).toBe(false);
     await waitForNextUpdate();
     const [ec, ecLoaded] = result.current;
@@ -145,16 +147,10 @@ describe('mapEnterpriseContractResultData', () => {
 
 describe('useEnterpriseContractResults', () => {
   beforeEach(() => {
-    mockGetTaskRunLogs.mockResolvedValue(
-      `[report-json] ${JSON.stringify(mockEnterpriseContractJSON)}`,
-    );
+    mockCommmonFetchJSON.mockResolvedValue(mockEnterpriseContractJSON);
     mockUseTaskRuns.mockReturnValue([
       [
         {
-          metadata: {
-            namespace: 'test-ns',
-            name: 'dummy-abcd',
-          },
           status: {
             podName: 'pod-acdf',
           },
