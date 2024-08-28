@@ -7,6 +7,11 @@ import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import { ContextMenuItem, ContextSwitcher } from '../ContextSwitcher';
+import {
+  APPLICATION_SWITCHER_STORAGE_KEY,
+  ContextTab,
+  MenuTabs,
+} from '../ContextSwitcher/ContextSwitcher';
 
 export const ApplicationSwitcher: React.FC<
   React.PropsWithChildren<{ selectedApplication?: string }>
@@ -34,9 +39,18 @@ export const ApplicationSwitcher: React.FC<
   return menuItems.length > 1 ? (
     <ContextSwitcher
       resourceType="application"
-      menuItems={menuItems}
+      menuItems={[
+        {
+          tabKey: ContextTab.All,
+          tabName: MenuTabs.All.name,
+          displayName: MenuTabs.All.displayName,
+          menuItems,
+        },
+      ]}
       selectedItem={selectedItem}
       onSelect={onSelect}
+      showRecentItems
+      storageKey={APPLICATION_SWITCHER_STORAGE_KEY}
       footer={
         <Level>
           <LevelItem>

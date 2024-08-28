@@ -14,6 +14,7 @@ setupDotenvFiles();
 const REGISTRATION_URL = process.env._REGISTRATION_URL;
 const PROXY_URL = process.env._PROXY_URL;
 const PROXY_WEBSOCKET_URL = process.env._PROXY_WEBSOCKET_URL;
+const WORKSPACE_ENDPOINT_URL = process.env.WORKSPACE_ENDPOINT_URL;
 
 const calculateRemoteConfig = (remoteConfig) => {
   if (remoteConfig === 'stage') {
@@ -45,15 +46,15 @@ const webpackProxy = {
       pathRewrite: { '^/api/k8s/registration': '' },
     },
     {
-      context: (path) => path.includes('/api/k8s/workspace/'),
-      target:
-        'https://workspaces-rest-api-server-workspaces-system.apps.stone-stg-host.qc0p.p1.openshiftapps.com',
+      context: (path) =>
+        path.includes('/api/k8s/') && path.includes('workspace.konflux-ci.dev/v1alpha1'),
+      target: WORKSPACE_ENDPOINT_URL,
       secure: false,
       changeOrigin: true,
       autoRewrite: true,
       ws: true,
       pathRewrite: {
-        '^/api/k8s/workspace/': '',
+        '^/api/k8s/': '',
       },
     },
     {

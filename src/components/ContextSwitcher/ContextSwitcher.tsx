@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import {
   Menu,
   MenuContent,
@@ -11,34 +10,34 @@ import {
   TabTitleText,
   TextInput,
   MenuSearchInput,
-  Flex,
-  FlexItem,
-  Button,
 } from '@patternfly/react-core';
 import { Dropdown, DropdownToggle } from '@patternfly/react-core/deprecated';
 import EllipsisHIcon from '@patternfly/react-icons/dist/js/icons/ellipsis-h-icon';
 import '././ContextSwitcher.scss';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import {
-  ContextMenuListItem,
-  filteredItems,
-  findItemByKey,
-  ItemVisibility,
-} from './context-switcher-utils';
+import { ContextMenuListItem, getFilteredItems, findItemByKey } from './context-switcher-utils';
 
-const LOCAL_STORAGE_KEY = 'context-switcher';
+export const APPLICATION_SWITCHER_STORAGE_KEY = 'application-switcher';
+export const WORKSPACE_SWITCHER_STORAGE_KEY = 'workspace-switcher';
 
 type LocalStorageKeys = {
   recentItems?: { [key: string]: string[] };
   lastTab?: { [key: string]: ContextTab };
 };
 
-const enum ContextTab {
+export const enum ContextTab {
   Recent,
   All,
+  Public,
   Private,
-  Community,
 }
+
+export const MenuTabs = {
+  Recent: { name: 'recent', displayName: 'Recent' },
+  All: { name: 'all', displayName: 'All' },
+  Public: { name: 'public', displayName: 'Public' },
+  Private: { name: 'private', displayName: 'Private' },
+};
 
 export type ContextMenuItem = {
   key: string;
@@ -48,11 +47,18 @@ export type ContextMenuItem = {
 };
 
 type ContextSwitcherProps = {
-  menuItems: ContextMenuItem[];
+  menuItems: {
+    tabKey: ContextTab;
+    tabName: string;
+    displayName: string;
+    menuItems: ContextMenuItem[];
+  }[];
   selectedItem?: ContextMenuItem;
   maxRecentItems?: number;
+  showRecentItems?: boolean;
   onSelect?: (item: ContextMenuItem) => void;
   resourceType?: string;
+  storageKey?: string;
   footer?: React.ReactNode;
 };
 
@@ -60,7 +66,11 @@ export const ContextSwitcher: React.FC<React.PropsWithChildren<ContextSwitcherPr
   menuItems,
   selectedItem,
   onSelect,
+  showRecentItems = false,
+  storageKey = WORKSPACE_SWITCHER_STORAGE_KEY,
   resourceType = 'resource',
+  maxRecentItems = 5,
+  footer,
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
@@ -68,39 +78,58 @@ export const ContextSwitcher: React.FC<React.PropsWithChildren<ContextSwitcherPr
   const [drilldownPath, setDrilldownPath] = React.useState<string[]>([]);
   const [menuHeights, setMenuHeights] = React.useState<{ [key: string]: number }>({});
   const [activeMenu, setActiveMenu] = React.useState<string>('context-switcher-root-menu');
-  const [localStorage, setLocalStorage] = useLocalStorage<LocalStorageKeys>(LOCAL_STORAGE_KEY);
+  const [localStorage, setLocalStorage] = useLocalStorage<LocalStorageKeys>(storageKey);
+
+  const recentItems = React.useMemo(
+    () => (localStorage as LocalStorageKeys)?.recentItems || {},
+    [localStorage],
+  );
 
   const lastTab = React.useMemo(
     () => (localStorage as LocalStorageKeys)?.lastTab || {},
     [localStorage],
   );
 
+  const allItems = menuItems.find((item) => item.tabKey === ContextTab.All)?.menuItems;
+
   const [activeTab, setActiveTab] = React.useState<ContextTab>(
     lastTab[resourceType] === undefined ? ContextTab.All : lastTab[resourceType],
   );
 
-  const privateMenuItems = React.useMemo(() => {
-    return menuItems.filter((item) => item.visibility === ItemVisibility.PRIVATE);
-  }, [menuItems]);
+  const recentMenuItems = React.useMemo(() => {
+    const recentKeys: string[] = recentItems[resourceType];
+    if (!recentKeys || recentKeys.length === 0) {
+      return selectedItem ? [selectedItem] : [];
+    }
+    return recentKeys.map((k) => findItemByKey(allItems, k)).filter((v) => !!v);
+  }, [resourceType, selectedItem, recentItems, allItems]);
 
-  const publicMenuItems = React.useMemo(() => {
-    return menuItems.filter((item) => item.visibility === ItemVisibility.COMMUNITY);
-  }, [menuItems]);
-
-  const [filteredPrivateItems, filteredPublicItems, filteredAllItems] = React.useMemo(
-    () => [
-      filteredItems(privateMenuItems, searchText.toLowerCase()),
-      filteredItems(publicMenuItems, searchText.toLowerCase()),
-      filteredItems(menuItems, searchText.toLowerCase()),
-    ],
-    [menuItems, privateMenuItems, publicMenuItems, searchText],
+  const filteredMenuItems = React.useMemo(
+    () =>
+      showRecentItems
+        ? [
+            ...menuItems.map((tab) => getFilteredItems(tab.menuItems, searchText.toLowerCase())),
+            getFilteredItems(recentMenuItems, searchText.toLowerCase()),
+          ]
+        : menuItems.map((tab) => getFilteredItems(tab.menuItems, searchText.toLowerCase())),
+    [menuItems, searchText, showRecentItems, recentMenuItems],
   );
 
   const onItemSelect = (_: React.MouseEvent, key: string) => {
     const itemKey = key.startsWith('group:') ? key.replace('group:', '') : key;
-    const item = findItemByKey(menuItems, itemKey);
+    const item = findItemByKey(allItems, itemKey);
     if (item.subItems?.length === 0) {
       return;
+    }
+    const recentKeys = (recentItems[resourceType] as string[]) || [];
+    if (!recentKeys.includes(key)) {
+      setLocalStorage({
+        ...((localStorage as LocalStorageKeys) || {}),
+        recentItems: {
+          ...recentItems,
+          [resourceType]: [key, ...recentKeys.slice(0, maxRecentItems - 1)],
+        },
+      });
     }
     setIsOpen(false);
     onSelect?.(item);
@@ -136,6 +165,21 @@ export const ContextSwitcher: React.FC<React.PropsWithChildren<ContextSwitcherPr
     setDrilldownPath(pathSansLast);
     setActiveMenu(toMenuId);
   };
+
+  const tabMenuItems = React.useMemo(
+    () =>
+      showRecentItems
+        ? [
+            ...menuItems,
+            {
+              tabKey: ContextTab.Recent,
+              tabName: MenuTabs.Recent.name,
+              displayName: MenuTabs.Recent.displayName,
+            },
+          ]
+        : menuItems,
+    [menuItems, showRecentItems],
+  );
 
   const setHeight = (menuId: string, height: number) => {
     if (
@@ -192,44 +236,26 @@ export const ContextSwitcher: React.FC<React.PropsWithChildren<ContextSwitcherPr
         </MenuSearch>
         <MenuContent menuHeight={`${menuHeights[activeMenu]}px`}>
           <Tabs activeKey={activeTab} onSelect={onTabChange} isFilled>
-            <Tab eventKey={ContextTab.Private} title={<TabTitleText>Private</TabTitleText>}>
-              <MenuList>
-                {filteredPrivateItems.map((item) => (
-                  <ContextMenuListItem key={item.key} item={item} />
-                ))}
-              </MenuList>
-            </Tab>
-            <Tab eventKey={ContextTab.Community} title={<TabTitleText>Public</TabTitleText>}>
-              <MenuList>
-                {filteredPublicItems.map((item) => (
-                  <ContextMenuListItem key={item.key} item={item} />
-                ))}
-              </MenuList>
-            </Tab>
-            <Tab eventKey={ContextTab.All} title={<TabTitleText>All</TabTitleText>}>
-              <MenuList>
-                {filteredAllItems.map((item) => (
-                  <ContextMenuListItem key={item.key} item={item} />
-                ))}
-              </MenuList>
-            </Tab>
+            {filteredMenuItems.map((menuItem, i) => (
+              <Tab
+                eventKey={tabMenuItems[i].tabKey}
+                key={tabMenuItems[i].tabName}
+                title={
+                  <TabTitleText data-test={`tab-${tabMenuItems[i].tabName}`}>
+                    {tabMenuItems[i].displayName}
+                  </TabTitleText>
+                }
+              >
+                <MenuList>
+                  {menuItem.map((item) => (
+                    <ContextMenuListItem key={item.key} item={item} />
+                  ))}
+                </MenuList>
+              </Tab>
+            ))}
           </Tabs>
         </MenuContent>
-        <MenuFooter>
-          <Flex>
-            <FlexItem align={{ default: 'alignRight' }}>
-              <Button
-                variant="link"
-                component={(props) => (
-                  <Link {...props} to={`/application-pipeline/workspace-list/`} />
-                )}
-                isInline
-              >
-                View workspace list
-              </Button>
-            </FlexItem>
-          </Flex>
-        </MenuFooter>
+        {footer && <MenuFooter>{footer}</MenuFooter>}
       </Menu>
     </Dropdown>
   );

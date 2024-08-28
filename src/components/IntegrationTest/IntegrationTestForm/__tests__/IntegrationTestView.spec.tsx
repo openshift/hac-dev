@@ -88,7 +88,8 @@ const IntegrationTestViewWrapper = ({ children }) => (
       workspace: 'test-ws',
       workspaceResource: undefined,
       workspacesLoaded: true,
-      workspaces: [],
+      kubesawWorkspaces: [],
+      konfluxWorkspaces: [],
       updateWorkspace: jest.fn(),
     }}
   >

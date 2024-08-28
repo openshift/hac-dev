@@ -8,6 +8,11 @@ export enum ItemVisibility {
   COMMUNITY = 'community',
 }
 
+export const WorkspaceLabels = {
+  HAS_DIRECT_ACCESS: 'internal.workspaces.konflux-ci.dev/has-direct-access',
+  IS_OWNER: 'internal.workspaces.konflux-ci.dev/is-owner',
+};
+
 export const ContextMenuListItem: React.FC<React.PropsWithChildren<{ item: ContextMenuItem }>> = ({
   item,
 }) => {
@@ -43,13 +48,13 @@ export const ContextMenuListItem: React.FC<React.PropsWithChildren<{ item: Conte
   );
 };
 
-export const filteredItems = (items: ContextMenuItem[], filter: string) => {
+export const getFilteredItems = (items: ContextMenuItem[], filter: string) => {
   const filtered: ContextMenuItem[] = [];
   items.forEach((item) => {
     if (item.name.toLowerCase().includes(filter)) {
       let filteredSubItems: ContextMenuItem[];
       if (item.subItems) {
-        filteredSubItems = filteredItems(item.subItems, filter);
+        filteredSubItems = getFilteredItems(item.subItems, filter);
       }
       filtered.push({ ...item, subItems: filteredSubItems });
     }

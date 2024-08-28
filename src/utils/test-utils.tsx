@@ -33,8 +33,9 @@ export const namespaceRenderer = (
           lastUsedWorkspace: 'test-ws',
           workspace: '',
           workspaceResource: undefined,
-          workspaces: [],
+          kubesawWorkspaces: [],
           workspacesLoaded: false,
+          konfluxWorkspaces: [],
           updateWorkspace: jest.fn(),
           ...contextValues,
         }}

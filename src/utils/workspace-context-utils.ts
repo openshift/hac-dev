@@ -6,19 +6,18 @@ import {
   setActiveWorkspaceLocalStorage as setActiveWorkspace,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { ItemVisibility } from '../components/ContextSwitcher/context-switcher-utils';
-import { WorkspaceModel } from '../models/workspace';
-import { Workspace } from '../types/workspace';
+import { KubesawWorkspaceModel, KonfluxWorkspaceModel } from '../models/workspace';
+import { KonfluxWorkspace, KubeSawWorkspace, Workspace } from '../types/workspace';
 
 const workspacePathMatcher = new RegExp(/workspaces\/([^/]+)/);
-const NAMESPACE_SUFFIX = '-tenant';
 
 export type WorkspaceContextData = {
   namespace: string;
   workspace: string;
-  workspaceResource: Workspace;
+  workspaceResource: KubeSawWorkspace;
   workspacesLoaded: boolean;
-  kubesawWorkspaces: Workspace[];
-  konfluxWorkspaces: Workspace[];
+  kubesawWorkspaces: KubeSawWorkspace[];
+  konfluxWorkspaces: KonfluxWorkspace[];
   lastUsedWorkspace: string;
   /**
    * This is used to trigger a manual re-fetch of the Workspace CR when there
@@ -27,6 +26,7 @@ export type WorkspaceContextData = {
    * in url and the workspace API does not like it.
    */
   updateWorkspace: () => void;
+  updateVisibility?: (workspace: KonfluxWorkspace, visibility: ItemVisibility) => void;
 };
 
 export const WorkspaceContext = React.createContext<WorkspaceContextData>({
@@ -38,6 +38,7 @@ export const WorkspaceContext = React.createContext<WorkspaceContextData>({
   workspacesLoaded: false,
   lastUsedWorkspace: getActiveWorkspace(),
   updateWorkspace: () => {},
+  updateVisibility: () => {},
 });
 
 export const WorkspaceProvider = WorkspaceContext.Provider;
@@ -48,117 +49,153 @@ export const useWorkspaceInfo = () => {
   return { namespace, workspace };
 };
 
-export const getHomeWorkspace = (workspaces: Workspace[]) =>
+export const getHomeWorkspace = (workspaces: KubeSawWorkspace[]) =>
   workspaces?.find((w) => w?.status?.type === 'home');
 
-const fetchKubesawWorkspace = async (name: string): Promise<Workspace> =>
+const fetchKubesawWorkspace = async (name: string): Promise<KubeSawWorkspace> =>
   fetch(
-    `/api/k8s/apis/${WorkspaceModel.apiGroup}/${WorkspaceModel.apiVersion}/${WorkspaceModel.plural}/${name}`,
+    `/api/k8s/apis/${KubesawWorkspaceModel.apiGroup}/${KubesawWorkspaceModel.apiVersion}/${KubesawWorkspaceModel.plural}/${name}`,
   ).then((data) => data.json());
 
-export const fetchKonfluxWorkspaces = async (): Promise<{ items: Workspace[] }> =>
-  fetch(`/api/k8s/workspace/apis/workspaces.konflux-ci.dev/v1alpha1/workspaces`).then((data) =>
-    data.json(),
-  );
+export const fetchKonfluxWorkspaces = async (): Promise<{ items: KonfluxWorkspace[] }> =>
+  fetch(
+    `/api/k8s/workspace/apis/${KonfluxWorkspaceModel.apiGroup}/${KonfluxWorkspaceModel.apiVersion}/workspaces`,
+  ).then((data) => data.json());
+
+export const fetchKonfluxWorkspace = async (
+  wsName: string,
+  wsNamespace: string,
+): Promise<KonfluxWorkspace> =>
+  fetch(
+    `/api/k8s/workspace/apis/${KonfluxWorkspaceModel.apiGroup}/${KonfluxWorkspaceModel.apiVersion}/namespaces/${wsNamespace}/workspaces/${wsName}`,
+  ).then((data) => data.json());
 
 export const useActiveWorkspace = (): WorkspaceContextData => {
   const lastUsedWorkspace = useLastUsedWorkspace();
   const navigate = useNavigate();
   const [, workspaceFromUrl = ''] = window.location.pathname.match(workspacePathMatcher) || [];
   const [workspaceName, setWorkspaceName] = React.useState<string>(getActiveWorkspace);
-  const [workspace, setWorkspace] = React.useState<Workspace>();
+  const [workspace, setWorkspace] = React.useState<KubeSawWorkspace>();
   const [namespace, setNamespace] = React.useState<string>('');
-  const [kubesawWorkspaces, setKubesawWorkspaces] = React.useState<Workspace[]>([]);
-  const [konfluxWorkspaces, setKonfluxWorkspaces] = React.useState<Workspace[]>([]);
+  const [kubesawWorkspaces, setKubesawWorkspaces] = React.useState<KubeSawWorkspace[]>([]);
+  const [konfluxWorkspaces, setKonfluxWorkspaces] = React.useState<KonfluxWorkspace[]>([]);
   const [workspacesLoaded, setWorkspacesLoaded] = React.useState<boolean>(false);
   const [wsUpdateCounter, setWsUpdateCounter] = React.useState(1);
+  const [changeVisibilityCounter, setChangeVisibilityCounter] = React.useState(1);
 
-  const getDefaultNsForWorkspace = React.useCallback(
-    (kubeWS: Workspace[], currentWorkspace: string, konfluxWS: Workspace[]) => {
-      const obj = kubeWS?.find((w) => w.metadata.name === currentWorkspace);
-      if (obj) {
-        return obj?.status?.namespaces.find((n) => n.type === 'default');
-      }
-      const ws = konfluxWS?.find((w) => w.metadata?.namespace === currentWorkspace);
-      return { name: `${ws.metadata?.namespace}${NAMESPACE_SUFFIX}` };
-    },
-    [],
-  );
+  const getDefaultNsForWorkspace = React.useCallback((obj: KubeSawWorkspace) => {
+    if (obj) {
+      return obj?.status?.namespaces?.find((n) => n.type === 'default');
+    }
+  }, []);
+
+  const updateWorkspaceVisibility = async (
+    ws: KonfluxWorkspace,
+    visibility: ItemVisibility,
+  ): Promise<{ item: Workspace[] }> => {
+    const newWS = {
+      ...ws,
+      spec: { ...ws.spec, visibility },
+    };
+
+    return fetch(
+      `/api/k8s/workspace/apis/${KonfluxWorkspaceModel.apiGroup}/${KonfluxWorkspaceModel.apiVersion}/namespaces/${workspace.metadata?.namespace}/workspaces/${workspace.metadata?.name}`,
+      {
+        method: 'put',
+        body: JSON.stringify(newWS),
+      },
+    ).then((data) => {
+      setChangeVisibilityCounter((i) => i + 1);
+      return data.json();
+    });
+  };
 
   React.useEffect(() => {
-    if (workspaceName && kubesawWorkspaces?.length > 0) {
+    if (workspaceName && workspace) {
       setActiveWorkspace(workspaceName);
-      const ns = getDefaultNsForWorkspace(kubesawWorkspaces, workspaceName, konfluxWorkspaces);
+      const ns = getDefaultNsForWorkspace(workspace);
       if (ns) {
         setNamespace(ns.name);
       }
     }
-  }, [getDefaultNsForWorkspace, setNamespace, workspaceName, kubesawWorkspaces, konfluxWorkspaces]);
+  }, [getDefaultNsForWorkspace, setNamespace, workspaceName, workspace]);
 
   // switch workspace if URL segment has changed
   React.useEffect(() => {
-    const urlWorkspace =
-      kubesawWorkspaces?.find((w) => w.metadata.name === workspaceFromUrl) ??
-      konfluxWorkspaces?.find((w) => w.metadata?.namespace === workspaceFromUrl);
-
-    if (workspaceName && workspaceFromUrl && workspaceFromUrl !== workspaceName && urlWorkspace) {
-      setWorkspaceName(workspaceFromUrl);
-      setWorkspace(urlWorkspace);
-    }
+    const setUrlWorkspace = async () => {
+      if (workspaceFromUrl && workspaceName && workspaceFromUrl !== workspaceName) {
+        let urlWorkspace = null;
+        try {
+          urlWorkspace = await fetchKubesawWorkspace(workspaceFromUrl);
+          if (urlWorkspace) {
+            setWorkspaceName(urlWorkspace?.metadata.name);
+            setWorkspace(urlWorkspace);
+          }
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(`Error fetching workspace ${workspaceFromUrl}: `, e);
+        }
+      }
+    };
+    setUrlWorkspace();
   }, [workspaceName, workspaceFromUrl, kubesawWorkspaces, konfluxWorkspaces]);
 
   React.useEffect(() => {
     let unmounted = false;
     const fetchWorkspaces = async () => {
-      let allWorkspaces: Workspace[] = [];
+      let kubesawWSList: KubeSawWorkspace[] = [];
       try {
         setActiveWorkspace(''); // to fetch root level workspaces
-        allWorkspaces = await k8sListResourceItems<Workspace>({
-          model: WorkspaceModel,
+        kubesawWSList = await k8sListResourceItems<KubeSawWorkspace>({
+          model: KubesawWorkspaceModel,
         });
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error('Error fetching workspaces', e);
       }
 
-      let ws: Workspace;
-      if (Array.isArray(allWorkspaces)) {
+      let ws: KubeSawWorkspace;
+      if (Array.isArray(kubesawWSList)) {
         const findWorkspace = (wsName: string) =>
-          allWorkspaces.find((w) => w.metadata.name === wsName);
+          kubesawWSList.find((w) => w.metadata.name === wsName);
 
         ws =
           findWorkspace(workspaceFromUrl) ??
           findWorkspace(lastUsedWorkspace) ??
-          getHomeWorkspace(allWorkspaces) ??
-          allWorkspaces[0];
+          getHomeWorkspace(kubesawWSList) ??
+          kubesawWSList[0];
       }
-
-      const newWS: { items: Workspace[] } = await fetchKonfluxWorkspaces();
-
-      setKonfluxWorkspaces(newWS.items ?? []);
+      let konfluxWSList: { items: KonfluxWorkspace[] } = { items: [] };
+      try {
+        konfluxWSList = await fetchKonfluxWorkspaces();
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(`Error fetching workspace `, e);
+      }
+      setKonfluxWorkspaces(konfluxWSList.items ?? []);
 
       // workspace resource needs to be fetched separately because the
       // workspace api does not populate workspace's status.availableRoles
       // and status.bindings when fetched with k8sList
-      if (ws && ws.spec?.visibility !== ItemVisibility.COMMUNITY) {
-        try {
-          if (ws) {
-            ws = await fetchKubesawWorkspace(ws.metadata.name);
-          }
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error(`Error fetching workspace ${ws.metadata.name}: `, e);
+
+      try {
+        if (ws) {
+          ws = await fetchKubesawWorkspace(ws.metadata.name);
         }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(`Error fetching workspace ${ws.metadata.name}: `, e);
       }
+
       if (unmounted) {
         return;
       }
 
       if (ws) {
-        const wsName = ws.metadata.name;
+        const wsName = ws?.metadata?.name;
         setWorkspaceName(wsName);
         setWorkspace(ws);
-        setKubesawWorkspaces(allWorkspaces);
+        setKubesawWorkspaces(kubesawWSList);
         setWorkspacesLoaded(true);
         const wsBasePath = generatePath('/application-pipeline/workspaces/:ws', { ws: wsName });
 
@@ -186,6 +223,22 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
     }
   }, [workspaceName, wsUpdateCounter]);
 
+  React.useEffect(() => {
+    if (changeVisibilityCounter) {
+      const reFetchWorkspaces = async () => {
+        let konfluxWSList: { items: KonfluxWorkspace[] } = { items: [] };
+        try {
+          konfluxWSList = await fetchKonfluxWorkspaces();
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(`Error fetching workspace `, e);
+        }
+        setKonfluxWorkspaces(konfluxWSList.items ?? []);
+      };
+      reFetchWorkspaces();
+    }
+  }, [changeVisibilityCounter]);
+
   return {
     namespace,
     lastUsedWorkspace,
@@ -195,5 +248,6 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
     konfluxWorkspaces,
     workspacesLoaded,
     updateWorkspace: () => setWsUpdateCounter((i) => i + 1),
+    updateVisibility: (ws, visibility) => updateWorkspaceVisibility(ws, visibility),
   };
 };

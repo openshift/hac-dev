@@ -8,6 +8,29 @@ export interface Workspace extends K8sResourceCommon {
     role: WorkspaceRole;
     availableRoles?: WorkspaceRole[];
     bindings?: WorkspaceBinding[];
+    space?: { name: string };
+  };
+  spec?: {
+    visibility: string;
+  };
+}
+
+export interface KubeSawWorkspace extends K8sResourceCommon {
+  status: {
+    type?: string;
+    namespaces: Namespace[];
+    owner: string;
+    role: WorkspaceRole;
+    availableRoles?: WorkspaceRole[];
+    bindings?: WorkspaceBinding[];
+  };
+}
+
+export interface KonfluxWorkspace extends K8sResourceCommon {
+  status: {
+    type?: string;
+    owner: { email: string };
+    space?: { name: string };
   };
   spec?: {
     visibility: string;

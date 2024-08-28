@@ -7,10 +7,10 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { useSearchParam } from '../../hooks/useSearchParam';
+import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
 import FilteredEmptyState from '../../shared/components/empty-state/FilteredEmptyState';
 import Table from '../../shared/components/table/Table';
 import { WorkspaceContext } from '../../utils/workspace-context-utils';
-import WorkspaceEmptyState from './WorkspaceEmptyState';
 import WorkspaceListHeader from './WorkspaceListHeader';
 import WorkspaceListRow from './WorkspaceListRow';
 
@@ -54,7 +54,7 @@ const WorkspaceListView: React.FC = () => {
   );
 
   if (!konfluxWorkspaces || konfluxWorkspaces.length === 0) {
-    return <WorkspaceEmptyState />;
+    return <ErrorEmptyState title="Unable to load workspaces" body={'Something went wrong'} />;
   }
   return (
     <Table

@@ -117,7 +117,9 @@ const ComponentDetailsViewWrapper = ({ children }) => (
       workspace: 'test-ws',
       workspaceResource: undefined,
       workspacesLoaded: true,
-      workspaces: [],
+      kubesawWorkspaces: [],
+      konfluxWorkspaces: [],
+      updateVisibility: jest.fn(),
       updateWorkspace: jest.fn(),
     }}
   >

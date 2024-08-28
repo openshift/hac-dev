@@ -15,6 +15,9 @@ const navExtensions = [
       href: '/application-pipeline/workspace-list',
       name: 'Workspaces',
     },
+    flags: {
+      required: ['SIGNUP'],
+    },
   },
   {
     type: 'core.navigation/href',

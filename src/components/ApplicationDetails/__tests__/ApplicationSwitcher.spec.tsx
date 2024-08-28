@@ -108,8 +108,7 @@ describe('ContextSwitcher', () => {
     act(() => screen.getByRole('button').click());
 
     expect(screen.getByPlaceholderText('Filter application by name')).toBeVisible();
-    expect(screen.getByText('Public')).toBeVisible();
-    expect(screen.getByText('Private')).toBeVisible();
+    expect(screen.getByText('Recent')).toBeVisible();
     expect(screen.getByText('All')).toBeVisible();
     expect(screen.queryByText('Create application')).toHaveAttribute('aria-disabled', 'false');
     switcher.unmount();
@@ -121,8 +120,7 @@ describe('ContextSwitcher', () => {
     act(() => screen.getByRole('button').click());
 
     expect(screen.getByPlaceholderText('Filter application by name')).toBeVisible();
-    expect(screen.getByText('Public')).toBeVisible();
-    expect(screen.getByText('Private')).toBeVisible();
+    expect(screen.getByText('Recent')).toBeVisible();
     expect(screen.getByText('All')).toBeVisible();
     expect(screen.queryByText('Create application')).toHaveAttribute('aria-disabled', 'true');
     switcher.unmount();
