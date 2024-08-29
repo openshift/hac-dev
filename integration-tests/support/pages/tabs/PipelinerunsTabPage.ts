@@ -170,7 +170,6 @@ export class TaskRunsTab {
         task: 'deprecated-base-image-check',
         status: 'Succeeded',
       },
-      { name: `${pipelineName}-sbom-json-check`, task: 'sbom-json-check', status: 'Succeeded' },
       { name: `${pipelineName}-clair-scan`, task: 'clair-scan', status: 'Succeeded|Test Failures' }, // Adding Test Warnings as some packages might have medium vulnerabilities sometimes
       {
         name: `${pipelineName}-clamav-scan`,
