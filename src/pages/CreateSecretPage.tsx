@@ -4,13 +4,11 @@ import NamespacedPage from '../components/NamespacedPage/NamespacedPage';
 import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import AddSecretForm from '../components/Secrets/SecretsForm/AddSecretForm';
 import { FULL_APPLICATION_TITLE } from '../consts/labels';
-import { RemoteSecretModel } from '../models';
+import { SecretModel } from '../models';
 import { AccessReviewResources } from '../types';
 
 const CreateSecretpage: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const accessReviewResources: AccessReviewResources = [
-    { model: RemoteSecretModel, verb: 'create' },
-  ];
+  const accessReviewResources: AccessReviewResources = [{ model: SecretModel, verb: 'create' }];
 
   return (
     <NamespacedPage>

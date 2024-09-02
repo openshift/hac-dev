@@ -2,7 +2,7 @@ import * as React from 'react';
 import '@testing-library/jest-dom';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
 import { screen, render, fireEvent, waitFor, act } from '@testing-library/react';
-import { useSecrets } from '../../../hooks/UseRemoteSecrets';
+import { useSecrets } from '../../../hooks/useSecrets';
 import { RemoteSecretStatusReason } from '../../../types';
 import SecretsListRow from '../SecretsListView/SecretsListRow';
 import SecretsListView from '../SecretsListView/SecretsListView';
@@ -23,7 +23,7 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-jest.mock('../../../hooks/UseRemoteSecrets', () => ({
+jest.mock('../../../hooks/useSecrets', () => ({
   useSecrets: jest.fn(),
 }));
 
