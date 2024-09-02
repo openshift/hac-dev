@@ -6,13 +6,13 @@ import PageAccessCheck from '../components/PageAccess/PageAccessCheck';
 import PageLayout from '../components/PageLayout/PageLayout';
 import SecretsListView from '../components/Secrets/SecretsListView/SecretsListView';
 import { FULL_APPLICATION_TITLE } from '../consts/labels';
-import { RemoteSecretModel } from '../models';
+import { SecretModel } from '../models';
 import ExternalLink from '../shared/components/links/ExternalLink';
 import { AccessReviewResources } from '../types';
 import { useWorkspaceBreadcrumbs } from '../utils/breadcrumb-utils';
 
 const SecretsListPage: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const accessReviewResources: AccessReviewResources = [{ model: RemoteSecretModel, verb: 'list' }];
+  const accessReviewResources: AccessReviewResources = [{ model: SecretModel, verb: 'list' }];
   const breadcrumbs = useWorkspaceBreadcrumbs();
   return (
     <NamespacedPage>

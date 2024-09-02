@@ -9,10 +9,10 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from '@patternfly/react-core';
-import { useSecrets } from '../../../hooks/UseRemoteSecrets';
 import { useSearchParam } from '../../../hooks/useSearchParam';
+import { useSecrets } from '../../../hooks/useSecrets';
 import secretEmptyStateIcon from '../../../imgs/secret.svg';
-import { RemoteSecretModel } from '../../../models';
+import { SecretModel } from '../../../models';
 import AppEmptyState from '../../../shared/components/empty-state/AppEmptyState';
 import FilteredEmptyState from '../../../shared/components/empty-state/FilteredEmptyState';
 import { useAccessReviewForModel } from '../../../utils/rbac';
@@ -29,7 +29,7 @@ const SecretsListView: React.FC<React.PropsWithChildren<SecretsListViewProps>> =
 
   const [secrets, secretsLoaded] = useSecrets(namespace);
   const [nameFilter, setNameFilter, unsetNameFilter] = useSearchParam('name', '');
-  const [canCreateRemoteSecret] = useAccessReviewForModel(RemoteSecretModel, 'create');
+  const [canCreateRemoteSecret] = useAccessReviewForModel(SecretModel, 'create');
 
   const filteredRemoteSecrets = React.useMemo(() => {
     // apply name filter
