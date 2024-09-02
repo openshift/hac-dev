@@ -5,6 +5,8 @@ export type ImportFormValues = {
   inAppContext: boolean;
   showComponent: boolean;
   componentName: string;
+  gitProviderAnnotation?: string;
+  gitURLAnnotation?: string;
   isPrivateRepo: boolean;
   source: {
     git: {

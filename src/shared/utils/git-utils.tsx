@@ -39,14 +39,6 @@ export const detectGitType = (url: string): GitProvider => {
   return GitProvider.UNSURE;
 };
 
-export const isGitLabRepo = (url: string): boolean => {
-  const domain = 'gitlab.';
-  if (url.startsWith(`https://${domain}`) || url.startsWith(`https://www.${domain}`)) {
-    return true;
-  }
-  return false;
-};
-
 export const routeDecoratorIcon = (routeURL: string): React.ReactElement => {
   switch (detectGitType(routeURL)) {
     case GitProvider.INVALID:

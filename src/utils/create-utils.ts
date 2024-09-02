@@ -4,7 +4,6 @@ import {
   k8sUpdateResource,
   commonFetch,
 } from '@openshift/dynamic-plugin-sdk-utils';
-import gitUrlParse from 'git-url-parse';
 import isEqual from 'lodash/isEqual';
 import isNumber from 'lodash/isNumber';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,7 +26,6 @@ import {
   SecretModel,
   ImageRepositoryModel,
 } from '../models';
-import { isGitLabRepo } from '../shared/utils/git-utils';
 import {
   ComponentKind,
   ApplicationKind,
@@ -46,7 +44,6 @@ import {
   BuildRequest,
   BUILD_REQUEST_ANNOTATION,
   GIT_PROVIDER_ANNOTATION,
-  GITLAB_ANNOTATION_VALUE,
   GITLAB_PROVIDER_URL_ANNOTATION,
 } from './component-utils';
 export const sanitizeName = (name: string) => name.split(/ |\./).join('-').toLowerCase();
@@ -114,11 +111,19 @@ export const createComponent = (
   enablePac: boolean = true,
   annotations?: { [key: string]: string },
 ) => {
-  const { componentName, containerImage, source, replicas, resources, env, targetPort } = component;
+  const {
+    componentName,
+    gitProviderAnnotation,
+    gitURLAnnotation,
+    containerImage,
+    source,
+    replicas,
+    resources,
+    env,
+    targetPort,
+  } = component;
 
   const name = component.componentName.split(/ |\./).join('-').toLowerCase();
-
-  const isGitLab = isGitLabRepo(source?.git?.url);
 
   const newComponent = {
     apiVersion: `${ComponentModel.apiGroup}/${ComponentModel.apiVersion}`,
@@ -152,17 +157,12 @@ export const createComponent = (
     verb === 'update' ? { ...originalComponent, spec: newComponent.spec } : newComponent;
 
   // merge additional annotations
-  if (annotations || isGitLab) {
+  if (annotations || gitProviderAnnotation || gitURLAnnotation) {
+    // Add gitlab annotaions in case of gitlab repo
     const newAnnotations = annotations;
-    if (isGitLab) {
-      let parsed: gitUrlParse.GitUrl;
-      try {
-        parsed = gitUrlParse(source?.git?.url);
-      } catch {
-        return null;
-      }
-      newAnnotations[GIT_PROVIDER_ANNOTATION] = GITLAB_ANNOTATION_VALUE;
-      newAnnotations[GITLAB_PROVIDER_URL_ANNOTATION] = parsed.resource;
+    if (gitProviderAnnotation || gitURLAnnotation) {
+      newAnnotations[GIT_PROVIDER_ANNOTATION] = gitProviderAnnotation;
+      newAnnotations[GITLAB_PROVIDER_URL_ANNOTATION] = gitURLAnnotation;
     }
     resource.metadata.annotations = { ...resource.metadata.annotations, ...newAnnotations };
   }

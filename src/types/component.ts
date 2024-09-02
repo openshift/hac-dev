@@ -29,6 +29,8 @@ export enum NudgeStats {
 
 export type ComponentSpecs = {
   componentName: string;
+  gitProviderAnnotation?: string;
+  gitURLAnnotation?: string;
   application: string;
   secret?: string;
   source?: ComponentSource;
