@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { usePipelineRun } from '../../hooks/usePipelineRuns';
+import { fetchPipelineRun } from '../../utils/pipeline-utils';
 import { namespaceRenderer } from '../../utils/test-utils';
 import GithubRedirectPage from '../GithubRedirectPage';
 
@@ -21,11 +21,11 @@ jest.mock('../../hooks/useWorkspaceForNamespace', () => ({
   useWorkspaceForNamespace: () => ({ metadata: { name: 'mock-workspace' } }),
 }));
 
-jest.mock('../../hooks/usePipelineRuns', () => ({ usePipelineRun: jest.fn() }));
+jest.mock('../../utils/pipeline-utils', () => ({ fetchPipelineRun: jest.fn() }));
 
 const mockUseParams = useParams as jest.Mock;
 const mockUseLocation = useLocation as jest.Mock;
-const mockUsePipelineRun = usePipelineRun as jest.Mock;
+const mockUsePipelineRun = fetchPipelineRun as jest.Mock;
 
 const getMockPathname = (isLogs: boolean) =>
   `/application-pipeline/ns/mock-workspace-tenant/pipelinerun/mock-pipelinerun/${
@@ -45,72 +45,73 @@ const getMockPipelineRun = (application?: string | undefined) => {
 };
 
 describe('GithubRedirect', () => {
-  it('should render loading indicator while pipeline run is loading', () => {
+  it('should render loading indicator while pipeline run is loading', async () => {
     mockUseLocation.mockReturnValue({ pathname: getMockPathname(false) });
     mockUseParams.mockReturnValue({
       ns: 'mock-workspace',
       pipelineRun: 'mock-pipeline',
       task: undefined,
     });
-    mockUsePipelineRun.mockReturnValue([getMockPipelineRun(), false]);
+    mockUsePipelineRun.mockReturnValue(getMockPipelineRun());
     namespaceRenderer(<GithubRedirectPage />, 'mock', { workspacesLoaded: true });
-    screen.getByRole('progressbar');
+
+    await waitFor(() => screen.getByRole('progressbar'));
   });
 
-  it('should render navigate when pipelinerun is loaded', () => {
+  it('should render navigate when pipelinerun is loaded', async () => {
     mockUseLocation.mockReturnValue({ pathname: getMockPathname(false) });
     mockUseParams.mockReturnValue({
       ns: 'mock-workspace',
       pipelineRun: 'mock-pipeline',
       task: undefined,
     });
-    mockUsePipelineRun.mockReturnValue([getMockPipelineRun('mock-application'), true, undefined]);
+    mockUsePipelineRun.mockReturnValue(getMockPipelineRun('mock-application'));
     namespaceRenderer(<GithubRedirectPage />, 'mock', { workspacesLoaded: true });
-    const navigate = screen.getByRole('navigate');
+    const navigate = await waitFor(() => screen.getByRole('navigate'));
     expect(navigate.innerHTML).toEqual(
       '/application-pipeline/workspaces/mock-workspace/applications/mock-application/pipelineruns/mock-pipeline',
     );
   });
 
-  it('should render navigate with logs url', () => {
+  it('should render navigate with logs url', async () => {
     mockUseLocation.mockReturnValue({ pathname: getMockPathname(true) });
     mockUseParams.mockReturnValue({
       ns: 'mock-workspace',
       pipelineRun: 'mock-pipeline',
       task: undefined,
     });
-    mockUsePipelineRun.mockReturnValue([getMockPipelineRun('mock-application'), true, undefined]);
+    mockUsePipelineRun.mockReturnValue(getMockPipelineRun('mock-application'));
     namespaceRenderer(<GithubRedirectPage />, 'mock', { workspacesLoaded: true });
-    const navigate = screen.getByRole('navigate');
+    const navigate = await waitFor(() => screen.getByRole('navigate'));
     expect(navigate.innerHTML).toEqual(
       '/application-pipeline/workspaces/mock-workspace/applications/mock-application/pipelineruns/mock-pipeline/logs',
     );
   });
 
-  it('should render navigate with task run logs url', () => {
+  it('should render navigate with task run logs url', async () => {
     mockUseLocation.mockReturnValue({ pathname: getMockPathname(true) });
     mockUseParams.mockReturnValue({
       ns: 'mock-workspace',
       pipelineRun: 'mock-pipeline',
       task: 'mock-task',
     });
-    mockUsePipelineRun.mockReturnValue([getMockPipelineRun('mock-application'), true, undefined]);
+    mockUsePipelineRun.mockReturnValue(getMockPipelineRun('mock-application'));
     namespaceRenderer(<GithubRedirectPage />, 'mock', { workspacesLoaded: true });
-    const navigate = screen.getByRole('navigate');
+    const navigate = await waitFor(() => screen.getByRole('navigate'));
     expect(navigate.innerHTML).toEqual(
       '/application-pipeline/workspaces/mock-workspace/applications/mock-application/pipelineruns/mock-pipeline/logs?task=mock-task',
     );
   });
 
-  it('should render error state when pipeline run not found', () => {
+  it('should render error state when pipeline run not found', async () => {
     mockUseLocation.mockReturnValue({ pathname: getMockPathname(true) });
     mockUseParams.mockReturnValue({
       ns: 'mock-workspace',
       pipelineRun: 'mock-pipeline',
       task: 'mock-task',
     });
-    mockUsePipelineRun.mockReturnValue([undefined, false, { code: 404 }]);
+    mockUsePipelineRun.mockRejectedValue({ code: 404 });
     namespaceRenderer(<GithubRedirectPage />, 'mock', { workspacesLoaded: true });
-    screen.getByText('404: Page not found');
+    await waitFor(() => screen.getByText('404: Page not found'));
   });
 });
