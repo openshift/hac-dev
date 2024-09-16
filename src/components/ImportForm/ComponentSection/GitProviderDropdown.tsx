@@ -16,6 +16,7 @@ export const GitProviderDropdown: React.FC<React.PropsWithChildren<GitProviderDr
   const dropdownItems = [
     { key: GIT_PROVIDER_ANNOTATION_VALUE.GITHUB, value: GIT_PROVIDER_ANNOTATION_VALUE.GITHUB },
     { key: GIT_PROVIDER_ANNOTATION_VALUE.GITLAB, value: GIT_PROVIDER_ANNOTATION_VALUE.GITLAB },
+    { key: GIT_PROVIDER_ANNOTATION_VALUE.OTHERS, value: GIT_PROVIDER_ANNOTATION_VALUE.OTHERS },
   ];
 
   return (
@@ -24,7 +25,6 @@ export const GitProviderDropdown: React.FC<React.PropsWithChildren<GitProviderDr
         {...props}
         label="Git provider annotation"
         placeholder={'Select git provider'}
-        dataTest="provider-annotation"
         value={value}
         items={dropdownItems}
         onChange={(provider: string) => setValue(provider)}

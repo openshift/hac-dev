@@ -1,50 +1,23 @@
 import * as React from 'react';
 import { ExpandableSection, FormSection, PageSection } from '@patternfly/react-core';
-import { useFormikContext } from 'formik';
 import { InputField } from 'formik-pf';
-import gitUrlParse from 'git-url-parse';
-import { detectGitType, GitProvider } from '../../../shared/utils/git-utils';
-import { GIT_PROVIDER_ANNOTATION_VALUE } from '../../../utils/component-utils';
 import HelpPopover from '../../HelpPopover';
-import { ImportFormValues } from '../type';
 import { GitProviderDropdown } from './GitProviderDropdown';
 
-const GitOptions: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { values, errors, setFieldValue } = useFormikContext<ImportFormValues>();
-  const [isGitAdvancedOpen, setGitAdvancedOpen] = React.useState<boolean>(false);
+type GitOptionProps = {
+  isGitAdvancedOpen: boolean;
+  setGitAdvancedOpen: (x) => void;
+};
 
-  const setGitURLAnnotation = React.useCallback(
-    (url) => {
-      let parsed: gitUrlParse.GitUrl;
-      try {
-        parsed = gitUrlParse(url);
-        setFieldValue('gitURLAnnotation', parsed?.resource);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
-    },
-    [setFieldValue],
-  );
-
-  React.useEffect(() => {
-    setGitURLAnnotation(values.source?.git?.url);
-    const gitType = detectGitType(values.source?.git?.url);
-    if (gitType !== GitProvider.GITHUB && gitType !== GitProvider.GITLAB) {
-      setFieldValue('gitProviderAnnotation', '');
-      setGitAdvancedOpen(true);
-    }
-    if (gitType === GitProvider.GITHUB) {
-      setFieldValue('gitProviderAnnotation', GIT_PROVIDER_ANNOTATION_VALUE.GITHUB);
-    }
-    if (gitType === GitProvider.GITLAB) {
-      setFieldValue('gitProviderAnnotation', GIT_PROVIDER_ANNOTATION_VALUE.GITLAB);
-    }
-  }, [setGitURLAnnotation, values.source?.git?.url, setFieldValue, errors?.source?.git?.url]);
+const GitOptions: React.FC<React.PropsWithChildren<GitOptionProps>> = ({
+  isGitAdvancedOpen,
+  setGitAdvancedOpen,
+}) => {
   return (
     <ExpandableSection
       toggleTextExpanded="Hide advanced Git options"
       toggleTextCollapsed="Show advanced Git options"
+      data-test="advanced-git-options"
       isExpanded={isGitAdvancedOpen}
       onToggle={() => setGitAdvancedOpen((x) => !x)}
     >

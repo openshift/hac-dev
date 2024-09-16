@@ -26,6 +26,18 @@ describe('ComponentSection', () => {
     await waitFor(() => screen.getByText('Show advanced Git options'));
   });
 
+  it('should expand git options if source url is others', async () => {
+    formikRenderer(<ComponentSection />, {
+      source: { git: { url: '' } },
+    });
+    const user = userEvent.setup();
+    const source = screen.getByPlaceholderText('Enter your source');
+
+    await user.type(source, 'https://bitbucket.com/abcd/repo.git');
+    await user.tab();
+    await waitFor(() => screen.getByText('Hide advanced Git options'));
+  });
+
   it('should show advanced Annotation section', async () => {
     formikRenderer(<ComponentSection />, {
       source: { git: { url: '' } },
