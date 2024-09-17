@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { useNavigate } from 'react-router-dom';
 import { renderHook } from '@testing-library/react-hooks';
-import { PipelineRunLabel } from '../../../consts/pipelinerun';
+import { PipelineRunEventType, PipelineRunLabel } from '../../../consts/pipelinerun';
 import { useSnapshots } from '../../../hooks/useSnapshots';
 import { runStatus } from '../../../utils/pipeline-utils';
 import { useAccessReviewForModel } from '../../../utils/rbac';
@@ -50,7 +50,12 @@ describe('usePipelinerunActions', () => {
   it('should contain enabled actions', async () => {
     const { result } = renderHook(() =>
       usePipelinerunActions({
-        metadata: { labels: { 'pipelines.appstudio.openshift.io/type': 'build' } },
+        metadata: {
+          labels: {
+            'pipelines.appstudio.openshift.io/type': 'build',
+            [PipelineRunLabel.COMMIT_EVENT_TYPE_LABEL]: PipelineRunEventType.PUSH,
+          },
+        },
         status: { conditions: [{ type: 'Succeeded', status: runStatus.Running }] },
       } as any),
     );
@@ -110,7 +115,12 @@ describe('usePipelinerunActions', () => {
     useAccessReviewForModelMock.mockReturnValueOnce([true, true]);
     const { result } = renderHook(() =>
       usePipelinerunActions({
-        metadata: { labels: { 'pipelines.appstudio.openshift.io/type': 'build' } },
+        metadata: {
+          labels: {
+            'pipelines.appstudio.openshift.io/type': 'build',
+            [PipelineRunLabel.COMMIT_EVENT_TYPE_LABEL]: PipelineRunEventType.PUSH,
+          },
+        },
         status: { conditions: [{ type: 'Succeeded', status: 'True' }] },
       } as any),
     );
@@ -121,6 +131,30 @@ describe('usePipelinerunActions', () => {
         label: 'Rerun',
         disabled: false,
         disabledTooltip: null,
+      }),
+    );
+  });
+
+  it('should contain disabled rerun actions for pull request builds', async () => {
+    useAccessReviewForModelMock.mockReturnValueOnce([true, true]);
+    const { result } = renderHook(() =>
+      usePipelinerunActions({
+        metadata: {
+          labels: {
+            'pipelines.appstudio.openshift.io/type': 'build',
+            [PipelineRunLabel.COMMIT_EVENT_TYPE_LABEL]: PipelineRunEventType.PULL,
+          },
+        },
+        status: { conditions: [{ type: 'Succeeded', status: 'True' }] },
+      } as any),
+    );
+    const actions = result.current;
+
+    expect(actions[0]).toEqual(
+      expect.objectContaining({
+        label: 'Rerun',
+        disabled: true,
+        disabledTooltip: 'Comment `/retest` on pull request to rerun',
       }),
     );
   });

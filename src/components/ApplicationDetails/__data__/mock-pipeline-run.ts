@@ -24,6 +24,7 @@ export const mockPipelineRuns = [
         'build.appstudio.openshift.io/type': 'build',
         'build.appstudio.openshift.io/version': '0.1',
         'pipelines.appstudio.openshift.io/type': 'build',
+        'pipelinesascode.tekton.dev/event-type': 'push',
         'pipelines.openshift.io/runtime': 'generic',
         'pipelines.openshift.io/strategy': 'docker',
         'pipelines.openshift.io/used-by': 'build-cloud',

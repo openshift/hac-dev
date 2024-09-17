@@ -292,14 +292,16 @@ describe('PipelineRunDetailsView', () => {
     watchResourceMock
       .mockReturnValueOnce([
         {
+          ...testPipelineRuns[DataState.SUCCEEDED],
           metadata: {
             labels: {
+              ...testPipelineRuns[DataState.SUCCEEDED].metadata.labels,
               [PipelineRunLabel.SNAPSHOT]: 'snp1',
               [PipelineRunLabel.TEST_SERVICE_SCENARIO]: 'scn1',
-              ...testPipelineRuns[DataState.SUCCEEDED].metadata.labels,
+              'pipelines.appstudio.openshift.io/type': 'test',
             },
+            name: 'test-pipelinerun',
           },
-          ...testPipelineRuns[DataState.SUCCEEDED],
         },
         true,
       ])
