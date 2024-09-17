@@ -145,8 +145,8 @@ describe('EditParamsModal', () => {
             path: '/spec/params',
             value: [
               { name: 'colors', values: ['red', 'green', 'orange'] },
-              { name: 'animal', values: ['tiger'] },
-              { name: 'param3', values: [''] },
+              { name: 'animal', value: 'tiger' },
+              { name: 'param3', values: [] },
             ],
           },
         ],
@@ -195,8 +195,8 @@ describe('EditParamsModal', () => {
             path: '/spec/params',
             value: [
               { name: 'colors', values: ['red', 'green', 'orange'] },
-              { name: 'animal', values: ['tiger'] },
-              { name: 'param3', values: ['new value'] },
+              { name: 'animal', value: 'tiger' },
+              { name: 'param3', value: 'new value' },
             ],
           },
         ],
