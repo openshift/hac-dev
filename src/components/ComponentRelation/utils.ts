@@ -1,8 +1,8 @@
-import { k8sGetResource, k8sUpdateResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { k8sPatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { union } from 'lodash-es';
 import * as yup from 'yup';
 import { ComponentModel } from '../../models';
-import { ComponentKind, NudgeStats } from '../../types';
+import { NudgeStats } from '../../types';
 import {
   ComponentRelationFormikValue,
   ComponentRelationNudgeType,
@@ -55,16 +55,6 @@ export const transformNudgeData = (data: ComponentRelationValue[]): { [key: stri
   }, {});
 };
 
-const mergeNudgeDataIntoResource = (resource: ComponentKind, nudgeData: string[]) => {
-  return {
-    ...resource,
-    spec: {
-      ...resource.spec,
-      [NudgeStats.NUDGES]: nudgeData,
-    },
-  };
-};
-
 export const updateNudgeDependencies = async (
   values: ComponentRelationValue[],
   namespace: string,
@@ -73,20 +63,20 @@ export const updateNudgeDependencies = async (
   const transformedData = transformNudgeData(values);
   const data = [];
   for (const [componentName, nudgeData] of Object.entries(transformedData)) {
-    // fetch new copy because component dependency might have been updated for this component
-    const component = await k8sGetResource<ComponentKind>({
+    const result = await k8sPatchResource({
       model: ComponentModel,
-      queryOptions: { name: componentName, ns: namespace },
-    });
-    const resource = mergeNudgeDataIntoResource(component, nudgeData);
-    const result = await k8sUpdateResource({
-      model: ComponentModel,
-      resource,
       queryOptions: {
-        name: component.metadata.name,
-        ns: component.metadata.namespace,
+        name: componentName,
+        ns: namespace,
         ...(dryRun && { queryParams: { dryRun: 'All' } }),
       },
+      patches: [
+        {
+          op: 'replace',
+          path: `/spec/${NudgeStats.NUDGES}`,
+          value: nudgeData,
+        },
+      ],
     });
     data.push(result);
   }
