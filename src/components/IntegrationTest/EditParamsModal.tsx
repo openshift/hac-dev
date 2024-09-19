@@ -16,6 +16,7 @@ import { IntegrationTestScenarioModel } from '../../models';
 import { IntegrationTestScenarioKind, Param } from '../../types/coreBuildService';
 import { ComponentProps, createModalLauncher } from '../modal/createModalLauncher';
 import FormikParamsField from './FormikParamsField';
+import { formatParams } from './IntegrationTestForm/utils/create-utils';
 
 type EditParamsModalProps = ComponentProps & {
   intTest: IntegrationTestScenarioKind;
@@ -50,7 +51,7 @@ export const EditParamsModal: React.FC<React.PropsWithChildren<EditParamsModalPr
           name: intTest.metadata.name,
           ns: intTest.metadata.namespace,
         },
-        patches: [{ op: 'replace', path: '/spec/params', value: values.params }],
+        patches: [{ op: 'replace', path: '/spec/params', value: formatParams(values.params) }],
       });
       onClose(null, { submitClicked: true });
     } catch (e) {
