@@ -66,6 +66,7 @@ oc get deployment $ENV_NAME-mbop -o json | \
      {"name": "KEYCLOAK_USERNAME", "value": $user},
      {"name": "KEYCLOAK_PASSWORD", "value": $pass},
      {"name": "KEYCLOAK_VERSION", "value": "23.0.1"}])' | oc replace -f -
+oc rollout status deployment $ENV_NAME-mbop
 
 # Call the keycloak API and add a user
 B64_USER=$(oc get secret ${ENV_NAME}-keycloak -o json | jq '.data.username'| tr -d '"')
