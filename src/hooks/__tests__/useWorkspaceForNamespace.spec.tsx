@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { WorkspaceProvider } from '../../utils/workspace-context-utils';
 import { useWorkspaceForNamespace } from '../useWorkspaceForNamespace';
 

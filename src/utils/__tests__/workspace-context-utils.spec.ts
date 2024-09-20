@@ -5,8 +5,7 @@ import {
   k8sListResourceItems,
   setActiveWorkspaceLocalStorage,
 } from '@openshift/dynamic-plugin-sdk-utils';
-import { waitFor } from '@testing-library/react';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { Workspace } from '../../types';
 import { getHomeWorkspace, useActiveWorkspace } from '../workspace-context-utils';
 
@@ -128,8 +127,11 @@ describe('useActiveWorkspace', () => {
   it('should set workspaces from the api results ', async () => {
     getActiveWorkspaceMock.mockReturnValue('');
 
-    const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useActiveWorkspace());
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
 
     expect(result.current.workspace).toBe('workspace-one');
     expect(result.current.workspaces).toHaveLength(2);
@@ -144,8 +146,11 @@ describe('useActiveWorkspace', () => {
     getActiveWorkspaceMock.mockReturnValue('');
     fetchMock.mockResolvedValue({ json: async () => mockWorkspaces[1] });
 
-    const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useActiveWorkspace());
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
 
     expect(result.current.workspace).toBe('workspace-two');
     expect(result.current.workspaceResource).toEqual({
@@ -167,8 +172,11 @@ describe('useActiveWorkspace', () => {
     k8sListResourceItemsMock.mockReturnValue(workspaces);
     getActiveWorkspaceMock.mockReturnValue('');
 
-    const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useActiveWorkspace());
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
 
     expect(result.current.workspace).toBe('workspace-one');
     expect(result.current.workspaceResource).toEqual({
@@ -193,8 +201,11 @@ describe('useActiveWorkspace', () => {
 
   it('should should select the workspace from url', async () => {
     window.location.pathname = '/application-pipeline/workspaces/workspace-two/applications';
-    const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useActiveWorkspace());
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
 
     expect(result.current.workspace).toBe('workspace-two');
   });
@@ -205,9 +216,11 @@ describe('useActiveWorkspace', () => {
       { metadata: { name: 'test-ws' } },
     ]);
     window.location.pathname = '/application-pipeline/workspaces/workspace-invalid/applications';
-    const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
-
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useActiveWorkspace());
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
 
     await waitFor(() => {
       expect(result.current.workspace).toBe('test-ws');
@@ -216,8 +229,11 @@ describe('useActiveWorkspace', () => {
 
   it('should should honor the workspace from localstorage', async () => {
     setActiveWorkspaceLocalStorage('workspace-one');
-    const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useActiveWorkspace());
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
 
     expect(result.current.workspace).toBe('workspace-one');
   });
@@ -246,8 +262,11 @@ describe('useActiveWorkspace', () => {
   it('should update workspace if url segment changes', async () => {
     k8sListResourceItemsMock.mockReturnValue(mockWorkspaces);
     window.location.pathname = '/application-pipeline/workspaces/workspace-one/applications';
-    const { result, waitForNextUpdate, rerender } = renderHook(() => useActiveWorkspace());
-    await waitForNextUpdate();
+    const { result, rerender } = renderHook(() => useActiveWorkspace());
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
 
     expect(result.current.workspace).toBe('workspace-one');
 
@@ -266,8 +285,11 @@ describe('useActiveWorkspace', () => {
     getActiveWorkspaceMock.mockReturnValue('');
     fetchMock.mockResolvedValue({ json: async () => mockWorkspaces[0] });
 
-    const { result, waitForNextUpdate } = renderHook(() => useActiveWorkspace());
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useActiveWorkspace());
+    const initialValue = result.current;
+    await waitFor(() => {
+      expect(result.current).not.toBe(initialValue);
+    });
 
     expect(fetchMock).toHaveBeenCalled();
     expect(fetchMock).toHaveBeenCalledWith(
