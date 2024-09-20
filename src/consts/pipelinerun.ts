@@ -45,4 +45,6 @@ export enum PipelineRunType {
 export enum PipelineRunEventType {
   PUSH = 'push',
   PULL = 'pull_request',
+  INCOMING = 'incoming',
+  RETEST = 'retest-all-comment',
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
+import { PipelineRunEventType, PipelineRunLabel, PipelineRunType } from '../../consts/pipelinerun';
 import { useComponent } from '../../hooks/useComponents';
 import { useSnapshots } from '../../hooks/useSnapshots';
 import { ComponentModel, PipelineRunModel, SnapshotModel } from '../../models';
@@ -27,6 +27,11 @@ export const usePipelinererunAction = (pipelineRun: PipelineRunKind) => {
   const [snapshots, snapshotsLoaded, snapshotsError] = useSnapshots(namespace);
 
   const snapShotLabel = pipelineRun?.metadata?.labels?.[PipelineRunLabel.SNAPSHOT];
+  const isPushBuildType = [PipelineRunEventType.PUSH, PipelineRunEventType.INCOMING].includes(
+    pipelineRun?.metadata?.labels?.[
+      PipelineRunLabel.COMMIT_EVENT_TYPE_LABEL
+    ] as PipelineRunEventType,
+  );
 
   const snapshot = React.useMemo(
     () =>
@@ -36,16 +41,13 @@ export const usePipelinererunAction = (pipelineRun: PipelineRunKind) => {
     [snapshots, snapshotsLoaded, snapshotsError, snapShotLabel],
   );
 
-  const runType = React.useMemo(
-    () => pipelineRun?.metadata?.labels[PipelineRunLabel.PIPELINE_TYPE],
-    [pipelineRun?.metadata?.labels],
-  );
+  const runType = pipelineRun?.metadata?.labels[PipelineRunLabel.PIPELINE_TYPE];
 
   const scenario = pipelineRun?.metadata?.labels?.[PipelineRunLabel.TEST_SERVICE_SCENARIO];
 
   return {
     cta: () =>
-      runType === PipelineRunType.BUILD
+      runType === PipelineRunType.BUILD && isPushBuildType
         ? componentLoaded &&
           !componentError &&
           startNewBuild(component).then(() => {
@@ -62,7 +64,7 @@ export const usePipelinererunAction = (pipelineRun: PipelineRunKind) => {
             );
           }),
     isDisabled:
-      (runType === PipelineRunType.BUILD && !canPatchComponent) ||
+      (runType === PipelineRunType.BUILD && (!isPushBuildType || !canPatchComponent)) ||
       (runType === PipelineRunType.TEST && (!canPatchSnapshot || !snapshot || !scenario)),
 
     disabledTooltip:
@@ -71,6 +73,8 @@ export const usePipelinererunAction = (pipelineRun: PipelineRunKind) => {
         ? "You don't have access to rerun"
         : runType === PipelineRunType.TEST && (!snapshot || !scenario)
         ? 'Missing snapshot or scenario'
+        : runType === PipelineRunType.BUILD && !isPushBuildType
+        ? 'Comment `/retest` on pull request to rerun'
         : null,
     key: 'rerun',
     label: 'Rerun',
