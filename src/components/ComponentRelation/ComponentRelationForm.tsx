@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Bullseye, Flex, FlexItem, Grid, GridItem, Radio } from '@patternfly/react-core';
+import { Bullseye, Flex, FlexItem, Grid, GridItem, Icon, Radio } from '@patternfly/react-core';
+import { MinusCircleIcon } from '@patternfly/react-icons/dist/esm/icons/minus-circle-icon';
 import { useField } from 'formik';
 import { HelpTooltipIcon } from '../../shared';
 import {
@@ -12,12 +13,17 @@ type ComponentRelationProps = {
   componentNames: string[];
   groupedComponents: { [application: string]: string[] };
   index?: Number;
+  removeProps: {
+    showRemove: boolean;
+    onRemove: () => void;
+  };
 };
 
 export const ComponentRelation: React.FC<ComponentRelationProps> = ({
   index,
   componentNames,
   groupedComponents,
+  removeProps: { showRemove, onRemove },
 }) => {
   const sourceName = `relations.${index.toString()}.source`;
   const nudgeName = `relations.${index.toString()}.nudgeType`;
@@ -87,6 +93,13 @@ export const ComponentRelation: React.FC<ComponentRelationProps> = ({
           groupedComponents={groupedComponents}
         />
       </GridItem>
+      {showRemove && (
+        <GridItem span={1}>
+          <Icon status="custom" onClick={onRemove} style={{ cursor: 'pointer' }}>
+            <MinusCircleIcon />
+          </Icon>
+        </GridItem>
+      )}
     </Grid>
   );
 };
