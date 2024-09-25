@@ -52,6 +52,14 @@ describe('ComponentRelationModal', () => {
     expect(screen.getAllByTestId('toggle-component-menu')).toHaveLength(2);
   });
 
+  it('should remove a relation', () => {
+    render(<ComponentRelationModal modalProps={{ isOpen: true }} application="apps" />);
+    fireEvent.click(screen.getByText(`Add another component relationship`));
+    expect(screen.getAllByTestId(/remove-relation-\d+/)).toHaveLength(2);
+    fireEvent.click(screen.getByTestId('remove-relation-0'));
+    expect(screen.queryAllByTestId(/remove-relation-\d+/)).toHaveLength(0);
+  });
+
   it('should show cancelation modal when clicked on cancel', () => {
     let isOpen = true;
     const onClose = () => {

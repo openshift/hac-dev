@@ -95,7 +95,12 @@ export const ComponentRelation: React.FC<ComponentRelationProps> = ({
       </GridItem>
       {showRemove && (
         <GridItem span={1}>
-          <Icon status="custom" onClick={onRemove} style={{ cursor: 'pointer' }}>
+          <Icon
+            id={`remove-relation-${index}`}
+            status="custom"
+            onClick={onRemove}
+            style={{ cursor: 'pointer' }}
+          >
             <MinusCircleIcon />
           </Icon>
         </GridItem>
