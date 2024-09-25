@@ -112,11 +112,10 @@ export const SecretTypeSubForm: React.FC<React.PropsWithChildren<unknown>> = () 
       {isPartnerTaskAvailable(currentTypeRef.current) ? (
         <SelectInputField
           name="name"
-          label="Secret name"
-          toggleAriaLabel="Secret name"
+          label="Select or enter secret name"
+          toggleAriaLabel="Select or enter secret name"
           helpText="Unique name of the new secret"
           toggleId="secret-name-toggle"
-          placeholderText="Enter name"
           variant={SelectVariant.typeahead}
           options={options}
           isCreatable

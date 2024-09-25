@@ -70,7 +70,7 @@ const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existi
         required
         key={values.type}
         name="secretName"
-        label="Select or enter name"
+        label="Select or enter secret name"
         helpText="Unique name of the new secret."
         isCreatable
         isInputValuePersisted
