@@ -4,8 +4,10 @@ import {
   k8sUpdateResource,
   commonFetch,
 } from '@openshift/dynamic-plugin-sdk-utils';
+import { Base64 } from 'js-base64';
 import isEqual from 'lodash/isEqual';
 import isNumber from 'lodash/isNumber';
+import { pick } from 'lodash-es';
 import { v4 as uuidv4 } from 'uuid';
 import {
   getRandomSvgNumber,
@@ -38,6 +40,9 @@ import {
   ImportSecret,
   ImageRepositoryKind,
   ImageRepositoryVisibility,
+  SecretTypeDropdownLabel,
+  SourceSecretType,
+  SecretFormValues,
 } from '../types';
 import { ComponentSpecs } from './../types/component';
 import {
@@ -356,25 +361,45 @@ export const addSecret = async (values: any, workspace: string, namespace: strin
   return await createSecretResource(values, workspace, namespace, false);
 };
 
+export const getSecretObject = (values: SecretFormValues, namespace: string): SecretKind => {
+  let data = {};
+  if (values.type === SecretTypeDropdownLabel.source) {
+    if (values.source.authType === SourceSecretType.basic) {
+      const authObj = pick(values.source, ['username', 'password']);
+      data = Object.entries(authObj).reduce((acc, [key, value]) => {
+        acc[key] = Base64.encode(value);
+        return acc;
+      }, {});
+    } else {
+      const SSH_KEY = 'ssh-privatekey';
+      data[SSH_KEY] = values.source[SSH_KEY];
+    }
+  } else {
+    data = values.opaque.keyValues.reduce((acc, s) => {
+      acc[s.key] = s.value ? s.value : '';
+      return acc;
+    }, {});
+  }
+  const secretResource: SecretKind = {
+    apiVersion: SecretModel.apiVersion,
+    kind: SecretModel.kind,
+    metadata: {
+      name: values.secretName,
+      namespace,
+    },
+    type: K8sSecretType[values.type],
+    data,
+  };
+
+  return secretResource;
+};
 export const createSecret = async (
   secret: ImportSecret,
   workspace: string,
   namespace: string,
   dryRun: boolean,
 ) => {
-  const secretResource = {
-    apiVersion: SecretModel.apiVersion,
-    kind: SecretModel.kind,
-    metadata: {
-      name: secret.secretName,
-      namespace,
-    },
-    type: K8sSecretType[secret.type],
-    stringData: secret.keyValues.reduce((acc, s) => {
-      acc[s.key] = s.value ? s.value : '';
-      return acc;
-    }, {}),
-  };
+  const secretResource = getSecretObject(secret, namespace);
 
   // Todo: K8sCreateResource appends the resource name and errors out.
   // Fix the below code when this sdk-utils issue is resolved https://issues.redhat.com/browse/RHCLOUD-21655.

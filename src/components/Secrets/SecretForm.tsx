@@ -6,6 +6,7 @@ import { DropdownItemObject, SelectInputField } from '../../shared';
 import KeyValueFileInputField from '../../shared/components/formik-fields/key-value-file-input-field/KeyValueFileInputField';
 import { SecretFormValues, SecretTypeDropdownLabel } from '../../types';
 import { RawComponentProps } from '../modal/createModalLauncher';
+import { SourceSecretForm } from './SecretsForm/SourceSecretForm';
 import SecretTypeSelector from './SecretTypeSelector';
 import {
   getSupportedPartnerTaskKeyValuePairs,
@@ -29,13 +30,13 @@ const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existi
   const currentTypeRef = React.useRef(values.type);
 
   const clearKeyValues = () => {
-    const newKeyValues = values.keyValues.filter((kv) => !kv.readOnlyKey);
+    const newKeyValues = values.opaque.keyValues.filter((kv) => !kv.readOnlyKey);
     setFieldValue('keyValues', [...(newKeyValues.length ? newKeyValues : defaultKeyValues)]);
   };
 
   const resetKeyValues = () => {
     setOptions([]);
-    const newKeyValues = values.keyValues.filter(
+    const newKeyValues = values.opaque.keyValues.filter(
       (kv) => !kv.readOnlyKey && (!!kv.key || !!kv.value),
     );
     setFieldValue('keyValues', [...newKeyValues, ...defaultImageKeyValues]);
@@ -43,11 +44,13 @@ const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existi
 
   const dropdownItems: DropdownItemObject[] = Object.entries(SecretTypeDropdownLabel).reduce(
     (acc, [key, value]) => {
-      value !== SecretTypeDropdownLabel.source && acc.push({ key, value });
+      acc.push({ key, value });
       return acc;
     },
     [],
   );
+
+  const currentType = currentTypeRef.current;
 
   return (
     <Form>
@@ -56,6 +59,12 @@ const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existi
         onChange={(type) => {
           currentTypeRef.current = type;
           if (type === SecretTypeDropdownLabel.image) {
+            resetKeyValues();
+            values.secretName &&
+              isPartnerTask(values.secretName) &&
+              setFieldValue('secretName', '');
+          }
+          if (type === SecretTypeDropdownLabel.source) {
             resetKeyValues();
             values.secretName &&
               isPartnerTask(values.secretName) &&
@@ -87,19 +96,25 @@ const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existi
         onSelect={(e, value) => {
           if (isPartnerTask(value)) {
             setFieldValue('keyValues', [
-              ...values.keyValues.filter((kv) => !kv.readOnlyKey && (!!kv.key || !!kv.value)),
+              ...values.opaque.keyValues.filter(
+                (kv) => !kv.readOnlyKey && (!!kv.key || !!kv.value),
+              ),
               ...getSupportedPartnerTaskKeyValuePairs(value),
             ]);
           }
           setFieldValue('secretName', value);
         }}
       />
-      <KeyValueFileInputField
-        name="keyValues"
-        data-test="secret-key-value-pair"
-        entries={defaultKeyValues}
-        disableRemoveAction={values.keyValues.length === 1}
-      />
+      {currentType === SecretTypeDropdownLabel.source && <SourceSecretForm />}
+      {currentType !== SecretTypeDropdownLabel.source && (
+        <KeyValueFileInputField
+          required
+          name="keyValues"
+          data-test="secret-key-value-pair"
+          entries={defaultKeyValues}
+          disableRemoveAction={values.opaque.keyValues.length === 1}
+        />
+      )}
     </Form>
   );
 };
