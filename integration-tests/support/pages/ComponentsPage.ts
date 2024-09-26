@@ -7,11 +7,12 @@ import { AbstractWizardPage } from './AbstractWizardPage';
 
 export class ComponentPage extends AbstractWizardPage {
   static checkQuayImageIsPrivate() {
-    let label = 'Image';
+    let label = 'Build container image';
     cy.contains(UIhelperPO.listGroup_dt, new RegExp(`^\\s*${label}\\s*$`))
       .siblings('dd')
+      .find('input')
       .then(($quay) => {
-        let quayLink = $quay.text();
+        let quayLink = $quay.val().toString();
         // remove "quay.io/" prefix from the quay link
         let quayRepoIdentifier = quayLink.replace('quay.io/', '');
         let curlLink = `https://quay.io/api/v1/repository/${quayRepoIdentifier}`;

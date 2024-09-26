@@ -67,7 +67,7 @@ describe('Advanced Happy path', () => {
     pathInRepository: 'pipelines/integration_pipeline_pass.yaml',
   };
 
-  const integrationTestTaskNames = ['task-success', 'task-green', 'task-skipped'];
+  const integrationTestTaskNames = ['task-success', 'task-success-2', 'task-skipped'];
   const vulnerabilities = /Critical(\d+).*High(\d+).*Medium(\d+).*Low(\d+)/g;
   const secret = {
     secretName: 'snyk-secret',
@@ -441,7 +441,7 @@ describe('Advanced Happy path', () => {
       ]);
     });
 
-    it('verify Pipeline runs Tab on component Details page', () => {
+    it('Verify Pipeline runs Tab on component Details page', () => {
       UIhelper.clickTab('Pipeline runs', false);
       UIhelper.verifyRowInTable('Pipeline run List', componentInfo.firstPipelineRunName, [
         // skipping due to https://issues.redhat.com/browse/HAC-5808
@@ -482,7 +482,7 @@ describe('Advanced Happy path', () => {
       latestCommitsTabPage.verifyNodesOnCommitOverview(['commit', `${componentName}-build`]);
     });
 
-    it('verify the Commit Pipeline runs Tab', () => {
+    it('Verify the Commit Pipeline runs Tab', () => {
       UIhelper.clickTab('Pipeline runs');
       UIhelper.verifyRowInTable(
         'Pipelinerun List',
