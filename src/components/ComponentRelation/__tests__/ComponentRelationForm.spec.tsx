@@ -14,7 +14,7 @@ describe('ComponentRelationForm', () => {
         componentNames={['asdf', 'asd']}
         groupedComponents={{ app: ['asdf', 'asd'] }}
         removeProps={{
-          showRemove: true,
+          disableRemove: true,
           onRemove: jest.fn(),
         }}
       />,

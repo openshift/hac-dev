@@ -85,7 +85,7 @@ export const DefineComponentRelationModal: React.FC<DefineComponentRelationModal
                         groupedComponents={groupedComponents}
                         index={index}
                         removeProps={{
-                          showRemove: values.relations.length > 1,
+                          disableRemove: values.relations.length <= 1,
                           onRemove: () => arrayHelpers.remove(index),
                         }}
                       />

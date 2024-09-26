@@ -81,10 +81,11 @@ describe('ComponentRelationModal', () => {
 
   it('should remove a relation', () => {
     render(<ComponentRelationModal modalProps={{ isOpen: true }} application="apps" />);
+    expect(screen.queryAllByTestId(/remove-relation-\d+/)).toHaveLength(1);
     fireEvent.click(screen.getByText(`Add another component relationship`));
     expect(screen.getAllByTestId(/remove-relation-\d+/)).toHaveLength(2);
     fireEvent.click(screen.getByTestId('remove-relation-0'));
-    expect(screen.queryAllByTestId(/remove-relation-\d+/)).toHaveLength(0);
+    expect(screen.queryAllByTestId(/remove-relation-\d+/)).toHaveLength(1);
   });
 
   it('should show cancelation modal when clicked on cancel', () => {
