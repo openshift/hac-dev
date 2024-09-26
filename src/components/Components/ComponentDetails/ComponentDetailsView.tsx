@@ -50,7 +50,7 @@ const ComponentDetailsView: React.FC<React.PropsWithChildren<ComponentDetailsVie
       componentActions.map((compAction) => ({
         key: compAction.id,
         label: compAction.label,
-        disabled: compAction.disabled,
+        isDisabled: compAction.disabled,
         disabledTooltip: compAction.disabledTooltip,
         onClick: () => {
           if (isFunction(compAction.cta)) {
