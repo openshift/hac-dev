@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Bullseye, Flex, FlexItem, Grid, GridItem, Icon, Radio } from '@patternfly/react-core';
+import { Bullseye, Flex, FlexItem, Grid, GridItem, Button, Radio } from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons/dist/esm/icons/minus-circle-icon';
 import { useField } from 'formik';
 import { HelpTooltipIcon } from '../../shared';
@@ -95,14 +95,9 @@ export const ComponentRelation: React.FC<ComponentRelationProps> = ({
       </GridItem>
       {showRemove && (
         <GridItem span={1}>
-          <Icon
-            id={`remove-relation-${index}`}
-            status="custom"
-            onClick={onRemove}
-            style={{ cursor: 'pointer' }}
-          >
+          <Button id={`remove-relation-${index}`} variant="plain" onClick={onRemove}>
             <MinusCircleIcon />
-          </Icon>
+          </Button>
         </GridItem>
       )}
     </Grid>
