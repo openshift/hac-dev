@@ -60,12 +60,14 @@ export const ComponentRelationModal: React.FC<ComponentRelationModalProps> = ({
     setShowCancelModal(true);
   }, [application, track, workspace]);
 
-  const initialValues: ComponentRelationFormikValue = {
-    relations:
-      loaded && !error && nudgeData.length > 0
-        ? nudgeData
-        : [{ source: '', nudgeType: ComponentRelationNudgeType.NUDGES, target: [] }],
-  };
+  const initialValues: ComponentRelationFormikValue = React.useMemo(() => {
+    return {
+      relations:
+        loaded && !error && nudgeData.length > 0
+          ? nudgeData
+          : [{ source: '', nudgeType: ComponentRelationNudgeType.NUDGES, target: [] }],
+    };
+  }, [error, loaded, nudgeData]);
 
   const handleSubmit = React.useCallback(
     async (
@@ -78,7 +80,7 @@ export const ComponentRelationModal: React.FC<ComponentRelationModalProps> = ({
         workspace,
       });
       try {
-        await updateNudgeDependencies(values.relations, namespace, true);
+        await updateNudgeDependencies(values.relations, initialValues.relations, namespace, true);
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(`Error while updating dependency data for component`, e);
@@ -86,7 +88,7 @@ export const ComponentRelationModal: React.FC<ComponentRelationModalProps> = ({
         helpers.setSubmitting(false);
         helpers.setStatus({ submitError: e?.message });
       }
-      return updateNudgeDependencies(values.relations, namespace)
+      return updateNudgeDependencies(values.relations, initialValues.relations, namespace)
         .then((compResults: ComponentKind[]) => {
           compResults.forEach((c) => {
             track('Component relationship updated', {
@@ -105,7 +107,7 @@ export const ComponentRelationModal: React.FC<ComponentRelationModalProps> = ({
           helpers.setStatus({ submitError: e?.message });
         });
     },
-    [application, namespace, onSaveRelationships, track, workspace],
+    [application, namespace, onSaveRelationships, track, workspace, initialValues],
   );
 
   if (showSubmissionModal && !showCancelModal) {
