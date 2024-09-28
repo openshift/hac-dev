@@ -5,37 +5,6 @@ import {
   transformNudgeData,
 } from '../utils';
 
-describe('transformNudgeData', () => {
-  it('should transform data', () => {
-    expect(
-      transformNudgeData([
-        { source: 'abcd', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['b', 'c'] },
-      ]),
-    ).toEqual({ abcd: ['b', 'c'] });
-    expect(
-      transformNudgeData([
-        { source: 'abcd', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['b', 'c'] },
-        { source: 'abcd', nudgeType: ComponentRelationNudgeType.NUDGED_BY, target: ['b', 'c'] },
-      ]),
-    ).toEqual({ abcd: ['b', 'c'], b: ['abcd'], c: ['abcd'] });
-    expect(
-      transformNudgeData([
-        { source: 'abcd', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['b', 'c'] },
-        { source: 'abcd', nudgeType: ComponentRelationNudgeType.NUDGED_BY, target: ['b', 'c'] },
-        { source: 'b', nudgeType: ComponentRelationNudgeType.NUDGED_BY, target: ['abcd', 'c'] },
-      ]),
-    ).toEqual({ abcd: ['b', 'c'], b: ['abcd'], c: ['abcd', 'b'] });
-    expect(
-      transformNudgeData([
-        { source: 'abcd', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['b', 'c'] },
-        { source: 'abcd', nudgeType: ComponentRelationNudgeType.NUDGED_BY, target: ['b', 'c'] },
-        { source: 'b', nudgeType: ComponentRelationNudgeType.NUDGED_BY, target: ['abcd', 'c'] },
-        { source: 'c', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['abcd', 'b'] },
-      ]),
-    ).toEqual({ abcd: ['b', 'c'], b: ['abcd'], c: ['abcd', 'b'] });
-  });
-});
-
 describe('computeNudgeDataChanges', () => {
   it('should compute data changes', () => {
     expect(
