@@ -84,6 +84,10 @@ export const DefineComponentRelationModal: React.FC<DefineComponentRelationModal
                         componentNames={componentNames}
                         groupedComponents={groupedComponents}
                         index={index}
+                        removeProps={{
+                          disableRemove: values.relations.length <= 1,
+                          onRemove: () => arrayHelpers.remove(index),
+                        }}
                       />
                       {index !== values.relations.length - 1 ? <Divider /> : null}
                     </>

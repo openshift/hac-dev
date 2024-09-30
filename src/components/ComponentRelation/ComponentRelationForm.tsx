@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Bullseye, Flex, FlexItem, Grid, GridItem, Radio } from '@patternfly/react-core';
+import { Bullseye, Flex, FlexItem, Grid, GridItem, Button, Radio } from '@patternfly/react-core';
+import { MinusCircleIcon } from '@patternfly/react-icons/dist/esm/icons/minus-circle-icon';
 import { useField } from 'formik';
 import { HelpTooltipIcon } from '../../shared';
 import {
@@ -12,12 +13,17 @@ type ComponentRelationProps = {
   componentNames: string[];
   groupedComponents: { [application: string]: string[] };
   index?: Number;
+  removeProps: {
+    disableRemove: boolean;
+    onRemove: () => void;
+  };
 };
 
 export const ComponentRelation: React.FC<ComponentRelationProps> = ({
   index,
   componentNames,
   groupedComponents,
+  removeProps: { disableRemove, onRemove },
 }) => {
   const sourceName = `relations.${index.toString()}.source`;
   const nudgeName = `relations.${index.toString()}.nudgeType`;
@@ -86,6 +92,16 @@ export const ComponentRelation: React.FC<ComponentRelationProps> = ({
           sourceComponentName={sourceValue}
           groupedComponents={groupedComponents}
         />
+      </GridItem>
+      <GridItem span={1}>
+        <Button
+          id={`remove-relation-${index}`}
+          variant="plain"
+          onClick={onRemove}
+          isDisabled={disableRemove}
+        >
+          <MinusCircleIcon />
+        </Button>
       </GridItem>
     </Grid>
   );

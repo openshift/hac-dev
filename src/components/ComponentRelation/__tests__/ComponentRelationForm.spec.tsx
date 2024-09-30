@@ -13,6 +13,10 @@ describe('ComponentRelationForm', () => {
         index={0}
         componentNames={['asdf', 'asd']}
         groupedComponents={{ app: ['asdf', 'asd'] }}
+        removeProps={{
+          disableRemove: true,
+          onRemove: jest.fn(),
+        }}
       />,
       {
         relations: [

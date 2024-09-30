@@ -1,5 +1,40 @@
 import { ComponentRelationNudgeType } from '../type';
-import { componentRelationValidationSchema, transformNudgeData } from '../utils';
+import {
+  componentRelationValidationSchema,
+  computeNudgeDataChanges,
+  transformNudgeData,
+} from '../utils';
+
+describe('computeNudgeDataChanges', () => {
+  it('should compute data changes', () => {
+    expect(
+      computeNudgeDataChanges(
+        [{ source: 'a', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['b', 'c'] }],
+        [],
+      ),
+    ).toEqual([{ source: 'a', nudgeType: ComponentRelationNudgeType.NUDGES, target: [] }]);
+    expect(
+      computeNudgeDataChanges(
+        [],
+        [{ source: 'a', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['b', 'c'] }],
+      ),
+    ).toEqual([{ source: 'a', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['b', 'c'] }]);
+    expect(
+      computeNudgeDataChanges(
+        [
+          { source: 'a', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['b'] },
+          { source: 'b', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['c'] },
+          { source: 'c', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['d'] },
+        ],
+        [{ source: 'b', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['c'] }],
+      ),
+    ).toEqual([
+      { source: 'b', nudgeType: ComponentRelationNudgeType.NUDGES, target: ['c'] },
+      { source: 'a', nudgeType: ComponentRelationNudgeType.NUDGES, target: [] },
+      { source: 'c', nudgeType: ComponentRelationNudgeType.NUDGES, target: [] },
+    ]);
+  });
+});
 
 describe('transformNudgeData', () => {
   it('should transform data', () => {
