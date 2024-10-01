@@ -412,10 +412,11 @@ describe('Advanced Happy path', () => {
 
     it('Verify Integration Tests Pipeline runs page', () => {
       UIhelper.clickTab('Pipeline runs');
-      UIhelper.verifyRowInTable('Pipeline run List', `${applicationName}-`, [
-        /Succeeded/,
-        /^Test$/,
-      ]);
+      UIhelper.verifyRowInTable(
+        'Pipeline run List',
+        `${integrationTestDetails.integrationTestName}-`,
+        [/Succeeded/, /^Test$/],
+      );
     });
   });
 
