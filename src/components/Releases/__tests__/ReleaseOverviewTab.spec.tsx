@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { mockReleases } from '../__data__/mock-release-data';
+import { mockReleases, mockReleaseWithManagedProcessing } from '../__data__/mock-release-data';
 import ReleaseOverviewTab from '../ReleaseOverviewTab';
 
 jest.mock('react-router-dom', () => ({
@@ -41,11 +41,15 @@ describe('ReleaseOverviewTab', () => {
     expect(screen.getByText('Release Target')).toBeVisible();
     expect(screen.getByText('test-target')).toBeVisible();
 
-    expect(screen.getByText('Release Strategy')).toBeVisible();
-    expect(screen.getByText('test-strategy')).toBeVisible();
-
     expect(screen.getByText('Pipeline Run')).toBeVisible();
-    expect(screen.getByText('test-strategy')).toBeVisible();
+    expect(screen.getByRole('link', { name: 'test-pipelinerun' }).getAttribute('href')).toBe(
+      '/application-pipeline/workspaces/target-ws/applications/test-app/pipelineruns/test-pipelinerun',
+    );
+  });
+
+  it('should render correct details if managedProcessing', () => {
+    render(<ReleaseOverviewTab release={mockReleaseWithManagedProcessing} />);
+    expect(screen.getByText('Pipeline Run')).toBeVisible();
     expect(screen.getByRole('link', { name: 'test-pipelinerun' }).getAttribute('href')).toBe(
       '/application-pipeline/workspaces/target-ws/applications/test-app/pipelineruns/test-pipelinerun',
     );
