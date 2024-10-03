@@ -72,7 +72,7 @@ export const TriggerReleaseFormPage: React.FC<Props> = ({ releasePlan, applicati
       validationSchema={triggerReleaseFormSchema}
       initialValues={initialValues}
     >
-      {(props) => <TriggerReleaseForm {...props} applicationName={applicationName} />}
+      {(props) => <TriggerReleaseForm {...props} />}
     </Formik>
   );
 };

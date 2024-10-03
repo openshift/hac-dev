@@ -17,17 +17,21 @@ describe('ReleasePlanDropdown', () => {
   });
 
   it('should show loading indicator if release plans arent loaded', () => {
-    useReleasePlansMock.mockReturnValue([[], false]);
-    formikRenderer(<ReleasePlanDropdown name="releasePlan" />);
+    const [releasePlans, loaded] = useReleasePlansMock.mockReturnValue([[], false])();
+    formikRenderer(
+      <ReleasePlanDropdown name="releasePlan" releasePlans={releasePlans} loaded={loaded} />,
+    );
     expect(screen.getByText('Loading release plans...')).toBeVisible();
   });
 
   it('should show dropdown if release plans are loaded', async () => {
-    useReleasePlansMock.mockReturnValue([
+    const [releasePlans, loaded] = useReleasePlansMock.mockReturnValue([
       [{ metadata: { name: 'rp1' } }, { metadata: { name: 'rp2' } }],
       true,
-    ]);
-    formikRenderer(<ReleasePlanDropdown name="releasePlan" />);
+    ])();
+    formikRenderer(
+      <ReleasePlanDropdown name="releasePlan" releasePlans={releasePlans} loaded={loaded} />,
+    );
     await act(async () => {
       fireEvent.click(screen.getByRole('button'));
     });
@@ -37,23 +41,29 @@ describe('ReleasePlanDropdown', () => {
   });
 
   it('should select current releasePlan by default', async () => {
-    useReleasePlansMock.mockReturnValue([
+    const [releasePlans, loaded] = useReleasePlansMock.mockReturnValue([
       [{ metadata: { name: 'rp1' } }, { metadata: { name: 'rp2' } }],
       true,
-    ]);
-    formikRenderer(<ReleasePlanDropdown name="releasePlan" />, { releasePlan: 'rp1' });
+    ])();
+    formikRenderer(
+      <ReleasePlanDropdown name="releasePlan" releasePlans={releasePlans} loaded={loaded} />,
+      { releasePlan: 'rp1' },
+    );
     expect(screen.getByText('rp1')).toBeVisible();
   });
 
   it('should change the release plan dropdown value', async () => {
-    useReleasePlansMock.mockReturnValue([
+    const [releasePlans, loaded] = useReleasePlansMock.mockReturnValue([
       [{ metadata: { name: 'rp1' } }, { metadata: { name: 'rp2' } }],
       true,
-    ]);
+    ])();
 
-    formikRenderer(<ReleasePlanDropdown name="releasePlan" />, {
-      targets: { application: 'app' },
-    });
+    formikRenderer(
+      <ReleasePlanDropdown name="releasePlan" releasePlans={releasePlans} loaded={loaded} />,
+      {
+        targets: { application: 'app' },
+      },
+    );
     expect(screen.queryByRole('button')).toBeInTheDocument();
 
     await act(async () => {
