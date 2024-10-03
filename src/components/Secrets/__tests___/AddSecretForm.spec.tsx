@@ -57,7 +57,7 @@ describe('AddSecretForm', () => {
 
     await waitFor(() => {
       screen.getByText('Secret type');
-      screen.getByText('Secret name');
+      screen.getByText('Select or enter secret name');
       screen.getByText('Labels');
     });
   });

@@ -164,7 +164,7 @@ export class Applications {
     }
     if (secret) {
       UIhelper.clickButton('Add secret');
-      cy.contains(applicationsPagePO.formGroup, 'Select or enter name').within(() => {
+      cy.contains(applicationsPagePO.formGroup, 'Select or enter secret name').within(() => {
         cy.get('input').clear().type(secret.secretName);
         cy.contains(
           'button',
