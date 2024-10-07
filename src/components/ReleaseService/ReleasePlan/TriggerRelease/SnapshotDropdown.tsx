@@ -29,6 +29,11 @@ export const SnapshotDropdown: React.FC<React.PropsWithChildren<SnapshotDropdown
     [filteredSnapshots],
   );
 
+  React.useEffect(() => {
+    // Reset snapshot dropdown value when applicationName changes
+    setValue('');
+  }, [loaded, props.applicationName, setValue]);
+
   return (
     <DropdownField
       {...props}
