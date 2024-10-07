@@ -7,14 +7,14 @@ import { ChangeVisibilityModal } from './ChangeVisibilityModal';
 
 const changeVisibilityModalLauncher = (workspace: KonfluxWorkspace) =>
   createRawModalLauncher(ChangeVisibilityModal, {
-    'data-testid': 'revoke-access-modal',
+    'data-testid': 'change-visibility-modal',
     title: 'Change visibility?',
     titleIconVariant: 'warning',
   })({ workspace });
 
 export const useWorkspaceActions = (workspace: KonfluxWorkspace): Action[] => {
   const showModal = useModalLauncher();
-  const isOwner = workspace?.metadata?.labels[WorkspaceLabels.IS_OWNER];
+  const isOwner = workspace?.metadata?.labels?.[WorkspaceLabels.IS_OWNER];
 
   return [
     {

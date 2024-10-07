@@ -5,7 +5,7 @@ export const workspaceTableColumnClasses = {
   kebab: 'pf-c-table__action',
 };
 
-const SecretsListHeader = () => {
+const WorkspaceListHeader = () => {
   return [
     {
       title: 'Name',
@@ -26,4 +26,4 @@ const SecretsListHeader = () => {
   ];
 };
 
-export default SecretsListHeader;
+export default WorkspaceListHeader;

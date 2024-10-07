@@ -51,12 +51,12 @@ export const ChangeVisibilityModal: React.FC<React.PropsWithChildren<Props>> = (
       setError(err.message || err.toString());
     }
     setSubmitting(false);
-    onClose(null, { submitClicked: true });
+    onClose && onClose(null, { submitClicked: true });
     navigate(`/application-pipeline/workspaces/${workspace.status?.space?.name}/applications`);
   };
 
   return (
-    <Modal {...modalProps} variant={ModalVariant.small}>
+    <Modal {...modalProps} variant={ModalVariant.small} data-testid="change-visibility-modal">
       <Stack hasGutter>
         <StackItem>
           <TextContent>
@@ -72,6 +72,7 @@ export const ChangeVisibilityModal: React.FC<React.PropsWithChildren<Props>> = (
                 </FlexItem>
                 <FlexItem alignSelf={{ default: 'alignSelfCenter' }}>
                   <Switch
+                    data-testid="visibility-switch"
                     hasCheckIcon={false}
                     isChecked={isChecked}
                     onChange={() => setChecked((checked) => !checked)}

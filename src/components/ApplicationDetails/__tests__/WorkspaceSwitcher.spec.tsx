@@ -115,4 +115,29 @@ describe('WorkspaceSwitcher', () => {
       '/application-pipeline/workspaces/test-ws-1/applications',
     );
   });
+
+  it('should navigate to application details on switch when on workspaces list', () => {
+    useLocationMock.mockReturnValue({
+      pathname: '/application-pipeline/workspaces-list',
+    });
+    renderWithContext({
+      kubesawWorkspaces: [
+        { metadata: { name: 'test-ws' } },
+        { metadata: { name: 'test-ws-1' } },
+        { metadata: { name: 'test-ws-2' } },
+      ],
+      konfluxWorkspaces: [
+        { metadata: { namespace: 'test-ws' } },
+        { metadata: { namespace: 'test-ws-1' } },
+        { metadata: { namespace: 'test-ws-2' } },
+      ],
+      workspace: 'test-ws',
+    });
+    act(() => screen.getByRole('button').click());
+
+    act(() => screen.getByText('test-ws-1').click());
+    expect(navigateMock).toHaveBeenCalledWith(
+      '/application-pipeline/workspaces/test-ws-1/applications',
+    );
+  });
 });
