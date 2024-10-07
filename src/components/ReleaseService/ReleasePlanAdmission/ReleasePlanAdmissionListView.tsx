@@ -96,8 +96,5 @@ const ReleasePlanAdmissionListView: React.FC<React.PropsWithChildren<unknown>> =
 };
 
 export default withPageAccessCheck(ReleasePlanAdmissionListView)({
-  accessReviewResources: [
-    { model: ReleasePlanAdmissionModel, verb: 'patch' },
-    { model: ReleasePlanAdmissionModel, verb: 'create' },
-  ],
+  accessReviewResources: [{ model: ReleasePlanAdmissionModel, verb: 'list' }],
 });
