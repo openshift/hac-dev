@@ -25,11 +25,16 @@ type ReleaseOverviewTabProps = {
   release: ReleaseKind;
 };
 
+const getPipelineRunFromRelease = (release: ReleaseKind): string => {
+  // backward compatibility until https://issues.redhat.com/browse/RELEASE-1109 is released.
+  return release.status?.processing?.pipelineRun ?? release.status?.managedProcessing?.pipelineRun;
+};
+
 const ReleaseOverviewTab: React.FC<React.PropsWithChildren<ReleaseOverviewTabProps>> = ({
   release,
 }) => {
   const { namespace, workspace } = useWorkspaceInfo();
-  const [pipelineRun, prWorkspace] = useWorkspaceResource(release.status?.processing?.pipelineRun);
+  const [pipelineRun, prWorkspace] = useWorkspaceResource(getPipelineRunFromRelease(release));
   const [releasePlan, releasePlanLoaded] = useK8sWatchResource<ReleasePlanKind>({
     name: release.spec.releasePlan,
     groupVersionKind: ReleasePlanGroupVersionKind,
@@ -121,12 +126,6 @@ const ReleaseOverviewTab: React.FC<React.PropsWithChildren<ReleaseOverviewTabPro
                 <DescriptionListTerm>Release Target</DescriptionListTerm>
                 <DescriptionListDescription>
                   <>{release.status?.target ?? '-'}</>
-                </DescriptionListDescription>
-              </DescriptionListGroup>
-              <DescriptionListGroup>
-                <DescriptionListTerm>Release Strategy</DescriptionListTerm>
-                <DescriptionListDescription>
-                  {release.status?.processing?.releaseStrategy?.split('/')[1] ?? '-'}
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>

@@ -15,6 +15,13 @@ export type ReleaseKind = K8sResourceCommon & {
     startTime?: string;
     completionTime?: string;
     automated?: boolean;
+    managedProcessing?: {
+      completionTime?: string;
+      pipelineRun?: string;
+      startTime?: string;
+      roleBinding?: string;
+    };
+    // keep this for backward compatibility
     processing?: {
       target?: string;
       pipelineRun?: string;
