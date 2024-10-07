@@ -1,4 +1,6 @@
+import { commonFetchJSON } from '@openshift/dynamic-plugin-sdk-utils';
 import { DataState, testPipelineRuns } from '../../__data__/pipelinerun-data';
+import { PipelineRunModel } from '../../models';
 import { PipelineRunKind, TaskRunKind } from '../../types';
 import {
   calculateDuration,
@@ -12,7 +14,9 @@ import {
   taskName,
   isPipelineV1Beta1,
   isTaskV1Beta1,
+  fetchPipelineRun,
 } from '../pipeline-utils';
+import { getFilteredPipelineRuns } from '../tekton-results';
 
 const samplePipelineRun = testPipelineRuns[DataState.SUCCEEDED];
 
@@ -246,5 +250,71 @@ describe('isPipelineV1Beta1', () => {
   it('should identify correct api version', () => {
     expect(isPipelineV1Beta1({ apiVersion: 'tekton.dev/v1beta1' } as any)).toBe(true);
     expect(isPipelineV1Beta1({ apiVersion: 'tekton.dev/v1' } as any)).toBe(false);
+  });
+});
+
+jest.mock('@openshift/dynamic-plugin-sdk-utils', () => {
+  const actual = jest.requireActual('@openshift/dynamic-plugin-sdk-utils');
+  return { ...actual, commonFetchJSON: jest.fn() };
+});
+jest.mock('../tekton-results', () => ({ getFilteredPipelineRuns: jest.fn() }));
+
+const mockCommonFetchJSON = commonFetchJSON as unknown as jest.Mock;
+const mockGetFilteredPipelineRun = getFilteredPipelineRuns as jest.Mock;
+describe('fetchPipelineRun', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it('should call commonFetchJSON to fetch pipeline run', async () => {
+    const workspace = 'test-workspace';
+    const namespace = 'test-namespace';
+    const pipelineName = 'pipeline-mock';
+    mockCommonFetchJSON.mockReturnValue({ metadata: { name: pipelineName } } as PipelineRunKind);
+    await fetchPipelineRun(workspace, namespace, pipelineName);
+    expect(mockCommonFetchJSON).toHaveBeenCalledTimes(1);
+    expect(mockGetFilteredPipelineRun).not.toHaveBeenCalled();
+    expect(mockCommonFetchJSON).toHaveBeenCalledWith(
+      `/workspaces/${workspace}/apis/${PipelineRunModel.apiGroup}/${PipelineRunModel.apiVersion}/namespaces/${namespace}/pipelineruns/${pipelineName}`,
+    );
+  });
+
+  it('should call getFilteredPipelinerun to fetch pipeline run when commonFetchJSON throws 404 error', async () => {
+    const workspace = 'test-workspace';
+    const namespace = 'test-namespace';
+    const pipelineName = 'pipeline-mock';
+    mockCommonFetchJSON.mockRejectedValue({ code: 404 });
+    mockGetFilteredPipelineRun.mockReturnValue([[]]);
+    try {
+      await fetchPipelineRun(workspace, namespace, pipelineName);
+    } catch (e) {
+      expect(e.code).toEqual(404);
+    }
+    expect(mockCommonFetchJSON).toHaveBeenCalledTimes(1);
+    expect(mockCommonFetchJSON).toHaveBeenCalledWith(
+      `/workspaces/${workspace}/apis/${PipelineRunModel.apiGroup}/${PipelineRunModel.apiVersion}/namespaces/${namespace}/pipelineruns/${pipelineName}`,
+    );
+    expect(mockGetFilteredPipelineRun).toHaveBeenCalledTimes(1);
+    expect(mockGetFilteredPipelineRun).toHaveBeenCalledWith(
+      workspace,
+      namespace,
+      `data.metadata.name=="${pipelineName}"`,
+    );
+  });
+
+  it('should not call getFilteredPipelinerun to fetch pipeline run when commonFetchJSON throws error other than 404', async () => {
+    const workspace = 'test-workspace';
+    const namespace = 'test-namespace';
+    const pipelineName = 'pipeline-mock';
+    mockCommonFetchJSON.mockRejectedValue({ code: 403 });
+    try {
+      await fetchPipelineRun(workspace, namespace, pipelineName);
+    } catch (e) {
+      expect(e.code).toEqual(403);
+    }
+    expect(mockCommonFetchJSON).toHaveBeenCalledTimes(1);
+    expect(mockCommonFetchJSON).toHaveBeenCalledWith(
+      `/workspaces/${workspace}/apis/${PipelineRunModel.apiGroup}/${PipelineRunModel.apiVersion}/namespaces/${namespace}/pipelineruns/${pipelineName}`,
+    );
+    expect(mockGetFilteredPipelineRun).toHaveBeenCalledTimes(0);
   });
 });

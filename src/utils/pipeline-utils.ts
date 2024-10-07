@@ -1,3 +1,4 @@
+import { commonFetchJSON } from '@openshift/dynamic-plugin-sdk-utils';
 import curry from 'lodash/fp/curry';
 import merge from 'lodash-es/merge';
 import { preferredNameAnnotation } from '../consts/pipeline';
@@ -14,6 +15,7 @@ import {
   TektonResultsRun,
 } from '../types';
 import { GitOpsDeploymentHealthStatus } from '../types/gitops-deployment';
+import { getFilteredPipelineRuns } from './tekton-results';
 
 export const COMPONENT_DESC =
   'A component is an image built from code in a source repository. Applications are sets of components that run together on environments.';
@@ -349,3 +351,32 @@ const getPipelineRunStatusResultForKey = curry(
   },
 );
 export const getPipelineRunStatusResultForName = getPipelineRunStatusResultForKey('name');
+
+// [TODO]: Remove this method in the new konflux-ui once we have a way to pass the workspace for API calls.
+// This should be done using the usePipelineRun hook
+export const fetchPipelineRun = async (
+  workspace: string,
+  namespace: string,
+  pipelineRunName: string,
+) => {
+  try {
+    const pr: PipelineRunKind = await commonFetchJSON(
+      `/workspaces/${workspace}/apis/${PipelineRunModel.apiGroup}/${PipelineRunModel.apiVersion}/namespaces/${namespace}/pipelineruns/${pipelineRunName}`,
+    );
+    return pr;
+  } catch (e) {
+    // if pipeline run is not found query the tekton results api
+    if (e?.code === 404) {
+      const records = await getFilteredPipelineRuns(
+        workspace,
+        namespace,
+        `data.metadata.name=="${pipelineRunName}"`,
+      );
+      if (records[0].length === 0) {
+        throw { code: 404, message: 'Pipeline run not found' };
+      }
+      return records[0]?.[0];
+    }
+    throw e;
+  }
+};

@@ -276,7 +276,7 @@ export const getFilteredRecord = async <R extends K8sResourceCommon>(
   return value;
 };
 
-const getFilteredPipelineRuns = (
+export const getFilteredPipelineRuns = (
   workspace: string,
   namespace: string,
   filter: string,
