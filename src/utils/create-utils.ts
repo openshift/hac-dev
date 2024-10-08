@@ -40,8 +40,12 @@ import {
   ImageRepositoryVisibility,
 } from '../types';
 import { ComponentSpecs } from './../types/component';
-import { BuildRequest, BUILD_REQUEST_ANNOTATION } from './component-utils';
-
+import {
+  BuildRequest,
+  BUILD_REQUEST_ANNOTATION,
+  GIT_PROVIDER_ANNOTATION,
+  GITLAB_PROVIDER_URL_ANNOTATION,
+} from './component-utils';
 export const sanitizeName = (name: string) => name.split(/ |\./).join('-').toLowerCase();
 /**
  * Create HAS Application CR
@@ -107,7 +111,17 @@ export const createComponent = (
   enablePac: boolean = true,
   annotations?: { [key: string]: string },
 ) => {
-  const { componentName, containerImage, source, replicas, resources, env, targetPort } = component;
+  const {
+    componentName,
+    gitProviderAnnotation,
+    gitURLAnnotation,
+    containerImage,
+    source,
+    replicas,
+    resources,
+    env,
+    targetPort,
+  } = component;
 
   const name = component.componentName.split(/ |\./).join('-').toLowerCase();
 
@@ -143,8 +157,14 @@ export const createComponent = (
     verb === 'update' ? { ...originalComponent, spec: newComponent.spec } : newComponent;
 
   // merge additional annotations
-  if (annotations) {
-    resource.metadata.annotations = { ...resource.metadata.annotations, ...annotations };
+  if (annotations || gitProviderAnnotation || gitURLAnnotation) {
+    // Add gitlab annotaions in case of gitlab repo
+    const newAnnotations = annotations;
+    if (gitProviderAnnotation || gitURLAnnotation) {
+      newAnnotations[GIT_PROVIDER_ANNOTATION] = gitProviderAnnotation;
+      newAnnotations[GITLAB_PROVIDER_URL_ANNOTATION] = gitURLAnnotation;
+    }
+    resource.metadata.annotations = { ...resource.metadata.annotations, ...newAnnotations };
   }
 
   return verb === 'create'

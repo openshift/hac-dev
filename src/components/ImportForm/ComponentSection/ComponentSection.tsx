@@ -8,6 +8,7 @@ import { SourceSection } from './SourceSection';
 
 export const ComponentSection = () => {
   const { values } = useFormikContext<ImportFormValues>();
+
   return (
     <FormSection>
       <TextContent>
@@ -28,6 +29,7 @@ export const ComponentSection = () => {
         isRequired
         data-testid="component-name"
       />
+
       {values.source.git.url ? (
         <GitRepoLink
           url={values.source.git.url}

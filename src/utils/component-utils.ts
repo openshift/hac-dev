@@ -14,6 +14,14 @@ export const BUILD_REQUEST_ANNOTATION = 'build.appstudio.openshift.io/request';
 
 export const BUILD_STATUS_ANNOTATION = 'build.appstudio.openshift.io/status';
 
+export const GIT_PROVIDER_ANNOTATION = 'git-provider';
+export const GIT_PROVIDER_ANNOTATION_VALUE = {
+  GITHUB: 'github',
+  GITLAB: 'gitlab',
+  OTHERS: 'others',
+};
+export const GITLAB_PROVIDER_URL_ANNOTATION = 'git-provider-url';
+
 export enum ComponentBuildState {
   enabled = 'enabled',
   disabled = 'disabled',

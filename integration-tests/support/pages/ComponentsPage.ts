@@ -40,9 +40,12 @@ export class ComponentPage extends AbstractWizardPage {
   }
 
   setPipeline(pipeline: string) {
-    cy.get(ComponentsPagePO.dropdown, { timeout: 80000 }).eq(0).should('be.enabled').click();
-    cy.get(ComponentsPagePO.dropdown).get('a').contains(pipeline).click();
+    cy.contains('.pf-v5-c-form__group', 'Pipeline').within(($form) => {
+      cy.get(ComponentsPagePO.dropdown).click();
+      cy.contains('li', pipeline).click();
+    });
   }
+
   public componentName: string;
 
   editComponentName(newName: string) {

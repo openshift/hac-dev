@@ -3,11 +3,14 @@ import { ValidatedOptions } from '@patternfly/react-core';
 import { useField, useFormikContext } from 'formik';
 import { InputField, SwitchField } from 'formik-pf';
 import GitUrlParse from 'git-url-parse';
+import { detectGitType, GitProvider } from '../../../shared/utils/git-utils';
+import { GIT_PROVIDER_ANNOTATION_VALUE } from '../../../utils/component-utils';
 import { ImportFormValues } from '../type';
 import GitOptions from './GitOptions';
 
 export const SourceSection = () => {
   const [, { touched, error }] = useField('source.git.url');
+  const [isGitAdvancedOpen, setGitAdvancedOpen] = React.useState<boolean>(false);
   const { touched: touchedValues, setFieldValue } = useFormikContext<ImportFormValues>();
   const validated = touched
     ? touched && !error
@@ -17,14 +20,34 @@ export const SourceSection = () => {
 
   const handleChange = React.useCallback(
     (event) => {
-      if (validated && !touchedValues.componentName) {
+      if (validated) {
+        const gitType = detectGitType(event.target?.value);
+        if (gitType !== GitProvider.GITHUB && gitType !== GitProvider.GITLAB) {
+          setFieldValue('gitProviderAnnotation', '');
+          setGitAdvancedOpen(true);
+        }
+        if (gitType === GitProvider.GITHUB) {
+          setFieldValue('gitProviderAnnotation', GIT_PROVIDER_ANNOTATION_VALUE.GITHUB);
+          setGitAdvancedOpen(false);
+        }
+        if (gitType === GitProvider.GITLAB) {
+          setFieldValue('gitProviderAnnotation', GIT_PROVIDER_ANNOTATION_VALUE.GITLAB);
+          setGitAdvancedOpen(false);
+        }
+
+        let parsed: GitUrlParse.GitUrl;
         let name: string;
         try {
-          name = GitUrlParse(event.target?.value ?? '').name;
+          parsed = GitUrlParse(event.target?.value ?? '');
+          setFieldValue('gitURLAnnotation', parsed?.resource);
+          name = parsed.name;
         } catch {
           name = '';
+          setFieldValue('gitURLAnnotation', '');
         }
-        setFieldValue('componentName', name);
+        if (!touchedValues.componentName) {
+          setFieldValue('componentName', name);
+        }
       }
     },
     [setFieldValue, touchedValues.componentName, validated],
@@ -43,7 +66,9 @@ export const SourceSection = () => {
       {validated === ValidatedOptions.success ? (
         <SwitchField name="isPrivateRepo" label="Is this a private repository?" />
       ) : null}
-      {validated === ValidatedOptions.success ? <GitOptions /> : null}
+      {validated === ValidatedOptions.success ? (
+        <GitOptions isGitAdvancedOpen={isGitAdvancedOpen} setGitAdvancedOpen={setGitAdvancedOpen} />
+      ) : null}
     </>
   );
 };

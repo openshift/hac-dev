@@ -40,6 +40,8 @@ export const createResources = async (
     source,
     application,
     componentName,
+    gitProviderAnnotation,
+    gitURLAnnotation,
     inAppContext,
     importSecrets = [],
     pipeline,
@@ -66,7 +68,7 @@ export const createResources = async (
   }
   if (showComponent) {
     await createComponent(
-      { componentName, application, source },
+      { componentName, application, source, gitProviderAnnotation, gitURLAnnotation },
       applicationName,
       namespace,
       '',
@@ -94,7 +96,7 @@ export const createResources = async (
     await createSecrets(importSecrets, workspace, namespace, true);
 
     createdComponent = await createComponent(
-      { componentName, application, source },
+      { componentName, application, gitProviderAnnotation, source, gitURLAnnotation },
       applicationName,
       namespace,
       '',
