@@ -37,6 +37,7 @@ const ApplicationDetails: React.FC<React.PropsWithChildren<HacbsApplicationDetai
   const defineComponentRelationAction = useComponentRelationAction(applicationName);
   const { namespace, workspace } = useWorkspaceInfo();
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
+  const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
   const [canCreateIntegrationTest] = useAccessReviewForModel(
     IntegrationTestScenarioModel,
     'create',
@@ -94,6 +95,8 @@ const ApplicationDetails: React.FC<React.PropsWithChildren<HacbsApplicationDetai
               });
               showModal(createCustomizeAllPipelinesModalLauncher(applicationName, namespace));
             },
+            disabledTooltip: 'You do not have access to manage build pipelines',
+            isDisabled: !canPatchComponent,
             key: 'manage-build-pipelines',
             label: 'Manage build pipelines',
           },

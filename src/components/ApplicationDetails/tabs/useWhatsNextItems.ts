@@ -17,6 +17,7 @@ export const useWhatsNextItems = (applicationName: string) => {
   const { workspace, namespace } = useWorkspaceInfo();
   const { url: githubAppURL } = useApplicationPipelineGitHubApp();
   const [canCreateComponent] = useAccessReviewForModel(ComponentModel, 'create');
+  const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
   const [canCreateIntegrationTest] = useAccessReviewForModel(
     IntegrationTestScenarioModel,
     'create',
@@ -122,6 +123,8 @@ export const useWhatsNextItems = (applicationName: string) => {
         'Add some automation by upgrading your default build pipelines to custom build pipelines.',
       icon: pipelineIcon,
       cta: {
+        disabled: !canPatchComponent,
+        disabledTooltip: "You don't have access to manage build pipelines",
         label: 'Manage build pipelines',
         onClick: () =>
           showModal(createCustomizeAllPipelinesModalLauncher(applicationName, namespace)),
