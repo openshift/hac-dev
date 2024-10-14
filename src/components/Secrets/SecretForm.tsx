@@ -17,20 +17,23 @@ type SecretFormProps = RawComponentProps & {
   existingSecrets: string[];
 };
 
-const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existingSecrets }) => {
+const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({
+  existingSecrets,
+  keyValues,
+}) => {
   const { values, setFieldValue } = useFormikContext<SecretFormValues>();
   const defaultKeyValues = [{ key: '', value: '', readOnlyKey: false }];
   const defaultImageKeyValues = [{ key: '.dockerconfigjson', value: '', readOnlyKey: true }];
 
-  const initialOptions = getSupportedPartnerTaskSecrets().filter(
-    (secret) => !existingSecrets.includes(secret.value),
-  );
+  const partnerTaskSecrets = getSupportedPartnerTaskSecrets().map((secret) => secret.value);
+  const initialOptions = existingSecrets
+    .filter((secret) => !partnerTaskSecrets.includes(secret))
+    .map((secret) => ({ value: secret }));
   const [options, setOptions] = React.useState(initialOptions);
   const currentTypeRef = React.useRef(values.type);
 
   const clearKeyValues = () => {
-    const newKeyValues = values.keyValues.filter((kv) => !kv.readOnlyKey);
-    setFieldValue('keyValues', [...(newKeyValues.length ? newKeyValues : defaultKeyValues)]);
+    setFieldValue('keyValues', defaultKeyValues);
   };
 
   const resetKeyValues = () => {
@@ -80,9 +83,7 @@ const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existi
         toggleId="secret-name-toggle"
         toggleAriaLabel="secret-name-dropdown"
         onClear={() => {
-          if (currentTypeRef.current !== values.type || isPartnerTask(values.secretName)) {
-            clearKeyValues();
-          }
+          clearKeyValues();
         }}
         onSelect={(e, value) => {
           if (isPartnerTask(value)) {
@@ -90,6 +91,9 @@ const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existi
               ...values.keyValues.filter((kv) => !kv.readOnlyKey && (!!kv.key || !!kv.value)),
               ...getSupportedPartnerTaskKeyValuePairs(value),
             ]);
+          } else {
+            const secretValueIndex = values.existingSecrets.findIndex((secret) => secret === value);
+            setFieldValue('keyValues', keyValues[secretValueIndex]);
           }
           setFieldValue('secretName', value);
         }}
