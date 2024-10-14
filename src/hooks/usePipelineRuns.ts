@@ -3,13 +3,14 @@ import {
   K8sGroupVersionKind,
   K8sResourceCommon,
   Selector,
-  useK8sWatchResource,
+  WatchK8sResource,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { differenceBy, uniqBy } from 'lodash-es';
 import { PipelineRunEventType, PipelineRunLabel, PipelineRunType } from '../consts/pipelinerun';
 import { PipelineRunGroupVersionKind, TaskRunGroupVersionKind } from '../models';
 import { useDeepCompareMemoize } from '../shared';
 import { PipelineRunKind, TaskRunKind } from '../types';
+import { chunkMatchExpressions, useChunkedK8SWatchResources } from '../utils/chunk-utils';
 import { getCommitSha } from '../utils/commits-utils';
 import { pipelineRunStatus, runStatus } from '../utils/pipeline-utils';
 import { EQ } from '../utils/tekton-results';
@@ -46,7 +47,36 @@ const useRuns = <Kind extends K8sResourceCommon>(
       : null;
   }, [groupVersionKind, namespace, optionsMemo, isList]);
 
-  const [resources, loaded, error] = useK8sWatchResource(watchOptions);
+  const chunkedWatchOptions = React.useMemo(() => {
+    // if there are no expressions to chunk, return the watchOptions as is
+    if (!optionsMemo?.selector) {
+      return watchOptions
+        ? {
+            'chunk-0': {
+              ...watchOptions,
+            },
+          }
+        : {};
+    }
+
+    // chunk the matchExpressions for the component label
+    return chunkMatchExpressions(optionsMemo.selector, PipelineRunLabel.COMPONENT).reduce(
+      (acc, selector, index) => {
+        return watchOptions
+          ? Object.assign(acc, {
+              [`chunk-${index}`]: {
+                ...watchOptions,
+                selector,
+              },
+            })
+          : {};
+      },
+      {} as Record<string, WatchK8sResource>,
+    );
+  }, [watchOptions, optionsMemo]);
+
+  const [resources, loaded, error] = useChunkedK8SWatchResources(chunkedWatchOptions);
+
   // if a pipeline run was removed from etcd, we want to still include it in the return value without re-querying tekton-results
   const etcdRuns = React.useMemo(() => {
     if (!loaded || error) {

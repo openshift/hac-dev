@@ -6,8 +6,10 @@ import {
   MatchLabels,
   Selector,
 } from '@openshift/dynamic-plugin-sdk-utils';
+import { concat } from 'lodash-es';
 import { PipelineRunLabel } from '../consts/pipelinerun';
 import { PipelineRunKindV1Beta1, TaskRunKindV1Beta1 } from '../types';
+import { chunkMatchExpressions } from './chunk-utils';
 
 // REST API spec
 // https://github.com/tektoncd/results/blob/main/docs/api/rest-api-spec.md
@@ -218,14 +220,18 @@ export const getFilteredRecord = async <R extends K8sResourceCommon>(
   nextPageToken?: string,
   cacheKey?: string,
 ): Promise<[R[], RecordsList, boolean?]> => {
-  const url = createTektonResultsUrl(
-    workspace,
-    namespace,
-    dataType,
-    filter,
-    options,
-    nextPageToken,
-  );
+  const urls = options?.selector
+    ? chunkMatchExpressions(options.selector, PipelineRunLabel.COMPONENT).map((selector) =>
+        createTektonResultsUrl(
+          workspace,
+          namespace,
+          dataType,
+          filter,
+          { ...options, selector },
+          nextPageToken,
+        ),
+      )
+    : [createTektonResultsUrl(workspace, namespace, dataType, filter, options, nextPageToken)];
 
   if (cacheKey) {
     const result = CACHE[cacheKey];
@@ -244,7 +250,8 @@ export const getFilteredRecord = async <R extends K8sResourceCommon>(
     }
   }
   InFlightStore[cacheKey] = true;
-  const value = await (async (): Promise<[R[], RecordsList]> => {
+
+  const fetchRecords = async (url: string): Promise<[R[], RecordsList]> => {
     try {
       let list: RecordsList = await commonFetchJSON(url);
       if (options?.limit >= 0) {
@@ -267,7 +274,19 @@ export const getFilteredRecord = async <R extends K8sResourceCommon>(
       }
       throw e;
     }
-  })();
+  };
+
+  const value = await Promise.all(urls.map((url) => fetchRecords(url))).then((resp) => {
+    return resp.reduce(
+      ([accArray, accObj], [currArray, currObj]) => {
+        return [
+          concat(accArray, currArray),
+          { ...accObj, records: currObj.records.concat(accObj?.records ?? []) },
+        ];
+      },
+      [[], {}] as [R[], RecordsList],
+    );
+  });
 
   if (cacheKey) {
     InFlightStore[cacheKey] = false;
