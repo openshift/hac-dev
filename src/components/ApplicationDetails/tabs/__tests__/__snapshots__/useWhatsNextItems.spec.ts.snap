@@ -100,6 +100,8 @@ Array [
         "link_name": "manage-build-pipelines",
         "workspace": undefined,
       },
+      "disabled": false,
+      "disabledTooltip": "You don't have access to manage build pipelines",
       "label": "Manage build pipelines",
       "onClick": [Function],
     },

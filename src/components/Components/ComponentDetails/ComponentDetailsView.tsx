@@ -1,24 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Bullseye,
-  Button,
-  ButtonVariant,
-  Spinner,
-  Text,
-  TextVariants,
-} from '@patternfly/react-core';
+import { Bullseye, ButtonVariant, Spinner, Text, TextVariants } from '@patternfly/react-core';
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
 import { useComponent } from '../../../hooks/useComponents';
 import pipelineImg from '../../../imgs/Pipeline.svg';
-import { ComponentGroupVersionKind } from '../../../models';
+import { ComponentGroupVersionKind, ComponentModel } from '../../../models';
 import DetailsPage, { Action } from '../../../shared/components/details-page/DetailsPage';
 import ErrorEmptyState from '../../../shared/components/empty-state/ErrorEmptyState';
 import { HttpError } from '../../../shared/utils/error/http-error';
 import { useApplicationBreadcrumbs } from '../../../utils/breadcrumb-utils';
+import { useAccessReviewForModel } from '../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { useComponentActions } from '../../ApplicationDetails/component-actions';
+import { ButtonWithAccessTooltip } from '../../ButtonWithAccessTooltip';
 import { createCustomizeComponentPipelineModalLauncher } from '../../CustomizedPipeline/CustomizePipelinesModal';
 import { GettingStartedCard } from '../../GettingStartedCard/GettingStartedCard';
 import { useModalLauncher } from '../../modal/ModalProvider';
@@ -43,6 +38,7 @@ const ComponentDetailsView: React.FC<React.PropsWithChildren<ComponentDetailsVie
   const applicationBreadcrumbs = useApplicationBreadcrumbs();
   const showModal = useModalLauncher();
   const [component, loaded, componentError] = useComponent(namespace, componentName);
+  const [canPatchComponent] = useAccessReviewForModel(ComponentModel, 'patch');
 
   const componentActions = useComponentActions(loaded ? component : undefined, componentName);
   const actions: Action[] = React.useMemo(
@@ -101,9 +97,11 @@ const ComponentDetailsView: React.FC<React.PropsWithChildren<ComponentDetailsVie
               Using the Advanced or Custom build pipeline, you can enable all additional tasks for
               added security.
             </div>
-            <Button
+            <ButtonWithAccessTooltip
               className="pf-u-mt-xl"
               variant={ButtonVariant.secondary}
+              isDisabled={!canPatchComponent}
+              tooltip="You don't have access to edit the build pipeline plan"
               onClick={() =>
                 showModal(
                   createCustomizeComponentPipelineModalLauncher(
@@ -114,7 +112,7 @@ const ComponentDetailsView: React.FC<React.PropsWithChildren<ComponentDetailsVie
               }
             >
               Edit build pipeline plan
-            </Button>
+            </ButtonWithAccessTooltip>
           </GettingStartedCard>
         }
         breadcrumbs={[

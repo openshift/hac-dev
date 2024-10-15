@@ -31,6 +31,8 @@ export const useComponentActions = (component: ComponentKind, name: string): Act
           ),
         id: 'manage-build-pipeline',
         label: 'Edit build pipeline plan',
+        disabled: !canPatchComponent,
+        disabledTooltip: "You don't have access to edit the build pipeline plan",
         analytics: {
           link_name: 'manage-build-pipeline',
           link_location: 'component-list',
