@@ -121,7 +121,7 @@ const IntegrationTestParams: React.FC<React.PropsWithChildren<IntegrationTestPar
                               <DataListItemCells
                                 dataListCells={[
                                   <DataListCell key="param-title" width={5}>
-                                    <TextContent>{`Parameter${i + 1}`}</TextContent>
+                                    <TextContent>{p.name}</TextContent>
                                   </DataListCell>,
 
                                   <DataListCell key="remove-param-button" width={3}>
