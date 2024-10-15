@@ -65,11 +65,19 @@ export class UIhelper {
     return cy.contains(UIhelperPO.pf5_button, new RegExp(`^\\s*${label}\\s*$`)).click();
   }
 
-  static clickLink(link: string, options?: { invoke?: boolean; force?: boolean }) {
+  static clickLink(
+    link: string,
+    options?: { invoke?: boolean; force?: boolean; removeTarget?: boolean },
+  ) {
     if (options?.invoke) {
       return cy.contains('a', new RegExp(`^\\s*${link}\\s*$`)).invoke('click');
     } else if (options?.force) {
       return cy.contains('a', new RegExp(`^\\s*${link}\\s*$`)).click({ force: true });
+    } else if (options?.removeTarget) {
+      return cy
+        .contains('a', new RegExp(`^\\s*${link}\\s*$`))
+        .invoke('removeAttr', 'target')
+        .click();
     }
     return cy.contains('a', new RegExp(`^\\s*${link}\\s*$`)).click();
   }

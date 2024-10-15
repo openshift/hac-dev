@@ -1,4 +1,5 @@
 import { NavItem } from '../support/constants/PageTitle';
+import { atlasPO } from '../support/pageObjects/atlas-po';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
 import {
   ComponentDetailsPage,
@@ -150,14 +151,23 @@ describe('Advanced Happy path', () => {
       UIhelper.clickTab('Details');
     });
 
-    // skipping due to https://issues.redhat.com/browse/HAC-5807
-    it.skip('Verify SBOM and logs', () => {
-      UIhelper.clickLink('View SBOM');
-      DetailsTab.verifyLogs('"bomFormat": "CycloneDX"');
+    it('Verify SBOM and logs', () => {
+      cy.url().then((url) => {
+        UIhelper.clickLink('View SBOM', { removeTarget: true });
+        cy.origin('https://auth.stage.redhat.com', { args: { atlasPO } }, ({ atlasPO }) => {
+          cy.get(atlasPO.username).type(Cypress.env('ATLAS_USERNAME'));
+          cy.get(atlasPO.password).type(Cypress.env('ATLAS_PASSWORD'), { log: false });
+          cy.get(atlasPO.loginButton).click();
+        });
+        cy.origin('https://atlas.stage.devshift.net/', { args: { atlasPO } }, ({ atlasPO }) => {
+          cy.contains(atlasPO.headerTitle, 'sha256:').should('be.visible');
+          cy.contains(atlasPO.cardTitle, 'Metadata').should('be.visible');
+        });
+        cy.visit(url);
+      });
     });
 
     it('Execute and validate using Cosign', () => {
-      Applications.clickBreadcrumbLink(componentInfo.firstPipelineRunName);
       DetailsTab.downloadSBOMAndCheckUsingCosign();
     });
   });
