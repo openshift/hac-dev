@@ -4,7 +4,7 @@ import { SelectVariant } from '@patternfly/react-core/deprecated';
 import { useFormikContext } from 'formik';
 import { DropdownItemObject, SelectInputField } from '../../shared';
 import KeyValueFileInputField from '../../shared/components/formik-fields/key-value-file-input-field/KeyValueFileInputField';
-import { SecretFormValues, SecretTypeDropdownLabel } from '../../types';
+import { SecretFormValues, SecretTypeDropdownLabel, KeyValueEntry } from '../../types';
 import { RawComponentProps } from '../modal/createModalLauncher';
 import SecretTypeSelector from './SecretTypeSelector';
 import {
@@ -15,6 +15,7 @@ import {
 
 type SecretFormProps = RawComponentProps & {
   existingSecrets: string[];
+  keyValues: KeyValueEntry;
 };
 
 const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({

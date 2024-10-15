@@ -53,11 +53,11 @@ const SecretModal: React.FC<React.PropsWithChildren<SecretModalProps>> = ({
               readOnlyKey: true,
             }));
           })
-      : [];
+      : defaultKeyValues;
   const secretNames =
     secrets && secretsLoaded
       ? secrets?.filter((secret) => secret.type === 'Opaque')?.map((secret) => secret.metadata.name)
-      : [];
+      : defaultKeyValues;
   const initialValues: SecretModalValues = {
     secretName: '',
     type: SecretTypeDropdownLabel.opaque,
