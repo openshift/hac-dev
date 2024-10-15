@@ -91,7 +91,7 @@ describe('UsernameSection', () => {
     validateMock.mockResolvedValue(true);
     formikRenderer(<UsernameSection />, { usernames: [] });
     await act(async () => {
-      fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'user-123' } });
+      fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'user-12.3' } });
     });
     await waitFor(() => expect(screen.getByText('Validated')).toBeVisible());
 
