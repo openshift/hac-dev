@@ -36,8 +36,32 @@ export const supportedPartnerTasksSecrets: { [key: string]: PartnerTask } = {
     name: 'snyk-secret',
     providerUrl: 'https://snyk.io/',
     tokenKeyName: 'snyk_token',
-    keyValuePairs: [{ key: 'snyk_token', value: '', readOnlyKey: true }],
+    keyValuePairs: [{ key: 'snyk_token', value: '', readOnlyKey: true, readOnlyValue: false }],
   },
+};
+
+export const secretsList = (secrets) => {
+  const partnerSecretNames = {
+    'snyk-secret': supportedPartnerTasksSecrets.snyk,
+  };
+  secrets
+    .filter((secret) => secret.type === 'Opaque')
+    .forEach((secret) => {
+      partnerSecretNames[secret.metadata.name] = {
+        type: secret.type,
+        name: secret.metadata.name,
+        providerUrl:
+          secret.metadata.name === 'snyk-secret' ? 'https://snyk.io/' : 'https://kube.io',
+        tokenKeyName:
+          secret.metadata.name === 'snyk-secret' ? 'secret_token' : secret.metadata.name,
+        keyValuePairs: Object.keys(secret.data).map((key) => ({
+          key,
+          value: Base64.decode(secret.data[key]),
+          readOnlyKey: true,
+        })),
+      };
+    });
+  return partnerSecretNames;
 };
 
 export const getSupportedPartnerTaskSecrets = () => {
