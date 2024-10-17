@@ -29,7 +29,7 @@ const SecretSection = () => {
     secrets && secretsLoaded
       ? secrets
           ?.filter((rs) => partnerTaskNames.includes(rs.metadata.name))
-          ?.map((s) => s.metadata.name) || []
+          ?.map((s) => s.metadata.name)
       : [];
 
   const onSubmit = React.useCallback(
