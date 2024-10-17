@@ -64,6 +64,20 @@ describe('useEnterpriseContractResultFromLogs', () => {
     expect(result.current[0][0].warnings).toEqual(undefined);
   });
 
+  it('should call tknResults when taskRun is empty array', async () => {
+    mockUseTaskRuns.mockReturnValueOnce([[], true, undefined]);
+    mockGetTaskRunLogs.mockReturnValue(`asdfcdfadsf
+      [report-json] { "components": [] }
+      `);
+    const { result } = renderHook(() => useEnterpriseContractResultFromLogs('dummy-abcd'));
+    const [, loaded] = result.current;
+    expect(mockCommmonFetchJSON).toHaveBeenCalled();
+    expect(loaded).toBe(true);
+    expect(mockCommmonFetchJSON).toHaveBeenLastCalledWith(
+      '/api/v1/namespaces/test-ns/pods/pod-acdf/log?container=step-report-json&follow=true',
+    );
+  });
+
   it('should filter out all 404 image url components from EC results', async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useEnterpriseContractResultFromLogs('dummy-abcd'),

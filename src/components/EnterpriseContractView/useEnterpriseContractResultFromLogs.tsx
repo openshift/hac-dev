@@ -21,7 +21,7 @@ export const useEnterpriseContractResultFromLogs = (
   const [ecJson, setEcJson] = React.useState<EnterpriseContractResult>();
   const [ecLoaded, setEcLoaded] = React.useState<boolean>(false);
   const ecResultOpts = React.useMemo(() => {
-    const podName = loaded && !error ? taskRun[0].status.podName : null;
+    const podName = loaded && !error ? taskRun?.[0]?.status?.podName : null;
     return podName
       ? {
           ns: namespace,
@@ -37,6 +37,9 @@ export const useEnterpriseContractResultFromLogs = (
 
   React.useEffect(() => {
     let unmount = false;
+    if (loaded && !ecResultOpts) {
+      setFetchTknLogs(true);
+    }
     if (ecResultOpts) {
       commonFetchJSON(getK8sResourceURL(PodModel, undefined, ecResultOpts))
         .then((res: EnterpriseContractResult) => {
@@ -58,7 +61,7 @@ export const useEnterpriseContractResultFromLogs = (
     return () => {
       unmount = true;
     };
-  }, [ecResultOpts]);
+  }, [ecResultOpts, loaded]);
 
   React.useEffect(() => {
     let unmount = false;
