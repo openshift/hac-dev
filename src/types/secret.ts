@@ -5,11 +5,21 @@ export const SecretByUILabel = 'ui.appstudio.redhat.com/secret-for';
 export type ImportSecret = {
   secretName: string;
   type: string;
-  keyValues: {
-    key: string;
-    value: string;
-    readOnlyKey?: boolean;
-  }[];
+  source: Source;
+  opaque: {
+    keyValues: {
+      key: string;
+      value: string;
+      readOnlyKey?: boolean;
+    }[];
+  };
+  image: {
+    keyValues: {
+      key: string;
+      value: string;
+      readOnlyKey?: boolean;
+    }[];
+  };
 };
 
 export enum SecretSPILabel {
