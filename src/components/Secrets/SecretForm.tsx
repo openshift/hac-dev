@@ -4,7 +4,7 @@ import { SelectVariant } from '@patternfly/react-core/deprecated';
 import { useFormikContext } from 'formik';
 import { DropdownItemObject, SelectInputField } from '../../shared';
 import KeyValueFileInputField from '../../shared/components/formik-fields/key-value-file-input-field/KeyValueFileInputField';
-import { SecretFormValues, SecretTypeDropdownLabel, KeyValueEntry } from '../../types';
+import { SecretFormValues, SecretTypeDropdownLabel } from '../../types';
 import { RawComponentProps } from '../modal/createModalLauncher';
 import SecretTypeSelector from './SecretTypeSelector';
 import {
@@ -15,26 +15,22 @@ import {
 
 type SecretFormProps = RawComponentProps & {
   existingSecrets: string[];
-  keyValues: KeyValueEntry;
 };
 
-const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({
-  existingSecrets,
-  keyValues,
-}) => {
+const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existingSecrets }) => {
   const { values, setFieldValue } = useFormikContext<SecretFormValues>();
   const defaultKeyValues = [{ key: '', value: '', readOnlyKey: false }];
   const defaultImageKeyValues = [{ key: '.dockerconfigjson', value: '', readOnlyKey: true }];
 
-  const partnerTaskSecrets = getSupportedPartnerTaskSecrets().map((secret) => secret.value);
-  const initialOptions = existingSecrets
-    .filter((secret) => !partnerTaskSecrets.includes(secret))
-    .map((secret) => ({ value: secret }));
+  const initialOptions = getSupportedPartnerTaskSecrets().filter(
+    (secret) => !existingSecrets.includes(secret.value),
+  );
   const [options, setOptions] = React.useState(initialOptions);
   const currentTypeRef = React.useRef(values.type);
 
   const clearKeyValues = () => {
-    setFieldValue('keyValues', defaultKeyValues);
+    const newKeyValues = values.keyValues.filter((kv) => !kv.readOnlyKey);
+    setFieldValue('keyValues', [...(newKeyValues.length ? newKeyValues : defaultKeyValues)]);
   };
 
   const resetKeyValues = () => {
@@ -84,7 +80,9 @@ const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({
         toggleId="secret-name-toggle"
         toggleAriaLabel="secret-name-dropdown"
         onClear={() => {
-          clearKeyValues();
+          if (currentTypeRef.current !== values.type || isPartnerTask(values.secretName)) {
+            clearKeyValues();
+          }
         }}
         onSelect={(e, value) => {
           if (isPartnerTask(value)) {
@@ -92,9 +90,6 @@ const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({
               ...values.keyValues.filter((kv) => !kv.readOnlyKey && (!!kv.key || !!kv.value)),
               ...getSupportedPartnerTaskKeyValuePairs(value),
             ]);
-          } else {
-            const secretValueIndex = values.existingSecrets.findIndex((secret) => secret === value);
-            setFieldValue('keyValues', keyValues[secretValueIndex]);
           }
           setFieldValue('secretName', value);
         }}

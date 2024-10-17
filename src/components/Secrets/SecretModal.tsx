@@ -8,10 +8,8 @@ import {
   ModalVariant,
 } from '@patternfly/react-core';
 import { Formik } from 'formik';
-import { useSecrets } from '../../hooks/useSecrets';
 import { ImportSecret, SecretTypeDropdownLabel } from '../../types';
 import { SecretFromSchema } from '../../utils/validation-utils';
-import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { RawComponentProps } from '../modal/createModalLauncher';
 import SecretForm from './SecretForm';
 
@@ -38,31 +36,14 @@ type SecretModalProps = RawComponentProps & {
 const SecretModal: React.FC<React.PropsWithChildren<SecretModalProps>> = ({
   modalProps,
   onSubmit,
+  existingSecrets,
 }) => {
-  const { namespace } = useWorkspaceInfo();
-  const [secrets, secretsLoaded] = useSecrets(namespace);
   const defaultKeyValues = [{ key: '', value: '', readOnlyKey: false }];
-  const keyValues =
-    secrets && secretsLoaded
-      ? secrets
-          ?.filter((secret) => secret.type === 'Opaque')
-          ?.map((secret) => {
-            return Object.keys(secret.data).map((key) => ({
-              key,
-              value: atob(secret.data[key]),
-              readOnlyKey: true,
-            }));
-          })
-      : defaultKeyValues;
-  const secretNames =
-    secrets && secretsLoaded
-      ? secrets?.filter((secret) => secret.type === 'Opaque')?.map((secret) => secret.metadata.name)
-      : defaultKeyValues;
   const initialValues: SecretModalValues = {
     secretName: '',
     type: SecretTypeDropdownLabel.opaque,
     keyValues: defaultKeyValues,
-    existingSecrets: secretNames,
+    existingSecrets,
   };
 
   return (
@@ -102,7 +83,7 @@ const SecretModal: React.FC<React.PropsWithChildren<SecretModalProps>> = ({
             />
           </ModalBoxHeader>
           <ModalBoxBody>
-            <SecretForm existingSecrets={initialValues.existingSecrets} keyValues={keyValues} />
+            <SecretForm existingSecrets={existingSecrets} />
           </ModalBoxBody>
         </Modal>
       )}

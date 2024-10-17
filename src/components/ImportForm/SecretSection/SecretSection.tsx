@@ -11,6 +11,7 @@ import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../../ButtonWithAccessTooltip';
 import { useModalLauncher } from '../../modal/ModalProvider';
 import { SecretModalLauncher } from '../../Secrets/SecretModalLauncher';
+import { getSupportedPartnerTaskSecrets } from '../../Secrets/utils/secret-utils';
 import { ImportFormValues } from '../type';
 
 const accessReviewResources: AccessReviewResources = [{ model: SecretModel, verb: 'create' }];
@@ -23,8 +24,13 @@ const SecretSection = () => {
 
   const [secrets, secretsLoaded] = useSecrets(namespace);
 
+  const partnerTaskNames = getSupportedPartnerTaskSecrets().map(({ label }) => label);
   const partnerTaskSecrets: string[] =
-    secrets && secretsLoaded ? secrets?.map((s) => s.metadata.name) || [] : [];
+    secrets && secretsLoaded
+      ? secrets
+          ?.filter((rs) => partnerTaskNames.includes(rs.metadata.name))
+          ?.map((s) => s.metadata.name) || []
+      : [];
 
   const onSubmit = React.useCallback(
     (secretValue: any) => {
