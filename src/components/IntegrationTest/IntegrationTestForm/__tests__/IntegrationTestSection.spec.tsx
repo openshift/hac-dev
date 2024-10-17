@@ -9,6 +9,10 @@ const navigateMock = jest.fn();
 jest.mock('react-router-dom', () => ({
   Link: (props) => <a href={props.to}>{props.children}</a>,
   useNavigate: () => navigateMock,
+  // Used in ContextsField
+  useParams: jest.fn(() => ({
+    appName: 'test-app',
+  })),
 }));
 
 jest.mock('react-i18next', () => ({
