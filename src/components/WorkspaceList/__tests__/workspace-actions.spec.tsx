@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { renderHook } from '@testing-library/react-hooks';
-import { mockKonfluxWorkspaces } from '../mock-workspace-data';
+import { mockKonfluxWorkspaces } from '../__data__/mock-workspace-data';
 import { useWorkspaceActions } from '../workspace-actions';
 
 jest.mock('../../../utils/rbac', () => ({

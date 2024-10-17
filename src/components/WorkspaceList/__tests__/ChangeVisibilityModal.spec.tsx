@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen, waitFor, act } from '@testing-library/react';
 import { WorkspaceContext } from '../../../utils/workspace-context-utils';
+import { mockKonfluxWorkspaces } from '../__data__/mock-workspace-data';
 import { ChangeVisibilityModal } from '../ChangeVisibilityModal';
-import { mockKonfluxWorkspaces } from '../mock-workspace-data';
 
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
@@ -16,15 +15,8 @@ jest.mock('react-router-dom', () => {
 });
 
 const mockUpdateVisibility = jest.fn();
-const useNavigateMock = useNavigate as jest.Mock;
 
 describe('ChangeVisibilityModal', () => {
-  let navigateMock: jest.Mock;
-  beforeEach(() => {
-    navigateMock = jest.fn();
-    useNavigateMock.mockImplementation(() => navigateMock);
-  });
-
   it('should show change visibility modal', async () => {
     render(
       <ChangeVisibilityModal
@@ -95,7 +87,7 @@ describe('ChangeVisibilityModal', () => {
     });
   });
 
-  it('should fire visibility change and navigate', async () => {
+  it('should fire visibility change', async () => {
     render(
       <WorkspaceContext.Provider
         value={{
@@ -125,7 +117,6 @@ describe('ChangeVisibilityModal', () => {
     await waitFor(() => {
       fireEvent.click(screen.getByRole('button', { name: /Update/ }));
       expect(mockUpdateVisibility).toHaveBeenCalled();
-      expect(navigateMock).toHaveBeenCalled();
     });
   });
 });

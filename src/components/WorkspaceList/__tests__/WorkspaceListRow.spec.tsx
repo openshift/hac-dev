@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, configure } from '@testing-library/react';
-import { mockKonfluxWorkspaces } from '../mock-workspace-data';
+import { mockKonfluxWorkspaces } from '../__data__/mock-workspace-data';
 import WorkspaceListRow from '../WorkspaceListRow';
 
 jest.mock('react-router-dom', () => ({

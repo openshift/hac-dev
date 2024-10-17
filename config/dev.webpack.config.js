@@ -47,7 +47,7 @@ const webpackProxy = {
     },
     {
       context: (path) =>
-        path.includes('/api/k8s/') && path.includes('workspace.konflux-ci.dev/v1alpha1'),
+        path.includes('/api/k8s/') && path.includes('workspaces.konflux-ci.dev/v1alpha1'),
       target: WORKSPACE_ENDPOINT_URL,
       secure: false,
       changeOrigin: true,

@@ -7,11 +7,9 @@ import { useAccessReviewForModel } from '../../utils/rbac';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
 import { ContextMenuItem, ContextSwitcher } from '../ContextSwitcher';
-import {
-  APPLICATION_SWITCHER_STORAGE_KEY,
-  ContextTab,
-  MenuTabs,
-} from '../ContextSwitcher/ContextSwitcher';
+import { ContextTab, MenuTabs } from '../ContextSwitcher/ContextSwitcher';
+
+export const APPLICATION_SWITCHER_STORAGE_KEY = 'application-switcher';
 
 export const ApplicationSwitcher: React.FC<
   React.PropsWithChildren<{ selectedApplication?: string }>

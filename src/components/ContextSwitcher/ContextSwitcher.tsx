@@ -17,9 +17,6 @@ import '././ContextSwitcher.scss';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { ContextMenuListItem, getFilteredItems, findItemByKey } from './context-switcher-utils';
 
-export const APPLICATION_SWITCHER_STORAGE_KEY = 'application-switcher';
-export const WORKSPACE_SWITCHER_STORAGE_KEY = 'workspace-switcher';
-
 type LocalStorageKeys = {
   recentItems?: { [key: string]: string[] };
   lastTab?: { [key: string]: ContextTab };
@@ -67,7 +64,7 @@ export const ContextSwitcher: React.FC<React.PropsWithChildren<ContextSwitcherPr
   selectedItem,
   onSelect,
   showRecentItems = false,
-  storageKey = WORKSPACE_SWITCHER_STORAGE_KEY,
+  storageKey = 'workspace-switcher',
   resourceType = 'resource',
   maxRecentItems = 5,
   footer,

@@ -1,6 +1,6 @@
+import { WorkspaceLabels } from '../../consts/workspace';
 import { Action } from '../../shared/components/action-menu/types';
 import { KonfluxWorkspace } from '../../types';
-import { WorkspaceLabels } from '../ContextSwitcher/context-switcher-utils';
 import { createRawModalLauncher } from '../modal/createModalLauncher';
 import { useModalLauncher } from '../modal/ModalProvider';
 import { ChangeVisibilityModal } from './ChangeVisibilityModal';

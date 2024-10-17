@@ -1,5 +1,5 @@
-import { KonfluxWorkspace, KubeSawWorkspace } from '../../types';
-import { WorkspaceLabels } from '../ContextSwitcher/context-switcher-utils';
+import { WorkspaceLabels } from '../../../consts/workspace';
+import { KonfluxWorkspace, KubeSawWorkspace } from '../../../types';
 
 export const mockKubesawWorkspaces: KubeSawWorkspace[] = [
   {

@@ -4,11 +4,9 @@ import { Button, Flex, FlexItem } from '@patternfly/react-core';
 import { WorkspaceContext } from '../../utils/workspace-context-utils';
 import { ContextMenuItem, ContextSwitcher } from '../ContextSwitcher';
 import { ItemVisibility } from '../ContextSwitcher/context-switcher-utils';
-import {
-  ContextTab,
-  MenuTabs,
-  WORKSPACE_SWITCHER_STORAGE_KEY,
-} from '../ContextSwitcher/ContextSwitcher';
+import { ContextTab, MenuTabs } from '../ContextSwitcher/ContextSwitcher';
+
+export const WORKSPACE_SWITCHER_STORAGE_KEY = 'workspace-switcher';
 
 export const WorkspaceSwitcher: React.FC<
   React.PropsWithChildren<{ selectedWorkspace?: string }>
@@ -72,26 +70,32 @@ export const WorkspaceSwitcher: React.FC<
     [menuItems],
   );
 
-  return Array.isArray(konfluxWorkspaces) && konfluxWorkspaces.length > 0 ? (
+  if (!Array.isArray(konfluxWorkspaces) || konfluxWorkspaces.length === 0) {
+    return null;
+  }
+  const namespace = selectedItem?.metadata?.namespace;
+  const footer = (
+    <Flex direction={{ default: 'column' }}>
+      <FlexItem align={{ default: 'alignRight' }}>
+        <Button
+          variant="link"
+          component={(props) => <Link {...props} to={`/application-pipeline/workspace-list`} />}
+          isInline
+        >
+          View workspace list
+        </Button>
+      </FlexItem>
+    </Flex>
+  );
+
+  return (
     <ContextSwitcher
       resourceType="workspace"
       menuItems={contextMenuItems}
       storageKey={WORKSPACE_SWITCHER_STORAGE_KEY}
-      selectedItem={{ key: selectedItem.metadata.namespace, name: selectedItem.metadata.namespace }}
+      selectedItem={{ key: namespace, name: selectedItem?.status?.space.name ?? namespace }}
       onSelect={onSelect}
-      footer={
-        <Flex direction={{ default: 'column' }}>
-          <FlexItem align={{ default: 'alignRight' }}>
-            <Button
-              variant="link"
-              component={(props) => <Link {...props} to={`/application-pipeline/workspace-list`} />}
-              isInline
-            >
-              View workspace list
-            </Button>
-          </FlexItem>
-        </Flex>
-      }
+      footer={footer}
     />
-  ) : null;
+  );
 };

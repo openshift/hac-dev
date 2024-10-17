@@ -8,11 +8,6 @@ export enum ItemVisibility {
   COMMUNITY = 'community',
 }
 
-export const WorkspaceLabels = {
-  HAS_DIRECT_ACCESS: 'internal.workspaces.konflux-ci.dev/has-direct-access',
-  IS_OWNER: 'internal.workspaces.konflux-ci.dev/is-owner',
-};
-
 export const ContextMenuListItem: React.FC<React.PropsWithChildren<{ item: ContextMenuItem }>> = ({
   item,
 }) => {

@@ -7,7 +7,7 @@ import {
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { ItemVisibility } from '../components/ContextSwitcher/context-switcher-utils';
 import { KubesawWorkspaceModel, KonfluxWorkspaceModel } from '../models/workspace';
-import { KonfluxWorkspace, KubeSawWorkspace, Workspace } from '../types/workspace';
+import { KonfluxWorkspace, KubeSawWorkspace } from '../types/workspace';
 
 const workspacePathMatcher = new RegExp(/workspaces\/([^/]+)/);
 
@@ -59,16 +59,22 @@ const fetchKubesawWorkspace = async (name: string): Promise<KubeSawWorkspace> =>
 
 export const fetchKonfluxWorkspaces = async (): Promise<{ items: KonfluxWorkspace[] }> =>
   fetch(
-    `/api/k8s/workspace/apis/${KonfluxWorkspaceModel.apiGroup}/${KonfluxWorkspaceModel.apiVersion}/workspaces`,
+    `/api/k8s/apis/${KonfluxWorkspaceModel.apiGroup}/${KonfluxWorkspaceModel.apiVersion}/workspaces`,
   ).then((data) => data.json());
 
-export const fetchKonfluxWorkspace = async (
-  wsName: string,
-  wsNamespace: string,
+export const queryKonfluxWorkspace = async (
+  {
+    wsName,
+    wsNamespace,
+    method,
+    payload,
+  }: { wsName: string; wsNamespace: string; method?: string; payload?: string },
+  callback: (data: Response) => KonfluxWorkspace,
 ): Promise<KonfluxWorkspace> =>
   fetch(
-    `/api/k8s/workspace/apis/${KonfluxWorkspaceModel.apiGroup}/${KonfluxWorkspaceModel.apiVersion}/namespaces/${wsNamespace}/workspaces/${wsName}`,
-  ).then((data) => data.json());
+    `/api/k8s/apis/${KonfluxWorkspaceModel.apiGroup}/${KonfluxWorkspaceModel.apiVersion}/namespaces/${wsNamespace}/workspaces/${wsName}`,
+    { method: method ?? 'get', body: payload ?? null },
+  ).then(callback);
 
 export const useActiveWorkspace = (): WorkspaceContextData => {
   const lastUsedWorkspace = useLastUsedWorkspace();
@@ -89,26 +95,30 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
     }
   }, []);
 
-  const updateWorkspaceVisibility = async (
-    ws: KonfluxWorkspace,
-    visibility: ItemVisibility,
-  ): Promise<{ item: Workspace[] }> => {
-    const newWS = {
-      ...ws,
-      spec: { ...ws.spec, visibility },
-    };
+  const updateWorkspaceVisibility = React.useCallback(
+    async (ws: KonfluxWorkspace, visibility: ItemVisibility): Promise<KonfluxWorkspace> => {
+      const newWS = {
+        ...ws,
+        spec: { ...ws.spec, visibility },
+      };
 
-    return fetch(
-      `/api/k8s/workspace/apis/${KonfluxWorkspaceModel.apiGroup}/${KonfluxWorkspaceModel.apiVersion}/namespaces/${workspace.metadata?.namespace}/workspaces/${workspace.metadata?.name}`,
-      {
-        method: 'put',
-        body: JSON.stringify(newWS),
-      },
-    ).then((data) => {
-      setChangeVisibilityCounter((i) => i + 1);
-      return data.json();
-    });
-  };
+      const callBack = (data) => {
+        setChangeVisibilityCounter((i) => i + 1);
+        return data.json();
+      };
+
+      return queryKonfluxWorkspace(
+        {
+          wsName: ws.metadata?.name,
+          wsNamespace: ws.metadata?.namespace,
+          method: 'put',
+          payload: JSON.stringify(newWS),
+        },
+        callBack,
+      );
+    },
+    [],
+  );
 
   React.useEffect(() => {
     if (workspaceName && workspace) {
@@ -248,6 +258,6 @@ export const useActiveWorkspace = (): WorkspaceContextData => {
     konfluxWorkspaces,
     workspacesLoaded,
     updateWorkspace: () => setWsUpdateCounter((i) => i + 1),
-    updateVisibility: (ws, visibility) => updateWorkspaceVisibility(ws, visibility),
+    updateVisibility: updateWorkspaceVisibility,
   };
 };

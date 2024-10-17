@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   Modal,
   Stack,
@@ -31,7 +30,6 @@ export const ChangeVisibilityModal: React.FC<React.PropsWithChildren<Props>> = (
 }) => {
   const [error, setError] = React.useState<string>();
   const { updateVisibility } = React.useContext(WorkspaceContext);
-  const navigate = useNavigate();
   const [isChecked, setChecked] = React.useState<boolean>(
     workspace.spec?.visibility === ItemVisibility.COMMUNITY,
   );
@@ -43,16 +41,17 @@ export const ChangeVisibilityModal: React.FC<React.PropsWithChildren<Props>> = (
 
   const submitChange = async () => {
     setSubmitting(true);
+    setError(null);
     const newVisibility = isChecked ? ItemVisibility.COMMUNITY : ItemVisibility.PRIVATE;
     try {
       await updateVisibility(workspace, newVisibility);
       setChecked(!isChecked);
+      setSubmitting(false);
+      onClose && onClose(null, { submitClicked: true });
     } catch (err) {
+      setSubmitting(false);
       setError(err.message || err.toString());
     }
-    setSubmitting(false);
-    onClose && onClose(null, { submitClicked: true });
-    navigate(`/application-pipeline/workspaces/${workspace.status?.space?.name}/applications`);
   };
 
   return (
@@ -72,6 +71,7 @@ export const ChangeVisibilityModal: React.FC<React.PropsWithChildren<Props>> = (
                 </FlexItem>
                 <FlexItem alignSelf={{ default: 'alignSelfCenter' }}>
                   <Switch
+                    aria-label="visibility-switch"
                     data-testid="visibility-switch"
                     hasCheckIcon={false}
                     isChecked={isChecked}
