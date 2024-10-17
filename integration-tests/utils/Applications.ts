@@ -77,11 +77,9 @@ export class Applications {
     componentName: string,
     applicationName: string,
     componentStatus: string,
-    buildTrigger: string,
   ) {
     this.createdComponentExists(componentName, applicationName);
     this.checkComponentStatus(componentName, componentStatus);
-    this.checkBuildTrigger(componentName, buildTrigger);
   }
 
   static createdComponentExists(componentName: string, applicationName: string) {

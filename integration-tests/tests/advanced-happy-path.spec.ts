@@ -121,12 +121,7 @@ describe('Advanced Happy path', () => {
     });
 
     it('Validate the component', () => {
-      Applications.checkComponentInListView(
-        componentName,
-        applicationName,
-        'Build running',
-        'Automatic',
-      );
+      Applications.checkComponentInListView(componentName, applicationName, 'Build running');
     });
 
     it('Verify the Pipeline run details and Task runs', () => {

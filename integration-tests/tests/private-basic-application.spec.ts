@@ -40,12 +40,7 @@ describe('Create Component from Private Git Using Login Form', () => {
     it('Create an Application with a component', () => {
       Applications.createApplication(applicationName);
       Applications.createComponent(privateRepo, componentName, pipeline, true);
-      Applications.checkComponentInListView(
-        componentName,
-        applicationName,
-        'Build running',
-        'Automatic',
-      );
+      Applications.checkComponentInListView(componentName, applicationName, 'Build running');
     });
 
     it('Verify the Pipeline run details and Node Graph view', () => {

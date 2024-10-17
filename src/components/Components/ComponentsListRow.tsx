@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
-import { PACState } from '../../hooks/usePACState';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import CommitLabel from '../../shared/components/commit-label/CommitLabel';
 import ExternalLink from '../../shared/components/links/ExternalLink';
@@ -14,8 +13,6 @@ import { useComponentActions } from '../ApplicationDetails/component-actions';
 import { ComponentRelationStatusIcon } from '../ComponentRelation/details-page/ComponentRelationStatusIcon';
 import GitRepoLink from '../GitLink/GitRepoLink';
 import { useBuildLogViewerModal } from '../LogViewer/BuildLogViewer';
-import ComponentBuildTrigger from './ComponentBuildTrigger';
-import ComponentPACStateLabel from './ComponentPACStateLabel';
 import { componentsTableColumnClasses } from './ComponentsListHeader';
 
 type ComponentWithLatestBuildPipeline = ComponentKind & {
@@ -29,15 +26,12 @@ export const getContainerImageLink = (url: string) => {
 
 const ComponentsListRow: React.FC<RowFunctionArgs<ComponentWithLatestBuildPipeline>> = ({
   obj: component,
-  customData,
 }) => {
   const { workspace } = useWorkspaceInfo();
   const applicationName = component.spec.application;
   const name = component.metadata.name;
   const actions = useComponentActions(component, name);
-  const { componentPACStates } = customData;
   const buildLogsModal = useBuildLogViewerModal(component);
-  const pacState = componentPACStates[name] ?? PACState.loading;
 
   const commit = React.useMemo(
     () =>
@@ -86,12 +80,6 @@ const ComponentsListRow: React.FC<RowFunctionArgs<ComponentWithLatestBuildPipeli
             </FlexItem>
           )}
         </Flex>
-      </TableData>
-      <TableData className={componentsTableColumnClasses.buildPipeline}>
-        <ComponentPACStateLabel component={component} pacState={pacState} enableAction />
-      </TableData>
-      <TableData className={componentsTableColumnClasses.buildTrigger}>
-        <ComponentBuildTrigger pacState={pacState} />
       </TableData>
       <TableData className={componentsTableColumnClasses.latestBuild}>
         <div className="component-list-view__build-completion">
