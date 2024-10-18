@@ -20,12 +20,12 @@ export const SourceSection = () => {
 
   const handleChange = React.useCallback(
     (event) => {
+      const gitType = detectGitType(event.target?.value);
+      if (gitType !== GitProvider.GITHUB && gitType !== GitProvider.GITLAB) {
+        setFieldValue('gitProviderAnnotation', '');
+        setGitAdvancedOpen(true);
+      }
       if (validated) {
-        const gitType = detectGitType(event.target?.value);
-        if (gitType !== GitProvider.GITHUB && gitType !== GitProvider.GITLAB) {
-          setFieldValue('gitProviderAnnotation', '');
-          setGitAdvancedOpen(true);
-        }
         if (gitType === GitProvider.GITHUB) {
           setFieldValue('gitProviderAnnotation', GIT_PROVIDER_ANNOTATION_VALUE.GITHUB);
           setGitAdvancedOpen(false);
@@ -39,7 +39,7 @@ export const SourceSection = () => {
         let name: string;
         try {
           parsed = GitUrlParse(event.target?.value ?? '');
-          setFieldValue('gitURLAnnotation', parsed?.resource);
+          setFieldValue('gitURLAnnotation', `https://${parsed?.resource}`);
           name = parsed.name;
         } catch {
           name = '';

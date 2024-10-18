@@ -17,6 +17,7 @@ const componentSchema = yup.object({
   }),
   componentName: resourceNameYupValidation,
   pipeline: yup.string().required('Required'),
+  gitProviderAnnotation: yup.string().required('Required'),
 });
 
 export const formValidationSchema = yup.mixed().test(
