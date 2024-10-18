@@ -39,7 +39,7 @@ export const SourceSection = () => {
         let name: string;
         try {
           parsed = GitUrlParse(event.target?.value ?? '');
-          setFieldValue('gitURLAnnotation', `https://${parsed?.resource}`);
+          setFieldValue('gitURLAnnotation', `${parsed?.protocol}://${parsed?.resource}`);
           name = parsed.name;
         } catch {
           name = '';
