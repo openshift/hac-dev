@@ -7,19 +7,31 @@ import {
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
-import usePACState from '../../../../hooks/usePACState';
+import HelpPopover from '../../../../../src/components/HelpPopover';
+import usePACState, { PACState } from '../../../../hooks/usePACState';
 import { ComponentKind } from '../../../../types';
-import ComponentBuildTrigger from '../../ComponentBuildTrigger';
 import ComponentPACStateLabel from '../../ComponentPACStateLabel';
 
 type ComponentBuildSettingsProps = {
   component: ComponentKind;
 };
 
+export const getHelpPopoverText = (pacState) => {
+  return pacState === PACState.disabled
+    ? 'Trigger a new build manually from the component’s action menu. To enable an automatic trigger with every commit, upgrade to the Custom build pipeline plan.'
+    : 'A new build pipeline run is automatically triggered with every commit to the source code.';
+};
+
+export const getBuildTriggerText = (pacState) => {
+  return pacState === PACState.disabled ? 'Manual' : 'Automatic';
+};
+
 const ComponentBuildSettings: React.FC<React.PropsWithChildren<ComponentBuildSettingsProps>> = ({
   component,
 }) => {
   const pacState = usePACState(component);
+  const helpPopoverText = getHelpPopoverText(pacState);
+  const buildTriggerText = getBuildTriggerText(pacState);
 
   return (
     <>
@@ -45,10 +57,10 @@ const ComponentBuildSettings: React.FC<React.PropsWithChildren<ComponentBuildSet
             }}
           >
             <DescriptionListGroup>
-              <DescriptionListTerm>Build trigger</DescriptionListTerm>
-              <DescriptionListDescription>
-                <ComponentBuildTrigger pacState={pacState} />
-              </DescriptionListDescription>
+              <DescriptionListTerm>
+                Build trigger <HelpPopover bodyContent={helpPopoverText} />
+              </DescriptionListTerm>
+              <DescriptionListDescription>{buildTriggerText}</DescriptionListDescription>
             </DescriptionListGroup>
           </DescriptionList>
         </FlexItem>
