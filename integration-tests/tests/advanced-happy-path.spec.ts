@@ -1,11 +1,7 @@
 import { NavItem } from '../support/constants/PageTitle';
 import { atlasPO } from '../support/pageObjects/atlas-po';
 import { ApplicationDetailPage } from '../support/pages/ApplicationDetailPage';
-import {
-  ComponentDetailsPage,
-  ComponentPageTabs,
-  DeploymentsTab,
-} from '../support/pages/ComponentDetailsPage';
+import { ComponentDetailsPage, ComponentPageTabs } from '../support/pages/ComponentDetailsPage';
 import { ComponentPage } from '../support/pages/ComponentsPage';
 import { SecretsPage } from '../support/pages/SecretsPage';
 import { ComponentsTabPage } from '../support/pages/tabs/ComponentsTabPage';
