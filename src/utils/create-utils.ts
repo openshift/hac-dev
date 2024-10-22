@@ -375,7 +375,11 @@ export const getSecretObject = (values: SecretFormValues, namespace: string): Se
       data[SSH_KEY] = values.source[SSH_KEY];
     }
   } else {
-    data = values.opaque.keyValues.reduce((acc, s) => {
+    const keyValues =
+      values.type === SecretTypeDropdownLabel.opaque
+        ? values.opaque.keyValues
+        : values.image.keyValues;
+    data = keyValues?.reduce((acc, s) => {
       acc[s.key] = s.value ? s.value : '';
       return acc;
     }, {});
@@ -387,8 +391,11 @@ export const getSecretObject = (values: SecretFormValues, namespace: string): Se
       name: values.secretName,
       namespace,
     },
-    type: K8sSecretType[values.type],
-    data,
+    type:
+      values.type === SecretTypeDropdownLabel.source
+        ? K8sSecretType[values.source?.authType]
+        : K8sSecretType[values.type],
+    stringData: data,
   };
 
   return secretResource;

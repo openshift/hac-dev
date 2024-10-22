@@ -9,7 +9,7 @@ import {
 } from '@patternfly/react-core';
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash-es';
-import { ImportSecret, SecretTypeDropdownLabel } from '../../types';
+import { ImportSecret, SecretTypeDropdownLabel, SourceSecretType } from '../../types';
 import { SecretFromSchema } from '../../utils/validation-utils';
 import { RawComponentProps } from '../modal/createModalLauncher';
 import SecretForm from './SecretForm';
@@ -50,7 +50,7 @@ const SecretModal: React.FC<React.PropsWithChildren<SecretModalProps>> = ({
       keyValues: defaultKeyValues,
     },
     source: {
-      authType: 'Basic authentication',
+      authType: SourceSecretType.basic,
     },
     existingSecrets,
   };

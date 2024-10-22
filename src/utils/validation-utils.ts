@@ -59,4 +59,15 @@ export const SecretFromSchema = yup.object({
       ),
     }),
   }),
+  image: yup.object().when('type', {
+    is: SecretTypeDropdownLabel.image,
+    then: yup.object({
+      keyValues: yup.array().of(
+        yup.object({
+          key: yup.string().required('Required'),
+          value: yup.string().required('Required'),
+        }),
+      ),
+    }),
+  }),
 });

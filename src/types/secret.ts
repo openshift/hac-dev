@@ -5,15 +5,15 @@ export const SecretByUILabel = 'ui.appstudio.redhat.com/secret-for';
 export type ImportSecret = {
   secretName: string;
   type: string;
-  source: Source;
-  opaque: {
+  source?: Source;
+  opaque?: {
     keyValues: {
       key: string;
       value: string;
       readOnlyKey?: boolean;
     }[];
   };
-  image: {
+  image?: {
     keyValues: {
       key: string;
       value: string;

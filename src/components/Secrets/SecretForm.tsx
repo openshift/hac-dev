@@ -20,6 +20,7 @@ type SecretFormProps = RawComponentProps & {
 
 const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existingSecrets }) => {
   const { values, setFieldValue } = useFormikContext<SecretFormValues>();
+
   const defaultKeyValues = [{ key: '', value: '', readOnlyKey: false }];
   const defaultImageKeyValues = [{ key: '.dockerconfigjson', value: '', readOnlyKey: true }];
 
@@ -109,7 +110,9 @@ const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existi
       {currentType !== SecretTypeDropdownLabel.source && (
         <KeyValueFileInputField
           required
-          name="keyValues"
+          name={
+            currentType === SecretTypeDropdownLabel.opaque ? 'opaque.keyValues' : 'image.keyValues'
+          }
           data-test="secret-key-value-pair"
           entries={defaultKeyValues}
           disableRemoveAction={values.opaque.keyValues.length === 1}
