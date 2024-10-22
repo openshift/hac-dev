@@ -100,7 +100,7 @@ describe('Advanced Happy path', () => {
   describe('Trigger a new Pipelinerun related to push event', () => {
     it('Merge the auto-generated PR, and verify the event status on modal', () => {
       Applications.goToComponentsTab();
-      componentPage.openPipelinePlanModal();
+      componentPage.clickManageBuildPipelinesLink();
       componentPage.verifyAndWaitForPRIsSent();
 
       APIHelper.mergePR(
