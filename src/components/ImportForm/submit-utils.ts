@@ -93,7 +93,10 @@ export const createResources = async (
 
   let createdComponent;
   if (showComponent) {
-    await createSecrets(importSecrets, workspace, namespace, true);
+    const secretsToCreate = importSecrets.filter((secret) =>
+      secret.existingSecrets.find((existing) => secret.secretName === existing.name) ? false : true,
+    );
+    await createSecrets(secretsToCreate, workspace, namespace, true);
 
     createdComponent = await createComponent(
       { componentName, application, gitProviderAnnotation, source, gitURLAnnotation },
@@ -113,7 +116,7 @@ export const createResources = async (
       isPrivate: isPrivateRepo,
       bombinoUrl,
     });
-    await createSecrets(importSecrets, workspace, namespace, false);
+    await createSecrets(secretsToCreate, workspace, namespace, false);
   }
 
   return {

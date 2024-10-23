@@ -4,7 +4,7 @@ import { createRawModalLauncher } from '../modal/createModalLauncher';
 import SecretForm from './SecretModal';
 
 export const SecretModalLauncher = (
-  existingSecrets?: string[],
+  existingSecrets?: any,
   onSubmit?: (values: SecretFormValues) => void,
   onClose?: () => void,
 ) =>
