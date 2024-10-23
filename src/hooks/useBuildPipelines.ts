@@ -22,22 +22,12 @@ export const useBuildPipelines = (
             [PipelineRunLabel.APPLICATION]: applicationName,
             [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
           },
-          ...(includeComponents &&
-            componentNames?.length > 0 && {
-              matchExpressions: [
-                {
-                  key: PipelineRunLabel.COMPONENT,
-                  operator: 'In',
-                  values: componentNames,
-                },
-              ],
-            }),
           filterByCommit: commit ? commit : undefined,
         },
         // TODO: Add limit when filtering by component name AND only PLRs are returned: https://github.com/tektoncd/results/issues/620
         // limit,
       }),
-      [applicationName, includeComponents, componentNames, commit],
+      [applicationName, commit],
     ),
   );
 

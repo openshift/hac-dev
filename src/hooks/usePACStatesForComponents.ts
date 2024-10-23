@@ -83,16 +83,11 @@ const usePACStatesForComponents = (components: ComponentKind[]): PacStatesForCom
             [PipelineRunLabel.COMMIT_EVENT_TYPE_LABEL]: PipelineRunEventType.PUSH,
           },
           matchExpressions: [
-            {
-              key: PipelineRunLabel.COMPONENT,
-              operator: 'In',
-              values: neededNames,
-            },
             { key: PipelineRunLabel.PULL_REQUEST_NUMBER_LABEL, operator: 'DoesNotExist' },
           ],
         },
       }),
-      [application, neededNames],
+      [application],
     ),
   );
 

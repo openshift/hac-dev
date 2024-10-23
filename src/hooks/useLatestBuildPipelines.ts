@@ -29,16 +29,9 @@ export const useLatestBuildPipelines = (
             [PipelineRunLabel.APPLICATION]: applicationName,
             [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD,
           },
-          matchExpressions: [
-            {
-              key: PipelineRunLabel.COMPONENT,
-              operator: 'In',
-              values: neededNames,
-            },
-          ],
         },
       }),
-      [applicationName, neededNames],
+      [applicationName],
     ),
   );
 

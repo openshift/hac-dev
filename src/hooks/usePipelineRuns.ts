@@ -274,22 +274,12 @@ export const usePipelineRunsForCommit = (
           matchLabels: {
             [PipelineRunLabel.APPLICATION]: applicationName,
           },
-          ...(componentsLoaded &&
-            componentNames?.length > 0 && {
-              matchExpressions: [
-                {
-                  key: PipelineRunLabel.COMPONENT,
-                  operator: 'In',
-                  values: componentNames,
-                },
-              ],
-            }),
           filterByCommit: commit,
         },
         // TODO: Add limit when filtering by component name AND only PLRs are returned
         // limit,
       }),
-      [applicationName, commit, componentNames, componentsLoaded],
+      [applicationName, commit],
     ),
   );
 
