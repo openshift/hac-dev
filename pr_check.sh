@@ -53,6 +53,7 @@ bonfire deploy \
         --clowd-env ${ENV_NAME} \
         --set-template-ref ${COMPONENT}=${GIT_COMMIT} \
         --set-image-tag ${IMAGE}=${IMAGE_TAG} \
+        --set-image-tag quay.io/redhat-services-prod/hcc-platex-services/chrome-service=latest \
         --namespace ${NAMESPACE}
 
 
