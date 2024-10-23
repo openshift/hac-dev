@@ -1,4 +1,4 @@
-import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { k8sCreateResource, k8sGetResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Base64 } from 'js-base64';
 import { pick } from 'lodash-es';
 import { SecretModel } from '../../../models';
@@ -281,3 +281,11 @@ export const getAddSecretBreadcrumbs = () => {
     { path: '#', name: 'Add secret' },
   ];
 };
+
+export const getSecretResource = async (namespace: string): Promise<SecretKind> =>
+  k8sGetResource({
+    model: SecretModel,
+    queryOptions: {
+      ns: namespace,
+    },
+  });
