@@ -36,6 +36,10 @@ jest.mock('../commit-status', () => ({
   useCommitStatus: () => ['-', true],
 }));
 
+jest.mock('../../../hooks/useApplications', () => ({
+  useApplication: jest.fn().mockReturnValue([{ metadata: { name: 'test' } }, true]),
+}));
+
 jest.mock('../../../shared/components/table/TableComponent', () => {
   return (props) => {
     const { data, filters, selected, match, kindObj } = props;

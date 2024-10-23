@@ -34,6 +34,10 @@ jest.mock('../../../../hooks/useComponents', () => ({
   useComponents: jest.fn(),
 }));
 
+jest.mock('../../../../hooks/useApplications', () => ({
+  useApplication: jest.fn().mockReturnValue([{ metadata: { name: 'test' } }, true]),
+}));
+
 const watchResourceMock = useK8sWatchResource as jest.Mock;
 const useComponentsMock = useComponents as jest.Mock;
 const useNavigateMock = useNavigate as jest.Mock;

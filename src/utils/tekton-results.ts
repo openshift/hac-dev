@@ -98,6 +98,12 @@ export const commitShaFilter = (commitSha: string): string =>
     EQ(`data.metadata.annotations["${PipelineRunLabel.COMMIT_ANNOTATION}"]`, commitSha),
   );
 
+export const creationTimestampFilterAfter = (creationTimestamp: string): string => {
+  return Date.parse(creationTimestamp)
+    ? EXP(`data.metadata.creationTimestamp`, `"${creationTimestamp}"`, '>')
+    : '';
+};
+
 export const expressionsToFilter = (expressions: Omit<MatchExpression, 'value'>[]): string =>
   AND(
     ...expressions
@@ -150,7 +156,17 @@ export const expressionsToFilter = (expressions: Omit<MatchExpression, 'value'>[
 export const selectorToFilter = (selector?: Selector) => {
   let filter = '';
   if (selector) {
-    const { matchLabels, matchExpressions, filterByName, filterByCommit } = selector;
+    const {
+      matchLabels,
+      matchExpressions,
+      filterByName,
+      filterByCommit,
+      filterByCreationTimestampAfter,
+    } = selector;
+
+    if (filterByCreationTimestampAfter) {
+      filter = AND(filter, creationTimestampFilterAfter(filterByCreationTimestampAfter as string));
+    }
 
     if (filterByName) {
       filter = AND(filter, nameFilter(filterByName as string));
@@ -167,8 +183,6 @@ export const selectorToFilter = (selector?: Selector) => {
       if (matchExpressions) {
         filter = AND(filter, expressionsToFilter(matchExpressions));
       }
-    } else {
-      filter = labelsToFilter(selector as MatchLabels);
     }
   }
   return filter;

@@ -14,6 +14,7 @@ import { getCommitSha } from '../utils/commits-utils';
 import { pipelineRunStatus, runStatus } from '../utils/pipeline-utils';
 import { EQ } from '../utils/tekton-results';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
+import { useApplication } from './useApplications';
 import { useComponents } from './useComponents';
 import { GetNextPage, useTRPipelineRuns, useTRTaskRuns } from './useTektonResults';
 
@@ -260,6 +261,7 @@ export const usePipelineRunsForCommit = (
   limit?: number,
 ): [PipelineRunKind[], boolean, unknown, GetNextPage] => {
   const [components, componentsLoaded] = useComponents(namespace, applicationName);
+  const [application, applicationLoaded] = useApplication(namespace, applicationName);
 
   const componentNames = React.useMemo(
     () => (componentsLoaded ? components.map((c) => c.metadata?.name) : []),
@@ -267,29 +269,22 @@ export const usePipelineRunsForCommit = (
   );
 
   const [pipelineRuns, plrsLoaded, plrError, getNextPage] = usePipelineRuns(
-    namespace && applicationName && commit && componentsLoaded ? namespace : null,
+    namespace && applicationName && commit && componentsLoaded && applicationLoaded
+      ? namespace
+      : null,
     React.useMemo(
       () => ({
         selector: {
+          filterByCreationTimestampAfter: application?.metadata?.creationTimestamp,
           matchLabels: {
             [PipelineRunLabel.APPLICATION]: applicationName,
           },
-          ...(componentsLoaded &&
-            componentNames?.length > 0 && {
-              matchExpressions: [
-                {
-                  key: PipelineRunLabel.COMPONENT,
-                  operator: 'In',
-                  values: componentNames,
-                },
-              ],
-            }),
           filterByCommit: commit,
         },
         // TODO: Add limit when filtering by component name AND only PLRs are returned
         // limit,
       }),
-      [applicationName, commit, componentNames, componentsLoaded],
+      [applicationName, commit, application],
     ),
   );
 

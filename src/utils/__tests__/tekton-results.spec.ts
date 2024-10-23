@@ -183,7 +183,21 @@ describe('tekton-results', () => {
           selectorToFilter({
             filterByName: 'resource-name',
           }),
-        ).toStrictEqual('data.metadata.labels["filterByName"] == "resource-name"');
+        ).toStrictEqual('data.metadata.name.startsWith("resource-name")');
+      });
+
+      it('should return creationTimestamp filter', () => {
+        expect(
+          selectorToFilter({
+            filterByCreationTimestampAfter: '2021-01-01T00:00:00Z',
+          }),
+        ).toStrictEqual('data.metadata.creationTimestamp > "2021-01-01T00:00:00Z"');
+
+        expect(
+          selectorToFilter({
+            filterByCreationTimestampAfter: 'not a timestamp',
+          }),
+        ).toStrictEqual('');
       });
 
       it('should return the label filter', () => {
