@@ -1,4 +1,4 @@
-import { k8sCreateResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { k8sCreateResource, k8sGetResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { Base64 } from 'js-base64';
 import { pick } from 'lodash-es';
 import { SecretModel } from '../../../models';
@@ -27,6 +27,7 @@ export type PartnerTask = {
     key: string;
     value: string;
     readOnlyKey?: boolean;
+    readOnlyValue?: boolean;
   }[];
 };
 
@@ -36,8 +37,30 @@ export const supportedPartnerTasksSecrets: { [key: string]: PartnerTask } = {
     name: 'snyk-secret',
     providerUrl: 'https://snyk.io/',
     tokenKeyName: 'snyk_token',
-    keyValuePairs: [{ key: 'snyk_token', value: '', readOnlyKey: true }],
+    keyValuePairs: [{ key: 'snyk_token', value: '', readOnlyKey: true, readOnlyValue: false }],
   },
+};
+
+export const secretsList = (secrets) => {
+  const partnerSecretNames = {
+    'snyk-secret': supportedPartnerTasksSecrets.snyk,
+  };
+  secrets
+    .filter((secret) => secret.type === 'Opaque')
+    .forEach((secret) => {
+      partnerSecretNames[secret.metadata.name] = {
+        type: secret.type,
+        name: secret.metadata.name,
+        providerUrl: secret.metadata.name === 'snyk-secret' ? 'https://snyk.io/' : '',
+        tokenKeyName: secret.metadata.name,
+        keyValuePairs: Object.keys(secret.data).map((key) => ({
+          key,
+          value: Base64.decode(secret.data[key]),
+          readOnlyKey: true,
+        })),
+      };
+    });
+  return partnerSecretNames;
 };
 
 export const getSupportedPartnerTaskSecrets = () => {
@@ -257,3 +280,11 @@ export const getAddSecretBreadcrumbs = () => {
     { path: '#', name: 'Add secret' },
   ];
 };
+
+export const getSecretResource = async (namespace: string): Promise<SecretKind> =>
+  k8sGetResource({
+    model: SecretModel,
+    queryOptions: {
+      ns: namespace,
+    },
+  });

@@ -1,3 +1,4 @@
+import { getSecretResource } from '../../components/Secrets/utils/secret-utils';
 import { ApplicationKind, ImportSecret } from '../../types';
 import {
   createApplication,
@@ -92,8 +93,12 @@ export const createResources = async (
   }
 
   let createdComponent;
+  const allSecrets = await getSecretResource(namespace);
+  const secretsToCreate = importSecrets.filter((secret) =>
+    allSecrets.items.find((existing) => secret.secretName in existing.data) ? false : true,
+  );
   if (showComponent) {
-    await createSecrets(importSecrets, workspace, namespace, true);
+    await createSecrets(secretsToCreate, workspace, namespace, true);
 
     createdComponent = await createComponent(
       { componentName, application, gitProviderAnnotation, source, gitURLAnnotation },
@@ -113,7 +118,7 @@ export const createResources = async (
       isPrivate: isPrivateRepo,
       bombinoUrl,
     });
-    await createSecrets(importSecrets, workspace, namespace, false);
+    await createSecrets(secretsToCreate, workspace, namespace, false);
   }
 
   return {

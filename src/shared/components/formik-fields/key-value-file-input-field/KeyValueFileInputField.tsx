@@ -94,6 +94,7 @@ const KeyValueFileInputField: React.FC<
                     label="Value"
                     name={`${name}.${idx.toString()}.value`}
                     filenamePlaceholder="Drag a file here or upload one"
+                    isDisabled={v.readOnlyValue ?? v.readOnlyKey}
                     onDataChange={(ev, data: string) => {
                       setFieldValue(`${name}.${idx.toString()}.value`, data);
                       onChange && onChange(data, `${name}.${idx.toString()}.value`);
