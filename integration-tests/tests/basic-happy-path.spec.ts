@@ -33,7 +33,8 @@ describe('Basic Happy Path', () => {
   const componentName: string = Common.generateAppName('java-quarkus');
   const piplinerunlogsTasks = ['init', 'clone-repository', 'build-container', 'show-summary'];
   const quarkusDeplomentBody = 'Congratulations, you have created a new Quarkus cloud application';
-  const pipeline = 'docker-build';
+  // this is default option and should be the fastest one
+  const pipeline = 'docker-build-oci-ta';
 
   before(function () {
     APIHelper.createRepositoryFromTemplate(sourceOwner, sourceRepo, repoOwner, repoName);
@@ -106,7 +107,7 @@ describe('Basic Happy Path', () => {
       // Pipeline build plan was removed from the Pipeline runs Tab
       // See https://issues.redhat.com/browse/KFLUXBUGS-603
       ComponentsTabPage.openComponent(componentName);
-      componentPage.openPipelinePlanModal();
+      componentPage.clickMergePullRequest();
       componentPage.verifyAndWaitForPRIsSent();
 
       APIHelper.mergePR(
