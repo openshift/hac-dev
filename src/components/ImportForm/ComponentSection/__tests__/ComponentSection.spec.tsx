@@ -26,6 +26,22 @@ describe('ComponentSection', () => {
     await waitFor(() => screen.getByText('Show advanced Git options'));
   });
 
+  it('should get private image repo switch when git src is ready', async () => {
+    formikRenderer(<ComponentSection />, {
+      source: { git: { url: '' } },
+    });
+    const user = userEvent.setup();
+    const source = screen.getByPlaceholderText('Enter your source');
+
+    await user.type(source, 'https://github.com/abcd/repo.git');
+    await user.tab();
+
+    const switchCheckbox = screen.getByLabelText('Is this a private image repository?');
+    expect(switchCheckbox).not.toBeChecked();
+    await user.click(switchCheckbox);
+    expect(switchCheckbox).toBeChecked();
+  });
+
   it('should expand git options if source url is others', async () => {
     formikRenderer(<ComponentSection />, {
       source: { git: { url: '' } },
