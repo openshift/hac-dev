@@ -15,7 +15,7 @@ type SecretFormProps = RawComponentProps & {
   existingSecrets: string[];
 };
 
-const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existingSecrets }) => {
+const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = () => {
   const { values, setFieldValue } = useFormikContext<SecretFormValues>();
   const { namespace } = useWorkspaceInfo();
   const [secrets, secretsLoaded] = useSecrets(namespace);
@@ -23,19 +23,20 @@ const SecretForm: React.FC<React.PropsWithChildren<SecretFormProps>> = ({ existi
   const defaultKeyValues = [{ key: '', value: '', readOnlyKey: false }];
   const defaultImageKeyValues = [{ key: '.dockerconfigjson', value: '', readOnlyKey: true }];
 
-  const sl = secretsLoaded ? secretsList(secrets) : [];
-  const initialOptions = Object.values(sl)
-    .map((secret) => ({ value: secret.name, label: secret.name }))
-    .filter((secret) => !existingSecrets.includes(secret.value));
+  const listOfSecrets = secretsLoaded ? secretsList(secrets) : [];
+  const initialOptions = Object.values(listOfSecrets).map((secret) => ({
+    value: secret.name,
+    label: secret.name,
+  }));
   const [options, setOptions] = React.useState(initialOptions);
   const currentTypeRef = React.useRef(values.type);
 
   const isSecretTask = (secretName: string) => {
-    return !!Object.values(sl).find((secret) => secret.name === secretName);
+    return !!Object.values(listOfSecrets).find((secret) => secret.name === secretName);
   };
 
   const getSecretsTaskKeyValuePairs = (secretName?: string) => {
-    const secretTask = Object.values(sl).find((secret) => secret.name === secretName);
+    const secretTask = Object.values(listOfSecrets).find((secret) => secret.name === secretName);
     return secretTask ? secretTask.keyValuePairs : [];
   };
 

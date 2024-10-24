@@ -27,6 +27,7 @@ export type PartnerTask = {
     key: string;
     value: string;
     readOnlyKey?: boolean;
+    readOnlyValue?: boolean;
   }[];
 };
 
@@ -50,10 +51,8 @@ export const secretsList = (secrets) => {
       partnerSecretNames[secret.metadata.name] = {
         type: secret.type,
         name: secret.metadata.name,
-        providerUrl:
-          secret.metadata.name === 'snyk-secret' ? 'https://snyk.io/' : 'https://kube.io',
-        tokenKeyName:
-          secret.metadata.name === 'snyk-secret' ? 'secret_token' : secret.metadata.name,
+        providerUrl: secret.metadata.name === 'snyk-secret' ? 'https://snyk.io/' : '',
+        tokenKeyName: secret.metadata.name,
         keyValuePairs: Object.keys(secret.data).map((key) => ({
           key,
           value: Base64.decode(secret.data[key]),
