@@ -64,7 +64,7 @@ export const SourceSection = () => {
         onChange={handleChange}
       />
       {validated === ValidatedOptions.success ? (
-        <SwitchField name="isPrivateRepo" label="Is this a private repository?" />
+        <SwitchField name="isPrivateRepo" label="Should the image produced be private?" />
       ) : null}
       {validated === ValidatedOptions.success ? (
         <GitOptions isGitAdvancedOpen={isGitAdvancedOpen} setGitAdvancedOpen={setGitAdvancedOpen} />

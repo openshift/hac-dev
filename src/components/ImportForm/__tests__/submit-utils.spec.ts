@@ -87,7 +87,7 @@ describe('Submit Utils: createResources', () => {
         application: 'test-app',
         inAppContext: true,
         showComponent: true,
-        isPrivateRepo: false,
+        isPrivateRepo: true,
         source: {
           git: {
             url: 'https://github.com/',
