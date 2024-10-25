@@ -7,6 +7,7 @@ import {
 import {
   IntegrationTestScenarioKind,
   Param,
+  Context,
   ResolverParam,
   ResolverType,
 } from '../../../../types/coreBuildService';
@@ -45,12 +46,29 @@ export const formatParams = (params): Param[] => {
   return newParams.length > 0 ? newParams : null;
 };
 
+export const formatContexts = (contexts = [], setDefault = false): Context[] | null => {
+  const defaultContext = {
+    name: 'application',
+    description: 'execute the integration test in all cases - this would be the default state',
+  };
+  const newContextNames = new Set(contexts.map((ctx) => ctx.name));
+  const newContexts = contexts.map(({ name, description }) => ({ name, description }));
+  // Even though this option is preselected in the context option list,
+  // it's not appended to the Formik field array when submitting.
+  // Lets set the default here so we know it will be applied.
+  if (setDefault && !newContextNames.has('application')) {
+    newContexts.push(defaultContext);
+  }
+
+  return newContexts.length ? newContexts : null;
+};
+
 export const editIntegrationTest = (
   integrationTest: IntegrationTestScenarioKind,
   integrationTestValues: IntegrationTestFormValues,
   dryRun?: boolean,
 ): Promise<IntegrationTestScenarioKind> => {
-  const { url, revision, path, optional, environmentName, environmentType, params } =
+  const { url, revision, path, optional, environmentName, environmentType, params, contexts } =
     integrationTestValues;
   const integrationTestResource: IntegrationTestScenarioKind = {
     ...integrationTest,
@@ -79,6 +97,7 @@ export const editIntegrationTest = (
         ],
       },
       params: formatParams(params),
+      contexts: formatContexts(contexts),
     },
   };
 
@@ -109,7 +128,7 @@ export const createIntegrationTest = (
   namespace: string,
   dryRun?: boolean,
 ): Promise<IntegrationTestScenarioKind> => {
-  const { name, url, revision, path, optional, params } = integrationTestValues;
+  const { name, url, revision, path, optional, params, contexts } = integrationTestValues;
   const isEC =
     url === EC_INTEGRATION_TEST_URL &&
     revision === EC_INTEGRATION_TEST_REVISION &&
@@ -134,12 +153,7 @@ export const createIntegrationTest = (
         ],
       },
       params: formatParams(params),
-      contexts: [
-        {
-          description: 'Application testing',
-          name: 'application',
-        },
-      ],
+      contexts: formatContexts(contexts, true),
     },
   };
 

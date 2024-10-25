@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
-import { IntegrationTestScenarioKind } from '../../../types/coreBuildService';
+import { IntegrationTestScenarioKind, Context } from '../../../types/coreBuildService';
 import { useTrackEvent, TrackEvents } from '../../../utils/analytics';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import IntegrationTestForm from './IntegrationTestForm';
@@ -52,6 +52,19 @@ const IntegrationTestView: React.FunctionComponent<
     return formParams;
   };
 
+  interface FormContext {
+    name: string;
+    description: string;
+  }
+
+  const getFormContextValues = (contexts: Context[] | null | undefined): FormContext[] => {
+    if (!contexts?.length) return [];
+
+    return contexts.map((context) => {
+      return context.name ? { name: context.name, description: context.description } : context;
+    });
+  };
+
   const initialValues = {
     integrationTest: {
       name: integrationTest?.metadata.name ?? '',
@@ -59,6 +72,7 @@ const IntegrationTestView: React.FunctionComponent<
       revision: revision?.value ?? '',
       path: path?.value ?? '',
       params: getFormParamValues(integrationTest?.spec?.params),
+      contexts: getFormContextValues(integrationTest?.spec?.contexts),
       optional:
         integrationTest?.metadata.labels?.[IntegrationTestLabels.OPTIONAL] === 'true' ?? false,
     },
