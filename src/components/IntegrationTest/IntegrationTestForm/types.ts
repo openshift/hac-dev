@@ -1,5 +1,5 @@
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
-import { Param } from '../../../types/coreBuildService';
+import { Param, Context } from '../../../types/coreBuildService';
 
 export type IntegrationTestFormValues = {
   name: string;
@@ -11,6 +11,7 @@ export type IntegrationTestFormValues = {
   environmentName?: string;
   environmentType?: string;
   params?: Param[];
+  contexts?: Context[];
 };
 
 export enum IntegrationTestAnnotations {

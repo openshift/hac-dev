@@ -2,7 +2,9 @@ import * as React from 'react';
 import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
 import { configure, fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { MockComponents } from '../../../../components/Commits/CommitDetails/visualization/__data__/MockCommitWorkflowData';
 import { useApplications } from '../../../../hooks/useApplications';
+import { useComponents } from '../../../../hooks/useComponents';
 import { useReleasePlans } from '../../../../hooks/useReleasePlans';
 import { namespaceRenderer } from '../../../../utils/test-utils';
 import { WorkspaceContext } from '../../../../utils/workspace-context-utils';
@@ -47,6 +49,11 @@ jest.mock('../../../../hooks/useApplications', () => ({
   useApplications: jest.fn(),
 }));
 
+jest.mock('../../../../hooks/useComponents', () => ({
+  // Used in ContextsField
+  useComponents: jest.fn(),
+}));
+
 jest.mock('../../../../utils/workspace-context-utils', () => {
   const actual = jest.requireActual('../../../../utils/workspace-context-utils');
   return {
@@ -61,6 +68,7 @@ jest.mock('../../../../utils/rbac', () => ({
 
 const createIntegrationTestMock = createIntegrationTest as jest.Mock;
 const useReleasePlansMock = useReleasePlans as jest.Mock;
+const mockUseComponents = useComponents as jest.Mock;
 
 configure({ testIdAttribute: 'data-test' });
 
@@ -103,6 +111,7 @@ describe('IntegrationTestView', () => {
     useApplicationsMock.mockReturnValue([[mockApplication], true]);
     watchResourceMock.mockReturnValueOnce([[], true]);
     useReleasePlansMock.mockReturnValue([[], true]);
+    mockUseComponents.mockReturnValue([MockComponents, true]);
   });
   const fillIntegrationTestForm = (wrapper: RenderResult) => {
     fireEvent.input(wrapper.getByLabelText(/Integration test name/), {

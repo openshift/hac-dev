@@ -42,8 +42,8 @@ const integrationTestData = {
     },
     contexts: [
       {
-        description: 'Application testing',
         name: 'application',
+        description: 'execute the integration test in all cases - this would be the default state',
       },
     ],
   },
