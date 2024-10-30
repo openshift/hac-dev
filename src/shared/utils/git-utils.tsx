@@ -32,7 +32,7 @@ export const detectGitType = (url: string): GitProvider => {
   if (hasDomain(url, 'bitbucket.org')) {
     return GitProvider.BITBUCKET;
   }
-  if (hasDomain(url, 'gitlab.com')) {
+  if (hasDomain(url, 'gitlab.com') || hasDomain(url, 'gitlab.cee.redhat.com')) {
     return GitProvider.GITLAB;
   }
   // Not a known URL

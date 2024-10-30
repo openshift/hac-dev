@@ -65,4 +65,20 @@ describe('ComponentSection', () => {
       ),
     );
   });
+
+  it('should populate git provider as gitlab when git repo is gitlab.cee', async () => {
+    formikRenderer(<ComponentSection />, {
+      source: { git: { url: '' } },
+    });
+    const user = userEvent.setup();
+    const source = screen.getByPlaceholderText('Enter your source');
+
+    await user.type(source, 'https://gitlab.cee.redhat.com/errata-guild/errata-rails.git');
+    await user.tab();
+    await waitFor(() =>
+      expect((screen.getByTestId('url-annotation') as HTMLInputElement).value).toBe(
+        'https://gitlab.cee.redhat.com',
+      ),
+    );
+  });
 });
