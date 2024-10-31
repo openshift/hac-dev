@@ -72,7 +72,7 @@ describe('ComponentActivityTab', () => {
       fireEvent.click(plrTab);
     });
     expect(navigateMock).toHaveBeenCalledWith(
-      '/application-pipeline/workspaces/test-ws/applications/my-test-output/components/stock-app-webshop-jhnj/undefined/pipelineruns',
+      '/application-pipeline/workspaces/test-ws/applications/my-test-output/components/sample-component/undefined/pipelineruns',
     );
   });
 });

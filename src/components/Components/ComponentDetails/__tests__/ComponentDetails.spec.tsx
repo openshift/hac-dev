@@ -204,6 +204,26 @@ describe('ComponentDetailsView', () => {
     );
   });
 
+  it('should render activity tab with metadata.name', async () => {
+    useComponentMock.mockReturnValue([
+      { ...mockComponent, spec: { componentName: 'human', ...mockComponent.spec } },
+      true,
+    ]);
+    routerRenderer(
+      <ComponentDetailsViewWrapper>
+        <ComponentDetailsView applicationName="test-application" componentName="human-resources" />,
+      </ComponentDetailsViewWrapper>,
+    );
+    const activityTab = screen.getByTestId('details__tabItem activity');
+
+    await act(async () => {
+      fireEvent.click(activityTab);
+    });
+    expect(navigateMock).toHaveBeenCalledWith(
+      '/application-pipeline/workspaces/test-ws/applications/test-application/components/human-resources/activity',
+    );
+  });
+
   it('should show an error state when latest build information is not available', () => {
     useLatestSuccessfulBuildPipelineRunForComponentMock.mockReturnValue([
       {},
