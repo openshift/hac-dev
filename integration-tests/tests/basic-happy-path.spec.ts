@@ -31,9 +31,10 @@ describe('Basic Happy Path', () => {
   const repoOwner = 'redhat-hac-qe';
   const publicRepo = `https://github.com/${repoOwner}/${repoName}`;
   const componentName: string = Common.generateAppName('java-quarkus');
-  const piplinerunlogsTasks = ['init', 'clone-repository', 'build-container', 'show-summary'];
+  const piplinerunlogsTasks = ['init', 'clone-repository', 'build-container', 'show-sbom'];
   const quarkusDeplomentBody = 'Congratulations, you have created a new Quarkus cloud application';
-  const pipeline = 'docker-build';
+  // this is default option and should be the fastest one
+  const pipeline = 'docker-build-oci-ta';
 
   before(function () {
     APIHelper.createRepositoryFromTemplate(sourceOwner, sourceRepo, repoOwner, repoName);
@@ -106,7 +107,7 @@ describe('Basic Happy Path', () => {
       // Pipeline build plan was removed from the Pipeline runs Tab
       // See https://issues.redhat.com/browse/KFLUXBUGS-603
       ComponentsTabPage.openComponent(componentName);
-      componentPage.openPipelinePlanModal();
+      componentPage.clickMergePullRequest();
       componentPage.verifyAndWaitForPRIsSent();
 
       APIHelper.mergePR(
@@ -177,7 +178,7 @@ describe('Basic Happy Path', () => {
       applicationDetailPage.openBuildLog(componentName);
       applicationDetailPage.verifyBuildLogTaskslist(piplinerunlogsTasks); //TO DO : Fetch the piplinerunlogsTasks from cluster using api At runtime.
       applicationDetailPage.verifyFailedLogTasksNotExists();
-      applicationDetailPage.checkBuildLog('show-summary', 'Image is in : quay.io');
+      applicationDetailPage.checkBuildLog('push-dockerfile', 'Selecting auth for quay.io');
       applicationDetailPage.closeBuildLog();
     });
   });

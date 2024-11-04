@@ -35,7 +35,11 @@ export class ComponentPage extends AbstractWizardPage {
     cy.get(ComponentsPagePO.create).should('be.enabled').click();
   }
 
-  openPipelinePlanModal() {
+  clickManageBuildPipelinesLink() {
+    cy.contains('button', 'Manage build pipelines').should('be.visible').click();
+  }
+
+  clickMergePullRequest() {
     cy.contains('button', 'Merge pull request').should('be.visible').click();
   }
 
