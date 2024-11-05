@@ -74,9 +74,12 @@ export const NEQ = (left: string, right: string) => EXP(left, `"${right}"`, '!='
 // TODO: switch to v1 once API is ready
 // https://github.com/tektoncd/community/pull/1055
 export enum DataType {
-  PipelineRun = 'tekton.dev/v1beta1.PipelineRun',
-  TaskRun = 'tekton.dev/v1beta1.TaskRun',
-  Log = 'results.tekton.dev/v1alpha2.Log',
+  PipelineRun = 'tekton.dev/v1.PipelineRun',
+  TaskRun = 'tekton.dev/v1.TaskRun',
+  Log = 'results.tekton.dev/v1alpha3.Log',
+  PipelineRun_OLD = 'tekton.dev/v1beta1.PipelineRun',
+  TaskRun_OLD = 'tekton.dev/v1beta1.TaskRun',
+  Log_OLD = 'results.tekton.dev/v1alpha2.Log',
 }
 
 export const labelsToFilter = (labels?: MatchLabels): string =>
@@ -188,12 +191,13 @@ const getTRUrlPrefix = (workspace: string): string => URL_PREFIX.replace(_WORKSP
 export const createTektonResultsUrl = (
   workspace: string,
   namespace: string,
-  dataType: DataType,
+  dataTypes: DataType[],
   filter?: string,
   options?: TektonResultsOptions,
   nextPageToken?: string,
-): string =>
-  `${getTRUrlPrefix(workspace)}/${namespace}/results/-/records?${new URLSearchParams({
+): string => {
+  const isMultiValued = dataTypes.length > 1;
+  return `${getTRUrlPrefix(workspace)}/${namespace}/results/-/records?${new URLSearchParams({
     // default sort should always be by `create_time desc`
     ['order_by']: 'create_time desc',
     ['page_size']: `${Math.max(
@@ -201,18 +205,26 @@ export const createTektonResultsUrl = (
       Math.min(MAXIMUM_PAGE_SIZE, options?.limit >= 0 ? options.limit : options?.pageSize ?? 30),
     )}`,
     ...(nextPageToken ? { ['page_token']: nextPageToken } : {}),
-    filter: AND(
-      EQ('data_type', dataType.toString()),
-      filter,
-      selectorToFilter(options?.selector),
-      options?.filter,
-    ),
+    filter: isMultiValued
+      ? AND(
+          OR(EQ('data_type', dataTypes[0].toString()), EQ('data_type', dataTypes[1].toString())),
+          filter,
+          selectorToFilter(options?.selector),
+          options?.filter,
+        )
+      : AND(
+          EQ('data_type', dataTypes[0].toString()),
+          filter,
+          selectorToFilter(options?.selector),
+          options?.filter,
+        ),
   }).toString()}`;
+};
 
 export const getFilteredRecord = async <R extends K8sResourceCommon>(
   workspace: string,
   namespace: string,
-  dataType: DataType,
+  dataTypes: DataType[],
   filter?: string,
   options?: TektonResultsOptions,
   nextPageToken?: string,
@@ -221,7 +233,7 @@ export const getFilteredRecord = async <R extends K8sResourceCommon>(
   const url = createTektonResultsUrl(
     workspace,
     namespace,
-    dataType,
+    dataTypes,
     filter,
     options,
     nextPageToken,
@@ -287,7 +299,7 @@ export const getFilteredPipelineRuns = (
   getFilteredRecord<PipelineRunKindV1Beta1>(
     workspace,
     namespace,
-    DataType.PipelineRun,
+    [DataType.PipelineRun, DataType.PipelineRun_OLD],
     filter,
     options,
     nextPageToken,
@@ -305,7 +317,7 @@ const getFilteredTaskRuns = (
   getFilteredRecord<TaskRunKindV1Beta1>(
     workspace,
     namespace,
-    DataType.TaskRun,
+    [DataType.TaskRun, DataType.TaskRun_OLD],
     filter,
     options,
     nextPageToken,
@@ -341,7 +353,7 @@ export const getTaskRunLog = (
   getFilteredRecord<any>(
     workspace,
     namespace,
-    DataType.Log,
+    [DataType.Log, DataType.Log_OLD],
     AND(EQ(`data.spec.resource.kind`, 'TaskRun'), EQ(`data.spec.resource.name`, taskRunName)),
     { limit: 1 },
   ).then((x) =>

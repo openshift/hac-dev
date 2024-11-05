@@ -350,10 +350,10 @@ describe('tekton-results', () => {
 
   describe('createTektonResultsUrl', () => {
     it('should create minimal URL', () => {
-      expect(createTektonResultsUrl('test-ws', 'test-ns', DataType.PipelineRun)).toEqual(
+      expect(createTektonResultsUrl('test-ws', 'test-ns', [DataType.PipelineRun])).toEqual(
         '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=30&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.PipelineRun%22',
       );
-      expect(createTektonResultsUrl('test-ws', 'test-ns', DataType.TaskRun)).toEqual(
+      expect(createTektonResultsUrl('test-ws', 'test-ns', [DataType.TaskRun])).toEqual(
         '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=30&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.TaskRun%22',
       );
     });
@@ -363,7 +363,7 @@ describe('tekton-results', () => {
         createTektonResultsUrl(
           'test-ws',
           'test-ns',
-          DataType.PipelineRun,
+          [DataType.PipelineRun],
           null,
           null,
           'test-token',
@@ -372,26 +372,28 @@ describe('tekton-results', () => {
     });
 
     it('should create URL with filter', () => {
-      expect(createTektonResultsUrl('test-ws', 'test-ns', DataType.PipelineRun, 'foo=bar')).toEqual(
+      expect(
+        createTektonResultsUrl('test-ws', 'test-ns', [DataType.PipelineRun], 'foo=bar'),
+      ).toEqual(
         '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/-/records?order_by=create_time+desc&page_size=30&filter=data_type+%3D%3D+%22tekton.dev%2Fv1beta1.PipelineRun%22+%26%26+foo%3Dbar',
       );
     });
 
     it('should create URL with page size', () => {
       // default page size
-      expect(createTektonResultsUrl('test-ws', 'test-ns', DataType.PipelineRun)).toContain(
+      expect(createTektonResultsUrl('test-ws', 'test-ns', [DataType.PipelineRun])).toContain(
         'page_size=30',
       );
       // min page size
       expect(
-        createTektonResultsUrl('test-ws', 'test-ns', DataType.PipelineRun, '', {
+        createTektonResultsUrl('test-ws', 'test-ns', [DataType.PipelineRun], '', {
           pageSize: 1,
         }),
       ).toContain('page_size=5');
 
       // min page size
       expect(
-        createTektonResultsUrl('test-ws', 'test-ns', DataType.PipelineRun, '', {
+        createTektonResultsUrl('test-ws', 'test-ns', [DataType.PipelineRun], '', {
           pageSize: 11000,
         }),
       ).toContain('page_size=10000');
@@ -399,7 +401,7 @@ describe('tekton-results', () => {
 
     it('should create URL using limit to affect page size', () => {
       expect(
-        createTektonResultsUrl('test-ws', 'test-ns', DataType.PipelineRun, '', {
+        createTektonResultsUrl('test-ws', 'test-ns', [DataType.PipelineRun], '', {
           pageSize: 10,
           limit: 5,
         }),
@@ -411,7 +413,7 @@ describe('tekton-results', () => {
         createTektonResultsUrl(
           'test-ws',
           'test-ns',
-          DataType.PipelineRun,
+          [DataType.PipelineRun],
           'foo=bar',
           sampleOptions,
         ),
@@ -425,8 +427,8 @@ describe('tekton-results', () => {
     it('should return cached value', async () => {
       commonFetchJSONMock.mockReturnValue(mockEmptyRecordsList);
 
-      await getFilteredRecord('test-ws', 'test-ns', DataType.PipelineRun);
-      await getFilteredRecord('test-ws', 'test-ns', DataType.PipelineRun);
+      await getFilteredRecord('test-ws', 'test-ns', [DataType.PipelineRun]);
+      await getFilteredRecord('test-ws', 'test-ns', [DataType.PipelineRun]);
       expect(commonFetchJSONMock).toHaveBeenCalledTimes(2);
 
       commonFetchJSONMock.mockClear();
@@ -434,7 +436,7 @@ describe('tekton-results', () => {
       await getFilteredRecord(
         'test-ws',
         'test-ns',
-        DataType.PipelineRun,
+        [DataType.PipelineRun],
         null,
         null,
         null,
@@ -443,7 +445,7 @@ describe('tekton-results', () => {
       await getFilteredRecord(
         'test-ws',
         'test-ns',
-        DataType.PipelineRun,
+        [DataType.PipelineRun],
         null,
         null,
         null,
@@ -458,7 +460,7 @@ describe('tekton-results', () => {
           code: 404,
         };
       });
-      const result = await getFilteredRecord('test-ws', 'test-ns', DataType.PipelineRun);
+      const result = await getFilteredRecord('test-ws', 'test-ns', [DataType.PipelineRun]);
       expect(result).toEqual([[], { nextPageToken: null, records: [] }]);
     });
 
@@ -469,13 +471,13 @@ describe('tekton-results', () => {
         };
       });
       await expect(
-        getFilteredRecord('test-ws', 'test-ns', DataType.PipelineRun),
+        getFilteredRecord('test-ws', 'test-ns', [DataType.PipelineRun]),
       ).rejects.toBeTruthy();
     });
 
     it('should return record list and decoded value', async () => {
       commonFetchJSONMock.mockReturnValue(mockRecordsList);
-      expect(await getFilteredRecord('test-ws', 'test-ns', DataType.PipelineRun)).toEqual(
+      expect(await getFilteredRecord('test-ws', 'test-ns', [DataType.PipelineRun])).toEqual(
         mockResponseCheck,
       );
     });
@@ -483,7 +485,7 @@ describe('tekton-results', () => {
     it('should return record list and decoded value', async () => {
       commonFetchJSONMock.mockReturnValue(mockRecordsList);
       expect(
-        await getFilteredRecord('test-ws', 'test-ns', DataType.PipelineRun, null, { limit: 1 }),
+        await getFilteredRecord('test-ws', 'test-ns', [DataType.PipelineRun], null, { limit: 1 }),
       ).toEqual([
         [mockResponseCheck[0][0]],
         {
