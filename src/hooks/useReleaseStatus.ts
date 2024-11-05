@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ReleaseKind } from '../types';
+import { ReleaseCondition, ReleaseKind } from '../types';
 import { runStatus } from '../utils/pipeline-utils';
 
 export const useReleaseStatus = (release: ReleaseKind) => {
@@ -8,21 +8,22 @@ export const useReleaseStatus = (release: ReleaseKind) => {
       return runStatus.Unknown;
     }
 
-    const progressing = release.status.conditions.some((c) => c.reason === 'Progressing');
-    if (progressing) {
-      return runStatus['In Progress'];
-    }
-
-    const succeeded = release.status.conditions.every(
-      (c) => c.reason === 'Succeeded' && c.status === 'True',
+    const releasedCondition = release.status.conditions.find(
+      (c) => c.type === ReleaseCondition.Released,
     );
+
+    const succeeded =
+      releasedCondition.status === 'True' && releasedCondition.reason === 'Succeeded';
     if (succeeded) {
       return runStatus.Succeeded;
     }
 
-    const failed = release.status.conditions.some(
-      (c) => c.reason === 'Failed' && c.status === 'False',
-    );
+    const progressing = releasedCondition.reason === 'Progressing';
+    if (progressing) {
+      return runStatus['In Progress'];
+    }
+
+    const failed = releasedCondition.reason === 'Failed' && releasedCondition.status === 'False';
     if (failed) {
       return runStatus.Failed;
     }
