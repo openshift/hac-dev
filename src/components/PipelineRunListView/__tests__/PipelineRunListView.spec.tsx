@@ -1,13 +1,14 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
-import { render, screen, fireEvent, configure, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, configure, waitFor, cleanup } from '@testing-library/react';
+import { PipelineRunLabel, PipelineRunType } from '../../../consts/pipelinerun';
 import { useComponents } from '../../../hooks/useComponents';
 import { usePipelineRuns } from '../../../hooks/usePipelineRuns';
 import { usePLRVulnerabilities } from '../../../hooks/useScanResults';
 import { useSearchParam } from '../../../hooks/useSearchParam';
 import { useSnapshots } from '../../../hooks/useSnapshots';
-import { PipelineRunKind } from '../../../types';
+import { PipelineRunKind, PipelineRunStatus } from '../../../types';
 import { mockComponentsData } from '../../ApplicationDetails/__data__';
 import { PipelineRunListRow } from '../PipelineRunListRow';
 import PipelineRunsListView from '../PipelineRunsListView';
@@ -125,11 +126,20 @@ const pipelineRuns: PipelineRunKind[] = [
       uid: '9c1f121c-1eb6-490f-b2d9-befbfc658df1',
       labels: {
         'appstudio.openshift.io/component': 'sample-component',
+        [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.TEST as string,
       },
     },
     spec: {
       key: 'key1',
     },
+    status: {
+      conditions: [
+        {
+          status: 'True',
+          type: 'Succeeded',
+        },
+      ],
+    } as PipelineRunStatus,
   },
   {
     kind: 'PipelineRun',
@@ -151,6 +161,7 @@ const pipelineRuns: PipelineRunKind[] = [
       uid: '9c1f121c-1eb6-490f-b2d9-befbfc658dfb',
       labels: {
         'appstudio.openshift.io/component': 'test-component',
+        [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD as string,
       },
     },
     spec: {
@@ -177,6 +188,7 @@ const pipelineRuns: PipelineRunKind[] = [
       uid: '9c1f121c-1eb6-490f-b2d9-befbfc658dfc',
       labels: {
         'appstudio.openshift.io/component': 'sample-component',
+        [PipelineRunLabel.PIPELINE_TYPE]: PipelineRunType.BUILD as string,
       },
     },
     spec: {
@@ -194,6 +206,10 @@ describe('Pipeline run List', () => {
     useSearchParamMock.mockImplementation(mockUseSearchParam);
     useComponentsMock.mockReturnValue([mockComponentsData, true]);
     mockUseSnapshots.mockReturnValue([[{ metadata: { name: 'snp1' } }], true]);
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   it('should render spinner if application data is not loaded', () => {
@@ -227,7 +243,7 @@ describe('Pipeline run List', () => {
     screen.queryByText('Started');
     screen.queryByText('Duration');
     screen.queryAllByText('Status');
-    screen.queryByText('Type');
+    screen.queryAllByText('Type');
     screen.queryByText('Component');
   });
 
@@ -268,30 +284,92 @@ describe('Pipeline run List', () => {
     });
   });
 
-  it('should render filtered pipelinerun list', async () => {
+  it('should render filtered pipelinerun list by name', async () => {
     usePipelineRunsMock.mockReturnValue([pipelineRuns, true]);
     const r = render(<PipelineRunsListView applicationName={appName} />);
 
     const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
 
     fireEvent.change(filter, {
-      target: { value: 'no-match' },
+      target: { value: 'basic-node-js-first' },
     });
 
-    expect(filter.value).toBe('no-match');
+    expect(filter.value).toBe('basic-node-js-first');
 
     r.rerender(<PipelineRunsListView applicationName={appName} />);
     await waitFor(() => {
-      expect(screen.queryByText('basic-node-js-first')).not.toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-first')).toBeInTheDocument();
       expect(screen.queryByText('basic-node-js-second')).not.toBeInTheDocument();
       expect(screen.queryByText('basic-node-js-third')).not.toBeInTheDocument();
-      expect(screen.queryByText('No results found')).toBeInTheDocument();
-      expect(
-        screen.queryByText(
-          'No results match this filter criteria. Clear all filters and try again.',
-        ),
-      ).toBeInTheDocument();
     });
+
+    // clean up for next tests
+    fireEvent.change(filter, {
+      target: { value: '' },
+    });
+    r.rerender(<PipelineRunsListView applicationName={appName} />);
+    expect(filter.value).toBe('');
+  });
+
+  it('should render filtered pipelinerun list by status', async () => {
+    usePipelineRunsMock.mockReturnValue([pipelineRuns, true]);
+    const r = render(<PipelineRunsListView applicationName={appName} />);
+
+    const statusFilter = screen.getByRole('button', {
+      name: /status filter menu/i,
+    });
+    await fireEvent.click(statusFilter);
+    expect(statusFilter).toHaveAttribute('aria-expanded', 'true');
+
+    const succeededOption = screen.getByLabelText(/succeeded/i, {
+      selector: 'input',
+    }) as HTMLInputElement;
+    fireEvent.click(succeededOption);
+
+    r.rerender(<PipelineRunsListView applicationName={appName} />);
+    expect(succeededOption.checked).toBe(true);
+    await waitFor(() => {
+      expect(screen.queryByText('basic-node-js-first')).toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-second')).not.toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-third')).not.toBeInTheDocument();
+    });
+
+    // clean up for other tests
+    expect(statusFilter).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.click(succeededOption);
+    r.rerender(<PipelineRunsListView applicationName={appName} />);
+    expect(succeededOption.checked).toBe(false);
+  });
+
+  it('should render filtered pipelinerun list by type', async () => {
+    usePipelineRunsMock.mockReturnValue([pipelineRuns, true]);
+    const r = render(<PipelineRunsListView applicationName={appName} />);
+
+    const typeFilter = screen.getByRole('button', {
+      name: /type filter menu/i,
+    });
+    await fireEvent.click(typeFilter);
+    expect(typeFilter).toHaveAttribute('aria-expanded', 'true');
+
+    const testOption = screen.getByLabelText(/test/i, {
+      selector: 'input',
+    }) as HTMLInputElement;
+    fireEvent.click(testOption);
+    r.rerender(<PipelineRunsListView applicationName={appName} />);
+    expect(testOption.checked).toBe(true);
+
+    r.rerender(<PipelineRunsListView applicationName={appName} />);
+    await waitFor(() => {
+      expect(screen.queryByText('basic-node-js-first')).toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-second')).not.toBeInTheDocument();
+      expect(screen.queryByText('basic-node-js-third')).not.toBeInTheDocument();
+    });
+
+    // clean up for other tests
+    expect(typeFilter).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.click(testOption);
+    r.rerender(<PipelineRunsListView applicationName={appName} />);
+    expect(testOption.checked).toBe(false);
   });
 
   it('should clear the filters and render the list again in the table', async () => {

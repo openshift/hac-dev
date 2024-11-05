@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Table as PfTable, TableHeader } from '@patternfly/react-table/deprecated';
 import '@testing-library/jest-dom';
 import { render, screen, configure, fireEvent, waitFor } from '@testing-library/react';
+import { PipelineRunStatus } from 'src/types';
 import { mockPipelineRuns } from '../../../../components/Components/__data__/mock-pipeline-run';
 import { PipelineRunLabel, PipelineRunType } from '../../../../consts/pipelinerun';
 import { useComponents } from '../../../../hooks/useComponents';
@@ -112,7 +113,14 @@ const snapShotPLRs = [
       },
     },
     spec: null,
-    status: null,
+    status: {
+      conditions: [
+        {
+          status: 'True',
+          type: 'Succeeded',
+        },
+      ],
+    } as PipelineRunStatus,
   },
   {
     apiVersion: mockPipelineRuns[0].apiVersion,
@@ -268,6 +276,173 @@ describe('SnapshotPipelinerunsTab', () => {
       expect(screen.queryByText('go-sample-s2f4f')).toBeInTheDocument();
       expect(screen.queryByText('go-sample-vvs')).not.toBeInTheDocument();
     });
+  });
+
+  it('should render filtered pipelinerun list by name', async () => {
+    usePLRVulnerabilitiesMock.mockReturnValue({
+      vulnerabilities: {},
+      fetchedPipelineRuns: snapShotPLRs.map((plr) => plr.metadata.name),
+    });
+    const r = render(
+      <SnapshotPipelineRunsList
+        applicationName={appName}
+        getNextPage={null}
+        snapshotPipelineRuns={snapShotPLRs}
+        loaded={true}
+      />,
+    );
+
+    const filter = screen.getByPlaceholderText<HTMLInputElement>('Filter by name...');
+
+    fireEvent.change(filter, {
+      target: { value: 'python-sample-942fq' },
+    });
+
+    expect(filter.value).toBe('python-sample-942fq');
+
+    r.rerender(
+      <SnapshotPipelineRunsList
+        applicationName={appName}
+        getNextPage={null}
+        snapshotPipelineRuns={snapShotPLRs}
+        loaded={true}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.queryByText('python-sample-942fq')).toBeInTheDocument();
+      expect(screen.queryByText('go-sample-s2f4f')).not.toBeInTheDocument();
+      expect(screen.queryByText('go-sample-vvs')).not.toBeInTheDocument();
+    });
+
+    // clean up for next tests
+    fireEvent.change(filter, {
+      target: { value: '' },
+    });
+    r.rerender(
+      <SnapshotPipelineRunsList
+        applicationName={appName}
+        getNextPage={null}
+        snapshotPipelineRuns={snapShotPLRs}
+        loaded={true}
+      />,
+    );
+    expect(filter.value).toBe('');
+  });
+
+  it('should render filtered pipelinerun list by status', async () => {
+    usePLRVulnerabilitiesMock.mockReturnValue({
+      vulnerabilities: {},
+      fetchedPipelineRuns: snapShotPLRs.map((plr) => plr.metadata.name),
+    });
+    const r = render(
+      <SnapshotPipelineRunsList
+        applicationName={appName}
+        getNextPage={null}
+        snapshotPipelineRuns={snapShotPLRs}
+        loaded={true}
+      />,
+    );
+
+    const statusFilter = screen.getByRole('button', {
+      name: /status filter menu/i,
+    });
+    await fireEvent.click(statusFilter);
+    expect(statusFilter).toHaveAttribute('aria-expanded', 'true');
+
+    const succeededOption = screen.getByLabelText(/succeeded/i, {
+      selector: 'input',
+    }) as HTMLInputElement;
+    fireEvent.click(succeededOption);
+
+    r.rerender(
+      <SnapshotPipelineRunsList
+        applicationName={appName}
+        getNextPage={null}
+        snapshotPipelineRuns={snapShotPLRs}
+        loaded={true}
+      />,
+    );
+    expect(succeededOption.checked).toBe(true);
+    await waitFor(() => {
+      expect(screen.queryByText('python-sample-942fq')).toBeInTheDocument();
+      expect(screen.queryByText('go-sample-s2f4f')).not.toBeInTheDocument();
+      expect(screen.queryByText('go-sample-vvs')).not.toBeInTheDocument();
+    });
+
+    // clean up for other tests
+    expect(statusFilter).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.click(succeededOption);
+    r.rerender(
+      <SnapshotPipelineRunsList
+        applicationName={appName}
+        getNextPage={null}
+        snapshotPipelineRuns={snapShotPLRs}
+        loaded={true}
+      />,
+    );
+    expect(succeededOption.checked).toBe(false);
+  });
+
+  it('should render filtered pipelinerun list by type', async () => {
+    usePLRVulnerabilitiesMock.mockReturnValue({
+      vulnerabilities: {},
+      fetchedPipelineRuns: snapShotPLRs.map((plr) => plr.metadata.name),
+    });
+    const r = render(
+      <SnapshotPipelineRunsList
+        applicationName={appName}
+        getNextPage={null}
+        snapshotPipelineRuns={snapShotPLRs}
+        loaded={true}
+      />,
+    );
+
+    const typeFilter = screen.getByRole('button', {
+      name: /type filter menu/i,
+    });
+    await fireEvent.click(typeFilter);
+    expect(typeFilter).toHaveAttribute('aria-expanded', 'true');
+
+    const buildOption = screen.getByLabelText(/build/i, {
+      selector: 'input',
+    }) as HTMLInputElement;
+    fireEvent.click(buildOption);
+    r.rerender(
+      <SnapshotPipelineRunsList
+        applicationName={appName}
+        getNextPage={null}
+        snapshotPipelineRuns={snapShotPLRs}
+        loaded={true}
+      />,
+    );
+    expect(buildOption.checked).toBe(true);
+
+    r.rerender(
+      <SnapshotPipelineRunsList
+        applicationName={appName}
+        getNextPage={null}
+        snapshotPipelineRuns={snapShotPLRs}
+        loaded={true}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.queryByText('python-sample-942fq')).toBeInTheDocument();
+      expect(screen.queryByText('go-sample-s2f4f')).not.toBeInTheDocument();
+      expect(screen.queryByText('go-sample-vvs')).not.toBeInTheDocument();
+    });
+
+    // clean up for other tests
+    expect(typeFilter).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.click(buildOption);
+    r.rerender(
+      <SnapshotPipelineRunsList
+        applicationName={appName}
+        getNextPage={null}
+        snapshotPipelineRuns={snapShotPLRs}
+        loaded={true}
+      />,
+    );
+    expect(buildOption.checked).toBe(false);
   });
 
   it('should clear the filters and render the list again in the table', async () => {
