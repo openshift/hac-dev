@@ -11,17 +11,20 @@ import './MultiStreamLogs.scss';
 type TektonTaskRunLogProps = {
   taskRun?: TaskRunKind;
   setCurrentLogsGetter: (getter: () => string) => void;
+  pipelineRunUID: string;
 };
 
 export const TektonTaskRunLog: React.FC<React.PropsWithChildren<TektonTaskRunLogProps>> = ({
   taskRun,
+  pipelineRunUID,
   setCurrentLogsGetter,
 }) => {
   const scrollPane = React.useRef<HTMLDivElement>();
   const taskName = taskRun?.spec.taskRef?.name ?? taskRun?.metadata.name;
   const [trResults, trLoaded, trError] = useTRTaskRunLog(
     taskRun.metadata.namespace,
-    taskRun.metadata.name,
+    pipelineRunUID,
+    taskRun,
   );
 
   React.useEffect(() => {

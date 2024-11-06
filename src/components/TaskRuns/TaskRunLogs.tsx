@@ -8,9 +8,15 @@ type Props = {
   taskRun: TaskRunKind;
   namespace: string;
   status: runStatus;
+  pipelineRunUID: string;
 };
 
-const TaskRunLogs: React.FC<React.PropsWithChildren<Props>> = ({ taskRun, namespace, status }) => {
+const TaskRunLogs: React.FC<React.PropsWithChildren<Props>> = ({
+  taskRun,
+  namespace,
+  status,
+  pipelineRunUID,
+}) => {
   const podName = taskRun?.status?.podName;
 
   if (!podName) {
@@ -26,6 +32,7 @@ const TaskRunLogs: React.FC<React.PropsWithChildren<Props>> = ({ taskRun, namesp
   return (
     <LogsWrapperComponent
       taskRun={taskRun}
+      pipelineRunUID={pipelineRunUID}
       resource={{
         name: podName,
         groupVersionKind: PodGroupVersionKind,

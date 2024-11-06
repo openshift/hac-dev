@@ -7,7 +7,7 @@ import {
   Selector,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { PipelineRunLabel } from '../consts/pipelinerun';
-import { PipelineRunKindV1Beta1, TaskRunKindV1Beta1 } from '../types';
+import { PipelineRunKindV1Beta1, TaskRunKind, TaskRunKindV1Beta1 } from '../types';
 
 // REST API spec
 // https://github.com/tektoncd/results/blob/main/docs/api/rest-api-spec.md
@@ -70,6 +70,10 @@ export const OR = (...expressions: string[]) => {
 const EXP = (left: string, right: string, operator: string) => `${left} ${operator} ${right}`;
 export const EQ = (left: string, right: string) => EXP(left, `"${right}"`, '==');
 export const NEQ = (left: string, right: string) => EXP(left, `"${right}"`, '!=');
+export const IN = (left: string, right: string[]) => {
+  const rightOperands = right.map((operand) => `"${operand.toString()}"`);
+  return EXP(left, `[${rightOperands}]`, 'in');
+};
 
 // TODO: switch to v1 once API is ready
 // https://github.com/tektoncd/community/pull/1055
@@ -195,9 +199,8 @@ export const createTektonResultsUrl = (
   filter?: string,
   options?: TektonResultsOptions,
   nextPageToken?: string,
-): string => {
-  const isMultiValued = dataTypes.length > 1;
-  return `${getTRUrlPrefix(workspace)}/${namespace}/results/-/records?${new URLSearchParams({
+): string =>
+  `${getTRUrlPrefix(workspace)}/${namespace}/results/-/records?${new URLSearchParams({
     // default sort should always be by `create_time desc`
     ['order_by']: 'create_time desc',
     ['page_size']: `${Math.max(
@@ -205,21 +208,13 @@ export const createTektonResultsUrl = (
       Math.min(MAXIMUM_PAGE_SIZE, options?.limit >= 0 ? options.limit : options?.pageSize ?? 30),
     )}`,
     ...(nextPageToken ? { ['page_token']: nextPageToken } : {}),
-    filter: isMultiValued
-      ? AND(
-          OR(EQ('data_type', dataTypes[0].toString()), EQ('data_type', dataTypes[1].toString())),
-          filter,
-          selectorToFilter(options?.selector),
-          options?.filter,
-        )
-      : AND(
-          EQ('data_type', dataTypes[0].toString()),
-          filter,
-          selectorToFilter(options?.selector),
-          options?.filter,
-        ),
+    filter: AND(
+      IN('data_type', dataTypes),
+      filter,
+      selectorToFilter(options?.selector),
+      options?.filter,
+    ),
   }).toString()}`;
-};
 
 export const getFilteredRecord = async <R extends K8sResourceCommon>(
   workspace: string,
@@ -345,7 +340,7 @@ export const getTaskRuns = (
 const getLog = (workspace: string, taskRunPath: string) =>
   commonFetchText(`${getTRUrlPrefix(workspace)}/${taskRunPath.replace('/records/', '/logs/')}`);
 
-export const getTaskRunLog = (
+export const getTaskRunLogOld = (
   workspace: string,
   namespace: string,
   taskRunName: string,
@@ -361,3 +356,13 @@ export const getTaskRunLog = (
       ? getLog(workspace, x?.[1]?.records[0].name).catch(() => throw404())
       : throw404(),
   );
+
+export const getTaskRunLog = (
+  workspace: string,
+  namespace: string,
+  pid: string,
+  taskRun: TaskRunKind,
+) =>
+  commonFetchText(
+    `${getTRUrlPrefix(workspace)}/${namespace}/results/${pid}/logs/${taskRun?.metadata?.uid}`,
+  ).catch(() => getTaskRunLogOld(workspace, namespace, taskRun.metadata.name));

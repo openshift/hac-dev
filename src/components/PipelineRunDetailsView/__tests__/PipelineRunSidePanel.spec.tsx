@@ -18,7 +18,7 @@ describe('PipelineRunSidePanel', () => {
   it('should render nothing by default', () => {
     const setPropsFn = jest.fn();
 
-    render(<PipelineRunSidePanel />, {
+    render(<PipelineRunSidePanel pipelineRunUID="pipelinerun-test" />, {
       wrapper: ({ children }) => (
         <SidePanelContext.Provider value={{ setProps: setPropsFn, close: () => {} }}>
           {children}
@@ -42,7 +42,7 @@ describe('PipelineRunSidePanel', () => {
 
     const setPropsFn = jest.fn();
 
-    render(<PipelineRunSidePanel />, {
+    render(<PipelineRunSidePanel pipelineRunUID="pipelinerun-test" />, {
       wrapper: ({ children }) => (
         <SidePanelContext.Provider value={{ setProps: setPropsFn, close: () => {} }}>
           {children}
@@ -68,13 +68,16 @@ describe('PipelineRunSidePanel', () => {
 
     const setPropsFn = jest.fn();
 
-    render(<PipelineRunSidePanel scrollIntoView={scrollIntoViewFn} />, {
-      wrapper: ({ children }) => (
-        <SidePanelContext.Provider value={{ setProps: setPropsFn, close: () => {} }}>
-          {children}
-        </SidePanelContext.Provider>
-      ),
-    });
+    render(
+      <PipelineRunSidePanel pipelineRunUID="pipelinerun-test" scrollIntoView={scrollIntoViewFn} />,
+      {
+        wrapper: ({ children }) => (
+          <SidePanelContext.Provider value={{ setProps: setPropsFn, close: () => {} }}>
+            {children}
+          </SidePanelContext.Provider>
+        ),
+      },
+    );
 
     expect(setPropsFn).toHaveBeenCalledWith(
       expect.objectContaining({

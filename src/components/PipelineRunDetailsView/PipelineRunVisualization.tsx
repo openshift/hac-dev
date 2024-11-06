@@ -40,7 +40,10 @@ const PipelineRunVisualization = ({ pipelineRun, error, taskRuns }) => {
         layoutFactory={layoutFactory}
         model={model}
       >
-        <PipelineRunSidePanel scrollIntoView={scrollIntoView} />
+        <PipelineRunSidePanel
+          scrollIntoView={scrollIntoView}
+          pipelineRunUID={pipelineRun?.metadata?.uid}
+        />
       </VisualizationFactory>
     </div>
   );

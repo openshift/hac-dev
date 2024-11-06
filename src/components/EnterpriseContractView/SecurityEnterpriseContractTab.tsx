@@ -43,9 +43,12 @@ const getResultsSummary = (ECs, ecLoaded) => {
 };
 
 export const SecurityEnterpriseContractTab: React.FC<
-  React.PropsWithChildren<{ pipelineRun: string }>
-> = ({ pipelineRun }) => {
-  const [ecResult, ecResultLoaded] = useEnterpriseContractResults(pipelineRun);
+  React.PropsWithChildren<{
+    pipelineRunName: string;
+    pipelineRunUID: string;
+  }>
+> = ({ pipelineRunName, pipelineRunUID }) => {
+  const [ecResult, ecResultLoaded] = useEnterpriseContractResults(pipelineRunName, pipelineRunUID);
 
   const [nameFilter, setNameFilter] = useSearchParam('name', '');
 

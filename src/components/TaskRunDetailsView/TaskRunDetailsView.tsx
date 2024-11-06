@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 import { PipelineRunLabel } from '../../consts/pipelinerun';
-import { useTaskRun } from '../../hooks/usePipelineRuns';
+import { usePipelineRun, useTaskRun } from '../../hooks/usePipelineRuns';
 import DetailsPage from '../../shared/components/details-page/DetailsPage';
 import ErrorEmptyState from '../../shared/components/empty-state/ErrorEmptyState';
 import { HttpError } from '../../shared/utils/error/http-error';
@@ -28,6 +28,12 @@ export const TaskRunDetailsView: React.FC<React.PropsWithChildren<TaskRunDetails
   const params = useParams();
   const navigate = useNavigate();
   const [taskRun, loaded, error] = useTaskRun(namespace, taskRunName);
+
+  const plrName = React.useMemo(
+    () => loaded && !error && taskRun?.metadata?.labels[TektonResourceLabel.pipelinerun],
+    [taskRun?.metadata?.labels, loaded, error],
+  );
+  const [pipelineRun, plrLoaded, plrError] = usePipelineRun(namespace, plrName);
 
   const trStatus = React.useMemo(
     () => loaded && taskRun && taskRunStatus(taskRun),
@@ -64,7 +70,6 @@ export const TaskRunDetailsView: React.FC<React.PropsWithChildren<TaskRunDetails
     );
   }
 
-  const plrName = taskRun.metadata?.labels[TektonResourceLabel.pipelinerun];
   const isEnterpriseContract = isResourceEnterpriseContract(taskRun);
 
   return (
@@ -105,14 +110,33 @@ export const TaskRunDetailsView: React.FC<React.PropsWithChildren<TaskRunDetails
         {
           key: 'logs',
           label: 'Logs',
-          component: <TaskRunLogsTab taskRun={taskRun} />,
+          component:
+            (plrLoaded && plrError) || (plrLoaded && !pipelineRun) ? (
+              <ErrorEmptyState
+                title={`Unable to load pipelineRun ${plrName}`}
+                body={JSON.stringify(plrError)}
+              />
+            ) : (
+              <TaskRunLogsTab pipelineRunUID={pipelineRun?.metadata?.uid} taskRun={taskRun} />
+            ),
         },
         ...(isEnterpriseContract
           ? [
               {
                 key: 'security',
                 label: 'Security',
-                component: <SecurityEnterpriseContractTab pipelineRun={plrName} />,
+                component:
+                  (plrLoaded && plrError) || (plrLoaded && !pipelineRun) ? (
+                    <ErrorEmptyState
+                      title={`Unable to load pipelineRun ${plrName}`}
+                      body={JSON.stringify(plrError)}
+                    />
+                  ) : (
+                    <SecurityEnterpriseContractTab
+                      pipelineRunName={plrName}
+                      pipelineRunUID={pipelineRun?.metadata?.uid}
+                    />
+                  ),
               },
             ]
           : []),

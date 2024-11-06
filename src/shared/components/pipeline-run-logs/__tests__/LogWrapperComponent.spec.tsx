@@ -170,6 +170,7 @@ describe('LogWrapperComponent', () => {
           namespace: 'test-ns',
           isList: false,
         }}
+        pipelineRunUID="test-id"
         taskRun={taskRun}
         downloadAllLabel="Download all task logs"
         onDownloadAll={downloadAllCallback}
@@ -196,6 +197,7 @@ describe('LogWrapperComponent', () => {
           namespace: 'test-ns',
           isList: false,
         }}
+        pipelineRunUID="test-id"
         taskRun={taskRun}
         downloadAllLabel="Download all task logs"
         onDownloadAll={downloadAll}
@@ -221,6 +223,7 @@ describe('LogWrapperComponent', () => {
           namespace: 'test-ns',
           isList: false,
         }}
+        pipelineRunUID="test-id"
         taskRun={taskRun}
         downloadAllLabel={'Download all task logs'}
         onDownloadAll={downloadAllCallback}
@@ -244,6 +247,7 @@ describe('LogWrapperComponent', () => {
           namespace: 'test-ns',
           isList: false,
         }}
+        pipelineRunUID="test-id"
         taskRun={taskRun}
         downloadAllLabel={'Download all task logs'}
         onDownloadAll={downloadAllCallback}
@@ -270,6 +274,7 @@ describe('LogWrapperComponent', () => {
           namespace: 'test-ns',
           isList: false,
         }}
+        pipelineRunUID="test-id"
         taskRun={taskRun}
         downloadAllLabel="Download all task logs"
         onDownloadAll={downloadAll}
@@ -301,6 +306,7 @@ describe('LogWrapperComponent', () => {
           namespace: 'test-ns',
           isList: false,
         }}
+        pipelineRunUID="test-id"
         taskRun={taskRun}
         downloadAllLabel="Download all task logs"
         onDownloadAll={downloadAll}
@@ -324,6 +330,7 @@ describe('LogWrapperComponent', () => {
           namespace: 'test-ns',
           isList: false,
         }}
+        pipelineRunUID="test-id"
         taskRun={taskRun}
         downloadAllLabel="Download all task logs"
         onDownloadAll={downloadAll}

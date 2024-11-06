@@ -118,16 +118,17 @@ export const useTRTaskRuns = (
 
 export const useTRTaskRunLog = (
   namespace: string,
-  taskRunName: string,
+  pipelineRunUID: string,
+  taskRun: TaskRunKind,
 ): [string, boolean, unknown] => {
   const { workspace } = useWorkspaceInfo();
   const [result, setResult] = React.useState<[string, boolean, unknown]>([null, false, undefined]);
   React.useEffect(() => {
     let disposed = false;
-    if (namespace && taskRunName) {
+    if (namespace && taskRun && pipelineRunUID) {
       (async () => {
         try {
-          const log = await getTaskRunLog(workspace, namespace, taskRunName);
+          const log = await getTaskRunLog(workspace, namespace, pipelineRunUID, taskRun);
           if (!disposed) {
             setResult([log, true, undefined]);
           }
@@ -141,6 +142,6 @@ export const useTRTaskRunLog = (
     return () => {
       disposed = true;
     };
-  }, [workspace, namespace, taskRunName]);
+  }, [workspace, namespace, taskRun, pipelineRunUID]);
   return result;
 };

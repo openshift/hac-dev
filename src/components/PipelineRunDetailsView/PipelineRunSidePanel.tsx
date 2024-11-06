@@ -11,9 +11,13 @@ import { isTaskNode } from './visualization/utils/pipelinerun-graph-utils';
 
 type Props = {
   scrollIntoView?: (node: Node) => void;
+  pipelineRunUID: string;
 };
 
-const PipelineRunSidePanel: React.FC<React.PropsWithChildren<Props>> = ({ scrollIntoView }) => {
+const PipelineRunSidePanel: React.FC<React.PropsWithChildren<Props>> = ({
+  scrollIntoView,
+  pipelineRunUID,
+}) => {
   const [[selectedId], setSelectedIds] = useVisualizationState<string[]>(SELECTION_STATE, []);
   const controller = useVisualizationController();
 
@@ -28,7 +32,11 @@ const PipelineRunSidePanel: React.FC<React.PropsWithChildren<Props>> = ({ scroll
   }, [controller, selectedId]);
 
   const panel = taskNode ? (
-    <TaskRunPanel onClose={() => setSelectedIds([])} taskNode={taskNode} />
+    <TaskRunPanel
+      onClose={() => setSelectedIds([])}
+      taskNode={taskNode}
+      pipelineRunUID={pipelineRunUID}
+    />
   ) : null;
 
   const isExpanded = !!panel;

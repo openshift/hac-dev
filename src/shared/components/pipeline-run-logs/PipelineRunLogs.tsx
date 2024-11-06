@@ -123,6 +123,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
             workspace,
             obj.metadata?.namespace,
             obj.metadata?.name,
+            obj.metadata?.uid,
           )
         : undefined;
     const activeTaskRun = taskRuns.find((taskRun) => taskRun.metadata.name === activeItem);
@@ -178,6 +179,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
         <div className="pipeline-run-logs__container">
           {activeItem && resource ? (
             <LogsWrapperComponent
+              pipelineRunUID={obj.metadata?.uid}
               resource={resource}
               taskRun={activeTaskRun}
               downloadAllLabel={'Download all task logs'}

@@ -55,7 +55,7 @@ describe('useEnterpriseContractResultFromLogs', () => {
 
   it('should parse valid rules to json', async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
-      useEnterpriseContractResultFromLogs('dummy-abcd'),
+      useEnterpriseContractResultFromLogs('dummy-abcd', 'pipelinerun-test'),
     );
     await waitForNextUpdate();
     expect(mockCommmonFetchJSON).toHaveBeenCalled();
@@ -69,7 +69,9 @@ describe('useEnterpriseContractResultFromLogs', () => {
     mockGetTaskRunLogs.mockReturnValue(`asdfcdfadsf
       [report-json] { "components": [] }
       `);
-    const { result } = renderHook(() => useEnterpriseContractResultFromLogs('dummy-abcd'));
+    const { result } = renderHook(() =>
+      useEnterpriseContractResultFromLogs('dummy-abcd', 'pipelinerun-test'),
+    );
     const [, loaded] = result.current;
     expect(mockCommmonFetchJSON).toHaveBeenCalled();
     expect(loaded).toBe(true);
@@ -80,7 +82,7 @@ describe('useEnterpriseContractResultFromLogs', () => {
 
   it('should filter out all 404 image url components from EC results', async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
-      useEnterpriseContractResultFromLogs('dummy-abcd'),
+      useEnterpriseContractResultFromLogs('dummy-abcd', 'pipelinerun-test'),
     );
     await waitForNextUpdate();
     const [ecResult, loaded] = result.current;
@@ -93,7 +95,7 @@ describe('useEnterpriseContractResultFromLogs', () => {
     mockCommmonFetchJSON.mockRejectedValue(new Error('Api error'));
 
     const { result, waitForNextUpdate } = renderHook(() =>
-      useEnterpriseContractResultFromLogs('dummy-abcd'),
+      useEnterpriseContractResultFromLogs('dummy-abcd', 'pipelinerun-test'),
     );
     await waitForNextUpdate();
     const [ecResult, loaded] = result.current;
@@ -124,7 +126,7 @@ describe('useEnterpriseContractResultFromLogs', () => {
     `);
 
     const { result, waitForNextUpdate } = renderHook(() =>
-      useEnterpriseContractResultFromLogs('dummy-abcd'),
+      useEnterpriseContractResultFromLogs('dummy-abcd', 'pipelinerun-test'),
     );
     const [, loaded] = result.current;
     expect(mockCommmonFetchJSON).toHaveBeenCalled();
@@ -177,7 +179,7 @@ describe('useEnterpriseContractResults', () => {
 
   it('should return enterprise contract results', async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
-      useEnterpriseContractResults('dummy-abcd'),
+      useEnterpriseContractResults('dummy-abcd', 'pipelinerun-test'),
     );
     expect(result.current[0]).toEqual(undefined);
     expect(result.current[1]).toEqual(false);

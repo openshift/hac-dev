@@ -22,17 +22,23 @@ describe('SecurityEnterpriseContractTab', () => {
   it('should render empty state for security tab when pods are missing', () => {
     mockUseEnterpriseContractResults.mockReturnValue([undefined, true]);
 
-    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy" />);
+    routerRenderer(
+      <SecurityEnterpriseContractTab pipelineRunName="dummy" pipelineRunUID="pipelinerun-test" />,
+    );
     screen.getByTestId('security-tab-empty-state');
   });
 
   it('should render component security tab', () => {
-    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy" />);
+    routerRenderer(
+      <SecurityEnterpriseContractTab pipelineRunName="dummy" pipelineRunUID="pipelinerun-test" />,
+    );
     screen.getByText('Missing CVE scan results');
   });
 
   it('should filter out results based on the name input field', () => {
-    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy" />);
+    routerRenderer(
+      <SecurityEnterpriseContractTab pipelineRunName="dummy" pipelineRunUID="pipelinerun-test" />,
+    );
     screen.getByText('Missing CVE scan results');
     fireEvent.input(screen.getByPlaceholderText('Filter by rule...'), {
       target: { value: 'No tasks' },
@@ -43,7 +49,9 @@ describe('SecurityEnterpriseContractTab', () => {
   });
 
   it('should filter out based on the status dropdown', async () => {
-    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy-1" />);
+    routerRenderer(
+      <SecurityEnterpriseContractTab pipelineRunName="dummy" pipelineRunUID="pipelinerun-test" />,
+    );
     screen.getByText('Missing CVE scan results');
     fireEvent.click(screen.getByRole('button', { name: 'Status filter menu' }));
     fireEvent.click(screen.getByLabelText('Success'));
@@ -53,7 +61,9 @@ describe('SecurityEnterpriseContractTab', () => {
   });
 
   it('should show empty state when no search result found', () => {
-    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy-1" />);
+    routerRenderer(
+      <SecurityEnterpriseContractTab pipelineRunName="dummy" pipelineRunUID="pipelinerun-test" />,
+    );
     screen.getByText('Missing CVE scan results');
     fireEvent.click(screen.getByRole('button', { name: 'Status filter menu' }));
     fireEvent.click(screen.getByLabelText('Failed'));
@@ -68,7 +78,9 @@ describe('SecurityEnterpriseContractTab', () => {
   });
 
   it('should sort by Status', () => {
-    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy-1" />);
+    routerRenderer(
+      <SecurityEnterpriseContractTab pipelineRunName="dummy" pipelineRunUID="pipelinerun-test" />,
+    );
     const status = screen.getAllByTestId('rule-status');
     expect(status[0].textContent.trim()).toEqual('Failed');
     fireEvent.click(screen.getAllByText('Status')[1]);
@@ -77,7 +89,9 @@ describe('SecurityEnterpriseContractTab', () => {
   });
 
   it('should render result summary', () => {
-    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy-1" />);
+    routerRenderer(
+      <SecurityEnterpriseContractTab pipelineRunName="dummy" pipelineRunUID="pipelinerun-test" />,
+    );
     const resultSummary = screen.getByTestId('result-summary');
     const status = resultSummary.getElementsByTagName('span');
     expect(status[0].textContent.trim()).toBe('Failed');

@@ -77,6 +77,7 @@ export const getDownloadAllLogsCallback = (
   workspace: string,
   namespace: string,
   pipelineRunName: string,
+  pipelineRunUID: string,
 ): (() => Promise<Error>) => {
   const getWatchUrls = async (): Promise<StepsWatchUrl> => {
     const stepsList: ContainerStatus[][] = await Promise.all(
@@ -148,7 +149,8 @@ export const getDownloadAllLogsCallback = (
                 ]);
         }
       } else {
-        allLogs += await getTaskRunLog(workspace, namespace, currTask).then(
+        const taskRun = taskRuns.find((t) => t.metadata.name === currTask);
+        allLogs += await getTaskRunLog(workspace, namespace, pipelineRunUID, taskRun).then(
           (log) => `${tasks[currTask].name.toUpperCase()}\n\n${log}\n\n`,
         );
       }

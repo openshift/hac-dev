@@ -14,6 +14,7 @@ import { extractEcResultsFromTaskRunLogs } from './utils';
 
 export const useEnterpriseContractResultFromLogs = (
   pipelineRunName: string,
+  pipelineRunUID: string,
 ): [ComponentEnterpriseContractResult[], boolean] => {
   const { namespace, workspace } = useWorkspaceInfo();
   const [taskRun, loaded, error] = useTaskRuns(namespace, pipelineRunName, 'verify');
@@ -71,7 +72,8 @@ export const useEnterpriseContractResultFromLogs = (
           const logs = await getTaskRunLog(
             workspace,
             taskRun[0].metadata.namespace,
-            taskRun[0].metadata.name,
+            pipelineRunUID,
+            taskRun[0],
           );
           if (unmount) return;
           const json = extractEcResultsFromTaskRunLogs(logs);
@@ -93,7 +95,7 @@ export const useEnterpriseContractResultFromLogs = (
     return () => {
       unmount = true;
     };
-  }, [fetchTknLogs, taskRun, workspace]);
+  }, [fetchTknLogs, taskRun, workspace, pipelineRunUID]);
 
   const ecResult = React.useMemo(() => {
     // filter out components for which ec didn't execute because invalid image URL
@@ -158,8 +160,9 @@ export const mapEnterpriseContractResultData = (
 
 export const useEnterpriseContractResults = (
   pipelineRunName: string,
+  pipelineRunUID: string,
 ): [UIEnterpriseContractData[], boolean] => {
-  const [ec, ecLoaded] = useEnterpriseContractResultFromLogs(pipelineRunName);
+  const [ec, ecLoaded] = useEnterpriseContractResultFromLogs(pipelineRunName, pipelineRunUID);
   const ecResult = React.useMemo(() => {
     return ecLoaded && ec ? mapEnterpriseContractResultData(ec) : undefined;
   }, [ec, ecLoaded]);

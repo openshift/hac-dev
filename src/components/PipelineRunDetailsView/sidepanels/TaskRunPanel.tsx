@@ -20,9 +20,14 @@ import './TaskRunPanel.scss';
 type Props = {
   onClose: () => void;
   taskNode: GraphElement<ElementModel, PipelineRunNodeData>;
+  pipelineRunUID: string;
 };
 
-const TaskRunPanel: React.FC<React.PropsWithChildren<Props>> = ({ taskNode, onClose }) => {
+const TaskRunPanel: React.FC<React.PropsWithChildren<Props>> = ({
+  taskNode,
+  onClose,
+  pipelineRunUID,
+}) => {
   const task = taskNode.getData().task;
   const taskRun = taskNode.getData().taskRun;
   const { status } = taskNode.getData();
@@ -64,6 +69,7 @@ const TaskRunPanel: React.FC<React.PropsWithChildren<Props>> = ({ taskNode, onCl
                 taskRun={taskRun}
                 namespace={taskNode.getData().namespace}
                 status={status}
+                pipelineRunUID={pipelineRunUID}
               />
             </DrawerPanelBody>
           </Tab>

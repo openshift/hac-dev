@@ -46,7 +46,13 @@ describe('TektonTaskRunLog', () => {
     useTRTaskRunLogMock.mockReturnValue(['', false, null]);
     configure({ testIdAttribute: 'data-test' });
 
-    render(<TektonTaskRunLog taskRun={testTaskRuns[0]} setCurrentLogsGetter={() => {}} />);
+    render(
+      <TektonTaskRunLog
+        taskRun={testTaskRuns[0]}
+        setCurrentLogsGetter={() => {}}
+        pipelineRunUID="pipelinerun-test"
+      />,
+    );
 
     await waitFor(() => {
       screen.getByTestId('loading-indicator');
@@ -55,7 +61,13 @@ describe('TektonTaskRunLog', () => {
   it('should display the tekton log results', async () => {
     useTRTaskRunLogMock.mockReturnValue(['tekton log results', true, null]);
 
-    render(<TektonTaskRunLog taskRun={testTaskRuns[0]} setCurrentLogsGetter={() => {}} />);
+    render(
+      <TektonTaskRunLog
+        taskRun={testTaskRuns[0]}
+        setCurrentLogsGetter={() => {}}
+        pipelineRunUID="pipelinerun-test"
+      />,
+    );
 
     await waitFor(() => {
       screen.getByText('tekton log results');

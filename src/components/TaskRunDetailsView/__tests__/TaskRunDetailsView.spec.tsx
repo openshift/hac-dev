@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
-import { useTaskRun } from '../../../hooks/usePipelineRuns';
+import { useTaskRun, usePipelineRun } from '../../../hooks/usePipelineRuns';
 import { routerRenderer } from '../../../utils/test-utils';
 import { testTaskRuns } from '../../TaskRunListView/__data__/mock-TaskRun-data';
 import { TaskRunDetailsView } from '../TaskRunDetailsView';
@@ -30,12 +30,18 @@ jest.mock('react-router-dom', () => {
 
 jest.mock('../../../hooks/usePipelineRuns', () => ({
   useTaskRun: jest.fn(),
+  usePipelineRun: jest.fn(),
 }));
 
 const useTaskRunMock = useTaskRun as jest.Mock;
+const usePipelineRunMock = usePipelineRun as jest.Mock;
 // const sanitizeHtmlMock = sanitizeHtml as jest.Mock;
 
 describe('TaskRunDetailsView', () => {
+  beforeEach(() => {
+    usePipelineRunMock.mockReturnValue([{ metadata: { uid: 'test-plr' } }, true, null]);
+  });
+
   const taskrunName = testTaskRuns[0].metadata.name;
   it('should render spinner if taskrun data is not loaded', () => {
     useTaskRunMock.mockReturnValue([null, false]);
@@ -56,6 +62,13 @@ describe('TaskRunDetailsView', () => {
     screen.getAllByText(taskrunName);
   });
 
+  it('should render the error state if the pipelineRun uid is not found', () => {
+    usePipelineRunMock.mockReturnValue([null, true, { code: 404 }]);
+    useTaskRunMock.mockReturnValueOnce([testTaskRuns[0], true]).mockReturnValue([[], true]);
+    routerRenderer(<TaskRunDetailsView taskRunName={taskrunName} />);
+    screen.queryByText('Unable to load pipelineRun');
+  });
+
   it('should redirect to details when taskrun succeeded', () => {
     useTaskRunMock.mockReturnValueOnce([testTaskRuns[1], true]).mockReturnValue([[], true]);
     routerRenderer(<TaskRunDetailsView taskRunName={taskrunName} />);
@@ -72,5 +85,11 @@ describe('TaskRunDetailsView', () => {
       '/application-pipeline/workspaces//applications/example-app/taskruns/example/logs',
     );
     screen.getAllByText(taskrunName);
+  });
+
+  it('should show failure message when TaskRun failed and no pipelinerun uid is found', () => {
+    useTaskRunMock.mockReturnValueOnce([testTaskRuns[0], true]).mockReturnValue([[], true]);
+    routerRenderer(<TaskRunDetailsView taskRunName={taskrunName} />);
+    screen.queryByText('Unable to load pipelineRun');
   });
 });
