@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-import { FormGroup } from '@patternfly/react-core';
+import { Bullseye, FormGroup, Spinner } from '@patternfly/react-core';
 import { FieldArray, useField, FieldArrayRenderProps } from 'formik';
 import { getFieldId } from '../../../src/shared/components/formik-fields/field-utils';
 import { useComponents } from '../../hooks/useComponents';
@@ -106,7 +106,9 @@ const ContextsField: React.FC<IntegrationTestContextProps> = ({ heading, fieldNa
           )}
         />
       ) : (
-        'Loading Additional Component Context options'
+        <Bullseye>
+          <Spinner size="xl" />
+        </Bullseye>
       )}
     </FormGroup>
   );
