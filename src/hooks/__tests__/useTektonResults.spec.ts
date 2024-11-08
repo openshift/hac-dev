@@ -49,7 +49,6 @@ const mockResponseLogs = 'test-log';
 
 const getPipelineRunsMock = getPipelineRuns as jest.Mock;
 const getTaskRunsMock = getTaskRuns as jest.Mock;
-// const getTaskRunLogMock = getTaskRunLog as jest.Mock;
 const getTaskRunLogOldMock = getTaskRunLogOld as jest.Mock;
 const commonFetchTextMock = commonFetchText as unknown as jest.Mock;
 
