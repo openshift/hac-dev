@@ -31,7 +31,6 @@ const permissions: Record<WorkspaceRole, Record<string, Permission[]>> = {
     'Remote Secrets': [Permission.Read],
     'Build Service': [Permission.Read],
     Configs: [Permission.Read],
-    Secrets: [Permission.Read],
   },
   maintainer: {
     Application: [Permission.Create, Permission.Read, Permission.Update],
@@ -55,7 +54,6 @@ const permissions: Record<WorkspaceRole, Record<string, Permission[]>> = {
     'Remote Secrets': [Permission.Read],
     'Build Service': [Permission.Create, Permission.Read],
     Configs: [Permission.Read],
-    Secrets: [Permission.Read],
   },
   admin: {
     Application: [Permission.Everything],
