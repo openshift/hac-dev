@@ -5,24 +5,13 @@ import TaskRunLogs from '../../TaskRuns/TaskRunLogs';
 
 export type TaskRunLogProps = {
   taskRun: TaskRunKind;
-  pipelineRunUID: string;
 };
 
-const TaskRunLogsTab: React.FC<React.PropsWithChildren<TaskRunLogProps>> = ({
-  taskRun,
-  pipelineRunUID,
-}) => {
+const TaskRunLogsTab: React.FC<React.PropsWithChildren<TaskRunLogProps>> = ({ taskRun }) => {
   const status = taskRunStatus(taskRun);
   const namespace = taskRun.metadata?.namespace;
 
-  return (
-    <TaskRunLogs
-      taskRun={taskRun}
-      status={status}
-      namespace={namespace}
-      pipelineRunUID={pipelineRunUID}
-    />
-  );
+  return <TaskRunLogs taskRun={taskRun} status={status} namespace={namespace} />;
 };
 
 export default TaskRunLogsTab;

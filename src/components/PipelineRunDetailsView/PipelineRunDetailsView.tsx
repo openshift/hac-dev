@@ -141,10 +141,7 @@ export const PipelineRunDetailsView: React.FC<
                   key: 'security',
                   label: 'Security',
                   component: (
-                    <SecurityEnterpriseContractTab
-                      pipelineRunName={pipelineRun.metadata.name}
-                      pipelineRunUID={pipelineRun.metadata.uid}
-                    />
+                    <SecurityEnterpriseContractTab pipelineRun={pipelineRun.metadata.name} />
                   ),
                 },
               ]

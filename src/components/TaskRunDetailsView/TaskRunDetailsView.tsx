@@ -117,7 +117,7 @@ export const TaskRunDetailsView: React.FC<React.PropsWithChildren<TaskRunDetails
                 body={JSON.stringify(plrError)}
               />
             ) : (
-              <TaskRunLogsTab pipelineRunUID={pipelineRun?.metadata?.uid} taskRun={taskRun} />
+              <TaskRunLogsTab taskRun={taskRun} />
             ),
         },
         ...(isEnterpriseContract
@@ -125,18 +125,7 @@ export const TaskRunDetailsView: React.FC<React.PropsWithChildren<TaskRunDetails
               {
                 key: 'security',
                 label: 'Security',
-                component:
-                  (plrLoaded && plrError) || (plrLoaded && !pipelineRun) ? (
-                    <ErrorEmptyState
-                      title={`Unable to load pipelineRun ${plrName}`}
-                      body={JSON.stringify(plrError)}
-                    />
-                  ) : (
-                    <SecurityEnterpriseContractTab
-                      pipelineRunName={plrName}
-                      pipelineRunUID={pipelineRun?.metadata?.uid}
-                    />
-                  ),
+                component: <SecurityEnterpriseContractTab pipelineRun={plrName} />,
               },
             ]
           : []),

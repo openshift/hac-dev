@@ -1,5 +1,6 @@
 import React from 'react';
 import { K8sResourceCommon } from '@openshift/dynamic-plugin-sdk-utils';
+import { PipelineRunModel } from '../models';
 import { PipelineRunKind, TaskRunKind } from '../types';
 import {
   getPipelineRuns,
@@ -118,17 +119,26 @@ export const useTRTaskRuns = (
 
 export const useTRTaskRunLog = (
   namespace: string,
-  pipelineRunUID: string,
   taskRun: TaskRunKind,
 ): [string, boolean, unknown] => {
   const { workspace } = useWorkspaceInfo();
   const [result, setResult] = React.useState<[string, boolean, unknown]>([null, false, undefined]);
+
+  const pipelineRunUID = taskRun?.metadata?.ownerReferences?.find(
+    (reference) => reference.kind === PipelineRunModel.kind,
+  )?.uid;
+
   React.useEffect(() => {
     let disposed = false;
     if (namespace && taskRun && pipelineRunUID) {
       (async () => {
         try {
-          const log = await getTaskRunLog(workspace, namespace, pipelineRunUID, taskRun);
+          const log = await getTaskRunLog(
+            workspace,
+            namespace,
+            pipelineRunUID,
+            taskRun?.metadata?.uid,
+          );
           if (!disposed) {
             setResult([log, true, undefined]);
           }

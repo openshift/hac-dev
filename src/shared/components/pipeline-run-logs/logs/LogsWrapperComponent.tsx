@@ -14,7 +14,6 @@ import { TektonTaskRunLog } from './TektonTaskRunLog';
 
 type LogsWrapperComponentProps = {
   taskRun: TaskRunKind;
-  pipelineRunUID: string;
   downloadAllLabel?: string;
   onDownloadAll?: () => Promise<Error>;
   resource: WatchK8sResource;
@@ -24,7 +23,6 @@ const LogsWrapperComponent: React.FC<React.PropsWithChildren<LogsWrapperComponen
   resource,
   taskRun,
   onDownloadAll,
-  pipelineRunUID,
   downloadAllLabel = 'Download all',
   ...props
 }) => {
@@ -128,11 +126,7 @@ const LogsWrapperComponent: React.FC<React.PropsWithChildren<LogsWrapperComponen
               setCurrentLogsGetter={setLogGetter}
             />
           ) : (
-            <TektonTaskRunLog
-              taskRun={taskRun}
-              setCurrentLogsGetter={setLogGetter}
-              pipelineRunUID={pipelineRunUID}
-            />
+            <TektonTaskRunLog taskRun={taskRun} setCurrentLogsGetter={setLogGetter} />
           )}
         </>
       ) : (

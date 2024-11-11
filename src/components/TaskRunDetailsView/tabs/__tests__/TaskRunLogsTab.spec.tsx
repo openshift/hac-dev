@@ -45,7 +45,6 @@ describe('TaskRunLogs', () => {
             ],
           },
         }}
-        pipelineRunUID="test-id"
       />,
       {
         wrapper: BrowserRouter,

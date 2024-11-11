@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { commonFetchJSON, getK8sResourceURL } from '@openshift/dynamic-plugin-sdk-utils';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
+import { PipelineRunModel } from '../../models';
 import { PodModel } from '../../models/pod';
 import { getTaskRunLog } from '../../utils/tekton-results';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
@@ -14,7 +15,6 @@ import { extractEcResultsFromTaskRunLogs } from './utils';
 
 export const useEnterpriseContractResultFromLogs = (
   pipelineRunName: string,
-  pipelineRunUID: string,
 ): [ComponentEnterpriseContractResult[], boolean] => {
   const { namespace, workspace } = useWorkspaceInfo();
   const [taskRun, loaded, error] = useTaskRuns(namespace, pipelineRunName, 'verify');
@@ -67,13 +67,16 @@ export const useEnterpriseContractResultFromLogs = (
   React.useEffect(() => {
     let unmount = false;
     if (fetchTknLogs) {
+      const pipelineRunUID = taskRun[0]?.metadata?.ownerReferences?.find(
+        (reference) => reference.kind === PipelineRunModel.kind,
+      )?.uid;
       const fetch = async () => {
         try {
           const logs = await getTaskRunLog(
             workspace,
             taskRun[0].metadata.namespace,
             pipelineRunUID,
-            taskRun[0],
+            taskRun[0].metadata?.uid,
           );
           if (unmount) return;
           const json = extractEcResultsFromTaskRunLogs(logs);
@@ -95,7 +98,7 @@ export const useEnterpriseContractResultFromLogs = (
     return () => {
       unmount = true;
     };
-  }, [fetchTknLogs, taskRun, workspace, pipelineRunUID]);
+  }, [fetchTknLogs, taskRun, workspace]);
 
   const ecResult = React.useMemo(() => {
     // filter out components for which ec didn't execute because invalid image URL
@@ -160,9 +163,8 @@ export const mapEnterpriseContractResultData = (
 
 export const useEnterpriseContractResults = (
   pipelineRunName: string,
-  pipelineRunUID: string,
 ): [UIEnterpriseContractData[], boolean] => {
-  const [ec, ecLoaded] = useEnterpriseContractResultFromLogs(pipelineRunName, pipelineRunUID);
+  const [ec, ecLoaded] = useEnterpriseContractResultFromLogs(pipelineRunName);
   const ecResult = React.useMemo(() => {
     return ecLoaded && ec ? mapEnterpriseContractResultData(ec) : undefined;
   }, [ec, ecLoaded]);

@@ -528,16 +528,9 @@ describe('tekton-results', () => {
     it('should call commonFetchText with pipeline uid & taskrun uid', async () => {
       commonFetchJSONMock.mockReturnValueOnce(mockLogsRecordsList);
       commonFetchTextMock.mockReturnValueOnce(Promise.resolve(mockLogResponse));
-      expect(
-        await getTaskRunLog('test-ws', 'test-ns', 'pipelinerun-uid', {
-          kind: 'TaskRun',
-          apiVersion: '',
-          metadata: {
-            uid: 'test-id',
-          },
-          spec: {},
-        }),
-      ).toEqual('sample log');
+      expect(await getTaskRunLog('test-ws', 'test-ns', 'pipelinerun-uid', 'test-id')).toEqual(
+        'sample log',
+      );
 
       expect(commonFetchTextMock.mock.calls).toEqual([
         [
@@ -548,16 +541,7 @@ describe('tekton-results', () => {
 
     it('should throw error 404 if record not found', async () => {
       commonFetchTextMock.mockClear().mockRejectedValue(mockEmptyRecordsList);
-      await expect(
-        getTaskRunLog('test-ws', 'test-ns', 'sample-task-run', {
-          kind: 'TaskRun',
-          apiVersion: '',
-          metadata: {
-            uid: 'test',
-          },
-          spec: {},
-        }),
-      ).rejects.toEqual({
+      await expect(getTaskRunLog('test-ws', 'test-ns', 'sample-task-run', 'test')).rejects.toEqual({
         code: 404,
       });
     });

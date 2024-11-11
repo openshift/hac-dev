@@ -4,6 +4,7 @@ import {
   k8sGetResource,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { saveAs } from 'file-saver';
+import { PipelineRunModel } from '../../../../models';
 import { PodModel } from '../../../../models/pod';
 import { TaskRunKind } from '../../../../types';
 import { getTaskRunLog } from '../../../../utils/tekton-results';
@@ -77,7 +78,6 @@ export const getDownloadAllLogsCallback = (
   workspace: string,
   namespace: string,
   pipelineRunName: string,
-  pipelineRunUID: string,
 ): (() => Promise<Error>) => {
   const getWatchUrls = async (): Promise<StepsWatchUrl> => {
     const stepsList: ContainerStatus[][] = await Promise.all(
@@ -150,9 +150,15 @@ export const getDownloadAllLogsCallback = (
         }
       } else {
         const taskRun = taskRuns.find((t) => t.metadata.name === currTask);
-        allLogs += await getTaskRunLog(workspace, namespace, pipelineRunUID, taskRun).then(
-          (log) => `${tasks[currTask].name.toUpperCase()}\n\n${log}\n\n`,
-        );
+        const pipelineRunUID = taskRun?.metadata?.ownerReferences?.find(
+          (reference) => reference.kind === PipelineRunModel.kind,
+        )?.uid;
+        allLogs += await getTaskRunLog(
+          workspace,
+          namespace,
+          pipelineRunUID,
+          taskRun?.metadata?.uid,
+        ).then((log) => `${tasks[currTask].name.toUpperCase()}\n\n${log}\n\n`);
       }
     }
     const buffer = new LineBuffer();

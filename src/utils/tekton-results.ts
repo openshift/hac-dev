@@ -7,7 +7,7 @@ import {
   Selector,
 } from '@openshift/dynamic-plugin-sdk-utils';
 import { PipelineRunLabel } from '../consts/pipelinerun';
-import { PipelineRunKindV1Beta1, TaskRunKind, TaskRunKindV1Beta1 } from '../types';
+import { PipelineRunKindV1Beta1, TaskRunKindV1Beta1 } from '../types';
 
 // REST API spec
 // https://github.com/tektoncd/results/blob/main/docs/api/rest-api-spec.md
@@ -337,32 +337,12 @@ export const getTaskRuns = (
   cacheKey?: string,
 ) => getFilteredTaskRuns(workspace, namespace, '', options, nextPageToken, cacheKey);
 
-const getLog = (workspace: string, taskRunPath: string) =>
-  commonFetchText(`${getTRUrlPrefix(workspace)}/${taskRunPath.replace('/records/', '/logs/')}`);
-
-export const getTaskRunLogOld = (
-  workspace: string,
-  namespace: string,
-  taskRunName: string,
-): Promise<string> =>
-  getFilteredRecord<any>(
-    workspace,
-    namespace,
-    [DataType.Log, DataType.Log_OLD],
-    AND(EQ(`data.spec.resource.kind`, 'TaskRun'), EQ(`data.spec.resource.name`, taskRunName)),
-    { limit: 1 },
-  ).then((x) =>
-    x?.[1]?.records.length > 0
-      ? getLog(workspace, x?.[1]?.records[0].name).catch(() => throw404())
-      : throw404(),
-  );
-
 export const getTaskRunLog = (
   workspace: string,
   namespace: string,
   pid: string,
-  taskRun: TaskRunKind,
+  taskRunID: string,
 ) =>
   commonFetchText(
-    `${getTRUrlPrefix(workspace)}/${namespace}/results/${pid}/logs/${taskRun?.metadata?.uid}`,
-  ).catch(() => getTaskRunLogOld(workspace, namespace, taskRun.metadata.name));
+    `${getTRUrlPrefix(workspace)}/${namespace}/results/${pid}/logs/${taskRunID}`,
+  ).catch(() => throw404());
