@@ -12,7 +12,7 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 RUN wget "https://github.com/sigstore/cosign/releases/download/v2.0.0/cosign-linux-amd64" && \
     mv cosign-linux-amd64 /usr/local/bin/cosign && \
     chmod +x /usr/local/bin/cosign
-    
+
 USER node:0
 
 COPY --chown=node:root --chmod=775 . /tmp/e2e

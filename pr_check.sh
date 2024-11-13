@@ -20,6 +20,17 @@ IQE_PLUGINS="hac_dev"
 IQE_MARKER_EXPRESSION="smoke"
 IQE_FILTER_EXPRESSION=""
 
+# If test dockerfile changes, rebuild the runner image
+TEST_IMAGE="quay.io/hacdev/hac-tests:next"
+if ! git diff --exit-code --quiet origin/$ghprbTargetBranch HEAD -- integration-tests/Dockerfile; then
+  echo "Dockerfile changes detected, rebuilding test image"
+  TEST_IMAGE="hac-dev:pr-${ghprbPullId}"
+
+  cd integration-tests
+  podman build -t "$TEST_IMAGE" . -f Dockerfile
+  cd ..
+fi
+
 # Build and push to quay
 set -exv
 # source is preferred to | bash -s in this case to avoid a subshell
@@ -100,18 +111,6 @@ COMMON_SETUP="-v $WORKSPACE/artifacts:/tmp/artifacts:Z,U \
     -e CYPRESS_GH_PR_TITLE=${PR_TITLE} \
     -e CYPRESS_SSO_URL=${HAC_KC_SSO_URL} \
     -e GH_COMMENTBODY=${GH_COMMENTBODY}"
-TEST_IMAGE="quay.io/hacdev/hac-tests:next"
-
-# If test dockerfile changes, rebuild the runner image
-if ! git diff --exit-code --quiet origin/$ghprbTargetBranch HEAD -- integration-tests/Dockerfile; then
-  echo "Dockerfile changes detected, rebuilding test image"
-  TEST_IMAGE="hac-dev:pr-${ghprbPullId}"
-
-  cd integration-tests
-  docker build -t "$TEST_IMAGE" . -f Dockerfile
-  podman pull docker-daemon:$TEST_IMAGE
-  cd ..
-fi
 
 set +e
 TEST_RUN=0
@@ -130,7 +129,6 @@ podman run --userns=keep-id ${COMMON_SETUP} \
 
 if [[ $TEST_IMAGE =~ "hac-dev:pr" ]]; then
   podman rmi -f $TEST_IMAGE
-  docker rmi -f $TEST_IMAGE
 fi
 
 bonfire namespace release -f ${NAMESPACE}
