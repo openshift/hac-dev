@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
-import { commonFetch, useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
+import { render, screen } from '@testing-library/react';
 import IntroBanner from '../IntroBanner';
 import '@testing-library/jest-dom';
-import SignupButton from '../SignupButton';
 
 jest.mock('@openshift/dynamic-plugin-sdk', () => ({
   useFeatureFlag: jest.fn(),
@@ -34,15 +33,8 @@ jest.mock('../../../utils/rbac', () => ({
 
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const useFeatureFlagMock = useFeatureFlag as jest.Mock;
-const fetchMock = commonFetch as jest.Mock;
 
 describe('Intro Banner', () => {
-  it('should show signup action when user is not signed up', () => {
-    useFeatureFlagMock.mockReturnValue([false, () => {}]);
-    render(<IntroBanner />);
-    expect(screen.getByRole('button', { name: 'Join the waitlist' })).toBeInTheDocument();
-  });
-
   it('should show waitlist alert when user is pending approval', () => {
     useFeatureFlagMock.mockReturnValueOnce([false, () => {}]).mockReturnValue([true, () => {}]);
     render(<IntroBanner />);
@@ -71,19 +63,5 @@ describe('Intro Banner', () => {
     useK8sWatchResourceMock.mockReturnValue([[{}], true]);
     render(<IntroBanner />);
     expect(screen.queryByRole('link', { name: 'View my applications' })).toBeInTheDocument();
-  });
-
-  it('should make signup call on submit', async () => {
-    const setFlagMock = jest.fn();
-    useFeatureFlagMock.mockReturnValue([false, setFlagMock]);
-    fetchMock.mockResolvedValue({ status: 202 });
-    render(<SignupButton />);
-    const signupButton = screen.getByRole('button', { name: 'Join the waitlist' });
-    expect(signupButton).toBeEnabled();
-    fireEvent.click(signupButton);
-    await waitFor(() =>
-      expect(fetchMock).toHaveBeenCalledWith('/registration/api/v1/signup', { method: 'POST' }),
-    );
-    expect(setFlagMock).toHaveBeenCalledWith(true);
   });
 });
