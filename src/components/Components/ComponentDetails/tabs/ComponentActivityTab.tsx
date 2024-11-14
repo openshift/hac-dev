@@ -23,7 +23,7 @@ export const ComponentActivityTab: React.FC<React.PropsWithChildren<ComponentAct
   const applicationName = component.spec.application;
   const { activeTab: parentTab, compActivity: activeTab } = params;
   const [lastSelectedTab, setLocalStorageItem] = useLocalStorage<string>(
-    `${component ? `${component.spec.componentName}_` : ''}${ACTIVITY_SECONDARY_TAB_KEY}`,
+    `${component ? `${component.metadata.name}_` : ''}${ACTIVITY_SECONDARY_TAB_KEY}`,
   );
   const currentTab = activeTab || lastSelectedTab || 'latest-commits';
   const navigate = useNavigate();
@@ -31,11 +31,11 @@ export const ComponentActivityTab: React.FC<React.PropsWithChildren<ComponentAct
     (newTab: string) => {
       if (currentTab !== newTab) {
         navigate(
-          `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components/${component.spec.componentName}/${parentTab}/${newTab}`,
+          `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components/${component.metadata.name}/${parentTab}/${newTab}`,
         );
       }
     },
-    [applicationName, component.spec.componentName, currentTab, navigate, parentTab, workspace],
+    [applicationName, component.metadata.name, currentTab, navigate, parentTab, workspace],
   );
 
   React.useEffect(() => {
@@ -47,14 +47,14 @@ export const ComponentActivityTab: React.FC<React.PropsWithChildren<ComponentAct
   React.useEffect(() => {
     if (!activeTab && lastSelectedTab) {
       navigate(
-        `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components/${component.spec.componentName}/${parentTab}/${lastSelectedTab}`,
+        `/application-pipeline/workspaces/${workspace}/applications/${applicationName}/components/${component.metadata.name}/${parentTab}/${lastSelectedTab}`,
         { replace: true },
       );
     }
   }, [
     activeTab,
     applicationName,
-    component.spec.componentName,
+    component.metadata.name,
     lastSelectedTab,
     navigate,
     parentTab,
