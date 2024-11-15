@@ -29,6 +29,10 @@ jest.mock('../../../../hooks/useUIInstance', () => {
   };
 });
 
+jest.mock('../../../../hooks/useApplications', () => ({
+  useApplication: jest.fn().mockReturnValue([{ metadata: { name: 'test' } }, true]),
+}));
+
 jest.mock('../../../topology/factories/VisualizationFactory', () => () => <div />);
 
 configure({ testIdAttribute: 'data-test' });

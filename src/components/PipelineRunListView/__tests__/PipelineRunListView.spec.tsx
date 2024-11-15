@@ -20,6 +20,10 @@ jest.mock('../../../hooks/usePipelineRuns', () => ({
   usePipelineRuns: jest.fn(),
 }));
 
+jest.mock('../../../hooks/useApplications', () => ({
+  useApplication: jest.fn().mockReturnValue([{ metadata: { name: 'test' } }, true]),
+}));
+
 jest.mock('../../../utils/workspace-context-utils', () => ({
   useWorkspaceInfo: jest.fn(() => ({ namespace: 'test-ns', workspace: 'test-ws' })),
 }));

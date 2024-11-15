@@ -11,6 +11,10 @@ jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   getActiveWorkspace: jest.fn(),
 }));
 
+jest.mock('../../hooks/useApplications', () => ({
+  useApplication: jest.fn().mockReturnValue([{ metadata: { name: 'test' } }, true]),
+}));
+
 const useK8sWatchResourceMock = useK8sWatchResource as jest.Mock;
 const useTRPipelineRunsMock = useTRPipelineRuns as jest.Mock;
 

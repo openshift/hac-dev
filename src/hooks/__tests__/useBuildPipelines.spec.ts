@@ -6,6 +6,10 @@ import { useTRPipelineRuns } from '../useTektonResults';
 
 jest.mock('../useTektonResults');
 
+jest.mock('../useApplications', () => ({
+  useApplication: jest.fn().mockReturnValue([{ metadata: { name: 'test' } }, true]),
+}));
+
 jest.mock('@openshift/dynamic-plugin-sdk-utils', () => ({
   useK8sWatchResource: jest.fn(() => [[], true]),
   getActiveWorkspace: jest.fn(),

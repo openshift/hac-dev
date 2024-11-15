@@ -39,11 +39,6 @@ export const useLatestIntegrationTestPipelines = (
           },
           matchExpressions: [
             {
-              key: PipelineRunLabel.COMPONENT,
-              operator: 'In',
-              values: componentNames,
-            },
-            {
               key: PipelineRunLabel.TEST_SERVICE_SCENARIO,
               operator: 'In',
               values: neededNames,
@@ -51,7 +46,7 @@ export const useLatestIntegrationTestPipelines = (
           ],
         },
       }),
-      [applicationName, componentNames, neededNames],
+      [applicationName, neededNames],
     ),
   );
 
