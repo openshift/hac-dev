@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { ButtonProps, ButtonVariant, Icon } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
+import { css } from '@patternfly/react-styles';
 import AnalyticsButton from '../../../components/AnalyticsButton/AnalyticsButton';
 import { AnalyticsButtonProperties } from '../../../utils/analytics';
+import './ExternalLink.scss';
 
 type ExternalLinkProps = {
   href: string;
@@ -18,6 +20,7 @@ type ExternalLinkProps = {
   onClick?: ButtonProps['onClick'];
   analytics?: AnalyticsButtonProperties;
   size?: 'sm' | 'md' | 'lg' | 'xl';
+  isHighlightable?: boolean;
 };
 
 const ExternalLink: React.FC<React.PropsWithChildren<ExternalLinkProps>> = ({
@@ -34,11 +37,12 @@ const ExternalLink: React.FC<React.PropsWithChildren<ExternalLinkProps>> = ({
   icon,
   onClick,
   size = 'sm',
+  isHighlightable,
 }) => (
   <AnalyticsButton
     component="a"
     style={style}
-    className={additionalClassName}
+    className={css(additionalClassName, isHighlightable && 'highlightable-link')}
     href={href}
     target="_blank"
     rel="noopener noreferrer"

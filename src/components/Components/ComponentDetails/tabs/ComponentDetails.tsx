@@ -92,6 +92,7 @@ const ComponentDetails: React.FC<React.PropsWithChildren<ComponentDetailsProps>>
                       : `https://${componentImageURL}`
                   }
                   text={componentImageURL}
+                  isHighlightable
                 />
               </DescriptionListDescription>
             </DescriptionListGroup>
