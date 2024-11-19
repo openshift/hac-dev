@@ -1,11 +1,12 @@
 /* eslint-disable max-nested-callbacks */
+
+import { commonFetchText } from '@openshift/dynamic-plugin-sdk-utils';
 import { act, renderHook } from '@testing-library/react-hooks';
 import {
   TektonResultsOptions,
   getPipelineRuns,
   getTaskRuns,
   RecordsList,
-  getTaskRunLog,
 } from '../../utils/tekton-results';
 import { useTRPipelineRuns, useTRTaskRunLog, useTRTaskRuns } from '../useTektonResults';
 
@@ -14,6 +15,18 @@ jest.mock('../../utils/workspace-context-utils', () => ({
 }));
 
 jest.mock('../../utils/tekton-results');
+
+jest.mock('../../utils/tekton-results', () => {
+  const actual = jest.requireActual('../../utils/tekton-results');
+  return {
+    ...actual,
+    getTaskRunLogOld: jest.fn(),
+    getPipelineRuns: jest.fn(),
+    getTaskRuns: jest.fn(),
+  };
+});
+
+jest.mock('@openshift/dynamic-plugin-sdk-utils');
 
 const mockResponse = [
   [{ metadata: { name: 'first' } }, { metadata: { name: 'second' } }],
@@ -25,12 +38,22 @@ const mockResponseNext = [
   {},
 ] as [any[], RecordsList];
 
+const mockTaskRun = {
+  apiVersion: 'v1Alpha1',
+  spec: {},
+  kind: 'TaskRun',
+  metadata: { uid: 'test-id' },
+};
+
+const mockResponseLogs = 'test-log';
+
 const getPipelineRunsMock = getPipelineRuns as jest.Mock;
 const getTaskRunsMock = getTaskRuns as jest.Mock;
-const getTaskRunLogMock = getTaskRunLog as jest.Mock;
+const commonFetchTextMock = commonFetchText as unknown as jest.Mock;
 
 describe('useTektonResults', () => {
   beforeEach(() => {
+    commonFetchTextMock.mockReturnValueOnce(Promise.resolve(mockResponseLogs));
     jest.clearAllMocks();
   });
 
@@ -182,32 +205,60 @@ describe('useTektonResults', () => {
   describe('useTRTaskRunLog', () => {
     it('should not attempt to get task run log', () => {
       renderHook(() => useTRTaskRunLog(null, null));
-      expect(getTaskRunLogMock).not.toHaveBeenCalled();
+      expect(commonFetchTextMock).not.toHaveBeenCalled();
+
+      renderHook(() =>
+        useTRTaskRunLog(null, {
+          apiVersion: 'v1Alpha1',
+          spec: {},
+          kind: 'TaskRun',
+          metadata: { uid: 'test-id' },
+        }),
+      );
+      expect(commonFetchTextMock).not.toHaveBeenCalled();
 
       renderHook(() => useTRTaskRunLog('test-ns', null));
-      expect(getTaskRunLogMock).not.toHaveBeenCalled();
-
-      renderHook(() => useTRTaskRunLog(null, 'sample-task-run'));
-      expect(getTaskRunLogMock).not.toHaveBeenCalled();
+      expect(commonFetchTextMock).not.toHaveBeenCalled();
     });
 
     it('should return task run log', async () => {
-      getTaskRunLogMock.mockReturnValue('sample log');
-      const { result, waitFor } = renderHook(() => useTRTaskRunLog('test-ns', 'sample-task-run'));
-      expect(getTaskRunLogMock).toHaveBeenCalledWith('test-ws', 'test-ns', 'sample-task-run');
-      expect(result.current).toEqual([null, false, undefined]);
-      await waitFor(() => result.current[1]);
-      expect(result.current).toEqual(['sample log', true, undefined]);
+      commonFetchTextMock.mockImplementation(() => mockResponseLogs);
+      renderHook(() =>
+        useTRTaskRunLog('test-ns', {
+          ...mockTaskRun,
+          metadata: {
+            ...mockTaskRun.metadata,
+            ownerReferences: [
+              { apiVersion: 'v1beta1', name: 'plr1', kind: `PipelineRun`, uid: 'pipelinerun-uid' },
+            ],
+          },
+        }),
+      );
+      expect(commonFetchTextMock).toHaveBeenCalled();
+      expect(commonFetchTextMock).toHaveBeenCalledWith(
+        '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/pipelinerun-uid/logs/test-id',
+      );
     });
 
-    it('should return error when exception thrown', async () => {
-      const error = {};
-      getTaskRunLogMock.mockImplementation(() => {
-        throw error;
-      });
-      const { result } = renderHook(() => useTRTaskRunLog('test-ns', 'sample-task-run'));
-      expect(getTaskRunLogMock).toHaveBeenCalledWith('test-ws', 'test-ns', 'sample-task-run');
-      expect(result.current).toEqual([null, false, error]);
+    it('should return error when exception thrown by both FetchLogs', async () => {
+      commonFetchTextMock.mockRejectedValue({});
+      const { result } = renderHook(() =>
+        useTRTaskRunLog('test-ns', {
+          apiVersion: 'v1Alpha1',
+          spec: {},
+          kind: 'TaskRun',
+          metadata: {
+            uid: 'test-id',
+            ownerReferences: [
+              { apiVersion: 'v1beta1', name: 'plr1', kind: 'PipelineRun', uid: 'pipelinerun-uid' },
+            ],
+          },
+        }),
+      );
+      expect(commonFetchTextMock).toHaveBeenCalledWith(
+        '/plugins/tekton-results/workspaces/test-ws/apis/results.tekton.dev/v1alpha2/parents/test-ns/results/pipelinerun-uid/logs/test-id',
+      );
+      expect(result.current).toEqual([null, false, undefined]);
     });
   });
 });

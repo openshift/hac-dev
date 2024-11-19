@@ -43,7 +43,9 @@ const getResultsSummary = (ECs, ecLoaded) => {
 };
 
 export const SecurityEnterpriseContractTab: React.FC<
-  React.PropsWithChildren<{ pipelineRun: string }>
+  React.PropsWithChildren<{
+    pipelineRun: string;
+  }>
 > = ({ pipelineRun }) => {
   const [ecResult, ecResultLoaded] = useEnterpriseContractResults(pipelineRun);
 

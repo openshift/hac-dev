@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { commonFetchJSON, getK8sResourceURL } from '@openshift/dynamic-plugin-sdk-utils';
 import { useTaskRuns } from '../../hooks/useTaskRuns';
+import { PipelineRunModel } from '../../models';
 import { PodModel } from '../../models/pod';
 import { getTaskRunLog } from '../../utils/tekton-results';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
@@ -66,12 +67,16 @@ export const useEnterpriseContractResultFromLogs = (
   React.useEffect(() => {
     let unmount = false;
     if (fetchTknLogs) {
+      const pipelineRunUID = taskRun[0]?.metadata?.ownerReferences?.find(
+        (reference) => reference.kind === PipelineRunModel.kind,
+      )?.uid;
       const fetch = async () => {
         try {
           const logs = await getTaskRunLog(
             workspace,
             taskRun[0].metadata.namespace,
-            taskRun[0].metadata.name,
+            pipelineRunUID,
+            taskRun[0].metadata?.uid,
           );
           if (unmount) return;
           const json = extractEcResultsFromTaskRunLogs(logs);

@@ -240,3 +240,34 @@ export const testTaskRuns: TaskRunKind[] = [
     },
   },
 ];
+
+export const mockTaskRunsWithOwnerRef: TaskRunKind[] = [
+  {
+    metadata: {
+      name: 'task1',
+      uid: 'task-1',
+      namespace: 'ns1',
+      ownerReferences: [
+        { name: 'plr-test', kind: 'PipelineRun', apiVersion: 'v1alpha1', uid: 'plr-uid' },
+      ],
+    },
+    apiVersion: 'v1alpha1',
+    kind: 'TaskRun',
+    spec: {},
+    status: { podName: 'pod-test' },
+  },
+  {
+    metadata: {
+      name: 'task2',
+      uid: 'task-2',
+      namespace: 'ns1',
+      ownerReferences: [
+        { name: 'plr-test', kind: 'PipelineRun', apiVersion: 'v1alpha1', uid: 'plr-uid' },
+      ],
+    },
+    apiVersion: 'v1alpha1',
+    kind: 'TaskRun',
+    spec: {},
+    status: { podName: 'pod-test' },
+  },
+];

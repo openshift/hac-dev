@@ -43,7 +43,7 @@ describe('SecurityEnterpriseContractTab', () => {
   });
 
   it('should filter out based on the status dropdown', async () => {
-    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy-1" />);
+    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy" />);
     screen.getByText('Missing CVE scan results');
     fireEvent.click(screen.getByRole('button', { name: 'Status filter menu' }));
     fireEvent.click(screen.getByLabelText('Success'));
@@ -53,7 +53,7 @@ describe('SecurityEnterpriseContractTab', () => {
   });
 
   it('should show empty state when no search result found', () => {
-    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy-1" />);
+    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy" />);
     screen.getByText('Missing CVE scan results');
     fireEvent.click(screen.getByRole('button', { name: 'Status filter menu' }));
     fireEvent.click(screen.getByLabelText('Failed'));
@@ -68,7 +68,7 @@ describe('SecurityEnterpriseContractTab', () => {
   });
 
   it('should sort by Status', () => {
-    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy-1" />);
+    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy" />);
     const status = screen.getAllByTestId('rule-status');
     expect(status[0].textContent.trim()).toEqual('Failed');
     fireEvent.click(screen.getAllByText('Status')[1]);
@@ -77,7 +77,7 @@ describe('SecurityEnterpriseContractTab', () => {
   });
 
   it('should render result summary', () => {
-    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy-1" />);
+    routerRenderer(<SecurityEnterpriseContractTab pipelineRun="dummy" />);
     const resultSummary = screen.getByTestId('result-summary');
     const status = resultSummary.getElementsByTagName('span');
     expect(status[0].textContent.trim()).toBe('Failed');

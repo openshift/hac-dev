@@ -70,13 +70,20 @@ export const OR = (...expressions: string[]) => {
 const EXP = (left: string, right: string, operator: string) => `${left} ${operator} ${right}`;
 export const EQ = (left: string, right: string) => EXP(left, `"${right}"`, '==');
 export const NEQ = (left: string, right: string) => EXP(left, `"${right}"`, '!=');
+export const IN = (left: string, right: string[]) => {
+  const rightOperands = right.map((operand) => `"${operand.toString()}"`);
+  return EXP(left, `[${rightOperands}]`, 'in');
+};
 
 // TODO: switch to v1 once API is ready
 // https://github.com/tektoncd/community/pull/1055
 export enum DataType {
-  PipelineRun = 'tekton.dev/v1beta1.PipelineRun',
-  TaskRun = 'tekton.dev/v1beta1.TaskRun',
-  Log = 'results.tekton.dev/v1alpha2.Log',
+  PipelineRun = 'tekton.dev/v1.PipelineRun',
+  TaskRun = 'tekton.dev/v1.TaskRun',
+  Log = 'results.tekton.dev/v1alpha3.Log',
+  PipelineRun_OLD = 'tekton.dev/v1beta1.PipelineRun',
+  TaskRun_OLD = 'tekton.dev/v1beta1.TaskRun',
+  Log_OLD = 'results.tekton.dev/v1alpha2.Log',
 }
 
 export const labelsToFilter = (labels?: MatchLabels): string =>
@@ -202,7 +209,7 @@ const getTRUrlPrefix = (workspace: string): string => URL_PREFIX.replace(_WORKSP
 export const createTektonResultsUrl = (
   workspace: string,
   namespace: string,
-  dataType: DataType,
+  dataTypes: DataType[],
   filter?: string,
   options?: TektonResultsOptions,
   nextPageToken?: string,
@@ -216,7 +223,7 @@ export const createTektonResultsUrl = (
     )}`,
     ...(nextPageToken ? { ['page_token']: nextPageToken } : {}),
     filter: AND(
-      EQ('data_type', dataType.toString()),
+      IN('data_type', dataTypes),
       filter,
       selectorToFilter(options?.selector),
       options?.filter,
@@ -226,7 +233,7 @@ export const createTektonResultsUrl = (
 export const getFilteredRecord = async <R extends K8sResourceCommon>(
   workspace: string,
   namespace: string,
-  dataType: DataType,
+  dataTypes: DataType[],
   filter?: string,
   options?: TektonResultsOptions,
   nextPageToken?: string,
@@ -235,7 +242,7 @@ export const getFilteredRecord = async <R extends K8sResourceCommon>(
   const url = createTektonResultsUrl(
     workspace,
     namespace,
-    dataType,
+    dataTypes,
     filter,
     options,
     nextPageToken,
@@ -301,7 +308,7 @@ export const getFilteredPipelineRuns = (
   getFilteredRecord<PipelineRunKindV1Beta1>(
     workspace,
     namespace,
-    DataType.PipelineRun,
+    [DataType.PipelineRun, DataType.PipelineRun_OLD],
     filter,
     options,
     nextPageToken,
@@ -319,7 +326,7 @@ const getFilteredTaskRuns = (
   getFilteredRecord<TaskRunKindV1Beta1>(
     workspace,
     namespace,
-    DataType.TaskRun,
+    [DataType.TaskRun, DataType.TaskRun_OLD],
     filter,
     options,
     nextPageToken,
@@ -344,22 +351,12 @@ export const getTaskRuns = (
   cacheKey?: string,
 ) => getFilteredTaskRuns(workspace, namespace, '', options, nextPageToken, cacheKey);
 
-const getLog = (workspace: string, taskRunPath: string) =>
-  commonFetchText(`${getTRUrlPrefix(workspace)}/${taskRunPath.replace('/records/', '/logs/')}`);
-
 export const getTaskRunLog = (
   workspace: string,
   namespace: string,
-  taskRunName: string,
-): Promise<string> =>
-  getFilteredRecord<any>(
-    workspace,
-    namespace,
-    DataType.Log,
-    AND(EQ(`data.spec.resource.kind`, 'TaskRun'), EQ(`data.spec.resource.name`, taskRunName)),
-    { limit: 1 },
-  ).then((x) =>
-    x?.[1]?.records.length > 0
-      ? getLog(workspace, x?.[1]?.records[0].name).catch(() => throw404())
-      : throw404(),
-  );
+  pid: string,
+  taskRunID: string,
+) =>
+  commonFetchText(
+    `${getTRUrlPrefix(workspace)}/${namespace}/results/${pid}/logs/${taskRunID}`,
+  ).catch(() => throw404());

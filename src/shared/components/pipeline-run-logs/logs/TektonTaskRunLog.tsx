@@ -19,10 +19,7 @@ export const TektonTaskRunLog: React.FC<React.PropsWithChildren<TektonTaskRunLog
 }) => {
   const scrollPane = React.useRef<HTMLDivElement>();
   const taskName = taskRun?.spec.taskRef?.name ?? taskRun?.metadata.name;
-  const [trResults, trLoaded, trError] = useTRTaskRunLog(
-    taskRun.metadata.namespace,
-    taskRun.metadata.name,
-  );
+  const [trResults, trLoaded, trError] = useTRTaskRunLog(taskRun.metadata.namespace, taskRun);
 
   React.useEffect(() => {
     setCurrentLogsGetter(() => scrollPane.current?.innerText);
