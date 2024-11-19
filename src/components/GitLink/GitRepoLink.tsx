@@ -35,7 +35,7 @@ const GitRepoLink: React.FC<React.PropsWithChildren<Props>> = ({
 
   return (
     <Tooltip content={fullUrl} position={TooltipPosition.bottom}>
-      <ExternalLink href={fullUrl} icon={icon} hideIcon dataTestID={dataTestID}>
+      <ExternalLink href={fullUrl} icon={icon} hideIcon dataTestID={dataTestID} isHighlightable>
         {parsed.owner}/{parsed.name}
         {revision ? (
           <>
