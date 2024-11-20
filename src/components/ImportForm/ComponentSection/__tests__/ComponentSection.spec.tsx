@@ -76,7 +76,9 @@ describe('ComponentSection', () => {
     await user.type(source, 'https://gitlab.com/abcd/repo.git');
     await user.tab();
     await waitFor(() =>
-      expect((screen.getByTestId('url-annotation') as HTMLInputElement).value).toBe('gitlab.com'),
+      expect((screen.getByTestId('url-annotation') as HTMLInputElement).value).toBe(
+        'https://gitlab.com',
+      ),
     );
   });
 });
