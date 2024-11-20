@@ -75,7 +75,7 @@
     "@openshift/dynamic-plugin-sdk-webpack": "3.0.1",
     "@pact-foundation/pact": "^12.1.0",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^2.0.3",
-    "@redhat-cloud-services/frontend-components-config": "^6.0.5",
+    "@redhat-cloud-services/frontend-components-config": "^6.3.3",
     "@redhat-cloud-services/tsc-transform-imports": "^1.0.4",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.0.0",
