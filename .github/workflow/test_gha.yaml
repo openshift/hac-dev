@@ -1,0 +1,17 @@
+name: PR Check Test
+
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      MY_TEST_VAR: "aaa"
+    steps:
+      - name: change it
+        run: |
+          MY_TEST_VAR="bbb"
+      - name: echo it
+        run: echo $MY_TEST_VAR
