@@ -86,6 +86,45 @@ describe('usePipelinerunActions', () => {
     );
   });
 
+  it('should contain enabled actions for Gitlab pipeline run event type', async () => {
+    const { result } = renderHook(() =>
+      usePipelinerunActions({
+        metadata: {
+          labels: {
+            'pipelines.appstudio.openshift.io/type': 'build',
+            [PipelineRunLabel.COMMIT_EVENT_TYPE_LABEL]: 'Push',
+          },
+        },
+        status: { conditions: [{ type: 'Succeeded', status: runStatus.Running }] },
+      } as any),
+    );
+    const actions = result.current;
+
+    expect(actions[0]).toEqual(
+      expect.objectContaining({
+        label: 'Rerun',
+        disabled: false,
+        disabledTooltip: null,
+      }),
+    );
+
+    expect(actions[1]).toEqual(
+      expect.objectContaining({
+        label: 'Stop',
+        disabled: false,
+        disabledTooltip: undefined,
+      }),
+    );
+
+    expect(actions[2]).toEqual(
+      expect.objectContaining({
+        label: 'Cancel',
+        disabled: false,
+        disabledTooltip: undefined,
+      }),
+    );
+  });
+
   it('should contain disabled actions for Stop and Cancel', async () => {
     useAccessReviewForModelMock.mockReturnValueOnce([true, true]);
     const { result } = renderHook(() =>
@@ -119,6 +158,30 @@ describe('usePipelinerunActions', () => {
           labels: {
             'pipelines.appstudio.openshift.io/type': 'build',
             [PipelineRunLabel.COMMIT_EVENT_TYPE_LABEL]: PipelineRunEventType.PUSH,
+          },
+        },
+        status: { conditions: [{ type: 'Succeeded', status: 'True' }] },
+      } as any),
+    );
+    const actions = result.current;
+
+    expect(actions[0]).toEqual(
+      expect.objectContaining({
+        label: 'Rerun',
+        disabled: false,
+        disabledTooltip: null,
+      }),
+    );
+  });
+
+  it('should contain enabled rerun actions when PAC enabled for Gitlab pipeline run event type', async () => {
+    useAccessReviewForModelMock.mockReturnValueOnce([true, true]);
+    const { result } = renderHook(() =>
+      usePipelinerunActions({
+        metadata: {
+          labels: {
+            'pipelines.appstudio.openshift.io/type': 'build',
+            [PipelineRunLabel.COMMIT_EVENT_TYPE_LABEL]: 'Push',
           },
         },
         status: { conditions: [{ type: 'Succeeded', status: 'True' }] },
