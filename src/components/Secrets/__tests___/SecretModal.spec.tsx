@@ -9,7 +9,7 @@ import { supportedPartnerTasksSecrets } from '../utils/secret-utils';
 const initialValues: SecretModalValues = {
   secretName: '',
   type: SecretTypeDropdownLabel.opaque,
-  keyValues: [{ key: '', value: '', readOnlyKey: false }],
+  opaque: { keyValues: [{ key: '', value: '', readOnlyKey: false }] },
   existingSecrets: [],
 };
 
