@@ -66,9 +66,16 @@ describe('useEnterpriseContractResultFromLogs', () => {
 
   it('should call tknResults when taskRun is empty array', async () => {
     mockUseTaskRuns.mockReturnValueOnce([[], true, undefined]);
-    mockGetTaskRunLogs.mockReturnValue(`asdfcdfadsf
-      [report-json] { "components": [] }
-      `);
+    mockGetTaskRunLogs.mockReturnValue(`
+      step-vulnerabilities :-
+      Lorem Ipsum some logs
+      
+      step-report-json :-
+      {"success":true,"components":[{"name":"component-name","details":"example"}]}
+      
+      step-something-else :-
+      Some other logs
+    `);
     const { result } = renderHook(() => useEnterpriseContractResultFromLogs('dummy-abcd'));
     const [, loaded] = result.current;
     expect(mockCommmonFetchJSON).toHaveBeenCalled();
@@ -119,8 +126,15 @@ describe('useEnterpriseContractResultFromLogs', () => {
       undefined,
     ]);
     mockCommmonFetchJSON.mockRejectedValue({ code: 404 });
-    mockGetTaskRunLogs.mockReturnValue(`asdfcdfadsf
-    [report-json] { "components": [] }
+    mockGetTaskRunLogs.mockReturnValue(`
+      step-vulnerabilities :-
+      Lorem Ipsum some logs
+      
+      step-report-json :-
+      {"success":true,"components":[]}
+      
+      step-something-else :-
+      Some other logs
     `);
 
     const { result, waitForNextUpdate } = renderHook(() =>
