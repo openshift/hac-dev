@@ -50,6 +50,7 @@ export type ComponentSpecs = {
 export type ComponentKind = K8sResourceCommon & {
   spec: ComponentSpecs;
   status?: {
+    lastPromotedImage?: string;
     containerImage?: string;
     conditions?: ResourceStatusCondition[];
     devfile?: string;

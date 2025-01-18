@@ -8,6 +8,7 @@ import PipelineRunStatus from '../../shared/components/pipeline-run-status/Pipel
 import { RowFunctionArgs, TableData } from '../../shared/components/table';
 import { ComponentKind, PipelineRunKind } from '../../types';
 import { getCommitsFromPLRs } from '../../utils/commits-utils';
+import { getLastestImage } from '../../utils/component-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { useComponentActions } from '../ApplicationDetails/component-actions';
 import { ComponentRelationStatusIcon } from '../ComponentRelation/details-page/ComponentRelationStatusIcon';
@@ -32,6 +33,7 @@ const ComponentsListRow: React.FC<RowFunctionArgs<ComponentWithLatestBuildPipeli
   const name = component.metadata.name;
   const actions = useComponentActions(component, name);
   const buildLogsModal = useBuildLogViewerModal(component);
+  const latestImage = getLastestImage(component);
 
   const commit = React.useMemo(
     () =>
@@ -68,14 +70,14 @@ const ComponentsListRow: React.FC<RowFunctionArgs<ComponentWithLatestBuildPipeli
               />
             </FlexItem>
           )}
-          {component.spec.containerImage && (
+          {latestImage && (
             <FlexItem>
               <ExternalLink
                 /** by default patternfly button disable text selection on Button component
                     this enables it on <a /> tag */
                 style={{ userSelect: 'auto' }}
-                href={getContainerImageLink(component.spec.containerImage)}
-                text={component.spec.containerImage}
+                href={getContainerImageLink(latestImage)}
+                text={latestImage}
               />
             </FlexItem>
           )}

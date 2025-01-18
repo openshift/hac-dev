@@ -106,7 +106,7 @@ export const mockComponentsData = [
     spec: {
       application: 'test-dev-samples',
       componentName: 'test-dotnet60',
-      containerImage: 'quay.io/redhat-appstudio/user-workload:test-ns-test-dotnet60',
+      containerImage: 'quay.io/redhat-appstudio/user-workload:test-ns-test-dotnet61',
       replicas: 1,
       resources: {
         requests: {
@@ -140,6 +140,7 @@ export const mockComponentsData = [
           type: 'Created',
         },
       ],
+      lastPromotedImage: 'quay.io/redhat-appstudio/user-workload:test-ns-test-dotnet60',
       containerImage: 'quay.io/redhat-appstudio/user-workload:test-ns-test-dotnet60',
       devfile:
         'commands:\n- apply:\n    component: dockerfile-build\n  id: build-image\ncomponents:\n- image:\n    dockerfile:\n      rootRequired: false\n      uri: https://raw.githubusercontent.com/test-user-1/devfile-sample-dotnet60-basic/main/docker/Dockerfile\n    imageName: ""\n  name: dockerfile-build\n- attributes:\n    deployment/container-port: 8081\n    deployment/cpuRequest: 10m\n    deployment/memoryRequest: 100Mi\n    deployment/replicas: 1\n    deployment/storageRequest: "0"\n  kubernetes:\n    inlined: placeholder\n  name: kubernetes\nmetadata:\n  description: Basic Devfile for a Dockerfile Component\n  name: dockerfile-component\nschemaVersion: 2.2.0\n',

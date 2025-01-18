@@ -11,6 +11,7 @@ import yamlParser from 'js-yaml';
 import { useLatestPushBuildPipelineRunForComponent } from '../../../../hooks/usePipelineRuns';
 import ExternalLink from '../../../../shared/components/links/ExternalLink';
 import { ComponentKind } from '../../../../types';
+import { getLastestImage } from '../../../../utils/component-utils';
 import { getPipelineRunStatusResults } from '../../../../utils/pipeline-utils';
 import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
 import GitRepoLink from '../../../GitLink/GitRepoLink';
@@ -35,7 +36,7 @@ const ComponentDetails: React.FC<React.PropsWithChildren<ComponentDetailsProps>>
       ? getPipelineRunStatusResults(latestPushBuildPLR)
       : null;
   const latestImageURL = results?.find((result) => result.name === RESULT_NAME);
-  const componentImageURL = latestImageURL?.value ?? component.spec.containerImage;
+  const componentImageURL = latestImageURL?.value ?? getLastestImage(component);
 
   const runTime = React.useMemo(() => {
     try {

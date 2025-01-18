@@ -20,7 +20,7 @@ configure({ testIdAttribute: 'data-test-id' });
 const rowData: SnapshotComponentTableData = {
   metadata: { uid: mockComponentsData[1].metadata.uid, name: mockComponentsData[1].metadata.name },
   name: mockComponentsData[1].metadata.name,
-  containerImage: mockComponentsData[1].spec.containerImage,
+  containerImage: mockComponentsData[1].status.lastPromotedImage,
   application: 'test-app',
   source: { git: { url: mockComponentsData[1].spec.source.git.url, revision: 'main' } },
 };
