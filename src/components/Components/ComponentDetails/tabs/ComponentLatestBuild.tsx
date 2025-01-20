@@ -20,6 +20,7 @@ import { Timestamp } from '../../../../shared/components/timestamp/Timestamp';
 import { HttpError } from '../../../../shared/utils/error/http-error';
 import { ComponentKind } from '../../../../types';
 import { getCommitsFromPLRs } from '../../../../utils/commits-utils';
+import { getLastestImage } from '../../../../utils/component-utils';
 import { useWorkspaceInfo } from '../../../../utils/workspace-context-utils';
 import { useBuildLogViewerModal } from '../../../LogViewer/BuildLogViewer';
 import ScanDescriptionListGroup from '../../../PipelineRunDetailsView/tabs/ScanDescriptionListGroup';
@@ -43,7 +44,7 @@ const ComponentLatestBuild: React.FC<React.PropsWithChildren<ComponentLatestBuil
   const [taskRuns, taskRunsLoaded] = useTaskRuns(namespace, pipelineRun?.metadata?.name);
   const buildLogsModal = useBuildLogViewerModal(component);
 
-  const containerImage = component.spec.containerImage;
+  const containerImage = getLastestImage(component);
 
   if (error) {
     const httpError = HttpError.fromCode((error as any).code);

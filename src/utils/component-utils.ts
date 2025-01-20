@@ -46,6 +46,19 @@ export type ComponentBuildStatus = {
 };
 
 /**
+ *
+ * @param component
+ * @returns name of latest container image
+ *
+ * The latest container image fieled is likely changed from time to time.
+ * So it is valueable to track it as utils to avoid bringing multiple changes
+ * accross several files for furture possible changes.
+ *
+ */
+export const getLastestImage = (component: ComponentKind) =>
+  component.status?.lastPromotedImage || component.spec?.containerImage;
+
+/**
  * If whole pac section is missing, PaC state is considered disabled
  * Missing pac section shows that PaC was never requested on this component before,
  * where as pac.state=disabled means that it was provisioned and then removed.

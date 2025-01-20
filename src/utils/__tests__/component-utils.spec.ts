@@ -11,6 +11,7 @@ import {
   startNewBuild,
   BUILD_REQUEST_ANNOTATION,
   BuildRequest,
+  getLastestImage,
 } from '../component-utils';
 
 jest.mock('../../hooks/useApplicationPipelineGitHubApp', () => ({
@@ -163,5 +164,37 @@ describe('component-utils', () => {
       pac: { state: 'enabled', 'merge-url': 'example.com' },
       message: 'done',
     });
+  });
+  it('should return status.lastPromotedImage when lastPromotedImage is available', () => {
+    const mockComponent = {
+      status: {
+        lastPromotedImage: 'test-url',
+      },
+    } as unknown as ComponentKind;
+
+    expect(getLastestImage(mockComponent)).toEqual('test-url');
+  });
+
+  it('should return spec.containerImage when lastPromotedImage is unavailable', () => {
+    const mockComponent = {
+      spec: {
+        containerImage: 'test-url',
+      },
+    } as unknown as ComponentKind;
+
+    expect(getLastestImage(mockComponent)).toEqual('test-url');
+  });
+
+  it('should return status.lastPromotedImage when lastPromotedImage and containerImage are both available', () => {
+    const mockComponent = {
+      spec: {
+        containerImage: 'test-url',
+      },
+      status: {
+        lastPromotedImage: 'test-url-promoted',
+      },
+    } as unknown as ComponentKind;
+
+    expect(getLastestImage(mockComponent)).toEqual('test-url-promoted');
   });
 });
