@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Flex, FlexItem } from '@patternfly/react-core';
+import { Button, Flex, FlexItem, Skeleton } from '@patternfly/react-core';
 import ActionMenu from '../../shared/components/action-menu/ActionMenu';
 import CommitLabel from '../../shared/components/commit-label/CommitLabel';
 import ExternalLink from '../../shared/components/links/ExternalLink';
@@ -27,6 +27,7 @@ export const getContainerImageLink = (url: string) => {
 
 const ComponentsListRow: React.FC<RowFunctionArgs<ComponentWithLatestBuildPipeline>> = ({
   obj: component,
+  customData,
 }) => {
   const { workspace } = useWorkspaceInfo();
   const applicationName = component.spec.application;
@@ -85,7 +86,11 @@ const ComponentsListRow: React.FC<RowFunctionArgs<ComponentWithLatestBuildPipeli
       </TableData>
       <TableData className={componentsTableColumnClasses.latestBuild}>
         <div className="component-list-view__build-completion">
-          <PipelineRunStatus pipelineRun={component.latestBuildPipelineRun} />
+          {component.latestBuildPipelineRun || customData.pipelineRunsLoaded ? (
+            <PipelineRunStatus pipelineRun={component.latestBuildPipelineRun} />
+          ) : (
+            <Skeleton />
+          )}
           <div>
             {commit ? (
               <>
