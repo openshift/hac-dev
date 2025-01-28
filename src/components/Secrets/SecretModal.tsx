@@ -8,7 +8,7 @@ import {
   ModalVariant,
 } from '@patternfly/react-core';
 import { Formik } from 'formik';
-import { ImportSecret, SecretTypeDropdownLabel } from '../../types';
+import { ImportSecret, SecretTypeDropdownLabel, ExistingSecret } from '../../types';
 import { SecretFromSchema } from '../../utils/validation-utils';
 import { RawComponentProps } from '../modal/createModalLauncher';
 import SecretForm from './SecretForm';
@@ -25,11 +25,11 @@ const createPartnerTaskSecret = (
 };
 
 export type SecretModalValues = ImportSecret & {
-  existingSecrets: string[];
+  existingSecrets: ExistingSecret[];
 };
 
 type SecretModalProps = RawComponentProps & {
-  existingSecrets: string[];
+  existingSecrets: ExistingSecret[];
   onSubmit: (value: SecretModalValues) => void;
 };
 

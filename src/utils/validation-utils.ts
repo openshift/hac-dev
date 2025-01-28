@@ -24,8 +24,8 @@ export const SecretFromSchema = yup.object({
   secretName: resourceNameYupValidation.test(
     'existing-secret-test',
     'Secret already exists',
-    (value, { parent: { existingSecrets } }) => {
-      return !existingSecrets.includes(value);
+    (value) => {
+      return value !== undefined;
     },
   ),
   keyValues: yup.array().of(
