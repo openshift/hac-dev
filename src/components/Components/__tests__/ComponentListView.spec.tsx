@@ -211,6 +211,26 @@ describe('ComponentListViewPage', () => {
     render(<ComponentListView applicationName="test-app" />);
     expect(getNextPageMock).toHaveBeenCalled();
   });
+
+  it('should not show pipeline runs error alert when there is no error', () => {
+    useTRPipelineRunsMock.mockReturnValue([[], true, undefined]);
+    render(<ComponentListView applicationName="test-app" />);
+    expect(screen.queryByText('Error while fetching pipeline runs')).not.toBeInTheDocument();
+  });
+
+  it('should show pipeline runs error alert when there is an error', () => {
+    const mockError = new Error('Failed to fetch pipeline runs');
+    useTRPipelineRunsMock.mockReturnValue([[], true, mockError]);
+    render(<ComponentListView applicationName="test-app" />);
+    expect(screen.getByText('Error while fetching pipeline runs')).toBeInTheDocument();
+    expect(screen.getByText(mockError.message)).toBeInTheDocument();
+  });
+
+  it('should not show pipeline runs error alert when data is not loaded', () => {
+    useTRPipelineRunsMock.mockReturnValue([[], false, new Error('Test error')]);
+    render(<ComponentListView applicationName="test-app" />);
+    expect(screen.queryByText('Error while fetching pipeline runs')).not.toBeInTheDocument();
+  });
 });
 
 describe('getContainerImageLink', () => {
