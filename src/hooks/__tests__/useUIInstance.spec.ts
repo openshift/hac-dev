@@ -50,7 +50,7 @@ describe('useSbomUrl', () => {
     chromeMock.mockReturnValue('prod');
     const { result } = renderHook(() => useSbomUrl());
     expect(result.current('image-hash-prod')).toEqual(
-      'https://atlas.devshift.net/sbom/content/image-hash-prod',
+      'https://atlas.build.devshift.net/sbom/content/image-hash-prod',
     );
   });
 
@@ -58,7 +58,7 @@ describe('useSbomUrl', () => {
     chromeMock.mockReturnValue('stage');
     const { result } = renderHook(() => useSbomUrl());
     expect(result.current('image-hash-stage')).toEqual(
-      'https://atlas.stage.devshift.net/sbom/content/image-hash-stage',
+      'https://atlas.build.stage.devshift.net/sbom/content/image-hash-stage',
     );
   });
 });

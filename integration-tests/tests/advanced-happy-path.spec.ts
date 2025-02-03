@@ -151,7 +151,7 @@ describe('Advanced Happy path', () => {
           cy.get(atlasPO.password).type(Cypress.env('ATLAS_PASSWORD'), { log: false });
           cy.get(atlasPO.loginButton).click();
         });
-        cy.origin('https://atlas.stage.devshift.net/', { args: { atlasPO } }, ({ atlasPO }) => {
+        cy.origin('https://atlas.build.stage.devshift.net/', { args: { atlasPO } }, ({ atlasPO }) => {
           cy.contains(atlasPO.headerTitle, 'sha256:').should('be.visible');
           cy.contains(atlasPO.cardTitle, 'Metadata').should('be.visible');
         });

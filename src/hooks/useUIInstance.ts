@@ -30,12 +30,12 @@ export const useUIInstance = (): ConsoleDotEnvironments => {
 const SBOM_PLACEHOLDER = '<PLACEHOLDER>';
 const getSBOMEnvUrl = (env: ConsoleDotEnvironments) => (imageHash: string) => {
   if (env === ConsoleDotEnvironments.prod) {
-    return `https://atlas.devshift.net/sbom/content/${SBOM_PLACEHOLDER}`.replace(
+    return `https://atlas.build.devshift.net/sbom/content/${SBOM_PLACEHOLDER}`.replace(
       SBOM_PLACEHOLDER,
       imageHash,
     );
   }
-  return `https://atlas.stage.devshift.net/sbom/content/${SBOM_PLACEHOLDER}`.replace(
+  return `https://atlas.build.stage.devshift.net/sbom/content/${SBOM_PLACEHOLDER}`.replace(
     SBOM_PLACEHOLDER,
     imageHash,
   );
