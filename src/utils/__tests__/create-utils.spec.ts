@@ -14,6 +14,7 @@ import {
   SPIAccessTokenBindingKind,
   SecretFor,
   SecretTypeDropdownLabel,
+  SourceSecretType,
 } from '../../types';
 import { ApplicationModel } from './../../models/application';
 import { ComponentDetectionQueryModel, ComponentModel } from './../../models/component';
@@ -497,7 +498,7 @@ describe('Create Utils', () => {
       {
         secretName: 'my-snyk-secret',
         type: SecretTypeDropdownLabel.opaque,
-        keyValues: [{ key: 'token', value: 'my-token-data' }],
+        opaque: { keyValues: [{ key: 'token', value: 'my-token-data' }] },
       },
       'test-ws',
       'test-ns',
@@ -522,7 +523,7 @@ describe('Create Utils', () => {
       {
         secretName: 'my-snyk-secret',
         type: SecretTypeDropdownLabel.opaque,
-        keyValues: [{ key: 'token', value: 'my-token-data' }],
+        opaque: { keyValues: [{ key: 'token', value: 'my-token-data' }] },
       },
       'test-ws',
       'test-ns',
@@ -547,7 +548,7 @@ describe('Create Utils', () => {
       {
         secretName: 'registry-creds',
         type: SecretTypeDropdownLabel.image,
-        keyValues: [{ key: 'token', value: 'my-token-data' }],
+        image: { keyValues: [{ key: 'token', value: 'my-token-data' }] },
       },
       'test-ws',
       'test-ns',
@@ -564,6 +565,81 @@ describe('Create Utils', () => {
     );
   });
 
+  it('should add correct values for Image pull secret', async () => {
+    commonFetchMock.mockClear();
+    commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
+
+    await createSecret(
+      {
+        secretName: 'registry-creds',
+        type: SecretTypeDropdownLabel.image,
+        image: { keyValues: [{ key: 'test', value: 'test-value' }] },
+      },
+      'test-ws',
+      'test-ns',
+      false,
+    );
+
+    expect(commonFetchMock).toHaveBeenCalledTimes(1);
+
+    expect(commonFetchMock).toHaveBeenCalledWith(
+      '/workspaces/test-ws/api/v1/namespaces/test-ns/secrets',
+      expect.objectContaining({
+        body: expect.stringContaining('"test":"test-value"'),
+      }),
+    );
+  });
+
+  it('should create a Source secret', async () => {
+    commonFetchMock.mockClear();
+    commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
+
+    await createSecret(
+      {
+        secretName: 'registry-creds',
+        type: SecretTypeDropdownLabel.source,
+        source: { authType: SourceSecretType.basic, username: 'test1', password: 'pass-test' },
+      },
+      'test-ws',
+      'test-ns',
+      false,
+    );
+
+    expect(commonFetchMock).toHaveBeenCalledTimes(1);
+
+    expect(commonFetchMock).toHaveBeenCalledWith(
+      '/workspaces/test-ws/api/v1/namespaces/test-ns/secrets',
+      expect.objectContaining({
+        body: expect.stringContaining('"type":"kubernetes.io/basic-auth"'),
+      }),
+    );
+  });
+
+  it('should add correct data for Source secret', async () => {
+    commonFetchMock.mockClear();
+    commonFetchMock.mockImplementationOnce((props) => Promise.resolve(props));
+
+    await createSecret(
+      {
+        secretName: 'registry-creds',
+        type: SecretTypeDropdownLabel.source,
+        source: { authType: SourceSecretType.basic, username: 'test1', password: 'pass-test' },
+      },
+      'test-ws',
+      'test-ns',
+      false,
+    );
+
+    expect(commonFetchMock).toHaveBeenCalledTimes(1);
+
+    expect(commonFetchMock).toHaveBeenCalledWith(
+      '/workspaces/test-ws/api/v1/namespaces/test-ns/secrets',
+      expect.objectContaining({
+        body: expect.stringContaining('"username":"dGVzdDE=","password":"cGFzcy10ZXN0"'),
+      }),
+    );
+  });
+
   it('should create partner task secret', async () => {
     commonFetchMock.mockClear();
     createResourceMock
@@ -575,7 +651,7 @@ describe('Create Utils', () => {
       {
         secretName: 'snyk-secret',
         type: SecretTypeDropdownLabel.opaque,
-        keyValues: [{ key: 'token', value: 'my-token-data' }],
+        opaque: { keyValues: [{ key: 'token', value: 'my-token-data' }] },
       },
       'test-ws',
       'test-ns',
