@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
-import { SecretTypeDropdownLabel } from '../../../types';
+import { SecretTypeDropdownLabel, SecretType } from '../../../types';
 import { formikRenderer } from '../../../utils/test-utils';
 import SecretModal, { SecretModalValues } from '../SecretModal';
 import { supportedPartnerTasksSecrets } from '../utils/secret-utils';
@@ -13,11 +13,27 @@ const initialValues: SecretModalValues = {
   existingSecrets: [],
 };
 
+const snykSecret = {
+  type: SecretType.opaque,
+  name: 'snyk-secret',
+  tokenKeyName: 'snyk-secret',
+  providerUrl: '',
+  keyValuePairs: [{ key: 'snyk_token', value: 'snyk_value', readOnlyKey: true }],
+};
+
+const testSecret = {
+  type: SecretType.opaque,
+  name: 'test-secret',
+  tokenKeyName: 'test-secret',
+  providerUrl: '',
+  keyValuePairs: [{ key: 'test_token', value: 'test_value', readOnlyKey: true }],
+};
+
 describe('SecretForm', () => {
   it('should show secret form in a modal', async () => {
     formikRenderer(
       <SecretModal
-        existingSecrets={['test']}
+        existingSecrets={[testSecret]}
         onSubmit={jest.fn()}
         modalProps={{ isOpen: true, onClose: jest.fn() }}
       />,
@@ -32,7 +48,7 @@ describe('SecretForm', () => {
   it('should render validation message when user click on create button without filling the form', async () => {
     formikRenderer(
       <SecretModal
-        existingSecrets={['test']}
+        existingSecrets={[testSecret]}
         onSubmit={jest.fn()}
         modalProps={{ isOpen: true, onClose: jest.fn() }}
       />,
@@ -50,7 +66,7 @@ describe('SecretForm', () => {
     formikRenderer(
       <SecretModal
         onSubmit={jest.fn()}
-        existingSecrets={['test']}
+        existingSecrets={[testSecret]}
         modalProps={{ isOpen: true, onClose }}
       />,
       initialValues,
@@ -69,7 +85,7 @@ describe('SecretForm', () => {
     formikRenderer(
       <SecretModal
         onSubmit={jest.fn()}
-        existingSecrets={['test']}
+        existingSecrets={[testSecret]}
         modalProps={{ isOpen: true, onClose }}
       />,
       initialValues,
@@ -88,12 +104,12 @@ describe('SecretForm', () => {
     });
   });
 
-  it('should not show the secrets in the select dropdown if it is already existing', async () => {
+  it('should show the secrets in the select dropdown if it is already existing', async () => {
     const onClose = jest.fn();
     formikRenderer(
       <SecretModal
         onSubmit={jest.fn()}
-        existingSecrets={['snyk-secret']}
+        existingSecrets={[snykSecret]}
         modalProps={{ isOpen: true, onClose }}
       />,
       initialValues,
@@ -104,7 +120,7 @@ describe('SecretForm', () => {
       const modal = screen.queryByTestId('build-secret-modal');
       fireEvent.click(modal.querySelector('#secret-name-toggle-select-typeahead'));
     });
-    expect(screen.queryByText('snyk-secret')).not.toBeInTheDocument();
+    expect(screen.queryByText('snyk-secret')).toBeInTheDocument();
   });
 
   it('should remove the selected value with clearn button is clicked', async () => {

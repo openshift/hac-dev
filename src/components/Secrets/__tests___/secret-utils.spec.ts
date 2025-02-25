@@ -42,7 +42,7 @@ describe('getSupportedPartnerTaskKeyValuePairs', () => {
 
   it('should return snyk secret values ', () => {
     expect(getSupportedPartnerTaskKeyValuePairs('snyk-secret')).toEqual([
-      { key: 'snyk_token', readOnlyKey: true, value: '' },
+      { key: 'snyk_token', readOnlyKey: true, value: '', readOnlyValue: false },
     ]);
   });
 });
