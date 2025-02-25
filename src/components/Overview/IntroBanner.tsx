@@ -26,7 +26,6 @@ import { useAccessReviewForModels } from '../../utils/rbac';
 import { SignupStatus } from '../../utils/signup-utils';
 import { useWorkspaceInfo } from '../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../ButtonWithAccessTooltip';
-import SignupButton from './SignupButton';
 
 import './IntroBanner.scss';
 
@@ -124,7 +123,6 @@ const IntroBanner: React.FC<React.PropsWithChildren<unknown>> = () => {
                 </p>
               </Alert>
             )}
-            {signupStatus === SignupStatus.NotSignedUp && <SignupButton />}
           </CardBody>
         </Card>
       </GridItem>
