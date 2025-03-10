@@ -8,7 +8,8 @@ import {
   ModalVariant,
 } from '@patternfly/react-core';
 import { Formik } from 'formik';
-import { ImportSecret, SecretTypeDropdownLabel } from '../../types';
+import { isEmpty } from 'lodash-es';
+import { ImportSecret, SecretTypeDropdownLabel, SourceSecretType } from '../../types';
 import { SecretFromSchema } from '../../utils/validation-utils';
 import { RawComponentProps } from '../modal/createModalLauncher';
 import SecretForm from './SecretForm';
@@ -42,7 +43,15 @@ const SecretModal: React.FC<React.PropsWithChildren<SecretModalProps>> = ({
   const initialValues: SecretModalValues = {
     secretName: '',
     type: SecretTypeDropdownLabel.opaque,
-    keyValues: defaultKeyValues,
+    opaque: {
+      keyValues: defaultKeyValues,
+    },
+    image: {
+      keyValues: defaultKeyValues,
+    },
+    source: {
+      authType: SourceSecretType.basic,
+    },
     existingSecrets,
   };
 
@@ -68,6 +77,7 @@ const SecretModal: React.FC<React.PropsWithChildren<SecretModalProps>> = ({
               onClick={() => {
                 props.handleSubmit();
               }}
+              isDisabled={!props.dirty || !isEmpty(props.errors) || props.isSubmitting}
             >
               Create
             </Button>,
