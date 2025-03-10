@@ -2,16 +2,17 @@ import React from 'react';
 import { TextInputTypes, GridItem, Grid, FormSection } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
 import { useFormikContext } from 'formik';
+import { Base64 } from 'js-base64';
 import { useSecrets } from '../../../hooks/useSecrets';
 import { SecretModel } from '../../../models';
 import { InputField, TextColumnField } from '../../../shared';
+import { ExistingSecret, SecretType } from '../../../types';
 import { AccessReviewResources } from '../../../types/rbac';
 import { useAccessReviewForModels } from '../../../utils/rbac';
 import { useWorkspaceInfo } from '../../../utils/workspace-context-utils';
 import { ButtonWithAccessTooltip } from '../../ButtonWithAccessTooltip';
 import { useModalLauncher } from '../../modal/ModalProvider';
 import { SecretModalLauncher } from '../../Secrets/SecretModalLauncher';
-import { getSupportedPartnerTaskSecrets } from '../../Secrets/utils/secret-utils';
 import { ImportFormValues } from '../type';
 
 const accessReviewResources: AccessReviewResources = [{ model: SecretModel, verb: 'create' }];
@@ -24,12 +25,20 @@ const SecretSection = () => {
 
   const [secrets, secretsLoaded] = useSecrets(namespace);
 
-  const partnerTaskNames = getSupportedPartnerTaskSecrets().map(({ label }) => label);
-  const partnerTaskSecrets: string[] =
+  const partnerTaskSecrets: ExistingSecret[] =
     secrets && secretsLoaded
-      ? secrets
-          ?.filter((rs) => partnerTaskNames.includes(rs.metadata.name))
-          ?.map((s) => s.metadata.name) || []
+      ? secrets?.map((secret) => ({
+          type: secret.type as SecretType,
+          name: secret.metadata.name,
+          providerUrl: '',
+          tokenKeyName: secret.metadata.name,
+          keyValuePairs: Object.keys(secret.data).map((key) => ({
+            key,
+            value: Base64.decode(secret.data[key]),
+            readOnlyKey: true,
+            readOnlyValue: true,
+          })),
+        }))
       : [];
 
   const onSubmit = React.useCallback(
