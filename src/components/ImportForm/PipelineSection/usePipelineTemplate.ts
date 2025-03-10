@@ -29,6 +29,11 @@ const PIPELINE_DATA = {
       bundle:
         'quay.io/konflux-ci/tekton-catalog/pipeline-docker-build-multi-platform-oci-ta@sha256:269480b2037478c1c8509c5f562b65f0b7f4e8675d5fda68b6bf3d28357962d7',
     },
+    {
+      name: 'tekton-bundle-builder',
+      bundle:
+        'quay.io/konflux-ci/tekton-catalog/pipeline-tekton-bundle-builder@sha256:f9ab9253f8ef1b288149d3bc76749cb0091f7a306e9ca71b8e3e5c56db63a57d',
+    },
   ],
 };
 
