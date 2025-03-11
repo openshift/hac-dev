@@ -206,6 +206,40 @@ const InFlightStore: { [key: string]: boolean } = {};
 
 const getTRUrlPrefix = (workspace: string): string => URL_PREFIX.replace(_WORKSPACE_, workspace);
 
+const commonFields = [
+  'records.name',
+  'records.data.value.apiVersion',
+  'records.data.value.kind',
+  'records.data.value.metadata.annotations',
+  'records.data.value.metadata.labels',
+  'records.data.value.metadata.name',
+  'records.data.value.metadata.namespace',
+  'records.data.value.metadata.uid',
+  'records.data.value.metadata.creationTimestamp',
+  'records.data.value.metadata.ownerReferences',
+  'records.data.value.status.conditions',
+  'records.data.value.status.results',
+  'records.data.value.status.startTime',
+  'records.data.value.status.completionTime',
+];
+
+const remainingTaskrunFields = [
+  'records.data.value.status.podName',
+  'records.data.value.status.taskSpec.description',
+  'records.data.value.spec.taskRef.params',
+  'records.data.value.spec.taskRef.name',
+  'records.data.value.spec.containers',
+  'records.data.value.spec.status',
+  'records.data.value.status.taskResults',
+  'records.data.value.status.containerStatuses',
+];
+
+const remainingPipelinerunFields = [
+  'records.data.value.status.pipelineSpec.tasks',
+  'records.data.value.status.pipelineSpec.finally',
+  'records.data.value.status.pipelineResults',
+];
+
 export const createTektonResultsUrl = (
   workspace: string,
   namespace: string,
@@ -222,6 +256,11 @@ export const createTektonResultsUrl = (
       Math.min(MAXIMUM_PAGE_SIZE, options?.limit >= 0 ? options.limit : options?.pageSize ?? 30),
     )}`,
     ...(nextPageToken ? { ['page_token']: nextPageToken } : {}),
+    // get partial response with required fields
+    ['PartialResponse']: 'true',
+    ['fields']: dataTypes.every((item) => item.includes('PipelineRun'))
+      ? [...commonFields, ...remainingPipelinerunFields].join(',')
+      : [...commonFields, ...remainingTaskrunFields].join(','),
     filter: AND(
       IN('data_type', dataTypes),
       filter,
