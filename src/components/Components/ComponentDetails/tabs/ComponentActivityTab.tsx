@@ -65,7 +65,7 @@ export const ComponentActivityTab: React.FC<React.PropsWithChildren<ComponentAct
   // If there is such a test pipeline directly run on the image itself, and not on the snapshot, then we want to include it
   const nonTestSnapShotFilter = (plr: PipelineRunKind) =>
     plr.metadata.labels?.[PipelineRunLabel.PIPELINE_TYPE] !== 'test' ||
-    !plr.spec.params?.find((p) => p.name === 'SNAPSHOT');
+    !plr?.spec?.params?.find((p) => p?.name === 'SNAPSHOT');
 
   return (
     <div>
