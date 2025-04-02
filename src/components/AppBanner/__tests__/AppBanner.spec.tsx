@@ -9,11 +9,7 @@ describe('AppBanner', () => {
     act(() => {
       render(<AppBanner />);
     });
-    fireEvent.click(
-      screen.getByRole('button', {
-        name: /Visit the documentation/i,
-      }),
-    );
+    fireEvent.click(screen.getByText('Visit the documentation'));
     await screen.findByTestId('dev-preview-banner');
   });
 });
