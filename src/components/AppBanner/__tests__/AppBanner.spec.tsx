@@ -11,9 +11,9 @@ describe('AppBanner', () => {
     });
     fireEvent.click(
       screen.getByRole('button', {
-        name: /private preview/i,
+        name: /Visit the documentation/i,
       }),
     );
-    await screen.findByTestId('dev-preview-banner-popover');
+    await screen.findByTestId('dev-preview-banner');
   });
 });
