@@ -29,7 +29,7 @@ describe('Application List', () => {
       </NamespacedPage>,
     );
     expect(screen.getByText('Test Component')).toBeInTheDocument();
-    expect(screen.getByText('Private Preview')).toBeInTheDocument();
+    expect(screen.getByText('Visit the documentation')).toBeInTheDocument();
   });
 
   it('should not render app banner if hideAppBanner prop is passed', () => {

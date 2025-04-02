@@ -1,5 +1,5 @@
 import React from 'react';
-import { Banner, Button, Popover } from '@patternfly/react-core';
+import { Banner, Button } from '@patternfly/react-core';
 
 import './AppBanner.scss';
 
@@ -7,20 +7,16 @@ const AppBanner: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <div data-test="dev-preview-banner">
       <Banner variant="blue" className="app-banner" isSticky>
-        <Popover
-          position="bottom"
-          bodyContent={
-            <div data-test="dev-preview-banner-popover">
-              Private preview releases provide early access to a limited set of features that might
-              not be fully tested. Users should not use private preview software in production or
-              for business-critical workloads.
-            </div>
-          }
+        🎉 We’ve launched Konflux UI! The current version will be deprecated soon.{' '}
+        <Button
+          variant="link"
+          href="https://konflux.pages.redhat.com/docs/users/getting-started/ui-versions.html"
+          target="_blank"
+          isInline
         >
-          <Button variant="link" isInline>
-            Private Preview
-          </Button>
-        </Popover>
+          Visit the documentation
+        </Button>{' '}
+        to find the UI for your specific cluster.
       </Banner>
     </div>
   );

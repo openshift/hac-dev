@@ -20,7 +20,6 @@ type NamespacedPageProps = {
 
 const NamespacedPage: React.FunctionComponent<React.PropsWithChildren<NamespacedPageProps>> = ({
   children,
-  hideAppBanner,
   skipWorkspaceCheck = false,
 }) => {
   const { workspacesLoaded } = React.useContext(WorkspaceContext);
@@ -46,7 +45,7 @@ const NamespacedPage: React.FunctionComponent<React.PropsWithChildren<Namespaced
   return (
     <ErrorBoundary>
       <ModalProvider>
-        {!hideAppBanner && <AppBanner />}
+        <AppBanner />
         <div className="main-layout-container">{children}</div>
       </ModalProvider>
     </ErrorBoundary>
