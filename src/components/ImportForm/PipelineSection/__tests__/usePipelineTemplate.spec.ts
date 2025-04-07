@@ -74,6 +74,11 @@ describe('usePipelineTemplate', () => {
             bundle:
               'quay.io/konflux-ci/tekton-catalog/pipeline-tekton-bundle-builder@sha256:f9ab9253f8ef1b288149d3bc76749cb0091f7a306e9ca71b8e3e5c56db63a57d',
           },
+          {
+            name: 'tekton-bundle-builder-oci-ta',
+            bundle:
+              'quay.io/konflux-ci/tekton-catalog/pipeline-tekton-bundle-builder-oci-ta@sha256:b3a65fcc910b3405c309adcfdbb710ce051a1215a82c91b568129c2b353014e0',
+          },
         ],
       },
       true,
