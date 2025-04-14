@@ -26,8 +26,8 @@ export const useSBRActions = (binding: WorkspaceBinding): Action[] => {
     {
       label: 'Edit access',
       id: `edit-access-${binding.masterUserRecord}`,
-      disabled: !canUpdate,
-      disabledTooltip: "You don't have permission to edit access",
+      disabled: true,
+      disabledTooltip: !canUpdate ? "You don't have permission to edit access" : null,
       cta: {
         href: `/application-pipeline/access/workspaces/${workspace}/edit/${binding.masterUserRecord}`,
       },

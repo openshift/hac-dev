@@ -31,7 +31,7 @@ const SignupButton: React.FC<React.PropsWithChildren<unknown>> = () => {
             variant={ButtonVariant.primary}
             type={ButtonType.submit}
             isLoading={isSubmitting}
-            isDisabled={isSubmitting}
+            isDisabled
             style={{ width: 'fit-content' }}
             size="lg"
           >
