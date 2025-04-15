@@ -10,7 +10,6 @@ import { useQuickstartCloseOnUnmount } from '../hooks/useQuickstartCloseOnUnmoun
 import { SpaceBindingRequestModel } from '../models';
 import { AccessReviewResources } from '../types';
 import { useWorkspaceBreadcrumbs } from '../utils/breadcrumb-utils';
-import { useAccessReviewForModel } from '../utils/rbac';
 import { useWorkspaceInfo } from '../utils/workspace-context-utils';
 
 const UserAccessPage: React.FunctionComponent<React.PropsWithChildren<unknown>> = () => {
@@ -18,7 +17,6 @@ const UserAccessPage: React.FunctionComponent<React.PropsWithChildren<unknown>> 
   const breadcrumbs = useWorkspaceBreadcrumbs();
   const { workspace } = useWorkspaceInfo();
 
-  const [canCreateSBR] = useAccessReviewForModel(SpaceBindingRequestModel, 'create');
   const accessReviewResources: AccessReviewResources = [
     { model: SpaceBindingRequestModel, verb: 'list' },
   ];
@@ -43,7 +41,7 @@ const UserAccessPage: React.FunctionComponent<React.PropsWithChildren<unknown>> 
             {
               id: 'grant-access',
               label: 'Grant access',
-              disabled: !canCreateSBR,
+              disabled: true,
               disabledTooltip: 'You cannot grant access in this workspace',
               cta: {
                 href: `/application-pipeline/access/workspaces/${workspace}/grant`,

@@ -6,8 +6,8 @@ import './AppBanner.scss';
 const AppBanner: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <div data-test="dev-preview-banner">
-      <Banner variant="blue" className="app-banner" isSticky>
-        🎉 We’ve launched Konflux UI! The current version will be deprecated soon.
+      <Banner variant="gold" className="app-banner" isSticky>
+        🎉 We’ve launched Konflux UI! The current version will be deprecated soon.&nbsp;
         <Button
           variant="link"
           component="a"
@@ -15,9 +15,9 @@ const AppBanner: React.FC<React.PropsWithChildren<unknown>> = () => {
           target="_blank"
           isInline
         >
-          {' Visit the documentation '}
+          Visit the documentation
         </Button>
-        to find the UI for your specific cluster.
+        &nbsp; to find the UI for your specific cluster.
       </Banner>
     </div>
   );

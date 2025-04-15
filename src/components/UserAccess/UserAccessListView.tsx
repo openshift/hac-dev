@@ -124,7 +124,7 @@ export const UserAccessListView: React.FC<React.PropsWithChildren<unknown>> = ()
                     to={`/application-pipeline/access/workspaces/${workspace}/grant`}
                   />
                 )}
-                isDisabled={!canCreateSBR}
+                isDisabled
                 tooltip="You cannot grant access in this workspace"
                 analytics={{
                   link_name: 'grant-access',

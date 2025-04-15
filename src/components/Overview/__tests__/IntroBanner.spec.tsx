@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useFeatureFlag } from '@openshift/dynamic-plugin-sdk';
 import { commonFetch, useK8sWatchResource } from '@openshift/dynamic-plugin-sdk-utils';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import IntroBanner from '../IntroBanner';
 import '@testing-library/jest-dom';
 import SignupButton from '../SignupButton';
@@ -79,11 +79,6 @@ describe('Intro Banner', () => {
     fetchMock.mockResolvedValue({ status: 202 });
     render(<SignupButton />);
     const signupButton = screen.getByRole('button', { name: 'Join the waitlist' });
-    expect(signupButton).toBeEnabled();
-    fireEvent.click(signupButton);
-    await waitFor(() =>
-      expect(fetchMock).toHaveBeenCalledWith('/registration/api/v1/signup', { method: 'POST' }),
-    );
-    expect(setFlagMock).toHaveBeenCalledWith(true);
+    expect(signupButton).toBeDisabled();
   });
 });
