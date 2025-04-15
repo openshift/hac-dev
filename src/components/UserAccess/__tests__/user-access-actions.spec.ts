@@ -32,7 +32,7 @@ describe('useSBRActions', () => {
     expect(actions[0]).toEqual(
       expect.objectContaining({
         label: 'Edit access',
-        disabled: false,
+        disabled: true,
         cta: {
           href: '/application-pipeline/access/workspaces/test-ws/edit/my-user',
         },
